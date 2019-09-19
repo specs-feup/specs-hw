@@ -72,7 +72,7 @@ public class MbInstruction implements TraceInstruction32 {
     }
 
     @Override
-    public int getAddress() {
+    public int getAddress32() {
         return address;
     }
 
@@ -207,7 +207,7 @@ public class MbInstruction implements TraceInstruction32 {
     }
 
     public static MbInstruction create(TraceInstruction32 traceInstruction) {
-        return create(traceInstruction.getAddress(), traceInstruction.getInstruction(), traceInstruction.getCycles(),
+        return create(traceInstruction.getAddress32(), traceInstruction.getInstruction(), traceInstruction.getCycles(),
                 traceInstruction.getEncoded().orElse(null));
     }
 

@@ -56,7 +56,7 @@ public void giveInstruction(Object instruction) {
 
    public void giveInstruction(MbInstruction mbInstruction) {
       // Get info from instruction
-      updateAddress(mbInstruction.getAddress());
+      updateAddress(mbInstruction.getAddress32());
 
       MbInstructionName name = mbInstruction.getInstructionName();
       boolean isJump = OperationProperties.isJump(name);

@@ -84,9 +84,9 @@ public class MbStackAnalyser {
             stackData.memCounter++;
          }
          //if(!instructionsWithR1.containsKey(address)) {
-         if(!stackData.addressesWhichUseR1.contains(mbInst.getAddress())) {
+         if(!stackData.addressesWhichUseR1.contains(mbInst.getAddress32())) {
             //instructionsWithR1.put(address, instruction);
-            stackData.addressesWhichUseR1.add(mbInst.getAddress());
+            stackData.addressesWhichUseR1.add(mbInst.getAddress32());
          }
          
       }

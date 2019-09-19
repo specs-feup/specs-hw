@@ -22,11 +22,11 @@ import pt.up.fe.specs.binarytranslation.Instruction;
  */
 public interface SimpleInstruction32 extends Instruction {
 
-    int getAddress();
+    int getAddress32();
 
     @Override
-    default String getAddressAsString() {
-        return Integer.toString(getAddress());
+    default String getAddress() {
+        return Integer.toString(getAddress32());
     }
 
 }

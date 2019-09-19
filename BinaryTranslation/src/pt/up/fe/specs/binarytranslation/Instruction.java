@@ -25,7 +25,7 @@ public interface Instruction {
         return new GenericInstruction(address, instruction);
     }
 
-    String getAddressAsString();
+    String getAddress();
 
     String getInstruction();
 
@@ -37,6 +37,6 @@ public interface Instruction {
      *         greater than 0 if the address of this instruction is greater than the address of given instruction.
      */
     default int compareAddr(Instruction instruction) {
-        return getAddressAsString().compareTo(instruction.getAddressAsString());
+        return getAddress().compareTo(instruction.getAddress());
     }
 }
