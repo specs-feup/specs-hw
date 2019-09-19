@@ -23,9 +23,9 @@ import org.specs.MicroBlaze.ArgumentsProperties.ArgumentProperty;
 import org.specs.MicroBlaze.MbInstructionName;
 import org.specs.MicroBlaze.OperationProperties;
 
+import pt.up.fe.specs.binarytranslation.TraceInstruction32;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
-import pt.up.fe.specs.util.asm.TraceInstruction32;
 
 /**
  * Represents a Microblaze instruction.
