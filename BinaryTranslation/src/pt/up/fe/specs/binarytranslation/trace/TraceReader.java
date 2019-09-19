@@ -17,6 +17,7 @@ import java.io.Closeable;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionStream;
+import pt.up.fe.specs.binarytranslation.InstructionStreamType;
 import pt.up.fe.specs.util.asm.processor.RegisterTable;
 
 /**
@@ -29,8 +30,14 @@ import pt.up.fe.specs.util.asm.processor.RegisterTable;
  */
 public interface TraceReader extends Closeable, InstructionStream {
 
+    @Override
     default Instruction nextInstruction() {
         return nextTraceInstruction();
+    }
+
+    @Override
+    default InstructionStreamType getType() {
+        return InstructionStreamType.TRACE;
     }
 
     /**
