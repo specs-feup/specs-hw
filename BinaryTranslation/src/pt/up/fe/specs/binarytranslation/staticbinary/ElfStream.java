@@ -1,8 +1,7 @@
 package pt.up.fe.specs.binarytranslation.staticbinary;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.InstructionStream;
 
-public interface ElfStream {
+public interface ElfStream extends InstructionStream {
 
-	Instruction nextInstruction();
 }
