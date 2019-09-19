@@ -28,7 +28,7 @@ import pt.up.fe.specs.util.asm.processor.RegisterTable;
  * 
  * @author Joao Bispo
  */
-public interface TraceReader extends Closeable, InstructionStream {
+public interface TraceStream extends Closeable, InstructionStream {
 
     @Override
     default Instruction nextInstruction() {
