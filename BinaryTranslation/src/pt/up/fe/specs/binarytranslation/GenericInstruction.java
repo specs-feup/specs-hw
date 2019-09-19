@@ -30,7 +30,7 @@ class GenericInstruction implements Instruction {
     }
 
     @Override
-    public String getAddressAsString() {
+    public String getAddress() {
         return address;
     }
 

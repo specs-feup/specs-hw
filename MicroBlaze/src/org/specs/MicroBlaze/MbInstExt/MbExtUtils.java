@@ -44,7 +44,7 @@ public class MbExtUtils {
 	int delaySlots = OperationProperties.getDelaySlots(branch.getInstructionName());
 	int targetAddressIndex = index + delaySlots + 1;
 
-	int realTargetAddress = SpecsStrings.moduloGet(mbInsts, targetAddressIndex).getAddress();
+	int realTargetAddress = SpecsStrings.moduloGet(mbInsts, targetAddressIndex).getAddress32();
 
 	return realTargetAddress;
     }
@@ -63,7 +63,7 @@ public class MbExtUtils {
 	// How many delay slots?
 	int delaySlots = OperationProperties.getDelaySlots(branch.getInstructionName());
 
-	return mbInsts.get(index).getAddress() + (delaySlots + 1) * addressOffset;
+	return mbInsts.get(index).getAddress32() + (delaySlots + 1) * addressOffset;
     }
 
     /**
@@ -86,8 +86,8 @@ public class MbExtUtils {
 	int addressOffset = 4;
 	int targetAddressIndex = index + delaySlots + 1;
 
-	int noJumpTargetAddress = mbInsts.get(index).getAddress() + (delaySlots + 1) * addressOffset;
-	int realTargetAddress = SpecsStrings.moduloGet(mbInsts, targetAddressIndex).getAddress();
+	int noJumpTargetAddress = mbInsts.get(index).getAddress32() + (delaySlots + 1) * addressOffset;
+	int realTargetAddress = SpecsStrings.moduloGet(mbInsts, targetAddressIndex).getAddress32();
 
 	// Check if there is no jump
 	if (realTargetAddress == noJumpTargetAddress) {
