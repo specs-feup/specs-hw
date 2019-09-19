@@ -21,6 +21,10 @@ package pt.up.fe.specs.binarytranslation;
  */
 public interface Instruction {
 
+    static Instruction newInstance(String address, String instruction) {
+        return new GenericInstruction(address, instruction);
+    }
+
     String getAddressAsString();
 
     String getInstruction();
