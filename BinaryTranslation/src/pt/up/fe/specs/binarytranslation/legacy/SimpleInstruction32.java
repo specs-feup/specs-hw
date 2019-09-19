@@ -11,7 +11,9 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation;
+package pt.up.fe.specs.binarytranslation.legacy;
+
+import pt.up.fe.specs.binarytranslation.Instruction;
 
 /**
  * Represents a simple instruction: an integer for the address and a string for the instruction.

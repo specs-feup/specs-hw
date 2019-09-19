@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation;
+package pt.up.fe.specs.binarytranslation.trace;
 
 import java.io.Closeable;
 
