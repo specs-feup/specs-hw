@@ -1,7 +1,5 @@
 package pt.up.fe.specs.binarytranslation;
 
-import java.io.Closeable;
-
 /**
  * Stream of instructions. The source can be either finite (e.g., ELF file) or potentially infinite (e.g., trace). It
  * can also already exist completely (e.g., file with instructions) or is being generated (e.g., simulator).
@@ -9,7 +7,7 @@ import java.io.Closeable;
  * @author JoaoBispo
  *
  */
-public interface InstructionStream extends Closeable {
+public interface InstructionStream extends AutoCloseable {
 
     /**
      * 
