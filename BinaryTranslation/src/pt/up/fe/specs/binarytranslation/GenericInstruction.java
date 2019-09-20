@@ -39,4 +39,9 @@ class GenericInstruction implements Instruction {
         return instruction;
     }
 
+    @Override
+    public String toString() {
+        return address + ": " + instruction;
+    }
+
 }
