@@ -30,6 +30,12 @@ class GenericInstruction implements Instruction {
     }
 
     @Override
+    public int getLatency() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
     public String getAddress() {
         return address;
     }

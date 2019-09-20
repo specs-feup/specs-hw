@@ -29,6 +29,14 @@ public interface Instruction {
 
     String getInstruction();
 
+    /*
+     * Gets latency of binary instruction.
+     * Retrieved from specific ISA implementation.
+     */
+    default int getLatency() {
+        return 1;
+    }
+
     /**
      * 
      * @param instruction

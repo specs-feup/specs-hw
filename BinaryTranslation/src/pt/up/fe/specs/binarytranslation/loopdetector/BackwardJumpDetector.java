@@ -13,8 +13,11 @@
 
 package pt.up.fe.specs.binarytranslation.loopdetector;
 
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionStream;
+import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 
 public class BackwardJumpDetector implements LoopDetector {
 
@@ -31,8 +34,8 @@ public class BackwardJumpDetector implements LoopDetector {
     }
 
     @Override
-    public void detectLoops(InstructionStream istream) {
-        // TODO Auto-generated method stub
+    public List<BinarySegment> detectLoops(InstructionStream istream) {
 
+        return null;
     }
 }
