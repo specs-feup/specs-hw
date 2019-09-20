@@ -4,8 +4,8 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionStream;
-import pt.up.fe.specs.binarytranslation.loops.BasicBlock;
-import pt.up.fe.specs.binarytranslation.loops.BinarySegment;
+import pt.up.fe.specs.binarytranslation.binarysegments.BasicBlock;
+import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 
 public final class BasicBlockDetector implements LoopDetector {
 

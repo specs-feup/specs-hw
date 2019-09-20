@@ -32,9 +32,7 @@ import pt.up.fe.specs.util.SpecsStrings;
  * 
  * @author Joao Bispo
  */
-// public class MbInstruction implements SimpleInstruction32 {
 public class MbInstruction implements TraceInstruction32 {
-    // public class MbInstruction extends TraceInstruction32 {
 
     /**
      * INSTANCE VARIABLES
@@ -55,7 +53,6 @@ public class MbInstruction implements TraceInstruction32 {
         this.address = address;
         this.instructionName = instructionName;
         this.cycles = cycles;
-        // this.operands = operands;
         this.operands = Collections.unmodifiableList(operands);
         this.encodedInst = encodedInst;
     }
@@ -83,15 +80,12 @@ public class MbInstruction implements TraceInstruction32 {
         builder.append(instructionName);
         if (!operands.isEmpty()) {
             builder.append(" ");
-            // builder.append(operands.get(0));
             builder.append(operands.get(0).getAsm());
         }
         for (int i = 1; i < operands.size(); i++) {
             MbOperand operand = operands.get(i);
             builder.append(MbParserUtils.REGISTER_SEPARATOR);
             builder.append(operand.getAsm());
-            // System.out.println("Operand asm:"+operand.getAsm());
-            // builder.append(operand);
         }
 
         return builder.toString();
@@ -161,20 +155,6 @@ public class MbInstruction implements TraceInstruction32 {
             if (!operand.isR0()) {
                 return false;
             }
-
-            /*
-            // If it is not a register, is not nop
-            if (operand.getType() != MbOperand.Type.register) {
-               return false;
-            }
-            
-            
-            // If value is not 0, is not nop
-            if (operand.getIntValue() != 0) {
-               return false;
-            }
-             * 
-             */
         }
 
         // Every operand is a register and 0, and operation is OR
@@ -184,7 +164,6 @@ public class MbInstruction implements TraceInstruction32 {
 
     public boolean hasSideEffects() {
         return OperationProperties.hasSideEffects(instructionName);
-        // return InstructionProperties.INSTRUCTIONS_WITH_SIDE_EFFECTS.contains(instructionName);
     }
 
     public String getAsm() {
@@ -214,11 +193,6 @@ public class MbInstruction implements TraceInstruction32 {
     public static MbInstruction create(int address, String instruction) {
         return create(address, instruction, null);
     }
-
-    // public static MbInstruction create(int addr, String mbInstString, int i, int instInt) {
-    // // TODO Auto-generated method stub
-    // return null;
-    // }
 
     public static MbInstruction create(int address, String instruction, Integer cycle) {
         return create(address, instruction, cycle, null);
@@ -254,148 +228,4 @@ public class MbInstruction implements TraceInstruction32 {
     public Boolean isJump() {
         return OperationProperties.isJump(instructionName);
     }
-
-    /**
-     * 
-     * @return the binary value of this instruction
-     */
-    // public int getAsmValue() {
-    // new AsmEncoder().
-    /*
-    StringBuilder binaryString = new StringBuilder();
-    
-    // Add the opcode
-    binaryString.append(Integer.toBinaryString(instructionName.getOpcode()));
-    
-    // Add 'rD'
-    binaryString.append(getBinaryRd());
-    
-    // Add 'rA'
-    binaryString.append(getBinaryRa());
-    
-    // Add 'rB' / imm
-    binaryString.append(getBinaryRbImm());
-    
-    // instructionName.
-    // TODO Auto-generated method stub
-    return Integer.parseInt(binaryString.toString(), 2);
-    */
-    // }
-    /*
-    private String getBinaryRa() {
-    	int rAInt = getIntRa();
-    	return toRegisterString(rAInt);
-    }
-    
-    private int getIntRa() {
-    	// Instructions with pseudo rA
-    	if (OperationProperties.isConditionalJump(instructionName)) {
-    	    return instructionName.getPseudoRd();
-    	}
-    
-    	return ArgumentsProperties.getRa(instructionName, operands).getRegId().getAsmValue();
-    	/*	
-    		// Add second operand
-    		MbOperand rD = operands.get(0);
-    		if (rD.getFlow() != Flow.WRITE) {
-    		    throw new RuntimeException("Found rD that is not 'WRITE', for " + instructionName);
-    		}
-    	
-    		return rD.getRegId().getAsmValue();
-    		*/
-    // }
-    /*
-    private String getBinaryRbImm() {
-    	MbOperand rBImm = ArgumentsProperties.getRbImm(instructionName, operands);
-    
-    	if (OperationProperties.isTypeB(instructionName)) {
-    	    return toImmString(rBImm.getShortValue());
-    	}
-    
-    	// Shift barrel can have rB AND imm
-    	if (OperationProperties.isShiftBarrel(instructionName)) {
-    	    String suffix = Integer.toBinaryString(instructionName.getSuffixRb());
-    	    suffix = ParseUtils.padLeft(suffix, 11, '0');
-    
-    	    // rB + suffix_11
-    	    if (instructionName == MbInstructionName.bsll || instructionName == MbInstructionName.bsra
-    		    || instructionName == MbInstructionName.bsrl) {
-    
-    		return toRegisterString(rBImm.getRegId().getAsmValue()) + suffix;
-    	    }
-    
-    	    // suffix_11 + imm_5
-    	    if (instructionName == MbInstructionName.bslli || instructionName == MbInstructionName.bsrai
-    		    || instructionName == MbInstructionName.bsrli) {
-    
-    		return toRegisterString(rBImm.getShortValue()) + suffix;
-    	    }
-    
-    	    throw new RuntimeException("Case not defined: " + instructionName);
-    	}
-    
-    	// As default, if it is of type A the bits next to rB should be 0.
-    	return toRegisterString(rBImm.getRegId().getAsmValue()) + ParseUtils.buildLine("0", 11);
-    
-    }
-    */
-    /*
-    private int getRbSuffix() {
-    // TODO: Inst can have rB AND imm, such as barrel shift i
-    if (OperationProperties.isShiftBarrel(instructionName)) {
-        return instructionName.getSuffixRb();
-    }
-    
-    return 0;
-    }
-    */
-    /*
-    private static String toImmString(short immValue) {
-    	String rDString = Integer.toBinaryString(immValue);
-    	/*
-    	if (rDString.length() > 5) {
-    	    throw new RuntimeException(
-    		    "Register has ASM value larger than 32 (" + immValue + "' found for " + instructionName);
-    	}
-    	*/
-    /*
-    	return ParseUtils.padLeft(rDString, 16, '0');
-    }
-    */
-    /*
-    private String getBinaryRd() {
-    	int rDInt = getIntRd();
-    	return toRegisterString(rDInt);
-    }
-    */
-    /*
-    private int getIntRd() {
-    // Instructions with pseudo rD
-    if (OperationProperties.isConditionalJump(instructionName)) {
-        return instructionName.getPseudoRd();
-    }
-    /*
-    // Add first operand
-    MbOperand rD = operands.get(0);
-    if (rD.getFlow() != Flow.WRITE) {
-        throw new RuntimeException("Found rD that is not 'WRITE', for " + instructionName);
-    }
-    
-    return rD.getRegId().getAsmValue();
-    */
-    /*
-    return ArgumentsProperties.getRd(instructionName, operands).getRegId().getAsmValue();
-    }
-    */
-    /*
-    private String toRegisterString(int registerValue) {
-    	String rDString = Integer.toBinaryString(registerValue);
-    	if (rDString.length() > 5) {
-    	    throw new RuntimeException(
-    		    "Register has ASM value larger than 32 (" + registerValue + "' found for " + instructionName);
-    	}
-    
-    	return ParseUtils.padLeft(rDString, 5, '0');
-    }
-    */
 }
