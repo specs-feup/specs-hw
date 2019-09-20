@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.loopdetector;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.InstructionStream;
 
 public class BackwardJumpDetector implements LoopDetector {
 
@@ -25,6 +26,12 @@ public class BackwardJumpDetector implements LoopDetector {
 
     @Override
     public void close() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void detectLoops(InstructionStream istream) {
         // TODO Auto-generated method stub
 
     }
