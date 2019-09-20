@@ -13,7 +13,11 @@
 
 package pt.up.fe.specs.binarytranslation.loopdetector;
 
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.InstructionStream;
+import pt.up.fe.specs.binarytranslation.loops.BinarySegment;
 
 /**
  * Detects PipelinableLoops
@@ -25,4 +29,9 @@ public interface LoopDetector extends AutoCloseable {
 
     void step(Instruction instruction);
 
+    /*
+     * Returns (eventually) objects of type "Loop" or list of "Loop"
+     * Example loops may include: megablock, basicblock, (or frequent instruction sequences?)     
+     */
+    List<BinarySegment> detectLoops(InstructionStream istream);
 }
