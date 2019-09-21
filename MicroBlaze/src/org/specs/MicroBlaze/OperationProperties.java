@@ -13,6 +13,8 @@
 
 package org.specs.MicroBlaze;
 
+import org.specs.MicroBlaze.isa.MbInstructionName;
+
 /**
  * Methods containg properties of MicroBlaze instructions.
  *

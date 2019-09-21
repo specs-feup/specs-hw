@@ -20,7 +20,7 @@ package org.specs.MicroBlaze.Utilities;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specs.MicroBlaze.MbInstructionName;
+import org.specs.MicroBlaze.isa.MbInstructionName;
 
 import pt.up.fe.specs.util.SpecsEnums;
 import pt.up.fe.specs.util.SpecsLogs;

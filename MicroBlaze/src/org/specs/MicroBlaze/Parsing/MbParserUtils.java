@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.specs.MicroBlaze.ArgumentsProperties.ArgumentProperty;
-import org.specs.MicroBlaze.MbInstructionName;
 import org.specs.MicroBlaze.MbRegister;
 import org.specs.MicroBlaze.MbRegisterUtils;
 import org.specs.MicroBlaze.Parsing.MbOperand.Flow;
 import org.specs.MicroBlaze.Parsing.MbOperand.Type;
+import org.specs.MicroBlaze.isa.MbInstructionName;
 
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -41,126 +41,28 @@ public class MbParserUtils {
      * @return
      */
     public static String[] parseArguments(String instruction) {
-	int whiteSpaceIndex = SpecsStrings.indexOfFirstWhitespace(instruction);
-	String registersString = instruction.substring(whiteSpaceIndex).trim();
+        int whiteSpaceIndex = SpecsStrings.indexOfFirstWhitespace(instruction);
+        String registersString = instruction.substring(whiteSpaceIndex).trim();
 
-	String[] regs = registersString.split(REGISTER_SEPARATOR);
-	for (int i = 0; i < regs.length; i++) {
-	    regs[i] = regs[i].trim();
-	}
+        String[] regs = registersString.split(REGISTER_SEPARATOR);
+        for (int i = 0; i < regs.length; i++) {
+            regs[i] = regs[i].trim();
+        }
 
-	return regs;
+        return regs;
     }
 
     public static MbOperand parseMbArgument(String argument, ArgumentProperty argProp) {
+        Optional<MbRegister> regId = MbRegisterUtils.getId(argument);
 
-	// MbRegisterId regId = EnumUtils.valueOf(MbRegisterId.class, argument.toUpperCase());
+        // If present is a register; otherwise, it is an immediate
+        if (regId.isPresent()) {
+            return MbOperand.newRegister(regId.get(), argProp.getFlow());
+        }
 
-	Optional<MbRegister> regId = MbRegisterUtils.getId(argument);
+        return MbOperand.newImmediate(argument, argProp.getFlow());
 
-	// If present is a register; otherwise, it is an immediate
-	if (regId.isPresent()) {
-	    return MbOperand.newRegister(regId.get(), argProp.getFlow());
-	    // return newRegisterOperand(regId.get(), argProp);
-	}
-
-	return MbOperand.newImmediate(argument, argProp.getFlow());
-	/*
-		// Check type
-		MbOperand.Type type = getType(regId);
-	
-		// Check flow
-		MbOperand.Flow flow = getFlow(argProp);
-	
-	
-		// Get value
-		// Integer value = null;
-		Short value = null;
-		if (type == MbOperand.Type.register) {
-		    // value = regId.getAsmValue();
-		    value = regId.getAsmValue().shortValue();
-		} else {
-		    value = parseValue(type, argument);
-		    if (value == null) {
-			System.out.println("Argument:" + argument + ", Prop:" + argProp);
-		    }
-		}
-	
-		// Integer value = parseValue(type, argument);
-		if (value == null) {
-		    return null;
-		}
-	
-		String id = null;
-		if (type == MbOperand.Type.immediate) {
-		    // id = MbRegisterId.getConstantName();
-		    id = MbRegisterUtils.getConstantName();
-		}
-	
-		if (type == MbOperand.Type.register) {
-		    // id = MbRegisterId.values()[value].getName();
-		    id = regId.getName();
-		}
-	
-		return new MbOperand(flow, type, value, id, regId);
-		*/
     }
-
-    /*
-    private static MbOperand newImmediateOperand(String argument, ArgumentProperty argProp) {
-    // Check type
-    MbOperand.Type type = MbOperand.Type.immediate;
-    
-    // Check flow
-    MbOperand.Flow flow = argProp.getFlow();
-    
-    // Get value
-    
-    Short value = parseValue(type, argument);
-    if (value == null) {
-        throw new RuntimeException("Could not extract short value. Argument:" + argument + ", Prop:" + argProp);
-    }
-    
-    String id = MbRegisterUtils.getConstantName();
-    
-    return new MbOperand(flow, type, value, id, null);
-    }
-    */
-
-    /**
-     * TODO: Move to inside of MbOperand as static constructor
-     * 
-     * @param mbRegister
-     * @param argProp
-     * @return
-     */
-    /*
-    private static MbOperand newRegisterOperand(MbRegister mbRegister, ArgumentProperty argProp) {
-    // Type
-    MbOperand.Type type = MbOperand.Type.register;
-    
-    // Check flow
-    MbOperand.Flow flow = argProp.getFlow();
-    
-    // Get value
-    Short value = mbRegister.getAsmValue().shortValue();
-    
-    // Get id
-    String id = mbRegister.getName();
-    
-    return new MbOperand(flow, type, value, id, mbRegister);
-    }
-    */
-
-    /*
-    private static MbOperand.Type getType(Optional<MbRegister> regId) {
-    if (regId.isPresent()) {
-        return MbOperand.Type.register;
-    }
-    
-    return MbOperand.Type.immediate;
-    }
-    */
 
     /**
      * Extracts the flow of the given ArgumentProperty. If it could not be determined throws an exception.
@@ -169,76 +71,67 @@ public class MbParserUtils {
      * @return
      */
     public static Flow getFlow(ArgumentProperty argProp) {
-	if (argProp == ArgumentProperty.read) {
-	    return MbOperand.Flow.READ;
-	}
+        if (argProp == ArgumentProperty.read) {
+            return MbOperand.Flow.READ;
+        }
 
-	if (argProp == ArgumentProperty.write) {
-	    return MbOperand.Flow.WRITE;
-	}
+        if (argProp == ArgumentProperty.write) {
+            return MbOperand.Flow.WRITE;
+        }
 
-	throw new RuntimeException("Case not defined: '" + argProp + "'");
-	// LoggingUtils.getLogger().warning("Case not defined: '" + argProp + "'");
-	// return null;
-
+        throw new RuntimeException("Case not defined: '" + argProp + "'");
     }
 
     // public static Integer parseValue(Type type, String argument) {
     public static Short parseValue(Type type, String argument) {
-	if (type == MbOperand.Type.IMMEDIATE) {
-	    Short value = null;
-	    try {
-		value = Short.parseShort(argument);
-	    } catch (NumberFormatException ex) {
-		throw new RuntimeException("Expecting a short immediate: '\" + argument + \"'.", ex);
-		// LoggingUtils.getLogger().
-		// warning("Expecting an integer immediate: '" + argument + "'.");
-		// warning("Expecting a short immediate: '" + argument + "'.");
-	    }
-	    return value;
-	}
+        if (type == MbOperand.Type.IMMEDIATE) {
+            Short value = null;
+            try {
+                value = Short.parseShort(argument);
+            } catch (NumberFormatException ex) {
+                throw new RuntimeException("Expecting a short immediate: '\" + argument + \"'.", ex);
+            }
+            return value;
+        }
 
-	throw new RuntimeException("Case not defined:" + type);
-	// LoggingUtils.getLogger().warning("Case not defined:" + type);
-	// return null;
+        throw new RuntimeException("Case not defined:" + type);
     }
 
     public static String getHexAddress(int address, int padLength) {
-	String hexString = Integer.toHexString(address).toUpperCase();
-	// Pad String
-	return "0x" + SpecsStrings.padLeft(hexString, padLength, '0');
+        String hexString = Integer.toHexString(address).toUpperCase();
+        // Pad String
+        return "0x" + SpecsStrings.padLeft(hexString, padLength, '0');
     }
 
     public static List<MbInstruction> getMbInstructions(List<Integer> addresses,
-	    List<String> instructions) {
+            List<String> instructions) {
 
-	int numInstructions = instructions.size();
+        int numInstructions = instructions.size();
 
-	List<MbInstruction> mbInstructions = new ArrayList<>();
-	for (int i = 0; i < numInstructions; i++) {
-	    int address = addresses.get(i);
-	    String instruction = instructions.get(i);
+        List<MbInstruction> mbInstructions = new ArrayList<>();
+        for (int i = 0; i < numInstructions; i++) {
+            int address = addresses.get(i);
+            String instruction = instructions.get(i);
 
-	    mbInstructions.add(MbInstruction.create(address, instruction));
-	}
+            mbInstructions.add(MbInstruction.create(address, instruction));
+        }
 
-	return mbInstructions;
+        return mbInstructions;
     }
 
     public static MbInstructionName getMbInstructionName(String instruction) {
-	int separatorIndex = instruction.indexOf(" ");
-	String instructionNameString = instruction.substring(0, separatorIndex);
-	MbInstructionName instructionName = (MbInstructionName) MbInstructionName.values()[0]
-		.getEnum(instructionNameString);
-	if (instructionName == null) {
-	    SpecsLogs.getLogger().warning("Could not parse instruction name for instruction '" + instruction + "'");
-	    return null;
-	}
+        int separatorIndex = instruction.indexOf(" ");
+        String instructionNameString = instruction.substring(0, separatorIndex);
+        MbInstructionName instructionName = (MbInstructionName) MbInstructionName.values()[0]
+                .getEnum(instructionNameString);
+        if (instructionName == null) {
+            SpecsLogs.getLogger().warning("Could not parse instruction name for instruction '" + instruction + "'");
+            return null;
+        }
 
-	return instructionName;
+        return instructionName;
     }
 
     public static final String REGISTER_PREFIX = "r";
-    // public static final String REGISTER_PREFIX = "R";
     public static final String REGISTER_SEPARATOR = ", ";
 }

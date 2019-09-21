@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package org.specs.MicroBlaze;
+package org.specs.MicroBlaze.isa;
 
 import java.util.EnumMap;
 import java.util.Map;

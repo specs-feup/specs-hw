@@ -11,7 +11,9 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation;
+package pt.up.fe.specs.binarytranslation.generic;
+
+import pt.up.fe.specs.binarytranslation.Instruction;
 
 /**
  * Generic implementation of interface instruction.
@@ -19,7 +21,7 @@ package pt.up.fe.specs.binarytranslation;
  * @author JoaoBispo
  *
  */
-class GenericInstruction implements Instruction {
+public class GenericInstruction implements Instruction {
 
     private final String address;
     private final String instruction;
@@ -48,6 +50,12 @@ class GenericInstruction implements Instruction {
     @Override
     public String toString() {
         return address + ": " + instruction;
+    }
+
+    @Override
+    public boolean isBackwardsBranch() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

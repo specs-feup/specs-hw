@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation;
 
+import pt.up.fe.specs.binarytranslation.generic.GenericInstruction;
+
 /**
  * Represents a generic assembly instruction.
  * 
@@ -37,6 +39,13 @@ public interface Instruction {
         return 1;
     }
 
+    /*
+     * True is instruction is backwards branch.
+     * Underlying layers must call instruction
+     * decoders to determine this.
+     */
+    boolean isBackwardsBranch();
+
     /**
      * 
      * @param instruction
@@ -47,4 +56,5 @@ public interface Instruction {
     default int compareAddr(Instruction instruction) {
         return getAddress().compareTo(instruction.getAddress());
     }
+
 }

@@ -6,12 +6,12 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.binarytranslation.staticbinary.ElfStream;
+import pt.up.fe.specs.binarytranslation.StaticStream;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public class MicroBlazeElfStream implements ElfStream {
+public class MicroBlazeElfStream implements StaticStream {
 
     private static final Pattern MB_REGEX = Pattern.compile("\\s(.[0-9a-f]):\\s*([0-9a-f]+)");
     private LineStream insts;

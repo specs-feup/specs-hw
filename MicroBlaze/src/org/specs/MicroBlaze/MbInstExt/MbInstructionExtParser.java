@@ -20,8 +20,8 @@ package org.specs.MicroBlaze.MbInstExt;
 import java.util.ArrayList;
 import java.util.List;
 import org.specs.MicroBlaze.CarryProperties;
-import org.specs.MicroBlaze.MbInstructionName;
 import org.specs.MicroBlaze.Parsing.MbInstruction;
+import org.specs.MicroBlaze.isa.MbInstructionName;
 
 /**
  * MbInstruction extended with additional information. Adds carry operands to

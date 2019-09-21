@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
+import org.specs.MicroBlaze.isa.MbInstructionName;
+
 /**
  * Information about the carry in MicroBlaze operations.
  *

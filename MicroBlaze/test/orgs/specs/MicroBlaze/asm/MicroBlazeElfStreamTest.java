@@ -20,6 +20,5 @@ class MicroBlazeElfStreamTest {
         while ((inst = el.nextInstruction()) != null) {
             System.out.println(inst);
         }
-
     }
 }

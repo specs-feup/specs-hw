@@ -20,10 +20,10 @@ import java.util.Optional;
 
 import org.specs.MicroBlaze.ArgumentsProperties;
 import org.specs.MicroBlaze.ArgumentsProperties.ArgumentProperty;
-import org.specs.MicroBlaze.MbInstructionName;
 import org.specs.MicroBlaze.OperationProperties;
+import org.specs.MicroBlaze.isa.MbInstructionName;
 
-import pt.up.fe.specs.binarytranslation.trace.TraceInstruction32;
+import pt.up.fe.specs.binarytranslation.legacy.TraceInstruction32;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
 
@@ -227,5 +227,11 @@ public class MbInstruction implements TraceInstruction32 {
     @Override
     public Boolean isJump() {
         return OperationProperties.isJump(instructionName);
+    }
+
+    @Override
+    public boolean isBackwardsBranch() {
+        // TODO Auto-generated method stub
+        return false;
     }
 }
