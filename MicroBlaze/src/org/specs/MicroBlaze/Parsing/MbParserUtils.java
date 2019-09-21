@@ -61,7 +61,6 @@ public class MbParserUtils {
         }
 
         return MbOperand.newImmediate(argument, argProp.getFlow());
-
     }
 
     /**

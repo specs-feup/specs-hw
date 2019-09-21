@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.specs.MicroBlaze.InstructionProperties;
+
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.asm.processor.InstructionName;
 
@@ -185,95 +187,95 @@ public enum MbInstructionName implements InstructionName {
     private final static Map<String, MbInstructionName> specialCases;
 
     static {
-	specialCases = new HashMap<>();
-	for (MbInstructionName mbInstructionName : values()) {
-	    if (!mbInstructionName.specialName) {
-		continue;
-	    }
+        specialCases = new HashMap<>();
+        for (MbInstructionName mbInstructionName : values()) {
+            if (!mbInstructionName.specialName) {
+                continue;
+            }
 
-	    specialCases.put(mbInstructionName.getName(), mbInstructionName);
-	}
+            specialCases.put(mbInstructionName.getName(), mbInstructionName);
+        }
     }
 
     public static final Collection<String> storeInstructions;
     public static final Collection<String> loadInstructions;
 
     static {
-	storeInstructions = new ArrayList<>();
+        storeInstructions = new ArrayList<>();
 
-	for (MbInstructionName instName : InstructionProperties.STORE_INSTRUCTIONS) {
-	    storeInstructions.add(instName.getName());
-	}
+        for (MbInstructionName instName : InstructionProperties.STORE_INSTRUCTIONS) {
+            storeInstructions.add(instName.getName());
+        }
 
-	loadInstructions = new ArrayList<>();
+        loadInstructions = new ArrayList<>();
 
-	for (MbInstructionName instName : InstructionProperties.LOAD_INSTRUCTIONS) {
-	    loadInstructions.add(instName.getName());
-	}
+        for (MbInstructionName instName : InstructionProperties.LOAD_INSTRUCTIONS) {
+            loadInstructions.add(instName.getName());
+        }
     }
 
     private final static Map<MbInstructionName, Integer> PSEUDO_RD;
 
     static {
-	PSEUDO_RD = new EnumMap<>(MbInstructionName.class);
-	PSEUDO_RD.put(beq, 0b00000);
-	PSEUDO_RD.put(beqd, 0b10000);
-	PSEUDO_RD.put(beqi, 0b00000);
-	PSEUDO_RD.put(beqid, 0b10000);
-	PSEUDO_RD.put(bge, 0b00101);
-	PSEUDO_RD.put(bged, 0b10101);
-	PSEUDO_RD.put(bgei, 0b00101);
-	PSEUDO_RD.put(bgeid, 0b10101);
-	PSEUDO_RD.put(bgt, 0b00100);
-	PSEUDO_RD.put(bgtd, 0b10100);
-	PSEUDO_RD.put(bgti, 0b00100);
-	PSEUDO_RD.put(bgtid, 0b10100);
-	PSEUDO_RD.put(ble, 0b00011);
-	PSEUDO_RD.put(bled, 0b10011);
-	PSEUDO_RD.put(blei, 0b00011);
-	PSEUDO_RD.put(bleid, 0b10011);
-	PSEUDO_RD.put(blt, 0b00010);
-	PSEUDO_RD.put(bltd, 0b10010);
-	PSEUDO_RD.put(blti, 0b00010);
-	PSEUDO_RD.put(bltid, 0b10010);
-	PSEUDO_RD.put(bne, 0b00001);
-	PSEUDO_RD.put(bned, 0b10001);
-	PSEUDO_RD.put(bnei, 0b00001);
-	PSEUDO_RD.put(bneid, 0b10001);
+        PSEUDO_RD = new EnumMap<>(MbInstructionName.class);
+        PSEUDO_RD.put(beq, 0b00000);
+        PSEUDO_RD.put(beqd, 0b10000);
+        PSEUDO_RD.put(beqi, 0b00000);
+        PSEUDO_RD.put(beqid, 0b10000);
+        PSEUDO_RD.put(bge, 0b00101);
+        PSEUDO_RD.put(bged, 0b10101);
+        PSEUDO_RD.put(bgei, 0b00101);
+        PSEUDO_RD.put(bgeid, 0b10101);
+        PSEUDO_RD.put(bgt, 0b00100);
+        PSEUDO_RD.put(bgtd, 0b10100);
+        PSEUDO_RD.put(bgti, 0b00100);
+        PSEUDO_RD.put(bgtid, 0b10100);
+        PSEUDO_RD.put(ble, 0b00011);
+        PSEUDO_RD.put(bled, 0b10011);
+        PSEUDO_RD.put(blei, 0b00011);
+        PSEUDO_RD.put(bleid, 0b10011);
+        PSEUDO_RD.put(blt, 0b00010);
+        PSEUDO_RD.put(bltd, 0b10010);
+        PSEUDO_RD.put(blti, 0b00010);
+        PSEUDO_RD.put(bltid, 0b10010);
+        PSEUDO_RD.put(bne, 0b00001);
+        PSEUDO_RD.put(bned, 0b10001);
+        PSEUDO_RD.put(bnei, 0b00001);
+        PSEUDO_RD.put(bneid, 0b10001);
     }
 
     private final static Map<MbInstructionName, Integer> PSEUDO_RA;
 
     static {
-	PSEUDO_RA = new EnumMap<>(MbInstructionName.class);
+        PSEUDO_RA = new EnumMap<>(MbInstructionName.class);
 
-	PSEUDO_RA.put(br, 0b00000);
-	PSEUDO_RA.put(bra, 0b01000);
-	PSEUDO_RA.put(brd, 0b10000);
-	PSEUDO_RA.put(brad, 0b11000);
-	PSEUDO_RA.put(brld, 0b10100);
-	PSEUDO_RA.put(brald, 0b11100);
-	PSEUDO_RA.put(bri, 0b00000);
-	PSEUDO_RA.put(brai, 0b01000);
-	PSEUDO_RA.put(brid, 0b10000);
-	PSEUDO_RA.put(braid, 0b11000);
-	PSEUDO_RA.put(brlid, 0b10100);
-	PSEUDO_RA.put(bralid, 0b11100);
-	PSEUDO_RA.put(brk, 0b01100);
-	PSEUDO_RA.put(brki, 0b01100);
+        PSEUDO_RA.put(br, 0b00000);
+        PSEUDO_RA.put(bra, 0b01000);
+        PSEUDO_RA.put(brd, 0b10000);
+        PSEUDO_RA.put(brad, 0b11000);
+        PSEUDO_RA.put(brld, 0b10100);
+        PSEUDO_RA.put(brald, 0b11100);
+        PSEUDO_RA.put(bri, 0b00000);
+        PSEUDO_RA.put(brai, 0b01000);
+        PSEUDO_RA.put(brid, 0b10000);
+        PSEUDO_RA.put(braid, 0b11000);
+        PSEUDO_RA.put(brlid, 0b10100);
+        PSEUDO_RA.put(bralid, 0b11100);
+        PSEUDO_RA.put(brk, 0b01100);
+        PSEUDO_RA.put(brki, 0b01100);
     }
 
     private final static Map<MbInstructionName, Integer> EXTENDED_OPCODE;
 
     static {
-	EXTENDED_OPCODE = new EnumMap<>(MbInstructionName.class);
+        EXTENDED_OPCODE = new EnumMap<>(MbInstructionName.class);
 
-	EXTENDED_OPCODE.put(bsrl, 0b00000000000);
-	EXTENDED_OPCODE.put(bsra, 0b01000000000);
-	EXTENDED_OPCODE.put(bsll, 0b10000000000);
-	EXTENDED_OPCODE.put(bsrli, 0b00000000000);
-	EXTENDED_OPCODE.put(bsrai, 0b00000010000);
-	EXTENDED_OPCODE.put(bslli, 0b00000100000);
+        EXTENDED_OPCODE.put(bsrl, 0b00000000000);
+        EXTENDED_OPCODE.put(bsra, 0b01000000000);
+        EXTENDED_OPCODE.put(bsll, 0b10000000000);
+        EXTENDED_OPCODE.put(bsrli, 0b00000000000);
+        EXTENDED_OPCODE.put(bsrai, 0b00000010000);
+        EXTENDED_OPCODE.put(bslli, 0b00000100000);
     }
 
     /**
@@ -287,30 +289,30 @@ public enum MbInstructionName implements InstructionName {
     // private static EnumSet<MbInstructionName> TYPE_EXTOP_11_IMM_5 = EnumSet.of(bsrli, bsrai, bslli);
 
     private MbInstructionName(int opcode) {
-	instructionName = name();
-	this.opcode = opcode;
-	specialName = false;
+        instructionName = name();
+        this.opcode = opcode;
+        specialName = false;
     }
 
     private MbInstructionName(int opcode, String instructionName) {
-	this.instructionName = instructionName;
-	this.opcode = opcode;
-	specialName = true;
+        this.instructionName = instructionName;
+        this.opcode = opcode;
+        specialName = true;
     }
 
     public static MbInstructionName getInstName(String instructionName) {
-	MbInstructionName specialCase = specialCases.get(instructionName);
-	if (specialCase != null) {
-	    return specialCase;
-	}
+        MbInstructionName specialCase = specialCases.get(instructionName);
+        if (specialCase != null) {
+            return specialCase;
+        }
 
-	try {
-	    return valueOf(instructionName.toLowerCase());
-	} catch (IllegalArgumentException ex) {
-	    Logger.getLogger(MbInstructionName.class.getName())
-		    .warning("Instruction not yet present in the list: '" + instructionName + "'");
-	    return null;
-	}
+        try {
+            return valueOf(instructionName.toLowerCase());
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(MbInstructionName.class.getName())
+                    .warning("Instruction not yet present in the list: '" + instructionName + "'");
+            return null;
+        }
     }
 
     /**
@@ -321,17 +323,17 @@ public enum MbInstructionName implements InstructionName {
     // public static MbInstructionName getEnum(String instructionName) {
     @Override
     public Enum<?> getEnum(String instructionName) {
-	return getInstName(instructionName);
+        return getInstName(instructionName);
     }
 
     @Override
     public Collection<String> getLoadInstructions() {
-	return loadInstructions;
+        return loadInstructions;
     }
 
     @Override
     public Collection<String> getStoreInstructions() {
-	return storeInstructions;
+        return storeInstructions;
     }
 
     /**
@@ -340,8 +342,8 @@ public enum MbInstructionName implements InstructionName {
      */
     @Override
     public String getName() {
-	return instructionName;
-	// return this.name();
+        return instructionName;
+        // return this.name();
     }
 
     /**
@@ -349,7 +351,7 @@ public enum MbInstructionName implements InstructionName {
      * @return the integer value of the opcode
      */
     public int getOpcode() {
-	return opcode;
+        return opcode;
     }
 
     /**
@@ -357,7 +359,7 @@ public enum MbInstructionName implements InstructionName {
      * @return a 6-bit binary string representing the opcode
      */
     public String getOpcodeString() {
-	return SpecsStrings.padLeft(Integer.toBinaryString(opcode), 6, '0');
+        return SpecsStrings.padLeft(Integer.toBinaryString(opcode), 6, '0');
     }
 
     /**
