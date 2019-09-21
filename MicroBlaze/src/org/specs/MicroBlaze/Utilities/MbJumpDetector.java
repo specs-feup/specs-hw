@@ -16,9 +16,9 @@
  */
 package org.specs.MicroBlaze.Utilities;
 
-import org.specs.MicroBlaze.MbInstructionName;
 import org.specs.MicroBlaze.OperationProperties;
 import org.specs.MicroBlaze.Parsing.MbInstruction;
+import org.specs.MicroBlaze.isa.MbInstructionName;
 
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.asm.processor.DelaySlotBranchCorrector;

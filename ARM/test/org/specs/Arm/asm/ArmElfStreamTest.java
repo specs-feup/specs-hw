@@ -20,6 +20,5 @@ public class ArmElfStreamTest {
         while ((inst = el.nextInstruction()) != null) {
             System.out.println(inst);
         }
-
     }
 }

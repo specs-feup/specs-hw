@@ -11,13 +11,10 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.trace;
+package pt.up.fe.specs.binarytranslation;
 
 import java.io.Closeable;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.binarytranslation.InstructionStream;
-import pt.up.fe.specs.binarytranslation.InstructionStreamType;
 import pt.up.fe.specs.util.asm.processor.RegisterTable;
 
 /**
@@ -44,7 +41,7 @@ public interface TraceStream extends Closeable, InstructionStream {
      * 
      * @return the next instruction in the trace, or null if it reached the end
      */
-    TraceInstruction32 nextTraceInstruction();
+    Instruction nextTraceInstruction();
 
     /**
      * 

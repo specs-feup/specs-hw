@@ -9,15 +9,26 @@ public class BasicBlock implements BinarySegment {
 
     private segmentType segtype = segmentType.BasicBlock;
     private List<Instruction> instlist;
+    private boolean terminated = false;
+    // value must be true if an instruction is added
+    // which is a backwards branch; no other instructions
+    // may be added
 
     public BasicBlock() {
         this.instlist = new ArrayList<Instruction>();
     }
 
     public void addInst(Instruction newinst) {
-        this.instlist.add(newinst);
+        if (this.terminated == true) {
+            // TODO proper exception handling
+            return;
+        } else {
+            this.instlist.add(newinst);
 
-        // TODO if added inst is branch, prevent addition of new insts
+            // if added inst is branch, prevent addition of new insts
+            if (newinst.isBackwardsBranch())
+                this.terminated = true;
+        }
     }
 
     @Override
