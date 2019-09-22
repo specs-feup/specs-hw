@@ -44,7 +44,11 @@ public interface Instruction {
      * Underlying layers must call instruction
      * decoders to determine this.
      */
-    boolean isBackwardsBranch();
+    default boolean isBackwardsBranch() {
+        return false;
+    }
+    // TODO remove default implementation
+    // after legacy issues are resolved
 
     /**
      * 
