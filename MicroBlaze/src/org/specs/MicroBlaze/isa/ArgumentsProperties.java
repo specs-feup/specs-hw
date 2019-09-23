@@ -11,9 +11,9 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze;
+package org.specs.MicroBlaze.isa;
 
-import static org.specs.MicroBlaze.ArgumentsProperties.ArgumentProperty.*;
+import static org.specs.MicroBlaze.isa.ArgumentsProperties.ArgumentProperty.*;
 import static org.specs.MicroBlaze.isa.MbInstructionName.*;
 
 import java.util.Collections;
@@ -23,7 +23,6 @@ import java.util.Map;
 
 import org.specs.MicroBlaze.Parsing.MbOperand;
 import org.specs.MicroBlaze.Parsing.MbOperand.Flow;
-import org.specs.MicroBlaze.isa.MbInstructionName;
 
 /**
  * Indicates which registers are for read or write, by the order they appear in the instruction, according to the

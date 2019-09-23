@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.specs.MicroBlaze.ArgumentsProperties.ArgumentProperty;
 import org.specs.MicroBlaze.MbRegister;
 import org.specs.MicroBlaze.MbRegisterUtils;
 import org.specs.MicroBlaze.Parsing.MbOperand.Flow;
 import org.specs.MicroBlaze.Parsing.MbOperand.Type;
 import org.specs.MicroBlaze.isa.MbInstructionName;
+import org.specs.MicroBlaze.isa.ArgumentsProperties.ArgumentProperty;
 
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
