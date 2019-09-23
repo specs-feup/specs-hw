@@ -9,6 +9,11 @@ package pt.up.fe.specs.binarytranslation;
  */
 public interface InstructionStream extends AutoCloseable {
 
+    enum InstructionStreamType {
+        TRACE,
+        STATIC_ELF;
+    }
+
     /**
      * 
      * @return true if there are still instructions in the stream, false otherwise

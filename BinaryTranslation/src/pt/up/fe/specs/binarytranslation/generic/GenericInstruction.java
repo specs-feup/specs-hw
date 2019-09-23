@@ -58,4 +58,52 @@ public class GenericInstruction implements Instruction {
         return false;
     }
 
+    @Override
+    public boolean isAdd() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isSub() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isLogical() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isUnaryLogical() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isConditionalJump() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isUnconditionalJump() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isStore() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isLoad() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }
