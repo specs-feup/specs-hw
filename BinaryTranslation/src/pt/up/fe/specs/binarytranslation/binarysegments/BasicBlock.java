@@ -7,7 +7,7 @@ import pt.up.fe.specs.binarytranslation.Instruction;
 
 public class BasicBlock implements BinarySegment {
 
-    private segmentType segtype = segmentType.BasicBlock;
+    private SegmentType segtype = SegmentType.BASIC_BLOCK;
     private List<Instruction> instlist;
     private boolean terminated = false;
     // value must be true if an instruction is added
@@ -57,7 +57,7 @@ public class BasicBlock implements BinarySegment {
     }
 
     @Override
-    public segmentType getSegmentType() {
+    public SegmentType getSegmentType() {
         return this.segtype;
     }
 }
