@@ -7,7 +7,7 @@ import org.junit.Test;
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
 
-class MicroBlazeElfStreamTest {
+public class MicroBlazeElfStreamTester {
 
     @Test
     public void test() {
