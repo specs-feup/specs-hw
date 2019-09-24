@@ -1,7 +1,6 @@
 package orgs.specs.MicroBlaze.asm;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -29,13 +28,17 @@ public class MicroBlazeElfStream implements StaticStream {
         String line = null;
         while (((line = insts.nextLine()) != null) && !SpecsStrings.matches(line, MB_REGEX))
             ;
+
+        if (line == null) {
+            return null;
+        }
+
         var addressAndInst = SpecsStrings.getRegex(line, MB_REGEX);
         return Instruction.newInstance(addressAndInst.get(0), addressAndInst.get(1));
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         insts.close();
-        close();
     }
 }
