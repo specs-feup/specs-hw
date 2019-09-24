@@ -14,11 +14,12 @@ class MicroBlazeElfStreamTest {
         File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/test.elf");
         fd.deleteOnExit();
 
-        MicroBlazeElfStream el = new MicroBlazeElfStream(fd);
-
-        Instruction inst = null;
-        while ((inst = el.nextInstruction()) != null) {
-            System.out.println(inst);
+        try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
+            Instruction inst = null;
+            while ((inst = el.nextInstruction()) != null) {
+                System.out.println(inst);
+            }
         }
+
     }
 }
