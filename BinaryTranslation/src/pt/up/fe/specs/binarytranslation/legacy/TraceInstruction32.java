@@ -43,7 +43,7 @@ public interface TraceInstruction32 extends SimpleInstruction32 {
      * 
      * @return
      */
-    Boolean isJump();
+    boolean isJump();
 
     /**
      * 
