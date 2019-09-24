@@ -4,12 +4,12 @@ import java.util.List;
 
 public interface BinarySegment {
 
-    enum segmentType {
-        BasicBlock,
-        MegaBlock
+    enum SegmentType {
+        BASIC_BLOCK,
+        MEGA_BLOCK
     };
 
-    segmentType getSegmentType();
+    SegmentType getSegmentType();
 
     /*
      * Number of instructions in the segment
