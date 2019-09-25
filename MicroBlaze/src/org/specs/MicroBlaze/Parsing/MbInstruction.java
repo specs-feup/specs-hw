@@ -46,6 +46,7 @@ public class MbInstruction implements TraceInstruction32 {
     private MbInstruction(int address, MbInstructionName instructionName, List<MbOperand> operands,
             Integer encodedInst) {
         this(address, instructionName, null, operands, encodedInst);
+
     }
 
     private MbInstruction(int address, MbInstructionName instructionName, Integer cycles, List<MbOperand> operands,

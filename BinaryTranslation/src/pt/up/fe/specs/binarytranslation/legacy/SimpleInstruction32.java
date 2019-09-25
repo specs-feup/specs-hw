@@ -14,7 +14,6 @@
 package pt.up.fe.specs.binarytranslation.legacy;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
  * Represents a simple instruction: an integer for the address and a string for the instruction.
@@ -26,47 +25,7 @@ public interface SimpleInstruction32 extends Instruction {
     int getAddress32();
 
     @Override
-    default String getAddress() {
-        return Integer.toString(getAddress32());
-    }
-
-    @Override
-    default boolean isAdd() {
-        throw new NotImplementedException(this);
-    }
-
-    @Override
-    default boolean isSub() {
-        throw new NotImplementedException(this);
-    }
-
-    @Override
-    default boolean isLogical() {
-        throw new NotImplementedException(this);
-    }
-
-    @Override
-    default boolean isUnaryLogical() {
-        throw new NotImplementedException(this);
-    }
-
-    @Override
-    default boolean isConditionalJump() {
-        throw new NotImplementedException(this);
-    }
-
-    @Override
-    default boolean isUnconditionalJump() {
-        throw new NotImplementedException(this);
-    }
-
-    @Override
-    default boolean isStore() {
-        throw new NotImplementedException(this);
-    }
-
-    @Override
-    default boolean isLoad() {
-        throw new NotImplementedException(this);
+    default Number getAddress() {
+        return getAddress32();
     }
 }

@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation;
 
 import pt.up.fe.specs.binarytranslation.generic.GenericInstruction;
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
  * Represents a generic assembly instruction.
@@ -23,27 +24,7 @@ import pt.up.fe.specs.binarytranslation.generic.GenericInstruction;
  */
 public interface Instruction {
 
-    /*
-     * Generic instruction types.
-     * Specific architecture implementations 
-     * must map each instruction in the ISA
-     * to one of these types 
-     */
-    enum InstructionType {
-        add,
-        sub,
-        logical,
-        unarylogical,
-        jump,
-        cjump,
-        ujump,
-        store,
-        load,
-        memory
-    }
-    // TODO add more types
-
-    static Instruction newInstance(String address, String instruction) {
+    static Instruction newInstance(Number address, String instruction) {
         return new GenericInstruction(address, instruction);
     }
 
@@ -51,12 +32,16 @@ public interface Instruction {
     /*
      * Position of instruction in program memory
      */
-    String getAddress();
+    Number getAddress();
 
     /*
      * Binary code of instruction
      */
     String getInstruction();
+
+    default Number getInstructionCode() {
+        throw new NotImplementedException(this);
+    }
 
     /*
      * Gets latency of binary instruction.
@@ -148,7 +133,6 @@ public interface Instruction {
      *         greater than 0 if the address of this instruction is greater than the address of given instruction.
      */
     default int compareAddr(Instruction instruction) {
-        return getAddress().compareTo(instruction.getAddress());
+        return getAddress().toString().compareTo(instruction.getAddress().toString());
     }
-
 }
