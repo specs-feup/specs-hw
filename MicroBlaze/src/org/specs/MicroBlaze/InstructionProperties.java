@@ -15,7 +15,7 @@ package org.specs.MicroBlaze;
 
 import java.util.EnumSet;
 
-import org.specs.MicroBlaze.isa.MbInstructionName;
+import org.specs.MicroBlaze.legacy.MbInstructionName;
 
 /**
  * Several properties of MicroBlaze instructions.

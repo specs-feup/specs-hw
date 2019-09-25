@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.generic;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.InstructionType;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
@@ -22,10 +23,12 @@ import pt.up.fe.specs.util.SpecsStrings;
  * @author JoaoBispo
  *
  */
-public class GenericInstruction implements Instruction {
+public abstract class GenericInstruction implements Instruction {
 
-    private final Number address;
-    private final String instruction;
+    private Number address;
+    protected int latency;
+    private String instruction;
+    protected InstructionType genericType;
 
     public GenericInstruction(Number address, String instruction) {
         this.address = address;
@@ -54,6 +57,12 @@ public class GenericInstruction implements Instruction {
     }
 
     @Override
+    public boolean isForwardsBranch() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
     public boolean isBackwardsBranch() {
         // TODO Auto-generated method stub
         return false;
@@ -61,49 +70,41 @@ public class GenericInstruction implements Instruction {
 
     @Override
     public boolean isAdd() {
-        // TODO Auto-generated method stub
-        return false;
+        return this.genericType == InstructionType.add;
     }
 
     @Override
     public boolean isSub() {
-        // TODO Auto-generated method stub
-        return false;
+        return this.genericType == InstructionType.sub;
     }
 
     @Override
     public boolean isLogical() {
-        // TODO Auto-generated method stub
-        return false;
+        return this.genericType == InstructionType.logical;
     }
 
     @Override
     public boolean isUnaryLogical() {
-        // TODO Auto-generated method stub
-        return false;
+        return this.genericType == InstructionType.unarylogical;
     }
 
     @Override
     public boolean isConditionalJump() {
-        // TODO Auto-generated method stub
-        return false;
+        return this.genericType == InstructionType.cjump;
     }
 
     @Override
     public boolean isUnconditionalJump() {
-        // TODO Auto-generated method stub
-        return false;
+        return this.genericType == InstructionType.ujump;
     }
 
     @Override
     public boolean isStore() {
-        // TODO Auto-generated method stub
-        return false;
+        return this.genericType == InstructionType.store;
     }
 
     @Override
     public boolean isLoad() {
-        // TODO Auto-generated method stub
-        return false;
+        return this.genericType == InstructionType.load;
     }
 }

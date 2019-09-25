@@ -13,13 +13,13 @@
 
 package org.specs.MicroBlaze.encoder;
 
-import static org.specs.MicroBlaze.isa.MbInstructionName.*;
+import static org.specs.MicroBlaze.legacy.MbInstructionName.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.specs.MicroBlaze.Parsing.MbInstruction;
-import org.specs.MicroBlaze.isa.MbInstructionName;
+import org.specs.MicroBlaze.legacy.MbInstructionName;
 
 public class MbEncoder {
 

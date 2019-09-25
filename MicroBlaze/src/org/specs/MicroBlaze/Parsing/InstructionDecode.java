@@ -14,7 +14,7 @@ package org.specs.MicroBlaze.Parsing;
 
 import static org.specs.MicroBlaze.Parsing.MbParserUtils.*;
 
-import org.specs.MicroBlaze.isa.MbInstructionName;
+import org.specs.MicroBlaze.legacy.MbInstructionName;
 
 /**
  * Decodes a MicroBlaze instruction from its binary representation into a String representation.

@@ -21,13 +21,6 @@ import java.util.Optional;
  * @author Joao Bispo
  */
 public interface TraceInstruction32 extends SimpleInstruction32 {
-    // public class TraceInstruction32 extends SimpleInstruction32 {
-    /*
-       public TraceInstruction32(int address, String instruction, Integer instructionCycles) {
-          super(address, instruction);
-          this.instructionCycles = instructionCycles;
-       }
-      */
 
     /**
      * How many cycles it takes to execute.

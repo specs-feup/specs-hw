@@ -28,4 +28,76 @@ public interface SimpleInstruction32 extends Instruction {
     default Number getAddress() {
         return getAddress32();
     }
+
+    @Override
+    default String getInstruction() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    default int getLatency() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    default boolean isAdd() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isBackwardsBranch() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isConditionalJump() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isForwardsBranch() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isLoad() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isLogical() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isStore() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isSub() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isUnaryLogical() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isUnconditionalJump() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

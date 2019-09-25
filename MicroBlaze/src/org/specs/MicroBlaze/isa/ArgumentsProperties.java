@@ -14,7 +14,7 @@
 package org.specs.MicroBlaze.isa;
 
 import static org.specs.MicroBlaze.isa.ArgumentsProperties.ArgumentProperty.*;
-import static org.specs.MicroBlaze.isa.MbInstructionName.*;
+import static org.specs.MicroBlaze.legacy.MbInstructionName.*;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.specs.MicroBlaze.Parsing.MbOperand;
 import org.specs.MicroBlaze.Parsing.MbOperand.Flow;
+import org.specs.MicroBlaze.legacy.MbInstructionName;
 
 /**
  * Indicates which registers are for read or write, by the order they appear in the instruction, according to the

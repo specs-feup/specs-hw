@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import org.specs.MicroBlaze.v2.MicroBlazeInstruction;
+
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.StaticStream;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -34,7 +36,7 @@ public class MicroBlazeElfStream implements StaticStream {
         }
 
         var addressAndInst = SpecsStrings.getRegex(line, MB_REGEX);
-        return Instruction.newInstance(Long.parseLong(addressAndInst.get(0), 16), addressAndInst.get(1));
+        return new MicroBlazeInstruction(Long.parseLong(addressAndInst.get(0), 16), addressAndInst.get(1));
     }
 
     @Override

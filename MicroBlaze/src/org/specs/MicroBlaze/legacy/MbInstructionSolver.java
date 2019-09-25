@@ -20,9 +20,6 @@ package org.specs.MicroBlaze.legacy;
 import pt.up.fe.specs.util.SpecsBits;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.asm.ArithmeticResult32;
-
-import org.specs.MicroBlaze.isa.MbInstructionName;
-
 import pt.up.fe.specs.util.SpecsAsm;
 
 /**

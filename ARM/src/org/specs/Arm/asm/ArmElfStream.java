@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import org.specs.Arm.isa.ArmInstruction;
+
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.StaticStream;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -33,7 +35,7 @@ public class ArmElfStream implements StaticStream {
         }
 
         var addressAndInst = SpecsStrings.getRegex(line, ARM_REGEX);
-        return Instruction.newInstance(Long.parseLong(addressAndInst.get(0).strip(), 16), addressAndInst.get(1));
+        return new ArmInstruction(Long.parseLong(addressAndInst.get(0).strip(), 16), addressAndInst.get(1));
     }
 
     @Override
