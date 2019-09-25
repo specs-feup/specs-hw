@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.generic;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.util.SpecsStrings;
 
 /**
  * Generic implementation of interface instruction.
@@ -23,10 +24,10 @@ import pt.up.fe.specs.binarytranslation.Instruction;
  */
 public class GenericInstruction implements Instruction {
 
-    private final String address;
+    private final Number address;
     private final String instruction;
 
-    public GenericInstruction(String address, String instruction) {
+    public GenericInstruction(Number address, String instruction) {
         this.address = address;
         this.instruction = instruction;
     }
@@ -38,7 +39,7 @@ public class GenericInstruction implements Instruction {
     }
 
     @Override
-    public String getAddress() {
+    public Number getAddress() {
         return address;
     }
 
@@ -49,7 +50,7 @@ public class GenericInstruction implements Instruction {
 
     @Override
     public String toString() {
-        return address + ": " + instruction;
+        return SpecsStrings.toHexString(address.longValue(), 8) + ": " + instruction;
     }
 
     @Override
@@ -105,5 +106,4 @@ public class GenericInstruction implements Instruction {
         // TODO Auto-generated method stub
         return false;
     }
-
 }

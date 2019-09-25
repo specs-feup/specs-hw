@@ -34,7 +34,7 @@ public class MicroBlazeElfStream implements StaticStream {
         }
 
         var addressAndInst = SpecsStrings.getRegex(line, MB_REGEX);
-        return Instruction.newInstance(addressAndInst.get(0), addressAndInst.get(1));
+        return Instruction.newInstance(Long.parseLong(addressAndInst.get(0), 16), addressAndInst.get(1));
     }
 
     @Override
