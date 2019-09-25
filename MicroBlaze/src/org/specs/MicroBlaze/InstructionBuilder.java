@@ -13,7 +13,7 @@
 
 package org.specs.MicroBlaze;
 
-import org.specs.MicroBlaze.isa.MbInstructionName;
+import org.specs.MicroBlaze.legacy.MbInstructionName;
 
 import pt.up.fe.specs.util.SpecsBits;
 

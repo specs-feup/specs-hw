@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.isa;
+package org.specs.MicroBlaze.legacy;
 
 import java.util.ArrayList;
 import java.util.Collection;

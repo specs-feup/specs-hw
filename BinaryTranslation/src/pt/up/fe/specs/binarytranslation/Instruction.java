@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation;
 
-import pt.up.fe.specs.binarytranslation.generic.GenericInstruction;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
@@ -23,10 +22,6 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
  *
  */
 public interface Instruction {
-
-    static Instruction newInstance(Number address, String instruction) {
-        return new GenericInstruction(address, instruction);
-    }
 
     // Get Fundamental properties /////////////////////////////////////////////
     /*
@@ -47,26 +42,21 @@ public interface Instruction {
      * Gets latency of binary instruction.
      * Retrieved from specific ISA implementation.
      */
-    default int getLatency() {
-        return 1;
-    }
+    public int getLatency();
 
     // Check for instruction type /////////////////////////////////////////////
     /*
      * Check if instruction is backwards branch.
      */
-    default boolean isBackwardsBranch() {
-        return false;
-    }
+    public boolean isBackwardsBranch();
     // TODO remove default implementation
     // after legacy issues are resolved
 
     /*
      * Check if instruction is forwards branch.
      */
-    default boolean isForwardsBranch() {
-        return false;
-    }
+    public boolean isForwardsBranch();
+
     // TODO remove default implementation
     // after legacy issues are resolved
 

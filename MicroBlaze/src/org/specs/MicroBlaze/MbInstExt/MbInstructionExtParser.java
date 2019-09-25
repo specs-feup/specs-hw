@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.specs.MicroBlaze.CarryProperties;
 import org.specs.MicroBlaze.Parsing.MbInstruction;
-import org.specs.MicroBlaze.isa.MbInstructionName;
+import org.specs.MicroBlaze.legacy.MbInstructionName;
 
 /**
  * MbInstruction extended with additional information. Adds carry operands to

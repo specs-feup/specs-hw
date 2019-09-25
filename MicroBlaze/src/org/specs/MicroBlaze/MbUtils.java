@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import org.specs.MicroBlaze.Parsing.MbInstruction;
 import org.specs.MicroBlaze.Parsing.MbOperand;
-import org.specs.MicroBlaze.isa.MbInstructionName;
+import org.specs.MicroBlaze.legacy.MbInstructionName;
 
 /**
  * Utility methods related to MicroBlaze instructions.
