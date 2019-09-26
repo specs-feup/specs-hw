@@ -32,4 +32,6 @@ public interface InstructionStream extends AutoCloseable {
      * @return the type of instruction stream.
      */
     InstructionStreamType getType();
+
+    int getInstructionWidth();
 }

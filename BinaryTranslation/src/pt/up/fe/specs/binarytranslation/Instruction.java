@@ -46,21 +46,6 @@ public interface Instruction {
 
     // Check for instruction type /////////////////////////////////////////////
     /*
-     * Check if instruction is backwards branch.
-     */
-    public boolean isBackwardsBranch();
-    // TODO remove default implementation
-    // after legacy issues are resolved
-
-    /*
-     * Check if instruction is forwards branch.
-     */
-    public boolean isForwardsBranch();
-
-    // TODO remove default implementation
-    // after legacy issues are resolved
-
-    /*
      * Check if instruction is addition
      */
     public boolean isAdd();
@@ -71,32 +56,50 @@ public interface Instruction {
     public boolean isSub();
 
     /*
+     * Check if instruction is multiplication
+     */
+    public boolean isMul();
+
+    /*
      * Check if instruction is logical
      */
     public boolean isLogical();
 
     /*
-     * Check if instruction is unary logical
+     * Check if instruction is unary
      */
-    public boolean isUnaryLogical();
+    public boolean isUnary();
 
     /*
      * Check if instruction is jump (of any kind)
      */
-    default public boolean isJump() {
-        return (isConditionalJump() | isUnconditionalJump()
-                | isForwardsBranch() | isBackwardsBranch());
-    }
+    public boolean isJump();
 
     /*
-     * Check if instruction is logical
+     * Check if instruction is conditional jump
      */
     public boolean isConditionalJump();
 
     /*
-     * Check if instruction is logical
+     * Check if instruction is unconditional jump
      */
     public boolean isUnconditionalJump();
+
+    /*
+     * Check if instruction is relative jump
+     */
+    public boolean isRelativeJump();
+
+    /*
+     * Check if instruction is absolute jump
+     */
+    public boolean isAbsoluteJump();
+
+    /*
+     * Check if instruction uses immediate 
+     * value for either relative or absolute jump
+     */
+    public boolean isImmediate();
 
     /*
      * Check if instruction is store
@@ -111,10 +114,33 @@ public interface Instruction {
     /*
      * Check if instruction is memory access
      */
-    default public boolean isMemory() {
-        return (isStore() | isLoad());
-    }
+    public boolean isMemory();
 
+    /*
+     * Check if instruction is floating point
+     */
+    public boolean isFloat();
+
+    /////////////////////////////////////////////// Additional non basic types:
+    /*
+     * Check if instruction is backwards branch.
+     */
+    public boolean isBackwardsJump();
+
+    /*
+     * Check if instruction is forwards branch.
+     */
+    public boolean isForwardsJump();
+
+    /*
+     * Return target of branch, if this
+     * instruction is a branch, else return
+     * this instruction addr + the instruction 
+     * set's instruction width 
+     */
+    Number getBranchTarget();
+
+    ///////////////////////////////////////////////////////////////////// Utils
     /**
      * 
      * @param instruction

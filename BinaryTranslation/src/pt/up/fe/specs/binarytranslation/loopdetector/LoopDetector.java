@@ -15,7 +15,6 @@ package pt.up.fe.specs.binarytranslation.loopdetector;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 
 /**
@@ -25,8 +24,6 @@ import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
  *
  */
 public interface LoopDetector extends AutoCloseable {
-
-    void step(Instruction instruction);
 
     /*
      * Returns (eventually) objects of type "Loop" or list of "Loop"

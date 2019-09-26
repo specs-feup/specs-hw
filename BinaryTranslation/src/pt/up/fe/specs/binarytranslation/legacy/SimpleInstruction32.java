@@ -25,6 +25,12 @@ public interface SimpleInstruction32 extends Instruction {
     int getAddress32();
 
     @Override
+    default Number getBranchTarget() {
+        return 4;
+        // TODO fix
+    }
+
+    @Override
     default Number getAddress() {
         return getAddress32();
     }
@@ -48,7 +54,7 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default boolean isBackwardsBranch() {
+    default boolean isBackwardsJump() {
         // TODO Auto-generated method stub
         return false;
     }
@@ -60,7 +66,7 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default boolean isForwardsBranch() {
+    default boolean isForwardsJump() {
         // TODO Auto-generated method stub
         return false;
     }
@@ -90,13 +96,55 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default boolean isUnaryLogical() {
+    default boolean isUnary() {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     default boolean isUnconditionalJump() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isAbsoluteJump() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isRelativeJump() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isFloat() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isImmediate() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isJump() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isMemory() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    default boolean isMul() {
         // TODO Auto-generated method stub
         return false;
     }
