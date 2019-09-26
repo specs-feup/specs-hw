@@ -48,6 +48,12 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
+    default String getName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     default boolean isAdd() {
         // TODO Auto-generated method stub
         return false;
@@ -147,5 +153,17 @@ public interface SimpleInstruction32 extends Instruction {
     default boolean isMul() {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    @Override
+    default int getDelay() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    default void printInstruction() {
+        // TODO Auto-generated method stub
+
     }
 }

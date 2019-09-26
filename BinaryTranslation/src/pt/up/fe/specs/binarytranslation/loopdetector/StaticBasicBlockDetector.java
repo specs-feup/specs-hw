@@ -52,8 +52,9 @@ public final class StaticBasicBlockDetector implements LoopDetector {
 
             // Address of the backwards branch
             long thisAddr = is.getAddress().longValue();
-
             long startAddr = is.getBranchTarget().longValue();
+            // these values are in bytes
+
             // TODO check for Imm...
             // OR accept that we cant capture basicblocks above 32k jumps
 
@@ -62,11 +63,17 @@ public final class StaticBasicBlockDetector implements LoopDetector {
             // every instruction has a targetaddr
             // its +4 for every instruction, except branches
 
-            // Size of the Basic Block
+            // TODO
+            // solution for imm: during elfstream parsing, if absorbed instruction
+            // is imm, then absorb another, and set the imm value as a field
+            // in the absorbed instruction
+
+            // Size of the Basic Block + any delay gaps from branch instruction
             int bbSize = (int) ((thisAddr - startAddr) / elfstream.getInstructionWidth());
+            int delay = is.getDelay();
 
             // Create the block
-            BasicBlock bb = new BasicBlock(insts.subList(i, i + bbSize));
+            BasicBlock bb = new BasicBlock(insts.subList(i - bbSize, i + 1 + delay));
 
             // Add to return list
             loops.add(bb);
@@ -77,6 +84,6 @@ public final class StaticBasicBlockDetector implements LoopDetector {
 
     @Override
     public void close() throws Exception {
-        close();
+        elfstream.close();
     }
 }

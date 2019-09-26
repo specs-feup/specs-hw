@@ -44,6 +44,17 @@ public interface Instruction {
      */
     public int getLatency();
 
+    /*
+     * Gets delay of binary instruction.
+     * Retrieved from specific ISA implementation.
+     */
+    public int getDelay();
+
+    /*
+     * Gets the plain (isa mnemonic) name of the instruction
+     */
+    String getName();
+
     // Check for instruction type /////////////////////////////////////////////
     /*
      * Check if instruction is addition
@@ -141,6 +152,11 @@ public interface Instruction {
     Number getBranchTarget();
 
     ///////////////////////////////////////////////////////////////////// Utils
+    /*
+     * Prints addr:instruction to system output
+     */
+    public void printInstruction();
+
     /**
      * 
      * @param instruction

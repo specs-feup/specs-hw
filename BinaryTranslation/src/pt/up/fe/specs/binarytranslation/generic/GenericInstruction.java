@@ -28,8 +28,10 @@ import pt.up.fe.specs.util.SpecsStrings;
 public abstract class GenericInstruction implements Instruction {
 
     private Number address;
-    protected int latency;
     private String instruction;
+    protected String plainname;
+    protected int latency;
+    protected int delay;
     protected List<InstructionType> genericType;
 
     public GenericInstruction(Number address, String instruction) {
@@ -38,9 +40,8 @@ public abstract class GenericInstruction implements Instruction {
     }
 
     @Override
-    public int getLatency() {
-        // TODO Auto-generated method stub
-        return 0;
+    public String getName() {
+        return plainname;
     }
 
     @Override
@@ -51,6 +52,16 @@ public abstract class GenericInstruction implements Instruction {
     @Override
     public String getInstruction() {
         return instruction;
+    }
+
+    @Override
+    public int getLatency() {
+        return this.latency;
+    }
+
+    @Override
+    public int getDelay() {
+        return this.delay;
     }
 
     @Override
@@ -86,7 +97,8 @@ public abstract class GenericInstruction implements Instruction {
 
     @Override
     public final boolean isJump() {
-        return genericType.contains(InstructionType.G_JUMP);
+        return (genericType.contains(InstructionType.G_CJUMP) |
+                genericType.contains(InstructionType.G_UJUMP));
     }
 
     @Override
@@ -133,14 +145,8 @@ public abstract class GenericInstruction implements Instruction {
     public final boolean isFloat() {
         return genericType.contains(InstructionType.G_FLOAT);
     }
-    /*
-    ///////////////////////////////////////////// Additional non basic types:
-    @Override
-    public Number getBranchTarget() {
-        // TODO Auto-generated method stub
-        return null;
-    }*/
 
+    ///////////////////////////////////////////// Additional non basic types:
     @Override
     public boolean isBackwardsJump() {
         Number branchTarget = this.getBranchTarget();
@@ -148,7 +154,7 @@ public abstract class GenericInstruction implements Instruction {
             return false;
 
         long val = branchTarget.longValue();
-        if (val < 0)
+        if (val < this.getAddress().longValue())
             return true;
         else
             return false;
@@ -161,9 +167,19 @@ public abstract class GenericInstruction implements Instruction {
             return false;
 
         long val = branchTarget.longValue();
-        if (val > 0)
+        if (val > this.getAddress().longValue())
             return true;
         else
             return false;
+    }
+
+    ///////////////////////////////////////////////////////////////////// Utils
+    /*
+     * Prints addr:instruction to system output
+     */
+    @Override
+    public void printInstruction() {
+        String addr = Long.toHexString(this.getAddress().longValue());
+        System.out.print(addr + ":" + this.getInstruction() + "\n");
     }
 }
