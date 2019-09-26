@@ -77,4 +77,9 @@ public class BasicBlock implements BinarySegment {
     public SegmentType getSegmentType() {
         return this.segtype;
     }
+
+    @Override
+    public List<Instruction> getInstructions() {
+        return this.instlist;
+    }
 }

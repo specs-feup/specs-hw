@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.loopdetector.StaticBasicBlockDetector;
 import pt.up.fe.specs.util.SpecsIo;
@@ -16,9 +17,18 @@ public class MicroBlazeStaticBasicBlockDetectorTest {
         File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/test.elf");
         fd.deleteOnExit();
 
-        MicroBlazeElfStream el = new MicroBlazeElfStream(fd);
-        var bbd = new StaticBasicBlockDetector(el);
-        List<BinarySegment> bblist = bbd.detectLoops();
-    }
+        try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
+            var bbd = new StaticBasicBlockDetector(el);
+            List<BinarySegment> bblist = bbd.detectLoops();
 
+            for (BinarySegment bs : bblist) {
+                System.out.print("Basic Block: \n");
+                for (Instruction is : bs.getInstructions()) {
+                    is.printInstruction();
+                }
+                System.out.print("\n\n");
+            }
+        }
+        return;
+    }
 }

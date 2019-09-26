@@ -2,6 +2,8 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.Instruction;
+
 public interface BinarySegment {
 
     enum SegmentType {
@@ -32,4 +34,9 @@ public interface BinarySegment {
      * registers which are output of the segment 
      */
     List<Integer> getLiveOuts();
+
+    /*
+     * Get list of the instructions in the segment
+     */
+    List<Instruction> getInstructions();
 }
