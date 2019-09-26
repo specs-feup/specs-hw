@@ -1,12 +1,15 @@
 package org.specs.Arm.isa;
 
-import pt.up.fe.specs.binarytranslation.InstructionSetFields;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.InstructionType;
 
-public enum ArmInstructionSetFields implements InstructionSetFields {
+public enum ArmInstructionSetFields {
 
-    add(0b000000, 1, InstructionType.add),
-    mul(0b010000, 3, InstructionType.mul);
+    add(0b000000, 1, InstructionType.G_ADD),
+    mul(0b010000, 3, InstructionType.G_MUL);
 
     /*
      * Instruction property fields
@@ -15,10 +18,11 @@ public enum ArmInstructionSetFields implements InstructionSetFields {
     private final String instructionName;
     private final int opcode;
     private final int latency;
-    private final InstructionType genericType;
-    private final int nrInputs = 2; // TODO fix
-    private final int nrOutputs = 1; // TODO fix
-    private final boolean hasDelay = false;
+    private final List<InstructionType> genericType;
+
+    // private final int nrInputs = 2; // TODO fix
+    // private final int nrOutputs = 1; // TODO fix
+    // private final boolean hasDelay = false;
 
     /*
      * Constructor
@@ -27,7 +31,7 @@ public enum ArmInstructionSetFields implements InstructionSetFields {
         this.instructionName = name();
         this.opcode = opcode;
         this.latency = latency;
-        this.genericType = tp;
+        this.genericType = Arrays.asList(tp);
     }
 
     /*
@@ -38,36 +42,59 @@ public enum ArmInstructionSetFields implements InstructionSetFields {
     }
 
     /*
-     * Private helper method too look up the list
+     * Private helper method too look up opcode in the list
      */
     private int getOpCode() {
         return this.opcode;
     }
 
     /*
-     * Private helper method too look up the list
+     * Private helper method too look up type in the list
      */
-    private InstructionType getGenericType() {
+    private List<InstructionType> getGenericType() {
         return this.genericType;
     }
 
     /*
-     * Initializes field in constructor for MicroBlazeInstruction
+     * Private helper method too look up name the list
      */
-    public static InstructionType getGenericType(int fullopcode) {
-        int opcode = (fullopcode) >> (32 - 6);
-        for (ArmInstructionSetFields insts : values()) {
-            if (insts.getOpCode() == opcode)
-                return insts.getGenericType();
-        }
-        return InstructionType.unknownType;
+    private String getName() {
+        return this.instructionName;
     }
 
     /*
      * Initializes field in constructor for MicroBlazeInstruction
      */
-    public static int getLatency(int fullopcode) {
-        int opcode = (fullopcode) >> (32 - 6);
+    public static String getName(long fullopcode) {
+        long opcode = (fullopcode) >> (32 - 6);
+        for (ArmInstructionSetFields insts : values()) {
+            if (insts.getOpCode() == opcode)
+                return insts.getName();
+        }
+        return "Unknown Instruction!";
+        // TODO throw something here
+    }
+
+    /*
+     * Initializes field in constructor for MicroBlazeInstruction
+     */
+    public static List<InstructionType> getGenericType(long fullopcode) {
+        long opcode = (fullopcode) >> (32 - 6);
+        for (ArmInstructionSetFields insts : values()) {
+            if (insts.getOpCode() == opcode)
+                return insts.getGenericType();
+        }
+        // return InstructionType.unknownType;
+        List<InstructionType> ret = new ArrayList<InstructionType>();
+        ret.add(InstructionType.G_UNKN);
+        return ret;
+    }
+
+    /*
+     * Initializes field in constructor for MicroBlazeInstruction
+     */
+    public static int getLatency(long fullopcode) {
+        long opcode = (fullopcode) >> (32 - 6);
         for (ArmInstructionSetFields insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getLatency();

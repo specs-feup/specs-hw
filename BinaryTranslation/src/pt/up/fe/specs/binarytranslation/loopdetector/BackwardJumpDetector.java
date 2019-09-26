@@ -15,16 +15,9 @@ package pt.up.fe.specs.binarytranslation.loopdetector;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 
 public class BackwardJumpDetector implements LoopDetector {
-
-    @Override
-    public void step(Instruction instruction) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void close() throws Exception {

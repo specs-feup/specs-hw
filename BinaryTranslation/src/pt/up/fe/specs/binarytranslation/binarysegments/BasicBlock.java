@@ -14,8 +14,25 @@ public class BasicBlock implements BinarySegment {
     // which is a backwards branch; no other instructions
     // may be added
 
+    /*
+     * Constructor for building the BB inst by inst later
+     */
     public BasicBlock() {
         this.instlist = new ArrayList<Instruction>();
+    }
+
+    /*
+     * Constructor builds the BB on the spot with an existing list
+     * Does NOT ensure the BB is terminated, only if the last inst in
+     * the ilist is a backwards branch
+     */
+    public BasicBlock(List<Instruction> ilist) {
+        this.instlist = new ArrayList<Instruction>();
+
+        // build the entire block
+        for (Instruction i : ilist) {
+            this.addInst(i);
+        }
     }
 
     public void addInst(Instruction newinst) {
@@ -26,7 +43,7 @@ public class BasicBlock implements BinarySegment {
             this.instlist.add(newinst);
 
             // if added inst is branch, prevent addition of new insts
-            if (newinst.isBackwardsBranch())
+            if (newinst.isBackwardsJump() && newinst.isConditionalJump())
                 this.terminated = true;
         }
     }

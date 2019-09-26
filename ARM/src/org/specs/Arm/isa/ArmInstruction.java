@@ -9,7 +9,7 @@ public class ArmInstruction extends GenericInstruction {
     */
     public ArmInstruction(Number address, String instruction) {
         super(address, instruction);
-        int fullopcode = Integer.valueOf(instruction);
+        long fullopcode = Integer.valueOf(instruction);
         this.latency = ArmInstructionSetFields.getLatency(fullopcode);
         this.genericType = ArmInstructionSetFields.getGenericType(fullopcode);
         // lookup ISA table for static information
@@ -23,6 +23,12 @@ public class ArmInstruction extends GenericInstruction {
 
     @Override
     public String getInstruction() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Number getBranchTarget() {
         // TODO Auto-generated method stub
         return null;
     }

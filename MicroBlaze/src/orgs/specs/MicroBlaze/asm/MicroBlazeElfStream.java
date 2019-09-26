@@ -14,7 +14,7 @@ import pt.up.fe.specs.util.utilities.LineStream;
 
 public class MicroBlazeElfStream implements StaticStream {
 
-    private static final Pattern MB_REGEX = Pattern.compile("\\s(.[0-9a-f]):\\s*([0-9a-f]+)");
+    private static final Pattern MB_REGEX = Pattern.compile("([0-9a-f]+):\\s([0-9a-f]+)");
     private LineStream insts;
 
     // TODO modify MB_REGEX
@@ -36,11 +36,19 @@ public class MicroBlazeElfStream implements StaticStream {
         }
 
         var addressAndInst = SpecsStrings.getRegex(line, MB_REGEX);
-        return new MicroBlazeInstruction(Long.parseLong(addressAndInst.get(0), 16), addressAndInst.get(1));
+        var addr = addressAndInst.get(0).trim();
+        var inst = addressAndInst.get(1).trim();
+        return new MicroBlazeInstruction(Long.parseLong(addr, 16), inst);
     }
 
     @Override
     public void close() {
         insts.close();
+    }
+
+    @Override
+    public int getInstructionWidth() {
+        return 4; // return in bytes
+        // TODO replace this with something smarter
     }
 }

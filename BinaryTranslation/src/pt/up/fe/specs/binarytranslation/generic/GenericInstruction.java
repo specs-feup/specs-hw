@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.generic;
 
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionType;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -28,7 +30,7 @@ public abstract class GenericInstruction implements Instruction {
     private Number address;
     protected int latency;
     private String instruction;
-    protected InstructionType genericType;
+    protected List<InstructionType> genericType;
 
     public GenericInstruction(Number address, String instruction) {
         this.address = address;
@@ -56,55 +58,112 @@ public abstract class GenericInstruction implements Instruction {
         return SpecsStrings.toHexString(address.longValue(), 8) + ": " + instruction;
     }
 
+    // Check for instruction type /////////////////////////////////////////////
     @Override
-    public boolean isForwardsBranch() {
+    public final boolean isAdd() {
+        return genericType.contains(InstructionType.G_ADD);
+    }
+
+    @Override
+    public final boolean isSub() {
+        return genericType.contains(InstructionType.G_SUB);
+    }
+
+    @Override
+    public final boolean isMul() {
+        return genericType.contains(InstructionType.G_MUL);
+    }
+
+    @Override
+    public final boolean isLogical() {
+        return genericType.contains(InstructionType.G_LOGICAL);
+    }
+
+    @Override
+    public final boolean isUnary() {
+        return genericType.contains(InstructionType.G_UNARY);
+    }
+
+    @Override
+    public final boolean isJump() {
+        return genericType.contains(InstructionType.G_JUMP);
+    }
+
+    @Override
+    public final boolean isConditionalJump() {
+        return genericType.contains(InstructionType.G_CJUMP);
+    }
+
+    @Override
+    public final boolean isUnconditionalJump() {
+        return genericType.contains(InstructionType.G_UJUMP);
+    }
+
+    @Override
+    public final boolean isRelativeJump() {
+        return genericType.contains(InstructionType.G_RJUMP);
+    }
+
+    @Override
+    public final boolean isAbsoluteJump() {
+        return genericType.contains(InstructionType.G_AJUMP);
+    }
+
+    @Override
+    public final boolean isImmediate() {
+        return genericType.contains(InstructionType.G_IJUMP);
+    }
+
+    @Override
+    public final boolean isStore() {
+        return genericType.contains(InstructionType.G_STORE);
+    }
+
+    @Override
+    public final boolean isLoad() {
+        return genericType.contains(InstructionType.G_LOAD);
+    }
+
+    @Override
+    public final boolean isMemory() {
+        return genericType.contains(InstructionType.G_MEMORY);
+    }
+
+    @Override
+    public final boolean isFloat() {
+        return genericType.contains(InstructionType.G_FLOAT);
+    }
+    /*
+    ///////////////////////////////////////////// Additional non basic types:
+    @Override
+    public Number getBranchTarget() {
         // TODO Auto-generated method stub
-        return false;
+        return null;
+    }*/
+
+    @Override
+    public boolean isBackwardsJump() {
+        Number branchTarget = this.getBranchTarget();
+        if (branchTarget == null)
+            return false;
+
+        long val = branchTarget.longValue();
+        if (val < 0)
+            return true;
+        else
+            return false;
     }
 
     @Override
-    public boolean isBackwardsBranch() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+    public boolean isForwardsJump() {
+        Number branchTarget = this.getBranchTarget();
+        if (branchTarget == null)
+            return false;
 
-    @Override
-    public boolean isAdd() {
-        return this.genericType == InstructionType.add;
-    }
-
-    @Override
-    public boolean isSub() {
-        return this.genericType == InstructionType.sub;
-    }
-
-    @Override
-    public boolean isLogical() {
-        return this.genericType == InstructionType.logical;
-    }
-
-    @Override
-    public boolean isUnaryLogical() {
-        return this.genericType == InstructionType.unarylogical;
-    }
-
-    @Override
-    public boolean isConditionalJump() {
-        return this.genericType == InstructionType.cjump;
-    }
-
-    @Override
-    public boolean isUnconditionalJump() {
-        return this.genericType == InstructionType.ujump;
-    }
-
-    @Override
-    public boolean isStore() {
-        return this.genericType == InstructionType.store;
-    }
-
-    @Override
-    public boolean isLoad() {
-        return this.genericType == InstructionType.load;
+        long val = branchTarget.longValue();
+        if (val > 0)
+            return true;
+        else
+            return false;
     }
 }

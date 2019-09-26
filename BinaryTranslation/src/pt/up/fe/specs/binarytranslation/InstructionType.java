@@ -8,19 +8,22 @@ public enum InstructionType {
      * must map each instruction in the ISA
      * to one of these types 
      */
-    add,
-    sub,
-    mul,
-    logical,
-    unarylogical,
-    jump,
-    cjump,
-    ujump,
-    store,
-    load,
-    memory,
-    floatingpoint,
-    other,
-    unknownType // TODO should fire off an exception
+    G_ADD,
+    G_SUB,
+    G_MUL,
+    G_LOGICAL,
+    G_UNARY,
+    G_JUMP, // is jump
+    G_CJUMP, // jump is conditional
+    G_UJUMP, // jump is unconditional
+    G_RJUMP, // jump is relative
+    G_AJUMP, // jump is absolute
+    G_IJUMP, // jump with immediate value
+    G_STORE,
+    G_LOAD,
+    G_MEMORY,
+    G_FLOAT,
+    G_OTHER,
+    G_UNKN // TODO should fire off an exception
     // TODO add more types
 }

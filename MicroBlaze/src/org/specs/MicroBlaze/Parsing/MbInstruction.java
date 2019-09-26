@@ -231,7 +231,7 @@ public class MbInstruction implements TraceInstruction32 {
     }
 
     @Override
-    public boolean isBackwardsBranch() {
+    public boolean isBackwardsJump() {
         // TODO Auto-generated method stub
         return false;
     }

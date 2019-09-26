@@ -42,4 +42,10 @@ public class ArmElfStream implements StaticStream {
     public void close() {
         insts.close();
     }
+
+    @Override
+    public int getInstructionWidth() {
+        return 4; // return in bytes
+        // TODO replace this with something smarter
+    }
 }
