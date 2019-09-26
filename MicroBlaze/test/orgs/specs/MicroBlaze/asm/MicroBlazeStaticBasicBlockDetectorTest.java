@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.asm.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
