@@ -11,7 +11,7 @@ import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.loopdetector.StaticBasicBlockDetector;
 import pt.up.fe.specs.util.SpecsIo;
 
-public class MicroBlazeStaticBasicBlockDetectorTest {
+public class MicroBlazeStaticBasicBlockDetectorTester {
 
     @Test
     public void test() {
