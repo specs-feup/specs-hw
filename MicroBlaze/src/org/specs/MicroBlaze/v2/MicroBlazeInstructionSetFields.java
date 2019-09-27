@@ -156,7 +156,7 @@ public enum MicroBlazeInstructionSetFields {
     idiv(0x4800_0000, 34, 0, G_OTHER),
     idivu(0x4800_0002, 34, 0, G_OTHER),
     cmp(0x1400_0001, 1, 0, G_OTHER),
-    cmpu(0x1400_003, 1, 0, G_OTHER),
+    cmpu(0x1400_0003, 1, 0, G_OTHER),
     pcmpbf(0x8000_0400, 1, 0, G_OTHER),
     pcmpeq(0x8800_0400, 1, 0, G_OTHER),
     pcmpne(0x8C00_0400, 1, 0, G_OTHER),
@@ -186,19 +186,25 @@ public enum MicroBlazeInstructionSetFields {
     wdc_ext_clear(0x9000_0466, 1, 0, G_OTHER),
     wic(0x9000_0068, 1, 0, G_OTHER);
 
+    // private final int opcodebitmask = 0b11111100000000000000000000000000;
+    // private final int nrInputs = 2; // TODO fix
+    // private final int nrOutputs = 1; // TODO fix
+    // private final boolean hasDelay = false;
+
     /*
      * Instruction property fields
      */
-    // private final int opcodebitmask = 0b11111100000000000000000000000000;
     private final String instructionName;
     private final int opcode;
     private final int latency;
     private final int delay;
     private final List<InstructionType> genericType;
-
-    // private final int nrInputs = 2; // TODO fix
-    // private final int nrOutputs = 1; // TODO fix
-    // private final boolean hasDelay = false;
+    private static int reducerMask = 0xFC00_0000;
+    private static int conditionalBranch = 0x9C00_0000;
+    private static int unconditionalBranch = 0x9800_0000;
+    private static int typeAB = 0x20000000; // if this bit is 1, then its typeB instruction
+    private static int maskA = makeMaskA();
+    private static int maskB = makeMaskB();
 
     /*
      * Constructor
@@ -209,6 +215,52 @@ public enum MicroBlazeInstructionSetFields {
         this.latency = latency;
         this.delay = delay;
         this.genericType = Arrays.asList(tp);
+    }
+
+    /*
+     * Private method to create bit mask for typeA 
+     * instructions in this ISA, based on the instruction list
+     */
+    private static int makeMaskA() {
+        int mask = 0;
+        for (MicroBlazeInstructionSetFields insts : values()) {
+            if (isTypeA(insts.getOpCode()))
+                mask |= insts.getOpCode();
+        }
+        return mask;
+    }
+
+    /*
+     * Private method to create bit mask for typeB 
+     * instructions in this ISA, based on the instruction list
+     */
+    private static int makeMaskB() {
+        int mask = 0;
+        for (MicroBlazeInstructionSetFields insts : values()) {
+            if (isTypeB(insts.getOpCode()))
+                mask |= insts.getOpCode();
+        }
+        return mask;
+    }
+
+    /*
+     * Check if instruction is typeA (or any relative branch)
+     */
+    private static boolean isTypeA(int opcode) {
+        opcode &= reducerMask;
+        return ((opcode & typeAB) == 0)
+                && (opcode != conditionalBranch)
+                && (opcode != unconditionalBranch);
+    }
+
+    /*
+     * Check if instruction is typeA (or any relative branch)
+     */
+    private static boolean isTypeB(int opcode) {
+        opcode &= reducerMask;
+        return ((opcode & typeAB) != 0)
+                || (opcode == conditionalBranch)
+                || (opcode == unconditionalBranch);
     }
 
     /*
@@ -250,7 +302,8 @@ public enum MicroBlazeInstructionSetFields {
      * Initializes field in constructor for MicroBlazeInstruction
      */
     public static String getName(long fullopcode) {
-        long opcode = (fullopcode) >> (32 - 6);
+        int mask = (isTypeA((int) fullopcode)) ? maskA : maskB;
+        long opcode = (fullopcode) & mask;
         for (MicroBlazeInstructionSetFields insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getName();
@@ -263,7 +316,8 @@ public enum MicroBlazeInstructionSetFields {
      * Initializes field in constructor for MicroBlazeInstruction
      */
     public static List<InstructionType> getGenericType(long fullopcode) {
-        long opcode = (fullopcode) >> (32 - 6);
+        int mask = (isTypeA((int) fullopcode)) ? maskA : maskB;
+        long opcode = (fullopcode) & mask;
         for (MicroBlazeInstructionSetFields insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getGenericType();
@@ -278,7 +332,8 @@ public enum MicroBlazeInstructionSetFields {
      * Initializes field in constructor for MicroBlazeInstruction
      */
     public static int getLatency(long fullopcode) {
-        long opcode = (fullopcode) >> (32 - 6);
+        int mask = (isTypeA((int) fullopcode)) ? maskA : maskB;
+        long opcode = (fullopcode) & mask;
         for (MicroBlazeInstructionSetFields insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getLatency();
@@ -290,7 +345,8 @@ public enum MicroBlazeInstructionSetFields {
      * Initializes field in constructor for MicroBlazeInstruction
      */
     public static int getDelay(long fullopcode) {
-        long opcode = (fullopcode) >> (32 - 6);
+        int mask = (isTypeA((int) fullopcode)) ? maskA : maskB;
+        long opcode = (fullopcode) & mask;
         for (MicroBlazeInstructionSetFields insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getDelay();
