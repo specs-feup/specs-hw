@@ -180,6 +180,6 @@ public abstract class GenericInstruction implements Instruction {
     @Override
     public void printInstruction() {
         String addr = Long.toHexString(this.getAddress().longValue());
-        System.out.print(addr + ":" + this.getInstruction() + "\n");
+        System.out.print(addr + ":" + this.getInstruction() + ":" + this.getName() + "\n");
     }
 }
