@@ -13,173 +13,25 @@
 
 package pt.up.fe.specs.binarytranslation.generic;
 
-import java.util.List;
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.binarytranslation.InstructionType;
-import pt.up.fe.specs.util.SpecsStrings;
+public class GenericInstruction extends AInstruction {
 
-/**
- * Generic implementation of interface instruction.
- * 
- * @author JoaoBispo
- *
- */
-public abstract class GenericInstruction implements Instruction {
+    private final Number instructionCode;
 
-    private Number address;
-    private String instruction;
-    protected String plainname;
-    protected int latency;
-    protected int delay;
-    protected List<InstructionType> genericType;
+    public GenericInstruction(Number address, Number instruction) {
+        super(address, instruction.toString());
 
-    public GenericInstruction(Number address, String instruction) {
-        this.address = address;
-        this.instruction = instruction.strip();
+        this.instructionCode = instruction;
     }
 
     @Override
-    public String getName() {
-        return plainname;
+    public Number getInstructionCode() {
+        return instructionCode;
     }
 
     @Override
-    public Number getAddress() {
-        return address;
-    }
-
-    @Override
-    public String getInstruction() {
-        return instruction;
-    }
-
-    @Override
-    public int getLatency() {
-        return this.latency;
-    }
-
-    @Override
-    public int getDelay() {
-        return this.delay;
-    }
-
-    @Override
-    public String toString() {
-        return SpecsStrings.toHexString(address.longValue(), 8) + ": " + instruction;
-    }
-
-    // Check for instruction type /////////////////////////////////////////////
-    @Override
-    public final boolean isAdd() {
-        return genericType.contains(InstructionType.G_ADD);
-    }
-
-    @Override
-    public final boolean isSub() {
-        return genericType.contains(InstructionType.G_SUB);
-    }
-
-    @Override
-    public final boolean isMul() {
-        return genericType.contains(InstructionType.G_MUL);
-    }
-
-    @Override
-    public final boolean isLogical() {
-        return genericType.contains(InstructionType.G_LOGICAL);
-    }
-
-    @Override
-    public final boolean isUnary() {
-        return genericType.contains(InstructionType.G_UNARY);
-    }
-
-    @Override
-    public final boolean isJump() {
-        return (genericType.contains(InstructionType.G_CJUMP) |
-                genericType.contains(InstructionType.G_UJUMP));
-    }
-
-    @Override
-    public final boolean isConditionalJump() {
-        return genericType.contains(InstructionType.G_CJUMP);
-    }
-
-    @Override
-    public final boolean isUnconditionalJump() {
-        return genericType.contains(InstructionType.G_UJUMP);
-    }
-
-    @Override
-    public final boolean isRelativeJump() {
-        return genericType.contains(InstructionType.G_RJUMP);
-    }
-
-    @Override
-    public final boolean isAbsoluteJump() {
-        return genericType.contains(InstructionType.G_AJUMP);
-    }
-
-    @Override
-    public final boolean isImmediate() {
-        return genericType.contains(InstructionType.G_IJUMP);
-    }
-
-    @Override
-    public final boolean isStore() {
-        return genericType.contains(InstructionType.G_STORE);
-    }
-
-    @Override
-    public final boolean isLoad() {
-        return genericType.contains(InstructionType.G_LOAD);
-    }
-
-    @Override
-    public final boolean isMemory() {
-        return genericType.contains(InstructionType.G_MEMORY);
-    }
-
-    @Override
-    public final boolean isFloat() {
-        return genericType.contains(InstructionType.G_FLOAT);
-    }
-
-    ///////////////////////////////////////////// Additional non basic types:
-    @Override
-    public boolean isBackwardsJump() {
-        Number branchTarget = this.getBranchTarget();
-        if (branchTarget == null)
-            return false;
-
-        long val = branchTarget.longValue();
-        if (val < this.getAddress().longValue())
-            return true;
-        else
-            return false;
-    }
-
-    @Override
-    public boolean isForwardsJump() {
-        Number branchTarget = this.getBranchTarget();
-        if (branchTarget == null)
-            return false;
-
-        long val = branchTarget.longValue();
-        if (val > this.getAddress().longValue())
-            return true;
-        else
-            return false;
-    }
-
-    ///////////////////////////////////////////////////////////////////// Utils
-    /*
-     * Prints addr:instruction to system output
-     */
-    @Override
-    public void printInstruction() {
-        String addr = Long.toHexString(this.getAddress().longValue());
-        System.out.print(addr + ":" + this.getInstruction() + ":" + this.getName() + "\n");
+    public Number getBranchTarget() {
+        throw new NotImplementedException(this);
     }
 }
