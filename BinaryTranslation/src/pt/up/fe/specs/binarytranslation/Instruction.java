@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation;
 
+import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
@@ -36,6 +37,12 @@ public interface Instruction {
 
     default Number getInstructionCode() {
         throw new NotImplementedException(this);
+    }
+
+    default String toBinaryString() {
+        // Assume 32-bits. If different, override this method
+        var binaryString = Integer.toBinaryString(getInstructionCode().intValue());
+        return SpecsStrings.padLeft(binaryString, 32, '0');
     }
 
     /*
