@@ -20,7 +20,7 @@ public enum MicroBlazeInstructionSetFields {
     addi(0x2000_0000, 1, 0, G_ADD),
     addic(0x2800_0000, 1, 0, G_ADD),
     addik(0x3000_0000, 1, 0, G_ADD),
-    addikc(0x3810_0000, 1, 0, G_ADD),
+    addikc(0x3800_0000, 1, 0, G_ADD),
     rsub(0x0400_0000, 1, 0, G_SUB),
     rsubc(0xC000_0000, 1, 0, G_SUB),
     rsubk(0x1400_0000, 1, 0, G_SUB),
@@ -45,11 +45,11 @@ public enum MicroBlazeInstructionSetFields {
     bsrl(0x4400_0000, 1, 0, G_LOGICAL),
     bsra(0x4400_0800, 1, 0, G_LOGICAL),
     bsll(0x4400_0400, 1, 0, G_LOGICAL),
-    bsrli(0x6400_0000, 1, 0, G_LOGICAL),
-    bsrai(0x6400_0800, 1, 0, G_LOGICAL),
-    bslli(0x6400_0400, 1, 0, G_LOGICAL),
-    bsefi(0x6400_4000, 1, 0, G_LOGICAL),
-    bsifi(0x6400_8000, 1, 0, G_LOGICAL),
+    bsrli(0x6400_0000, 1, 0, G_LOGICAL), // exception to typeb rule
+    bsrai(0x6400_0800, 1, 0, G_LOGICAL), // exception to typeb rule
+    bslli(0x6400_0400, 1, 0, G_LOGICAL), // exception to typeb rule
+    bsefi(0x6400_4000, 1, 0, G_LOGICAL), // exception to typeb rule
+    bsifi(0x6400_8000, 1, 0, G_LOGICAL), // exception to typeb rule
     or(0x8000_0000, 1, 0, G_LOGICAL),
     ori(0xA000_0000, 1, 0, G_LOGICAL),
     xor(0x8800_0000, 1, 0, G_LOGICAL),
@@ -85,6 +85,7 @@ public enum MicroBlazeInstructionSetFields {
     bned(0x9E20_0000, 1, 0, G_CJUMP, G_RJUMP),
     bnei(0xBC20_0000, 1, 0, G_CJUMP, G_RJUMP, G_IJUMP),
     bneid(0xBE20_0000, 1, 1, G_CJUMP, G_RJUMP, G_IJUMP),
+    // all branches are exception to typeb rule
 
     // Unconditional Jumps
     br(0x9800_0000, 1, 0, G_UJUMP, G_RJUMP),
@@ -94,17 +95,20 @@ public enum MicroBlazeInstructionSetFields {
     brld(0x9814_0000, 1, 1, G_UJUMP, G_RJUMP),
     brald(0x981C_0000, 1, 1, G_UJUMP, G_AJUMP),
     bri(0xB800_0000, 1, 0, G_UJUMP, G_RJUMP, G_IJUMP),
-    brai(0xB810_0000, 1, 0, G_UJUMP, G_AJUMP, G_IJUMP),
-    brid(0xB808_0000, 1, 1, G_UJUMP, G_RJUMP, G_IJUMP),
+    brai(0xB808_0000, 1, 0, G_UJUMP, G_AJUMP, G_IJUMP),
+    brid(0xB810_0000, 1, 1, G_UJUMP, G_RJUMP, G_IJUMP),
     braid(0xB818_0000, 1, 1, G_UJUMP, G_AJUMP, G_IJUMP),
     brlid(0xB814_0000, 1, 1, G_UJUMP, G_RJUMP, G_IJUMP),
     bralid(0xB81C_0000, 1, 1, G_UJUMP, G_AJUMP, G_IJUMP),
     brk(0x980C_0000, 1, 0, G_UJUMP, G_RJUMP),
     brki(0xB80C_0000, 1, 0, G_UJUMP, G_RJUMP, G_IJUMP),
-    rtbd(0xB640_0000, 1, 0, G_UJUMP, G_RJUMP, G_IJUMP),
-    rtid(0xB620_0000, 1, 0, G_UJUMP, G_RJUMP, G_IJUMP),
-    rted(0xB680_0000, 1, 0, G_UJUMP, G_RJUMP, G_IJUMP),
-    rtsd(0xB600_0000, 1, 0, G_UJUMP, G_RJUMP, G_IJUMP),
+    // all branches are exception to typeb rule
+
+    // Returns
+    rtbd(0xB640_0000, 1, 0, G_UJUMP, G_RJUMP, G_IJUMP), // exception to typeb rule
+    rtid(0xB620_0000, 1, 0, G_UJUMP, G_RJUMP, G_IJUMP), // exception to typeb rule
+    rted(0xB680_0000, 1, 0, G_UJUMP, G_RJUMP, G_IJUMP), // exception to typeb rule
+    rtsd(0xB600_0000, 1, 0, G_UJUMP, G_RJUMP, G_IJUMP), // exception to typeb rule
 
     // Floating Point
     fadd(0x5800_0000, 6, 0, G_FLOAT, G_ADD),
@@ -199,12 +203,26 @@ public enum MicroBlazeInstructionSetFields {
     private final int latency;
     private final int delay;
     private final List<InstructionType> genericType;
-    private static int reducerMask = 0xFC00_0000;
-    private static int conditionalBranch = 0x9C00_0000;
+    private static int reducerMask = 0xFC00_0000; // gets only the first 6 bits
+
+    // Exceptions to TypeA/B rule
+    private static int specialInst = 0x9400_0000;
+    private static int barrelShift = 0x6400_0000; // barrelshift with immediate value
+
     private static int unconditionalBranch = 0x9800_0000;
+    private static int iunconditionalBranch = 0xB800_0000;
+
+    private static int conditionalBranch = 0x9C00_0000;
+    private static int iconditionalBranch = 0xBC00_0000;
+    private static int returnInstructions = 0xB400_0000;
+
     private static int typeAB = 0x20000000; // if this bit is 1, then its typeB instruction
     private static int maskA = makeMaskA();
     private static int maskB = makeMaskB();
+    private static int ubranchMask = makeMaskUBranch();
+    private static int cbranchMask = makeMaskCBranch();
+    private static int specialMask = makeMaskSpecial();
+    private static int ibarrelMask = makeMaskBarrel();
 
     /*
      * Constructor
@@ -244,23 +262,148 @@ public enum MicroBlazeInstructionSetFields {
     }
 
     /*
-     * Check if instruction is typeA (or any relative branch)
+     * Private method to create bit mask for unconditional branches 
+     * instructions in this ISA, based on the instruction list
      */
-    private static boolean isTypeA(int opcode) {
-        opcode &= reducerMask;
-        return ((opcode & typeAB) == 0)
-                && (opcode != conditionalBranch)
-                && (opcode != unconditionalBranch);
+    private static int makeMaskUBranch() {
+        int mask = 0;
+        for (MicroBlazeInstructionSetFields insts : values()) {
+            if (isUBranch(insts.getOpCode()))
+                mask |= insts.getOpCode();
+        }
+        return mask;
+    }
+
+    /*
+     * Private method to create bit mask for conditional branches 
+     * instructions in this ISA, based on the instruction list
+     */
+    private static int makeMaskCBranch() {
+        int mask = 0;
+        for (MicroBlazeInstructionSetFields insts : values()) {
+            if (isCBranch(insts.getOpCode()) || isReturn(insts.getOpCode()))
+                mask |= insts.getOpCode();
+        }
+        return mask;
+    }
+
+    /*
+     * Private method to create bit mask for branches 
+     * instructions in this ISA, based on the instruction list
+     */
+    private static int makeMaskSpecial() {
+        int mask = 0;
+        for (MicroBlazeInstructionSetFields insts : values()) {
+            if (isSpecial(insts.getOpCode()))
+                mask |= insts.getOpCode();
+        }
+        return mask;
+    }
+
+    /*
+     * Private method to create bit mask for branches 
+     * instructions in this ISA, based on the instruction list
+     */
+    private static int makeMaskBarrel() {
+        int mask = 0;
+        for (MicroBlazeInstructionSetFields insts : values()) {
+            if (isBarrel(insts.getOpCode()))
+                mask |= insts.getOpCode();
+        }
+        return mask;
     }
 
     /*
      * Check if instruction is typeA (or any relative branch)
      */
+    private static boolean isTypeA(int opcode) {
+        opcode &= reducerMask;
+        return (!isSpecial(opcode)
+                && !isBranch(opcode)
+                && !isBarrel(opcode)
+                && ((opcode & typeAB) == 0));
+    }
+
+    /*
+     * Check if instruction is typeB (or any relative branch)
+     */
     private static boolean isTypeB(int opcode) {
         opcode &= reducerMask;
-        return ((opcode & typeAB) != 0)
-                || (opcode == conditionalBranch)
-                || (opcode == unconditionalBranch);
+        return (!isSpecial(opcode)
+                && !isBranch(opcode)
+                && !isBarrel(opcode)
+                && !isReturn(opcode)
+                && ((opcode & typeAB) != 0));
+    }
+
+    /*
+     * Check if instruction is Special
+     */
+    private static boolean isSpecial(int opcode) {
+        opcode &= reducerMask;
+        return (opcode == specialInst);
+    }
+
+    /*
+     * Check if instruction is Branch
+     */
+    private static boolean isBranch(int opcode) {
+        return (isCBranch(opcode) || isUBranch(opcode));
+    }
+
+    /*
+     * Check if instruction is Conditional Branch
+     */
+    private static boolean isCBranch(int opcode) {
+        opcode &= reducerMask;
+        return ((opcode == conditionalBranch)
+                || (opcode == iconditionalBranch));
+    }
+
+    /*
+     * Check if instruction is Unconditional Branch
+     */
+    private static boolean isUBranch(int opcode) {
+        opcode &= reducerMask;
+        return ((opcode == unconditionalBranch)
+                || (opcode == iunconditionalBranch));
+    }
+
+    /*
+     * Check if instruction is return instruction
+     */
+    private static boolean isReturn(int opcode) {
+        opcode &= reducerMask;
+        return (opcode == returnInstructions);
+    }
+
+    /*
+     * Check if instruction is Barrel Shift
+     */
+    private static boolean isBarrel(int opcode) {
+        opcode &= reducerMask;
+        return (opcode == barrelShift);
+    }
+
+    /*
+     * Pick a mask
+     */
+    private static int pickMask(int fullopcode) {
+        if (isSpecial(fullopcode))
+            return specialMask;
+        else if (isCBranch(fullopcode))
+            return cbranchMask;
+        else if (isUBranch(fullopcode))
+            return ubranchMask;
+        else if (isBarrel(fullopcode))
+            return ibarrelMask;
+        else if (isTypeA(fullopcode))
+            return maskA;
+        else if (isTypeB(fullopcode))
+            return maskB;
+
+        return 0;
+        // TODO throw something here
     }
 
     /*
@@ -301,9 +444,9 @@ public enum MicroBlazeInstructionSetFields {
     /*
      * Initializes field in constructor for MicroBlazeInstruction
      */
-    public static String getName(long fullopcode) {
-        int mask = (isTypeA((int) fullopcode)) ? maskA : maskB;
-        long opcode = (fullopcode) & mask;
+    public static String getName(int fullopcode) {
+        int mask = pickMask((int) fullopcode);
+        int opcode = (fullopcode) & mask;
         for (MicroBlazeInstructionSetFields insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getName();
@@ -315,9 +458,9 @@ public enum MicroBlazeInstructionSetFields {
     /*
      * Initializes field in constructor for MicroBlazeInstruction
      */
-    public static List<InstructionType> getGenericType(long fullopcode) {
-        int mask = (isTypeA((int) fullopcode)) ? maskA : maskB;
-        long opcode = (fullopcode) & mask;
+    public static List<InstructionType> getGenericType(int fullopcode) {
+        int mask = pickMask((int) fullopcode);
+        int opcode = (fullopcode) & mask;
         for (MicroBlazeInstructionSetFields insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getGenericType();
@@ -331,9 +474,9 @@ public enum MicroBlazeInstructionSetFields {
     /*
      * Initializes field in constructor for MicroBlazeInstruction
      */
-    public static int getLatency(long fullopcode) {
-        int mask = (isTypeA((int) fullopcode)) ? maskA : maskB;
-        long opcode = (fullopcode) & mask;
+    public static int getLatency(int fullopcode) {
+        int mask = pickMask((int) fullopcode);
+        int opcode = (fullopcode) & mask;
         for (MicroBlazeInstructionSetFields insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getLatency();
@@ -344,9 +487,9 @@ public enum MicroBlazeInstructionSetFields {
     /*
      * Initializes field in constructor for MicroBlazeInstruction
      */
-    public static int getDelay(long fullopcode) {
-        int mask = (isTypeA((int) fullopcode)) ? maskA : maskB;
-        long opcode = (fullopcode) & mask;
+    public static int getDelay(int fullopcode) {
+        int mask = pickMask((int) fullopcode);
+        int opcode = (fullopcode) & mask;
         for (MicroBlazeInstructionSetFields insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getDelay();
