@@ -36,7 +36,7 @@ public abstract class GenericInstruction implements Instruction {
 
     public GenericInstruction(Number address, String instruction) {
         this.address = address;
-        this.instruction = instruction;
+        this.instruction = instruction.strip();
     }
 
     @Override
