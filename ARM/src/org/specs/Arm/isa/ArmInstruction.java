@@ -1,8 +1,8 @@
 package org.specs.Arm.isa;
 
-import pt.up.fe.specs.binarytranslation.generic.GenericInstruction;
+import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 
-public class ArmInstruction extends GenericInstruction {
+public class ArmInstruction extends AInstruction {
 
     /*
     * 
