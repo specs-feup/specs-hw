@@ -34,4 +34,5 @@ public class GenericInstruction extends AInstruction {
     public Number getBranchTarget() {
         throw new NotImplementedException(this);
     }
+
 }
