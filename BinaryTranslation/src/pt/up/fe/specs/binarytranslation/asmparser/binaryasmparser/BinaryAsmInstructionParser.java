@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.stringparser.StringParser;
 
 /**
@@ -39,6 +41,123 @@ import pt.up.fe.specs.util.stringparser.StringParser;
  *
  */
 public class BinaryAsmInstructionParser implements AsmInstructionParser {
+
+    public static BinaryAsmInstructionParser newInstance(AsmInstructionType type, String rule,
+            Predicate<Map<String, String>> predicate) {
+
+        return new BinaryAsmInstructionParser(type, parseBinaryAsmRule(rule), predicate);
+    }
+
+    public static BinaryAsmInstructionParser newInstance(AsmInstructionType type, String rule) {
+        return newInstance(type, rule, null);
+    }
+
+    private static List<BinaryAsmRule> parseBinaryAsmRule(String rule) {
+        String currentRule = rule;
+
+        List<BinaryAsmRule> rules = new ArrayList<>();
+        while (!currentRule.isEmpty()) {
+            // Ignore underscore
+            if (currentRule.startsWith("_")) {
+                currentRule = currentRule.substring(1);
+                continue;
+            }
+
+            // If 0 or 1, create constant rule
+            if (currentRule.startsWith("0") || currentRule.startsWith("1")) {
+                String constString = currentRule.substring(0, 1);
+                currentRule = currentRule.substring(1);
+
+                // Check if has ()
+                var result = extractAmount(currentRule, rule);
+                if (result != null) {
+                    constString = SpecsStrings.buildLine(constString, result.getAmount());
+                    currentRule = result.getCurrentString();
+                }
+                // if (currentRule.startsWith("(")) {
+                // int endIndex = currentRule.indexOf(')');
+                // if (endIndex == -1) {
+                // throw new RuntimeException("Unbalanced parenthesis on rule: " + rule);
+                // }
+                //
+                // int amount = Integer.parseInt(currentRule.substring(1, endIndex));
+                // constString = SpecsStrings.buildLine(constString, amount);
+                // currentRule = currentRule.substring(endIndex + 1);
+                // }
+
+                rules.add(new ConstantRule(constString));
+                continue;
+            }
+
+            // If x, create ignore rule
+            if (currentRule.startsWith("x")) {
+                int amount = 1;
+                currentRule = currentRule.substring(1);
+
+                // Check if has ()
+                var result = extractAmount(currentRule, rule);
+                if (result != null) {
+                    amount = result.getAmount();
+                    currentRule = result.getCurrentString();
+                }
+
+                rules.add(new IgnoreRule(amount));
+                continue;
+            }
+
+            // Otherwise, interpret as a field with ()
+            int startIndex = currentRule.indexOf('(');
+            if (startIndex == -1) {
+                throw new RuntimeException("Expected field name to have () associated: " + rule);
+            }
+
+            String fieldName = currentRule.substring(0, startIndex);
+            currentRule = currentRule.substring(startIndex);
+            var result = extractAmount(currentRule, rule);
+
+            rules.add(new FieldRule(fieldName, result.getAmount()));
+            currentRule = result.getCurrentString();
+        }
+
+        // Rules could be optimized - e.g., fuse constant rules together
+        // System.out.println("RULES: " + rules);
+        return rules;
+    }
+
+    private static ExtractResult extractAmount(String currentRule, String fullRule) {
+        if (!currentRule.startsWith("(")) {
+            return null;
+        }
+
+        int endIndex = currentRule.indexOf(')');
+        if (endIndex == -1) {
+            throw new RuntimeException("Unbalanced parenthesis on rule: " + fullRule);
+        }
+
+        int amount = Integer.parseInt(currentRule.substring(1, endIndex));
+        String updatedCurrentRule = currentRule.substring(endIndex + 1);
+
+        return new ExtractResult(updatedCurrentRule, amount);
+    }
+
+    static class ExtractResult {
+        private final String currentString;
+        private final int amount;
+
+        public ExtractResult(String currentString, int amount) {
+            this.currentString = currentString;
+            this.amount = amount;
+        }
+
+        public int getAmount() {
+            return amount;
+        }
+
+        public String getCurrentString() {
+            return currentString;
+        }
+
+    }
 
     private final AsmInstructionType type;
     private final List<BinaryAsmRule> rules;
