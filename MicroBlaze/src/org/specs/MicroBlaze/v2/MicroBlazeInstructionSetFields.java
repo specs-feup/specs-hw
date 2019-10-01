@@ -42,9 +42,9 @@ public enum MicroBlazeInstructionSetFields {
     andi(0xA400_0000, 1, 0, G_LOGICAL),
     andn(0x8C00_0000, 1, 0, G_LOGICAL),
     andni(0xAC00_0000, 1, 0, G_LOGICAL),
-    bsrl(0x4400_0000, 1, 0, G_LOGICAL),
-    bsra(0x4400_0800, 1, 0, G_LOGICAL),
-    bsll(0x4400_0400, 1, 0, G_LOGICAL),
+    bsrl(0x4400_0000, 1, 0, G_LOGICAL), // exception to typeb rule
+    bsra(0x4400_0800, 1, 0, G_LOGICAL), // exception to typeb rule
+    bsll(0x4400_0400, 1, 0, G_LOGICAL), // exception to typeb rule
     bsrli(0x6400_0000, 1, 0, G_LOGICAL), // exception to typeb rule
     bsrai(0x6400_0800, 1, 0, G_LOGICAL), // exception to typeb rule
     bslli(0x6400_0400, 1, 0, G_LOGICAL), // exception to typeb rule
@@ -173,11 +173,13 @@ public enum MicroBlazeInstructionSetFields {
     mtse(0x9500_C000, 1, 0, G_OTHER),
     imm(0xB000_0000, 1, 0, G_OTHER),
     clz(0x9000_00E0, 1, 0, G_OTHER),
+
     get(0x6C00_0000, 1, 0, G_OTHER),
     getd(0x4C00_0000, 1, 0, G_OTHER),
-    // TODO some gets are missing
     put(0x6C00_8000, 2, 0, G_OTHER),
     putd(0x4C00_8000, 2, 0, G_OTHER),
+    // TODO some gets are missing
+
     sext16(0x9000_0061, 1, 0, G_OTHER),
     sext8(0x9000_0060, 1, 0, G_OTHER),
     swapb(0x9000_01E0, 1, 0, G_OTHER),
@@ -207,7 +209,9 @@ public enum MicroBlazeInstructionSetFields {
 
     // Exceptions to TypeA/B rule
     private static int specialInst = 0x9400_0000;
-    private static int barrelShift = 0x6400_0000; // barrelshift with immediate value
+
+    private static int barrelShift = 0x4400_0000; // barrelshift
+    private static int ibarrelShift = 0x6400_0000; // barrelshift with immediate value
 
     private static int unconditionalBranch = 0x9800_0000;
     private static int iunconditionalBranch = 0xB800_0000;
@@ -216,13 +220,19 @@ public enum MicroBlazeInstructionSetFields {
     private static int iconditionalBranch = 0xBC00_0000;
     private static int returnInstructions = 0xB400_0000;
 
+    private static int streamInsts = 0x6C00_0000;
+    private static int dstreamInsts = 0x4C00_0000;
+
     private static int typeAB = 0x20000000; // if this bit is 1, then its typeB instruction
     private static int maskA = makeMaskA();
     private static int maskB = makeMaskB();
     private static int ubranchMask = makeMaskUBranch();
     private static int cbranchMask = makeMaskCBranch();
     private static int specialMask = makeMaskSpecial();
-    private static int ibarrelMask = makeMaskBarrel();
+    private static int barrelMask = makeMaskBarrel();
+    private static int ibarrelMask = makeMaskiBarrel();
+    private static int streamMask = makeMaskStream();
+    private static int dstreamMask = makeMaskdStream();
 
     /*
      * Constructor
@@ -271,6 +281,9 @@ public enum MicroBlazeInstructionSetFields {
             if (isUBranch(insts.getOpCode()))
                 mask |= insts.getOpCode();
         }
+
+        // hack to remove MBAR
+        mask &= 0xFFFF_FFFB;
         return mask;
     }
 
@@ -301,13 +314,49 @@ public enum MicroBlazeInstructionSetFields {
     }
 
     /*
-     * Private method to create bit mask for branches 
-     * instructions in this ISA, based on the instruction list
+     * Private method to create bit mask for barrel shifts
      */
     private static int makeMaskBarrel() {
         int mask = 0;
         for (MicroBlazeInstructionSetFields insts : values()) {
             if (isBarrel(insts.getOpCode()))
+                mask |= insts.getOpCode();
+        }
+        return mask;
+    }
+
+    /*
+     * Private method to create bit mask 
+     * for barrel shifts with immediate values
+     */
+    private static int makeMaskiBarrel() {
+        int mask = 0;
+        for (MicroBlazeInstructionSetFields insts : values()) {
+            if (isiBarrel(insts.getOpCode()))
+                mask |= insts.getOpCode();
+        }
+        return mask;
+    }
+
+    /*
+     * Private method to create bit mask put/get
+     */
+    private static int makeMaskStream() {
+        int mask = 0;
+        for (MicroBlazeInstructionSetFields insts : values()) {
+            if (isStream(insts.getOpCode()))
+                mask |= insts.getOpCode();
+        }
+        return mask;
+    }
+
+    /*
+     * Private method to create bit mask putd/getd
+     */
+    private static int makeMaskdStream() {
+        int mask = 0;
+        for (MicroBlazeInstructionSetFields insts : values()) {
+            if (isdStream(insts.getOpCode()))
                 mask |= insts.getOpCode();
         }
         return mask;
@@ -321,6 +370,10 @@ public enum MicroBlazeInstructionSetFields {
         return (!isSpecial(opcode)
                 && !isBranch(opcode)
                 && !isBarrel(opcode)
+                && !isiBarrel(opcode)
+                && !isReturn(opcode)
+                && !isStream(opcode)
+                && !isdStream(opcode)
                 && ((opcode & typeAB) == 0));
     }
 
@@ -332,7 +385,10 @@ public enum MicroBlazeInstructionSetFields {
         return (!isSpecial(opcode)
                 && !isBranch(opcode)
                 && !isBarrel(opcode)
+                && !isiBarrel(opcode)
                 && !isReturn(opcode)
+                && !isStream(opcode)
+                && !isdStream(opcode)
                 && ((opcode & typeAB) != 0));
     }
 
@@ -386,19 +442,58 @@ public enum MicroBlazeInstructionSetFields {
     }
 
     /*
+     * Check if instruction is Barrel Shift w/ immediate value
+     */
+    private static boolean isiBarrel(int opcode) {
+        opcode &= reducerMask;
+        return (opcode == ibarrelShift);
+    }
+
+    /*
+     * Check if instruction is put/get
+     */
+    private static boolean isStream(int opcode) {
+        opcode &= reducerMask;
+        return (opcode == streamInsts);
+    }
+
+    /*
+     * Check if instruction is putd/getd
+     */
+    private static boolean isdStream(int opcode) {
+        opcode &= reducerMask;
+        return (opcode == dstreamInsts);
+    }
+
+    /*
      * Pick a mask
      */
     private static int pickMask(int fullopcode) {
+
         if (isSpecial(fullopcode))
             return specialMask;
+
         else if (isCBranch(fullopcode))
             return cbranchMask;
+
         else if (isUBranch(fullopcode))
             return ubranchMask;
+
         else if (isBarrel(fullopcode))
+            return barrelMask;
+
+        else if (isiBarrel(fullopcode))
             return ibarrelMask;
+
+        else if (isStream(fullopcode))
+            return streamMask;
+
+        else if (isdStream(fullopcode))
+            return dstreamMask;
+
         else if (isTypeA(fullopcode))
             return maskA;
+
         else if (isTypeB(fullopcode))
             return maskB;
 

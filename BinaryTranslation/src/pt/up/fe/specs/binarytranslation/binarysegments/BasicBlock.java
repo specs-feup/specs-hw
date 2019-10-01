@@ -10,6 +10,7 @@ public class BasicBlock implements BinarySegment {
     private SegmentType segtype = SegmentType.BASIC_BLOCK;
     private List<Instruction> instlist;
     private boolean terminated = false;
+    private int delaycounter = 0;
     // value must be true if an instruction is added
     // which is a backwards branch; no other instructions
     // may be added
@@ -36,15 +37,41 @@ public class BasicBlock implements BinarySegment {
     }
 
     public void addInst(Instruction newinst) {
-        if (this.terminated == true) {
+
+        // cannot (should not!) add any more
+        if (this.terminated == true && this.delaycounter == 0) {
             // TODO proper exception handling
             return;
-        } else {
+        }
+
+        // should not be able to add more branches
+        else if (this.terminated == true && newinst.isJump()) {
+            // TODO proper exception handling
+            return;
+        }
+
+        // should not be able to add forward jumps
+        else if (newinst.isJump() && !newinst.isBackwardsJump()) {
+            // TODO proper exception handling
+            return;
+        }
+
+        /// add
+        else {
+
             this.instlist.add(newinst);
 
-            // if added inst is branch, prevent addition of new insts
-            if (newinst.isBackwardsJump() && newinst.isConditionalJump())
-                this.terminated = true;
+            // countdown to pipe fill due to delay
+            if (this.delaycounter > 0) {
+                this.delaycounter--;
+            }
+
+            // if added inst is branch allow
+            // addition of at most getDelay insts after this
+            if (newinst.isBackwardsJump() && newinst.isConditionalJump()) {
+                this.terminated = true; // only one branch permitted
+                this.delaycounter = newinst.getDelay();
+            }
         }
     }
 
