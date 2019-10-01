@@ -33,6 +33,10 @@ public interface ArmInstructionParsers {
                     "cond(4)_000_opcode(4)_S(1)_Rn(4)_Rd(4)_shift_amount(5)_shift(2)_0_Rm(4)",
                     data -> !data.get(ArmAsmFields.COND).equals("1111")),
 
+            newInstance(MISCELLANEOUS_1,
+                    "cond(4)_000_10xx_0_x(15)_0_x(4)",
+                    data -> !data.get(ArmAsmFields.COND).equals("1111")),
+
             newInstance(UNDEFINED, "x(32)")
 
     );
