@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.asmparser.impl;
+package pt.up.fe.specs.binarytranslation.generic;
 
 import java.util.HashSet;
 import java.util.List;
