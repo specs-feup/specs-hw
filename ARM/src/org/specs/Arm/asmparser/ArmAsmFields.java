@@ -11,28 +11,17 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.generic;
+package org.specs.Arm.asmparser;
 
-import pt.up.fe.specs.util.exceptions.NotImplementedException;
+public interface ArmAsmFields {
 
-public class GenericInstruction extends AInstruction {
-
-    private final Number instructionCode;
-
-    public GenericInstruction(Number address, Number instruction) {
-        super(address, instruction.toString());
-
-        this.instructionCode = instruction;
-    }
-
-    @Override
-    public Number getInstructionCode() {
-        return instructionCode;
-    }
-
-    @Override
-    public Number getBranchTarget() {
-        throw new NotImplementedException(this);
-    }
+    static String COND = "cond";
+    static String OPCODE = "opcode";
+    static String S = "S";
+    static String RN = "Rn";
+    static String RD = "Rd";
+    static String SHIFT_AMOUNT = "shift_amount";
+    static String SHIFT = "shift";
+    static String RM = "Rm";
 
 }

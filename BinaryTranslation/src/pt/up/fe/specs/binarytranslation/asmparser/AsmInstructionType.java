@@ -11,28 +11,14 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.generic;
+package pt.up.fe.specs.binarytranslation.asmparser;
 
-import pt.up.fe.specs.util.exceptions.NotImplementedException;
-
-public class GenericInstruction extends AInstruction {
-
-    private final Number instructionCode;
-
-    public GenericInstruction(Number address, Number instruction) {
-        super(address, instruction.toString());
-
-        this.instructionCode = instruction;
-    }
-
-    @Override
-    public Number getInstructionCode() {
-        return instructionCode;
-    }
-
-    @Override
-    public Number getBranchTarget() {
-        throw new NotImplementedException(this);
-    }
+/**
+ * Represents the general type of a particular assembly instruction.
+ * 
+ * @author JoaoBispo
+ *
+ */
+public interface AsmInstructionType {
 
 }
