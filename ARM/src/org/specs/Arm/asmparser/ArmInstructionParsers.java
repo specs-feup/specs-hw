@@ -14,7 +14,7 @@
 package org.specs.Arm.asmparser;
 
 import static org.specs.Arm.asmparser.ArmAsmInstructionType.*;
-import static pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryAsmInstructionParser.*;
+import static pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryAsmInstructionParser.newInstance;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,7 +23,7 @@ import java.util.Set;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
-import pt.up.fe.specs.binarytranslation.asmparser.impl.GenericIsaParser;
+import pt.up.fe.specs.binarytranslation.generic.GenericIsaParser;
 import pt.up.fe.specs.util.SpecsSystem;
 
 public interface ArmInstructionParsers {
@@ -42,11 +42,7 @@ public interface ArmInstructionParsers {
     );
 
     static IsaParser getArmIsaParser() {
-        // List<AsmInstructionParser> instParsers = SpecsSystem.getStaticFields(ArmInstructionParsers.class,
-        // AsmInstructionParser.class);
-
         Set<String> allowedFields = new HashSet<>(SpecsSystem.getStaticFields(ArmAsmFields.class, String.class));
-
         return new GenericIsaParser(PARSERS, allowedFields);
     }
 }

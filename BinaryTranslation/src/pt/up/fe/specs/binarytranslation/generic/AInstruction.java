@@ -22,8 +22,6 @@ import pt.up.fe.specs.util.SpecsStrings;
 /**
  * Generic implementation of interface instruction.
  * 
- * 
- * @author JoaoBispo
  *
  */
 public abstract class AInstruction implements Instruction {
