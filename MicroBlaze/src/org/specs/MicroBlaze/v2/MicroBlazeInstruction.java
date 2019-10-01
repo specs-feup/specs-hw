@@ -2,9 +2,9 @@ package org.specs.MicroBlaze.v2;
 
 import java.math.BigInteger;
 
-import pt.up.fe.specs.binarytranslation.generic.GenericInstruction;
+import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 
-public class MicroBlazeInstruction extends GenericInstruction {
+public class MicroBlazeInstruction extends AInstruction {
 
     /*
      * 

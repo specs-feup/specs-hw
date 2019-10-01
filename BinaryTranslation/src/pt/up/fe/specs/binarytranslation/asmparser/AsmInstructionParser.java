@@ -11,28 +11,20 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.generic;
+package pt.up.fe.specs.binarytranslation.asmparser;
 
-import pt.up.fe.specs.util.exceptions.NotImplementedException;
+import java.util.Optional;
 
-public class GenericInstruction extends AInstruction {
+import pt.up.fe.specs.binarytranslation.Instruction;
 
-    private final Number instructionCode;
+public interface AsmInstructionParser {
 
-    public GenericInstruction(Number address, Number instruction) {
-        super(address, instruction.toString());
-
-        this.instructionCode = instruction;
-    }
-
-    @Override
-    public Number getInstructionCode() {
-        return instructionCode;
-    }
-
-    @Override
-    public Number getBranchTarget() {
-        throw new NotImplementedException(this);
-    }
-
+    /**
+     * Receives a string with the assembly instruction, if the given instruction respects the format, returns the parsed
+     * data, otherwise returns an empty Optional.
+     * 
+     * @param binaryString
+     * @return
+     */
+    Optional<AsmInstructionData> parse(Instruction asmInstruction);
 }

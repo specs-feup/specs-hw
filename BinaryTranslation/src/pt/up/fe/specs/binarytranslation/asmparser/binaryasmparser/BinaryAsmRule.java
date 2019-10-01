@@ -11,28 +11,21 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.generic;
+package pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser;
 
-import pt.up.fe.specs.util.exceptions.NotImplementedException;
+import java.util.Map;
 
-public class GenericInstruction extends AInstruction {
+import pt.up.fe.specs.util.stringparser.StringParser;
 
-    private final Number instructionCode;
+public interface BinaryAsmRule {
 
-    public GenericInstruction(Number address, Number instruction) {
-        super(address, instruction.toString());
-
-        this.instructionCode = instruction;
-    }
-
-    @Override
-    public Number getInstructionCode() {
-        return instructionCode;
-    }
-
-    @Override
-    public Number getBranchTarget() {
-        throw new NotImplementedException(this);
-    }
+    /**
+     * Applies a parsing rule to the current string being parsed.
+     * 
+     * @param currentString
+     * @param fields
+     * @return true if parsing was successful, false otherwise
+     */
+    boolean apply(StringParser currentString, Map<String, String> fields);
 
 }
