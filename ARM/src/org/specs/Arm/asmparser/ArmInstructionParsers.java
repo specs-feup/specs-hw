@@ -13,6 +13,10 @@
 
 package org.specs.Arm.asmparser;
 
+import static org.specs.Arm.asmparser.ArmAsmInstructionType.*;
+import static pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryAsmInstructionParser.*;
+
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,12 +28,21 @@ import pt.up.fe.specs.util.SpecsSystem;
 
 public interface ArmInstructionParsers {
 
+    List<AsmInstructionParser> PARSERS = Arrays.asList(
+            newInstance(DATA_PROCESSING_IMMEDIATE_SHIFT,
+                    "cond(4)_000_opcode(4)_S(1)_Rn(4)_Rd(4)_shift_amount(5)_shift(2)_0_Rm(4)",
+                    data -> !data.get(ArmAsmFields.COND).equals("1111")),
+
+            newInstance(UNDEFINED, "x(32)")
+
+    );
+
     static IsaParser getArmIsaParser() {
-        List<AsmInstructionParser> instParsers = SpecsSystem.getStaticFields(ArmInstructionParsers.class,
-                AsmInstructionParser.class);
+        // List<AsmInstructionParser> instParsers = SpecsSystem.getStaticFields(ArmInstructionParsers.class,
+        // AsmInstructionParser.class);
 
         Set<String> allowedFields = new HashSet<>(SpecsSystem.getStaticFields(ArmAsmFields.class, String.class));
 
-        return new GenericIsaParser(instParsers, allowedFields);
+        return new GenericIsaParser(PARSERS, allowedFields);
     }
 }

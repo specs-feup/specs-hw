@@ -36,8 +36,10 @@ public class ArmElfStreamTester {
         try (var lines = LineStream.newInstance(SpecsIo.resourceToStream("org/specs/Arm/asm/test/asm.txt"), "");) {
             while (lines.hasNextLine()) {
                 String asmInstruction = lines.nextLine();
-                var inst = new GenericInstruction(0, new BigInteger(asmInstruction, 16));
+                System.out.println("LINE: " + asmInstruction);
 
+                var inst = new GenericInstruction(0, new BigInteger(asmInstruction, 16));
+                System.out.println("INST: " + inst.toBinaryString());
                 var data = parser.parse(inst);
                 System.out.println("DATA: " + data);
             }

@@ -17,4 +17,11 @@ public interface ArmAsmFields {
 
     static String COND = "cond";
     static String OPCODE = "opcode";
+    static String S = "S";
+    static String RN = "Rn";
+    static String RD = "Rd";
+    static String SHIFT_AMOUNT = "shift_amount";
+    static String SHIFT = "shift";
+    static String RM = "Rm";
+
 }
