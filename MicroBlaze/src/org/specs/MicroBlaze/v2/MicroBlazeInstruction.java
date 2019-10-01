@@ -31,4 +31,9 @@ public class MicroBlazeInstruction extends AInstruction {
 
         return null;
     }
+
+    @Override
+    public Number getInstructionCode() {
+        return new BigInteger(this.getInstruction(), 16);
+    }
 }
