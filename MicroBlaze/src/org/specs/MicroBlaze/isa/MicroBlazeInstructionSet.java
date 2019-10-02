@@ -1,24 +1,22 @@
-package org.specs.MicroBlaze.v2;
+package org.specs.MicroBlaze.isa;
 
 import static org.specs.MicroBlaze.asmparser.MicroBlazeAsmInstructionType.*;
 import static pt.up.fe.specs.binarytranslation.InstructionType.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.specs.MicroBlaze.asmparser.MicroBlazeAsmInstructionType;
 import org.specs.MicroBlaze.asmparser.MicroBlazeInstructionParsers;
 
+import pt.up.fe.specs.binarytranslation.InstructionSet;
 import pt.up.fe.specs.binarytranslation.InstructionType;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
-import pt.up.fe.specs.binarytranslation.generic.InstructionData;
 
-public enum MicroBlazeInstructionSet {
+public enum MicroBlazeInstructionSet implements InstructionSet {
 
     // name, binary code, latency, delay, subtype
     // within ISA (i.e. instruction binary format), generic type
@@ -210,7 +208,8 @@ public enum MicroBlazeInstructionSet {
      * Creates a table of lists, where each type of instruction
      *  format gets its list of instructions in that format
      */
-    private static Map<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSet>> typeLists = makeTypeLists();
+    private static Map<AsmInstructionType, List<InstructionSet>> typeLists = InstructionSet
+            .makeTypeLists(MicroBlazeAsmInstructionType.values(), MicroBlazeInstructionSet.values());
 
     /*
      * Constructor
@@ -231,94 +230,65 @@ public enum MicroBlazeInstructionSet {
     }
 
     /*
-     * Constructs a map where each key is a type of 
-     * instruction format, and the list are the instructions of that format
+     * Get values of this ISA type list (i.e., SPECIAL, TYPE A, etc)
      */
-    private static Map<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSet>> makeTypeLists() {
+    public AsmInstructionType[] getAsmInstructionTypes() {
+        return MicroBlazeAsmInstructionType.values();
+    }
 
-        var ret = new HashMap<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSet>>();
+    /*
+     * Private helper method too look up the list
+     */
+    public int getLatency() {
+        return this.latency;
+    }
 
-        // For each instruction format
-        for (MicroBlazeAsmInstructionType type : MicroBlazeAsmInstructionType.values()) {
-            var nlist = new ArrayList<MicroBlazeInstructionSet>();
+    /*
+     * Private helper method too look up the list
+     */
+    public int getDelay() {
+        return this.delay;
+    }
 
-            // For each instruction in the set, which fits that format, make the list
-            for (MicroBlazeInstructionSet inst : values()) {
-                if (inst.codetype == type) {
-                    nlist.add(inst);
-                }
-            }
-            ret.put(type, nlist);
-        }
-        return ret;
+    /*
+     * Private helper method too get full opcode
+     */
+    public int getOpCode() {
+        return this.opcode;
+    }
+
+    /*
+     * Private helper method too get only the bits that matter
+     */
+    public int getReducedOpCode() {
+        return this.reducedopcode;
+    }
+
+    /*
+     * Private helper method too look up type in the list
+     */
+    public List<InstructionType> getGenericType() {
+        return this.genericType;
+    }
+
+    /*
+     * Private helper method too look up name the list
+     */
+    public String getName() {
+        return this.instructionName;
     }
 
     /*
      * Gets only the instructions which match format of type "type"
      */
-    private static List<MicroBlazeInstructionSet> getTypeList(AsmInstructionType type) {
+    public List<InstructionSet> getTypeList(AsmInstructionType type) {
         return typeLists.get(type);
     }
 
     /*
-     * Initializes field in constructor for MicroBlazeInstruction
+     * 
      */
-    private static String getName(AsmInstructionData asmData) {
-        for (MicroBlazeInstructionSet inst : getTypeList(asmData.getType())) {
-            if (inst.reducedopcode == asmData.getReducedOpcode())
-                return inst.instructionName;
-        }
-        return "Unknown Instruction!";
-        // TODO throw something here
-    }
-
-    /*
-     * Initializes field in constructor for MicroBlazeInstruction
-     */
-    private static List<InstructionType> getGenericType(AsmInstructionData asmData) {
-        for (MicroBlazeInstructionSet inst : getTypeList(asmData.getType())) {
-            if (inst.reducedopcode == asmData.getReducedOpcode())
-                return inst.genericType;
-        }
-        // return InstructionType.unknownType;
-        List<InstructionType> ret = new ArrayList<InstructionType>();
-        ret.add(InstructionType.G_UNKN);
-        return ret;
-    }
-
-    /*
-     * Initializes field in constructor for MicroBlazeInstruction
-     */
-    private static int getLatency(AsmInstructionData asmData) {
-        for (MicroBlazeInstructionSet inst : getTypeList(asmData.getType())) {
-            if (inst.reducedopcode == asmData.getReducedOpcode())
-                return inst.latency;
-        }
-        return -1; // TODO replace with exception
-    }
-
-    /*
-     * Initializes field in constructor for MicroBlazeInstruction
-     */
-    private static int getDelay(AsmInstructionData asmData) {
-        for (MicroBlazeInstructionSet inst : getTypeList(asmData.getType())) {
-            if (inst.reducedopcode == asmData.getReducedOpcode())
-                return inst.delay;
-        }
-        return -1; // TODO replace with exception
-    }
-
-    /*
-     * Interpret field data given by parsers
-     */
-    public static InstructionData process(AsmInstructionData fieldData) {
-
-        String plainname = getName(fieldData);
-        int latency = getLatency(fieldData);
-        int delay = getDelay(fieldData);
-        List<InstructionType> genericTypes = getGenericType(fieldData);
-        // TODO operands
-
-        return new InstructionData(plainname, latency, delay, genericTypes);
+    public AsmInstructionType getCodeType() {
+        return this.codetype;
     }
 }
