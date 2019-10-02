@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
@@ -172,9 +171,13 @@ public class BinaryAsmInstructionParser implements AsmInstructionParser {
     }
 
     @Override
-    public Optional<AsmInstructionData> parse(Instruction asmInstruction) {
+    public Optional<AsmInstructionData> parse(String asmInstruction) {
 
-        var currentString = new StringParser(asmInstruction.toBinaryString());
+        long aux = Long.parseLong(asmInstruction, 16);
+        var binaryString = Long.toBinaryString(aux);
+        binaryString = SpecsStrings.padLeft(binaryString, 32, '0');
+
+        var currentString = new StringParser(binaryString);
         Map<String, String> fields = new HashMap<>();
 
         for (var rule : rules) {

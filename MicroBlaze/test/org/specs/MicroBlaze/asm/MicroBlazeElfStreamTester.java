@@ -3,7 +3,6 @@ package org.specs.MicroBlaze.asm;
 import java.io.File;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.asm.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
@@ -18,7 +17,7 @@ public class MicroBlazeElfStreamTester {
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
             Instruction inst = null;
             while ((inst = el.nextInstruction()) != null) {
-                System.out.println(inst);
+                inst.printInstruction();
             }
         }
 

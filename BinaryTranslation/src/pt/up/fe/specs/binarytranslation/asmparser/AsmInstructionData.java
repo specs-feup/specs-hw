@@ -35,4 +35,25 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
 
         return data;
     }
+
+    public AsmInstructionType getType() {
+        return this.get(TYPE);
+    }
+
+    /*
+     * Reduces all fields with prefix name "opcode" to a single sequence of bits
+     */
+    public int getReducedOpcode() {
+        String tmp = "";
+        var map1 = this.get(FIELDS);
+        var keys1 = map1.keySet();
+
+        for (String key : keys1) {
+            if (key.contains("opcode")) {
+                tmp = tmp + map1.get(key);
+            }
+        }
+
+        return Integer.parseInt(tmp, 2);
+    }
 }

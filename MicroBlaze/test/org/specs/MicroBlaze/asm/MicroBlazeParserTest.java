@@ -3,17 +3,14 @@ package org.specs.MicroBlaze.asm;
 import java.io.File;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.asmparser.MicroBlazeInstructionParsers;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 import pt.up.fe.specs.util.SpecsIo;
 
-public class MicroBlazeTest {
+public class MicroBlazeParserTest {
 
     @Test
-    public void testArmParser() {
-        IsaParser parser = MicroBlazeInstructionParsers.getMicroBlazeIsaParser();
+    public void testMicroBlazeParser() {
 
         StringBuilder output = new StringBuilder();
 
@@ -23,8 +20,7 @@ public class MicroBlazeTest {
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
             Instruction inst = null;
             while ((inst = el.nextInstruction()) != null) {
-                var data = parser.parse(inst);
-                output.append(data).append("\n");
+                output.append(inst.getFields()).append("\n");
             }
         }
 

@@ -13,10 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.generic;
 
-import java.util.List;
-
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
@@ -28,10 +27,13 @@ public abstract class AInstruction implements Instruction {
 
     private Number address;
     private String instruction;
-    protected String plainname;
+    protected AsmInstructionData fieldData; // raw field data
+    protected InstructionData idata; // decoded field data
+
+    /*protected String plainname;
     protected int latency;
     protected int delay;
-    protected List<InstructionType> genericType;
+    protected List<InstructionType> genericType;*/
 
     public AInstruction(Number address, String instruction) {
         this.address = address;
@@ -40,7 +42,7 @@ public abstract class AInstruction implements Instruction {
 
     @Override
     public String getName() {
-        return plainname;
+        return idata.getPlainName();
     }
 
     @Override
@@ -55,12 +57,12 @@ public abstract class AInstruction implements Instruction {
 
     @Override
     public int getLatency() {
-        return this.latency;
+        return idata.getLatency();
     }
 
     @Override
     public int getDelay() {
-        return this.delay;
+        return idata.getDelay();
     }
 
     @Override
@@ -71,78 +73,78 @@ public abstract class AInstruction implements Instruction {
     // Check for instruction type /////////////////////////////////////////////
     @Override
     public final boolean isAdd() {
-        return genericType.contains(InstructionType.G_ADD);
+        return idata.getGenericTypes().contains(InstructionType.G_ADD);
     }
 
     @Override
     public final boolean isSub() {
-        return genericType.contains(InstructionType.G_SUB);
+        return idata.getGenericTypes().contains(InstructionType.G_SUB);
     }
 
     @Override
     public final boolean isMul() {
-        return genericType.contains(InstructionType.G_MUL);
+        return idata.getGenericTypes().contains(InstructionType.G_MUL);
     }
 
     @Override
     public final boolean isLogical() {
-        return genericType.contains(InstructionType.G_LOGICAL);
+        return idata.getGenericTypes().contains(InstructionType.G_LOGICAL);
     }
 
     @Override
     public final boolean isUnary() {
-        return genericType.contains(InstructionType.G_UNARY);
+        return idata.getGenericTypes().contains(InstructionType.G_UNARY);
     }
 
     @Override
     public final boolean isJump() {
-        return (genericType.contains(InstructionType.G_CJUMP) |
-                genericType.contains(InstructionType.G_UJUMP));
+        return (idata.getGenericTypes().contains(InstructionType.G_CJUMP) |
+                idata.getGenericTypes().contains(InstructionType.G_UJUMP));
     }
 
     @Override
     public final boolean isConditionalJump() {
-        return genericType.contains(InstructionType.G_CJUMP);
+        return idata.getGenericTypes().contains(InstructionType.G_CJUMP);
     }
 
     @Override
     public final boolean isUnconditionalJump() {
-        return genericType.contains(InstructionType.G_UJUMP);
+        return idata.getGenericTypes().contains(InstructionType.G_UJUMP);
     }
 
     @Override
     public final boolean isRelativeJump() {
-        return genericType.contains(InstructionType.G_RJUMP);
+        return idata.getGenericTypes().contains(InstructionType.G_RJUMP);
     }
 
     @Override
     public final boolean isAbsoluteJump() {
-        return genericType.contains(InstructionType.G_AJUMP);
+        return idata.getGenericTypes().contains(InstructionType.G_AJUMP);
     }
 
     @Override
     public final boolean isImmediate() {
-        return genericType.contains(InstructionType.G_IJUMP);
+        return idata.getGenericTypes().contains(InstructionType.G_IJUMP);
     }
 
     @Override
     public final boolean isStore() {
-        return genericType.contains(InstructionType.G_STORE);
+        return idata.getGenericTypes().contains(InstructionType.G_STORE);
     }
 
     @Override
     public final boolean isLoad() {
-        return genericType.contains(InstructionType.G_LOAD);
+        return idata.getGenericTypes().contains(InstructionType.G_LOAD);
     }
 
     @Override
     public final boolean isMemory() {
-        return genericType.contains(InstructionType.G_MEMORY);
+        return idata.getGenericTypes().contains(InstructionType.G_MEMORY);
     }
 
     @Override
     public final boolean isFloat() {
-        return genericType.contains(InstructionType.G_FLOAT);
+        return idata.getGenericTypes().contains(InstructionType.G_FLOAT);
     }
 
     ///////////////////////////////////////////// Additional non basic types:
@@ -180,5 +182,10 @@ public abstract class AInstruction implements Instruction {
     public void printInstruction() {
         String addr = Long.toHexString(this.getAddress().longValue());
         System.out.print(addr + ":" + this.getInstruction() + ":" + this.getName() + "\n");
+    }
+
+    @Override
+    public AsmInstructionData getFields() {
+        return this.fieldData;
     }
 }
