@@ -1,6 +1,6 @@
-package org.specs.MicroBlaze.asmparser;
+package org.specs.MicroBlaze.isa;
 
-public interface MicroBlazeAsmFields {
+public interface MicroBlazeInstructionParsersFields {
 
     static String OPCODEA = "opcodea";
     static String OPCODEB = "opcodeb";

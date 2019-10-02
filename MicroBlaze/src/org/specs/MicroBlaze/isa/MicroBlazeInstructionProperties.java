@@ -1,22 +1,18 @@
 package org.specs.MicroBlaze.isa;
 
-import static org.specs.MicroBlaze.asmparser.MicroBlazeAsmInstructionType.*;
+import static org.specs.MicroBlaze.isa.MicroBlazeInstructionType.*;
 import static pt.up.fe.specs.binarytranslation.InstructionType.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import org.specs.MicroBlaze.asmparser.MicroBlazeAsmInstructionType;
-import org.specs.MicroBlaze.asmparser.MicroBlazeInstructionParsers;
-
-import pt.up.fe.specs.binarytranslation.InstructionSet;
+import pt.up.fe.specs.binarytranslation.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.InstructionType;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 
-public enum MicroBlazeInstructionSet implements InstructionSet {
+public enum MicroBlazeInstructionProperties implements InstructionProperties {
 
     // name, binary code, latency, delay, subtype
     // within ISA (i.e. instruction binary format), generic type
@@ -200,22 +196,15 @@ public enum MicroBlazeInstructionSet implements InstructionSet {
     private final int reducedopcode; // only the bits that matter, built after parsing the fields
     private final int latency;
     private final int delay;
-    private final MicroBlazeAsmInstructionType codetype;
+    private final MicroBlazeInstructionType codetype;
     private final List<InstructionType> genericType;
     private final AsmInstructionData iData; // decoded fields of this instruction
 
     /*
-     * Creates a table of lists, where each type of instruction
-     *  format gets its list of instructions in that format
-     */
-    private static Map<AsmInstructionType, List<InstructionSet>> typeLists = InstructionSet
-            .makeTypeLists(MicroBlazeAsmInstructionType.values(), MicroBlazeInstructionSet.values());
-
-    /*
      * Constructor
      */
-    private MicroBlazeInstructionSet(int opcode, int latency,
-            int delay, MicroBlazeAsmInstructionType mbtype, InstructionType... tp) {
+    private MicroBlazeInstructionProperties(int opcode, int latency,
+            int delay, MicroBlazeInstructionType mbtype, InstructionType... tp) {
         this.instructionName = name();
         this.opcode = opcode;
         this.latency = latency;
@@ -227,13 +216,6 @@ public enum MicroBlazeInstructionSet implements InstructionSet {
         IsaParser parser = MicroBlazeInstructionParsers.getMicroBlazeIsaParser();
         this.iData = parser.parse(Integer.toHexString(opcode)); // TODO make new overload for "parse"
         this.reducedopcode = this.iData.getReducedOpcode();
-    }
-
-    /*
-     * Get values of this ISA type list (i.e., SPECIAL, TYPE A, etc)
-     */
-    public AsmInstructionType[] getAsmInstructionTypes() {
-        return MicroBlazeAsmInstructionType.values();
     }
 
     /*
@@ -279,14 +261,7 @@ public enum MicroBlazeInstructionSet implements InstructionSet {
     }
 
     /*
-     * Gets only the instructions which match format of type "type"
-     */
-    public List<InstructionSet> getTypeList(AsmInstructionType type) {
-        return typeLists.get(type);
-    }
-
-    /*
-     * 
+     * get code type of a particular instruction
      */
     public AsmInstructionType getCodeType() {
         return this.codetype;
