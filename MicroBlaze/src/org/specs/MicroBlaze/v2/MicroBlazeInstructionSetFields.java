@@ -5,7 +5,9 @@ import static pt.up.fe.specs.binarytranslation.InstructionType.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.specs.MicroBlaze.asmparser.MicroBlazeAsmInstructionType;
 
@@ -194,40 +196,16 @@ public enum MicroBlazeInstructionSetFields {
      * Instruction property fields
      */
     private final String instructionName;
-    private final int opcode;
+    private final int opcode; // 32 bit instruction code without operands
+    private final int reducedopcode; // only the bits that matter for the specific instruction type
     private final int latency;
     private final int delay;
     private final MicroBlazeAsmInstructionType codetype;
     private final List<InstructionType> genericType;
-    private static int reducerMask = 0xFC00_0000; // gets only the first 6 bits
 
-    // Exceptions to TypeA/B rule
-    private static int specialInst = 0x9400_0000;
-
-    private static int barrelShift = 0x4400_0000; // barrelshift
-    private static int ibarrelShift = 0x6400_0000; // barrelshift with immediate value
-
-    private static int unconditionalBranch = 0x9800_0000;
-    private static int iunconditionalBranch = 0xB800_0000;
-
-    private static int conditionalBranch = 0x9C00_0000;
-    private static int iconditionalBranch = 0xBC00_0000;
-    private static int returnInstructions = 0xB400_0000;
-
-    private static int streamInsts = 0x6C00_0000;
-    private static int dstreamInsts = 0x4C00_0000;
-
-    private static int typeAB = 0x20000000; // if this bit is 1, then its typeB instruction
-
-    private static int maskA = makeMaskA();
-    private static int maskB = makeMaskB();
-    private static int ubranchMask = makeMaskUBranch();
-    private static int cbranchMask = makeMaskCBranch();
-    private static int specialMask = makeMaskSpecial();
-    private static int barrelMask = makeMaskBarrel();
-    private static int ibarrelMask = makeMaskiBarrel();
-    private static int streamMask = makeMaskStream();
-    private static int dstreamMask = makeMaskdStream();
+    private static Map<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSetFields>> typeLists = makeTypeLists();
+    // private static Map<MicroBlazeAsmInstructionType, Integer> typeMasks = new HashMap<MicroBlazeAsmInstructionType,
+    // Integer>();
 
     /*
      * Constructor
@@ -236,127 +214,43 @@ public enum MicroBlazeInstructionSetFields {
             int delay, MicroBlazeAsmInstructionType mbtype, InstructionType... tp) {
         this.instructionName = name();
         this.opcode = opcode;
+        this.reducedopcode = reduceOpcode(mbtype, opcode);
         this.latency = latency;
         this.delay = delay;
         this.codetype = mbtype;
         this.genericType = Arrays.asList(tp);
     }
 
-    /*
-     * Private method to create bit mask for typeA 
-     * instructions in this ISA, based on the instruction list
-     */
-    private static int makeMaskA() {
-        int mask = 0;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (isTypeA(insts.getOpCode()))
-                mask |= insts.getOpCode();
-        }
-        return mask;
+    private int reduceOpcode(MicroBlazeAsmInstructionType mbtype, int opcode) {
+        return 0;
     }
 
     /*
-     * Private method to create bit mask for typeB 
-     * instructions in this ISA, based on the instruction list
+     * Constructs a map where each key is a type of 
+     * instruction format, and the list are the instructions of that format
+     * Also constructs the mask that enables decoding of the specific instruction
+     * after the global type "MicroBlazeAsmInstructionType" has been determined
      */
-    private static int makeMaskB() {
-        int mask = 0;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (isTypeB(insts.getOpCode()))
-                mask |= insts.getOpCode();
-        }
-        return mask;
-    }
+    private static Map<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSetFields>> makeTypeLists() {
 
-    /*
-     * Private method to create bit mask for unconditional branches 
-     * instructions in this ISA, based on the instruction list
-     */
-    private static int makeMaskUBranch() {
-        int mask = 0;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (isUBranch(insts.getOpCode()))
-                mask |= insts.getOpCode();
-        }
+        var ret = new HashMap<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSetFields>>();
 
-        // hack to remove MBAR
-        mask &= 0xFFFF_FFFB;
-        return mask;
-    }
-
-    /*
-     * Private method to create bit mask for conditional branches 
-     * instructions in this ISA, based on the instruction list
-     */
-    private static int makeMaskCBranch() {
-        int mask = 0;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (isCBranch(insts.getOpCode()) || isReturn(insts.getOpCode()))
-                mask |= insts.getOpCode();
+        // For each instruction format
+        for (MicroBlazeAsmInstructionType type : MicroBlazeAsmInstructionType.values()) {
+            var nlist = new ArrayList<MicroBlazeInstructionSetFields>();
+            // int mask = 0;
+            // For each instruction in the set, which fits
+            // that format, make the list, and add to the mask
+            for (MicroBlazeInstructionSetFields inst : values()) {
+                if (inst.getCodeType() == type) {
+                    nlist.add(inst);
+                    // mask |= inst.getOpCode();
+                }
+            }
+            ret.put(type, nlist);
+            // typeMasks.put(type, mask);
         }
-        return mask;
-    }
-
-    /*
-     * Private method to create bit mask for branches 
-     * instructions in this ISA, based on the instruction list
-     */
-    private static int makeMaskSpecial() {
-        int mask = 0;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (isSpecial(insts.getOpCode()))
-                mask |= insts.getOpCode();
-        }
-        return mask;
-    }
-
-    /*
-     * Private method to create bit mask for barrel shifts
-     */
-    private static int makeMaskBarrel() {
-        int mask = 0;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (isBarrel(insts.getOpCode()))
-                mask |= insts.getOpCode();
-        }
-        return mask;
-    }
-
-    /*
-     * Private method to create bit mask 
-     * for barrel shifts with immediate values
-     */
-    private static int makeMaskiBarrel() {
-        int mask = 0;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (isiBarrel(insts.getOpCode()))
-                mask |= insts.getOpCode();
-        }
-        return mask;
-    }
-
-    /*
-     * Private method to create bit mask put/get
-     */
-    private static int makeMaskStream() {
-        int mask = 0;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (isStream(insts.getOpCode()))
-                mask |= insts.getOpCode();
-        }
-        return mask;
-    }
-
-    /*
-     * Private method to create bit mask putd/getd
-     */
-    private static int makeMaskdStream() {
-        int mask = 0;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (isdStream(insts.getOpCode()))
-                mask |= insts.getOpCode();
-        }
-        return mask;
+        return ret;
     }
 
     /*
@@ -441,39 +335,40 @@ public enum MicroBlazeInstructionSetFields {
 
     /*
      * Pick a mask
-     */
+     
     private static int pickMask(int fullopcode) {
-
+    
         if (isSpecial(fullopcode))
             return specialMask;
-
+    
         else if (isCBranch(fullopcode))
             return cbranchMask;
-
+    
         else if (isUBranch(fullopcode))
             return ubranchMask;
-
+    
         else if (isBarrel(fullopcode))
             return barrelMask;
-
+    
         else if (isiBarrel(fullopcode))
             return ibarrelMask;
-
+    
         else if (isStream(fullopcode))
             return streamMask;
-
+    
         else if (isdStream(fullopcode))
             return dstreamMask;
-
+    
         else if (isTypeA(fullopcode))
             return maskA;
-
+    
         else if (isTypeB(fullopcode))
             return maskB;
-
+    
         return 0;
         // TODO throw something here
     }
+     */
 
     /*
      * Private helper method too look up the list
@@ -497,6 +392,13 @@ public enum MicroBlazeInstructionSetFields {
     }
 
     /*
+     * Private helper to get code type (i.e. format of instruction word)
+     */
+    private MicroBlazeAsmInstructionType getCodeType() {
+        return this.codetype;
+    }
+
+    /*
      * Private helper method too look up type in the list
      */
     private List<InstructionType> getGenericType() {
@@ -513,9 +415,14 @@ public enum MicroBlazeInstructionSetFields {
     /*
      * Initializes field in constructor for MicroBlazeInstruction
      */
-    public static String getName(int fullopcode) {
-        int mask = pickMask((int) fullopcode);
-        int opcode = (fullopcode) & mask;
+    public static String getName(AsmInstructionData asmData) {
+
+        // int mask = pickMask((int) fullopcode);
+        // int opcode = (fullopcode) & mask;
+
+        // get only insts of the respective type
+        var insts = getTypeList(asmData.getType());
+
         for (MicroBlazeInstructionSetFields insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getName();
@@ -571,6 +478,8 @@ public enum MicroBlazeInstructionSetFields {
      */
     public static AInstructionData process(AsmInstructionData fieldData) {
 
-        return new AInstructionData();
+        String plainname = getName(fieldData);
+        
+        return new AInstructionData(plainname, );
     }
 }
