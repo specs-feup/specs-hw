@@ -16,9 +16,9 @@ import pt.up.fe.specs.binarytranslation.InstructionType;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
-import pt.up.fe.specs.binarytranslation.generic.AInstructionData;
+import pt.up.fe.specs.binarytranslation.generic.InstructionData;
 
-public enum MicroBlazeInstructionSetFields {
+public enum MicroBlazeInstructionSet {
 
     // name, binary code, latency, delay, subtype
     // within ISA (i.e. instruction binary format), generic type
@@ -199,6 +199,7 @@ public enum MicroBlazeInstructionSetFields {
      */
     private final String instructionName;
     private final int opcode; // 32 bit instruction code without operands
+    private final int reducedopcode; // only the bits that matter, built after parsing the fields
     private final int latency;
     private final int delay;
     private final MicroBlazeAsmInstructionType codetype;
@@ -209,21 +210,12 @@ public enum MicroBlazeInstructionSetFields {
      * Creates a table of lists, where each type of instruction
      *  format gets its list of instructions in that format
      */
-    private static Map<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSetFields>> typeLists = makeTypeLists();
-
-    /*
-     * Uses the parser to init the decoded instruction set
-     * to get the interpreted fields, from the raw data
-     */
-    // private static Map<MicroBlazeInstructionSetFields, AsmInstructionData> parsedLists = makeParsedLists();
-
-    // private static Map<MicroBlazeAsmInstructionType, Integer> typeMasks = new HashMap<MicroBlazeAsmInstructionType,
-    // Integer>();
+    private static Map<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSet>> typeLists = makeTypeLists();
 
     /*
      * Constructor
      */
-    private MicroBlazeInstructionSetFields(int opcode, int latency,
+    private MicroBlazeInstructionSet(int opcode, int latency,
             int delay, MicroBlazeAsmInstructionType mbtype, InstructionType... tp) {
         this.instructionName = name();
         this.opcode = opcode;
@@ -232,225 +224,49 @@ public enum MicroBlazeInstructionSetFields {
         this.codetype = mbtype;
         this.genericType = Arrays.asList(tp);
 
+        // use the parser to initialize private fields of instruction set itself
         IsaParser parser = MicroBlazeInstructionParsers.getMicroBlazeIsaParser();
-        this.iData = parser.parse(Integer.toString(opcode)); // TODO make new overload for "parse"
+        this.iData = parser.parse(Integer.toHexString(opcode)); // TODO make new overload for "parse"
+        this.reducedopcode = this.iData.getReducedOpcode();
     }
 
     /*
      * Constructs a map where each key is a type of 
      * instruction format, and the list are the instructions of that format
-     * Also constructs the mask that enables decoding of the specific instruction
-     * after the global type "MicroBlazeAsmInstructionType" has been determined
      */
-    private static Map<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSetFields>> makeTypeLists() {
+    private static Map<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSet>> makeTypeLists() {
 
-        var ret = new HashMap<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSetFields>>();
+        var ret = new HashMap<MicroBlazeAsmInstructionType, List<MicroBlazeInstructionSet>>();
 
         // For each instruction format
         for (MicroBlazeAsmInstructionType type : MicroBlazeAsmInstructionType.values()) {
-            var nlist = new ArrayList<MicroBlazeInstructionSetFields>();
-            // int mask = 0;
-            // For each instruction in the set, which fits
-            // that format, make the list, and add to the mask
-            for (MicroBlazeInstructionSetFields inst : values()) {
-                if (inst.getCodeType() == type) {
+            var nlist = new ArrayList<MicroBlazeInstructionSet>();
+
+            // For each instruction in the set, which fits that format, make the list
+            for (MicroBlazeInstructionSet inst : values()) {
+                if (inst.codetype == type) {
                     nlist.add(inst);
-                    // mask |= inst.getOpCode();
                 }
             }
             ret.put(type, nlist);
-            // typeMasks.put(type, mask);
         }
         return ret;
     }
 
     /*
-    /*
-     * Decodes the instruction set list itself, breaking it down into fields
-     
-    private static Map<MicroBlazeInstructionSetFields, AsmInstructionData> makeParsedLists() {
-        var ret = new HashMap<MicroBlazeInstructionSetFields, AsmInstructionData>();
-        IsaParser parser = MicroBlazeInstructionParsers.getMicroBlazeIsaParser();
-        for (MicroBlazeInstructionSetFields inst : values()) {
-            var fieldData = parser.parse(Integer.toString(inst.getOpCode())); // TODO make new overload for "parse"
-            ret.put(inst, fieldData);
-        }
-        return ret;
-    }
-    */
-    /*
-     * Check if instruction is typeA (or any relative branch)
+     * Gets only the instructions which match format of type "type"
      */
-    private static boolean isTypeA(AsmInstructionData asmData) {
-        AsmInstructionType iType = asmData.getType();
-        return (iType == TYPE_A);
-    }
-
-    /*
-     * Check if instruction is typeB (or any relative branch)
-     */
-    private static boolean isTypeB(AsmInstructionData asmData) {
-        AsmInstructionType iType = asmData.getType();
-        return (iType == TYPE_B);
-    }
-
-    /*
-     * Check if instruction is Special
-     */
-    private static boolean isSpecial(AsmInstructionData asmData) {
-        AsmInstructionType iType = asmData.getType();
-        return (iType == SPECIAL);
-    }
-
-    /*
-     * Check if instruction is Branch
-     */
-    private static boolean isBranch(AsmInstructionData asmData) {
-        AsmInstructionType iType = asmData.getType();
-        return (iType == UBRANCH) || (iType == CBRANCH);
-    }
-
-    /*
-     * Check if instruction is Conditional Branch
-     */
-    private static boolean isCBranch(AsmInstructionData asmData) {
-        AsmInstructionType iType = asmData.getType();
-        return (iType == CBRANCH);
-    }
-
-    /*
-     * Check if instruction is Unconditional Branch
-     */
-    private static boolean isUBranch(AsmInstructionData asmData) {
-        AsmInstructionType iType = asmData.getType();
-        return (iType == UBRANCH);
-    }
-
-    /*
-     * Check if instruction is return instruction
-     */
-    private static boolean isReturn(AsmInstructionData asmData) {
-        AsmInstructionType iType = asmData.getType();
-        return (iType == RETURN);
-    }
-
-    /*
-     * Check if instruction is Barrel Shift w/ immediate value
-     */
-    private static boolean isiBarrel(AsmInstructionData asmData) {
-        AsmInstructionType iType = asmData.getType();
-        return (iType == IBARREL);
-    }
-
-    /*
-     * Check if instruction is put/get
-     */
-    private static boolean isStream(AsmInstructionData asmData) {
-        AsmInstructionType iType = asmData.getType();
-        return (iType == STREAM);
-    }
-
-    /*
-     * Check if instruction is putd/getd
-     */
-    private static boolean isdStream(AsmInstructionData asmData) {
-        AsmInstructionType iType = asmData.getType();
-        return (iType == DSTREAM);
-    }
-
-    /*
-     * Pick a mask
-     
-    private static int pickMask(int fullopcode) {
-    
-        if (isSpecial(fullopcode))
-            return specialMask;
-    
-        else if (isCBranch(fullopcode))
-            return cbranchMask;
-    
-        else if (isUBranch(fullopcode))
-            return ubranchMask;
-    
-        else if (isBarrel(fullopcode))
-            return barrelMask;
-    
-        else if (isiBarrel(fullopcode))
-            return ibarrelMask;
-    
-        else if (isStream(fullopcode))
-            return streamMask;
-    
-        else if (isdStream(fullopcode))
-            return dstreamMask;
-    
-        else if (isTypeA(fullopcode))
-            return maskA;
-    
-        else if (isTypeB(fullopcode))
-            return maskB;
-    
-        return 0;
-        // TODO throw something here
-    }
-     */
-
-    /*
-     * Private helper method too look up the list
-     */
-    private int getLatency() {
-        return this.latency;
-    }
-
-    /*
-     * Private helper method too look up the list
-     */
-    private int getDelay() {
-        return this.delay;
-    }
-
-    /*
-     * Private helper method too look up opcode in the list
-     */
-    private int getOpCode() {
-        return this.opcode;
-    }
-
-    /*
-     * Private helper to get code type (i.e. format of instruction word)
-     */
-    private MicroBlazeAsmInstructionType getCodeType() {
-        return this.codetype;
-    }
-
-    /*
-     * Private helper method too look up type in the list
-     */
-    private List<InstructionType> getGenericType() {
-        return this.genericType;
-    }
-
-    /*
-     * Private helper method too look up name the list
-     */
-    private String getName() {
-        return this.instructionName;
+    private static List<MicroBlazeInstructionSet> getTypeList(AsmInstructionType type) {
+        return typeLists.get(type);
     }
 
     /*
      * Initializes field in constructor for MicroBlazeInstruction
      */
-    public static String getName(AsmInstructionData asmData) {
-
-        // int mask = pickMask((int) fullopcode);
-        // int opcode = (fullopcode) & mask;
-
-        // get only insts of the respective type
-        var insts = getTypeList(asmData.getType());
-
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (insts.getOpCode() == opcode)
-                return insts.getName();
+    private static String getName(AsmInstructionData asmData) {
+        for (MicroBlazeInstructionSet inst : getTypeList(asmData.getType())) {
+            if (inst.reducedopcode == asmData.getReducedOpcode())
+                return inst.instructionName;
         }
         return "Unknown Instruction!";
         // TODO throw something here
@@ -459,12 +275,10 @@ public enum MicroBlazeInstructionSetFields {
     /*
      * Initializes field in constructor for MicroBlazeInstruction
      */
-    public static List<InstructionType> getGenericType(int fullopcode) {
-        int mask = pickMask((int) fullopcode);
-        int opcode = (fullopcode) & mask;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (insts.getOpCode() == opcode)
-                return insts.getGenericType();
+    private static List<InstructionType> getGenericType(AsmInstructionData asmData) {
+        for (MicroBlazeInstructionSet inst : getTypeList(asmData.getType())) {
+            if (inst.reducedopcode == asmData.getReducedOpcode())
+                return inst.genericType;
         }
         // return InstructionType.unknownType;
         List<InstructionType> ret = new ArrayList<InstructionType>();
@@ -475,12 +289,10 @@ public enum MicroBlazeInstructionSetFields {
     /*
      * Initializes field in constructor for MicroBlazeInstruction
      */
-    public static int getLatency(int fullopcode) {
-        int mask = pickMask((int) fullopcode);
-        int opcode = (fullopcode) & mask;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (insts.getOpCode() == opcode)
-                return insts.getLatency();
+    private static int getLatency(AsmInstructionData asmData) {
+        for (MicroBlazeInstructionSet inst : getTypeList(asmData.getType())) {
+            if (inst.reducedopcode == asmData.getReducedOpcode())
+                return inst.latency;
         }
         return -1; // TODO replace with exception
     }
@@ -488,12 +300,10 @@ public enum MicroBlazeInstructionSetFields {
     /*
      * Initializes field in constructor for MicroBlazeInstruction
      */
-    public static int getDelay(int fullopcode) {
-        int mask = pickMask((int) fullopcode);
-        int opcode = (fullopcode) & mask;
-        for (MicroBlazeInstructionSetFields insts : values()) {
-            if (insts.getOpCode() == opcode)
-                return insts.getDelay();
+    private static int getDelay(AsmInstructionData asmData) {
+        for (MicroBlazeInstructionSet inst : getTypeList(asmData.getType())) {
+            if (inst.reducedopcode == asmData.getReducedOpcode())
+                return inst.delay;
         }
         return -1; // TODO replace with exception
     }
@@ -501,10 +311,14 @@ public enum MicroBlazeInstructionSetFields {
     /*
      * Interpret field data given by parsers
      */
-    public static AInstructionData process(AsmInstructionData fieldData) {
+    public static InstructionData process(AsmInstructionData fieldData) {
 
         String plainname = getName(fieldData);
-        
-        return new AInstructionData(plainname, );
+        int latency = getLatency(fieldData);
+        int delay = getDelay(fieldData);
+        List<InstructionType> genericTypes = getGenericType(fieldData);
+        // TODO operands
+
+        return new InstructionData(plainname, latency, delay, genericTypes);
     }
 }

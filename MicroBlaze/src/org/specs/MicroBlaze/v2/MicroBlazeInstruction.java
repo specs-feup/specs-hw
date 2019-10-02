@@ -2,6 +2,9 @@ package org.specs.MicroBlaze.v2;
 
 import java.math.BigInteger;
 
+import org.specs.MicroBlaze.asmparser.MicroBlazeInstructionParsers;
+
+import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 
 public class MicroBlazeInstruction extends AInstruction {
@@ -9,13 +12,11 @@ public class MicroBlazeInstruction extends AInstruction {
     /*
      * 
      */
-    public MicroBlazeInstruction(Number address, String instruction) {
-        super(address, instruction);
-        int fullopcode = new BigInteger(instruction, 16).intValue();
-        this.plainname = MicroBlazeInstructionSetFields.getName(fullopcode);
-        this.delay = MicroBlazeInstructionSetFields.getDelay(fullopcode);
-        this.latency = MicroBlazeInstructionSetFields.getLatency(fullopcode);
-        this.genericType = MicroBlazeInstructionSetFields.getGenericType(fullopcode);
+    public MicroBlazeInstruction(String address, String instruction) {
+        super(Long.parseLong(address, 16), instruction);
+        IsaParser parser = MicroBlazeInstructionParsers.getMicroBlazeIsaParser();
+        this.fieldData = parser.parse(instruction);
+        this.idata = MicroBlazeInstructionSet.process(fieldData);
         // lookup ISA table for static information
     }
 

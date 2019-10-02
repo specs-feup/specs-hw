@@ -166,4 +166,10 @@ public interface SimpleInstruction32 extends Instruction {
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    default Object getFields() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

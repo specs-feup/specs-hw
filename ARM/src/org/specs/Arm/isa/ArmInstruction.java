@@ -10,8 +10,9 @@ public class ArmInstruction extends AInstruction {
     public ArmInstruction(Number address, String instruction) {
         super(address, instruction);
         long fullopcode = Integer.valueOf(instruction);
-        this.latency = ArmInstructionSetFields.getLatency(fullopcode);
-        this.genericType = ArmInstructionSetFields.getGenericType(fullopcode);
+
+        /*this.latency = ArmInstructionSetFields.getLatency(fullopcode);
+        this.genericType = ArmInstructionSetFields.getGenericType(fullopcode);*/
         // lookup ISA table for static information
     }
 

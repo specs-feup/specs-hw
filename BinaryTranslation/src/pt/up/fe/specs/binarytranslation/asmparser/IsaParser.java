@@ -13,8 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.asmparser;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
-
 public interface IsaParser {
 
     /**
@@ -23,5 +21,5 @@ public interface IsaParser {
      * @param instruction
      * @return
      */
-    AsmInstructionData parse(Instruction instruction);
+    AsmInstructionData parse(String instruction);
 }

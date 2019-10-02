@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
@@ -36,7 +35,7 @@ public class GenericIsaParser implements IsaParser {
         this(instructionParsers, null);
     }
 
-    public AsmInstructionData parse(Instruction instruction) {
+    public AsmInstructionData parse(String instruction) {
         // Iterate over all parsers
         for (var parser : instructionParsers) {
             var instData = parser.parse(instruction).orElse(null);

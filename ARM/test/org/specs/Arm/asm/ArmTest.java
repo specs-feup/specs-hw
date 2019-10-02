@@ -13,15 +13,12 @@
 
 package org.specs.Arm.asm;
 
-import static org.junit.Assert.*;
-
-import java.math.BigInteger;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.specs.Arm.asmparser.ArmInstructionParsers;
 
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
-import pt.up.fe.specs.binarytranslation.generic.GenericInstruction;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.utilities.LineStream;
@@ -36,9 +33,7 @@ public class ArmTest {
         try (var lines = LineStream.newInstance(SpecsIo.resourceToStream("org/specs/Arm/asm/test/asm.txt"), "");) {
             while (lines.hasNextLine()) {
                 String asmInstruction = lines.nextLine();
-
-                var inst = new GenericInstruction(0, new BigInteger(asmInstruction, 16));
-                var data = parser.parse(inst);
+                var data = parser.parse(asmInstruction);
                 output.append(data).append("\n");
             }
         }

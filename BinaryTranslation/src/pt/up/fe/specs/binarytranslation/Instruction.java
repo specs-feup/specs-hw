@@ -164,6 +164,12 @@ public interface Instruction {
      */
     public void printInstruction();
 
+    /*
+     * Returns Raw instruction fields as produced 
+     * by respective parser (AsmInstructionParser)
+     */
+    public Object getFields();
+
     /**
      * 
      * @param instruction
