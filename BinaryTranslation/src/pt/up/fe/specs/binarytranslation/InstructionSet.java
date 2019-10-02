@@ -9,68 +9,48 @@ import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 import pt.up.fe.specs.binarytranslation.generic.InstructionData;
 
-public interface InstructionSet {
+public class InstructionSet {
+
+    private List<InstructionProperties> instList;
+    private List<AsmInstructionType> codeTypes;
+    private Map<AsmInstructionType, List<InstructionProperties>> typeLists;
 
     /*
-     * Private helper method too look up the list
+     * Constructor of instruction set; set is constructed from list of instruction
+     * implemented as an enum, which implements InstructionProperties
      */
-    abstract int getLatency();
-
-    /*
-     * Private helper method too look up the list
-     */
-    abstract int getDelay();
-
-    /*
-     * Private helper method too get full opcode
-     */
-    abstract int getOpCode();
-
-    /*
-     * Private helper method too get only the bits that matter
-     */
-    abstract int getReducedOpCode();
-
-    /*
-     * Private helper method too look up type of instruction format
-     */
-    abstract AsmInstructionType getCodeType();
-
-    /*
-     * Private helper method too look up type in the list
-     */
-    abstract List<InstructionType> getGenericType();
-
-    /*
-     * Private helper method too look up name the list
-     */
-    abstract String getName();
+    public InstructionSet(List<InstructionProperties> instList, List<AsmInstructionType> codeTypes) {
+        this.instList = instList;
+        this.codeTypes = codeTypes;
+        this.typeLists = makeTypeLists();
+    }
 
     /*
      * Gets only the instructions which match format of type "type"
      */
-    abstract List<InstructionSet> getTypeList(AsmInstructionType type);
+    private List<InstructionProperties> getTypeList(AsmInstructionType type) {
+        return this.typeLists.get(type);
+    }
 
     /*
      * Constructs a map where each key is a type of 
      * instruction format, and the list are the instructions of that format
      */
-    public static Map<AsmInstructionType, List<InstructionSet>> makeTypeLists(AsmInstructionType[] types,
-            InstructionSet[] insts) {
+    private Map<AsmInstructionType, List<InstructionProperties>> makeTypeLists() {
 
-        var ret = new HashMap<AsmInstructionType, List<InstructionSet>>();
+        var ret = new HashMap<AsmInstructionType, List<InstructionProperties>>();
 
         // For each instruction format
-        for (AsmInstructionType type : types) {
-            var nlist = new ArrayList<InstructionSet>();
+        for (AsmInstructionType codetype : codeTypes) {
+            var nlist = new ArrayList<InstructionProperties>();
 
             // For each instruction in the set, which fits that format, make the list
-            for (InstructionSet inst : insts) {
-                if (inst.getCodeType() == type) {
+            for (InstructionProperties inst : instList) {
+                if (inst.getCodeType() == codetype) {
                     nlist.add(inst);
                 }
             }
-            ret.put(type, nlist);
+            ret.put(codetype, nlist);
         }
         return ret;
     }
@@ -79,7 +59,7 @@ public interface InstructionSet {
      * Initializes field in constructor for MicroBlazeInstruction
      */
     private String getName(AsmInstructionData asmData) {
-        for (InstructionSet inst : getTypeList(asmData.getType())) {
+        for (InstructionProperties inst : getTypeList(asmData.getType())) {
             if (inst.getReducedOpCode() == asmData.getReducedOpcode())
                 return inst.getName();
         }
@@ -91,7 +71,7 @@ public interface InstructionSet {
      * Initializes field in constructor for MicroBlazeInstruction
      */
     private List<InstructionType> getGenericType(AsmInstructionData asmData) {
-        for (InstructionSet inst : getTypeList(asmData.getType())) {
+        for (InstructionProperties inst : getTypeList(asmData.getType())) {
             if (inst.getReducedOpCode() == asmData.getReducedOpcode())
                 return inst.getGenericType();
         }
@@ -105,7 +85,7 @@ public interface InstructionSet {
      * Initializes field in constructor for MicroBlazeInstruction
      */
     private int getLatency(AsmInstructionData asmData) {
-        for (InstructionSet inst : getTypeList(asmData.getType())) {
+        for (InstructionProperties inst : getTypeList(asmData.getType())) {
             if (inst.getReducedOpCode() == asmData.getReducedOpcode())
                 return inst.getLatency();
         }
@@ -116,7 +96,7 @@ public interface InstructionSet {
      * Initializes field in constructor for MicroBlazeInstruction
      */
     private int getDelay(AsmInstructionData asmData) {
-        for (InstructionSet inst : getTypeList(asmData.getType())) {
+        for (InstructionProperties inst : getTypeList(asmData.getType())) {
             if (inst.getReducedOpCode() == asmData.getReducedOpcode())
                 return inst.getDelay();
         }
@@ -126,7 +106,7 @@ public interface InstructionSet {
     /*
      * Interpret field data given by parsers
      */
-    public default InstructionData process(AsmInstructionData fieldData) {
+    public InstructionData process(AsmInstructionData fieldData) {
 
         String plainname = getName(fieldData);
         int latency = getLatency(fieldData);

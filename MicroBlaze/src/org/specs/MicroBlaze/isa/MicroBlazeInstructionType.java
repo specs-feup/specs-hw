@@ -1,8 +1,8 @@
-package org.specs.MicroBlaze.asmparser;
+package org.specs.MicroBlaze.isa;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 
-public enum MicroBlazeAsmInstructionType implements AsmInstructionType {
+public enum MicroBlazeInstructionType implements AsmInstructionType {
 
     SPECIAL,
     UBRANCH,

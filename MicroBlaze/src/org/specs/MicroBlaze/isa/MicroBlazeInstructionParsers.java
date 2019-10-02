@@ -1,6 +1,6 @@
-package org.specs.MicroBlaze.asmparser;
+package org.specs.MicroBlaze.isa;
 
-import static org.specs.MicroBlaze.asmparser.MicroBlazeAsmInstructionType.*;
+import static org.specs.MicroBlaze.isa.MicroBlazeInstructionType.*;
 import static pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryAsmInstructionParser.newInstance;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public interface MicroBlazeInstructionParsers {
             newInstance(UNDEFINED, "x(32)"));
 
     static IsaParser getMicroBlazeIsaParser() {
-        Set<String> allowedFields = new HashSet<>(SpecsSystem.getStaticFields(MicroBlazeAsmFields.class, String.class));
+        Set<String> allowedFields = new HashSet<>(SpecsSystem.getStaticFields(MicroBlazeInstructionParsersFields.class, String.class));
         return new GenericIsaParser(PARSERS, allowedFields);
     }
 }

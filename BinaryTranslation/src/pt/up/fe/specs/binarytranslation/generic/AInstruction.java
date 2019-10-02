@@ -14,8 +14,10 @@
 package pt.up.fe.specs.binarytranslation.generic;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.InstructionSet;
 import pt.up.fe.specs.binarytranslation.InstructionType;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
+import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
@@ -27,13 +29,12 @@ public abstract class AInstruction implements Instruction {
 
     private Number address;
     private String instruction;
+
     protected AsmInstructionData fieldData; // raw field data
     protected InstructionData idata; // decoded field data
 
-    /*protected String plainname;
-    protected int latency;
-    protected int delay;
-    protected List<InstructionType> genericType;*/
+    protected static IsaParser parser;
+    protected static InstructionSet instSet; // shared by all insts, so they can decode themselves
 
     public AInstruction(Number address, String instruction) {
         this.address = address;
