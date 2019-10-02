@@ -1,4 +1,4 @@
-package org.specs.MicroBlaze.v2;
+package org.specs.MicroBlaze.isa;
 
 import java.math.BigInteger;
 

@@ -15,12 +15,10 @@
  *  under the License.
  */
 
-package org.specs.MicroBlaze.isa;
+package org.specs.MicroBlaze.legacy;
 
 import java.util.EnumMap;
 import java.util.Map;
-
-import org.specs.MicroBlaze.legacy.MbInstructionName;
 
 /**
  *

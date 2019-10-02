@@ -6,7 +6,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.InstructionType;
 
-public enum ArmInstructionSetFields {
+public enum ArmInstructionSet {
 
     add(0b000000, 1, InstructionType.G_ADD),
     mul(0b010000, 3, InstructionType.G_MUL);
@@ -27,7 +27,7 @@ public enum ArmInstructionSetFields {
     /*
      * Constructor
      */
-    private ArmInstructionSetFields(int opcode, int latency, InstructionType tp) {
+    private ArmInstructionSet(int opcode, int latency, InstructionType tp) {
         this.instructionName = name();
         this.opcode = opcode;
         this.latency = latency;
@@ -67,7 +67,7 @@ public enum ArmInstructionSetFields {
      */
     public static String getName(long fullopcode) {
         long opcode = (fullopcode) >> (32 - 6);
-        for (ArmInstructionSetFields insts : values()) {
+        for (ArmInstructionSet insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getName();
         }
@@ -80,7 +80,7 @@ public enum ArmInstructionSetFields {
      */
     public static List<InstructionType> getGenericType(long fullopcode) {
         long opcode = (fullopcode) >> (32 - 6);
-        for (ArmInstructionSetFields insts : values()) {
+        for (ArmInstructionSet insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getGenericType();
         }
@@ -95,7 +95,7 @@ public enum ArmInstructionSetFields {
      */
     public static int getLatency(long fullopcode) {
         long opcode = (fullopcode) >> (32 - 6);
-        for (ArmInstructionSetFields insts : values()) {
+        for (ArmInstructionSet insts : values()) {
             if (insts.getOpCode() == opcode)
                 return insts.getLatency();
         }

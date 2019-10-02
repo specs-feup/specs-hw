@@ -21,8 +21,8 @@ import org.specs.MicroBlaze.MbRegister;
 import org.specs.MicroBlaze.MbRegisterUtils;
 import org.specs.MicroBlaze.Parsing.MbOperand.Flow;
 import org.specs.MicroBlaze.Parsing.MbOperand.Type;
-import org.specs.MicroBlaze.isa.ArgumentsProperties.ArgumentProperty;
 import org.specs.MicroBlaze.legacy.MbInstructionName;
+import org.specs.MicroBlaze.legacy.ArgumentsProperties.ArgumentProperty;
 
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import org.specs.MicroBlaze.v2.MicroBlazeInstruction;
+import org.specs.MicroBlaze.isa.MicroBlazeInstruction;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.StaticStream;
