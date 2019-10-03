@@ -34,7 +34,10 @@ public abstract class AInstruction implements Instruction {
     protected InstructionData idata; // decoded field data
 
     protected static IsaParser parser;
-    protected static InstructionSet instSet; // shared by all insts, so they can decode themselves
+    // shared by all insts, so they can go parse themselves
+
+    protected static InstructionSet instSet;
+    // shared by all insts, so they can go decode themselves
 
     public AInstruction(Number address, String instruction) {
         this.address = address;
@@ -182,7 +185,11 @@ public abstract class AInstruction implements Instruction {
     @Override
     public void printInstruction() {
         String addr = Long.toHexString(this.getAddress().longValue());
-        System.out.print(addr + ":" + this.getInstruction() + ":" + this.getName() + "\n");
+        System.out.print(addr + ":" + this.getInstruction() + ": " + this.getName() + "\t");
+        for (GenericInstructionOperand op : this.idata.operands) {
+            System.out.print(op.getRepresentation() + ", ");
+        }
+        System.out.print("\n");
     }
 
     @Override

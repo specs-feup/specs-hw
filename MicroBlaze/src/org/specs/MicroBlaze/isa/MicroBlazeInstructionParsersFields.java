@@ -6,8 +6,8 @@ public interface MicroBlazeInstructionParsersFields {
     static String OPCODEB = "opcodeb";
     static String OPCODEC = "opcodec";
     static String OPCODED = "opcoded";
-    static String RD = "rd";
-    static String RA = "ra";
-    static String RB = "rb";
+    static String RD = "registerd";
+    static String RA = "registera";
+    static String RB = "registerb";
     static String IMM = "imm";
 }

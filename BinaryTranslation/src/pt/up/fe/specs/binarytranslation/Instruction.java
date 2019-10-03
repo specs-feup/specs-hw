@@ -13,9 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation;
 
-import pt.up.fe.specs.util.SpecsStrings;
-import pt.up.fe.specs.util.exceptions.NotImplementedException;
-
 /**
  * Represents a generic assembly instruction.
  * 
@@ -31,19 +28,9 @@ public interface Instruction {
     Number getAddress();
 
     /*
-     * Binary code of instruction
+     * Binary code of instruction as string
      */
     String getInstruction();
-
-    default Number getInstructionCode() {
-        throw new NotImplementedException(this);
-    }
-
-    default String toBinaryString() {
-        // Assume 32-bits. If different, override this method
-        var binaryString = Integer.toBinaryString(getInstructionCode().intValue());
-        return SpecsStrings.padLeft(binaryString, 32, '0');
-    }
 
     /*
      * Gets latency of binary instruction.
