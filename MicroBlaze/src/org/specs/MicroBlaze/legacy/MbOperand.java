@@ -11,12 +11,9 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.Parsing;
+package org.specs.MicroBlaze.legacy;
 
 import java.util.Optional;
-
-import org.specs.MicroBlaze.MbRegister;
-import org.specs.MicroBlaze.MbRegisterUtils;
 
 import pt.up.fe.specs.util.SpecsLogs;
 

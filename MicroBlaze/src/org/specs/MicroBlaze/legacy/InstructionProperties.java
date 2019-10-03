@@ -11,11 +11,9 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze;
+package org.specs.MicroBlaze.legacy;
 
 import java.util.EnumSet;
-
-import org.specs.MicroBlaze.legacy.MbInstructionName;
 
 /**
  * Several properties of MicroBlaze instructions.

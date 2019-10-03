@@ -11,15 +11,13 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.encoder;
-
-import org.specs.MicroBlaze.Parsing.MbInstruction;
+package org.specs.MicroBlaze.legacy;
 
 @FunctionalInterface
 public interface AsmEncoder {
 
     default int getValue(MbInstruction instruction) {
-	return Integer.parseInt(getBinaryString(instruction), 2);
+        return Integer.parseInt(getBinaryString(instruction), 2);
     }
 
     String getBinaryString(MbInstruction instruction);

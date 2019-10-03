@@ -187,8 +187,11 @@ public abstract class AInstruction implements Instruction {
     public void printInstruction() {
         String addr = Long.toHexString(this.getAddress().longValue());
         System.out.print(addr + ":" + this.getInstruction() + ": " + this.getName() + "\t");
+        int i = 0;
         for (GenericInstructionOperand op : this.idata.operands) {
-            System.out.print(op.getRepresentation() + ", ");
+            System.out.print(op.getRepresentation());
+            if (i++ < this.idata.operands.size() - 1)
+                System.out.print(", ");
         }
         System.out.print("\n");
     }

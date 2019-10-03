@@ -11,9 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze;
-
-import org.specs.MicroBlaze.legacy.MbInstructionName;
+package org.specs.MicroBlaze.legacy;
 
 /**
  * Methods containg properties of MicroBlaze instructions.

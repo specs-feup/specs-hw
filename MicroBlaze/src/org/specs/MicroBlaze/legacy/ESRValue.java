@@ -11,13 +11,10 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.registers;
-
-import org.specs.MicroBlaze.MbRegister;
-import org.specs.MicroBlaze.api.SpecialRegisterValue;
+package org.specs.MicroBlaze.legacy;
 
 /**
- * Floating Point Status Register.
+ * Exception Status Register.
  * 
  * <p>
  * Functions return the MSB of the corresponding flag. Using functions instead of constants to avoid problems with
@@ -26,32 +23,36 @@ import org.specs.MicroBlaze.api.SpecialRegisterValue;
  * @author JoaoBispo
  *
  */
-public enum FSRValue implements SpecialRegisterValue {
+public enum ESRValue implements SpecialRegisterValue {
 
-    IO(27),
-    DZ(28),
-    OF(29),
-    UF(30),
-    DO(31);
+    DS(19),
+    ESS(20, 7),
+    EC(27, 5);
 
     private final int msb;
+    private final int length;
 
-    private FSRValue(int msb) {
-	this.msb = msb;
+    private ESRValue(int msb, int length) {
+        this.msb = msb;
+        this.length = length;
+    }
+
+    private ESRValue(int msb) {
+        this(msb, 1);
     }
 
     @Override
     public int getMsb() {
-	return msb;
+        return msb;
     }
 
     @Override
     public int getSize() {
-	return 1;
+        return length;
     }
 
     @Override
     public MbRegister getRegister() {
-	return MbRegister.RFSR;
+        return MbRegister.RESR;
     }
 }

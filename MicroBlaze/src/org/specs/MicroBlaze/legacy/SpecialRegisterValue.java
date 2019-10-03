@@ -11,9 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.api;
-
-import org.specs.MicroBlaze.MbRegister;
+package org.specs.MicroBlaze.legacy;
 
 public interface SpecialRegisterValue {
 
