@@ -25,6 +25,12 @@ import org.suikasoft.jOptions.Datakey.KeyFactory;
 import pt.up.fe.specs.binarytranslation.InstructionOperandType;
 import pt.up.fe.specs.binarytranslation.generic.GenericInstructionOperand;
 
+/**
+ * Raw field data as extracted by an {@link IsaParser}
+ * 
+ * @author NunoPaulino
+ *
+ */
 public class AsmInstructionData extends ADataClass<AsmInstructionData> {
 
     public static final DataKey<AsmInstructionType> TYPE = KeyFactory.object("type", AsmInstructionType.class);
