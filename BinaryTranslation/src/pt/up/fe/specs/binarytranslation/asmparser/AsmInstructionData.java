@@ -13,12 +13,17 @@
 
 package pt.up.fe.specs.binarytranslation.asmparser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.suikasoft.jOptions.DataStore.ADataClass;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
+
+import pt.up.fe.specs.binarytranslation.InstructionOperandType;
+import pt.up.fe.specs.binarytranslation.generic.GenericInstructionOperand;
 
 public class AsmInstructionData extends ADataClass<AsmInstructionData> {
 
@@ -55,5 +60,30 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
         }
 
         return Integer.parseInt(tmp, 2);
+    }
+
+    /*
+     * Gets a list of integers which represent the operands in the fields
+     */
+    public List<GenericInstructionOperand> getOperands() {
+
+        var map1 = this.get(FIELDS);
+        var keys1 = map1.keySet();
+        List<GenericInstructionOperand> operands = new ArrayList<GenericInstructionOperand>();
+
+        for (String key : keys1) {
+            if (key.contains("register")) {
+                var op = new GenericInstructionOperand(InstructionOperandType.register,
+                        Integer.parseInt(map1.get(key), 2));
+                operands.add(op);
+
+            } else if (key.contains("imm")) {
+                var op = new GenericInstructionOperand(InstructionOperandType.immediate,
+                        Integer.parseInt(map1.get(key), 2));
+                operands.add(op);
+            }
+        }
+
+        return operands;
     }
 }

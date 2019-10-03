@@ -10,12 +10,15 @@ public class InstructionData {
     protected int latency;
     protected int delay;
     protected List<InstructionType> genericType;
+    protected List<GenericInstructionOperand> operands;
 
-    public InstructionData(String plainname, int latency, int delay, List<InstructionType> genericType) {
+    public InstructionData(String plainname, int latency, int delay, List<InstructionType> genericType,
+            List<GenericInstructionOperand> operands) {
         this.plainname = plainname;
         this.latency = latency;
         this.delay = delay;
         this.genericType = genericType;
+        this.operands = operands;
     }
 
     /*
@@ -45,5 +48,4 @@ public class InstructionData {
     public List<InstructionType> getGenericTypes() {
         return this.genericType;
     }
-
 }

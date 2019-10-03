@@ -72,6 +72,8 @@ public final class StaticBasicBlockDetector implements LoopDetector {
             int bbSize = (int) ((thisAddr - startAddr) / elfstream.getInstructionWidth());
             int delay = is.getDelay();
 
+            // TODO possible bug here, instruction list skips some addrs in static elf
+
             // Create the block
             BasicBlock bb = new BasicBlock(insts.subList(i - bbSize, i + 1 + delay));
 

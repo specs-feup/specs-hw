@@ -25,6 +25,8 @@ public class MicroBlazeInstruction extends AInstruction {
         this.fieldData = parser.parse(instruction);
         this.idata = instSet.process(fieldData);
         // lookup ISA table for static information
+
+        // TODO trim non used operands based on specifics of Microblaze ISA here?
     }
 
     @Override
@@ -38,10 +40,5 @@ public class MicroBlazeInstruction extends AInstruction {
         }
 
         return null;
-    }
-
-    @Override
-    public Number getInstructionCode() {
-        return new BigInteger(this.getInstruction(), 16);
     }
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.generic.GenericInstructionOperand;
 import pt.up.fe.specs.binarytranslation.generic.InstructionData;
 
 public class InstructionSet {
@@ -112,8 +113,8 @@ public class InstructionSet {
         int latency = getLatency(fieldData);
         int delay = getDelay(fieldData);
         List<InstructionType> genericTypes = getGenericType(fieldData);
-        // TODO operands
+        List<GenericInstructionOperand> operands = fieldData.getOperands();
 
-        return new InstructionData(plainname, latency, delay, genericTypes);
+        return new InstructionData(plainname, latency, delay, genericTypes, operands);
     }
 }
