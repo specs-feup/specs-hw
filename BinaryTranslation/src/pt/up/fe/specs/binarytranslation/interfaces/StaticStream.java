@@ -11,28 +11,14 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation;
+package pt.up.fe.specs.binarytranslation.interfaces;
 
-/**
- * A generic instruction operand, composed of type, and value
- * 
- * @author NunoPaulino
- *
- */
-public interface InstructionOperand {
+import pt.up.fe.specs.binarytranslation.InstructionStream;
 
-    /*
-     * Get value
-     */
-    public Integer getValue();
+public interface StaticStream extends InstructionStream {
 
-    /*
-     * Get type (register or immediate)
-     */
-    public Integer getType();
-
-    /*
-     * Return formated string with <prefix><value>
-     */
-    public String getRepresentation();
+    @Override
+    default InstructionStreamType getType() {
+        return InstructionStreamType.STATIC_ELF;
+    }
 }

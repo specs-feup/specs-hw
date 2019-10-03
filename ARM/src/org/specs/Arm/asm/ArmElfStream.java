@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import org.specs.Arm.isa.ArmInstruction;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.binarytranslation.StaticStream;
+import pt.up.fe.specs.binarytranslation.interfaces.StaticStream;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.LineStream;

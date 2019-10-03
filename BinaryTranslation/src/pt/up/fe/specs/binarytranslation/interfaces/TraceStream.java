@@ -1,5 +1,5 @@
-/*
- * Copyright 2010 SPeCS Research Group.
+/**
+ * Copyright 2019 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -11,10 +11,12 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation;
+package pt.up.fe.specs.binarytranslation.interfaces;
 
 import java.io.Closeable;
 
+import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.InstructionStream;
 import pt.up.fe.specs.util.asm.processor.RegisterTable;
 
 /**
