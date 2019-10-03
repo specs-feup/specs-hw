@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.specs.MicroBlaze.InstructionProperties;
-
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.asm.processor.InstructionName;
 

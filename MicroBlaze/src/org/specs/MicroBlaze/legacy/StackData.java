@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package org.specs.MicroBlaze.Utilities;
+package org.specs.MicroBlaze.legacy;
 
 import java.util.HashSet;
 import java.util.Set;

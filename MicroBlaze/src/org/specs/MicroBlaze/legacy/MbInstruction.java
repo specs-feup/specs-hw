@@ -11,16 +11,13 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.Parsing;
+package org.specs.MicroBlaze.legacy;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.specs.MicroBlaze.OperationProperties;
-import org.specs.MicroBlaze.legacy.ArgumentsProperties;
-import org.specs.MicroBlaze.legacy.MbInstructionName;
 import org.specs.MicroBlaze.legacy.ArgumentsProperties.ArgumentProperty;
 
 import pt.up.fe.specs.binarytranslation.legacy.TraceInstruction32;

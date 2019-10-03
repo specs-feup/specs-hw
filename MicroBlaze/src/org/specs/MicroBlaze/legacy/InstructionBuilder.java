@@ -11,9 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze;
-
-import org.specs.MicroBlaze.legacy.MbInstructionName;
+package org.specs.MicroBlaze.legacy;
 
 import pt.up.fe.specs.util.SpecsBits;
 
@@ -34,15 +32,15 @@ public class InstructionBuilder {
      * @param args
      */
     public static int getOpcodeShifted(MbInstructionName instruction) {
-	// Get opcode
-	// int opcode = OpCode.getOpcode(instruction);
-	int opcode = instruction.getOpcode();
+        // Get opcode
+        // int opcode = OpCode.getOpcode(instruction);
+        int opcode = instruction.getOpcode();
 
-	// Shift opcode
-	opcode = opcode << (PROCESSOR_BITS - OPCODE_BITS);
+        // Shift opcode
+        opcode = opcode << (PROCESSOR_BITS - OPCODE_BITS);
 
-	// Return
-	return opcode;
+        // Return
+        return opcode;
     }
 
     /**
@@ -51,19 +49,19 @@ public class InstructionBuilder {
      * @return
      */
     public static int getFlagA() {
-	int flagA = 0;
+        int flagA = 0;
 
-	flagA = SpecsBits.setBit(FLAG_A_BIT, flagA);
+        flagA = SpecsBits.setBit(FLAG_A_BIT, flagA);
 
-	return flagA;
+        return flagA;
     }
 
     public static int newImm(int immValue) {
-	int opCode = getOpcodeShifted(MbInstructionName.imm);
+        int opCode = getOpcodeShifted(MbInstructionName.imm);
 
-	int instruction = opCode | (short) immValue;
+        int instruction = opCode | (short) immValue;
 
-	return instruction;
+        return instruction;
     }
 
     /**
@@ -81,11 +79,11 @@ public class InstructionBuilder {
     }
     */
     public static int newBrai(int immValue) {
-	return newBriGeneral(immValue, true);
+        return newBriGeneral(immValue, true);
     }
 
     public static int newBri(int immValue) {
-	return newBriGeneral(immValue, false);
+        return newBriGeneral(immValue, false);
     }
 
     /**
@@ -93,16 +91,16 @@ public class InstructionBuilder {
      * @return
      */
     private static int newBriGeneral(int immValue, boolean useFlagA) {
-	int opCode = getOpcodeShifted(MbInstructionName.brai);
+        int opCode = getOpcodeShifted(MbInstructionName.brai);
 
-	int flagA = 0;
-	if (useFlagA) {
-	    flagA = getFlagA();
-	}
+        int flagA = 0;
+        if (useFlagA) {
+            flagA = getFlagA();
+        }
 
-	int instruction = opCode | flagA | (short) immValue;
+        int instruction = opCode | flagA | (short) immValue;
 
-	return instruction;
+        return instruction;
 
     }
 

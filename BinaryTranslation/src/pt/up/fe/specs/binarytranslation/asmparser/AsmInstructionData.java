@@ -14,7 +14,7 @@
 package pt.up.fe.specs.binarytranslation.asmparser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
     public static final DataKey<AsmInstructionType> TYPE = KeyFactory.object("type", AsmInstructionType.class);
 
     public static final DataKey<Map<String, String>> FIELDS = KeyFactory.generic("fields",
-            (Map<String, String>) new HashMap<String, String>());
+            (Map<String, String>) new LinkedHashMap<String, String>());
 
     public static AsmInstructionData newInstance(AsmInstructionType type, Map<String, String> fields) {
         var data = new AsmInstructionData();

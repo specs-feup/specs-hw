@@ -14,7 +14,7 @@
 package pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -178,7 +178,7 @@ public class BinaryAsmInstructionParser implements AsmInstructionParser {
         binaryString = SpecsStrings.padLeft(binaryString, 32, '0');
 
         var currentString = new StringParser(binaryString);
-        Map<String, String> fields = new HashMap<>();
+        Map<String, String> fields = new LinkedHashMap<>();
 
         for (var rule : rules) {
             boolean success = rule.apply(currentString, fields);
