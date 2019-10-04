@@ -1,18 +1,28 @@
 package org.specs.Arm.isa;
 
+import java.util.Arrays;
+
+import pt.up.fe.specs.binarytranslation.InstructionSet;
 import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 
 public class ArmInstruction extends AInstruction {
 
     /*
-    * 
-    */
-    public ArmInstruction(Number address, String instruction) {
-        super(address, instruction);
-        long fullopcode = Integer.valueOf(instruction);
+     * Parser and "decoder" Shared by all
+     */
+    static {
+        instSet = new InstructionSet(Arrays.asList(ArmInstructionProperties.values()),
+                Arrays.asList(ArmInstructionType.values()));
+        parser = ArmInstructionParsers.getArmIsaParser();
+    }
 
-        /*this.latency = ArmInstructionSetFields.getLatency(fullopcode);
-        this.genericType = ArmInstructionSetFields.getGenericType(fullopcode);*/
+    /*
+     * Create the instruction
+     */
+    public ArmInstruction(String address, String instruction) {
+        super(Long.parseLong(address, 16), instruction);
+        this.fieldData = parser.parse(instruction);
+        this.idata = instSet.process(fieldData);
         // lookup ISA table for static information
     }
 

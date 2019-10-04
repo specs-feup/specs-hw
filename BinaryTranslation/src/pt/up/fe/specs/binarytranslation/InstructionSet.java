@@ -96,6 +96,9 @@ public class InstructionSet {
         // uses opcode fields to determine properties
         InstructionProperties props = getProperties(fieldData);
 
+        if (props == null)
+            return new InstructionData();
+
         String plainname = props.getName();
         int latency = props.getLatency();
         int delay = props.getDelay();

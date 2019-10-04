@@ -40,6 +40,10 @@ public class InstructionData {
         this.operands = operands;
     }
 
+    public InstructionData() {
+        // TODO Auto-generated constructor stub
+    }
+
     /*
      * Get plain name
      */

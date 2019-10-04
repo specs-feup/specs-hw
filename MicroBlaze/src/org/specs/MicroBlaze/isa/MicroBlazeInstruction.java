@@ -38,8 +38,6 @@ public class MicroBlazeInstruction extends AInstruction {
         this.fieldData = parser.parse(instruction);
         this.idata = instSet.process(fieldData);
         // lookup ISA table for static information
-
-        // TODO trim non used operands based on specifics of Microblaze ISA here?
     }
 
     @Override
