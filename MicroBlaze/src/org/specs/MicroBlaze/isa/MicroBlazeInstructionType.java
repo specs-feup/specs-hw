@@ -19,7 +19,11 @@ public enum MicroBlazeInstructionType implements AsmInstructionType {
 
     SPECIAL,
     UBRANCH,
+    ULBRANCH,
+    UIBRANCH,
+    UILBRANCH,
     CBRANCH,
+    CIBRANCH,
     BARREL,
     IBARREL,
     RETURN,
