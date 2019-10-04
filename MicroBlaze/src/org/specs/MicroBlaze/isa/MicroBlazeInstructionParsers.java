@@ -46,7 +46,7 @@ public interface MicroBlazeInstructionParsers {
 
     static IsaParser getMicroBlazeIsaParser() {
         Set<String> allowedFields = new HashSet<>(
-                SpecsSystem.getStaticFields(MicroBlazeInstructionParsersFields.class, String.class));
+                SpecsSystem.getStaticFields(MicroBlazeInstructionFields.class, String.class));
         return new GenericIsaParser(PARSERS, allowedFields);
     }
 }
