@@ -30,8 +30,12 @@ public interface MicroBlazeInstructionParsers {
 
     List<AsmInstructionParser> PARSERS = Arrays.asList(
             newInstance(SPECIAL, "100101_opcodea(5)_opcodeb(5)_opcodec(2)_opcoded(14)"),
-            newInstance(UBRANCH, "10_opcodea(1)_110_registerd(5)_opcodeb(5)_imm(16)"),
-            newInstance(CBRANCH, "10_opcodea(1)_111_opcodeb(5)_registera(5)_imm(16)"),
+            newInstance(UBRANCH, "100110_0(5)_opcodea(2)_000_registerb(5)_0(11)"),
+            newInstance(ULBRANCH, "100110_registerd(5)_opcodea(2)_100_registerb(5)_0(11)"),
+            newInstance(UIBRANCH, "101110_0(5)_opcodea(2)_000_imm(16)"),
+            newInstance(UILBRANCH, "101110_registerd(5)_opcodea(2)_100_imm(16)"),
+            newInstance(CBRANCH, "100111_opcodea(5)_registera(5)_registerb(5)_0(11)"),
+            newInstance(CIBRANCH, "101111_opcodea(5)_registera(5)_imm(16)"),
             newInstance(RETURN, "101101_opcodea(5)_registera(5)_imm(16)"),
             newInstance(IBARREL, "011001_registerd(5)_registera(5)_opcodea(2)_000_opcodeb(5)_0_imm(5)"),
             newInstance(STREAM, "011011_registerd(5)_registera(5)_opcodea(1)_0(15)"),
