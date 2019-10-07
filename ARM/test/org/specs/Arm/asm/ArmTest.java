@@ -13,9 +13,8 @@
 
 package org.specs.Arm.asm;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
-import org.junit.Test;
 import org.specs.Arm.isa.ArmInstructionParsers;
 
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
@@ -25,7 +24,7 @@ import pt.up.fe.specs.util.utilities.LineStream;
 
 public class ArmTest {
 
-    @Test
+    // @Test
     public void testArmParser() {
         IsaParser parser = ArmInstructionParsers.getArmIsaParser();
 
