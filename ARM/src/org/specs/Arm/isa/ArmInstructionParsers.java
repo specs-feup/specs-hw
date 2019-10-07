@@ -33,17 +33,40 @@ public interface ArmInstructionParsers {
      */
 
     List<AsmInstructionParser> PARSERS = Arrays.asList(
-            newInstance(DPI_PCREL, "opcodea(1)_imml(2)_10000_imm(19)_registerd(5)"),
 
-            newInstance(DPI_ADDSUBIMM, "sf(1)_opcodea()_100010_opcodeb(1)_imm(12)_registern(5)_registerd(5)",
+            // 1. Data processing (Immediate) - page C4-252 of ARMV8 manual
+            newInstance(DPI_PCREL,
+                    "opcodea(1)_imml(2)_10000_imm(19)_registerd(5)"),
+
+            newInstance(DPI_ADDSUBIMM,
+                    "sf(1)_opcodea(2)_100010_opcodeb(1)_imm(12)_registern(5)_registerd(5)",
                     data -> !data.get("registerd").equals("11111")),
 
             newInstance(DPI_ADDSUBIMM_TAGS,
-                    "opcodea(3)_100011_opcodeb(1)_immh(6)_opcodec(2)_imml(4)_registern(5)_registerd(5)"),
+                    "sf(1)_opcodea(2)_100011_opcodeb(1)_immh(6)_opcodec(2)_imml(4)_registern(5)_registerd(5)"),
 
-            newInstance(LOGICAL, "opcodea(3)_100100_opcodeb(1)_immr(6)_imms(6)_registern(5)_registerd(5)"),
+            newInstance(LOGICAL,
+                    "sf(1)_opcodea(2)_100100_opcodeb(1)_immr(6)_imms(6)_registern(5)_registerd(5)"),
 
-            newInstance(MOVEW, "opcodea(3)_100101_opcodeb(2)_imm(16)_registerd(5)"),
+            newInstance(MOVEW,
+                    "sf(1)_opcodea(2)_100101_opcodeb(2)_imm(16)_registerd(5)"),
+            // TODO predicates
+
+            newInstance(BITFIELD,
+                    "sf(1)_opcodea(2)_100110_opcodeb(1)_immr(6)_imms(6)_registern(5)_registerd(5)"),
+
+            newInstance(EXTRACT,
+                    "sf(1)_opcodea(2)_100111_opcodeb(2)_registerm(5)_imms(6)_registern(5)_registerd(5)"),
+
+            // 2. Branches, Exception Generating and System instructions - page C4-257 of ARMV8 manual
+            newInstance(CONDITIONALBRANCH,
+                    "0101010_opcodea(1)_imm(19)_opcodeb(1)_cond(4)"),
+
+            newInstance(EXCEPTION,
+                    "11010100_opcodea(3)_imm(16)_opcodeb(3)_opcodec(2)"),
+
+            newInstance(UCONDITIONALBRANCH,
+                    "1101011_opcodea(4)_opcodeb(5)_opcodec(6)_registern(5)_opcoded(5)"),
 
             // newInstance(BRANCH, "opcodea(3)_101_opcodea(3)_registern(4)_imm(16)"),
 

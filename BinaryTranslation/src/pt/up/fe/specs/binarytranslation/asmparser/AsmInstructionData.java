@@ -93,4 +93,17 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
 
         return operands;
     }
+
+    /*
+     * Get "sf" field from ARM instruction types
+     */
+    public Boolean is64Bits() {
+
+        var map1 = this.get(FIELDS);
+        var keys1 = map1.keySet();
+        if (keys1.contains("sf"))
+            return this.get(FIELDS).get("sf").equals("1");
+        else
+            return false;
+    }
 }

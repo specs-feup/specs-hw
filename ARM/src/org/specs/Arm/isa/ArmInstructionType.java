@@ -22,6 +22,11 @@ public enum ArmInstructionType implements AsmInstructionType {
     DPI_ADDSUBIMM_TAGS,
     LOGICAL,
     MOVEW,
+    BITFIELD,
+    EXTRACT,
+    CONDITIONALBRANCH,
+    EXCEPTION,
+    UCONDITIONALBRANCH,
 
     BRANCH,
     LOAD_STORES,
