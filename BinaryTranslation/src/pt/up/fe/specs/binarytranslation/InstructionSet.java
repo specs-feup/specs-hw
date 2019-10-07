@@ -20,8 +20,6 @@ import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
-import pt.up.fe.specs.binarytranslation.generic.GenericInstructionOperand;
-import pt.up.fe.specs.binarytranslation.generic.InstructionData;
 
 /**
  * Represents the hook into an instruction set. Its initialized with a list of {@link InstructionProperties} and all
@@ -85,7 +83,7 @@ public class InstructionSet {
             if (inst.getReducedOpCode() == asmData.getReducedOpcode())
                 return inst;
         }
-        return null; // TODO replace with exception
+        return null;
     }
 
     /*
@@ -105,7 +103,7 @@ public class InstructionSet {
         List<InstructionType> genericTypes = props.getGenericType();
 
         // uses operand fields to construct operand list
-        List<GenericInstructionOperand> operands = fieldData.getOperands();
+        List<InstructionOperand> operands = fieldData.getOperands();
 
         return new InstructionData(plainname, latency, delay, genericTypes, operands);
     }

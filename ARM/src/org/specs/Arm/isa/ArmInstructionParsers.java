@@ -28,14 +28,24 @@ import pt.up.fe.specs.util.SpecsSystem;
 
 public interface ArmInstructionParsers {
 
-    List<AsmInstructionParser> PARSERS = Arrays.asList(
-            newInstance(DATA_PROCESSING_REGISTER,
-                    "cond(4)_000_opcodea(5)_0(8)_imm(5)_opcodeb(2)_00000",
-                    data -> !data.get(ArmInstructionFields.COND).equals("1110")),
+    /*
+     * For ARMv8 aarch64 instruction set
+     */
 
-            newInstance(DATA_PROCESSING_IMMEDIATE,
-                    "cond(4)_001_opcodea(5)_registern(4)_imm(16)",
-                    data -> !data.get(ArmInstructionFields.COND).equals("1110")),
+    List<AsmInstructionParser> PARSERS = Arrays.asList(
+            newInstance(DPI_PCREL, "opcodea(1)_imml(2)_10000_imm(19)_registerd(5)"),
+
+            newInstance(DPI_ADDSUBIMM, "sf(1)_opcodea()_100010_opcodeb(1)_imm(12)_registern(5)_registerd(5)",
+                    data -> !data.get("registerd").equals("11111")),
+
+            newInstance(DPI_ADDSUBIMM_TAGS,
+                    "opcodea(3)_100011_opcodeb(1)_immh(6)_opcodec(2)_imml(4)_registern(5)_registerd(5)"),
+
+            newInstance(LOGICAL, "opcodea(3)_100100_opcodeb(1)_immr(6)_imms(6)_registern(5)_registerd(5)"),
+
+            newInstance(MOVEW, "opcodea(3)_100101_opcodeb(2)_imm(16)_registerd(5)"),
+
+            // newInstance(BRANCH, "opcodea(3)_101_opcodea(3)_registern(4)_imm(16)"),
 
             // newInstance(MISCELLANEOUS_1,
             // "cond(4)_000_10xx_0_x(15)_0_x(4)",

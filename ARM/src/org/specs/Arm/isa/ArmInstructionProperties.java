@@ -1,6 +1,6 @@
 package org.specs.Arm.isa;
 
-import static org.specs.Arm.isa.ArmInstructionType.DATA_PROCESSING_REGISTER;
+import static org.specs.Arm.isa.ArmInstructionType.*;
 import static pt.up.fe.specs.binarytranslation.InstructionType.*;
 
 import java.util.Arrays;
@@ -17,14 +17,37 @@ public enum ArmInstructionProperties implements InstructionProperties {
     // name, binary code, latency, delay, subtype
     // within ISA (i.e. instruction binary format), generic type
 
-    // DATA_PROCESSING_REGISTER
-    and(0x0000_0000, 1, 1, DATA_PROCESSING_REGISTER, G_LOGICAL),
-    xor(0x0020_0000, 3, 1, DATA_PROCESSING_REGISTER, G_LOGICAL),
-    sub(0x0040_0000, 1, 1, DATA_PROCESSING_REGISTER, G_SUB),
-    rsub(0x0060_0000, 1, 1, DATA_PROCESSING_REGISTER, G_SUB),
-    add(0x0080_0000, 1, 1, DATA_PROCESSING_REGISTER, G_ADD),
+    // DPI_PCREL
+    adr(0x1000_0000, 1, 1, DPI_PCREL, G_OTHER),
+    adrp(0x9000_0000, 3, 1, DPI_PCREL, G_OTHER),
 
-    addi(0x0080_0000, 1, 1, DATA_PROCESSING_REGISTER, G_ADD);
+    // DPI_ADDSUBIMM
+    add32(0x1100_0000, 1, 1, DPI_ADDSUBIMM, G_ADD),
+    adds32(0x3100_0000, 1, 1, DPI_ADDSUBIMM, G_ADD),
+    sub32(0x5100_0000, 1, 1, DPI_ADDSUBIMM, G_SUB),
+    subs32(0x7100_0000, 1, 1, DPI_ADDSUBIMM, G_SUB),
+
+    /*add64(0x9100_0000, 1, 1, DPI_ADDSUBIMM, G_ADD),
+    adds64(0xB100_0000, 1, 1, DPI_ADDSUBIMM, G_ADD),
+    sub64(0xD100_0000, 1, 1, DPI_ADDSUBIMM, G_ADD),
+    subs64(0xF100_0000, 1, 1, DPI_ADDSUBIMM, G_ADD),*/
+
+    // DPI_ADDSUBIMM_TAGS
+    addg(0x9180_0000, 1, 1, DPI_ADDSUBIMM_TAGS, G_ADD),
+    subg(0xD180_0000, 1, 1, DPI_ADDSUBIMM_TAGS, G_SUB),
+
+    // LOGICAL
+    and32(0x1200_0000, 1, 1, LOGICAL, G_LOGICAL),
+    orr32(0x3200_0000, 1, 1, LOGICAL, G_LOGICAL),
+    eor32(0x5200_0000, 1, 1, LOGICAL, G_LOGICAL),
+    ands32(0x7200_0000, 1, 1, LOGICAL, G_LOGICAL),
+    and64(0x9200_0000, 1, 1, LOGICAL, G_LOGICAL),
+    orr64(0xB200_0000, 1, 1, LOGICAL, G_LOGICAL),
+    eor64(0xD200_0000, 1, 1, LOGICAL, G_LOGICAL),
+    ands64(0xF200_0000, 1, 1, LOGICAL, G_LOGICAL),
+
+    // MOVEW
+    movn32(0x1280_0000, 1, 1, MOVEW, G_OTHER);
 
     /*
      * Instruction property fields
