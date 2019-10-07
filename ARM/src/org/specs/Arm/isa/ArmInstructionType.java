@@ -11,12 +11,12 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.Arm.asmparser;
+package org.specs.Arm.isa;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 
-public enum ArmAsmInstructionType implements AsmInstructionType {
-    DATA_PROCESSING_IMMEDIATE_SHIFT,
+public enum ArmInstructionType implements AsmInstructionType {
+    DATA_PROCESSING_REGISTER,
     MISCELLANEOUS_1,
     DATA_PROCESSING_REGISTER_SHIFT,
     MISCELLANEOUS_2,

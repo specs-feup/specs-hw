@@ -35,7 +35,9 @@ public class ArmElfStream implements StaticStream {
         }
 
         var addressAndInst = SpecsStrings.getRegex(line, ARM_REGEX);
-        return new ArmInstruction(Long.parseLong(addressAndInst.get(0).strip(), 16), addressAndInst.get(1));
+        var addr = addressAndInst.get(0).trim();
+        var inst = addressAndInst.get(1).trim();
+        return new ArmInstruction(addr, inst);
     }
 
     @Override

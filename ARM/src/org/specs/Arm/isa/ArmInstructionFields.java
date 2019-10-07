@@ -11,9 +11,11 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.isa;
+package org.specs.Arm.isa;
 
-public interface MicroBlazeInstructionParsersFields {
+public interface ArmInstructionFields {
+
+    static String COND = "cond";
 
     static String OPCODEA = "opcodea";
     static String OPCODEB = "opcodeb";
@@ -23,4 +25,16 @@ public interface MicroBlazeInstructionParsersFields {
     static String RA = "registera";
     static String RB = "registerb";
     static String IMM = "imm";
+
+    /*
+    static String COND = "cond";
+    static String OPCODE = "opcode";
+    static String S = "S";
+    static String RN = "Rn";
+    static String RD = "Rd";
+    static String SHIFT_AMOUNT = "shift_amount";
+    static String SHIFT = "shift";
+    static String RM = "Rm";
+    */
+
 }

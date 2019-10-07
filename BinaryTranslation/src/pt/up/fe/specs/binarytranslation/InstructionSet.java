@@ -78,51 +78,14 @@ public class InstructionSet {
     }
 
     /*
-     * Initializes field in constructor for MicroBlazeInstruction
+     * Gets all properties of instruction from ISA, based on raw field data
      */
-    private String getName(AsmInstructionData asmData) {
+    private InstructionProperties getProperties(AsmInstructionData asmData) {
         for (InstructionProperties inst : getTypeList(asmData.getType())) {
             if (inst.getReducedOpCode() == asmData.getReducedOpcode())
-                return inst.getName();
+                return inst;
         }
-        return "Unknown Instruction!";
-        // TODO throw something here
-    }
-
-    /*
-     * Initializes field in constructor for MicroBlazeInstruction
-     */
-    private List<InstructionType> getGenericType(AsmInstructionData asmData) {
-        for (InstructionProperties inst : getTypeList(asmData.getType())) {
-            if (inst.getReducedOpCode() == asmData.getReducedOpcode())
-                return inst.getGenericType();
-        }
-        // return InstructionType.unknownType;
-        List<InstructionType> ret = new ArrayList<InstructionType>();
-        ret.add(InstructionType.G_UNKN);
-        return ret;
-    }
-
-    /*
-     * Initializes field in constructor for MicroBlazeInstruction
-     */
-    private int getLatency(AsmInstructionData asmData) {
-        for (InstructionProperties inst : getTypeList(asmData.getType())) {
-            if (inst.getReducedOpCode() == asmData.getReducedOpcode())
-                return inst.getLatency();
-        }
-        return -1; // TODO replace with exception
-    }
-
-    /*
-     * Initializes field in constructor for MicroBlazeInstruction
-     */
-    private int getDelay(AsmInstructionData asmData) {
-        for (InstructionProperties inst : getTypeList(asmData.getType())) {
-            if (inst.getReducedOpCode() == asmData.getReducedOpcode())
-                return inst.getDelay();
-        }
-        return -1; // TODO replace with exception
+        return null; // TODO replace with exception
     }
 
     /*
@@ -130,10 +93,18 @@ public class InstructionSet {
      */
     public InstructionData process(AsmInstructionData fieldData) {
 
-        String plainname = getName(fieldData);
-        int latency = getLatency(fieldData);
-        int delay = getDelay(fieldData);
-        List<InstructionType> genericTypes = getGenericType(fieldData);
+        // uses opcode fields to determine properties
+        InstructionProperties props = getProperties(fieldData);
+
+        if (props == null)
+            return new InstructionData();
+
+        String plainname = props.getName();
+        int latency = props.getLatency();
+        int delay = props.getDelay();
+        List<InstructionType> genericTypes = props.getGenericType();
+
+        // uses operand fields to construct operand list
         List<GenericInstructionOperand> operands = fieldData.getOperands();
 
         return new InstructionData(plainname, latency, delay, genericTypes, operands);
