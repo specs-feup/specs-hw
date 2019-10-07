@@ -7,6 +7,8 @@ import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 
 public class ArmInstruction extends AInstruction {
 
+    private Boolean is64bits = false;
+
     /*
      * Parser and "decoder" Shared by all
      */
@@ -24,6 +26,9 @@ public class ArmInstruction extends AInstruction {
         this.fieldData = parser.parse(instruction);
         this.idata = instSet.process(fieldData);
         // lookup ISA table for static information
+
+        this.is64bits = fieldData.is64Bits();
+        // TODO create specific classes for AsmInstructionData (for MB and ARM)
     }
 
     @Override
