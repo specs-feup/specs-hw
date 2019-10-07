@@ -2,12 +2,14 @@ package org.specs.MicroBlaze.asm;
 
 import java.io.File;
 
+import org.junit.jupiter.api.Test;
+
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
 
-public class MicroBlazeParserTest {
+public class MicroBlazeParserTester {
 
-    // @Test
+    @Test
     public void testMicroBlazeParser() {
 
         StringBuilder output = new StringBuilder();
