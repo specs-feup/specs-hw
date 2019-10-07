@@ -2,7 +2,7 @@ package org.specs.MicroBlaze.asm;
 
 import java.io.File;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
