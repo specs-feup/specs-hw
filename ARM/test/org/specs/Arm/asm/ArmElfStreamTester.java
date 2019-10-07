@@ -12,13 +12,13 @@ public class ArmElfStreamTester {
     @Test
     public void test() {
 
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/test/test.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/test/helloworld64.elf");
         fd.deleteOnExit();
 
         try (ArmElfStream el = new ArmElfStream(fd);) {
             Instruction inst = null;
             while ((inst = el.nextInstruction()) != null) {
-                System.out.println(inst);
+                inst.printInstruction();
             }
         }
 

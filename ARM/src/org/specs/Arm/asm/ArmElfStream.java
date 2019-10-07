@@ -14,11 +14,11 @@ import pt.up.fe.specs.util.utilities.LineStream;
 
 public class ArmElfStream implements StaticStream {
 
-    private static final Pattern ARM_REGEX = Pattern.compile("\\s(.[0-9a-f]):\\s*([0-9a-f]+)");
+    private static final Pattern ARM_REGEX = Pattern.compile("([0-9a-f]+):\\s([0-9a-f]+)");
     private final LineStream insts;
 
     public ArmElfStream(File elfname) {
-        var output = SpecsSystem.runProcess(Arrays.asList("arm-none-eabi-objdump", "-d",
+        var output = SpecsSystem.runProcess(Arrays.asList("aarch64-none-elf-objdump", "-d",
                 elfname.getAbsolutePath()), new File("."), true, false);
 
         insts = LineStream.newInstance(output.getStdOut());
@@ -37,6 +37,7 @@ public class ArmElfStream implements StaticStream {
         var addressAndInst = SpecsStrings.getRegex(line, ARM_REGEX);
         var addr = addressAndInst.get(0).trim();
         var inst = addressAndInst.get(1).trim();
+        // System.out.print(addr + "\n");
         return new ArmInstruction(addr, inst);
     }
 

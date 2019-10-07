@@ -22,6 +22,7 @@ import org.suikasoft.jOptions.DataStore.ADataClass;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
 
+import pt.up.fe.specs.binarytranslation.InstructionOperand;
 import pt.up.fe.specs.binarytranslation.InstructionOperandType;
 import pt.up.fe.specs.binarytranslation.generic.GenericInstructionOperand;
 
@@ -71,11 +72,11 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
     /*
      * Gets a list of integers which represent the operands in the fields
      */
-    public List<GenericInstructionOperand> getOperands() {
+    public List<InstructionOperand> getOperands() {
 
         var map1 = this.get(FIELDS);
         var keys1 = map1.keySet();
-        List<GenericInstructionOperand> operands = new ArrayList<GenericInstructionOperand>();
+        List<InstructionOperand> operands = new ArrayList<InstructionOperand>();
 
         for (String key : keys1) {
             if (key.contains("register")) {

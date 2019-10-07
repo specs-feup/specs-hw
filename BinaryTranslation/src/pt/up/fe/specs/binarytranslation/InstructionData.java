@@ -11,11 +11,10 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.generic;
+package pt.up.fe.specs.binarytranslation;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import pt.up.fe.specs.binarytranslation.InstructionType;
 
 /**
  * Holds data taken from an executed or static instruction, after decoding its raw parsed fields
@@ -29,10 +28,10 @@ public class InstructionData {
     protected int latency;
     protected int delay;
     protected List<InstructionType> genericType;
-    protected List<GenericInstructionOperand> operands;
+    protected List<InstructionOperand> operands;
 
     public InstructionData(String plainname, int latency, int delay, List<InstructionType> genericType,
-            List<GenericInstructionOperand> operands) {
+            List<InstructionOperand> operands) {
         this.plainname = plainname;
         this.latency = latency;
         this.delay = delay;
@@ -40,8 +39,16 @@ public class InstructionData {
         this.operands = operands;
     }
 
+    /*
+     * Helper constructor for situations with an undefined instruction
+     */
     public InstructionData() {
-        // TODO Auto-generated constructor stub
+        this.plainname = "Unknown";
+        this.latency = 1;
+        this.delay = 1;
+        this.genericType = new ArrayList<InstructionType>();
+        this.genericType.add(InstructionType.G_UNKN);
+        this.operands = new ArrayList<InstructionOperand>();
     }
 
     /*
@@ -70,5 +77,12 @@ public class InstructionData {
      */
     public List<InstructionType> getGenericTypes() {
         return this.genericType;
+    }
+
+    /*
+     * Get Operands
+     */
+    public List<InstructionOperand> getOperands() {
+        return this.operands;
     }
 }

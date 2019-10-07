@@ -27,18 +27,6 @@ public class ArmInstruction extends AInstruction {
     }
 
     @Override
-    public Number getAddress() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String getInstruction() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public Number getBranchTarget() {
         // TODO Auto-generated method stub
         return null;

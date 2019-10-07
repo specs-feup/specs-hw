@@ -17,24 +17,17 @@ public interface ArmInstructionFields {
 
     static String COND = "cond";
 
+    static String SF = "sf";
     static String OPCODEA = "opcodea";
     static String OPCODEB = "opcodeb";
     static String OPCODEC = "opcodec";
     static String OPCODED = "opcoded";
+    static String RM = "registerm";
+    static String RN = "registern";
     static String RD = "registerd";
-    static String RA = "registera";
-    static String RB = "registerb";
     static String IMM = "imm";
-
-    /*
-    static String COND = "cond";
-    static String OPCODE = "opcode";
-    static String S = "S";
-    static String RN = "Rn";
-    static String RD = "Rd";
-    static String SHIFT_AMOUNT = "shift_amount";
-    static String SHIFT = "shift";
-    static String RM = "Rm";
-    */
-
+    static String IMML = "imml";
+    static String IMMH = "immh";
+    static String IMMR = "immr";
+    static String IMMS = "imms";
 }

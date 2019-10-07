@@ -31,12 +31,16 @@ public interface InstructionProperties {
     /*
      * Private helper method too look up the list
      */
-    public int getLatency();
+    default int getLatency() {
+        return 1;
+    };
 
     /*
      * Private helper method too look up the list
      */
-    public int getDelay();
+    default int getDelay() {
+        return 1;
+    };
 
     /*
      * Private helper method too get full opcode
