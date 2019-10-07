@@ -16,7 +16,7 @@ package org.specs.Arm.asm;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.specs.Arm.asmparser.ArmInstructionParsers;
+import org.specs.Arm.isa.ArmInstructionParsers;
 
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 import pt.up.fe.specs.util.SpecsIo;
