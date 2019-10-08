@@ -18,6 +18,8 @@ public interface ArmInstructionFields {
     static String COND = "cond";
 
     static String SF = "sf";
+    static String SFA = "sfa";
+    static String SFB = "sfb";
     static String OPCODEA = "opcodea";
     static String OPCODEB = "opcodeb";
     static String OPCODEC = "opcodec";
