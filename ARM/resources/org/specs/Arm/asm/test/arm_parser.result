@@ -1,0 +1,2 @@
+AsmInstructionData [type: DATA_PROCESSING_IMMEDIATE_SHIFT, fields: {cond=1110, opcode=1010, S=1, Rn=0001, Rd=0000, shift_amount=00000, shift=00, Rm=0000}]
+AsmInstructionData [type: UNDEFINED, fields: {}]
