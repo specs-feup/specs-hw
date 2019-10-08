@@ -7,7 +7,7 @@ import org.junit.Test;
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
 
-public class MicroBlazeParserTest {
+public class MicroBlazeParserTester {
 
     @Test
     public void testMicroBlazeParser() {
