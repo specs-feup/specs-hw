@@ -22,9 +22,11 @@ public interface ArmInstructionFields {
     static String OPCODEB = "opcodeb";
     static String OPCODEC = "opcodec";
     static String OPCODED = "opcoded";
+    static String MEMTYPE = "memtype";
     static String RM = "registerm";
     static String RN = "registern";
     static String RD = "registerd";
+    static String RT = "registert";
     static String IMM = "imm";
     static String IMML = "imml";
     static String IMMH = "immh";
