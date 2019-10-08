@@ -65,8 +65,36 @@ public interface ArmInstructionParsers {
             newInstance(EXCEPTION,
                     "11010100_opcodea(3)_imm(16)_opcodeb(3)_opcodec(2)"),
 
-            newInstance(UCONDITIONALBRANCH,
+            newInstance(UCONDITIONALBRANCH_REG,
                     "1101011_opcodea(4)_opcodeb(5)_opcodec(6)_registern(5)_opcoded(5)"),
+
+            newInstance(UCONDITIONALBRANCH_IMM,
+                    "opcodea(1)_00101_imm(26)"),
+
+            newInstance(COMPARE_AND_BRANCH_IMM,
+                    "sf(1)_011010_opcodea(1)_imm(19)_registert(5)"),
+
+            newInstance(TEST_AND_BRANCH,
+                    "sf(1)_011011_opcodea(1)_registerm(5)_imm(14)_registert(5)"),
+
+            newInstance(LOAD_REG_LITERAL,
+                    "sf(2)_011_opcodea(1)_00_imm(19)_registert(5)"),
+
+            newInstance(LOAD_STORE_PAIR_ADDITIONAL,
+                    "011010_memtype(3)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)"),
+
+            newInstance(LOAD_STORE_PAIR,
+                    "sf(2)_101_opcodea(1)_memtype(3)_opcodeb(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
+                    data -> (!data.get("sf").equals("01") && !data.get("opcodea").equals("0"))),
+
+            newInstance(LOAD_STORE_PAIR_IMM_UNSCALED_FMT1,
+                    "opcodea(2)_111_opcodeb(1)_00_opcodec(2)_0_imm(9)_00_registern(5)_registert(5)"),
+
+            newInstance(LOAD_STORE_PAIR_IMM_UNSCALED_FMT2,
+                    "opcodea(2)_111_opcodeb(1)_00_sf(2)_0_imm(9)_00_registern(5)_registert(5)"),
+
+            newInstance(LOAD_STORE_PAIR_IMM_UNSCALED_FMT3,
+                    "sf(2)_111_opcodea(1)_00_opcodeb(2)_0_imm(9)_00_registern(5)_registert(5)"),
 
             // newInstance(BRANCH, "opcodea(3)_101_opcodea(3)_registern(4)_imm(16)"),
 
