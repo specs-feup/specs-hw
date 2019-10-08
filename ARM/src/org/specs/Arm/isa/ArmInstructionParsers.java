@@ -19,7 +19,9 @@ import static pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryA
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
@@ -80,31 +82,68 @@ public interface ArmInstructionParsers {
             newInstance(LOAD_REG_LITERAL,
                     "sf(2)_011_opcodea(1)_00_imm(19)_registert(5)"),
 
+            ////////////////////
+
             newInstance(LOAD_STORE_PAIR_ADDITIONAL,
-                    "011010_memtype(3)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)"),
+                    "011010_memtype(3)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
+                    data -> (!data.get("memtype").equals("000"))),
 
             newInstance(LOAD_STORE_PAIR,
                     "sf(2)_101_opcodea(1)_memtype(3)_opcodeb(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
-                    data -> (!data.get("sf").equals("01") && !data.get("opcodea").equals("0"))),
+                    data -> ((!data.get("memtype").equals("000"))
+                            && (!data.get("sf").equals("01") && !data.get("opcodea").equals("0")))),
+
+            newInstance(LOAD_STORE_PAIR_NO_ALLOC,
+                    "sf(2)_101_opcodea(1)_000_opcodeb(1)_imm(7)_registerm(5)_registern(5)_registert(5)"),
+
+            ////////////////////
 
             newInstance(LOAD_STORE_PAIR_IMM_UNSCALED_FMT1,
-                    "opcodea(2)_111_opcodeb(1)_00_opcodec(2)_0_imm(9)_00_registern(5)_registert(5)"),
+                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_00_registern(5)_registert(5)", isNotFmt1orFmt2()),
 
             newInstance(LOAD_STORE_PAIR_IMM_UNSCALED_FMT2,
-                    "opcodea(2)_111_opcodeb(1)_00_sf(2)_0_imm(9)_00_registern(5)_registert(5)"),
+                    "opcodea(2)_111000_sf(2)_0_imm(9)_00_registern(5)_registert(5)"),
 
             newInstance(LOAD_STORE_PAIR_IMM_UNSCALED_FMT3,
-                    "sf(2)_111_opcodea(1)_00_opcodeb(2)_0_imm(9)_00_registern(5)_registert(5)"),
+                    "sfa(2)_111_opcodea(3)_sfb(1)_opcodeb(2)_imm(9)_00_registern(5)_registert(5)"),
 
-            // newInstance(BRANCH, "opcodea(3)_101_opcodea(3)_registern(4)_imm(16)"),
+            ////////////////////
 
-            // newInstance(MISCELLANEOUS_1,
-            // "cond(4)_000_10xx_0_x(15)_0_x(4)",
-            // data -> !data.get(ArmInstructionFields.COND).equals("1111")),
+            newInstance(LOAD_STORE_PAIR_IMM_PREPOST_FMT1,
+                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_memtype(2)_registern(5)_registert(5)",
+                    isNotFmt1orFmt2().and(isPrePostAccess())),
+
+            newInstance(LOAD_STORE_PAIR_IMM_PREPOST_FMT2,
+                    "opcodea(2)_111000_sf(2)_0_imm(9)_memtype(2)_registern(5)_registert(5)", isPrePostAccess()),
+
+            newInstance(LOAD_STORE_PAIR_IMM_PREPOST_FMT3,
+                    "sfa(2)_111_opcodea(3)_sfb(1)_opcodeb(2)_imm(9)_memtype(2)_registern(5)_registert(5)",
+                    isPrePostAccess()),
+
+            ////////////////////
 
             newInstance(UNDEFINED, "x(32)")
 
     );
+
+    /*
+     * // predicate == "cannot be LD(U)RSB or LD(U)RSH" && "cannot be ST(U)R or LD(U)R"
+     */
+    private static Predicate<Map<String, String>> isNotFmt1orFmt2() {
+        return data -> !(data.get("opcodeb").equals("11") ||
+                (data.get("opcodeb").equals("10")
+                        && (data.get("opcodea").equals("00") || data.get("opcodea").equals("01")))
+                ||
+                ((data.get("opcodeb").equals("00") || (data.get("opcodeb").equals("01"))
+                        && (data.get("opcodea").equals("10") || data.get("opcodea").equals("11")))));
+    }
+
+    /*
+     * // predicate == check if memory access type is not priviledged or unscaled (i.e. must be pre os post indexed)
+     */
+    private static Predicate<Map<String, String>> isPrePostAccess() {
+        return data -> (data.get("memtype").equals("01") || data.get("memtype").equals("11"));
+    }
 
     static IsaParser getArmIsaParser() {
         Set<String> allowedFields = new HashSet<>(
