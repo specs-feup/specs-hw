@@ -31,6 +31,10 @@ public class GenericIsaParser implements IsaParser {
         this.allowedFields = allowedFields;
     }
 
+    // public GenericIsaParser(List<AsmInstructionParser> instructionParsers, Set<String> allowedFields) {
+    // this(instructionParsers, allowedFields, AsmInstructionData::newInstance);
+    // }
+
     public GenericIsaParser(List<AsmInstructionParser> instructionParsers) {
         this(instructionParsers, null);
     }

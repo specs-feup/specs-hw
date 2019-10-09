@@ -47,109 +47,96 @@ public abstract class AInstruction implements Instruction {
         this.instruction = instruction.strip();
     }
 
-    @Override
-    public String getName() {
+    public final String getName() {
         return idata.getPlainName();
     }
 
-    @Override
-    public Number getAddress() {
+    public final Number getAddress() {
         return address;
     }
 
-    @Override
-    public String getInstruction() {
+    public final String getInstruction() {
         return instruction;
     }
 
-    @Override
-    public int getLatency() {
+    public final int getLatency() {
         return idata.getLatency();
     }
 
-    @Override
-    public int getDelay() {
+    public final int getDelay() {
         return idata.getDelay();
     }
 
-    @Override
+    public final int getBitWidth() {
+        return this.idata.getBitWidth();
+    }
+
+    public final Boolean isSimd() {
+        return this.idata.isSimd();
+    }
+
     public String toString() {
         return SpecsStrings.toHexString(address.longValue(), 8) + ": " + instruction;
     }
 
     // Check for instruction type /////////////////////////////////////////////
-    @Override
     public final boolean isAdd() {
         return idata.getGenericTypes().contains(InstructionType.G_ADD);
     }
 
-    @Override
     public final boolean isSub() {
         return idata.getGenericTypes().contains(InstructionType.G_SUB);
     }
 
-    @Override
     public final boolean isMul() {
         return idata.getGenericTypes().contains(InstructionType.G_MUL);
     }
 
-    @Override
     public final boolean isLogical() {
         return idata.getGenericTypes().contains(InstructionType.G_LOGICAL);
     }
 
-    @Override
     public final boolean isUnary() {
         return idata.getGenericTypes().contains(InstructionType.G_UNARY);
     }
 
-    @Override
     public final boolean isJump() {
         return (idata.getGenericTypes().contains(InstructionType.G_CJUMP) |
                 idata.getGenericTypes().contains(InstructionType.G_UJUMP));
     }
 
-    @Override
     public final boolean isConditionalJump() {
         return idata.getGenericTypes().contains(InstructionType.G_CJUMP);
     }
 
-    @Override
     public final boolean isUnconditionalJump() {
         return idata.getGenericTypes().contains(InstructionType.G_UJUMP);
     }
 
-    @Override
     public final boolean isRelativeJump() {
         return idata.getGenericTypes().contains(InstructionType.G_RJUMP);
     }
 
-    @Override
     public final boolean isAbsoluteJump() {
         return idata.getGenericTypes().contains(InstructionType.G_AJUMP);
     }
 
-    @Override
     public final boolean isImmediate() {
         return idata.getGenericTypes().contains(InstructionType.G_IJUMP);
     }
 
-    @Override
     public final boolean isStore() {
         return idata.getGenericTypes().contains(InstructionType.G_STORE);
     }
 
-    @Override
     public final boolean isLoad() {
         return idata.getGenericTypes().contains(InstructionType.G_LOAD);
     }
 
-    @Override
     public final boolean isMemory() {
         return idata.getGenericTypes().contains(InstructionType.G_MEMORY);
     }
 
-    @Override
     public final boolean isFloat() {
         return idata.getGenericTypes().contains(InstructionType.G_FLOAT);
     }
