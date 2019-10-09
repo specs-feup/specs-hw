@@ -79,35 +79,53 @@ public interface ArmInstructionParsers {
             newInstance(TEST_AND_BRANCH,
                     "sf(1)_011011_opcodea(1)_registerm(5)_imm(14)_registert(5)"),
 
-            newInstance(LOAD_REG_LITERAL,
-                    "sf(2)_011_opcodea(1)_00_imm(19)_registert(5)"),
+            ////////////////////
+
+            newInstance(LOAD_REG_LITERAL_FMT1,
+                    "sf(2)_011_simd(1)_00_imm(19)_registert(5)",
+                    data -> !(data.get("simd").equals("0")
+                            && (data.get("sf").equals("10") || data.get("sf").equals("11")))),
+
+            newInstance(LOAD_REG_LITERAL_FMT2,
+                    "opcodea(2)_011000_imm(19)_registert(5)"),
 
             ////////////////////
 
-            newInstance(LOAD_STORE_PAIR_ADDITIONAL,
+            // these parsers gather LOAD_STORE_PAIR_POSTINDEX + LOAD_STORE_PAIR_OFFSET + LOAD_STORE_PAIR_PREINDEX
+
+            newInstance(LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1,
+                    "sf(2)_101_simd(1)_memtype(3)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
+                    data -> ((!data.get("memtype").equals("000"))
+                            && !(data.get("sf").equals("01") && data.get("simd").equals("0")))),
+
+            newInstance(LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2,
                     "011010_memtype(3)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
                     data -> (!data.get("memtype").equals("000"))),
 
-            newInstance(LOAD_STORE_PAIR,
-                    "sf(2)_101_opcodea(1)_memtype(3)_opcodeb(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
-                    data -> ((!data.get("memtype").equals("000"))
-                            && (!data.get("sf").equals("01") && !data.get("opcodea").equals("0")))),
+            ////////////////////
 
             newInstance(LOAD_STORE_PAIR_NO_ALLOC,
-                    "sf(2)_101_opcodea(1)_000_opcodeb(1)_imm(7)_registerm(5)_registern(5)_registert(5)"),
+                    "sf(2)_101_simd(1)_000_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)"),
 
             ////////////////////
 
-            newInstance(LOAD_STORE_PAIR_IMM_UNSCALED_FMT1,
-                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_00_registern(5)_registert(5)", isNotFmt1orFmt2()),
+            // these parsers gather LOAD_STORE_PAIR_UNPRIV and LOAD_STORE_PAIR_IMM_UNSCALED
 
-            newInstance(LOAD_STORE_PAIR_IMM_UNSCALED_FMT2,
-                    "opcodea(2)_111000_sf(2)_0_imm(9)_00_registern(5)_registert(5)"),
+            newInstance(LOAD_STORE_PAIR_IMM_FMT1,
+                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_opcodec(2)_registern(5)_registert(5)",
+                    isNotFmt1orFmt2().and(isPrivorUnscaledAccess())),
 
-            newInstance(LOAD_STORE_PAIR_IMM_UNSCALED_FMT3,
-                    "sfa(2)_111_opcodea(3)_sfb(1)_opcodeb(2)_imm(9)_00_registern(5)_registert(5)"),
+            newInstance(LOAD_STORE_PAIR_IMM_FMT2,
+                    "opcodea(2)_111000_sf(2)_0_imm(9)_opcodec(2)_registern(5)_registert(5)",
+                    isPrivorUnscaledAccess()),
+
+            newInstance(LOAD_STORE_PAIR_IMM_FMT3,
+                    "sfa(2)_111_simd(1)_opcodea(2)_sfb(1)_opcodeb(2)_imm(9)_opcodec(2)_registern(5)_registert(5)",
+                    isPrivorUnscaledAccess()),
 
             ////////////////////
+
+            // these parsers gather LOAD_STORE_PAIR_IMM Pre and post indexed
 
             newInstance(LOAD_STORE_PAIR_IMM_PREPOST_FMT1,
                     "opcodea(2)_111000_opcodeb(2)_0_imm(9)_memtype(2)_registern(5)_registert(5)",
@@ -117,21 +135,8 @@ public interface ArmInstructionParsers {
                     "opcodea(2)_111000_sf(2)_0_imm(9)_memtype(2)_registern(5)_registert(5)", isPrePostAccess()),
 
             newInstance(LOAD_STORE_PAIR_IMM_PREPOST_FMT3,
-                    "sfa(2)_111_opcodea(3)_sfb(1)_opcodeb(2)_imm(9)_memtype(2)_registern(5)_registert(5)",
+                    "sfa(2)_111_simd(1)_opcodea(2)_sfb(1)_opcodeb(2)_imm(9)_memtype(2)_registern(5)_registert(5)",
                     isPrePostAccess()),
-
-            ////////////////////
-
-            newInstance(LOAD_STORE_PAIR_UNPRIV_FMT1,
-                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_10_registern(5)_registert(5)", isNotFmt1orFmt2()),
-
-            newInstance(LOAD_STORE_PAIR_UNPRIV_FMT2,
-                    "opcodea(2)_111000_sf(2)_0_imm(9)_10_registern(5)_registert(5)"),
-
-            newInstance(LOAD_STORE_PAIR_UNPRIV_FMT3,
-                    "sf(2)_111000_opcodeb(2)_0_imm(9)_10_registern(5)_registert(5)"),
-
-            ////////////////////
 
             newInstance(UNDEFINED, "x(32)")
 
@@ -159,8 +164,8 @@ public interface ArmInstructionParsers {
     /*
      * // predicate == check if memory access type is not priviledged type
      */
-    private static Predicate<Map<String, String>> isPrivAccess() {
-        return data -> (data.get("memtype").equals("10"));
+    private static Predicate<Map<String, String>> isPrivorUnscaledAccess() {
+        return data -> (data.get("opcodec").equals("10") || data.get("opcodec").equals("00"));
     }
 
     static IsaParser getArmIsaParser() {
