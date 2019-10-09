@@ -96,6 +96,8 @@ public enum ArmInstructionProperties implements InstructionProperties {
     tbz(0x3600_0000, 1, 1, TEST_AND_BRANCH, G_CMP, G_JUMP, G_IJUMP),
     tbnz(0x3700_0000, 1, 1, TEST_AND_BRANCH, G_CMP, G_JUMP, G_IJUMP),
 
+    ///////////////////////////////////////////////////////////////////////////
+
     // LOAD_REG_LITERAL (C4-280)
     ldr_reg("ldr", 0x1800_0000, 1, 1, LOAD_REG_LITERAL, G_MEMORY, G_LOAD),
     ldr_simd_reg("ldr", 0x1C00_0000, 1, 1, LOAD_REG_LITERAL, G_MEMORY, G_LOAD),
@@ -110,8 +112,10 @@ public enum ArmInstructionProperties implements InstructionProperties {
     ldnp_simd("ldnp", 0x2C40_0000, 1, 1, LOAD_STORE_PAIR_NO_ALLOC, G_MEMORY, G_LOAD),
     // TODO check if "sf" field processing is best for these insts (and variants)
 
-    // LOAD_STORE_PAIR (LOAD_STORE_PAIR_POSTINDEX + LOAD_STORE_PAIR_OFFSET + LOAD_STORE_PAIR_PREINDEX) (C4-281 to
-    // C4-282)
+    ///////////////////////////////////////////////////////////////////////////
+
+    // LOAD_STORE_PAIR (LOAD_STORE_PAIR_POSTINDEX +
+    // LOAD_STORE_PAIR_OFFSET + LOAD_STORE_PAIR_PREINDEX) (C4-281 to C4-282)
     stp(0x2800_0000, 1, 1, LOAD_STORE_PAIR, G_MEMORY, G_STORE),
     ldp(0x2840_0000, 1, 1, LOAD_STORE_PAIR, G_MEMORY, G_LOAD),
     stp_simd("stp", 0x2C00_0000, 1, 1, LOAD_STORE_PAIR, G_MEMORY, G_STORE),
@@ -120,6 +124,8 @@ public enum ArmInstructionProperties implements InstructionProperties {
     // LOAD_STORE_PAIR_ADDITIONAL (C4-282)
     stgp(0x6800_0000, 1, 1, LOAD_STORE_PAIR_ADDITIONAL, G_MEMORY, G_STORE),
     ldpsw(0x6840_0000, 1, 1, LOAD_STORE_PAIR_ADDITIONAL, G_MEMORY, G_LOAD),
+
+    ///////////////////////////////////////////////////////////////////////////
 
     // LOAD_STORE_PAIR_IMM_UNSCALED_FMT1 (C4-283 to C4-284)
     sturb(0x3800_0000, 1, 1, LOAD_STORE_PAIR_IMM_UNSCALED_FMT1, G_MEMORY, G_STORE),
@@ -139,6 +145,8 @@ public enum ArmInstructionProperties implements InstructionProperties {
     stur_simd("stur", 0x3C00_0000, 1, 1, LOAD_STORE_PAIR_IMM_UNSCALED_FMT3, G_MEMORY, G_STORE),
     ldur_simd("ldur", 0x3C40_0000, 1, 1, LOAD_STORE_PAIR_IMM_UNSCALED_FMT3, G_MEMORY, G_LOAD),
 
+    ///////////////////////////////////////////////////////////////////////////
+
     // LOAD_STORE_PAIR_IMM_PREPOST_FMT1 (C4-284 to C4-285 and C4-286 to C4-287)
     strb(0x3800_0000, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT1, G_MEMORY, G_STORE),
     ldrb(0x3840_0000, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT1, G_MEMORY, G_LOAD),
@@ -154,7 +162,41 @@ public enum ArmInstructionProperties implements InstructionProperties {
     str(0x3800_0000, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT2, G_MEMORY, G_STORE),
     ldr_imm("ldr", 0x3840_0000, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT3, G_MEMORY, G_LOAD),
     str_simd("str", 0x3C00_0000, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT3, G_MEMORY, G_STORE),
-    ldr_simd_imm("ldr", 0x3C40_0000, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT3, G_MEMORY, G_LOAD);
+    ldr_simd_imm("ldr", 0x3C40_0000, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT3, G_MEMORY, G_LOAD),
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    // LOAD_STORE_PAIR_UNPRIV_FMT1 (C4-286)
+    sttrb(0x3800_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV_FMT1, G_MEMORY, G_STORE),
+    ldtrb(0x3840_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV_FMT1, G_MEMORY, G_LOAD),
+    sttrh(0x7800_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV_FMT1, G_MEMORY, G_STORE),
+    ldtrh(0x7840_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV_FMT1, G_MEMORY, G_LOAD),
+    ldtrsw(0xB880_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV_FMT1, G_MEMORY, G_LOAD),
+
+    // LOAD_STORE_PAIR_UNPRIV_FMT2 (C4-286)
+    ldtrsb(0x38C0_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV_FMT2, G_MEMORY, G_LOAD),
+    ldtrsh(0x78C0_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV_FMT2, G_MEMORY, G_LOAD),
+
+    // LOAD_STORE_PAIR_UNPRIV_FMT3 (C4-286)
+    sttr(0xB800_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV_FMT3, G_MEMORY, G_STORE),
+    ldtr(0xB840_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV_FMT3, G_MEMORY, G_LOAD);
+
+    /*
+    ldtrsb32("ldtrsb", 0x38C0_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV, G_MEMORY, G_LOAD),
+    ldtrsb64("ldtrsb", 0x3880_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV, G_MEMORY, G_LOAD),
+    
+    
+    
+    ldtrsh32("ldtrsh", 0x78C0_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV, G_MEMORY, G_LOAD),
+    ldtrsh64("ldtrsh", 0x7880_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV, G_MEMORY, G_LOAD),
+    sttr32("sttr", 0xB800_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV, G_MEMORY, G_STORE),
+    sttr64("sttr", 0xF800_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV, G_MEMORY, G_STORE),
+    
+    ldtr32("ldtr", 0xB840_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV, G_MEMORY, G_LOAD),
+    ldtr64("ldtr", 0xF840_0000, 1, 1, LOAD_STORE_PAIR_UNPRIV, G_MEMORY, G_LOAD);
+    */
+
+    ///////////////////////////////////////////////////////////////////////////
 
     /*
      * Instruction property fields
@@ -180,8 +222,6 @@ public enum ArmInstructionProperties implements InstructionProperties {
         this.codetype = mbtype;
         this.genericType = tp;
 
-        // System.out.print(this.codetype.toString() + ": " + this.instructionName + "\n");
-
         // use the parser to initialize private fields of instruction set itself
         IsaParser parser = ArmInstructionParsers.getArmIsaParser();
         this.iData = parser.parse(Integer.toHexString(opcode)); // TODO make new overload for "parse"
@@ -195,7 +235,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
             int delay, ArmInstructionType mbtype, InstructionType... tp) {
         this(opcode, latency, delay, mbtype, Arrays.asList(tp));
         this.instructionName = name();
-
+        System.out.print(this.codetype.toString() + ": " + this.instructionName + "\n");
     }
 
     /*
@@ -205,6 +245,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
             int delay, ArmInstructionType mbtype, InstructionType... tp) {
         this(opcode, latency, delay, mbtype, Arrays.asList(tp));
         this.instructionName = explicitname;
+        System.out.print(this.codetype.toString() + ": " + this.instructionName + "\n");
     }
 
     /*
