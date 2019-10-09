@@ -122,6 +122,17 @@ public interface ArmInstructionParsers {
 
             ////////////////////
 
+            newInstance(LOAD_STORE_PAIR_UNPRIV_FMT1,
+                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_10_registern(5)_registert(5)", isNotFmt1orFmt2()),
+
+            newInstance(LOAD_STORE_PAIR_UNPRIV_FMT2,
+                    "opcodea(2)_111000_sf(2)_0_imm(9)_10_registern(5)_registert(5)"),
+
+            newInstance(LOAD_STORE_PAIR_UNPRIV_FMT3,
+                    "sf(2)_111000_opcodeb(2)_0_imm(9)_10_registern(5)_registert(5)"),
+
+            ////////////////////
+
             newInstance(UNDEFINED, "x(32)")
 
     );
@@ -143,6 +154,13 @@ public interface ArmInstructionParsers {
      */
     private static Predicate<Map<String, String>> isPrePostAccess() {
         return data -> (data.get("memtype").equals("01") || data.get("memtype").equals("11"));
+    }
+
+    /*
+     * // predicate == check if memory access type is not priviledged type
+     */
+    private static Predicate<Map<String, String>> isPrivAccess() {
+        return data -> (data.get("memtype").equals("10"));
     }
 
     static IsaParser getArmIsaParser() {
