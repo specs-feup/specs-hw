@@ -43,6 +43,7 @@ public enum InstructionType {
     G_LOAD,
     G_MEMORY,
     G_FLOAT,
+    G_CMP,
     G_OTHER,
     G_UNKN // TODO should fire off an exception
     // TODO add more types
