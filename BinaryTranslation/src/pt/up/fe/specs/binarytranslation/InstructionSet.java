@@ -97,14 +97,8 @@ public class InstructionSet {
         if (props == null)
             return new InstructionData();
 
-        String plainname = props.getName();
-        int latency = props.getLatency();
-        int delay = props.getDelay();
-        List<InstructionType> genericTypes = props.getGenericType();
-
-        // uses operand fields to construct operand list
-        List<InstructionOperand> operands = fieldData.getOperands();
-
-        return new InstructionData(plainname, latency, delay, genericTypes, operands);
+        return new InstructionData(props.getName(), props.getLatency(),
+                props.getDelay(), fieldData.getBitWidth(),
+                fieldData.isSimd(), props.getGenericType(), fieldData.getOperands());
     }
 }

@@ -27,14 +27,19 @@ public class InstructionData {
     protected String plainname;
     protected int latency;
     protected int delay;
+    protected int bitwidth;
+    protected Boolean isSimd;
     protected List<InstructionType> genericType;
     protected List<InstructionOperand> operands;
 
-    public InstructionData(String plainname, int latency, int delay, List<InstructionType> genericType,
+    public InstructionData(String plainname, int latency, int delay, int bitwidth, Boolean isSimd,
+            List<InstructionType> genericType,
             List<InstructionOperand> operands) {
         this.plainname = plainname;
         this.latency = latency;
         this.delay = delay;
+        this.bitwidth = bitwidth;
+        this.isSimd = isSimd;
         this.genericType = genericType;
         this.operands = operands;
     }
@@ -46,6 +51,8 @@ public class InstructionData {
         this.plainname = "Unknown";
         this.latency = 1;
         this.delay = 1;
+        this.bitwidth = 32;
+        this.isSimd = false;
         this.genericType = new ArrayList<InstructionType>();
         this.genericType.add(InstructionType.G_UNKN);
         this.operands = new ArrayList<InstructionOperand>();
@@ -70,6 +77,20 @@ public class InstructionData {
      */
     public int getDelay() {
         return this.delay;
+    }
+
+    /*
+     * get bitwidth
+     */
+    public int getBitWidth() {
+        return this.bitwidth;
+    }
+
+    /*
+     * get issimd
+     */
+    public Boolean isSimd() {
+        return this.isSimd;
     }
 
     /*

@@ -14,7 +14,6 @@
 package org.specs.Arm.isa;
 
 import static org.specs.Arm.isa.ArmInstructionType.*;
-import static pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryAsmInstructionParser.newInstance;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,11 +23,25 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
+import pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryAsmInstructionParser;
 import pt.up.fe.specs.binarytranslation.generic.GenericIsaParser;
 import pt.up.fe.specs.util.SpecsSystem;
 
 public interface ArmInstructionParsers {
+
+    // private final BiFunction<AsmInstructionType, Map<String, String>, AsmInstructionData> dataConstructor;
+
+    static AsmInstructionParser newInstance(AsmInstructionType type, String rule,
+            Predicate<Map<String, String>> predicate) {
+
+        return BinaryAsmInstructionParser.newInstance(type, rule, predicate, ArmAsmInstructionData::new);
+    }
+
+    static AsmInstructionParser newInstance(AsmInstructionType type, String rule) {
+        return newInstance(type, rule, null);
+    }
 
     /*
      * For ARMv8 aarch64 instruction set
@@ -155,14 +168,14 @@ public interface ArmInstructionParsers {
     }
 
     /*
-     * // predicate == check if memory access type is not priviledged or unscaled (i.e. must be pre os post indexed)
+     * // predicate == check if memory access type is not privileged or unscaled (i.e. must be pre os post indexed)
      */
     private static Predicate<Map<String, String>> isPrePostAccess() {
         return data -> (data.get("memtype").equals("01") || data.get("memtype").equals("11"));
     }
 
     /*
-     * // predicate == check if memory access type is not priviledged type
+     * // predicate == check if memory access type is not privileged type
      */
     private static Predicate<Map<String, String>> isPrivorUnscaledAccess() {
         return data -> (data.get("opcodec").equals("10") || data.get("opcodec").equals("00"));

@@ -39,13 +39,18 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
     public static final DataKey<Map<String, String>> FIELDS = KeyFactory.generic("fields",
             (Map<String, String>) new LinkedHashMap<String, String>());
 
-    public static AsmInstructionData newInstance(AsmInstructionType type, Map<String, String> fields) {
-        var data = new AsmInstructionData();
+    // public static AsmInstructionData newInstance(AsmInstructionType type, Map<String, String> fields) {
+    // var data = new AsmInstructionData();
+    //
+    // data.set(TYPE, type);
+    // data.set(FIELDS, fields);
+    //
+    // return data;
+    // }
 
-        data.set(TYPE, type);
-        data.set(FIELDS, fields);
-
-        return data;
+    public AsmInstructionData(AsmInstructionType type, Map<String, String> fields) {
+        set(TYPE, type);
+        set(FIELDS, fields);
     }
 
     public AsmInstructionType getType() {
@@ -65,6 +70,9 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
                 tmp = tmp + map1.get(key);
             }
         }
+
+        if (tmp.isEmpty())
+            return 0;
 
         return Integer.parseInt(tmp, 2);
     }
@@ -95,15 +103,18 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
     }
 
     /*
-     * Get "sf" field from ARM instruction types
+     * Return a default bitwidth; this method SHOULD
+     * be overwritten by specific processor implementations
      */
-    public Boolean is64Bits() {
+    public int getBitWidth() {
+        return 32;
+    }
 
-        var map1 = this.get(FIELDS);
-        var keys1 = map1.keySet();
-        if (keys1.contains("sf"))
-            return this.get(FIELDS).get("sf").equals("1");
-        else
-            return false;
+    /*
+     * Check if instruction is simd instruction; this method SHOULD
+     * be overwritten by specific processor implementations
+     */
+    public Boolean isSimd() {
+        return false;
     }
 }

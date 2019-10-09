@@ -157,6 +157,16 @@ public interface Instruction {
      */
     public Object getFields();
 
+    /*
+     * Returns width of registers instruction operates on 
+     */
+    public int getBitWidth();
+
+    /*
+     * True if instruction is SIMD instruction 
+     */
+    public Boolean isSimd();
+
     /**
      * 
      * @param instruction

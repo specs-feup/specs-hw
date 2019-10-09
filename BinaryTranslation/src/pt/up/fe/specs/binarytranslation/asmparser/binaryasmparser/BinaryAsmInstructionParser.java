@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
@@ -40,6 +41,13 @@ import pt.up.fe.specs.util.stringparser.StringParser;
  *
  */
 public class BinaryAsmInstructionParser implements AsmInstructionParser {
+
+    public static BinaryAsmInstructionParser newInstance(AsmInstructionType type, String rule,
+            Predicate<Map<String, String>> predicate,
+            BiFunction<AsmInstructionType, Map<String, String>, AsmInstructionData> dataConstructor) {
+
+        return new BinaryAsmInstructionParser(type, parseBinaryAsmRule(rule), predicate, dataConstructor);
+    }
 
     public static BinaryAsmInstructionParser newInstance(AsmInstructionType type, String rule,
             Predicate<Map<String, String>> predicate) {
@@ -161,13 +169,22 @@ public class BinaryAsmInstructionParser implements AsmInstructionParser {
     private final AsmInstructionType type;
     private final List<BinaryAsmRule> rules;
     private final Predicate<Map<String, String>> predicate;
+    private final BiFunction<AsmInstructionType, Map<String, String>, AsmInstructionData> dataConstructor;
 
     private BinaryAsmInstructionParser(AsmInstructionType type, List<BinaryAsmRule> rules,
-            Predicate<Map<String, String>> predicate) {
+            Predicate<Map<String, String>> predicate,
+            BiFunction<AsmInstructionType, Map<String, String>, AsmInstructionData> dataConstructor) {
 
         this.type = type;
         this.rules = rules;
         this.predicate = predicate;
+        this.dataConstructor = dataConstructor;
+    }
+
+    private BinaryAsmInstructionParser(AsmInstructionType type, List<BinaryAsmRule> rules,
+            Predicate<Map<String, String>> predicate) {
+
+        this(type, rules, predicate, AsmInstructionData::new);
     }
 
     @Override
@@ -199,7 +216,7 @@ public class BinaryAsmInstructionParser implements AsmInstructionParser {
             return Optional.empty();
         }
 
-        return Optional.of(AsmInstructionData.newInstance(type, fields));
+        return Optional.of(dataConstructor.apply(type, fields));
     }
 
 }
