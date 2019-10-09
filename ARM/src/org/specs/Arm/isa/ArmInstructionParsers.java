@@ -71,7 +71,7 @@ public interface ArmInstructionParsers {
                     "sf(1)_opcodea(2)_100110_opcodeb(1)_immr(6)_imms(6)_registern(5)_registerd(5)"),
 
             newInstance(EXTRACT,
-                    "sf(1)_opcodea(2)_100111_opcodeb(2)_registerm(5)_imms(6)_registern(5)_registerd(5)"),
+                    "sf(1)_001_0011_1x0_registerm(5)_imms(6)_registern(5)_registerd(5)"),
 
             // 2. Branches, Exception Generating and System instructions - page C4-257 of ARMV8 manual
             newInstance(CONDITIONALBRANCH,

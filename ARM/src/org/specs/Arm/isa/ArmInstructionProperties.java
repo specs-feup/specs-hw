@@ -46,12 +46,12 @@ public enum ArmInstructionProperties implements InstructionProperties {
     movk(0x7280_0000, 1, 1, MOVEW, G_OTHER),
 
     // BITFIELD (C4-256)
-    sfbm(0x1300_0000, 1, 1, BITFIELD, G_OTHER),
-    bfm(0x5300_0000, 1, 1, BITFIELD, G_OTHER),
-    ubfm(0x7300_0000, 1, 1, BITFIELD, G_OTHER),
+    sbfm(0x1300_0000, 1, 1, BITFIELD, G_OTHER),
+    bfm(0x3300_0000, 1, 1, BITFIELD, G_OTHER),
+    ubfm(0x5300_0000, 1, 1, BITFIELD, G_OTHER),
 
     // EXTRACT (C4-256)
-    extr(0x1380_0000, 1, 1, BITFIELD, G_OTHER),
+    extr(0x1380_0000, 1, 1, EXTRACT, G_OTHER),
 
     // CONDITIONALBRANCH (C4-257)
     bcond(0x5400_0000, 1, 1, CONDITIONALBRANCH, G_JUMP, G_CJUMP, G_RJUMP),

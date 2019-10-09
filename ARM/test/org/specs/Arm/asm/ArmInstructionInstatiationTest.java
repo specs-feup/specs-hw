@@ -135,6 +135,100 @@ public class ArmInstructionInstatiationTest {
         testDecode("ands_imm_64", "ands", Integer.toHexString(0b111_100100_0_000000000000_00000_00000));
     }
 
+    // MOVEW //////////////////////////////////////////////////////////////////
+    // moven 32 bit
+    @Test
+    public void testMovn32() {
+        testDecode("movn_imm_32", "movn", Integer.toHexString(0b000_100101_0_000000000000_00000_00000));
+    }
+
+    // movez 32 bit
+    @Test
+    public void testMovz32() {
+        testDecode("movz_imm_32", "movz", Integer.toHexString(0b010_100101_0_000000000000_00000_00000));
+    }
+
+    // movek 32 bit
+    @Test
+    public void testMovk32() {
+        testDecode("movk_imm_32", "movk", Integer.toHexString(0b011_100101_0_000000000000_00000_00000));
+    }
+
+    // moven 64 bit
+    @Test
+    public void testMovn64() {
+        testDecode("movn_imm_64", "movn", Integer.toHexString(0b100_100101_0_000000000000_00000_00000));
+    }
+
+    // movez 64 bit
+    @Test
+    public void testMovz64() {
+        testDecode("movz_imm_64", "movz", Integer.toHexString(0b110_100101_0_000000000000_00000_00000));
+    }
+
+    // movek 64 bit
+    @Test
+    public void testMovk64() {
+        testDecode("movk_imm_64", "movk", Integer.toHexString(0b111_100101_0_000000000000_00000_00000));
+    }
+
+    // BITFIELD ///////////////////////////////////////////////////////////////
+    // sbfm 32 bit
+    @Test
+    public void testSbfm32() {
+        testDecode("sbfm_imm_32", "sbfm", Integer.toHexString(0b000_100110_0_000000000000_00000_00000));
+    }
+
+    // bfm 32 bit
+    @Test
+    public void testBfm32() {
+        testDecode("bfm_imm_32", "bfm", Integer.toHexString(0b001_100110_0_000000000000_00000_00000));
+    }
+
+    // ubfm 32 bit
+    @Test
+    public void testUbfm32() {
+        testDecode("ubfm_imm_32", "ubfm", Integer.toHexString(0b010_100110_0_000000000000_00000_00000));
+    }
+
+    // sbfm 64 bit
+    @Test
+    public void testSbfm64() {
+        testDecode("sbfm_imm_64", "sbfm", Integer.toHexString(0b100_100110_0_000000000000_00000_00000));
+    }
+
+    // bfm 64 bit
+    @Test
+    public void testBfm64() {
+        testDecode("bfm_imm_64", "bfm", Integer.toHexString(0b101_100110_0_000000000000_00000_00000));
+    }
+
+    // ubfm 64 bit
+    @Test
+    public void testUbfm64() {
+        testDecode("ubfm_imm_64", "ubfm", Integer.toHexString(0b110_100110_0_000000000000_00000_00000));
+    }
+
+    // EXTRACT ////////////////////////////////////////////////////////////////
+    // extr 32 bit
+    @Test
+    public void testExtr32() {
+        testDecode("extr_imm_32", "extr", Integer.toHexString(0b000_100111_0_000000000000_00000_00000));
+    }
+
+    // extr 64 bit
+    @Test
+    public void testExtr64() {
+        testDecode("extr_imm_64", "extr", Integer.toHexString(0b100_100111_1_000000000000_00000_00000));
+    }
+
+    // CONDITIONALBRANCH //////////////////////////////////////////////////////
+    // b.
+    @Test
+    public void testB() {
+        testDecode("bcond", "b", Integer.toHexString(0b0101_0100_000000000000000000_0_0000));
+    }
+
     private void testDecode(String name, String expected, String binaryInstruction) {
         ArmInstruction testinst = new ArmInstruction("0", binaryInstruction);
         System.out.print(name + "\tresolved to\t->\t" + testinst.getName() +
