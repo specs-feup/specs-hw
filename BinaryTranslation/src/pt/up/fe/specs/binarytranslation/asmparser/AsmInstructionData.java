@@ -34,8 +34,14 @@ import pt.up.fe.specs.binarytranslation.generic.GenericInstructionOperand;
  */
 public class AsmInstructionData extends ADataClass<AsmInstructionData> {
 
+    /*
+     * This datakey only holds the instruction type (i.e., binary instruction format as specified in the parsers)
+     */
     public static final DataKey<AsmInstructionType> TYPE = KeyFactory.object("type", AsmInstructionType.class);
 
+    /*
+     * This map contains the field names specified in the parsers, and their values
+     */
     public static final DataKey<Map<String, String>> FIELDS = KeyFactory.generic("fields",
             (Map<String, String>) new LinkedHashMap<String, String>());
 
@@ -52,6 +58,13 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
      */
     public AsmInstructionType getType() {
         return this.get(TYPE);
+    }
+
+    /*
+     * Get all fields
+     */
+    public Map<String, String> getFields() {
+        return this.get(FIELDS);
     }
 
     /*

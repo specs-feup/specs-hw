@@ -168,7 +168,9 @@ public enum ArmInstructionProperties implements InstructionProperties {
 
     // LOAD_STORE_PAIR_IMM_PREPOST_FMT3 (C4-284 to C4-285 and C4-286 to C4-287)
     str_imm("str", 0x3800_0000, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT3, G_MEMORY, G_STORE),
-    ldr_imm("ldr", 0x3840_0000, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT3, G_MEMORY, G_LOAD);
+    ldr_imm("ldr", 0x3840_0000, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT3, G_MEMORY, G_LOAD),
+
+    unknown(0x000000000, 1, 1, UNDEFINED, G_UNKN);
 
     ///////////////////////////////////////////////////////////////////////////
 

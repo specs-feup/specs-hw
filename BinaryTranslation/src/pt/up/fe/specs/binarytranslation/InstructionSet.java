@@ -79,11 +79,21 @@ public class InstructionSet {
      * Gets all properties of instruction from ISA, based on raw field data
      */
     private InstructionProperties getProperties(AsmInstructionData asmData) {
+        InstructionProperties props = null;
         for (InstructionProperties inst : getTypeList(asmData.getType())) {
-            if (inst.getReducedOpCode() == asmData.getReducedOpcode())
+            if (inst.getReducedOpCode() == asmData.getReducedOpcode()) {
                 return inst;
+            }
         }
-        return null;
+
+        // find the type labeled as generic unknown otherwise
+        for (InstructionProperties inst : instList) {
+            if (inst.getGenericType().contains(InstructionType.G_UNKN)) {
+                return inst;
+            }
+        }
+
+        return props;
     }
 
     /*

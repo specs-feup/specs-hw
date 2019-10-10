@@ -19,11 +19,23 @@ public class ArmInstructionData extends InstructionData {
         this.condition = fieldData.getCond();
     }
 
-    public int getBitwidth() {
+    /*
+     * Some ARM instructions need a suffix (i.e., the conditionals)
+     */
+    @Override
+    public String getPlainName() {
+        if (this.condition.equals(ArmInstructionCondition.NONE)) {
+            return this.plainname;
+        } else {
+            return this.plainname + "." + this.condition.getShorthandle().toLowerCase();
+        }
+    }
+
+    public int getBitWidth() {
         return bitwidth;
     }
 
-    public Boolean getIsSimd() {
+    public Boolean isSimd() {
         return isSimd;
     }
 }

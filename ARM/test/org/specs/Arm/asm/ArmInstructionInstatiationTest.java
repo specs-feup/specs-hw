@@ -3,7 +3,9 @@ package org.specs.Arm.asm;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.specs.Arm.isa.ArmAsmInstructionData;
 import org.specs.Arm.isa.ArmInstruction;
+import org.specs.Arm.isa.ArmInstructionData;
 
 public class ArmInstructionInstatiationTest {
 
@@ -226,97 +228,97 @@ public class ArmInstructionInstatiationTest {
     // b.eq
     @Test
     public void testBeq() {
-        testDecode("b.eq", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0000));
+        testDecode("b.eq", "b.eq", Integer.toHexString(0b0101_0100_0000000000000000000_0_0000));
     }
 
     // b.ne
     @Test
     public void testBne() {
-        testDecode("b.ne", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0001));
+        testDecode("b.ne", "b.ne", Integer.toHexString(0b0101_0100_0000000000000000000_0_0001));
     }
 
     // b.cs
     @Test
     public void testBcs() {
-        testDecode("b.cs", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0010));
+        testDecode("b.cs", "b.cs", Integer.toHexString(0b0101_0100_0000000000000000000_0_0010));
     }
 
     // b.cc
     @Test
     public void testBcc() {
-        testDecode("b.cc", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0011));
+        testDecode("b.cc", "b.cc", Integer.toHexString(0b0101_0100_0000000000000000000_0_0011));
     }
 
     // b.mn
     @Test
     public void testBmn() {
-        testDecode("b.mn", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0100));
+        testDecode("b.mn", "b.mn", Integer.toHexString(0b0101_0100_0000000000000000000_0_0100));
     }
 
     // b.pl
     @Test
     public void testBpl() {
-        testDecode("b.pl", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0101));
+        testDecode("b.pl", "b.pl", Integer.toHexString(0b0101_0100_0000000000000000000_0_0101));
     }
 
     // b.vs
     @Test
     public void testBvs() {
-        testDecode("b.vs", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0110));
+        testDecode("b.vs", "b.vs", Integer.toHexString(0b0101_0100_0000000000000000000_0_0110));
     }
 
     // b.vc
     @Test
     public void testBvc() {
-        testDecode("b.vc", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0111));
+        testDecode("b.vc", "b.vc", Integer.toHexString(0b0101_0100_0000000000000000000_0_0111));
     }
 
     // b.hi
     @Test
     public void testBhi() {
-        testDecode("b.hi", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1000));
+        testDecode("b.hi", "b.hi", Integer.toHexString(0b0101_0100_0000000000000000000_0_1000));
     }
 
     // b.ls
     @Test
     public void testBls() {
-        testDecode("b.ls", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1001));
+        testDecode("b.ls", "b.ls", Integer.toHexString(0b0101_0100_0000000000000000000_0_1001));
     }
 
     // b.ge
     @Test
     public void testBge() {
-        testDecode("b.ge", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1010));
+        testDecode("b.ge", "b.ge", Integer.toHexString(0b0101_0100_0000000000000000000_0_1010));
     }
 
     // b.lt
     @Test
     public void testBlt() {
-        testDecode("b.lt", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1011));
+        testDecode("b.lt", "b.lt", Integer.toHexString(0b0101_0100_0000000000000000000_0_1011));
     }
 
     // b.gt
     @Test
     public void testBlgt() {
-        testDecode("b.gt", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1100));
+        testDecode("b.gt", "b.gt", Integer.toHexString(0b0101_0100_0000000000000000000_0_1100));
     }
 
     // b.le
     @Test
     public void testBle() {
-        testDecode("b.le", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1101));
+        testDecode("b.le", "b.le", Integer.toHexString(0b0101_0100_0000000000000000000_0_1101));
     }
 
     // b.al
     @Test
     public void testBal() {
-        testDecode("b.al", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1110));
+        testDecode("b.al", "b.al", Integer.toHexString(0b0101_0100_0000000000000000000_0_1110));
     }
 
     // b.nvb
     @Test
     public void testBnvb() {
-        testDecode("b.nvb", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1111));
+        testDecode("b.nvb", "b.nvb", Integer.toHexString(0b0101_0100_0000000000000000000_0_1111));
     }
 
     // EXCEPTION //////////////////////////////////////////////////////////////
@@ -622,9 +624,16 @@ public class ArmInstructionInstatiationTest {
     }
 
     private void testDecode(String name, String expected, String binaryInstruction) {
-        ArmInstruction testinst = new ArmInstruction("0", binaryInstruction);
+        ArmInstruction testinst = ArmInstruction.newInstance("0", binaryInstruction);
+        ArmInstructionData idata = testinst.getData();
+        ArmAsmInstructionData fieldData = testinst.getFieldData();
+
+        // System.out.print(name + "\tresolved to\t->\t" + testinst.getName() +
+        // "\t(SIMD: " + idata.isSimd() + ", width: " + idata.getBitWidth() + ")\n");
+
         System.out.print(name + "\tresolved to\t->\t" + testinst.getName() +
-                "\t(SIMD: " + testinst.isSimd() + ", width: " + testinst.getBitWidth() + ")\n");
+                "\t(" + fieldData.getFields() + ")\n");
+
         assertEquals(expected, testinst.getName());
     }
 }

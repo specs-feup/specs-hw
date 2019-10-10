@@ -7,8 +7,6 @@ import pt.up.fe.specs.binarytranslation.InstructionCondition;
  */
 public enum ArmInstructionCondition implements InstructionCondition {
 
-    NONE("NONE", 0b0000),
-
     Equal("EQ", 0b0000),
     NotEqual("NE", 0b0001),
     CarrySet("CS", 0b0010),
@@ -28,7 +26,9 @@ public enum ArmInstructionCondition implements InstructionCondition {
     SignedGreaterThan("GT", 0b1100),
     SignedLessThanorEqual("LE", 0b1101),
     Always1("AL", 0b1110),
-    Always2("NVb", 0b1111);
+    Always2("NVb", 0b1111),
+
+    NONE("NONE", 0b0000);
 
     private String shorthandle;
     private int condCode;

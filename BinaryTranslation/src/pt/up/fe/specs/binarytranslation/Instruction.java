@@ -161,24 +161,15 @@ public interface Instruction {
     };
 
     /*
+     * Returns decoded instructiondata
+     */
+    public InstructionData getData();
+
+    /*
      * Returns Raw instruction fields as produced 
      * by respective parser (AsmInstructionParser)
      */
-    public AsmInstructionData getFields();
-
-    /*
-     * Returns width of registers instruction operates on 
-     */
-    public default int getBitWidth() {
-        return 32;
-    }
-
-    /*
-     * True if instruction is SIMD instruction 
-     */
-    public default Boolean isSimd() {
-        return false;
-    }
+    public AsmInstructionData getFieldData();
 
     /**
      * 

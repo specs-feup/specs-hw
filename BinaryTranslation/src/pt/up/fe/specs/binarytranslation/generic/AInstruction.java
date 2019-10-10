@@ -30,17 +30,25 @@ public abstract class AInstruction implements Instruction {
 
     private Number address;
     private String instruction;
-    protected InstructionData idata; // decoded field data
+
+    // decoded field data (abstract class)
+    private final InstructionData idata;
 
     // shared by all instructions, so they can go decode themselves
     protected static InstructionSet instSet;
 
-    public AInstruction(Number address, String instruction) {
+    public AInstruction(Number address, String instruction, InstructionData idata) {
         this.address = address;
         this.instruction = instruction.strip();
+        this.idata = idata;
     }
 
     ///////////////////////////////////////////////////////////////////////////
+    @Override
+    public InstructionData getData() {
+        return idata;
+    }
+
     public final String getName() {
         return idata.getPlainName();
     }
