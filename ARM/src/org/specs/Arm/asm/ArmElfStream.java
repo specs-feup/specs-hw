@@ -38,7 +38,7 @@ public class ArmElfStream implements StaticStream {
         var addr = addressAndInst.get(0).trim();
         var inst = addressAndInst.get(1).trim();
         // System.out.print(addr + "\n");
-        return new ArmInstruction(addr, inst);
+        return ArmInstruction.newInstance(addr, inst);
     }
 
     @Override

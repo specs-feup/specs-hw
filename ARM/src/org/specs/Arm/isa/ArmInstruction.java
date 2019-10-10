@@ -2,13 +2,21 @@ package org.specs.Arm.isa;
 
 import java.util.Arrays;
 
+import pt.up.fe.specs.binarytranslation.InstructionData;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 
+/**
+ * Implementation of AInstruction, specialized for ARMv8 project and ISA Relies on {@link ArmAsmInstructionData} and
+ * {@link ArmIsaParser} to initialize internal data.
+ * 
+ * @author NunoPaulino
+ * 
+ */
 public class ArmInstruction extends AInstruction {
 
-    private ArmAsmInstructionData fieldData; // raw field data
+    // raw field data
+    private final ArmAsmInstructionData fieldData;
 
     // shared by all instructions, so they can go parse themselves
     private static ArmIsaParser parser;
@@ -22,23 +30,24 @@ public class ArmInstruction extends AInstruction {
                 Arrays.asList(ArmInstructionType.values()));
     }
 
+    public static ArmInstruction newInstance(String address, String instruction) {
+        var fieldData = parser.parse(instruction);
+        var idata = new ArmInstructionData(instSet.process(fieldData), fieldData);
+        return new ArmInstruction(address, instruction, idata, fieldData);
+    }
+
     /*
      * Create the instruction
      */
-    public ArmInstruction(String address, String instruction) {
-        super(Long.parseLong(address, 16), instruction);
-        this.fieldData = parser.parse(instruction);
-        this.idata = new ArmInstructionData(instSet.process(fieldData), this.fieldData);
+    private ArmInstruction(String address, String instruction, InstructionData idata, ArmAsmInstructionData fieldData) {
+        super(Long.parseLong(address, 16), instruction, idata);
+        this.fieldData = fieldData;
     }
 
     @Override
-    public int getBitWidth() {
-        return this.idata.getBitwidth();
-    }
-
-    @Override
-    public Boolean isSimd() {
-        return this.idata.getIsSimd();
+    public ArmInstructionData getData() {
+        // idata is guaranteed to be an (ArmInstructionData)
+        return (ArmInstructionData) super.getData();
     }
 
     @Override
@@ -47,7 +56,8 @@ public class ArmInstruction extends AInstruction {
         return null;
     }
 
-    public AsmInstructionData getFields() {
+    public ArmAsmInstructionData getFieldData() {
         return this.fieldData;
     }
+
 }

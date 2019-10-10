@@ -169,7 +169,7 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default AsmInstructionData getFields() {
+    default AsmInstructionData getFieldData() {
         // TODO Auto-generated method stub
         return null;
     }
