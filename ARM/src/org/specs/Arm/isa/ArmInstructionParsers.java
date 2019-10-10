@@ -16,25 +16,20 @@ package org.specs.Arm.isa;
 import static org.specs.Arm.isa.ArmInstructionType.*;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Predicate;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
-import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 import pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryAsmInstructionParser;
-import pt.up.fe.specs.binarytranslation.generic.GenericIsaParser;
-import pt.up.fe.specs.util.SpecsSystem;
 
 public interface ArmInstructionParsers {
 
     static AsmInstructionParser newInstance(AsmInstructionType type, String rule,
             Predicate<Map<String, String>> predicate) {
 
-        return new BinaryAsmInstructionParser(type, rule, predicate, ArmAsmInstructionData::new);
+        return new BinaryAsmInstructionParser(type, rule, predicate);
     }
 
     static AsmInstructionParser newInstance(AsmInstructionType type, String rule) {
@@ -179,9 +174,9 @@ public interface ArmInstructionParsers {
         return data -> (data.get("opcodec").equals("10") || data.get("opcodec").equals("00"));
     }
 
-    static IsaParser getArmIsaParser() {
+    /* static IsaParser getArmIsaParser() {
         Set<String> allowedFields = new HashSet<>(
                 SpecsSystem.getStaticFields(ArmInstructionFields.class, String.class));
         return new GenericIsaParser(PARSERS, allowedFields);
-    }
+    }*/
 }

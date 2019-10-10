@@ -197,7 +197,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
         this.genericType = tp;
 
         // use the parser to initialize private fields of instruction set itself
-        IsaParser parser = ArmInstructionParsers.getArmIsaParser();
+        IsaParser parser = new ArmIsaParser();
         this.iData = parser.parse(Integer.toHexString(opcode)); // TODO make new overload for "parse"
         this.reducedopcode = this.iData.getReducedOpcode();
     }

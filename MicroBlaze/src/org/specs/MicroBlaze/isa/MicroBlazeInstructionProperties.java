@@ -236,7 +236,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
         this.genericType = Arrays.asList(tp);
 
         // use the parser to initialize private fields of instruction set itself
-        IsaParser parser = MicroBlazeInstructionParsers.getMicroBlazeIsaParser();
+        IsaParser parser = new MicroBlazeIsaParser();
         this.iData = parser.parse(Integer.toHexString(opcode)); // TODO make new overload for "parse"
         this.reducedopcode = this.iData.getReducedOpcode();
     }

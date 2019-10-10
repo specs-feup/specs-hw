@@ -13,10 +13,10 @@
 
 package org.specs.Arm.asm;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.specs.Arm.isa.ArmInstructionParsers;
+import org.specs.Arm.isa.ArmIsaParser;
 
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 import pt.up.fe.specs.util.SpecsIo;
@@ -27,7 +27,7 @@ public class ArmTester {
 
     @Test
     public void testArmParser() {
-        IsaParser parser = ArmInstructionParsers.getArmIsaParser();
+        IsaParser parser = new ArmIsaParser();
 
         StringBuilder output = new StringBuilder();
         try (var lines = LineStream.newInstance(SpecsIo.resourceToStream("org/specs/Arm/asm/test/asm.txt"), "");) {

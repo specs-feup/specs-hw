@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.legacy;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 
 /**
  * Represents a simple instruction: an integer for the address and a string for the instruction.
@@ -168,7 +169,7 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default Object getFields() {
+    default AsmInstructionData getFields() {
         // TODO Auto-generated method stub
         return null;
     }

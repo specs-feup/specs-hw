@@ -175,7 +175,7 @@ public class ArmInstructionInstatiationTest {
     // BITFIELD ///////////////////////////////////////////////////////////////
     // sbfm 32 bit
     @Test
-    public void testSbfm32() {
+    public void testSbfm32() {op.getRepresentation()
         testDecode("sbfm_imm_32", "sbfm", Integer.toHexString(0b000_100110_0_000000000000_00000_00000));
     }
 

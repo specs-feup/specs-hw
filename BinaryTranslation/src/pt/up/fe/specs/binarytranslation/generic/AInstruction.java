@@ -18,8 +18,6 @@ import pt.up.fe.specs.binarytranslation.InstructionData;
 import pt.up.fe.specs.binarytranslation.InstructionOperand;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
 import pt.up.fe.specs.binarytranslation.InstructionType;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
-import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
@@ -32,20 +30,14 @@ public abstract class AInstruction implements Instruction {
 
     private Number address;
     private String instruction;
-
-    protected AsmInstructionData fieldData; // raw field data
     protected InstructionData idata; // decoded field data
 
-    protected static IsaParser parser;
-    // shared by all instructions, so they can go parse themselves
-
-    protected static InstructionSet instSet;
     // shared by all instructions, so they can go decode themselves
+    protected static InstructionSet instSet;
 
     public AInstruction(Number address, String instruction) {
         this.address = address;
         this.instruction = instruction.strip();
-        this.fieldData = parser.parse(instruction);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -177,10 +169,5 @@ public abstract class AInstruction implements Instruction {
                 System.out.print(", ");
         }
         System.out.print("\n");
-    }
-
-    @Override
-    public AsmInstructionData getFields() {
-        return this.fieldData;
     }
 }

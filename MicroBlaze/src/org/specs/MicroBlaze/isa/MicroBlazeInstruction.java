@@ -17,17 +17,23 @@ import java.math.BigInteger;
 import java.util.Arrays;
 
 import pt.up.fe.specs.binarytranslation.InstructionSet;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 
 public class MicroBlazeInstruction extends AInstruction {
+
+    private AsmInstructionData fieldData; // raw field data
+
+    // shared by all instructions, so they can go parse themselves
+    private static MicroBlazeIsaParser parser;
 
     /*
      * Parser and "decoder" Shared by all
      */
     static {
+        parser = new MicroBlazeIsaParser();
         instSet = new InstructionSet(Arrays.asList(MicroBlazeInstructionProperties.values()),
                 Arrays.asList(MicroBlazeInstructionType.values()));
-        parser = MicroBlazeInstructionParsers.getMicroBlazeIsaParser();
     }
 
     /*
@@ -36,8 +42,7 @@ public class MicroBlazeInstruction extends AInstruction {
     public MicroBlazeInstruction(String address, String instruction) {
         super(Long.parseLong(address, 16), instruction);
         this.fieldData = parser.parse(instruction);
-        this.idata = instSet.process(fieldData);
-        // lookup ISA table for static information
+        this.idata = new MicroBlazeInstructionData(instSet.process(fieldData), this.fieldData);
     }
 
     @Override
@@ -51,5 +56,9 @@ public class MicroBlazeInstruction extends AInstruction {
         }
 
         return null;
+    }
+
+    public AsmInstructionData getFields() {
+        return this.fieldData;
     }
 }

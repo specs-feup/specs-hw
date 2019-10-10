@@ -10,7 +10,7 @@ public class ArmInstructionData extends InstructionData {
      */
     private int bitwidth;
     private Boolean isSimd;
-    private ArmInstructionConditions condition;
+    private ArmInstructionCondition condition;
 
     public ArmInstructionData(InstructionProperties props, ArmAsmInstructionData fieldData) {
         super(props, fieldData);

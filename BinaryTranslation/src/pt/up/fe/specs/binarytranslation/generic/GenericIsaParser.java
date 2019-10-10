@@ -21,7 +21,7 @@ import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 
-public class GenericIsaParser implements IsaParser {
+public abstract class GenericIsaParser implements IsaParser {
 
     private final List<AsmInstructionParser> instructionParsers;
     private final Set<String> allowedFields;
@@ -35,7 +35,7 @@ public class GenericIsaParser implements IsaParser {
         this(instructionParsers, null);
     }
 
-    public AsmInstructionData parse(String instruction) {
+    protected AsmInstructionData doparse(String instruction) {
         // Iterate over all parsers
         for (var parser : instructionParsers) {
             var instData = parser.parse(instruction).orElse(null);
