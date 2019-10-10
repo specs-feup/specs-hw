@@ -97,6 +97,11 @@ public interface ArmInstructionParsers {
 
             ////////////////////
 
+            newInstance(LOAD_STORE_PAIR_NO_ALLOC,
+                    "sf(2)_101_simd(1)_000_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)"),
+
+            ///////////////////
+
             // these parsers gather LOAD_STORE_PAIR_POSTINDEX + LOAD_STORE_PAIR_OFFSET + LOAD_STORE_PAIR_PREINDEX
 
             newInstance(LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1,
@@ -107,11 +112,6 @@ public interface ArmInstructionParsers {
             newInstance(LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2,
                     "011010_memtype(3)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
                     data -> (!data.get("memtype").equals("000"))),
-
-            ////////////////////
-
-            newInstance(LOAD_STORE_PAIR_NO_ALLOC,
-                    "sf(2)_101_simd(1)_000_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)"),
 
             ////////////////////
 
