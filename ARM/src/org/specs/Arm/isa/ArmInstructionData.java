@@ -18,4 +18,12 @@ public class ArmInstructionData extends InstructionData {
         this.isSimd = fieldData.isSimd();
         this.condition = fieldData.getCond();
     }
+
+    public int getBitwidth() {
+        return bitwidth;
+    }
+
+    public Boolean getIsSimd() {
+        return isSimd;
+    }
 }

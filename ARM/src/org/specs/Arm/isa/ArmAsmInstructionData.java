@@ -7,14 +7,23 @@ import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 
 public class ArmAsmInstructionData extends AsmInstructionData {
 
+    /*
+     * Create raw
+     */
     public ArmAsmInstructionData(AsmInstructionType type, Map<String, String> fields) {
         super(type, fields);
     }
 
     /*
+     * Create from parent class
+     */
+    public ArmAsmInstructionData(AsmInstructionData fieldData) {
+        super(fieldData.get(TYPE), fieldData.get(FIELDS));
+    }
+
+    /*
      * Get "sf" field from ARM instruction types and interpret
      */
-    @Override
     public int getBitWidth() {
 
         ArmInstructionType type = (ArmInstructionType) this.get(TYPE);
@@ -46,7 +55,6 @@ public class ArmAsmInstructionData extends AsmInstructionData {
     /*
      * Get "simd field"
      */
-    @Override
     public Boolean isSimd() {
         var map1 = this.get(FIELDS);
         var keys1 = map1.keySet();

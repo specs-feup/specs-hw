@@ -37,16 +37,15 @@ public abstract class AInstruction implements Instruction {
     protected InstructionData idata; // decoded field data
 
     protected static IsaParser parser;
-    // shared by all insts, so they can go parse themselves
+    // shared by all instructions, so they can go parse themselves
 
     protected static InstructionSet instSet;
-    // shared by all insts, so they can go decode themselves
+    // shared by all instructions, so they can go decode themselves
 
     public AInstruction(Number address, String instruction) {
         this.address = address;
         this.instruction = instruction.strip();
         this.fieldData = parser.parse(instruction);
-        this.idata = instSet.process(fieldData);
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -73,4 +73,9 @@ public abstract class InstructionData {
     public List<InstructionOperand> getOperands() {
         return this.operands;
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    public abstract int getBitwidth();
+
+    public abstract Boolean getIsSimd();
 }
