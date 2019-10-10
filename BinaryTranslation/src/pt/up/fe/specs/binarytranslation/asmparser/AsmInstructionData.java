@@ -39,15 +39,9 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
     public static final DataKey<Map<String, String>> FIELDS = KeyFactory.generic("fields",
             (Map<String, String>) new LinkedHashMap<String, String>());
 
-    // public static AsmInstructionData newInstance(AsmInstructionType type, Map<String, String> fields) {
-    // var data = new AsmInstructionData();
-    //
-    // data.set(TYPE, type);
-    // data.set(FIELDS, fields);
-    //
-    // return data;
-    // }
-
+    /*
+     * Constructor
+     */
     public AsmInstructionData(AsmInstructionType type, Map<String, String> fields) {
         set(TYPE, type);
         set(FIELDS, fields);

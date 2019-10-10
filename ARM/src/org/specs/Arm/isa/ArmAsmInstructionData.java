@@ -11,15 +11,6 @@ public class ArmAsmInstructionData extends AsmInstructionData {
         super(type, fields);
     }
 
-    // public static ArmAsmInstructionData newInstance(AsmInstructionType type, Map<String, String> fields) {
-    // var data = new ArmAsmInstructionData();
-    //
-    // data.set(TYPE, type);
-    // data.set(FIELDS, fields);
-    //
-    // return data;
-    // }
-
     /*
      * Get "sf" field from ARM instruction types and interpret
      */

@@ -31,12 +31,10 @@ import pt.up.fe.specs.util.SpecsSystem;
 
 public interface ArmInstructionParsers {
 
-    // private final BiFunction<AsmInstructionType, Map<String, String>, AsmInstructionData> dataConstructor;
-
     static AsmInstructionParser newInstance(AsmInstructionType type, String rule,
             Predicate<Map<String, String>> predicate) {
 
-        return BinaryAsmInstructionParser.newInstance(type, rule, predicate, ArmAsmInstructionData::new);
+        return new BinaryAsmInstructionParser(type, rule, predicate, ArmAsmInstructionData::new);
     }
 
     static AsmInstructionParser newInstance(AsmInstructionType type, String rule) {

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
@@ -34,15 +35,18 @@ public class InstructionSet {
     private List<InstructionProperties> instList;
     private List<AsmInstructionType> codeTypes;
     private Map<AsmInstructionType, List<InstructionProperties>> typeLists;
+    private BiFunction<InstructionProperties, AsmInstructionData, InstructionData> dataConstructor;
 
     /*
      * Constructor of instruction set; set is constructed from list of instruction
      * implemented as an enum, which implements InstructionProperties
      */
-    public InstructionSet(List<InstructionProperties> instList, List<AsmInstructionType> codeTypes) {
+    public InstructionSet(List<InstructionProperties> instList, List<AsmInstructionType> codeTypes,
+            BiFunction<InstructionProperties, AsmInstructionData, InstructionData> dataConstructor) {
         this.instList = instList;
         this.codeTypes = codeTypes;
         this.typeLists = makeTypeLists();
+        this.dataConstructor = dataConstructor;
     }
 
     /*
@@ -87,7 +91,7 @@ public class InstructionSet {
     }
 
     /*
-     * Interpret field data given by parsers
+     * Build instruction data from raw fielddata
      */
     public InstructionData process(AsmInstructionData fieldData) {
 
@@ -95,10 +99,8 @@ public class InstructionSet {
         InstructionProperties props = getProperties(fieldData);
 
         if (props == null)
-            return new InstructionData();
+            return null; // TODO throw something
 
-        return new InstructionData(props.getName(), props.getLatency(),
-                props.getDelay(), fieldData.getBitWidth(),
-                fieldData.isSimd(), props.getGenericType(), fieldData.getOperands());
+        return dataConstructor.apply(props, fieldData);
     }
 }

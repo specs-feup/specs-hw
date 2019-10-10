@@ -160,12 +160,16 @@ public interface Instruction {
     /*
      * Returns width of registers instruction operates on 
      */
-    public int getBitWidth();
+    public default int getBitWidth() {
+        return 32;
+    }
 
     /*
      * True if instruction is SIMD instruction 
      */
-    public Boolean isSimd();
+    public default Boolean isSimd() {
+        return false;
+    }
 
     /**
      * 
