@@ -8,17 +8,12 @@ import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 public class ArmInstruction extends AInstruction {
 
     /*
-     * Fields only relevant for ARM instructions
-     */
-    private ArmInstructionConditions condition;
-
-    /*
-     * Parser and "decoder" Shared by all
+     * Binary Parser and "isa decoder" Shared by all
      */
     static {
-        instSet = new InstructionSet(Arrays.asList(ArmInstructionProperties.values()),
-                Arrays.asList(ArmInstructionType.values()));
         parser = ArmInstructionParsers.getArmIsaParser();
+        instSet = new InstructionSet(Arrays.asList(ArmInstructionProperties.values()),
+                Arrays.asList(ArmInstructionType.values()), ArmInstructionData::new);
     }
 
     /*
@@ -26,10 +21,17 @@ public class ArmInstruction extends AInstruction {
      */
     public ArmInstruction(String address, String instruction) {
         super(Long.parseLong(address, 16), instruction);
-        this.fieldData = parser.parse(instruction);
-        this.idata = instSet.process(fieldData);
+    }
 
-        // this.condition = fieldData.get
+    @Override
+    public int getBitWidth() {
+        return 0;
+    }
+
+    @Override
+    public Boolean isSimd() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override

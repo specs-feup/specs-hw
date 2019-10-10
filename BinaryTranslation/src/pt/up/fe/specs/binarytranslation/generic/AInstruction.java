@@ -45,8 +45,11 @@ public abstract class AInstruction implements Instruction {
     public AInstruction(Number address, String instruction) {
         this.address = address;
         this.instruction = instruction.strip();
+        this.fieldData = parser.parse(instruction);
+        this.idata = instSet.process(fieldData);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
     public final String getName() {
         return idata.getPlainName();
     }
@@ -65,14 +68,6 @@ public abstract class AInstruction implements Instruction {
 
     public final int getDelay() {
         return idata.getDelay();
-    }
-
-    public final int getBitWidth() {
-        return this.idata.getBitWidth();
-    }
-
-    public final Boolean isSimd() {
-        return this.idata.isSimd();
     }
 
     public String toString() {
