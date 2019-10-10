@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
@@ -35,18 +34,15 @@ public class InstructionSet {
     private List<InstructionProperties> instList;
     private List<AsmInstructionType> codeTypes;
     private Map<AsmInstructionType, List<InstructionProperties>> typeLists;
-    private BiFunction<InstructionProperties, AsmInstructionData, InstructionData> dataConstructor;
 
     /*
      * Constructor of instruction set; set is constructed from list of instruction
      * implemented as an enum, which implements InstructionProperties
      */
-    public InstructionSet(List<InstructionProperties> instList, List<AsmInstructionType> codeTypes,
-            BiFunction<InstructionProperties, AsmInstructionData, InstructionData> dataConstructor) {
+    public InstructionSet(List<InstructionProperties> instList, List<AsmInstructionType> codeTypes) {
         this.instList = instList;
         this.codeTypes = codeTypes;
         this.typeLists = makeTypeLists();
-        this.dataConstructor = dataConstructor;
     }
 
     /*
@@ -91,16 +87,12 @@ public class InstructionSet {
     }
 
     /*
-     * Build instruction data from raw fielddata
+     * Get correct general properties from ISA
      */
-    public InstructionData process(AsmInstructionData fieldData) {
+    public InstructionProperties process(AsmInstructionData fieldData) {
 
         // uses opcode fields to determine properties
         InstructionProperties props = getProperties(fieldData);
-
-        if (props == null)
-            return null; // TODO throw something
-
-        return dataConstructor.apply(props, fieldData);
+        return props;
     }
 }

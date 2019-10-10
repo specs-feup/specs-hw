@@ -47,6 +47,9 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
         set(FIELDS, fields);
     }
 
+    /*
+     * Get type of instruction as defined by parsers, and in implementations of AsmInstructionType
+     */
     public AsmInstructionType getType() {
         return this.get(TYPE);
     }
@@ -94,21 +97,5 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
         }
 
         return operands;
-    }
-
-    /*
-     * Return a default bitwidth; this method SHOULD
-     * be overwritten by specific processor implementations
-     */
-    public int getBitWidth() {
-        return 32;
-    }
-
-    /*
-     * Check if instruction is simd instruction; this method SHOULD
-     * be overwritten by specific processor implementations
-     */
-    public Boolean isSimd() {
-        return false;
     }
 }
