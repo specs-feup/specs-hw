@@ -29,6 +29,7 @@ public class ArmAsmInstructionData extends AsmInstructionData {
         ArmInstructionType type = (ArmInstructionType) this.get(TYPE);
         var map1 = this.get(FIELDS);
         var keys1 = map1.keySet();
+        int sf = 0;
 
         if (!keys1.contains("sf") && !keys1.contains("sfa") && !keys1.contains("sfb")) {
             return 32; // default length
@@ -37,6 +38,7 @@ public class ArmAsmInstructionData extends AsmInstructionData {
         // sf, sfa, and sfb fields are treated differently based on the instruction format
         switch (type) {
 
+        // when "sf" is a single bit
         case DPI_PCREL:
         case DPI_ADDSUBIMM:
         case DPI_ADDSUBIMM_TAGS:
@@ -45,6 +47,22 @@ public class ArmAsmInstructionData extends AsmInstructionData {
         case EXTRACT:
         case BITFIELD:
             return (map1.get("sf").equals("1")) ? 64 : 32;
+
+        // when sf is two bits
+        case LOAD_REG_LITERAL_FMT1:
+            sf = Integer.parseInt(map1.get("sf"), 2);
+            return ((int) Math.pow(2, sf)) * 32;
+
+        // when sf is two bits (again)
+        case LOAD_STORE_PAIR_NO_ALLOC:
+        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1:
+
+            sf = Integer.parseInt(map1.get("sf"), 2);
+            if (this.isSimd()) {
+                return ((int) Math.pow(2, sf)) * 32;
+            } else {
+                return (sf != 0) ? 64 : 32;
+            }
 
         default:
             return 32;

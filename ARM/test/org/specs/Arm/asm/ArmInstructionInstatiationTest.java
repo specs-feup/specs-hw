@@ -175,7 +175,7 @@ public class ArmInstructionInstatiationTest {
     // BITFIELD ///////////////////////////////////////////////////////////////
     // sbfm 32 bit
     @Test
-    public void testSbfm32() {op.getRepresentation()
+    public void testSbfm32() {
         testDecode("sbfm_imm_32", "sbfm", Integer.toHexString(0b000_100110_0_000000000000_00000_00000));
     }
 
@@ -223,10 +223,402 @@ public class ArmInstructionInstatiationTest {
     }
 
     // CONDITIONALBRANCH //////////////////////////////////////////////////////
-    // b.
+    // b.eq
+    @Test
+    public void testBeq() {
+        testDecode("b.eq", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0000));
+    }
+
+    // b.ne
+    @Test
+    public void testBne() {
+        testDecode("b.ne", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0001));
+    }
+
+    // b.cs
+    @Test
+    public void testBcs() {
+        testDecode("b.cs", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0010));
+    }
+
+    // b.cc
+    @Test
+    public void testBcc() {
+        testDecode("b.cc", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0011));
+    }
+
+    // b.mn
+    @Test
+    public void testBmn() {
+        testDecode("b.mn", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0100));
+    }
+
+    // b.pl
+    @Test
+    public void testBpl() {
+        testDecode("b.pl", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0101));
+    }
+
+    // b.vs
+    @Test
+    public void testBvs() {
+        testDecode("b.vs", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0110));
+    }
+
+    // b.vc
+    @Test
+    public void testBvc() {
+        testDecode("b.vc", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_0111));
+    }
+
+    // b.hi
+    @Test
+    public void testBhi() {
+        testDecode("b.hi", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1000));
+    }
+
+    // b.ls
+    @Test
+    public void testBls() {
+        testDecode("b.ls", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1001));
+    }
+
+    // b.ge
+    @Test
+    public void testBge() {
+        testDecode("b.ge", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1010));
+    }
+
+    // b.lt
+    @Test
+    public void testBlt() {
+        testDecode("b.lt", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1011));
+    }
+
+    // b.gt
+    @Test
+    public void testBlgt() {
+        testDecode("b.gt", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1100));
+    }
+
+    // b.le
+    @Test
+    public void testBle() {
+        testDecode("b.le", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1101));
+    }
+
+    // b.al
+    @Test
+    public void testBal() {
+        testDecode("b.al", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1110));
+    }
+
+    // b.nvb
+    @Test
+    public void testBnvb() {
+        testDecode("b.nvb", "b", Integer.toHexString(0b0101_0100_0000000000000000000_0_1111));
+    }
+
+    // EXCEPTION //////////////////////////////////////////////////////////////
+    // svc
+    @Test
+    public void testSvc() {
+        testDecode("svc", "svc", Integer.toHexString(0b1101_0100_000_0000000000000000_000_01));
+    }
+
+    // hvc
+    @Test
+    public void testHvc() {
+        testDecode("hvc", "hvc", Integer.toHexString(0b1101_0100_000_0000000000000000_000_10));
+    }
+
+    // smc
+    @Test
+    public void testSmc() {
+        testDecode("smc", "smc", Integer.toHexString(0b1101_0100_000_0000000000000000_000_11));
+    }
+
+    // brk
+    @Test
+    public void testBrk() {
+        testDecode("brk", "brk", Integer.toHexString(0b1101_0100_001_0000000000000000_000_00));
+    }
+
+    // hlt
+    @Test
+    public void testHlt() {
+        testDecode("hlt", "hlt", Integer.toHexString(0b1101_0100_010_0000000000000000_000_00));
+    }
+
+    // dcps1
+    @Test
+    public void testDcps1() {
+        testDecode("dcps1", "dcps1", Integer.toHexString(0b1101_0100_101_0000000000000000_000_01));
+    }
+
+    // dcps2
+    @Test
+    public void testDcps2() {
+        testDecode("dcps2", "dcps2", Integer.toHexString(0b1101_0100_101_0000000000000000_000_10));
+    }
+
+    // dcps3
+    @Test
+    public void testDcps3() {
+        testDecode("dcps3", "dcps3", Integer.toHexString(0b1101_0100_101_0000000000000000_000_11));
+    }
+
+    // UNCONDITIONAL BRANCH (IMMEDIATE) ///////////////////////////////////////
+    // br
+    @Test
+    public void testBr() {
+        testDecode("br", "br", Integer.toHexString(0b1101_011_0000_11111_000000_00000_00000));
+    }
+
+    // braaz
+    @Test
+    public void testBraaz() {
+        testDecode("braaz", "braaz", Integer.toHexString(0b1101_011_0000_11111_000010_00000_00000));
+    }
+
+    // braa
+    @Test
+    public void testBraa() {
+        testDecode("braa", "braa", Integer.toHexString(0b1101_011_1000_11111_000010_00000_00000));
+    }
+
+    // brabz
+    @Test
+    public void testBrabz() {
+        testDecode("brabz", "brabz", Integer.toHexString(0b1101_011_0000_11111_000011_00000_00000));
+    }
+
+    // brab
+    @Test
+    public void testBrab() {
+        testDecode("brab", "brab", Integer.toHexString(0b1101_011_1000_11111_000011_00000_00000));
+    }
+
+    // blraaz
+    @Test
+    public void testBlraaz() {
+        testDecode("blraaz", "blraaz", Integer.toHexString(0b1101_011_0001_11111_000010_00000_00000));
+    }
+
+    // braa
+    @Test
+    public void testBlraa() {
+        testDecode("blraa", "blraa", Integer.toHexString(0b1101_011_1001_11111_000010_00000_00000));
+    }
+
+    // blrabz
+    @Test
+    public void testBlrabz() {
+        testDecode("blrabz", "blrabz", Integer.toHexString(0b1101_011_0001_11111_000011_00000_00000));
+    }
+
+    // blrab
+    @Test
+    public void testBlrab() {
+        testDecode("blrab", "blrab", Integer.toHexString(0b1101_011_1001_11111_000011_00000_00000));
+    }
+
+    // UNCONDITIONAL BRANCH (IMMEDIATE) (C4-264 to C4-265) ////////////////////
+    // b
     @Test
     public void testB() {
-        testDecode("bcond", "b", Integer.toHexString(0b0101_0100_000000000000000000_0_0000));
+        testDecode("b", "b", Integer.toHexString(0b0_00101_00000000000000000000000000));
+    }
+
+    // COMPARE AND BRANCH (MMEDIATE) (C4-265) /////////////////////////////////
+    // cbz 32 bits
+    @Test
+    public void testCbz32() {
+        testDecode("cbz32", "cbz", Integer.toHexString(0b0_011010_0_000000000000000000000000));
+    }
+
+    // cbz 64 bits
+    @Test
+    public void testCbz64() {
+        testDecode("cbz64", "cbz", Integer.toHexString(0b1_011010_0_000000000000000000000000));
+    }
+
+    // cbnz 32 bits
+    @Test
+    public void testCbnz32() {
+        testDecode("cbnz32", "cbnz", Integer.toHexString(0b0_011010_1_000000000000000000000000));
+    }
+
+    // cbnz 64 bits
+    @Test
+    public void testCbnz64() {
+        testDecode("cbnz64", "cbnz", Integer.toHexString(0b1_011010_1_000000000000000000000000));
+    }
+
+    // TEST_AND_BRANCH (C4-265) ///////////////////////////////////////////////
+    // tbz
+    @Test
+    public void testTbz() {
+        testDecode("tbz", "tbz", Integer.toHexString(0b0_011011_0_000000000000000000000000));
+    }
+
+    // tbnz
+    @Test
+    public void testTbnz() {
+        testDecode("tbnz", "tbnz", Integer.toHexString(0b0_011011_1_000000000000000000000000));
+    }
+
+    // LOAD_REG_LITERAL (C4-280) //////////////////////////////////////////////
+    // ldr literal 32 bits
+    @Test
+    public void testldr32literal() {
+        testDecode("ldr_32_literal", "ldr", Integer.toHexString(0b00_011_000_0000000000000000000_00000));
+    }
+
+    // ldr literal 64 bits
+    @Test
+    public void testldr64literal() {
+        testDecode("ldr_64_literal", "ldr", Integer.toHexString(0b01_011_000_0000000000000000000_00000));
+    }
+
+    // ldr literal simd 32 bits
+    @Test
+    public void testldr32literalsimd() {
+        testDecode("ldr_32_literal_simd", "ldr", Integer.toHexString(0b00_011_100_0000000000000000000_00000));
+    }
+
+    // ldr literal simd 64 bits
+    @Test
+    public void testldr64literalsimd() {
+        testDecode("ldr_64_literal_simd", "ldr", Integer.toHexString(0b01_011_100_0000000000000000000_00000));
+    }
+
+    // ldr literal simd 128 bits
+    @Test
+    public void testldr128literalsimd() {
+        testDecode("ldr_128_literal_simd", "ldr", Integer.toHexString(0b10_011_100_0000000000000000000_00000));
+    }
+
+    // LOAD_STORE_PAIR (LOAD_STORE_NOALLOC) (C4-280 to C4-281) ////////////////
+    // stnp 32
+    @Test
+    public void teststnp32() {
+        testDecode("stnp_32", "stnp", Integer.toHexString(0b00_101_0_000_0_0000000_00000_00000_00000));
+    }
+
+    // stnp 64
+    @Test
+    public void teststnp64() {
+        testDecode("stnp_64", "stnp", Integer.toHexString(0b10_101_0_000_0_0000000_00000_00000_00000));
+    }
+
+    // stnp 32 simd
+    @Test
+    public void teststnp32simd() {
+        testDecode("stnp_32_simd", "stnp", Integer.toHexString(0b00_101_1_000_0_0000000_00000_00000_00000));
+    }
+
+    // stnp 64 simd
+    @Test
+    public void teststnp64simd() {
+        testDecode("stnp_64_simd", "stnp", Integer.toHexString(0b01_101_1_000_0_0000000_00000_00000_00000));
+    }
+
+    // stnp 128 simd
+    @Test
+    public void teststnp128simd() {
+        testDecode("stnp_128_simd", "stnp", Integer.toHexString(0b10_101_1_000_0_0000000_00000_00000_00000));
+    }
+
+    // ldnp 32
+    @Test
+    public void testldnp32() {
+        testDecode("ldnp_32", "ldnp", Integer.toHexString(0b00_101_0_000_1_0000000_00000_00000_00000));
+    }
+
+    // ldnp 64
+    @Test
+    public void testldnp64() {
+        testDecode("ldnp_64", "ldnp", Integer.toHexString(0b10_101_0_000_1_0000000_00000_00000_00000));
+    }
+
+    // ldnp 32 simd
+    @Test
+    public void testldnp32simd() {
+        testDecode("ldnp_32_simd", "ldnp", Integer.toHexString(0b00_101_1_000_1_0000000_00000_00000_00000));
+    }
+
+    // ldnp 64 simd
+    @Test
+    public void testldnp64simd() {
+        testDecode("ldnp_64_simd", "ldnp", Integer.toHexString(0b01_101_1_000_1_0000000_00000_00000_00000));
+    }
+
+    // ldnp 128 simd
+    @Test
+    public void testldnp128simd() {
+        testDecode("ldnp_128_simd", "ldnp", Integer.toHexString(0b00_101_0_000_1_0000000_00000_00000_00000));
+    }
+
+    // LOAD_STORE_PAIR (POST INDEXED) (C4-281 to C4-282) //////////////////////
+    // stp 32
+    @Test
+    public void teststp32() {
+        testDecode("stp_32_post", "stp", Integer.toHexString(0b00_101_0_001_0_0000000_00000_00000_00000));
+    }
+
+    // stp 64
+    @Test
+    public void teststp64() {
+        testDecode("stp_64_post", "stp", Integer.toHexString(0b10_101_0_001_0_0000000_00000_00000_00000));
+    }
+
+    // stp 32 simd
+    @Test
+    public void teststp32simd() {
+        testDecode("stp_32_simd_post", "stp", Integer.toHexString(0b00_101_1_001_0_0000000_00000_00000_00000));
+    }
+
+    // stp 64 simd
+    @Test
+    public void teststp64simd() {
+        testDecode("stp_64_simd_post", "stp", Integer.toHexString(0b01_101_1_001_0_0000000_00000_00000_00000));
+    }
+
+    // stp 128 simd
+    @Test
+    public void teststp128simd() {
+        testDecode("stp_128_simd_post", "stp", Integer.toHexString(0b10_101_1_001_0_0000000_00000_00000_00000));
+    }
+
+    // ldp 32
+    @Test
+    public void testldp32() {
+        testDecode("ldp_32_post", "ldp", Integer.toHexString(0b00_101_0_001_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 64
+    @Test
+    public void testldp64() {
+        testDecode("ldp_64_post", "ldp", Integer.toHexString(0b10_101_0_001_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 32 simd
+    @Test
+    public void testldp32simd() {
+        testDecode("ldp_32_simd_post", "ldp", Integer.toHexString(0b00_101_1_001_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 64 simd
+    @Test
+    public void testldp64simd() {
+        testDecode("ldp_64_simd_post", "ldp", Integer.toHexString(0b01_101_1_001_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 128 simd
+    @Test
+    public void testldp128simd() {
+        testDecode("ldp_128_simd_post", "ldp", Integer.toHexString(0b00_101_0_001_1_0000000_00000_00000_00000));
     }
 
     private void testDecode(String name, String expected, String binaryInstruction) {
