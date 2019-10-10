@@ -72,19 +72,19 @@ public class ArmAsmInstructionData extends AsmInstructionData {
     /*
      * Decode "cond" field if present
      */
-    public ArmInstructionConditions getCond() {
+    public ArmInstructionCondition getCond() {
         var map1 = this.get(FIELDS);
         var keys1 = map1.keySet();
 
         if (!keys1.contains("cond"))
-            return ArmInstructionConditions.NONE;
+            return ArmInstructionCondition.NONE;
 
         int condcode = Integer.parseInt(map1.get("cond"), 2);
-        for (ArmInstructionConditions cond : ArmInstructionConditions.values()) {
+        for (ArmInstructionCondition cond : ArmInstructionCondition.values()) {
             if (cond.getCondCode() == condcode)
                 return cond;
         }
-        return ArmInstructionConditions.NONE;
+        return ArmInstructionCondition.NONE;
         // TODO throw something
     }
 }

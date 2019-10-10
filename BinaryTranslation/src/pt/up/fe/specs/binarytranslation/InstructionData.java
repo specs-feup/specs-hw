@@ -75,7 +75,11 @@ public abstract class InstructionData {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    public abstract int getBitwidth();
+    public int getBitwidth() {
+        return 32;
+    }
 
-    public abstract Boolean getIsSimd();
+    public Boolean getIsSimd() {
+        return false;
+    }
 }

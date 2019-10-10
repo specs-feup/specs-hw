@@ -1,6 +1,11 @@
 package org.specs.Arm.isa;
 
-public enum ArmInstructionConditions {
+import pt.up.fe.specs.binarytranslation.InstructionCondition;
+
+/*
+ * Predicates for the execution of ARM instructions which contain a "cond" field
+ */
+public enum ArmInstructionCondition implements InstructionCondition {
 
     NONE("NONE", 0b0000),
 
@@ -28,9 +33,13 @@ public enum ArmInstructionConditions {
     private String shorthandle;
     private int condCode;
 
-    private ArmInstructionConditions(String shorthandle, int condCode) {
+    private ArmInstructionCondition(String shorthandle, int condCode) {
         this.shorthandle = shorthandle;
         this.condCode = condCode;
+    }
+
+    public Boolean isConditional() {
+        return this.equals(ArmInstructionCondition.NONE);
     }
 
     public int getCondCode() {

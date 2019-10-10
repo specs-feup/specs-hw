@@ -14,19 +14,27 @@
 package org.specs.MicroBlaze.isa;
 
 import static org.specs.MicroBlaze.isa.MicroBlazeInstructionType.*;
-import static pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryAsmInstructionParser.newInstance;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.function.Predicate;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
-import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
-import pt.up.fe.specs.binarytranslation.generic.GenericIsaParser;
-import pt.up.fe.specs.util.SpecsSystem;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryAsmInstructionParser;
 
 public interface MicroBlazeInstructionParsers {
+
+    static AsmInstructionParser newInstance(AsmInstructionType type, String rule,
+            Predicate<Map<String, String>> predicate) {
+
+        return new BinaryAsmInstructionParser(type, rule, predicate);
+    }
+
+    static AsmInstructionParser newInstance(AsmInstructionType type, String rule) {
+        return newInstance(type, rule, null);
+    }
 
     List<AsmInstructionParser> PARSERS = Arrays.asList(
             newInstance(SPECIAL, "100101_opcodea(5)_opcodeb(5)_opcodec(2)_opcoded(14)"),
@@ -43,10 +51,4 @@ public interface MicroBlazeInstructionParsers {
             newInstance(TYPE_A, "opcodea(2)_0_opcodeb(3)_registerd(5)_registera(5)_registerb(5)_opcodec(11)"),
             newInstance(TYPE_B, "opcodea(2)_1_opcodeb(3)_registerd(5)_registera(5)_imm(16)"),
             newInstance(UNDEFINED, "x(32)"));
-
-    static IsaParser getMicroBlazeIsaParser() {
-        Set<String> allowedFields = new HashSet<>(
-                SpecsSystem.getStaticFields(MicroBlazeInstructionFields.class, String.class));
-        return new GenericIsaParser(PARSERS, allowedFields);
-    }
 }

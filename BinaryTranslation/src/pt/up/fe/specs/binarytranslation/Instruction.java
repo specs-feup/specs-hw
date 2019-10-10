@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation;
 
+import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
+
 /**
  * Represents a generic assembly instruction.
  * 
@@ -152,10 +154,17 @@ public interface Instruction {
     public void printInstruction();
 
     /*
+     * Prints other instruction properties to system output
+     */
+    public default void printProperties() {
+        return;
+    };
+
+    /*
      * Returns Raw instruction fields as produced 
      * by respective parser (AsmInstructionParser)
      */
-    public Object getFields();
+    public AsmInstructionData getFields();
 
     /*
      * Returns width of registers instruction operates on 
