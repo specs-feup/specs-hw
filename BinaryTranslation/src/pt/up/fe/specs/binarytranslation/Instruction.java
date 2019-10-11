@@ -161,7 +161,7 @@ public interface Instruction {
     };
 
     /*
-     * Returns decoded instructiondata
+     * Returns decoded instruction data
      */
     public InstructionData getData();
 

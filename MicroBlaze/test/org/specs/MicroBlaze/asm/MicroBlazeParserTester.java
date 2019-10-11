@@ -20,7 +20,7 @@ public class MicroBlazeParserTester {
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
             Instruction inst = null;
             while ((inst = el.nextInstruction()) != null) {
-                output.append(inst.getFields()).append("\n");
+                output.append(inst.getFieldData()).append("\n");
             }
         }
 

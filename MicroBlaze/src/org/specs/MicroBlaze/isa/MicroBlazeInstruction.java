@@ -16,6 +16,7 @@ package org.specs.MicroBlaze.isa;
 import java.math.BigInteger;
 import java.util.Arrays;
 
+import pt.up.fe.specs.binarytranslation.InstructionData;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.generic.AInstruction;
@@ -37,12 +38,21 @@ public class MicroBlazeInstruction extends AInstruction {
     }
 
     /*
+     * Static "constructor"
+     */
+    public static MicroBlazeInstruction newInstance(String address, String instruction) {
+        var fieldData = parser.parse(instruction);
+        var idata = new MicroBlazeInstructionData(instSet.process(fieldData), fieldData);
+        return new MicroBlazeInstruction(address, instruction, idata, fieldData);
+    }
+
+    /*
      * Create the instruction
      */
-    public MicroBlazeInstruction(String address, String instruction) {
-        super(Long.parseLong(address, 16), instruction);
-        this.fieldData = parser.parse(instruction);
-        this.idata = new MicroBlazeInstructionData(instSet.process(fieldData), this.fieldData);
+    private MicroBlazeInstruction(String address, String instruction, InstructionData idata,
+            AsmInstructionData fieldData) {
+        super(Long.parseLong(address, 16), instruction, idata);
+        this.fieldData = fieldData;
     }
 
     @Override
@@ -58,7 +68,8 @@ public class MicroBlazeInstruction extends AInstruction {
         return null;
     }
 
-    public AsmInstructionData getFields() {
+    @Override
+    public AsmInstructionData getFieldData() {
         return this.fieldData;
     }
 }

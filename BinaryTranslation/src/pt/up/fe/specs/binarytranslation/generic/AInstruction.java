@@ -43,7 +43,6 @@ public abstract class AInstruction implements Instruction {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    @Override
     public InstructionData getData() {
         return idata;
     }
