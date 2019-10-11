@@ -15,7 +15,6 @@ package pt.up.fe.specs.binarytranslation.generic;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionData;
-import pt.up.fe.specs.binarytranslation.InstructionOperand;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
 import pt.up.fe.specs.binarytranslation.InstructionType;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -170,12 +169,18 @@ public abstract class AInstruction implements Instruction {
     public void printInstruction() {
         String addr = Long.toHexString(this.getAddress().longValue());
         System.out.print(addr + ":" + this.getInstruction() + ": " + this.getName() + "\t");
+
+        /*
+         * TODO operand printing will have to be ISA specific due to field ordering in parsing
+         */
+        /*
         int i = 0;
         for (InstructionOperand op : this.idata.getOperands()) {
             System.out.print(op.getRepresentation());
             if (i++ < this.idata.getOperands().size() - 1)
                 System.out.print(", ");
         }
+        */
         System.out.print("\n");
     }
 }

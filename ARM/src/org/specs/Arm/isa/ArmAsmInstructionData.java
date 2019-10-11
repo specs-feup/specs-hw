@@ -1,5 +1,6 @@
 package org.specs.Arm.isa;
 
+import java.math.BigInteger;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
@@ -104,5 +105,41 @@ public class ArmAsmInstructionData extends AsmInstructionData {
         }
         return ArmInstructionCondition.NONE;
         // TODO throw something
+    }
+
+    /*
+     * Repeat a bit (as string) "n" times (for sign extension of imm fields)
+     */
+    private String repeat(String bit, int n) {
+        String extension = "";
+        for (int i = 0; i < n; i++)
+            extension = extension + bit;
+        return extension;
+    }
+
+    /*
+     * Get target of branch if instruction is branch
+     */
+    public int getBranchTarget() {
+
+        ArmInstructionType type = (ArmInstructionType) this.get(TYPE);
+        var map1 = this.get(FIELDS);
+        var keys1 = map1.keySet();
+        int imm = 0;
+
+        switch (type) {
+
+        // conditional branches have a 19 bit IMM field
+        case CONDITIONALBRANCH:
+            String immfield = map1.get("imm");
+            immfield = repeat(immfield.substring(0, 1), 32 - immfield.length()) + immfield;
+            imm = new BigInteger(immfield, 2).intValue();
+            return imm;
+
+        default:
+            return 0;
+        // TODO throw exception here??
+        }
+
     }
 }
