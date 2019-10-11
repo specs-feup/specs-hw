@@ -313,6 +313,12 @@ public class ArmInstructionInstatiationTest {
     @Test
     public void testBal() {
         testDecode("b.al", "b.al", Integer.toHexString(0b0101_0100_0000000000000000000_0_1110));
+
+        // test with positive relative target (+12) (0x0C)
+        testDecode("240", "b.al", "b.al", Integer.toHexString(0b0101_0100_0000000000000001100_0_1110));
+
+        // test with negative relative target (-36) (0x24)
+        testDecode("434", "b.al", "b.al", Integer.toHexString(0b0101_0100_1111111111111011100_0_1110));
     }
 
     // b.nvb
@@ -623,8 +629,8 @@ public class ArmInstructionInstatiationTest {
         testDecode("ldp_128_simd_post", "ldp", Integer.toHexString(0b00_101_0_001_1_0000000_00000_00000_00000));
     }
 
-    private void testDecode(String name, String expected, String binaryInstruction) {
-        ArmInstruction testinst = ArmInstruction.newInstance("0", binaryInstruction);
+    private void testDecode(String addr, String name, String expected, String binaryInstruction) {
+        ArmInstruction testinst = ArmInstruction.newInstance(addr, binaryInstruction);
         ArmInstructionData idata = testinst.getData();
         ArmAsmInstructionData fieldData = testinst.getFieldData();
 
@@ -634,6 +640,13 @@ public class ArmInstructionInstatiationTest {
         System.out.print(name + "\tresolved to\t->\t" + testinst.getName() +
                 "\t(" + fieldData.getFields() + ")\n");
 
+        // System.out.print(name + "\tresolved to\t->\t" + testinst.getName() + "target addr: 0x"
+        // + Integer.toHexString(testinst.getBranchTarget().intValue()) + "\n");
+
         assertEquals(expected, testinst.getName());
+    }
+
+    private void testDecode(String name, String expected, String binaryInstruction) {
+        testDecode("0", name, expected, binaryInstruction);
     }
 }

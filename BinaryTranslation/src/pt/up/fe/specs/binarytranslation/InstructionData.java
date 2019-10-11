@@ -25,11 +25,11 @@ import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
  */
 public abstract class InstructionData {
 
-    protected String plainname;
-    protected int latency;
-    protected int delay;
-    protected List<InstructionType> genericType;
-    protected List<InstructionOperand> operands;
+    protected final String plainname;
+    protected final int latency;
+    protected final int delay;
+    protected final List<InstructionType> genericType;
+    protected final List<InstructionOperand> operands;
 
     public InstructionData(InstructionProperties props, AsmInstructionData fieldData) {
         this.plainname = props.getName();

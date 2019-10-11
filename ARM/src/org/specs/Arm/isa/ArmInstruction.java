@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import pt.up.fe.specs.binarytranslation.InstructionData;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
+import pt.up.fe.specs.binarytranslation.InstructionType;
 import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 
 /**
@@ -51,10 +52,26 @@ public class ArmInstruction extends AInstruction {
     }
 
     @Override
+    /*
+     * target addr of branch is current addr of this inst + branchTarget (if relative jump)
+     * or branchTarget (is absolute jump)
+     */
     public Number getBranchTarget() {
-        // TODO Auto-generated method stub
-        return null;
+        if (this.isJump()) {
+            int branchTarget = this.getData().getBranchTarget();
+
+            if (this.getData().getGenericTypes().contains(InstructionType.G_RJUMP)) {
+                var v = this.getAddress().intValue();
+                return branchTarget = v + branchTarget;
+            }
+
+            else if (this.getData().getGenericTypes().contains(InstructionType.G_AJUMP))
+                return branchTarget;
+        }
+        return 4; // if not a jump, just jumps to next instruction
+        // TODO either replace this with empty, or replace with getInstructionWidth
     }
+    // TODO promote this into AInstruction??
 
     public ArmAsmInstructionData getFieldData() {
         return this.fieldData;
