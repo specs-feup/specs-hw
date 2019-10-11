@@ -105,18 +105,18 @@ public enum ArmInstructionProperties implements InstructionProperties {
 
     // LOAD_STORE_PAIR (LOAD_STORE_NOALLOC) (C4-280 to C4-281)
     stnp(0x2800_0000, 1, 1, LOAD_STORE_PAIR_NO_ALLOC, G_MEMORY, G_STORE),
-    ldnp(0x28C0_0000, 1, 1, LOAD_STORE_PAIR_NO_ALLOC, G_MEMORY, G_LOAD),
+    ldnp(0x2840_0000, 1, 1, LOAD_STORE_PAIR_NO_ALLOC, G_MEMORY, G_LOAD),
 
     ///////////////////////////////////////////////////////////////////////////
 
     // LOAD_STORE_PAIR (LOAD_STORE_PAIR_POSTINDEX +
     // LOAD_STORE_PAIR_OFFSET + LOAD_STORE_PAIR_PREINDEX) (C4-281 to C4-282)
-    stp(0x2800_0000, 1, 1, LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1, G_MEMORY, G_STORE),
+    stp(0x2880_0000, 1, 1, LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1, G_MEMORY, G_STORE),
     ldp(0x28C0_0000, 1, 1, LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1, G_MEMORY, G_LOAD),
 
-    // LOAD_STORE_PAIR_ADDITIONAL (C4-282)
-    stgp(0x6800_0000, 1, 1, LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2, G_MEMORY, G_STORE),
-    ldpsw(0x6840_0000, 1, 1, LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2, G_MEMORY, G_LOAD),
+    // LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2 (C4-282)
+    stgp(0x6880_0000, 1, 1, LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2, G_MEMORY, G_STORE),
+    ldpsw(0x68C0_0000, 1, 1, LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2, G_MEMORY, G_LOAD),
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -136,6 +136,13 @@ public enum ArmInstructionProperties implements InstructionProperties {
     stur(0x3800_0000, 1, 1, LOAD_STORE_PAIR_IMM_FMT3, G_MEMORY, G_STORE),
     ldur(0x3840_0000, 1, 1, LOAD_STORE_PAIR_IMM_FMT3, G_MEMORY, G_LOAD),
 
+    // enum is:
+    // 00_111_x_(00)_0(1_0)_000000000_(00)_0000000000
+
+    //
+    // 00_111_1_(00)_0(1_0)_000000000_(00)_0000000000
+    // 001000
+
     ///////////////////////////////////////////////////////////////////////////
 
     // LOAD_STORE_PAIR_UNPRIV_FMT1 (C4-286)
@@ -146,8 +153,8 @@ public enum ArmInstructionProperties implements InstructionProperties {
     ldtrsw(0xB880_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT1, G_MEMORY, G_LOAD),
 
     // LOAD_STORE_PAIR_UNPRIV_FMT2 (C4-286)
-    ldtrsb(0x38C0_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_LOAD),
-    ldtrsh(0x78C0_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_LOAD),
+    ldtrsb(0x3800_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_LOAD),
+    ldtrsh(0x7800_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_LOAD),
 
     // LOAD_STORE_PAIR_UNPRIV_FMT3 (C4-286)
     sttr(0xB800_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT3, G_MEMORY, G_STORE),
@@ -184,7 +191,8 @@ public enum ArmInstructionProperties implements InstructionProperties {
     private final int delay;
     private final ArmInstructionType codetype;
     private final List<InstructionType> genericType;
-    private final AsmInstructionData iData; // decoded fields of this instruction
+    private final AsmInstructionData fieldData; // decoded fields of this instruction
+    private final IsaParser parser = new ArmIsaParser();
 
     /*
      *  Helper constructor
@@ -199,9 +207,8 @@ public enum ArmInstructionProperties implements InstructionProperties {
         this.genericType = tp;
 
         // use the parser to initialize private fields of instruction set itself
-        IsaParser parser = new ArmIsaParser();
-        this.iData = parser.parse(Integer.toHexString(opcode)); // TODO make new overload for "parse"
-        this.reducedopcode = this.iData.getReducedOpcode();
+        this.fieldData = parser.parse(Integer.toHexString(opcode));
+        this.reducedopcode = this.fieldData.getReducedOpcode();
     }
 
     /*
@@ -212,6 +219,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
         this(opcode, latency, delay, mbtype, Arrays.asList(tp));
         this.instructionName = name();
         // System.out.print(this.codetype.toString() + ": " + this.instructionName + "\n");
+        // System.out.print(this.instructionName + ": " + Integer.toBinaryString(this.reducedopcode) + "\n");
     }
 
     /*
@@ -271,5 +279,12 @@ public enum ArmInstructionProperties implements InstructionProperties {
      */
     public AsmInstructionType getCodeType() {
         return this.codetype;
+    }
+
+    /*
+     * Only used for Junit tests!
+     */
+    public AsmInstructionData getFieldData() {
+        return fieldData;
     }
 }

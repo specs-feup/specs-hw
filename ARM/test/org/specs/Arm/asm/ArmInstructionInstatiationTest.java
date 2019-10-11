@@ -571,74 +571,283 @@ public class ArmInstructionInstatiationTest {
     // LOAD_STORE_PAIR (POST INDEXED) (C4-281 to C4-282) //////////////////////
     // stp 32
     @Test
-    public void teststp32() {
+    public void teststp32post() {
         testDecode("stp_32_post", "stp", Integer.toHexString(0b00_101_0_001_0_0000000_00000_00000_00000));
     }
 
     // stp 64
     @Test
-    public void teststp64() {
+    public void teststp64post() {
         testDecode("stp_64_post", "stp", Integer.toHexString(0b10_101_0_001_0_0000000_00000_00000_00000));
     }
 
     // stp 32 simd
     @Test
-    public void teststp32simd() {
+    public void teststp32simdpost() {
         testDecode("stp_32_simd_post", "stp", Integer.toHexString(0b00_101_1_001_0_0000000_00000_00000_00000));
     }
 
     // stp 64 simd
     @Test
-    public void teststp64simd() {
+    public void teststp64simdpost() {
         testDecode("stp_64_simd_post", "stp", Integer.toHexString(0b01_101_1_001_0_0000000_00000_00000_00000));
     }
 
     // stp 128 simd
     @Test
-    public void teststp128simd() {
+    public void teststp128simdpost() {
         testDecode("stp_128_simd_post", "stp", Integer.toHexString(0b10_101_1_001_0_0000000_00000_00000_00000));
     }
 
     // ldp 32
     @Test
-    public void testldp32() {
+    public void testldp32post() {
         testDecode("ldp_32_post", "ldp", Integer.toHexString(0b00_101_0_001_1_0000000_00000_00000_00000));
     }
 
     // ldp 64
     @Test
-    public void testldp64() {
+    public void testldp64post() {
         testDecode("ldp_64_post", "ldp", Integer.toHexString(0b10_101_0_001_1_0000000_00000_00000_00000));
     }
 
     // ldp 32 simd
     @Test
-    public void testldp32simd() {
+    public void testldp32simdpost() {
         testDecode("ldp_32_simd_post", "ldp", Integer.toHexString(0b00_101_1_001_1_0000000_00000_00000_00000));
     }
 
     // ldp 64 simd
     @Test
-    public void testldp64simd() {
+    public void testldp64simdpost() {
         testDecode("ldp_64_simd_post", "ldp", Integer.toHexString(0b01_101_1_001_1_0000000_00000_00000_00000));
     }
 
     // ldp 128 simd
     @Test
-    public void testldp128simd() {
+    public void testldp128simdpost() {
         testDecode("ldp_128_simd_post", "ldp", Integer.toHexString(0b00_101_0_001_1_0000000_00000_00000_00000));
     }
+
+    // LOAD_STORE_PAIR (PRE INDEXED) (C4-281 to C4-282) //////////////////////
+    // stp 32
+    @Test
+    public void teststp32pre() {
+        testDecode("stp_32_pre", "stp", Integer.toHexString(0b00_101_0_011_0_0000000_00000_00000_00000));
+    }
+
+    // stp 64
+    @Test
+    public void teststp64pre() {
+        testDecode("stp_64_pre", "stp", Integer.toHexString(0b10_101_0_011_0_0000000_00000_00000_00000));
+    }
+
+    // stp 32 simd
+    @Test
+    public void teststp32simdpre() {
+        testDecode("stp_32_simd_pre", "stp", Integer.toHexString(0b00_101_1_011_0_0000000_00000_00000_00000));
+    }
+
+    // stp 64 simd
+    @Test
+    public void teststp64simdpre() {
+        testDecode("stp_64_simd_pre", "stp", Integer.toHexString(0b01_101_1_011_0_0000000_00000_00000_00000));
+    }
+
+    // stp 128 simd
+    @Test
+    public void teststp128simdpre() {
+        testDecode("stp_128_simd_pre", "stp", Integer.toHexString(0b10_101_1_011_0_0000000_00000_00000_00000));
+    }
+
+    // ldp 32
+    @Test
+    public void testldp32pre() {
+        testDecode("ldp_32_pre", "ldp", Integer.toHexString(0b00_101_0_011_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 64
+    @Test
+    public void testldp64pre() {
+        testDecode("ldp_64_pre", "ldp", Integer.toHexString(0b10_101_0_011_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 32 simd
+    @Test
+    public void testldp32simdpre() {
+        testDecode("ldp_32_simd_pre", "ldp", Integer.toHexString(0b00_101_1_011_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 64 simd
+    @Test
+    public void testldp64simdpre() {
+        testDecode("ldp_64_simd_pre", "ldp", Integer.toHexString(0b01_101_1_011_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 128 simd
+    @Test
+    public void testldp128simdpre() {
+        testDecode("ldp_128_simd_pre", "ldp", Integer.toHexString(0b00_101_0_011_1_0000000_00000_00000_00000));
+    }
+
+    // LOAD_STORE_PAIR_OFFSET (C4-281 to C4-282) //////////////////////
+    // stp 32
+    @Test
+    public void teststp32off() {
+        testDecode("stp_32_off", "stp", Integer.toHexString(0b00_101_0_010_0_0000000_00000_00000_00000));
+    }
+
+    // stp 64
+    @Test
+    public void teststp64off() {
+        testDecode("stp_64_off", "stp", Integer.toHexString(0b10_101_0_010_0_0000000_00000_00000_00000));
+    }
+
+    // stp 32 simd
+    @Test
+    public void teststp32simdoff() {
+        testDecode("stp_32_simd_off", "stp", Integer.toHexString(0b00_101_1_010_0_0000000_00000_00000_00000));
+    }
+
+    // stp 64 simd
+    @Test
+    public void teststp64simdoff() {
+        testDecode("stp_64_simd_off", "stp", Integer.toHexString(0b01_101_1_010_0_0000000_00000_00000_00000));
+    }
+
+    // stp 128 simd
+    @Test
+    public void teststp128simdoff() {
+        testDecode("stp_128_simd_off", "stp", Integer.toHexString(0b10_101_1_010_0_0000000_00000_00000_00000));
+    }
+
+    // ldp 32
+    @Test
+    public void testldp32off() {
+        testDecode("ldp_32_off", "ldp", Integer.toHexString(0b00_101_0_010_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 64
+    @Test
+    public void testldp64off() {
+        testDecode("ldp_64_off", "ldp", Integer.toHexString(0b10_101_0_010_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 32 simd
+    @Test
+    public void testldp32simdoff() {
+        testDecode("ldp_32_simd_off", "ldp", Integer.toHexString(0b00_101_1_010_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 64 simd
+    @Test
+    public void testldp64simdoff() {
+        testDecode("ldp_64_simd_off", "ldp", Integer.toHexString(0b01_101_1_010_1_0000000_00000_00000_00000));
+    }
+
+    // ldp 128 simd
+    @Test
+    public void testldp128simdoff() {
+        testDecode("ldp_128_simd_off", "ldp", Integer.toHexString(0b00_101_0_010_1_0000000_00000_00000_00000));
+    }
+
+    // LOAD_STORE_PAIR_IMM_UNSCALED (C4-283 to C4-284) ///////////////////
+    // sturb
+    @Test
+    public void teststurb() {
+        testDecode("sturb", "sturb", Integer.toHexString(0b00_111_0_00_00_0_000000000_00_00000_00000));
+    }
+
+    // ldurb
+    @Test
+    public void testldurb() {
+        testDecode("ldurb", "ldurb", Integer.toHexString(0b00_111_0_00_01_0_000000000_00_00000_00000));
+    }
+
+    // ldursb 32 bit
+    @Test
+    public void testldursb32() {
+        testDecode("ldursb32", "ldursb", Integer.toHexString(0b00_111_0_00_11_0_000000000_00_00000_00000));
+    }
+
+    // ldursb 64 bit
+    @Test
+    public void testldursb64() {
+        testDecode("ldursb64", "ldursb", Integer.toHexString(0b00_111_0_00_10_0_000000000_00_00000_00000));
+    }
+
+    // stur simd 8 bit
+    @Test
+    public void teststursimd8() {
+        testDecode("stur_8_simd", "stur", Integer.toHexString(0b00_111_1_00_00_0_000000000_00_00000_00000));
+    }
+
+    // stur simd 16 bit
+    @Test
+    public void teststursimd16() {
+        testDecode("stur_16_simd", "stur", Integer.toHexString(0b01_111_1_00_00_0_000000000_00_00000_00000));
+    }
+
+    // stur simd 32 bit
+    @Test
+    public void teststursimd32() {
+        testDecode("stur_32_simd", "stur", Integer.toHexString(0b10_111_1_00_00_0_000000000_00_00000_00000));
+    }
+
+    // stur simd 64 bit
+    @Test
+    public void teststursimd64() {
+        testDecode("stur_64_simd", "stur", Integer.toHexString(0b11_111_1_00_00_0_000000000_00_00000_00000));
+    }
+
+    // stur simd 128 bit
+    @Test
+    public void teststursimd128() {
+        testDecode("stur_128_simd", "stur", Integer.toHexString(0b00_111_1_00_10_0_000000000_00_00000_00000));
+    }
+
+    // ldur simd 8 bit
+    @Test
+    public void testldursimd8() {
+        testDecode("ldur_8_simd", "ldur", Integer.toHexString(0b00_111_1_00_01_0_000000000_00_00000_00000));
+    }
+
+    // ldur simd 16 bit
+    @Test
+    public void testldursimd16() {
+        testDecode("ldur_16_simd", "ldur", Integer.toHexString(0b01_111_1_00_01_0_000000000_00_00000_00000));
+    }
+
+    // ldur simd 32 bit
+    @Test
+    public void testldursimd32() {
+        testDecode("ldur_32_simd", "ldur", Integer.toHexString(0b10_111_1_00_01_0_000000000_00_00000_00000));
+    }
+
+    // ldur simd 64 bit
+    @Test
+    public void testldursimd64() {
+        testDecode("ldur_64_simd", "ldur", Integer.toHexString(0b11_111_1_00_01_0_000000000_00_00000_00000));
+    }
+
+    // ldur simd 128 bit
+    @Test
+    public void testldursimd128() {
+        testDecode("ldur_128_simd", "ldur", Integer.toHexString(0b00_111_1_00_11_0_000000000_00_00000_00000));
+    }
+
+    // LOAD_STORE_PAIR_UNPRIV (C4-286) ////////////////////////////////////////
 
     private void testDecode(String addr, String name, String expected, String binaryInstruction) {
         ArmInstruction testinst = ArmInstruction.newInstance(addr, binaryInstruction);
         ArmInstructionData idata = testinst.getData();
         ArmAsmInstructionData fieldData = testinst.getFieldData();
 
-        // System.out.print(name + "\tresolved to\t->\t" + testinst.getName() +
-        // "\t(SIMD: " + idata.isSimd() + ", width: " + idata.getBitWidth() + ")\n");
-
         System.out.print(name + "\tresolved to\t->\t" + testinst.getName() +
-                "\t(" + fieldData.getFields() + ")\n");
+                "\t(SIMD: " + idata.isSimd() + ", width: " + idata.getBitWidth() + ")\n");
+
+        // System.out.print(name + "\tresolved to\t->\t" + testinst.getName() +
+        // "\t(" + fieldData.getFields() + ")\n");
 
         // System.out.print(name + "\tresolved to\t->\t" + testinst.getName() + "target addr: 0x"
         // + Integer.toHexString(testinst.getBranchTarget().intValue()) + "\n");

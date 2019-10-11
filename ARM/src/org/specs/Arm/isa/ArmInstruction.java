@@ -27,10 +27,17 @@ public class ArmInstruction extends AInstruction {
      */
     static {
         parser = new ArmIsaParser();
+
+        var v = ArmInstructionProperties.values();
+        var b = ArmInstructionType.values();
+
         instSet = new InstructionSet(Arrays.asList(ArmInstructionProperties.values()),
                 Arrays.asList(ArmInstructionType.values()));
     }
 
+    /*
+     * Static "constructor"
+     */
     public static ArmInstruction newInstance(String address, String instruction) {
         var fieldData = parser.parse(instruction);
         var idata = new ArmInstructionData(instSet.process(fieldData), fieldData);
