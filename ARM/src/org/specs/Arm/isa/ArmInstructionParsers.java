@@ -119,11 +119,11 @@ public interface ArmInstructionParsers {
 
             newInstance(LOAD_STORE_PAIR_IMM_FMT1,
                     "opcodea(2)_111000_opcodeb(2)_0_imm(9)_opcodec(2)_registern(5)_registert(5)",
-                    isNotFmt1orFmt2().and(isPrivorUnscaledAccess())),
+                    isNotFmt2().and(isNotFmt3("opcodeb").and(isPrivorUnscaledAccess()))),
 
             newInstance(LOAD_STORE_PAIR_IMM_FMT2,
                     "opcodea(2)_111000_sf(2)_0_imm(9)_opcodec(2)_registern(5)_registert(5)",
-                    isPrivorUnscaledAccess()),
+                    isNotFmt3("sf").and(isPrivorUnscaledAccess())),
 
             newInstance(LOAD_STORE_PAIR_IMM_FMT3,
                     "sfa(2)_111_simd(1)_opcodea(2)_sfb(1)_opcodeb(2)_imm(9)_opcodec(2)_registern(5)_registert(5)",
@@ -135,10 +135,11 @@ public interface ArmInstructionParsers {
 
             newInstance(LOAD_STORE_PAIR_IMM_PREPOST_FMT1,
                     "opcodea(2)_111000_opcodeb(2)_0_imm(9)_memtype(2)_registern(5)_registert(5)",
-                    isNotFmt1orFmt2().and(isPrePostAccess())),
+                    isNotFmt2().and(isNotFmt3("opcodeb").and(isPrePostAccess()))),
 
             newInstance(LOAD_STORE_PAIR_IMM_PREPOST_FMT2,
-                    "opcodea(2)_111000_sf(2)_0_imm(9)_memtype(2)_registern(5)_registert(5)", isPrePostAccess()),
+                    "opcodea(2)_111000_sf(2)_0_imm(9)_memtype(2)_registern(5)_registert(5)",
+                    isNotFmt3("sf").and(isPrePostAccess())),
 
             newInstance(LOAD_STORE_PAIR_IMM_PREPOST_FMT3,
                     "sfa(2)_111_simd(1)_opcodea(2)_sfb(1)_opcodeb(2)_imm(9)_memtype(2)_registern(5)_registert(5)",
@@ -149,15 +150,20 @@ public interface ArmInstructionParsers {
     );
 
     /*
-     * // predicate == "cannot be LD(U)RSB or LD(U)RSH" && "cannot be ST(U)R or LD(U)R"
+     * // predicate == "cannot be ST(U)R or LD(U)R"
      */
-    private static Predicate<Map<String, String>> isNotFmt1orFmt2() {
+    private static Predicate<Map<String, String>> isNotFmt3(String b) {
+        return data -> !((data.get(b).equals("00") || data.get(b).equals("01")) &&
+                (data.get("opcodea").equals("10") || data.get("opcodea").equals("11")));
+    }
+
+    /*
+     * // predicate == "cannot be LD(U)RSB or LD(U)RSH"
+     */
+    private static Predicate<Map<String, String>> isNotFmt2() {
         return data -> !(data.get("opcodeb").equals("11") ||
                 (data.get("opcodeb").equals("10")
-                        && (data.get("opcodea").equals("00") || data.get("opcodea").equals("01")))
-                ||
-                ((data.get("opcodeb").equals("00") || (data.get("opcodeb").equals("01"))
-                        && (data.get("opcodea").equals("10") || data.get("opcodea").equals("11")))));
+                        && (data.get("opcodea").equals("00") || data.get("opcodea").equals("01"))));
     }
 
     /*
