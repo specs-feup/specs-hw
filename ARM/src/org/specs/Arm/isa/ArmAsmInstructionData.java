@@ -29,18 +29,12 @@ public class ArmAsmInstructionData extends AsmInstructionData {
 
         ArmInstructionType type = (ArmInstructionType) this.get(TYPE);
         var map1 = this.get(FIELDS);
-        var keys1 = map1.keySet();
         int sf = 0;
-
-        if (!keys1.contains("sf") && !keys1.contains("sfa") && !keys1.contains("sfb")) {
-            return 32; // default length
-        }
 
         // sf, sfa, and sfb fields are treated differently based on the instruction format
         switch (type) {
 
         // when "sf" is a single bit
-        case DPI_PCREL:
         case DPI_ADDSUBIMM:
         case DPI_ADDSUBIMM_TAGS:
         case LOGICAL:
@@ -60,10 +54,26 @@ public class ArmAsmInstructionData extends AsmInstructionData {
 
             sf = Integer.parseInt(map1.get("sf"), 2);
             if (this.isSimd()) {
-                return ((int) Math.pow(2, sf)) * 32;
+                sf = ((int) Math.pow(2, sf)) * 32;
             } else {
-                return (sf != 0) ? 64 : 32;
+                sf = (sf != 0) ? 64 : 32;
             }
+            return sf;
+
+        // fields "opcodea" and "opcodeb" used for size
+        case LOAD_STORE_PAIR_IMM_FMT2:
+            Boolean a, b, c, d;
+            a = map1.get("opcodea").substring(0, 1).equals("1");
+            b = map1.get("opcodea").substring(1, 2).equals("1");
+            c = map1.get("opcodeb").substring(0, 1).equals("1");
+            d = map1.get("opcodeb").substring(1, 2).equals("1");
+            sf = ((!a & !d) | (b & !c)) ? 64 : 32;
+            return sf;
+
+        // two fields, sfa, and sfb
+        case LOAD_STORE_PAIR_IMM_FMT3:
+            sf = Integer.parseInt(map1.get("sfb") + map1.get("sfa"), 2);
+            return ((int) Math.pow(2, sf)) * 8;
 
         default:
             return 32;

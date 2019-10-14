@@ -118,51 +118,44 @@ public interface ArmInstructionParsers {
             // these parsers gather LOAD_STORE_PAIR_UNPRIV and LOAD_STORE_PAIR_IMM_UNSCALED
 
             newInstance(LOAD_STORE_PAIR_IMM_FMT1,
-                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_opcodec(2)_registern(5)_registert(5)",
-                    isNotFmt2().and(isNotFmt3("opcodeb").and(isPrivorUnscaledAccess()))),
+                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_opcodec(1)_0_registern(5)_registert(5)",
+                    isFmt1().and(isPrivorUnscaledAccess())),
 
             newInstance(LOAD_STORE_PAIR_IMM_FMT2,
-                    "opcodea(2)_111000_sf(2)_0_imm(9)_opcodec(2)_registern(5)_registert(5)",
-                    isNotFmt3("sf").and(isPrivorUnscaledAccess())),
+                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_opcodec(1)_0_registern(5)_registert(5)",
+                    isPrivorUnscaledAccess()),
 
             newInstance(LOAD_STORE_PAIR_IMM_FMT3,
-                    "sfa(2)_111_simd(1)_opcodea(2)_sfb(1)_opcodeb(2)_imm(9)_opcodec(2)_registern(5)_registert(5)",
-                    isPrivorUnscaledAccess()),
+                    "sfa(2)_111_simd(1)_opcodea(2)_sfb(1)_opcodeb(2)_imm(9)_opcodec(1)_0_registern(5)_registert(5)",
+                    isPrivorUnscaledAccess().and(data -> data.get("simd").equals("1"))),
 
             ////////////////////
 
             // these parsers gather LOAD_STORE_PAIR_IMM Pre and post indexed
 
             newInstance(LOAD_STORE_PAIR_IMM_PREPOST_FMT1,
-                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_memtype(2)_registern(5)_registert(5)",
-                    isNotFmt2().and(isNotFmt3("opcodeb").and(isPrePostAccess()))),
+                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_opcodec(1)_1_registern(5)_registert(5)",
+                    isFmt1().and(isPrePostAccess())),
 
             newInstance(LOAD_STORE_PAIR_IMM_PREPOST_FMT2,
-                    "opcodea(2)_111000_sf(2)_0_imm(9)_memtype(2)_registern(5)_registert(5)",
-                    isNotFmt3("sf").and(isPrePostAccess())),
+                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_opcodec(1)_1_registern(5)_registert(5)", isPrePostAccess()),
 
             newInstance(LOAD_STORE_PAIR_IMM_PREPOST_FMT3,
-                    "sfa(2)_111_simd(1)_opcodea(2)_sfb(1)_opcodeb(2)_imm(9)_memtype(2)_registern(5)_registert(5)",
-                    isPrePostAccess()),
+                    "sfa(2)_111_simd(1)_opcodea(2)_sfb(1)_opcodeb(2)_imm(9)_opcodec(1)_1_registern(5)_registert(5)",
+                    isPrePostAccess().and(data -> data.get("simd").equals("1"))),
 
-            newInstance(UNDEFINED, "x(32)")
-
-    );
+            newInstance(UNDEFINED, "x(32)"));
 
     /*
-     * // predicate == "cannot be ST(U)R or LD(U)R"
+     * predicate == "cannot be ST(U)R or LD(U)R"
+     * &&
+     * predicate == "cannot be LD(U)RSB or LD(U)RSH
      */
-    private static Predicate<Map<String, String>> isNotFmt3(String b) {
-        return data -> !((data.get(b).equals("00") || data.get(b).equals("01")) &&
-                (data.get("opcodea").equals("10") || data.get("opcodea").equals("11")));
-    }
-
-    /*
-     * // predicate == "cannot be LD(U)RSB or LD(U)RSH"
-     */
-    private static Predicate<Map<String, String>> isNotFmt2() {
-        return data -> !(data.get("opcodeb").equals("11") ||
-                (data.get("opcodeb").equals("10")
+    private static Predicate<Map<String, String>> isFmt1() {
+        return data -> !(((data.get("opcodeb").equals("00") || data.get("opcodeb").equals("01"))
+                && (data.get("opcodea").equals("10") || data.get("opcodea").equals("11")))
+                ||
+                ((data.get("opcodeb").equals("11") || data.get("opcodeb").equals("10"))
                         && (data.get("opcodea").equals("00") || data.get("opcodea").equals("01"))));
     }
 
@@ -170,14 +163,14 @@ public interface ArmInstructionParsers {
      * // predicate == check if memory access type is not privileged or unscaled (i.e. must be pre os post indexed)
      */
     private static Predicate<Map<String, String>> isPrePostAccess() {
-        return data -> (data.get("memtype").equals("01") || data.get("memtype").equals("11"));
+        return data -> (data.get("opcodec").equals("0") || data.get("opcodec").equals("1"));
     }
 
     /*
      * // predicate == check if memory access type is not privileged type
      */
     private static Predicate<Map<String, String>> isPrivorUnscaledAccess() {
-        return data -> (data.get("opcodec").equals("10") || data.get("opcodec").equals("00"));
+        return data -> (data.get("opcodec").equals("1") || data.get("opcodec").equals("0"));
     }
 
     /* static IsaParser getArmIsaParser() {
