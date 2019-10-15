@@ -27,10 +27,6 @@ public class ArmInstruction extends AInstruction {
      */
     static {
         parser = new ArmIsaParser();
-
-        var v = ArmInstructionProperties.values();
-        var b = ArmInstructionType.values();
-
         instSet = new InstructionSet(Arrays.asList(ArmInstructionProperties.values()),
                 Arrays.asList(ArmInstructionType.values()));
     }
