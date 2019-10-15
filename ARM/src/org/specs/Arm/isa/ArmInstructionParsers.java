@@ -111,13 +111,13 @@ public interface ArmInstructionParsers {
             // Load/store register pair (post-indexed) - C4-281
 
             newInstance(LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1,
-                    "sf(2)_101_simd(1)_memtype(3)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
-                    data -> ((!data.get("memtype").equals("000"))
+                    "sf(2)_101_simd(1)_0_memtype(2)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
+                    data -> ((!data.get("memtype").equals("00"))
                             && !(data.get("sf").equals("01") && data.get("simd").equals("0")))),
 
             newInstance(LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2,
-                    "011010_memtype(3)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
-                    data -> (!data.get("memtype").equals("000"))),
+                    "011010_0_memtype(2)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
+                    data -> (!data.get("memtype").equals("00"))),
 
             ////////////////////
 
@@ -186,11 +186,27 @@ public interface ArmInstructionParsers {
 
             ///////////////////////////////////////////////////////////////////
             // 4. Data Processing (Register) (C4.1.5) /////////////////////////
+
             newInstance(DPR_TWOSOURCE,
                     "sf(1)_0_opcodea(1)_11010110_registerm(5)_opcodeb(6)_registern(5)_registerd(5)"),
 
             newInstance(DPR_ONESOURCE,
                     "sf(1)_1_opcodea(1)_11010110_opcodeb(5)_opcodec(6)_registern(5)_registerd(5)"),
+
+            newInstance(LOGICAL_SHIFT_REG,
+                    "sf(1)_opcodea(2)_01010_imml(2)_S(1)_registerm(5)_imm(6)_registern(5)_registerd(5)"),
+
+            // "sf(2)_101_simd(1)_memtype(3)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
+            // oor: 00 101_ 0_100_00000000000000000000000
+
+            newInstance(ADD_SUB_SHIFT_REG,
+                    "sf(1)_opcodea(2)_01011_imml(2)_0_registerm(5)_imm(6)_registern(5)_registerd(5)"),
+
+            newInstance(ADD_SUB_EXT_REG,
+                    "sf(1)_opcodea(2)_01011001_registerm(5)_imml(3)_immh(3)_registern(5)_registerd(5)"),
+
+            newInstance(ADD_SUB_CARRY,
+                    "sf(1)_opcodea(2)_11010000_registerm(5)_000000_registern(5)_registerd(5)"),
 
             ////////////////////
 

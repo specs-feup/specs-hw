@@ -255,6 +255,48 @@ public enum ArmInstructionProperties implements InstructionProperties {
     pacga(0x9AC0_3000, 1, 1, DPR_TWOSOURCE, G_OTHER),
     subps(0xBAC0_0000, 1, 1, DPR_TWOSOURCE, G_SUB, G_OTHER),
 
+    // DPR_ONESOURCE (C4-301) /////////////////////////////////////////////////
+    rbit(0x5AC0_0000, 1, 1, DPR_ONESOURCE, G_UNARY, G_LOGICAL),
+    rev16(0x5AC0_0400, 1, 1, DPR_ONESOURCE, G_UNARY, G_LOGICAL),
+    rev(0x5AC0_0800, 1, 1, DPR_ONESOURCE, G_UNARY, G_LOGICAL),
+    clz(0x5AC0_1000, 1, 1, DPR_ONESOURCE, G_UNARY, G_LOGICAL),
+    cls(0x5AC0_1400, 1, 1, DPR_ONESOURCE, G_UNARY, G_LOGICAL),
+    rev32(0xDAC0_0800, 1, 1, DPR_ONESOURCE, G_UNARY, G_LOGICAL), // TODO: is this an alias?
+
+    /*
+    pacia(0xDAC1_0000, 1, 1, DPR_ONESOURCE, G_UNARY, G_LOGICAL),
+    paciza(0xDAC1_2000, 1, 1, DPR_ONESOURCE, G_UNARY, G_LOGICAL),
+    pacia1716(0xD503_211F, 1, 1, DPR_ONESOURCE, G_UNARY, G_LOGICAL),
+    // TODO all the "pacias", all the "autias", all the "autdb", and all the "xpacds"
+    */
+
+    // LOGICAL_SHIFT_REG (C4-303) /////////////////////////////////////////////
+    and_shift_reg("and", 0x0A00_0000, 1, 1, LOGICAL_SHIFT_REG, G_LOGICAL),
+    bic_shift_reg("bic", 0x0A20_0000, 1, 1, LOGICAL_SHIFT_REG, G_LOGICAL),
+    orr_shift_reg("orr", 0x2A00_0000, 1, 1, LOGICAL_SHIFT_REG, G_LOGICAL),
+    orn_shift_reg("orn", 0x2A20_0000, 1, 1, LOGICAL_SHIFT_REG, G_LOGICAL),
+    eor_shift_reg("eor", 0x4A00_0000, 1, 1, LOGICAL_SHIFT_REG, G_LOGICAL),
+    eon_shift_reg("eon", 0x4A20_0000, 1, 1, LOGICAL_SHIFT_REG, G_LOGICAL),
+    ands_shift_reg("ands", 0x6A00_0000, 1, 1, LOGICAL_SHIFT_REG, G_LOGICAL),
+
+    // ADD_SUB_SHIFT_REG (C4-303) /////////////////////////////////////////////
+    add_shift_reg("add", 0x0B00_0000, 1, 1, ADD_SUB_SHIFT_REG, G_ADD),
+    adds_shift_reg("adds", 0x2B00_0000, 1, 1, ADD_SUB_SHIFT_REG, G_ADD),
+    sub_shift_reg("sub", 0x4B00_0000, 1, 1, ADD_SUB_SHIFT_REG, G_SUB),
+    subs_shift_reg("subs", 0x6B00_0000, 1, 1, ADD_SUB_SHIFT_REG, G_SUB),
+
+    // ADD_SUB_EXT_REG (C4-304) ///////////////////////////////////////////////
+    add_ext_reg("add", 0x0B20_0000, 1, 1, ADD_SUB_EXT_REG, G_ADD),
+    adds_ext_reg("adds", 0x2B20_0000, 1, 1, ADD_SUB_EXT_REG, G_ADD),
+    sub_ext_reg("sub", 0x4B20_0000, 1, 1, ADD_SUB_EXT_REG, G_SUB),
+    subs_ext_reg("subs", 0x6B20_0000, 1, 1, ADD_SUB_EXT_REG, G_SUB),
+
+    // ADD_SUB_CARRY (C4-305) /////////////////////////////////////////////////
+    adc(0x1A00_0000, 1, 1, ADD_SUB_CARRY, G_ADD),
+    adcs(0x3A00_0000, 1, 1, ADD_SUB_CARRY, G_ADD),
+    sbc(0x5A00_0000, 1, 1, ADD_SUB_CARRY, G_SUB),
+    sbcs(0x7A00_0000, 1, 1, ADD_SUB_CARRY, G_SUB),
+
     ///////////////////////////////////////////////////////////////////////////
 
     unknown(0x000000000, 1, 1, UNDEFINED, G_UNKN);

@@ -42,6 +42,10 @@ public class ArmAsmInstructionData extends AsmInstructionData {
         case EXTRACT:
         case BITFIELD:
         case DPR_TWOSOURCE:
+        case LOGICAL_SHIFT_REG:
+        case ADD_SUB_SHIFT_REG:
+        case ADD_SUB_EXT_REG:
+        case ADD_SUB_CARRY:
             return (map1.get("sf").equals("1")) ? 64 : 32;
 
         // when sf is two bits
