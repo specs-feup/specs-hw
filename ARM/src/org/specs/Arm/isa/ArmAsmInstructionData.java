@@ -41,6 +41,7 @@ public class ArmAsmInstructionData extends AsmInstructionData {
         case MOVEW:
         case EXTRACT:
         case BITFIELD:
+        case DPR_TWOSOURCE:
             return (map1.get("sf").equals("1")) ? 64 : 32;
 
         // when sf is two bits
@@ -72,6 +73,8 @@ public class ArmAsmInstructionData extends AsmInstructionData {
 
         // two fields, sfa, and sfb
         case LOAD_STORE_PAIR_IMM_FMT3:
+        case LOAD_STORE_IMM_PREPOST_FMT3:
+        case LOAD_STORE_REG_OFF_FMT3:
             sf = Integer.parseInt(map1.get("sfb") + map1.get("sfa"), 2);
             return ((int) Math.pow(2, sf)) * 8;
 

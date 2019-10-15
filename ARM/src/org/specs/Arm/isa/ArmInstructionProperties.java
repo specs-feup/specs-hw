@@ -156,30 +156,106 @@ public enum ArmInstructionProperties implements InstructionProperties {
     ldtrsb64("ldtrsb", 0x3880_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_LOAD),
     ldtrsh32("ldtrsh", 0x78C0_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_LOAD),
     ldtrsh64("ldtrsh", 0x7880_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_LOAD),
-    sttr(0xB800_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_STORE),
-    ldtr(0xB840_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_LOAD),
+    sttr32("sttr", 0xB800_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_STORE),
+    sttr64("sttr", 0xF800_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_STORE),
+    ldtr32("ldtr", 0xB840_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_LOAD),
+    ldtr64("ldtr", 0xF840_0800, 1, 1, LOAD_STORE_PAIR_IMM_FMT2, G_MEMORY, G_LOAD),
 
     ///////////////////////////////////////////////////////////////////////////
 
     // LOAD_STORE_PAIR_IMM_PREPOST_FMT1 (C4-284 to C4-285 and C4-286 to C4-287)
-    strb(0x3800_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT1, G_MEMORY, G_STORE),
-    ldrb(0x3840_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT1, G_MEMORY, G_LOAD),
-    strh(0x7800_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT1, G_MEMORY, G_STORE),
-    ldrh(0x7840_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT1, G_MEMORY, G_LOAD),
-    ldrsw(0xB880_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT1, G_MEMORY, G_LOAD),
+    strb(0x3800_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT1, G_MEMORY, G_STORE),
+    ldrb(0x3840_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT1, G_MEMORY, G_LOAD),
+    strh(0x7800_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT1, G_MEMORY, G_STORE),
+    ldrh(0x7840_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT1, G_MEMORY, G_LOAD),
+    ldrsw(0xB880_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT1, G_MEMORY, G_LOAD),
 
     // LOAD_STORE_PAIR_IMM_PREPOST_FMT2 (C4-284 to C4-285 and C4-286 to C4-287)
-    ldrsb(0x3880_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT2, G_MEMORY, G_LOAD),
-    ldrsh(0x7880_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT2, G_MEMORY, G_LOAD),
-
-    str32("str", 0xB800_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT2, G_MEMORY, G_STORE),
-    str64("str", 0xF800_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT2, G_MEMORY, G_STORE),
-    ldr32("ldr", 0xB840_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT2, G_MEMORY, G_LOAD),
-    ldr64("ldr", 0xF840_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT2, G_MEMORY, G_LOAD),
+    ldrsb32("ldrsb", 0x38C0_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT2, G_MEMORY, G_LOAD),
+    ldrsb64("ldrsb", 0x3880_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT2, G_MEMORY, G_LOAD),
+    ldrsh32("ldrsh", 0x78C0_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT2, G_MEMORY, G_LOAD),
+    ldrsh64("ldrsh", 0x7880_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT2, G_MEMORY, G_LOAD),
+    str32("str", 0xB800_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT2, G_MEMORY, G_STORE),
+    str64("str", 0xF800_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT2, G_MEMORY, G_STORE),
+    ldr32("ldr", 0xB840_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT2, G_MEMORY, G_LOAD),
+    ldr64("ldr", 0xF840_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT2, G_MEMORY, G_LOAD),
 
     // LOAD_STORE_PAIR_IMM_PREPOST_FMT3 (C4-284 to C4-285 and C4-286 to C4-287)
-    str_simd("str", 0x3C00_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT3, G_MEMORY, G_STORE),
-    ldr_simd("ldr", 0x3C40_0400, 1, 1, LOAD_STORE_PAIR_IMM_PREPOST_FMT3, G_MEMORY, G_LOAD),
+    str_simd("str", 0x3C00_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT3, G_MEMORY, G_STORE),
+    ldr_simd("ldr", 0x3C40_0400, 1, 1, LOAD_STORE_IMM_PREPOST_FMT3, G_MEMORY, G_LOAD),
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    // LOAD_STORE_REG_OFF_FMT1 (C4-295 to C4-297) /////////////////////////////
+    strb_reg_off("strb", 0x3820_0800, 1, 1, LOAD_STORE_REG_OFF_FMT1, G_MEMORY, G_STORE),
+    ldrb_reg_off("ldrb", 0x3860_0800, 1, 1, LOAD_STORE_REG_OFF_FMT1, G_MEMORY, G_LOAD),
+    strh_reg_off("strh", 0x7820_0800, 1, 1, LOAD_STORE_REG_OFF_FMT1, G_MEMORY, G_STORE),
+    ldrh_reg_off("ldrh", 0x7860_0800, 1, 1, LOAD_STORE_REG_OFF_FMT1, G_MEMORY, G_LOAD),
+    // ldrsw
+    // prfm
+
+    // LOAD_STORE_REG_OFF_FMT2 (C4-295 to C4-297) /////////////////////////////
+    ldrsb32_reg_off("ldrsb", 0x38E0_0800, 1, 1, LOAD_STORE_REG_OFF_FMT2, G_MEMORY, G_LOAD),
+    ldrsb64_reg_off("ldrsb", 0x38A0_0800, 1, 1, LOAD_STORE_REG_OFF_FMT2, G_MEMORY, G_LOAD),
+    ldrsh32_reg_off("ldrsh", 0x78E0_0800, 1, 1, LOAD_STORE_REG_OFF_FMT2, G_MEMORY, G_LOAD),
+    ldrsh64_reg_off("ldrsh", 0x78A0_0800, 1, 1, LOAD_STORE_REG_OFF_FMT2, G_MEMORY, G_LOAD),
+    str32_reg_off("str", 0xB820_0800, 1, 1, LOAD_STORE_REG_OFF_FMT2, G_MEMORY, G_STORE),
+    str64_reg_off("str", 0xF820_0800, 1, 1, LOAD_STORE_REG_OFF_FMT2, G_MEMORY, G_STORE),
+    ldr32_reg_off("ldr", 0xB860_0800, 1, 1, LOAD_STORE_REG_OFF_FMT2, G_MEMORY, G_LOAD),
+    ldr64_reg_off("ldr", 0xF860_0800, 1, 1, LOAD_STORE_REG_OFF_FMT2, G_MEMORY, G_LOAD),
+
+    // LOAD_STORE_REG_OFF_FMT3 (C4-295 to C4-297) /////////////////////////////
+    str_simd_reg_off("str", 0x3C20_0800, 1, 1, LOAD_STORE_REG_OFF_FMT3, G_MEMORY, G_STORE),
+    ldr_simd_reg_off("ldr", 0x3C60_0800, 1, 1, LOAD_STORE_REG_OFF_FMT3, G_MEMORY, G_LOAD),
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    // LOAD_STORE_REG_UIMM_FMT1 (C4-297) //////////////////////////////////////
+    strb_uimm("strb", 0x3900_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT1, G_MEMORY, G_STORE),
+    ldrb_uimm("ldrb", 0x3940_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT1, G_MEMORY, G_LOAD),
+    strh_uimm("strh", 0x7900_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT1, G_MEMORY, G_STORE),
+    ldrh_uimm("ldrh", 0x7940_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT1, G_MEMORY, G_LOAD),
+    ldrsw_uimm("ldrsw", 0xB980_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT1, G_MEMORY, G_LOAD),
+    prfm_uimm("prfm", 0xF980_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT1, G_MEMORY, G_LOAD),
+
+    // LOAD_STORE_REG_UIMM_FMT2 (C4-297) //////////////////////////////////////
+    ldrsb32_uimm("ldrsb", 0x39C0_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT2, G_MEMORY, G_LOAD),
+    ldrsb64_uimm("ldrsb", 0x3980_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT2, G_MEMORY, G_LOAD),
+    ldrsh32_uimm("ldrsh", 0x79C0_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT2, G_MEMORY, G_LOAD),
+    ldrsh64_uimm("ldrsh", 0x7980_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT2, G_MEMORY, G_LOAD),
+    str32_uimm("str", 0xB900_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT2, G_MEMORY, G_STORE),
+    str64_uimm("str", 0xF900_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT2, G_MEMORY, G_STORE),
+    ldr32_uimm("ldr", 0xB940_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT2, G_MEMORY, G_LOAD),
+    ldr64_uimm("ldr", 0xF940_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT2, G_MEMORY, G_LOAD),
+
+    // LOAD_STORE_REG_UIMM_FMT3 (C4-297) //////////////////////////////////////
+    str_simd_uimm("str", 0x3D00_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT3, G_MEMORY, G_STORE),
+    ldr_simd_uimm("ldr", 0x3D40_0000, 1, 1, LOAD_STORE_REG_UIMM_FMT3, G_MEMORY, G_LOAD),
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    // DPR_TWOSOURCE (C4-299) /////////////////////////////////////////////////
+    udiv(0x1AC0_0800, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    sdiv(0x1AC0_0C00, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    lslv(0x1AC0_2000, 1, 1, DPR_TWOSOURCE, G_LOGICAL),
+    lsrv(0x1AC0_2400, 1, 1, DPR_TWOSOURCE, G_LOGICAL),
+    asrv(0x1AC0_2800, 1, 1, DPR_TWOSOURCE, G_LOGICAL),
+    rorv(0x1AC0_2C00, 1, 1, DPR_TWOSOURCE, G_LOGICAL),
+    crc32b(0x1AC0_4000, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    crc32h(0x1AC0_4400, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    crc32w(0x1AC0_4800, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    crc32x(0x9AC0_4C00, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    crc32cb(0x1AC0_5000, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    crc32ch(0x1AC0_5400, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    crc32cw(0x1AC0_5800, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    crc32cx(0x9AC0_5C00, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    subp(0x9AC0_0000, 1, 1, DPR_TWOSOURCE, G_SUB, G_OTHER),
+    irg(0x9AC0_1000, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    gmi(0x9AC0_1400, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    pacga(0x9AC0_3000, 1, 1, DPR_TWOSOURCE, G_OTHER),
+    subps(0xBAC0_0000, 1, 1, DPR_TWOSOURCE, G_SUB, G_OTHER),
+
+    ///////////////////////////////////////////////////////////////////////////
 
     unknown(0x000000000, 1, 1, UNDEFINED, G_UNKN);
 
@@ -189,6 +265,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
      * Instruction property fields
      */
     private String instructionName;
+    private String enumName;
     private final int opcode; // 32 bit instruction code without operands
     private final int reducedopcode; // only the bits that matter, built after parsing the fields
     private final int latency;
@@ -204,6 +281,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     private ArmInstructionProperties(int opcode, int latency,
             int delay, ArmInstructionType mbtype, List<InstructionType> tp) {
         this.instructionName = "";
+        this.enumName = name();
         this.opcode = opcode;
         this.latency = latency;
         this.delay = delay;

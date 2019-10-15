@@ -17,6 +17,7 @@ import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 
 public enum ArmInstructionType implements AsmInstructionType {
 
+    // 1.
     DPI_PCREL,
     DPI_ADDSUBIMM,
     DPI_ADDSUBIMM_TAGS,
@@ -24,6 +25,8 @@ public enum ArmInstructionType implements AsmInstructionType {
     MOVEW,
     BITFIELD,
     EXTRACT,
+
+    // 2.
     CONDITIONALBRANCH,
     EXCEPTION,
     UCONDITIONALBRANCH_REG,
@@ -31,6 +34,7 @@ public enum ArmInstructionType implements AsmInstructionType {
     COMPARE_AND_BRANCH_IMM,
     TEST_AND_BRANCH,
 
+    // 3.
     LOAD_REG_LITERAL_FMT1,
     LOAD_REG_LITERAL_FMT2,
     LOAD_STORE_PAIR_NO_ALLOC,
@@ -38,13 +42,27 @@ public enum ArmInstructionType implements AsmInstructionType {
     LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1,
     LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2,
 
-    LOAD_STORE_PAIR_IMM_PREPOST_FMT1,
-    LOAD_STORE_PAIR_IMM_PREPOST_FMT2,
-    LOAD_STORE_PAIR_IMM_PREPOST_FMT3,
+    LOAD_STORE_IMM_PREPOST_FMT1,
+    LOAD_STORE_IMM_PREPOST_FMT2,
+    LOAD_STORE_IMM_PREPOST_FMT3,
 
     LOAD_STORE_PAIR_IMM_FMT1,
     LOAD_STORE_PAIR_IMM_FMT2,
     LOAD_STORE_PAIR_IMM_FMT3,
+
+    LOAD_STORE_REG_OFF_FMT1,
+    LOAD_STORE_REG_OFF_FMT2,
+    LOAD_STORE_REG_OFF_FMT3,
+
+    LOAD_STORE_REG_UIMM_FMT1,
+    LOAD_STORE_REG_UIMM_FMT2,
+    LOAD_STORE_REG_UIMM_FMT3,
+
+    // 4. Data Processing (Register) (C4.1.5) /////////////////////////////////
+    DPR_TWOSOURCE,
+    DPR_ONESOURCE,
+    LOGICAL_SHIFT_REG,
+    ADD_SUB_EXTENDED,
 
     UNDEFINED;
 }

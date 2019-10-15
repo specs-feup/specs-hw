@@ -21,6 +21,7 @@ public interface ArmInstructionFields {
     static String SFA = "sfa";
     static String SFB = "sfb";
     static String SIMD = "simd";
+    static String OPTION = "option";
     static String OPCODEA = "opcodea";
     static String OPCODEB = "opcodeb";
     static String OPCODEC = "opcodec";
