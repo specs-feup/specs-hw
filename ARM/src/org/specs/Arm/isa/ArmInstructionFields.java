@@ -17,6 +17,7 @@ public interface ArmInstructionFields {
 
     static String COND = "cond";
 
+    static String S = "S";
     static String SF = "sf";
     static String SFA = "sfa";
     static String SFB = "sfb";

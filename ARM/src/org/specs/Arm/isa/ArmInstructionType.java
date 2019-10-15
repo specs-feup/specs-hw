@@ -62,7 +62,9 @@ public enum ArmInstructionType implements AsmInstructionType {
     DPR_TWOSOURCE,
     DPR_ONESOURCE,
     LOGICAL_SHIFT_REG,
-    ADD_SUB_EXTENDED,
+    ADD_SUB_SHIFT_REG,
+    ADD_SUB_EXT_REG,
+    ADD_SUB_CARRY,
 
     UNDEFINED;
 }

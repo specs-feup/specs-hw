@@ -1606,6 +1606,84 @@ public class ArmInstructionInstatiationTest {
         testDecode("rorv64", "rorv", Integer.toHexString(0b1_00_11010110_00000_001011_00000_00000));
     }
 
+    // crc32b
+    @Test
+    public void test_crc32b() {
+        testDecode("crc32b", "crc32b", Integer.toHexString(0b0_00_11010110_00000_010000_00000_00000));
+    }
+
+    // crc32h
+    @Test
+    public void test_crc32h() {
+        testDecode("crc32h", "crc32h", Integer.toHexString(0b0_00_11010110_00000_010001_00000_00000));
+    }
+
+    // crc32w
+    @Test
+    public void test_crc32w() {
+        testDecode("crc32w", "crc32w", Integer.toHexString(0b0_00_11010110_00000_010010_00000_00000));
+    }
+
+    // crc32x
+    @Test
+    public void test_crc32x() {
+        testDecode("crc32x", "crc32x", Integer.toHexString(0b1_00_11010110_00000_010011_00000_00000));
+    }
+
+    // subp
+    @Test
+    public void test_subp() {
+        testDecode("subp", "subp", Integer.toHexString(0b1_00_11010110_00000_000000_00000_00000));
+    }
+
+    // irg
+    @Test
+    public void test_irg() {
+        testDecode("irg", "irg", Integer.toHexString(0b1_00_11010110_00000_000100_00000_00000));
+    }
+
+    // gmi
+    @Test
+    public void test_gmi() {
+        testDecode("gmi", "gmi", Integer.toHexString(0b1_00_11010110_00000_000101_00000_00000));
+    }
+
+    // pacga
+    @Test
+    public void test_pacga() {
+        testDecode("pacga", "pacga", Integer.toHexString(0b1_00_11010110_00000_001100_00000_00000));
+    }
+
+    // crc32cb
+    @Test
+    public void test_crc32cb() {
+        testDecode("crc32cb", "crc32cb", Integer.toHexString(0b0_00_11010110_00000_010100_00000_00000));
+    }
+
+    // crc32ch
+    @Test
+    public void test_crc32ch() {
+        testDecode("crc32ch", "crc32ch", Integer.toHexString(0b0_00_11010110_00000_010101_00000_00000));
+    }
+
+    // crc32cw
+    @Test
+    public void test_crc32cw() {
+        testDecode("crc32cw", "crc32cw", Integer.toHexString(0b0_00_11010110_00000_010110_00000_00000));
+    }
+
+    // crc32cx
+    @Test
+    public void test_crc32cx() {
+        testDecode("crc32cx", "crc32cx", Integer.toHexString(0b1_00_11010110_00000_010111_00000_00000));
+    }
+
+    // subps
+    @Test
+    public void test_subps() {
+        testDecode("subps", "subps", Integer.toHexString(0b1_01_11010110_00000_000000_00000_00000));
+    }
+
     private void testDecode(String addr, String name, String expected, String binaryInstruction) {
         ArmInstruction testinst = ArmInstruction.newInstance(addr, binaryInstruction);
         ArmInstructionData idata = testinst.getData();
