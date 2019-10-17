@@ -65,6 +65,10 @@ public enum ArmInstructionType implements AsmInstructionType {
     ADD_SUB_SHIFT_REG,
     ADD_SUB_EXT_REG,
     ADD_SUB_CARRY,
+    CONDITIONAL_CMP_REG,
+    CONDITIONAL_CMP_IMM,
+    CONDITIONAL_SELECT,
+    DPR_THREESOURCE,
 
     UNDEFINED;
 }

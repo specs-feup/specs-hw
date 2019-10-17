@@ -14,7 +14,9 @@ public class MicroBlazeIsaParser extends GenericIsaParser {
     }
 
     @Override
-    public AsmInstructionData parse(String instruction) {
-        return doparse(instruction);
+    public MicroBlazeAsmInstructionData parse(String instruction) {
+
+        AsmInstructionData fieldData = doparse(instruction);
+        return new MicroBlazeAsmInstructionData(fieldData);
     }
 }

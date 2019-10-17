@@ -297,7 +297,28 @@ public enum ArmInstructionProperties implements InstructionProperties {
     sbc(0x5A00_0000, 1, 1, ADD_SUB_CARRY, G_SUB),
     sbcs(0x7A00_0000, 1, 1, ADD_SUB_CARRY, G_SUB),
 
-    ///////////////////////////////////////////////////////////////////////////
+    // CONDITIONAL_CMP_REG (C4-306) ///////////////////////////////////////////
+    ccmn(0x3A40_0000, 1, 1, CONDITIONAL_CMP_REG, G_CMP),
+    ccmp(0x7A40_0000, 1, 1, CONDITIONAL_CMP_REG, G_CMP),
+
+    // CONDITIONAL_CMP_IMM (C4-306) ///////////////////////////////////////////
+    ccmn_imm("ccmn", 0x3A40_0800, 1, 1, CONDITIONAL_CMP_IMM, G_CMP),
+    ccmp_imm("ccmp", 0x7A40_0800, 1, 1, CONDITIONAL_CMP_IMM, G_CMP),
+
+    // CONDITIONAL_SELECT (C4-307) ///////////////////////////////////////////
+    csel(0x1A80_0000, 1, 1, CONDITIONAL_SELECT, G_OTHER),
+    csinc(0x1A80_0400, 1, 1, CONDITIONAL_SELECT, G_OTHER),
+    csinv(0x5A80_0000, 1, 1, CONDITIONAL_SELECT, G_OTHER),
+    csneg(0x5A80_0400, 1, 1, CONDITIONAL_SELECT, G_OTHER),
+
+    // DPR_THREESOURCE (C4-308) /////////////////////////////////////////////////
+    madd(0x1B00_0000, 1, 1, DPR_THREESOURCE, G_ADD),
+    msub(0x1B00_8000, 1, 1, DPR_THREESOURCE, G_SUB),
+    smaddl(0x9B20_0000, 1, 1, DPR_THREESOURCE, G_ADD),
+    smsubl(0x9B20_8000, 1, 1, DPR_THREESOURCE, G_SUB),
+    umaddl(0x9BA0_0000, 1, 1, DPR_THREESOURCE, G_ADD),
+    umsubl(0x9BA0_8000, 1, 1, DPR_THREESOURCE, G_SUB),
+    umulh(0x9BC0_0000, 1, 1, DPR_THREESOURCE, G_MUL),
 
     unknown(0x000000000, 1, 1, UNDEFINED, G_UNKN);
 

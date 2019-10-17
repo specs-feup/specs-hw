@@ -28,6 +28,7 @@ public interface ArmInstructionFields {
     static String OPCODEC = "opcodec";
     static String OPCODED = "opcoded";
     static String MEMTYPE = "memtype";
+    static String RA = "registera";
     static String RM = "registerm";
     static String RN = "registern";
     static String RD = "registerd";

@@ -18,12 +18,12 @@ import java.util.Arrays;
 
 import pt.up.fe.specs.binarytranslation.InstructionData;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 
 public class MicroBlazeInstruction extends AInstruction {
 
-    private AsmInstructionData fieldData; // raw field data
+    // raw field data
+    private final MicroBlazeAsmInstructionData fieldData;
 
     // shared by all instructions, so they can go parse themselves
     private static MicroBlazeIsaParser parser;
@@ -50,9 +50,15 @@ public class MicroBlazeInstruction extends AInstruction {
      * Create the instruction
      */
     private MicroBlazeInstruction(String address, String instruction, InstructionData idata,
-            AsmInstructionData fieldData) {
+            MicroBlazeAsmInstructionData fieldData) {
         super(Long.parseLong(address, 16), instruction, idata);
         this.fieldData = fieldData;
+    }
+
+    @Override
+    public MicroBlazeInstructionData getData() {
+        // idata is guaranteed to be an (ArmInstructionData)
+        return (MicroBlazeInstructionData) super.getData();
     }
 
     @Override
@@ -69,7 +75,7 @@ public class MicroBlazeInstruction extends AInstruction {
     }
 
     @Override
-    public AsmInstructionData getFieldData() {
+    public MicroBlazeAsmInstructionData getFieldData() {
         return this.fieldData;
     }
 }

@@ -38,28 +38,30 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     msrclr(0x9411_0000, 1, 0, SPECIAL, G_OTHER),
     msrset(0x9410_0000, 1, 0, SPECIAL, G_OTHER),
 
+    // MBAR
+    mbar(0xB802_0004, 1, 0, MBAR, G_OTHER),
+
     // UBRANCH
     br(0x9800_0000, 1, 0, UBRANCH, G_UJUMP, G_RJUMP),
-    bra(0x9810_0000, 1, 0, UBRANCH, G_UJUMP, G_AJUMP),
-    brd(0x9808_0000, 1, 1, UBRANCH, G_UJUMP, G_RJUMP),
+    bra(0x9808_0000, 1, 0, UBRANCH, G_UJUMP, G_AJUMP),
+    brd(0x9810_0000, 1, 1, UBRANCH, G_UJUMP, G_RJUMP),
     brad(0x9818_0000, 1, 1, UBRANCH, G_UJUMP, G_AJUMP),
-    brk(0x980C_0000, 1, 0, UBRANCH, G_UJUMP, G_RJUMP),
-    mbar(0xB802_0004, 1, 0, UBRANCH, G_OTHER),
 
     // ULBRANCH
     brld(0x9814_0000, 1, 1, ULBRANCH, G_UJUMP, G_RJUMP),
     brald(0x981C_0000, 1, 1, ULBRANCH, G_UJUMP, G_AJUMP),
+    brk(0x980C_0000, 1, 0, ULBRANCH, G_UJUMP, G_RJUMP),
 
     // UIBRANCH
     bri(0xB800_0000, 1, 0, UIBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
     brai(0xB808_0000, 1, 0, UIBRANCH, G_UJUMP, G_AJUMP, G_IJUMP),
     brid(0xB810_0000, 1, 1, UIBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
     braid(0xB818_0000, 1, 1, UIBRANCH, G_UJUMP, G_AJUMP, G_IJUMP),
-    brki(0xB80C_0000, 1, 0, UIBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
 
     // UILBRANCH
     brlid(0xB814_0000, 1, 1, UILBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
     bralid(0xB81C_0000, 1, 1, UILBRANCH, G_UJUMP, G_AJUMP, G_IJUMP),
+    brki(0xB80C_0000, 1, 0, UILBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
 
     // brk and brald are same instruction??
 
@@ -98,11 +100,11 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     rtsd(0xB600_0000, 1, 0, RETURN, G_UJUMP, G_RJUMP, G_IJUMP),
 
     // IBARREL
-    bsrli(0x6400_0000, 1, 0, IBARREL, G_LOGICAL),
-    bsrai(0x6400_0800, 1, 0, IBARREL, G_LOGICAL),
-    bslli(0x6400_0400, 1, 0, IBARREL, G_LOGICAL),
-    bsefi(0x6400_4000, 1, 0, IBARREL, G_LOGICAL),
-    bsifi(0x6400_8000, 1, 0, IBARREL, G_LOGICAL),
+    bsrli(0x6400_0000, 1, 0, IBARREL_FMT1, G_LOGICAL),
+    bsrai(0x6400_0200, 1, 0, IBARREL_FMT1, G_LOGICAL),
+    bslli(0x6400_0400, 1, 0, IBARREL_FMT1, G_LOGICAL),
+    bsefi(0x6400_4000, 1, 0, IBARREL_FMT2, G_LOGICAL),
+    bsifi(0x6400_8000, 1, 0, IBARREL_FMT2, G_LOGICAL),
 
     // STREAM
     get(0x6C00_0000, 1, 0, STREAM, G_OTHER),
@@ -111,6 +113,9 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     // DSTREAM
     getd(0x4C00_0000, 1, 0, DSTREAM, G_OTHER),
     putd(0x4C00_8000, 2, 0, DSTREAM, G_OTHER),
+
+    // IMM
+    imm(0xB000_0000, 1, 0, IMM, G_OTHER),
 
     // TYPE A
     add(0x0000_0000, 1, 0, TYPE_A, G_ADD),
@@ -203,7 +208,6 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     andi(0xA400_0000, 1, 0, TYPE_B, G_LOGICAL),
     xori(0xA800_0000, 1, 0, TYPE_B, G_LOGICAL),
     andni(0xAC00_0000, 1, 0, TYPE_B, G_LOGICAL),
-    imm(0xB000_0000, 1, 0, TYPE_B, G_OTHER),
     lbui(0xE000_0000, 2, 0, TYPE_B, G_LOAD),
     lhui(0xE400_0000, 2, 0, TYPE_B, G_LOAD),
     lwi(0xE800_0000, 2, 0, TYPE_B, G_LOAD),
@@ -215,13 +219,15 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
      * Instruction property fields
      */
     private final String instructionName;
+    private final String enumName;
     private final int opcode; // 32 bit instruction code without operands
     private final int reducedopcode; // only the bits that matter, built after parsing the fields
     private final int latency;
     private final int delay;
     private final MicroBlazeInstructionType codetype;
     private final List<InstructionType> genericType;
-    private final AsmInstructionData iData; // decoded fields of this instruction
+    private final AsmInstructionData fieldData; // decoded fields of this instruction
+    private final IsaParser parser = new MicroBlazeIsaParser();
 
     /*
      * Constructor
@@ -229,6 +235,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     private MicroBlazeInstructionProperties(int opcode, int latency,
             int delay, MicroBlazeInstructionType mbtype, InstructionType... tp) {
         this.instructionName = name();
+        this.enumName = name();
         this.opcode = opcode;
         this.latency = latency;
         this.delay = delay;
@@ -236,9 +243,8 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
         this.genericType = Arrays.asList(tp);
 
         // use the parser to initialize private fields of instruction set itself
-        IsaParser parser = new MicroBlazeIsaParser();
-        this.iData = parser.parse(Integer.toHexString(opcode)); // TODO make new overload for "parse"
-        this.reducedopcode = this.iData.getReducedOpcode();
+        this.fieldData = parser.parse(Integer.toHexString(opcode)); // TODO make new overload for "parse"
+        this.reducedopcode = this.fieldData.getReducedOpcode();
     }
 
     /*
@@ -288,5 +294,12 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
      */
     public AsmInstructionType getCodeType() {
         return this.codetype;
+    }
+
+    /*
+     * Only used for Junit tests!
+     */
+    public AsmInstructionData getFieldData() {
+        return fieldData;
     }
 }
