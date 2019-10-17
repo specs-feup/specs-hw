@@ -18,6 +18,7 @@ import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 public enum MicroBlazeInstructionType implements AsmInstructionType {
 
     SPECIAL,
+    MBAR,
     UBRANCH,
     ULBRANCH,
     UIBRANCH,
@@ -25,10 +26,12 @@ public enum MicroBlazeInstructionType implements AsmInstructionType {
     CBRANCH,
     CIBRANCH,
     BARREL,
-    IBARREL,
+    IBARREL_FMT1,
+    IBARREL_FMT2,
     RETURN,
     STREAM,
     DSTREAM,
+    IMM,
     TYPE_A,
     TYPE_B,
     UNDEFINED

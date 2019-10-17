@@ -23,4 +23,5 @@ public interface MicroBlazeInstructionFields {
     static String RA = "registera";
     static String RB = "registerb";
     static String IMM = "imm";
+    static String IMMW = "immw";
 }

@@ -196,9 +196,6 @@ public interface ArmInstructionParsers {
             newInstance(LOGICAL_SHIFT_REG,
                     "sf(1)_opcodea(2)_01010_imml(2)_S(1)_registerm(5)_imm(6)_registern(5)_registerd(5)"),
 
-            // "sf(2)_101_simd(1)_memtype(3)_opcodea(1)_imm(7)_registerm(5)_registern(5)_registert(5)",
-            // oor: 00 101_ 0_100_00000000000000000000000
-
             newInstance(ADD_SUB_SHIFT_REG,
                     "sf(1)_opcodea(2)_01011_imml(2)_0_registerm(5)_imm(6)_registern(5)_registerd(5)"),
 
@@ -207,6 +204,18 @@ public interface ArmInstructionParsers {
 
             newInstance(ADD_SUB_CARRY,
                     "sf(1)_opcodea(2)_11010000_registerm(5)_000000_registern(5)_registerd(5)"),
+
+            newInstance(CONDITIONAL_CMP_REG,
+                    "sf(1)_opcodea(2)_11010010_registerm(5)_cond(4)_0_opcodeb(1)_registern(5)_opcodec(1)_opcoded(4)"),
+
+            newInstance(CONDITIONAL_CMP_IMM,
+                    "sf(1)_opcodea(2)_11010010_registerm(5)_cond(4)_1_opcodeb(1)_registern(5)_opcodec(1)_opcoded(4)"),
+
+            newInstance(CONDITIONAL_SELECT,
+                    "sf(1)_opcodea(2)_11010100_registerm(5)_cond(4)_opcodeb(2)_registern(5)_registerd(5)"),
+
+            newInstance(DPR_THREESOURCE,
+                    "sf(1)_opcodea(2)_11011_opcodeb(3)_registerm(5)_opcodec(1)_registera(5)_registern(5)_registerd(5)"),
 
             ////////////////////
 

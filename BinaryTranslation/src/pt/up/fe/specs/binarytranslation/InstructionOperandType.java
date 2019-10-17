@@ -19,18 +19,9 @@ package pt.up.fe.specs.binarytranslation;
  * @author NunoPaulino
  *
  */
-public enum InstructionOperandType {
+public interface InstructionOperandType {
 
-    register("r"),
-    immediate("");
+    public String getPrefix();
 
-    private String prefix;
-
-    private InstructionOperandType(String prefix) {
-        this.prefix = prefix;
-    }
-
-    public String getPrefix() {
-        return this.prefix;
-    }
+    public int getWidth();
 }

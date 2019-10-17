@@ -1684,6 +1684,67 @@ public class ArmInstructionInstatiationTest {
         testDecode("subps", "subps", Integer.toHexString(0b1_01_11010110_00000_000000_00000_00000));
     }
 
+    // DPR_ONESOURCE (C4-301) /////////////////////////////////////////////////
+    // rbit32
+    @Test
+    public void test_rbit32() {
+        testDecode("rbit32", "rbit", Integer.toHexString(0b0_10_11010110_00000_000000_00000_00000));
+    }
+
+    // rbit64
+    @Test
+    public void test_rbit() {
+        testDecode("rbit64", "rbit", Integer.toHexString(0b1_10_11010110_00000_000000_00000_00000));
+    }
+
+    // rev16 32 bit
+    @Test
+    public void test_rev16_32() {
+        testDecode("rev16_32", "rev16", Integer.toHexString(0b0_10_11010110_00000_000001_00000_00000));
+    }
+
+    // rev16 64 bit
+    @Test
+    public void test_rev16_64() {
+        testDecode("rev16_64", "rev16", Integer.toHexString(0b1_10_11010110_00000_000001_00000_00000));
+    }
+
+    // rev32
+    @Test
+    public void test_rev32() {
+        testDecode("rev32", "rev", Integer.toHexString(0b0_10_11010110_00000_000010_00000_00000));
+    }
+
+    // rev64
+    @Test
+    public void test_rev64() {
+        testDecode("rev64", "rev", Integer.toHexString(0b1_10_11010110_00000_000010_00000_00000));
+    }
+
+    // clz32
+    @Test
+    public void test_clz32() {
+        testDecode("clz32", "clz", Integer.toHexString(0b0_10_11010110_00000_000100_00000_00000));
+    }
+
+    // clz64
+    @Test
+    public void test_clz64() {
+        testDecode("clz64", "clz", Integer.toHexString(0b1_10_11010110_00000_000100_00000_00000));
+    }
+
+    // cls32
+    @Test
+    public void test_cls32() {
+        testDecode("cls32", "cls", Integer.toHexString(0b0_10_11010110_00000_000101_00000_00000));
+    }
+
+    // cls64
+    @Test
+    public void test_cls64() {
+        testDecode("cls64", "cls", Integer.toHexString(0b1_10_11010110_00000_000101_00000_00000));
+    }
+
     private void testDecode(String addr, String name, String expected, String binaryInstruction) {
         ArmInstruction testinst = ArmInstruction.newInstance(addr, binaryInstruction);
         ArmInstructionData idata = testinst.getData();

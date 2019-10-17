@@ -21,11 +21,12 @@ public class ArmInstructionData extends InstructionData {
     private final int branchTarget;
 
     public ArmInstructionData(InstructionProperties props, ArmAsmInstructionData fieldData) {
-        super(props, fieldData);
+        super(props);
         this.bitwidth = fieldData.getBitWidth();
         this.isSimd = fieldData.isSimd();
         this.condition = fieldData.getCond();
         this.branchTarget = fieldData.getBranchTarget();
+        this.operands = fieldData.getOperands();
     }
 
     /*

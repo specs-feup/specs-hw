@@ -15,8 +15,6 @@ package pt.up.fe.specs.binarytranslation;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
-
 /**
  * Holds data taken from an executed or static instruction, after decoding its raw parsed fields
  * 
@@ -25,18 +23,20 @@ import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
  */
 public abstract class InstructionData {
 
+    // from enum properties
     protected final String plainname;
     protected final int latency;
     protected final int delay;
     protected final List<InstructionType> genericType;
-    protected final List<InstructionOperand> operands;
 
-    public InstructionData(InstructionProperties props, AsmInstructionData fieldData) {
+    // from asm fields
+    protected List<InstructionOperand> operands;
+
+    public InstructionData(InstructionProperties props) {
         this.plainname = props.getName();
         this.latency = props.getLatency();
         this.delay = props.getDelay();
         this.genericType = props.getGenericType();
-        this.operands = fieldData.getOperands();
     }
 
     /*
@@ -75,7 +75,7 @@ public abstract class InstructionData {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    public int getBitwidth() {
+    public int getBitWidth() {
         return 32;
     }
 
