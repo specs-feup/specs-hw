@@ -123,7 +123,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     addk(0x1000_0000, 1, 0, TYPE_A, G_ADD),
     addkc(0x1800_0000, 1, 0, TYPE_A, G_ADD),
     rsub(0x0400_0000, 1, 0, TYPE_A, G_SUB),
-    rsubc(0xC000_0000, 1, 0, TYPE_A, G_SUB),
+    rsubc(0x0C00_0000, 1, 0, TYPE_A, G_SUB),
     rsubk(0x1400_0000, 1, 0, TYPE_A, G_SUB),
     rsubkc(0x1C00_0000, 1, 0, TYPE_A, G_SUB),
     cmp(0x1400_0001, 1, 0, TYPE_A, G_CMP),
@@ -133,7 +133,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     mulhu(0x4000_0003, 3, 0, TYPE_A, G_MUL),
     mulhsu(0x4000_0002, 3, 0, TYPE_A, G_MUL),
     bsrl(0x4400_0000, 1, 0, TYPE_A, G_LOGICAL),
-    bsra(0x4400_0800, 1, 0, TYPE_A, G_LOGICAL),
+    bsra(0x4400_0200, 1, 0, TYPE_A, G_LOGICAL),
     bsll(0x4400_0400, 1, 0, TYPE_A, G_LOGICAL),
     idiv(0x4800_0000, 34, 0, TYPE_A, G_OTHER),
     idivu(0x4800_0002, 34, 0, TYPE_A, G_OTHER),
@@ -141,13 +141,13 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     frsub(0x5800_0080, 6, 0, TYPE_A, G_FLOAT, G_SUB),
     fmul(0x5800_0100, 6, 0, TYPE_A, G_FLOAT, G_MUL),
     fdiv(0x5800_0180, 30, 0, TYPE_A, G_FLOAT),
-    fcmp_un(0x5800_0200, 3, 0, TYPE_A, G_CMP, G_FLOAT),
-    fcmp_lt(0x5800_0210, 3, 0, TYPE_A, G_CMP, G_FLOAT),
-    fcmp_eq(0x5800_0220, 3, 0, TYPE_A, G_CMP, G_FLOAT),
-    fcmp_le(0x5800_0230, 3, 0, TYPE_A, G_CMP, G_FLOAT),
-    fcmp_gt(0x5800_0240, 3, 0, TYPE_A, G_CMP, G_FLOAT),
-    fcmp_ne(0x5800_0250, 3, 0, TYPE_A, G_CMP, G_FLOAT),
-    fcmp_ge(0x5800_0260, 3, 0, TYPE_A, G_CMP, G_FLOAT),
+    fcmp_un("fcmp.un", 0x5800_0200, 3, 0, TYPE_A, G_CMP, G_FLOAT),
+    fcmp_lt("fcmp.lt", 0x5800_0210, 3, 0, TYPE_A, G_CMP, G_FLOAT),
+    fcmp_eq("fcmp.eq", 0x5800_0220, 3, 0, TYPE_A, G_CMP, G_FLOAT),
+    fcmp_le("fcmp.le", 0x5800_0230, 3, 0, TYPE_A, G_CMP, G_FLOAT),
+    fcmp_gt("fcmp.gt", 0x5800_0240, 3, 0, TYPE_A, G_CMP, G_FLOAT),
+    fcmp_ne("fcmp.ne", 0x5800_0250, 3, 0, TYPE_A, G_CMP, G_FLOAT),
+    fcmp_ge("fcmp.ge", 0x5800_0260, 3, 0, TYPE_A, G_CMP, G_FLOAT),
     flt(0x5800_0280, 6, 0, TYPE_A, G_FLOAT),
     fint(0x5800_0300, 5, 0, TYPE_A, G_FLOAT),
     fsqrt(0x5800_0380, 29, 0, TYPE_A, G_FLOAT),
@@ -167,12 +167,12 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     swapb(0x9000_01E0, 1, 0, TYPE_A, G_OTHER),
     swaph(0x9000_01E2, 1, 0, TYPE_A, G_OTHER),
     wic(0x9000_0068, 1, 0, TYPE_A, G_OTHER),
-    wdc(0x9000_0000, 1, 0, TYPE_A, G_OTHER),
-    wdc_flush(0x9000_0074, 1, 0, TYPE_A, G_OTHER),
-    wdc_clear(0x9000_0066, 1, 0, TYPE_A, G_OTHER),
-    wdc_clear_ea(0x9000_00E6, 1, 0, TYPE_A, G_OTHER),
-    wdc_ext_flush(0x9000_0474, 1, 0, TYPE_A, G_OTHER),
-    wdc_ext_clear(0x9000_0466, 1, 0, TYPE_A, G_OTHER),
+    wdc(0x9000_0064, 1, 0, TYPE_A, G_OTHER),
+    wdc_flush("wdc.flush", 0x9000_0074, 1, 0, TYPE_A, G_OTHER),
+    wdc_clear("wdc.clear", 0x9000_0066, 1, 0, TYPE_A, G_OTHER),
+    wdc_clear_ea("wdc.clear.ea", 0x9000_00E6, 1, 0, TYPE_A, G_OTHER),
+    wdc_ext_flush("wdc.ext.flush", 0x9000_0476, 1, 0, TYPE_A, G_OTHER),
+    wdc_ext_clear("wdc.ext.clear", 0x9000_0466, 1, 0, TYPE_A, G_OTHER),
     lbu(0xC000_0000, 2, 0, TYPE_A, G_LOAD),
     lbur(0xC000_0200, 2, 0, TYPE_A, G_LOAD),
     lbuea(0xC000_0080, 2, 0, TYPE_A, G_LOAD),
@@ -213,13 +213,15 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     lwi(0xE800_0000, 2, 0, TYPE_B, G_LOAD),
     sbi(0xF000_0000, 2, 0, TYPE_B, G_STORE),
     shi(0xF400_0000, 2, 0, TYPE_B, G_STORE),
-    swi(0xF800_0000, 2, 0, TYPE_B, G_STORE);
+    swi(0xF800_0000, 2, 0, TYPE_B, G_STORE),
+
+    unknown(0x000000000, 1, 1, UNDEFINED, G_UNKN);
 
     /*
      * Instruction property fields
      */
-    private final String instructionName;
-    private final String enumName;
+    private String instructionName;
+    private String enumName;
     private final int opcode; // 32 bit instruction code without operands
     private final int reducedopcode; // only the bits that matter, built after parsing the fields
     private final int latency;
@@ -233,18 +235,37 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
      * Constructor
      */
     private MicroBlazeInstructionProperties(int opcode, int latency,
-            int delay, MicroBlazeInstructionType mbtype, InstructionType... tp) {
+            int delay, MicroBlazeInstructionType mbtype, List<InstructionType> tp) {
         this.instructionName = name();
         this.enumName = name();
         this.opcode = opcode;
         this.latency = latency;
         this.delay = delay;
         this.codetype = mbtype;
-        this.genericType = Arrays.asList(tp);
+        this.genericType = tp;
 
         // use the parser to initialize private fields of instruction set itself
         this.fieldData = parser.parse(Integer.toHexString(opcode)); // TODO make new overload for "parse"
         this.reducedopcode = this.fieldData.getReducedOpcode();
+    }
+
+    /*
+     * Constructor
+     */
+    private MicroBlazeInstructionProperties(int opcode, int latency,
+            int delay, MicroBlazeInstructionType mbtype, InstructionType... tp) {
+        this(opcode, latency, delay, mbtype, Arrays.asList(tp));
+        this.instructionName = name();
+    }
+
+    /*
+     * Helper constructor with explicit name for instruction
+     */
+    private MicroBlazeInstructionProperties(String explicitname, int opcode, int latency,
+            int delay, MicroBlazeInstructionType mbtype, InstructionType... tp) {
+        this(opcode, latency, delay, mbtype, Arrays.asList(tp));
+        this.instructionName = explicitname;
+        // System.out.print(this.codetype.toString() + ": " + this.instructionName + "\n");
     }
 
     /*

@@ -395,6 +395,548 @@ public class MicroBLazeInstructionInstantiationTest {
         testDecode("addkc", "addkc", Integer.toHexString(0b000110_00000_00000_00000_00000000000));
     }
 
+    // rsub
+    @Test
+    public void test_rsub() {
+        testDecode("rsub", "rsub", Integer.toHexString(0b000001_00000_00000_00000_00000000000));
+    }
+
+    // rsubc
+    @Test
+    public void test_rsubc() {
+        testDecode("rsubc", "rsubc", Integer.toHexString(0b000011_00000_00000_00000_00000000000));
+    }
+
+    // rsubk
+    @Test
+    public void test_rsubk() {
+        testDecode("rsubk", "rsubk", Integer.toHexString(0b000101_00000_00000_00000_00000000000));
+    }
+
+    // rsubkc
+    @Test
+    public void test_rsubkc() {
+        testDecode("rsubkc", "rsubkc", Integer.toHexString(0b000111_00000_00000_00000_00000000000));
+    }
+
+    // cmp
+    @Test
+    public void test_cmp() {
+        testDecode("cmp", "cmp", Integer.toHexString(0b00101_00000_00000_00000_00000000001));
+    }
+
+    // cmpu
+    @Test
+    public void test_cmpu() {
+        testDecode("cmpu", "cmpu", Integer.toHexString(0b00101_00000_00000_00000_00000000011));
+    }
+
+    // mul
+    @Test
+    public void test_mul() {
+        testDecode("mul", "mul", Integer.toHexString(0b010000_00000_00000_00000_00000000000));
+    }
+
+    // mulh
+    @Test
+    public void test_mulh() {
+        testDecode("mulh", "mulh", Integer.toHexString(0b010000_00000_00000_00000_00000000001));
+    }
+
+    // mulhu
+    @Test
+    public void test_mulhu() {
+        testDecode("mulhu", "mulhu", Integer.toHexString(0b010000_00000_00000_00000_00000000011));
+    }
+
+    // mulhsu
+    @Test
+    public void test_mulhsu() {
+        testDecode("mulhsu", "mulhsu", Integer.toHexString(0b010000_00000_00000_00000_00000000010));
+    }
+
+    // bsrl
+    @Test
+    public void test_bsrl() {
+        testDecode("bsrl", "bsrl", Integer.toHexString(0b010001_00000_00000_00000_00000000000));
+    }
+
+    // bsra
+    @Test
+    public void test_bsra() {
+        testDecode("bsra", "bsra", Integer.toHexString(0b010001_00000_00000_00000_01000000000));
+    }
+
+    // bsll
+    @Test
+    public void test_bsll() {
+        testDecode("bsll", "bsll", Integer.toHexString(0b010001_00000_00000_00000_10000000000));
+    }
+
+    // idiv
+    @Test
+    public void test_idiv() {
+        testDecode("idiv", "idiv", Integer.toHexString(0b010010_00000_00000_00000_00000000000));
+    }
+
+    // idivu
+    @Test
+    public void test_idivu() {
+        testDecode("idivu", "idivu", Integer.toHexString(0b010010_00000_00000_00000_00000000010));
+    }
+
+    // fadd
+    @Test
+    public void test_fadd() {
+        testDecode("fadd", "fadd", Integer.toHexString(0b010110_00000_00000_00000_00000000000));
+    }
+
+    // frsub
+    @Test
+    public void test_frsub() {
+        testDecode("frsub", "frsub", Integer.toHexString(0b010110_00000_00000_00000_00010000000));
+    }
+
+    // fmul
+    @Test
+    public void test_fmul() {
+        testDecode("fmul", "fmul", Integer.toHexString(0b010110_00000_00000_00000_00100000000));
+    }
+
+    // fdiv
+    @Test
+    public void test_fdiv() {
+        testDecode("fdiv", "fdiv", Integer.toHexString(0b010110_00000_00000_00000_00110000000));
+    }
+
+    // fcmp_un
+    @Test
+    public void test_fcmp_un() {
+        testDecode("fcmp_un", "fcmp.un", Integer.toHexString(0b010110_00000_00000_00000_0100_000_0000));
+    }
+
+    // fcmp_lt
+    @Test
+    public void test_fcmp_lt() {
+        testDecode("fcmp_lt", "fcmp.lt", Integer.toHexString(0b010110_00000_00000_00000_0100_001_0000));
+    }
+
+    // fcmp_eq
+    @Test
+    public void test_fcmp_eq() {
+        testDecode("fcmp_eq", "fcmp.eq", Integer.toHexString(0b010110_00000_00000_00000_0100_010_0000));
+    }
+
+    // fcmp_le
+    @Test
+    public void test_fcmp_le() {
+        testDecode("fcmp_le", "fcmp.le", Integer.toHexString(0b010110_00000_00000_00000_0100_011_0000));
+    }
+
+    // fcmp_gt
+    @Test
+    public void test_fcmp_gt() {
+        testDecode("fcmp_gt", "fcmp.gt", Integer.toHexString(0b010110_00000_00000_00000_0100_100_0000));
+    }
+
+    // fcmp_ne
+    @Test
+    public void test_fcmp_ne() {
+        testDecode("fcmp_ne", "fcmp.ne", Integer.toHexString(0b010110_00000_00000_00000_0100_101_0000));
+    }
+
+    // fcmp_ge
+    @Test
+    public void test_fcmp_ge() {
+        testDecode("fcmp_ge", "fcmp.ge", Integer.toHexString(0b010110_00000_00000_00000_0100_110_0000));
+    }
+
+    // flt
+    @Test
+    public void test_flt() {
+        testDecode("flt", "flt", Integer.toHexString(0b010110_00000_00000_00000_01010000000));
+    }
+
+    // fint
+    @Test
+    public void test_fint() {
+        testDecode("fint", "fint", Integer.toHexString(0b010110_00000_00000_00000_01100000000));
+    }
+
+    // fsqrt
+    @Test
+    public void test_fsqrt() {
+        testDecode("fsqrt", "fsqrt", Integer.toHexString(0b010110_00000_00000_00000_01110000000));
+    }
+
+    // or
+    @Test
+    public void test_or() {
+        testDecode("or", "or", Integer.toHexString(0b100000_00000_00000_00000_00000000000));
+    }
+
+    // pcmpbf
+    @Test
+    public void test_pcmpbf() {
+        testDecode("pcmpbf", "pcmpbf", Integer.toHexString(0b100000_00000_00000_00000_10000000000));
+    }
+
+    // and
+    @Test
+    public void test_and() {
+        testDecode("and", "and", Integer.toHexString(0b100001_00000_00000_00000_00000000000));
+    }
+
+    // xor
+    @Test
+    public void test_xor() {
+        testDecode("xor", "xor", Integer.toHexString(0b100010_00000_00000_00000_00000000000));
+    }
+
+    // pcmpeq
+    @Test
+    public void test_pcmpeq() {
+        testDecode("pcmpeq", "pcmpeq", Integer.toHexString(0b100010_00000_00000_00000_10000000000));
+    }
+
+    // andn
+    @Test
+    public void test_andn() {
+        testDecode("andn", "andn", Integer.toHexString(0b100011_00000_00000_00000_00000000000));
+    }
+
+    // pcmpne
+    @Test
+    public void test_pcmpne() {
+        testDecode("pcmpne", "pcmpne", Integer.toHexString(0b100011_00000_00000_00000_10000000000));
+    }
+
+    // sra
+    @Test
+    public void test_sra() {
+        testDecode("sra", "sra", Integer.toHexString(0b100100_00000_00000_0000000000000001));
+    }
+
+    // src
+    @Test
+    public void test_src() {
+        testDecode("src", "src", Integer.toHexString(0b100100_00000_00000_0000000000100001));
+    }
+
+    // srl
+    @Test
+    public void test_srl() {
+        testDecode("srl", "srl", Integer.toHexString(0b100100_00000_00000_0000000001000001));
+    }
+
+    // sext8
+    @Test
+    public void test_sext8() {
+        testDecode("sext8", "sext8", Integer.toHexString(0b100100_00000_00000_0000000001100000));
+    }
+
+    // sext16
+    @Test
+    public void test_sext16() {
+        testDecode("sext16", "sext16", Integer.toHexString(0b100100_00000_00000_0000000001100001));
+    }
+
+    // clz
+    @Test
+    public void test_clz() {
+        testDecode("clz", "clz", Integer.toHexString(0b100100_00000_00000_0000000011100000));
+    }
+
+    // swapb
+    @Test
+    public void test_swapb() {
+        testDecode("swapb", "swapb", Integer.toHexString(0b100100_00000_00000_0000000111100000));
+    }
+
+    // swaph
+    @Test
+    public void test_swaph() {
+        testDecode("swaph", "swaph", Integer.toHexString(0b100100_00000_00000_0000000111100010));
+    }
+
+    // wic
+    @Test
+    public void test_wic() {
+        testDecode("wic", "wic", Integer.toHexString(0b100100_00000_00000_0000000001101000));
+    }
+
+    // wdc
+    @Test
+    public void test_wdc() {
+        testDecode("wdc", "wdc", Integer.toHexString(0b100100_00000_00000_00000_00001100100));
+    }
+
+    // wdc_flush
+    @Test
+    public void test_wdc_flush() {
+        testDecode("wdc_flush", "wdc.flush", Integer.toHexString(0b100100_00000_00000_00000_00001110100));
+    }
+
+    // wdc_clear
+    @Test
+    public void test_wdc_clear() {
+        testDecode("wdc_clear", "wdc.clear", Integer.toHexString(0b100100_00000_00000_00000_00001100110));
+    }
+
+    // wdc_clear_ea
+    @Test
+    public void test_wdc_clear_ea() {
+        testDecode("wdc_clear_ea", "wdc.clear.ea", Integer.toHexString(0b100100_00000_00000_00000_00011100110));
+    }
+
+    // wdc_ext_flush
+    @Test
+    public void test_wdc_ext_flush() {
+        testDecode("wdc_ext_flush", "wdc.ext.flush", Integer.toHexString(0b100100_00000_00000_00000_10001110110));
+    }
+
+    // wdc_ext_clear
+    @Test
+    public void test_wdc_ext_clear() {
+        testDecode("wdc_ext_clear", "wdc.ext.clear", Integer.toHexString(0b100100_00000_00000_00000_10001100110));
+    }
+
+    // lbu
+    @Test
+    public void test_lbu() {
+        testDecode("lbu", "lbu", Integer.toHexString(0b110000_00000_00000_00000_00000000000));
+    }
+
+    // lbur
+    @Test
+    public void test_lbur() {
+        testDecode("lbur", "lbur", Integer.toHexString(0b110000_00000_00000_00000_01000000000));
+    }
+
+    // lbuea
+    @Test
+    public void test_lbuea() {
+        testDecode("lbuea", "lbuea", Integer.toHexString(0b110000_00000_00000_00000_00010000000));
+    }
+
+    // lhu
+    @Test
+    public void test_lhu() {
+        testDecode("lhu", "lhu", Integer.toHexString(0b110001_00000_00000_00000_00000000000));
+    }
+
+    // lhur
+    @Test
+    public void test_lhur() {
+        testDecode("lhur", "lhur", Integer.toHexString(0b110001_00000_00000_00000_01000000000));
+    }
+
+    // lhuea
+    @Test
+    public void test_lhuea() {
+        testDecode("lhuea", "lhuea", Integer.toHexString(0b110001_00000_00000_00000_00010000000));
+    }
+
+    // lw
+    @Test
+    public void test_lw() {
+        testDecode("lw", "lw", Integer.toHexString(0b110010_00000_00000_00000_00000000000));
+    }
+
+    // lwr
+    @Test
+    public void test_lwr() {
+        testDecode("lwr", "lwr", Integer.toHexString(0b110010_00000_00000_00000_01000000000));
+    }
+
+    // lwx
+    @Test
+    public void test_lwx() {
+        testDecode("lwx", "lwx", Integer.toHexString(0b110010_00000_00000_00000_10000000000));
+    }
+
+    // lwea
+    @Test
+    public void test_lwea() {
+        testDecode("lwea", "lwea", Integer.toHexString(0b110010_00000_00000_00000_00010000000));
+    }
+
+    // sb
+    @Test
+    public void test_sb() {
+        testDecode("sb", "sb", Integer.toHexString(0b110100_00000_00000_00000_00000000000));
+    }
+
+    // sbr
+    @Test
+    public void test_sbr() {
+        testDecode("sbr", "sbr", Integer.toHexString(0b110100_00000_00000_00000_01000000000));
+    }
+
+    // sbea
+    @Test
+    public void test_sbea() {
+        testDecode("sbea", "sbea", Integer.toHexString(0b110100_00000_00000_00000_00010000000));
+    }
+
+    // sh
+    @Test
+    public void test_sh() {
+        testDecode("sh", "sh", Integer.toHexString(0b110101_00000_00000_00000_00000000000));
+    }
+
+    // shr
+    @Test
+    public void test_shr() {
+        testDecode("shr", "shr", Integer.toHexString(0b110101_00000_00000_00000_01000000000));
+    }
+
+    // shea
+    @Test
+    public void test_shea() {
+        testDecode("shea", "shea", Integer.toHexString(0b110101_00000_00000_00000_00010000000));
+    }
+
+    // sw
+    @Test
+    public void test_sw() {
+        testDecode("sw", "sw", Integer.toHexString(0b110110_00000_00000_00000_00000000000));
+    }
+
+    // swr
+    @Test
+    public void test_swr() {
+        testDecode("swr", "swr", Integer.toHexString(0b110110_00000_00000_00000_01000000000));
+    }
+
+    // swx
+    @Test
+    public void test_swx() {
+        testDecode("swx", "swx", Integer.toHexString(0b110110_00000_00000_00000_10000000000));
+    }
+
+    // swea
+    @Test
+    public void test_swea() {
+        testDecode("swea", "swea", Integer.toHexString(0b110110_00000_00000_00000_00010000000));
+    }
+
+    // TYPE_B /////////////////////////////////////////////////////////////////
+
+    // addi
+    @Test
+    public void test_addi() {
+        testDecode("addi", "addi", Integer.toHexString(0b001000_00000_00000_0000000000000000));
+    }
+
+    // addic
+    @Test
+    public void test_addic() {
+        testDecode("addic", "addic", Integer.toHexString(0b001010_00000_00000_0000000000000000));
+    }
+
+    // addik
+    @Test
+    public void test_addik() {
+        testDecode("addik", "addik", Integer.toHexString(0b001100_00000_00000_0000000000000000));
+    }
+
+    // addikc
+    @Test
+    public void test_addikc() {
+        testDecode("addikc", "addikc", Integer.toHexString(0b001110_00000_00000_0000000000000000));
+    }
+
+    // rsubi
+    @Test
+    public void test_rsubi() {
+        testDecode("rsubi", "rsubi", Integer.toHexString(0b001001_00000_00000_0000000000000000));
+    }
+
+    // rsubic
+    @Test
+    public void test_rsubic() {
+        testDecode("rsubic", "rsubic", Integer.toHexString(0b001011_00000_00000_0000000000000000));
+    }
+
+    // rsubik
+    @Test
+    public void test_rsubik() {
+        testDecode("rsubik", "rsubik", Integer.toHexString(0b001101_00000_00000_0000000000000000));
+    }
+
+    // rsubikc
+    @Test
+    public void test_rsubikc() {
+        testDecode("rsubikc", "rsubikc", Integer.toHexString(0b001111_00000_00000_0000000000000000));
+    }
+
+    // muli
+    @Test
+    public void test_muli() {
+        testDecode("muli", "muli", Integer.toHexString(0b011000_00000_00000_0000000000000000));
+    }
+
+    // ori
+    @Test
+    public void test_ori() {
+        testDecode("ori", "ori", Integer.toHexString(0b101000_00000_00000_0000000000000000));
+    }
+
+    // andi
+    @Test
+    public void test_andi() {
+        testDecode("andi", "andi", Integer.toHexString(0b101001_00000_00000_0000000000000000));
+    }
+
+    // xori
+    @Test
+    public void test_xori() {
+        testDecode("xori", "xori", Integer.toHexString(0b101010_00000_00000_0000000000000000));
+    }
+
+    // andni
+    @Test
+    public void test_andni() {
+        testDecode("andni", "andni", Integer.toHexString(0b101011_00000_00000_0000000000000000));
+    }
+
+    // lbui
+    @Test
+    public void test_lbui() {
+        testDecode("lbui", "lbui", Integer.toHexString(0b111000_00000_00000_0000000000000000));
+    }
+
+    // lhui
+    @Test
+    public void test_lhui() {
+        testDecode("lhui", "lhui", Integer.toHexString(0b111001_00000_00000_0000000000000000));
+    }
+
+    // lwi
+    @Test
+    public void test_lwi() {
+        testDecode("lwi", "lwi", Integer.toHexString(0b111010_00000_00000_0000000000000000));
+    }
+
+    // sbi
+    @Test
+    public void test_sbi() {
+        testDecode("sbi", "sbi", Integer.toHexString(0b111100_00000_00000_0000000000000000));
+    }
+
+    // shi
+    @Test
+    public void test_shi() {
+        testDecode("shi", "shi", Integer.toHexString(0b111101_00000_00000_0000000000000000));
+    }
+
+    // swi
+    @Test
+    public void test_swi() {
+        testDecode("swi", "swi", Integer.toHexString(0b111110_00000_00000_0000000000000000));
+    }
+
     private void testDecode(String addr, String name, String expected, String binaryInstruction) {
         MicroBlazeInstruction testinst = MicroBlazeInstruction.newInstance(addr, binaryInstruction);
         MicroBlazeInstructionData idata = testinst.getData();
