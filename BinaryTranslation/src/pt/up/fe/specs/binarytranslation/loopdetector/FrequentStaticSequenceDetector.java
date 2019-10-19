@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
@@ -18,6 +19,9 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
     private List<Instruction> insts;
     private StaticStream elfstream;
 
+    // easy lookup of insts by converting addr to index
+    private Map<Integer, Integer> addrtoindex;
+
     /*
      * Since list needs revisiting, absorb all instructions in
      * the static dump into StaticBasicBlockDetector class instance
@@ -26,42 +30,24 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         this.elfstream = istream;
         this.sequences = new ArrayList<BinarySegment>();
         this.insts = new ArrayList<Instruction>();
+        this.addrtoindex = new HashMap<Integer, Integer>();
 
+        int i = 0;
         Instruction inst;
         while ((inst = elfstream.nextInstruction()) != null) {
             insts.add(inst);
+            addrtoindex.put(inst.getAddress().intValue(), i++);
         }
     }
-
-    /*
-    private void countStaticFrequency() {
-        Instruction inst = null;
-        while ((inst = elfstream.nextInstruction()) != null) {
-    
-            // do not form frequent sequences containing jumps
-            if (inst.isJump())
-                continue;
-    
-            var name = inst.getName();
-            int count = countMap.containsKey(name) ? countMap.get(name) : 0;
-            countMap.put(name, count + 1);
-            insts.add(inst);
-        }
-    
-        // sort map
-        countMap = countMap.entrySet().stream().sorted(
-                Collections.reverseOrder(Map.Entry.comparingByValue()))
-                .collect(Collectors.toMap(e -> e.getKey(),
-                        e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
-    }
-    */
 
     /*
      * Constructs a map with <instruction addr, sequence hash>
      * Only returns hashes for sequences which happens more than once
-     * Returns a list of start instructions
+     * Returns a map with <sequence hash, List<instruction start addr(s)>>
      */
-    private List<Integer> getHashCodes(int sequenceSize) {
+    private Map<Integer, List<Integer>> getHashCodes(int sequenceSize) {
+
+        // TODO the hash must take into account operands??
 
         /*
          *  Generate a hash code list of all sequences of size "sequenceSize"
@@ -101,13 +87,25 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
                 it.remove();
         }
 
-        // System.out.print(hashes + "\n");
-        // System.out.print(hashes.size() + "\n");
+        /*
+         * Construct map of hashes and lists of addrs where the sequence starts
+         */
+        Map<Integer, List<Integer>> inv = new HashMap<Integer, List<Integer>>();
+        for (Entry<Integer, Integer> entry : hashes.entrySet()) {
+            if (inv.containsKey(entry.getValue())) {
+                var existinglist = inv.get(entry.getValue());
+                existinglist.add(entry.getKey());
+                inv.put(entry.getValue(), existinglist);
+            } else {
+                List<Integer> nl = new ArrayList<Integer>();
+                nl.add(entry.getKey());
+                inv.put(entry.getValue(), nl);
+            }
+        }
 
-        // System.out.print(hashcountMap + "\n");
-        // System.out.print(hashcountMap.size() + "\n");
+        System.out.print(inv);
 
-        return new ArrayList<>(hashes.keySet());
+        return inv;
     }
 
     @Override
@@ -121,13 +119,24 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         /*
          * Construct sequences between given sizes
          */
-        for (int size = 2; size < 4; size++) {
+        for (int size = 2; size < 10; size++) {
+
+            Map<Integer, List<Integer>> hashes = getHashCodes(size);
+
+            for (Entry<Integer, List<Integer>> entry : hashes.entrySet()) {
+                var firstaddr = entry.getValue().get(0);
+                var idx = addrtoindex.get(firstaddr);
+                sequences.add(new FrequentSequence(insts.subList(idx, idx + size), entry.getValue()));
+            }
+
+            /*
             List<Integer> addrs = getHashCodes(size);
+            
             for (int i = 0; i < insts.size(); i++) {
                 if (addrs.contains(insts.get(i).getAddress().intValue())) {
                     sequences.add(new FrequentSequence(insts.subList(i, i + size)));
                 }
-            }
+            }*/
         }
 
         /*
