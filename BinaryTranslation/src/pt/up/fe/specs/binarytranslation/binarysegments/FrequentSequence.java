@@ -1,6 +1,5 @@
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
@@ -8,35 +7,30 @@ import pt.up.fe.specs.binarytranslation.Instruction;
 public class FrequentSequence implements BinarySegment {
 
     private SegmentType segtype = SegmentType.STATIC_FREQUENT;
-    private List<Instruction> instlist;
+    private List<Instruction> instlist; // TODO should be instrucitonproperties??
+    private List<Integer> startAddresses;
+    private int sequencehash;
 
     /*
-     * Constructor for building the BB inst by inst later
+     * Constructor builds the sequence on the spot with an existing list
      */
-    public FrequentSequence() {
-        this.instlist = new ArrayList<Instruction>();
+    private FrequentSequence(List<Instruction> ilist) {
+        this.instlist = ilist;
+
+        // regenerate hashstring
+        String hashstring = "";
+        for (Instruction i : ilist) {
+            hashstring += i.getName();
+        }
+        this.sequencehash = hashstring.hashCode();
     }
 
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
-    public FrequentSequence(List<Instruction> ilist) {
-        this.instlist = new ArrayList<Instruction>();
-
-        // build the entire block
-        for (Instruction i : ilist) {
-            this.addInst(i);
-        }
-    }
-
-    public void addInst(Instruction newinst) {
-
-        if (newinst.isJump()) {
-            // TODO proper exception handling
-            return;
-        }
-
-        this.instlist.add(newinst);
+    public FrequentSequence(List<Instruction> ilist, List<Integer> startAddresses) {
+        this(ilist);
+        this.startAddresses = startAddresses;
     }
 
     @Override
@@ -76,6 +70,7 @@ public class FrequentSequence implements BinarySegment {
 
     @Override
     public void printSegment() {
+        System.out.print("Sequence=[hashcode: " + this.sequencehash + "; " + this.startAddresses + "]\n");
         for (Instruction inst : this.instlist) {
             inst.printInstruction();
         }

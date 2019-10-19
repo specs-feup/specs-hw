@@ -21,7 +21,6 @@ public class MicroBlazeFrequentStaticSequenceDetectorTest {
             List<BinarySegment> bblist = bbd.detectSegments();
 
             for (BinarySegment bs : bblist) {
-                System.out.print("Frequent Sequence: \n");
                 bs.printSegment();
                 System.out.print("\n\n");
             }
