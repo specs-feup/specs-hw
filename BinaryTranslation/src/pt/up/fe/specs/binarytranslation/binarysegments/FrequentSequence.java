@@ -73,4 +73,11 @@ public class FrequentSequence implements BinarySegment {
     public List<Instruction> getInstructions() {
         return this.instlist;
     }
+
+    @Override
+    public void printSegment() {
+        for (Instruction inst : this.instlist) {
+            inst.printInstruction();
+        }
+    }
 }

@@ -53,4 +53,9 @@ public interface BinarySegment {
      * Get list of the instructions in the segment
      */
     List<Instruction> getInstructions();
+
+    /*
+     * Prints the segment to system out
+     */
+    void printSegment();
 }
