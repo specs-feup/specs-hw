@@ -9,6 +9,7 @@ import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.binarysegments.FrequentSequence;
 import pt.up.fe.specs.binarytranslation.interfaces.StaticStream;
 
 public class FrequentStaticSequenceDetector implements SegmentDetector {
@@ -58,8 +59,9 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
     /*
      * Constructs a map with <instruction addr, sequence hash>
      * Only returns hashes for sequences which happens more than once
+     * Returns a list of start instructions
      */
-    private Map<Integer, Integer> getHashCodes(int sequenceSize) {
+    private List<Integer> getHashCodes(int sequenceSize) {
 
         /*
          *  Generate a hash code list of all sequences of size "sequenceSize"
@@ -105,7 +107,7 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         // System.out.print(hashcountMap + "\n");
         // System.out.print(hashcountMap.size() + "\n");
 
-        return hashes;
+        return new ArrayList<>(hashes.keySet());
     }
 
     @Override
@@ -116,17 +118,19 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
         // get all stream; redo this another way later
 
+        /*
+         * Construct sequences between given sizes
+         */
         for (int size = 2; size < 4; size++) {
-            Map<Integer, Integer> hashes = getHashCodes(size);
-
-            for (Integer addr : hashes.keySet()) {
-
+            List<Integer> addrs = getHashCodes(size);
+            for (int i = 0; i < insts.size(); i++) {
+                if (addrs.contains(insts.get(i).getAddress().intValue())) {
+                    sequences.add(new FrequentSequence(insts.subList(i, i + size)));
+                }
             }
         }
 
-        int size = 6;
-        Map<Integer, Integer> hashes = getHashCodes(size);
-
+        /*
         int decreasecount = 0;
         for (Instruction inst : insts) {
             if (hashes.containsKey(inst.getAddress().intValue())) {
@@ -138,8 +142,8 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
             if (decreasecount == 0)
                 System.out.print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
         }
-
-        return null;
+        */
+        return sequences;
     }
 
     @Override
