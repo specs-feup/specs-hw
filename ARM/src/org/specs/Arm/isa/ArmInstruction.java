@@ -3,6 +3,7 @@ package org.specs.Arm.isa;
 import java.util.Arrays;
 
 import pt.up.fe.specs.binarytranslation.InstructionData;
+import pt.up.fe.specs.binarytranslation.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
 import pt.up.fe.specs.binarytranslation.InstructionType;
 import pt.up.fe.specs.binarytranslation.generic.AInstruction;
@@ -36,15 +37,17 @@ public class ArmInstruction extends AInstruction {
      */
     public static ArmInstruction newInstance(String address, String instruction) {
         var fieldData = parser.parse(instruction);
-        var idata = new ArmInstructionData(instSet.process(fieldData), fieldData);
-        return new ArmInstruction(address, instruction, idata, fieldData);
+        var props = instSet.process(fieldData);
+        var idata = new ArmInstructionData(props, fieldData);
+        return new ArmInstruction(address, instruction, idata, fieldData, props);
     }
 
     /*
      * Create the instruction
      */
-    private ArmInstruction(String address, String instruction, InstructionData idata, ArmAsmInstructionData fieldData) {
-        super(Long.parseLong(address, 16), instruction, idata);
+    private ArmInstruction(String address, String instruction, InstructionData idata,
+            ArmAsmInstructionData fieldData, InstructionProperties props) {
+        super(Long.parseLong(address, 16), instruction, idata, props);
         this.fieldData = fieldData;
     }
 

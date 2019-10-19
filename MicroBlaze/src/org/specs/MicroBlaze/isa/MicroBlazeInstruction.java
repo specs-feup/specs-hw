@@ -17,6 +17,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 
 import pt.up.fe.specs.binarytranslation.InstructionData;
+import pt.up.fe.specs.binarytranslation.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
 import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 
@@ -42,16 +43,17 @@ public class MicroBlazeInstruction extends AInstruction {
      */
     public static MicroBlazeInstruction newInstance(String address, String instruction) {
         var fieldData = parser.parse(instruction);
-        var idata = new MicroBlazeInstructionData(instSet.process(fieldData), fieldData);
-        return new MicroBlazeInstruction(address, instruction, idata, fieldData);
+        var props = instSet.process(fieldData);
+        var idata = new MicroBlazeInstructionData(props, fieldData);
+        return new MicroBlazeInstruction(address, instruction, idata, fieldData, props);
     }
 
     /*
      * Create the instruction
      */
     private MicroBlazeInstruction(String address, String instruction, InstructionData idata,
-            MicroBlazeAsmInstructionData fieldData) {
-        super(Long.parseLong(address, 16), instruction, idata);
+            MicroBlazeAsmInstructionData fieldData, InstructionProperties props) {
+        super(Long.parseLong(address, 16), instruction, idata, props);
         this.fieldData = fieldData;
     }
 

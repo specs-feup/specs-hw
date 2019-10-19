@@ -166,6 +166,11 @@ public interface Instruction {
     public InstructionData getData();
 
     /*
+     * Returns enum Which contains instructions properties
+     */
+    public InstructionProperties getProperties();
+
+    /*
      * Returns Raw instruction fields as produced 
      * by respective parser (AsmInstructionParser)
      */

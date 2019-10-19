@@ -1,0 +1,84 @@
+FMT1
+
+00     0 00 00	STURB
+00     0 00 01	LDURB
+
+01     0 00 00	STURH
+01     0 00 01	LDURH
+
+10     0 00 10	LDURSW
+11     0 00 10	PRFUM
+
+valid for fmt1:
+opa opb
+ 00  00
+ 00  01
+ 01  00
+ 01  01
+ 10  10
+ 11  10
+------------------------------
+
+FMT2
+
+00 111000 11	LDURSB - 32-bit variant on page C6-1062
+00 111000 10	LDURSB - 64-bit variant on page C6-1062
+
+01 111000 11	LDURSH - 32-bit variant on page C6-1064
+01 111000 10	LDURSH - 64-bit variant on page C6-1064
+
+10 111000 00	STUR - 32-bit variant on page C6-1290
+11 111000 00	STUR - 64-bit variant on page C6-1290
+
+10 111000 01	LDUR - 32-bit variant on page C6-1058
+11 111000 01	LDUR - 64-bit variant on page C6-1058
+
+
+32:
+0011 x
+0111 x
+1000 x
+1001 x
+
+64:
+0010 x
+0110 x
+1100 x
+1101
+
+0000 dc
+0001 dc
+0010 1
+0011 0
+
+0100 dc
+0101 dc
+0110 1
+0111 0
+
+1000 0
+1001 0
+1010 dc
+1011 dc
+
+1100 1
+1101 1
+1110 dc
+1111 dc
+
+------------------------------
+
+FMT3
+
+00     1 00 	0	0	STUR (SIMD&FP) - 8-bit variant on page C7-2121
+01     1 00 	0	0	STUR (SIMD&FP) - 16-bit variant on page C7-2121
+10     1 00 	0	0	STUR (SIMD&FP) - 32-bit variant on page C7-2121
+11     1 00 	0	0	STUR (SIMD&FP) - 64-bit variant on page C7-2121
+00     1 00 	1	0	STUR (SIMD&FP) - 128-bit variant on page C7-2121
+
+00     1 00 	0	1	LDUR (SIMD&FP) - 8-bit variant on page C7-1809
+01     1 00 	0	1	LDUR (SIMD&FP) - 16-bit variant on page C7-1809
+10     1 00 	0	1	LDUR (SIMD&FP) - 32-bit variant on page C7-1809
+11     1 00 	0	1	LDUR (SIMD&FP) - 64-bit variant on page C7-1809
+00     1 00 	1	1	LDUR (SIMD&FP) - 128-bit variant on page C7-1809
+

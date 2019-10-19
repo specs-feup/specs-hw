@@ -15,6 +15,7 @@ package pt.up.fe.specs.binarytranslation.legacy;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionData;
+import pt.up.fe.specs.binarytranslation.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
@@ -180,4 +181,11 @@ public interface SimpleInstruction32 extends Instruction {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    default InstructionProperties getProperties() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

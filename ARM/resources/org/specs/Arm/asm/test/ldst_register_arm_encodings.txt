@@ -1,0 +1,67 @@
+FMT1
+
+00     0 00 00	STURB
+00     0 00 01	LDURB
+
+01     0 00 00	STURH
+01     0 00 01	LDURH
+
+10     0 00 10	LDURSW
+11     0 00 10	PRFUM
+
+valid for fmt1:
+opa opb
+ 00  00
+ 00  01
+ 01  00
+ 01  01
+ 10  10
+ 11  10
+------------------------------
+
+FMT2
+	    sf
+00     0 00 11	LDURSB - 32-bit variant on page C6-1062
+00     0 00 10	LDURSB - 64-bit variant on page C6-1062
+
+01     0 00 11	LDURSH - 32-bit variant on page C6-1064
+01     0 00 10	LDURSH - 64-bit variant on page C6-1064
+
+------------------------------
+
+FMT3
+
+sf     opcodea  sf	opcodeb
+10     0 00 	0	0	STUR - 32-bit variant on page C6-1290
+11     0 00 	0	0	STUR - 64-bit variant on page C6-1290
+
+10     0 00 	0	1	LDUR - 32-bit variant on page C6-1058
+11     0 00 	0	1	LDUR - 64-bit variant on page C6-1058
+
+00     1 00 	0	0	STUR (SIMD&FP) - 8-bit variant on page C7-2121
+01     1 00 	0	0	STUR (SIMD&FP) - 16-bit variant on page C7-2121
+10     1 00 	0	0	STUR (SIMD&FP) - 32-bit variant on page C7-2121
+11     1 00 	0	0	STUR (SIMD&FP) - 64-bit variant on page C7-2121
+00     1 00 	1	0	STUR (SIMD&FP) - 128-bit variant on page C7-2121
+
+00     1 00 	0	1	LDUR (SIMD&FP) - 8-bit variant on page C7-1809
+01     1 00 	0	1	LDUR (SIMD&FP) - 16-bit variant on page C7-1809
+10     1 00 	0	1	LDUR (SIMD&FP) - 32-bit variant on page C7-1809
+11     1 00 	0	1	LDUR (SIMD&FP) - 64-bit variant on page C7-1809
+00     1 00 	1	1	LDUR (SIMD&FP) - 128-bit variant on page C7-1809
+
+valid for fmt3 (opa and opb fields from fmt1):
+opa opb
+ 10  00
+ 11  00
+ 10  01
+ 11  01
+ 00  00 --> ambiguous! solved by V!
+ 01  00 --> ambiguous! solved by V!
+ 00  10
+ 00  01 --> ambiguous! solved by V!
+ 01  01 --> ambiguous! solved by V!
+ 00  11
+
+- 
+

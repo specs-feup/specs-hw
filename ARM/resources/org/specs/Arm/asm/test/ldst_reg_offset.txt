@@ -1,0 +1,45 @@
+
+00     0    00     != 011	STRB (register) - Extended register variant on page C6-1247
+00     0    00     011		STRB (register) - Shifted register variant on page C6-1247
+
+00     0    01     != 011	LDRB (register) - Extended register variant on page C6-988
+00     0    01     011		LDRB (register) - Shifted register variant on page C6-988
+
+01     0    00     -		STRH (register)
+01     0    01     -		LDRH (register)
+
+10     0    10     -		LDRSW (register)
+11     0    10     -		PRFM (register)
+
+------------------------
+
+00     0    11     != 011	LDRSB (register) - 32-bit with extended register offset variant on page C6-998
+00     0    11     011		LDRSB (register) - 32-bit with shifted register offset variant on page C6-998
+00     0    10     != 011	LDRSB (register) - 64-bit with extended register offset variant on page C6-998
+00     0    10     011		LDRSB (register) - 64-bit with shifted register offset variant on page C6-998
+
+01     0    11     -		LDRSH (register) - 32-bit variant on page C6-1003
+01     0    10     -		LDRSH (register) - 64-bit variant on page C6-1003
+
+10     0    00     -		STR (register) - 32-bit variant on page C6-1242
+11     0    00     -		STR (register) - 64-bit variant on page C6-1242
+
+10     0    01     -		LDR (register) - 32-bit variant on page C6-981
+11     0    01     -		LDR (register) - 64-bit variant on page C6-981
+
+----------------------
+
+00     1    00     != 011	STR (register, SIMD&FP) 8
+00     1    00     011		STR (register, SIMD&FP) 8
+01     1    00     -		STR (register, SIMD&FP) 16
+10     1    00     -		STR (register, SIMD&FP) 32
+11     1    00     -		STR (register, SIMD&FP) 64
+00     1    10     -		STR (register, SIMD&FP) 128
+
+00     1    01     != 011	LDR (register, SIMD&FP) 8
+00     1    01     011		LDR (register, SIMD&FP) 8
+01     1    01     -		LDR (register, SIMD&FP) 16
+10     1    01     -		LDR (register, SIMD&FP) 32
+11     1    01     -		LDR (register, SIMD&FP) 64
+00     1    11     -		LDR (register, SIMD&FP) 128
+
