@@ -29,7 +29,7 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         this.insts = new ArrayList<Instruction>();
         this.countMap = new HashMap<String, Integer>();
     }
-
+/*
     private void countStaticFrequency() {
         Instruction inst = null;
         while ((inst = elfstream.nextInstruction()) != null) {
@@ -50,15 +50,33 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
                 .collect(Collectors.toMap(e -> e.getKey(),
                         e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
     }
+*/
+    private Map<Integer, Integer> getHashCodes(int sequenceSize) {
 
-    private void formCandidateSequences() {
-
-        // (only the most frequent insts are likely to form sequences which in turn are frequent)
-        List<String> freqnames = new ArrayList<String>();
-        for (int i = 0; i < countMap.size() / 5; i++) {
-            // freqnames.add(countMap.get(i).get)
+        // generate a hashcode list of all sequences of size "sequenceSize"
+        Map<Integer, Integer> hashcodes = new LinkedHashMap<Integer, Integer>();
+        int i = 0;
+        while((i + sequenceSize) < insts.size()) {
+            String hashstring = "";      
+            for(int j = 0; j < sequenceSize && (i + j) < insts.size(); j++) {
+                hashstring += insts.get(i + j).getName();      
+            }       
+            hashcodes.put(insts.get(i).getAddress().intValue(), hashstring.hashCode());
+            i++;
         }
-
+        System.out.print(hashcodes);
+        System.out.print("\n" + hashcodes.size());        
+        return hashcodes;
+    }
+    
+    private void countHashFrequency(Map<Integer, Integer> hashcodes) {     
+       Map<Integer, Integer> hashcountMap = new HashMap<Integer, Integer>();     
+       for(Integer hash : hashcodes.values()) {
+            int count = hashcountMap.containsKey(hash) ? hashcountMap.get(hash) : 0;
+            hashcountMap.put(hash, count + 1);
+        }
+       
+       System.out.print(hashcountMap);
     }
 
     @Override
@@ -66,13 +84,14 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
         // TODO pass window size?
         // TODO pass forbidden operations list?
-
-        // step 1. read entire stream -> count frequency of all instructions
-        countStaticFrequency();
-        System.out.print(countMap);
-
-        // step 2. form sequences of any size which contain only the most frequent insts
-
+        
+        // get all stream; redo this another way later
+        Instruction inst;
+        while ((inst = elfstream.nextInstruction()) != null) {
+            insts.add(inst);
+        }
+        
+        countHashFrequency(getHashCodes(3));
         return null;
     }
 
