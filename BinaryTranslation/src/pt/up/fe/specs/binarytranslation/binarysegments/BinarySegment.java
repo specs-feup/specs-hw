@@ -20,7 +20,8 @@ import pt.up.fe.specs.binarytranslation.Instruction;
 public interface BinarySegment {
 
     enum SegmentType {
-        BASIC_BLOCK,
+        STATIC_FREQUENT,
+        STATIC_BASIC_BLOCK,
         MEGA_BLOCK
     };
 
