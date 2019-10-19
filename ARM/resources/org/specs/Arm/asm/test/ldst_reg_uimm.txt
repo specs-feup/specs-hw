@@ -1,0 +1,37 @@
+
+00     0    00	STRB (immediate)
+00     0    01	LDRB (immediate)
+
+01     0    00	STRH (immediate)
+01     0    01	LDRH (immediate)
+
+10     0    10	LDRSW (immediate)
+11     0    10	PRFM (immediate)
+
+-------------
+
+00     0    11	LDRSB (immediate) - 32-bit variant on page C6-996
+00     0    10	LDRSB (immediate) - 64-bit variant on page C6-996
+
+01     0    11	LDRSH (immediate) - 32-bit variant on page C6-1001
+01     0    10	LDRSH (immediate) - 64-bit variant on page C6-1001
+
+10     0    00	STR (immediate) - 32-bit variant on page C6-1240
+11     0    00	STR (immediate) - 64-bit variant on page C6-1240
+
+10     0    01	LDR (immediate) - 32-bit variant on page C6-977
+11     0    01	LDR (immediate) - 64-bit variant on page C6-977
+
+-------------
+
+00     1    01	LDR (immediate, SIMD&FP) - 8-bit variant on page C7-1801
+01     1    01	LDR (immediate, SIMD&FP) - 16-bit variant on page C7-1801
+10     1    01	LDR (immediate, SIMD&FP) - 32-bit variant on page C7-1801
+11     1    01	LDR (immediate, SIMD&FP) - 64-bit variant on page C7-1801
+00     1    11	LDR (immediate, SIMD&FP) - 128-bit variant on page C7-1802
+
+00     1    00	STR (immediate, SIMD&FP) - 8-bit variant on page C7-2115
+01     1    00	STR (immediate, SIMD&FP) - 16-bit variant on page C7-2115
+10     1    00	STR (immediate, SIMD&FP) - 32-bit variant on page C7-2115
+11     1    00	STR (immediate, SIMD&FP) - 64-bit variant on page C7-2115
+00     1    10	STR (immediate, SIMD&FP) - 128-bit variant on page C7-2116

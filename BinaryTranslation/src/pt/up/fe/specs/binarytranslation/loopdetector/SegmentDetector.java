@@ -23,11 +23,11 @@ import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
  * @author JoaoBispo
  *
  */
-public interface LoopDetector extends AutoCloseable {
+public interface SegmentDetector extends AutoCloseable {
 
     /*
-     * Returns (eventually) objects of type "Loop" or list of "Loop"
-     * Example loops may include: megablock, basicblock, (or frequent instruction sequences?)     
+     * Returns (eventually) objects of type "Loop" or list of "Loop", or other segments,
+     * Example loops may include: megablock, basicblock, or frequent instruction sequences     
      */
-    List<BinarySegment> detectLoops();
+    List<BinarySegment> detectSegments();
 }

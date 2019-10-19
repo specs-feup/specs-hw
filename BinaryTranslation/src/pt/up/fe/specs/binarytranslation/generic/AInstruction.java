@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.generic;
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionData;
 import pt.up.fe.specs.binarytranslation.InstructionOperand;
+import pt.up.fe.specs.binarytranslation.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
 import pt.up.fe.specs.binarytranslation.InstructionType;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -37,15 +38,23 @@ public abstract class AInstruction implements Instruction {
     // shared by all instructions, so they can go decode themselves
     protected static InstructionSet instSet;
 
-    public AInstruction(Number address, String instruction, InstructionData idata) {
+    // the enum which represents the ISA properties of this instruction
+    protected static InstructionProperties props;
+
+    public AInstruction(Number address, String instruction, InstructionData idata, InstructionProperties props) {
         this.address = address;
         this.instruction = instruction.strip();
         this.idata = idata;
+        this.props = props;
     }
 
     ///////////////////////////////////////////////////////////////////////////
     public InstructionData getData() {
         return idata;
+    }
+
+    public InstructionProperties getProperties() {
+        return props;
     }
 
     public final String getName() {

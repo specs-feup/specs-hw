@@ -17,7 +17,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 
-public class BackwardJumpDetector implements LoopDetector {
+public class BackwardJumpDetector implements SegmentDetector {
 
     @Override
     public void close() throws Exception {
@@ -26,7 +26,7 @@ public class BackwardJumpDetector implements LoopDetector {
     }
 
     @Override
-    public List<BinarySegment> detectLoops() {
+    public List<BinarySegment> detectSegments() {
 
         return null;
     }

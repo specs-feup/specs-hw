@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.binarytranslation.InstructionStream;
 import pt.up.fe.specs.binarytranslation.binarysegments.BasicBlock;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.interfaces.StaticStream;
@@ -29,18 +28,18 @@ import pt.up.fe.specs.binarytranslation.interfaces.StaticStream;
  * @author NunoPaulino
  *
  */
-public final class StaticBasicBlockDetector implements LoopDetector {
+public final class StaticBasicBlockDetector implements SegmentDetector {
 
     private List<BinarySegment> loops;
     private List<Instruction> insts;
     private List<Integer> backBranchesIdx;
-    private InstructionStream elfstream;
+    private StaticStream elfstream;
 
     /*
      * Since list needs revisiting, absorb all instructions in
      * the static dump into StaticBasicBlockDetector class instance
      */
-    public StaticBasicBlockDetector(InstructionStream istream) {
+    public StaticBasicBlockDetector(StaticStream istream) {
         this.elfstream = istream;
         this.loops = new ArrayList<BinarySegment>();
         this.insts = new ArrayList<Instruction>();
@@ -48,7 +47,7 @@ public final class StaticBasicBlockDetector implements LoopDetector {
     }
 
     @Override
-    public List<BinarySegment> detectLoops() {
+    public List<BinarySegment> detectSegments() {
 
         // identify all backwards branches, save indexes in list
         Integer idx = 0;
