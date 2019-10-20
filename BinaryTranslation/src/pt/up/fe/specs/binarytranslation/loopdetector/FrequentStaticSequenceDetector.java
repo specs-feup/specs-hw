@@ -56,41 +56,41 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         Map<Integer, Integer> hashes = new LinkedHashMap<Integer, Integer>();
         int i = 0, j = 0;
         while ((i + sequenceSize) < insts.size()) {
-            
+
             String hashstring = "";
-            for (j = 0; j < sequenceSize && !insts.get(i + j).isJump()
-                    && !insts.get(i + j).isMemory(); j++) {
-                
+            for (j = 0; j < sequenceSize; j++) {
+
                 Instruction inst = insts.get(i + j);
-                
-                // do not form frequent sequences containing jumps
-                if(inst.isJump()) {
+
+                // do not form frequent sequences containing jumps // TODO and stream instructions
+                if (inst.isJump()) {
                     i += inst.getDelay(); // skip over
                     break; // stop sequence
                 }
-                
+
                 // do not form frequent sequences memory accesses
-                else if(inst.isMemory()) {
+                else if (inst.isMemory()) {
                     break; // stop sequence
                 }
-                    
+
                 hashstring += Integer.toHexString(inst.getProperties().getOpCode());
-                // TODO this unique id (the opcode) will not be unique for arm, since the 
-                // specific instruction is resolved later with fields that arent being 
+                // TODO this unique id (the opcode) will not be unique for arm, since the
+                // specific instruction is resolved later with fields that arent being
                 // interpreted yet; how to solve?
+                // TODO replace getOpCode with getUniqueID()
             }
-            
+
             // if sequence was complete
             if (j == sequenceSize) {
                 hashes.put(insts.get(i).getAddress().intValue(), hashstring.hashCode());
             }
 
             i++;
-            
-            // TODO this detection method doesnt work either, since the flow of 
+
+            // TODO this detection method doesnt work either, since the flow of
             // register values within the instruciton has to be the same even if
             // the sequence of instructions is the same
-            
+
             // TODO need new type of instruction class, where operands are abstracted
             // away from their register representations
         }
@@ -151,9 +151,9 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
             for (Entry<Integer, List<Integer>> entry : hashes.entrySet()) {
                 var firstaddr = entry.getValue().get(0);
                 var idx = addrtoindex.get(firstaddr);
-                
+
                 List<InstructionProperties> props = new ArrayList<InstructionProperties>();
-                for(Instruction inst : insts.subList(idx, idx + size)) {
+                for (Instruction inst : insts.subList(idx, idx + size)) {
                     props.add(inst.getProperties());
                 }
 

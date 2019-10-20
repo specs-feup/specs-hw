@@ -30,6 +30,8 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     // name, binary code, latency, delay, subtype
     // within ISA (i.e. instruction binary format), generic type
 
+    // TODO add if operands are permutable
+
     // SPECIAL
     mts(0x9400_C000, 1, 0, SPECIAL, G_OTHER),
     mtse(0x9500_C000, 1, 0, SPECIAL, G_OTHER),
@@ -67,7 +69,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
 
     // CBRANCH
     beq(0x9C00_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
-    beqd(0x9E00_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
+    beqd(0x9E00_0000, 1, 1, CBRANCH, G_CJUMP, G_RJUMP),
     bge(0x9CA0_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
     bged(0x9EA0_0000, 1, 1, CBRANCH, G_CJUMP, G_RJUMP),
     bgt(0x9C80_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
@@ -77,7 +79,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     blt(0x9C40_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
     bltd(0x9E40_0000, 1, 1, CBRANCH, G_CJUMP, G_RJUMP),
     bne(0x9C20_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
-    bned(0x9E20_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
+    bned(0x9E20_0000, 1, 1, CBRANCH, G_CJUMP, G_RJUMP),
 
     // CIBRANCH
     beqi(0xBC00_0000, 1, 0, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
@@ -94,10 +96,10 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     bneid(0xBE20_0000, 1, 1, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
 
     // RETURN
-    rtbd(0xB640_0000, 1, 0, RETURN, G_UJUMP, G_RJUMP, G_IJUMP),
-    rtid(0xB620_0000, 1, 0, RETURN, G_UJUMP, G_RJUMP, G_IJUMP),
-    rted(0xB680_0000, 1, 0, RETURN, G_UJUMP, G_RJUMP, G_IJUMP),
-    rtsd(0xB600_0000, 1, 0, RETURN, G_UJUMP, G_RJUMP, G_IJUMP),
+    rtbd(0xB640_0000, 1, 1, RETURN, G_UJUMP, G_RJUMP, G_IJUMP),
+    rtid(0xB620_0000, 1, 1, RETURN, G_UJUMP, G_RJUMP, G_IJUMP),
+    rted(0xB680_0000, 1, 1, RETURN, G_UJUMP, G_RJUMP, G_IJUMP),
+    rtsd(0xB600_0000, 1, 1, RETURN, G_UJUMP, G_RJUMP, G_IJUMP),
 
     // IBARREL
     bsrli(0x6400_0000, 1, 0, IBARREL_FMT1, G_LOGICAL),
@@ -111,8 +113,8 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     put(0x6C00_8000, 2, 0, STREAM, G_OTHER),
 
     // DSTREAM
-    getd(0x4C00_0000, 1, 0, DSTREAM, G_OTHER),
-    putd(0x4C00_8000, 2, 0, DSTREAM, G_OTHER),
+    getd(0x4C00_0000, 1, 1, DSTREAM, G_OTHER),
+    putd(0x4C00_8000, 2, 1, DSTREAM, G_OTHER),
 
     // IMM
     imm(0xB000_0000, 1, 0, IMM, G_OTHER),
@@ -316,7 +318,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     public String getEnumName() {
         return enumName;
     }
-    
+
     /*
      * get code type of a particular instruction
      */
