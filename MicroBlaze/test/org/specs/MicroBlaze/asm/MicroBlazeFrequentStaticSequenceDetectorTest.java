@@ -20,13 +20,10 @@ public class MicroBlazeFrequentStaticSequenceDetectorTest {
             var bbd = new FrequentStaticSequenceDetector(el);
             List<BinarySegment> bblist = bbd.detectSegments();
 
-            /* for (BinarySegment bs : bblist) {
-                System.out.print("Basic Block: \n");
-                for (Instruction is : bs.getInstructions()) {
-                    is.printInstruction();
-                }
+            for (BinarySegment bs : bblist) {
+                bs.printSegment();
                 System.out.print("\n\n");
-            }*/
+            }
         }
         return;
     }
