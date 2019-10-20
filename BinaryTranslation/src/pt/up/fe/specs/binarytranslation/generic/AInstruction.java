@@ -41,7 +41,8 @@ public abstract class AInstruction implements Instruction {
     // the enum which represents the ISA properties of this instruction
     protected InstructionProperties props;
 
-    public AInstruction(Number address, String instruction, InstructionData idata, InstructionProperties props) {
+    public AInstruction(Number address, String instruction,
+            InstructionData idata, InstructionProperties props) {
         this.address = address;
         this.instruction = instruction.strip();
         this.idata = idata;
@@ -115,8 +116,8 @@ public abstract class AInstruction implements Instruction {
     }
 
     public final boolean isJump() {
-        return (idata.getGenericTypes().contains(InstructionType.G_CJUMP) |
-                idata.getGenericTypes().contains(InstructionType.G_UJUMP));
+        return (this.isConditionalJump() || this.isUnconditionalJump()
+                || this.isAbsoluteJump() || this.isRelativeJump());
     }
 
     public final boolean isConditionalJump() {
