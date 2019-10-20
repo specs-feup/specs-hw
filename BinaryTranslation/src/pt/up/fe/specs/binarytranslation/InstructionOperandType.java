@@ -24,4 +24,6 @@ public interface InstructionOperandType {
     public String getPrefix();
 
     public int getWidth();
+
+    public Boolean isRegister();
 }

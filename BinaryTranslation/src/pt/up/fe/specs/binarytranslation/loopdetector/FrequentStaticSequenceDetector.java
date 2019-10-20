@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.InstructionOperand;
 import pt.up.fe.specs.binarytranslation.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.FrequentSequence;
@@ -58,6 +59,8 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         while ((i + sequenceSize) < insts.size()) {
 
             String hashstring = "";
+            Map<Integer, Integer> regremap = new HashMap<Integer, Integer>();
+
             for (j = 0; j < sequenceSize; j++) {
 
                 Instruction inst = insts.get(i + j);
@@ -73,15 +76,31 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
                     break; // stop sequence
                 }
 
-                hashstring += Integer.toHexString(inst.getProperties().getOpCode());
+                // make part 1 of hashstring
+                hashstring += "_" + Integer.toHexString(inst.getProperties().getOpCode());
                 // TODO this unique id (the opcode) will not be unique for arm, since the
                 // specific instruction is resolved later with fields that arent being
                 // interpreted yet; how to solve?
                 // TODO replace getOpCode with getUniqueID()
+
+                // make part 2 of hashstring
+                var operands = inst.getData().getOperands();
+                for (InstructionOperand op : operands) {
+
+                    // remap register numbering to start from zero
+                    if (!op.getType().isRegister())
+                        continue;
+
+                    if (!regremap.containsKey(op.getValue()))
+                        regremap.put(op.getValue(), regremap.size());
+
+                    hashstring += "_" + Integer.toHexString(regremap.get(op.getValue()));
+                }
             }
 
             // if sequence was complete
             if (j == sequenceSize) {
+                System.out.print(insts.get(i).getAddress() + ": " + hashstring + "\n");
                 hashes.put(insts.get(i).getAddress().intValue(), hashstring.hashCode());
             }
 

@@ -22,7 +22,7 @@ public class MicroBlazeFrequentStaticSequenceDetectorTester {
 
             for (BinarySegment bs : bblist) {
                 bs.printSegment();
-                System.out.print("\n\n");
+                System.out.print("\n");
             }
         }
         return;
