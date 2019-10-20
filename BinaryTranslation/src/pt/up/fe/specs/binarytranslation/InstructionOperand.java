@@ -29,7 +29,7 @@ public interface InstructionOperand {
     /*
      * Get type (register or immediate)
      */
-    public Integer getType();
+    public InstructionOperandType getType();
 
     /*
      * Return formated string with <prefix><value>

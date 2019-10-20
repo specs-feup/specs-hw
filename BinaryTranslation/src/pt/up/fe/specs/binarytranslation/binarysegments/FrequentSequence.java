@@ -22,7 +22,7 @@ public class FrequentSequence implements BinarySegment {
         // regenerate hashstring
         String hashstring = "";
         for (InstructionProperties i : ilist) {
-            hashstring += Integer.toHexString(i.getOpCode());    
+            hashstring += Integer.toHexString(i.getOpCode());
         }
         this.sequencehash = hashstring.hashCode();
     }
@@ -69,7 +69,7 @@ public class FrequentSequence implements BinarySegment {
     public List<InstructionProperties> getProperties() {
         return this.instlist;
     }
-    
+
     @Override
     public List<Instruction> getInstructions() {
         // TODO Auto-generated method stub
@@ -79,13 +79,12 @@ public class FrequentSequence implements BinarySegment {
     @Override
     public void printSegment() {
         List<String> hexes = new ArrayList<String>();
-        for(Integer addr : this.startAddresses)
+        for (Integer addr : this.startAddresses)
             hexes.add("0x" + Integer.toHexString(addr));
-         
+
         System.out.print("Sequence=[hashcode: " + this.sequencehash + "; " + hexes + "]\n");
         for (InstructionProperties inst : this.instlist) {
             System.out.print(inst.getEnumName() + "\n");
         }
-        System.out.print("\n");
     }
 }

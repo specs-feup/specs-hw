@@ -22,4 +22,9 @@ public enum MicroBlazeInstructionOperandType implements InstructionOperandType {
     public int getWidth() {
         return width;
     }
+
+    @Override
+    public Boolean isRegister() {
+        return (this.name() == "register");
+    }
 }

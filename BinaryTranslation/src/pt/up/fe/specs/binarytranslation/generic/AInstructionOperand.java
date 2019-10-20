@@ -39,7 +39,7 @@ public abstract class AInstructionOperand implements InstructionOperand {
     }
 
     @Override
-    public Integer getType() {
-        return this.getType();
+    public InstructionOperandType getType() {
+        return this.type;
     }
 }
