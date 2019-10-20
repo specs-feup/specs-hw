@@ -176,6 +176,16 @@ public interface Instruction {
      */
     public AsmInstructionData getFieldData();
 
+    /*
+     * Returns a unique hash representation of the instruction
+     */
+    public Integer getHash();
+
+    /*
+     * Returns string representation of instruction (includes operands) 
+     */
+    public String getRepresentaion();
+
     /**
      * 
      * @param instruction

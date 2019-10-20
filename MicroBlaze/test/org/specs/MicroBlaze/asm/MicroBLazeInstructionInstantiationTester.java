@@ -7,7 +7,7 @@ import org.specs.MicroBlaze.isa.MicroBlazeAsmInstructionData;
 import org.specs.MicroBlaze.isa.MicroBlazeInstruction;
 import org.specs.MicroBlaze.isa.MicroBlazeInstructionData;
 
-public class MicroBLazeInstructionInstantiationTest {
+public class MicroBLazeInstructionInstantiationTester {
 
     // SPECIAL //////////////////////////////////////////////////////////
 
