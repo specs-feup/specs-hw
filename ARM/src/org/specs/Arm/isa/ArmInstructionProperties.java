@@ -378,35 +378,35 @@ public enum ArmInstructionProperties implements InstructionProperties {
     }
 
     /*
-     * Private helper method too look up the list
+     * helper method too look up the list
      */
     public int getLatency() {
         return this.latency;
     }
 
     /*
-     * Private helper method too look up the list
+     * helper method too look up the list
      */
     public int getDelay() {
         return this.delay;
     }
 
     /*
-     * Private helper method too get full opcode
+     * helper method too get full opcode
      */
     public int getOpCode() {
         return this.opcode;
     }
 
     /*
-     * Private helper method too get only the bits that matter
+     * helper method too get only the bits that matter
      */
     public int getReducedOpCode() {
         return this.reducedopcode;
     }
 
     /*
-     * Private helper method too look up type in the list
+     * helper method too look up type in the list
      */
     public List<InstructionType> getGenericType() {
         return this.genericType;
@@ -417,6 +417,13 @@ public enum ArmInstructionProperties implements InstructionProperties {
      */
     public String getName() {
         return this.instructionName;
+    }
+    
+    /*
+     * Returns name of enum (should be unique)
+     */
+    public String getEnumName() {
+        return enumName;
     }
 
     /*

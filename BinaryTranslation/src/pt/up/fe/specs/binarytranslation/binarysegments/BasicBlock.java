@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.InstructionProperties;
 
 public class BasicBlock implements BinarySegment {
 
@@ -121,6 +122,12 @@ public class BasicBlock implements BinarySegment {
     @Override
     public List<Instruction> getInstructions() {
         return this.instlist;
+    }
+    
+    @Override
+    public List<InstructionProperties> getProperties() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override

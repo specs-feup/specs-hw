@@ -20,7 +20,7 @@ public class MicroBlazeElfStream implements StaticStream {
     // TODO modify MB_REGEX
 
     public MicroBlazeElfStream(File elfname) {
-        var output = SpecsSystem.runProcess(Arrays.asList("cmd", "/C", "type", // "mb-objdump", "-d",
+        var output = SpecsSystem.runProcess(Arrays.asList("cmd", "/C", "type", //"mb-objdump", "-d"
                 elfname.getAbsolutePath()), new File("."), true, false);
         insts = LineStream.newInstance(output.getStdOut());
     }
