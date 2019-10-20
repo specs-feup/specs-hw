@@ -39,7 +39,7 @@ public abstract class AInstruction implements Instruction {
     protected static InstructionSet instSet;
 
     // the enum which represents the ISA properties of this instruction
-    protected static InstructionProperties props;
+    protected InstructionProperties props;
 
     public AInstruction(Number address, String instruction, InstructionData idata, InstructionProperties props) {
         this.address = address;
