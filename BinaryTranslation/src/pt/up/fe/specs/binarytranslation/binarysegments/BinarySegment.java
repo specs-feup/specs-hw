@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.InstructionProperties;
 
 public interface BinarySegment {
 
@@ -50,9 +51,14 @@ public interface BinarySegment {
     List<Integer> getLiveOuts();
 
     /*
-     * Get list of the instructions in the segment
+     * Get list of the instructions in the segment (use with trace segments)
      */
     List<Instruction> getInstructions();
+    
+    /*
+     * Get list of inst props (use with static segments)
+     */
+    List<InstructionProperties> getProperties();
 
     /*
      * Prints the segment to system out
