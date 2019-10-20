@@ -20,7 +20,8 @@ import pt.up.fe.specs.binarytranslation.Instruction;
 public interface BinarySegment {
 
     enum SegmentType {
-        BASIC_BLOCK,
+        STATIC_FREQUENT,
+        STATIC_BASIC_BLOCK,
         MEGA_BLOCK
     };
 
@@ -52,4 +53,9 @@ public interface BinarySegment {
      * Get list of the instructions in the segment
      */
     List<Instruction> getInstructions();
+
+    /*
+     * Prints the segment to system out
+     */
+    void printSegment();
 }

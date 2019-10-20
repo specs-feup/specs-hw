@@ -136,7 +136,7 @@ public abstract class AInstruction implements Instruction {
     }
 
     public final boolean isMemory() {
-        return idata.getGenericTypes().contains(InstructionType.G_MEMORY);
+        return idata.getGenericTypes().contains(InstructionType.G_MEMORY) || this.isLoad() || this.isStore();
     }
 
     public final boolean isFloat() {

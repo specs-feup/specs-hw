@@ -20,7 +20,7 @@ import pt.up.fe.specs.binarytranslation.Instruction;
 
 public class BasicBlock implements BinarySegment {
 
-    private SegmentType segtype = SegmentType.BASIC_BLOCK;
+    private SegmentType segtype = SegmentType.STATIC_BASIC_BLOCK;
     private List<Instruction> instlist;
     private boolean terminated = false;
     private int delaycounter = 0;
@@ -121,5 +121,12 @@ public class BasicBlock implements BinarySegment {
     @Override
     public List<Instruction> getInstructions() {
         return this.instlist;
+    }
+
+    @Override
+    public void printSegment() {
+        for (Instruction inst : this.instlist) {
+            inst.printInstruction();
+        }
     }
 }
