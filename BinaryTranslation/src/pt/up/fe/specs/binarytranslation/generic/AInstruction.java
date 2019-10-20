@@ -39,7 +39,7 @@ public abstract class AInstruction implements Instruction {
     protected static InstructionSet instSet;
 
     // the enum which represents the ISA properties of this instruction
-    protected static InstructionProperties props;
+    protected InstructionProperties props;
 
     public AInstruction(Number address, String instruction, InstructionData idata, InstructionProperties props) {
         this.address = address;
@@ -49,6 +49,18 @@ public abstract class AInstruction implements Instruction {
     }
 
     ///////////////////////////////////////////////////////////////////////////
+    public Integer getHash() {
+        return this.getRepresentaion().hashCode();
+    }
+
+    public String getRepresentaion() {
+        String str = this.getName();
+        for (InstructionOperand op : this.getData().getOperands()) {
+            str += " " + op.getRepresentation();
+        }
+        return str;
+    }
+
     public InstructionData getData() {
         return idata;
     }

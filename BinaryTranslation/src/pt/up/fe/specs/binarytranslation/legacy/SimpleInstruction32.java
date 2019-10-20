@@ -188,4 +188,15 @@ public interface SimpleInstruction32 extends Instruction {
         return null;
     }
 
+    @Override
+    default Integer getHash() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    default String getRepresentaion() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

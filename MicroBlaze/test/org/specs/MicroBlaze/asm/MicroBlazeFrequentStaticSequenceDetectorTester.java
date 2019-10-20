@@ -9,7 +9,7 @@ import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.loopdetector.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.util.SpecsIo;
 
-public class MicroBlazeFrequentStaticSequenceDetectorTest {
+public class MicroBlazeFrequentStaticSequenceDetectorTester {
 
     @Test
     public void test() {

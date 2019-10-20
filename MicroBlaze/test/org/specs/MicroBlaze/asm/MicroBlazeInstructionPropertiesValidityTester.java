@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.specs.MicroBlaze.isa.MicroBlazeInstructionProperties;
 
-public class MicroBlazeInstructionPropertiesValidityTest {
+public class MicroBlazeInstructionPropertiesValidityTester {
 
     /*
      * Test checks if the manually initialized data in the MicroBlazeInstructionProperties enum
