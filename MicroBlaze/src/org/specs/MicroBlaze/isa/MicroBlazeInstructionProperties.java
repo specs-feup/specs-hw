@@ -215,7 +215,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     shi(0xF400_0000, 2, 0, TYPE_B, G_STORE),
     swi(0xF800_0000, 2, 0, TYPE_B, G_STORE),
 
-    unknown(0x000000000, 1, 1, UNDEFINED, G_UNKN);
+    unknown(0xFFFF_FFFF, 1, 1, UNDEFINED, G_UNKN);
 
     /*
      * Instruction property fields
@@ -269,47 +269,54 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     }
 
     /*
-     * Private helper method too look up the list
+     * helper method too look up the list
      */
     public int getLatency() {
         return this.latency;
     }
 
     /*
-     * Private helper method too look up the list
+     * helper method too look up the list
      */
     public int getDelay() {
         return this.delay;
     }
 
     /*
-     * Private helper method too get full opcode
+     * helper method too get full opcode
      */
     public int getOpCode() {
         return this.opcode;
     }
 
     /*
-     * Private helper method too get only the bits that matter
+     * helper method too get only the bits that matter
      */
     public int getReducedOpCode() {
         return this.reducedopcode;
     }
 
     /*
-     * Private helper method too look up type in the list
+     * helper method too look up type in the list
      */
     public List<InstructionType> getGenericType() {
         return this.genericType;
     }
 
     /*
-     * Private helper method too look up name the list
+     * helper method too look up name the list
      */
     public String getName() {
         return this.instructionName;
     }
 
+    /*
+     * Returns name of enum (should be unique)
+     */
+    public String getEnumName() {
+        return enumName;
+    }
+    
     /*
      * get code type of a particular instruction
      */
