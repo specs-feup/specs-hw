@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.specs.MicroBlaze.isa.MicroBlazeInstructionProperties;
 
-public class MicroBlazeInstructionPropertiesUniquenessTest {
+public class MicroBlazeInstructionPropertiesUniquenessTester {
 
     /*
      * Test if all opcodes in all the instructionsproperties for microblaze are unique
