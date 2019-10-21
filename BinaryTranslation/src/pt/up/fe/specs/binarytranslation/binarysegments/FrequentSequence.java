@@ -4,33 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.binarytranslation.InstructionProperties;
 
 public class FrequentSequence implements BinarySegment {
 
     private SegmentType segtype = SegmentType.STATIC_FREQUENT;
-    private List<InstructionProperties> instlist;
+    private List<Instruction> instlist;
     private List<Integer> startAddresses;
-    private int sequencehash;
 
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
-    private FrequentSequence(List<InstructionProperties> ilist) {
+    private FrequentSequence(List<Instruction> ilist) {
         this.instlist = ilist;
-
-        // regenerate hashstring
-        String hashstring = "";
-        for (InstructionProperties i : ilist) {
-            hashstring += Integer.toHexString(i.getOpCode());
-        }
-        this.sequencehash = hashstring.hashCode();
     }
 
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
-    public FrequentSequence(List<InstructionProperties> ilist, List<Integer> startAddresses) {
+    public FrequentSequence(List<Instruction> ilist, List<Integer> startAddresses) {
         this(ilist);
         this.startAddresses = startAddresses;
     }
@@ -66,14 +57,8 @@ public class FrequentSequence implements BinarySegment {
     }
 
     @Override
-    public List<InstructionProperties> getProperties() {
-        return this.instlist;
-    }
-
-    @Override
     public List<Instruction> getInstructions() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.instlist;
     }
 
     @Override
@@ -82,9 +67,9 @@ public class FrequentSequence implements BinarySegment {
         for (Integer addr : this.startAddresses)
             hexes.add("0x" + Integer.toHexString(addr));
 
-        System.out.print("Sequence=[hashcode: " + this.sequencehash + "; " + hexes + "]\n");
-        for (InstructionProperties inst : this.instlist) {
-            System.out.print(inst.getEnumName() + "\n");
+        System.out.print("Sequence=[" + hexes + "]\n");
+        for (Instruction inst : this.instlist) {
+            inst.printInstruction();
         }
     }
 }

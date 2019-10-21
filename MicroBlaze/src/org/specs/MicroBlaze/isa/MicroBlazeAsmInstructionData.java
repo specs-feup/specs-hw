@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.InstructionOperand;
+import pt.up.fe.specs.binarytranslation.Operand;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 
@@ -27,20 +27,20 @@ public class MicroBlazeAsmInstructionData extends AsmInstructionData {
     /*
      * Gets a list of integers which represent the operands in the fields
      */
-    public List<InstructionOperand> getOperands() {
+    public List<Operand> getOperands() {
 
         var map1 = this.get(FIELDS);
         var keys1 = map1.keySet();
-        List<InstructionOperand> operands = new ArrayList<InstructionOperand>();
+        List<Operand> operands = new ArrayList<Operand>();
 
         for (String key : keys1) {
             if (key.contains("register")) {
-                var op = new MicroBlazeInstructionOperand(MicroBlazeInstructionOperandType.register,
+                var op = new MicroBlazeOperand(MicroBlazeOperandProperties.register,
                         Integer.parseInt(map1.get(key), 2));
                 operands.add(op);
 
             } else if (key.contains("imm")) {
-                var op = new MicroBlazeInstructionOperand(MicroBlazeInstructionOperandType.immediate,
+                var op = new MicroBlazeOperand(MicroBlazeOperandProperties.immediate,
                         Integer.parseInt(map1.get(key), 2));
                 operands.add(op);
             }

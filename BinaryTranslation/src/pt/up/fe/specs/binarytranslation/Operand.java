@@ -14,16 +14,42 @@
 package pt.up.fe.specs.binarytranslation;
 
 /**
- * Types of operands, and their string prefixes for printing in human readable format
+ * A generic instruction operand, composed of type, and value
  * 
  * @author NunoPaulino
  *
  */
-public interface InstructionOperandType {
+public interface Operand {
 
-    public String getPrefix();
+    /*
+     * Get value
+     */
+    public Integer getValue();
 
-    public int getWidth();
+    /*
+     * Get properties of operand (can query for 
+     * type, e.g., register or immediate, and other things)
+     */
+    public OperandProperties getProperties();
 
+    /*
+     * True if is register
+     */
     public Boolean isRegister();
+
+    /*
+     * True if is immediate
+     */
+    public Boolean isImmediate();
+
+    /*
+     * Return formated string with <prefix><value>
+     */
+    public String getRepresentation();
+
+    /*
+     * Used to abstract an operand away from an 
+     * executed representation, to a vague representation
+     */
+    public void setVague();
 }

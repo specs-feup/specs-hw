@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.generic;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionData;
-import pt.up.fe.specs.binarytranslation.InstructionOperand;
+import pt.up.fe.specs.binarytranslation.Operand;
 import pt.up.fe.specs.binarytranslation.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
 import pt.up.fe.specs.binarytranslation.InstructionType;
@@ -56,7 +56,7 @@ public abstract class AInstruction implements Instruction {
 
     public String getRepresentaion() {
         String str = this.getName();
-        for (InstructionOperand op : this.getData().getOperands()) {
+        for (Operand op : this.getData().getOperands()) {
             str += " " + op.getRepresentation();
         }
         return str;
@@ -197,7 +197,7 @@ public abstract class AInstruction implements Instruction {
          */
 
         int i = 0;
-        for (InstructionOperand op : this.idata.getOperands()) {
+        for (Operand op : this.idata.getOperands()) {
             System.out.print(op.getRepresentation());
             if (i++ < this.idata.getOperands().size() - 1)
                 System.out.print(", ");
