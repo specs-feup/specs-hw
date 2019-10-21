@@ -30,7 +30,7 @@ public abstract class InstructionData {
     protected final List<InstructionType> genericType;
 
     // from asm fields
-    protected List<InstructionOperand> operands;
+    protected List<Operand> operands;
 
     public InstructionData(InstructionProperties props) {
         this.plainname = props.getName();
@@ -70,7 +70,7 @@ public abstract class InstructionData {
     /*
      * Get Operands
      */
-    public List<InstructionOperand> getOperands() {
+    public List<Operand> getOperands() {
         return this.operands;
     }
 

@@ -1,16 +1,16 @@
 package pt.up.fe.specs.binarytranslation.loopdetector;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.binarytranslation.InstructionOperand;
-import pt.up.fe.specs.binarytranslation.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.Operand;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.FrequentSequence;
 import pt.up.fe.specs.binarytranslation.interfaces.StaticStream;
@@ -43,38 +43,123 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
     }
 
     /*
+     * Private helper class to hold hash 
+     * sequence data, and prevent duplicate work
+     */
+    private class HashedSequence {
+        protected Integer hashCode;
+        protected Map<Integer, Integer> regremap;
+        protected List<Instruction> instlist;
+        protected List<Integer> addrs;
+
+        HashedSequence(Integer hashCode, List<Instruction> instlist,
+                Map<Integer, Integer> regremap, Integer addr) {
+            this.instlist = instlist;
+            this.regremap = regremap;
+            this.hashCode = hashCode;
+            this.addrs = new ArrayList<Integer>(addr);
+        }
+    }
+
+    // no point in starting to build hashes if sequence will fail at some point
+    private Boolean validSequence(List<Instruction> insts) {
+
+        // check if this subsequence is at all apt
+        for (Instruction inst : insts) {
+
+            // TODO fail with stream instructions
+
+            // do not form frequent sequences containing jumps
+            if (inst.isJump()) {
+                return false;
+            }
+
+            // do not form frequent sequences memory accesses
+            else if (inst.isMemory()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /*
+     * Builds register replacement map for a given sequence (assumed valid)
+     */
+    private Map<Integer, Integer> makeRegReplaceMap(List<Instruction> insts) {
+
+        Map<Integer, Integer> regremap = new HashMap<Integer, Integer>();
+        for (Instruction inst : insts) {
+
+            var operands = inst.getData().getOperands();
+            for (Operand op : operands) {
+
+                // remap register numbering to start from zero
+                if (!op.isRegister())
+                    continue;
+
+                if (!regremap.containsKey(op.getValue()))
+                    regremap.put(op.getValue(), regremap.size());
+            }
+        }
+
+        return regremap;
+    }
+
+    /*
+     * Makes a copy of each instructions, but abstracts all its operands
+     */
+    private List<Instruction> makeVague(List<Instruction> ilist) {
+
+        List<Instruction> abstracted = ilist.stream().map(inst -> inst.copy()).collect(Collectors.toList());
+        List<Instruction> abstracted = new ArrayList<Instruction>();
+        Collections.copy(abstracted, ilist);
+
+    }
+
+    /*
      * Constructs a map with <instruction addr, sequence hash>
      * Only returns hashes for sequences which happens more than once
      * Returns a map with <sequence hash, List<instruction start addr(s)>>
      */
-    private Map<Integer, List<Integer>> getHashCodes(int sequenceSize) {
+    private List<HashedSequence> getSequences(int sequenceSize) {
 
-        // TODO the hash must take into account operands??
+        // Generate a hash code list of all sequences of size "sequenceSize"
+        Map<Integer, HashedSequence> sequences = new HashMap<Integer, HashedSequence>();
+        int atomicityCountDown = 0;
+        for (int i = 0; (i + sequenceSize) < insts.size(); i++) {
 
-        /*
-         *  Generate a hash code list of all sequences of size "sequenceSize"
-         */
-        Map<Integer, Integer> hashes = new LinkedHashMap<Integer, Integer>();
-        int i = 0, j = 0;
-        while ((i + sequenceSize) < insts.size()) {
+            List<Instruction> candidate = insts.subList(i, i + sequenceSize);
+
+            // count down if any atom in progress
+            if (atomicityCountDown > 0)
+                atomicityCountDown--;
+
+            // if last instruction in previous candidate
+            // had delay, next block must be atomic
+            // (e.g., sequence cannot span non atomic bounds)
+            if (i > 0)
+                atomicityCountDown = insts.get(i - 1).getDelay();
+
+            // if candidate sequence window starts
+            // breaking atomicity window, then advance
+            if (sequenceSize > atomicityCountDown) {
+                i += atomicityCountDown;
+                atomicityCountDown = 0;
+            }
+
+            // discard candidate?
+            if (!validSequence(candidate))
+                continue;
+
+            // make vague
+            Map<Integer, Integer> regremap = makeRegReplaceMap(candidate);
+
+            // need to make a copy of each instruction! so next detections dont break
+            List<Instruction> abstractedcandidate = makeVague(candidate);
 
             String hashstring = "";
-            Map<Integer, Integer> regremap = new HashMap<Integer, Integer>();
-
-            for (j = 0; j < sequenceSize; j++) {
-
-                Instruction inst = insts.get(i + j);
-
-                // do not form frequent sequences containing jumps // TODO and stream instructions
-                if (inst.isJump()) {
-                    i += inst.getDelay(); // skip over
-                    break; // stop sequence
-                }
-
-                // do not form frequent sequences memory accesses
-                else if (inst.isMemory()) {
-                    break; // stop sequence
-                }
+            for (Instruction inst : abstractedcandidate) {
 
                 // make part 1 of hashstring
                 hashstring += "_" + Integer.toHexString(inst.getProperties().getOpCode());
@@ -85,71 +170,42 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
                 // make part 2 of hashstring
                 var operands = inst.getData().getOperands();
-                for (InstructionOperand op : operands) {
+                for (Operand op : operands) {
 
                     // remap register numbering to start from zero
-                    if (!op.getType().isRegister())
+                    if (!op.isRegister())
                         continue;
-
-                    if (!regremap.containsKey(op.getValue()))
-                        regremap.put(op.getValue(), regremap.size());
 
                     hashstring += "_" + Integer.toHexString(regremap.get(op.getValue()));
                 }
             }
 
-            // if sequence was complete
-            if (j == sequenceSize) {
-                System.out.print(insts.get(i).getAddress() + ": " + hashstring + "\n");
-                hashes.put(insts.get(i).getAddress().intValue(), hashstring.hashCode());
+            Integer hashCode = hashstring.hashCode();
+            Integer startAddr = insts.get(i).getAddress().intValue();
+
+            // if sequence was complete, add (or add addr to existing equal sequence)
+            if (sequences.containsKey(hashCode)) {
+                sequences.get(hashCode).addrs.add(startAddr);
             }
 
-            i++;
-
-            // TODO this detection method doesnt work either, since the flow of
-            // register values within the instruciton has to be the same even if
-            // the sequence of instructions is the same
-
-            // TODO need new type of instruction class, where operands are abstracted
-            // away from their register representations
+            // add new sequence
+            else {
+                sequences.put(hashCode, new HashedSequence(hashCode,
+                        abstractedcandidate, regremap, startAddr));
+            }
         }
 
         /*
-         * Make histogram of occurrences
+         * Remove all sequences which only happen once
          */
-        Map<Integer, Integer> hashcountMap = new HashMap<Integer, Integer>();
-        for (Integer hash : hashes.values()) {
-            int count = hashcountMap.containsKey(hash) ? hashcountMap.get(hash) : 0;
-            hashcountMap.put(hash, count + 1);
-        }
-
-        /*
-         * Reduce list to sequences which happen more than once 
-         */
-        Iterator<Integer> it = hashes.keySet().iterator();
+        Iterator<Integer> it = sequences.keySet().iterator();
         while (it.hasNext()) {
-            var hash = hashes.get(it.next());
-            if (hashcountMap.get(hash) <= 1)
+            var size = sequences.get(it.next()).addrs.size();
+            if (size <= 1)
                 it.remove();
         }
 
-        /*
-         * Construct map of hashes and lists of addrs where the sequence starts
-         */
-        Map<Integer, List<Integer>> inv = new HashMap<Integer, List<Integer>>();
-        for (Entry<Integer, Integer> entry : hashes.entrySet()) {
-            if (inv.containsKey(entry.getValue())) {
-                var existinglist = inv.get(entry.getValue());
-                existinglist.add(entry.getKey());
-                inv.put(entry.getValue(), existinglist);
-            } else {
-                List<Integer> nl = new ArrayList<Integer>();
-                nl.add(entry.getKey());
-                inv.put(entry.getValue(), nl);
-            }
-        }
-
-        return inv;
+        return new ArrayList<HashedSequence>(sequences.values());
     }
 
     @Override
@@ -165,43 +221,44 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
          */
         for (int size = 2; size < 10; size++) {
 
-            Map<Integer, List<Integer>> hashes = getHashCodes(size);
+            List<HashedSequence> sequences = getSequences(size);
 
             for (Entry<Integer, List<Integer>> entry : hashes.entrySet()) {
                 var firstaddr = entry.getValue().get(0);
                 var idx = addrtoindex.get(firstaddr);
 
-                List<InstructionProperties> props = new ArrayList<InstructionProperties>();
+                List<Instruction> sequence = new ArrayList<Instruction>();
+                Map<Integer, Integer> regremap = new HashMap<Integer, Integer>();
+
+                // Make register remap again
                 for (Instruction inst : insts.subList(idx, idx + size)) {
-                    props.add(inst.getProperties());
+
+                    var operands = inst.getData().getOperands();
+                    for (Operand op : operands) {
+
+                        // remap register numbering to start from zero
+                        if (!op.isRegister())
+                            continue;
+
+                        if (!regremap.containsKey(op.getValue()))
+                            regremap.put(op.getValue(), regremap.size());
+                    }
+
+                    sequence.add(inst.makeVague());
                 }
 
-                sequences.add(new FrequentSequence(props, entry.getValue()));
-            }
+                // Transform operands of all instructions to vague operands
+                for (Instruction inst : ilist) {
+                    var operands = inst.getData().getOperands();
+                    for (Operand op : operands) {
 
-            /*
-            List<Integer> addrs = getHashCodes(size);
-            
-            for (int i = 0; i < insts.size(); i++) {
-                if (addrs.contains(insts.get(i).getAddress().intValue())) {
-                    sequences.add(new FrequentSequence(insts.subList(i, i + size)));
+                    }
                 }
-            }*/
+
+                sequences.add(new FrequentSequence(insts.subList(idx, idx + size), entry.getValue()));
+            }
         }
 
-        /*
-        int decreasecount = 0;
-        for (Instruction inst : insts) {
-            if (hashes.containsKey(inst.getAddress().intValue())) {
-                System.out.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-                decreasecount = size;
-            }
-            inst.printInstruction();
-            decreasecount--;
-            if (decreasecount == 0)
-                System.out.print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
-        }
-        */
         return sequences;
     }
 
