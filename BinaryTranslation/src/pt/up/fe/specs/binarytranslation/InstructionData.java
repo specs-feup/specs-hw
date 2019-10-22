@@ -32,6 +32,9 @@ public abstract class InstructionData {
     // from asm fields
     protected List<Operand> operands;
 
+    /*
+     * Constructor
+     */
     public InstructionData(InstructionProperties props) {
         this.plainname = props.getName();
         this.latency = props.getLatency();

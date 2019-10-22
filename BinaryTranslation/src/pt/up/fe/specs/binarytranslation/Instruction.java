@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation;
 
+import java.util.Map;
+
 import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
 
 /**
@@ -186,14 +188,14 @@ public interface Instruction {
      */
     public String getRepresentaion();
 
-    /**
-     * 
-     * @param instruction
-     * @return the value 0 if the address of the given instruction is equal to the address of this instruction; a value
-     *         less than 0 if the address of this instruction is less than the address of given instruction; and a value
-     *         greater than 0 if the address of this instruction is greater than the address of given instruction.
+    /*
+     * Return copy of this object
      */
-    default int compareAddr(Instruction instruction) {
-        return getAddress().toString().compareTo(instruction.getAddress().toString());
-    }
+    public Instruction copy();
+
+    /*
+     * Used to abstract an instruction away from an 
+     * executed representation, to a symbolic representation
+     */
+    void makeSymbolic(Number address, Map<Integer, String> regremap);
 }

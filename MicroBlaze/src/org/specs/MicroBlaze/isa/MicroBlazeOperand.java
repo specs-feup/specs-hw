@@ -9,11 +9,14 @@ public class MicroBlazeOperand extends AOperand {
     }
 
     @Override
-    public void setVague() {
+    public void setSymbolic(String value) {
         if (this.props == MicroBlazeOperandProperties.register)
-            this.props = MicroBlazeOperandProperties.vague_register;
+            this.props = MicroBlazeOperandProperties.symbolic_register;
 
         else if (this.props == MicroBlazeOperandProperties.immediate)
-            this.props = MicroBlazeOperandProperties.vague_immediate;
+            this.props = MicroBlazeOperandProperties.symbolic_immediate;
+
+        this.svalue = value;
+        this.value = -1;
     }
 }

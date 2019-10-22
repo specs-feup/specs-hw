@@ -1,13 +1,10 @@
 package pt.up.fe.specs.binarytranslation.loopdetector;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.Operand;
@@ -17,7 +14,6 @@ import pt.up.fe.specs.binarytranslation.interfaces.StaticStream;
 
 public class FrequentStaticSequenceDetector implements SegmentDetector {
 
-    private List<BinarySegment> sequences;
     private List<Instruction> insts;
     private StaticStream elfstream;
 
@@ -30,7 +26,6 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
      */
     public FrequentStaticSequenceDetector(StaticStream istream) {
         this.elfstream = istream;
-        this.sequences = new ArrayList<BinarySegment>();
         this.insts = new ArrayList<Instruction>();
         this.addrtoindex = new HashMap<Integer, Integer>();
 
@@ -47,16 +42,11 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
      * sequence data, and prevent duplicate work
      */
     private class HashedSequence {
-        protected Integer hashCode;
-        protected Map<Integer, Integer> regremap;
         protected List<Instruction> instlist;
         protected List<Integer> addrs;
 
-        HashedSequence(Integer hashCode, List<Instruction> instlist,
-                Map<Integer, Integer> regremap, Integer addr) {
+        HashedSequence(List<Instruction> instlist, Integer addr) {
             this.instlist = instlist;
-            this.regremap = regremap;
-            this.hashCode = hashCode;
             this.addrs = new ArrayList<Integer>(addr);
         }
     }
@@ -86,20 +76,21 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
     /*
      * Builds register replacement map for a given sequence (assumed valid)
      */
-    private Map<Integer, Integer> makeRegReplaceMap(List<Instruction> insts) {
+    private Map<Integer, String> makeRegReplaceMap(List<Instruction> ilist) {
 
-        Map<Integer, Integer> regremap = new HashMap<Integer, Integer>();
-        for (Instruction inst : insts) {
+        char symbol = 'a';
+        Map<Integer, String> regremap = new HashMap<Integer, String>();
+        for (Instruction i : ilist) {
 
-            var operands = inst.getData().getOperands();
+            var operands = i.getData().getOperands();
             for (Operand op : operands) {
 
                 // remap register numbering to start from zero
                 if (!op.isRegister())
                     continue;
 
-                if (!regremap.containsKey(op.getValue()))
-                    regremap.put(op.getValue(), regremap.size());
+                if (!regremap.containsKey(op.getIntegerValue()))
+                    regremap.put(op.getIntegerValue(), String.valueOf(symbol++));
             }
         }
 
@@ -107,14 +98,20 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
     }
 
     /*
-     * Makes a copy of each instructions, but abstracts all its operands
+     * Makes a copy of each instruction, but turns operands symbolic
      */
-    private List<Instruction> makeVague(List<Instruction> ilist) {
+    private List<Instruction> makeSymbolic(List<Instruction> ilist, Map<Integer, String> regremap) {
 
-        List<Instruction> abstracted = ilist.stream().map(inst -> inst.copy()).collect(Collectors.toList());
-        List<Instruction> abstracted = new ArrayList<Instruction>();
-        Collections.copy(abstracted, ilist);
+        List<Instruction> symbolic = new ArrayList<Instruction>();
 
+        Integer addr = 0;
+        for (Instruction i : ilist) {
+            symbolic.add(i.copy());
+            symbolic.get(symbolic.size() - 1).makeSymbolic(addr, regremap);
+            addr += 4;
+        }
+
+        return symbolic;
     }
 
     /*
@@ -153,10 +150,10 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
                 continue;
 
             // make vague
-            Map<Integer, Integer> regremap = makeRegReplaceMap(candidate);
+            Map<Integer, String> regremap = makeRegReplaceMap(candidate);
 
             // need to make a copy of each instruction! so next detections dont break
-            List<Instruction> abstractedcandidate = makeVague(candidate);
+            List<Instruction> abstractedcandidate = makeSymbolic(candidate, regremap);
 
             String hashstring = "";
             for (Instruction inst : abstractedcandidate) {
@@ -169,14 +166,10 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
                 // TODO replace getOpCode with getUniqueID()
 
                 // make part 2 of hashstring
-                var operands = inst.getData().getOperands();
-                for (Operand op : operands) {
-
-                    // remap register numbering to start from zero
-                    if (!op.isRegister())
-                        continue;
-
-                    hashstring += "_" + Integer.toHexString(regremap.get(op.getValue()));
+                for (Operand op : inst.getData().getOperands()) {
+                    if (op.isRegister()) {
+                        hashstring += "_" + op.getStringValue();
+                    }
                 }
             }
 
@@ -190,8 +183,7 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
             // add new sequence
             else {
-                sequences.put(hashCode, new HashedSequence(hashCode,
-                        abstractedcandidate, regremap, startAddr));
+                sequences.put(hashCode, new HashedSequence(abstractedcandidate, startAddr));
             }
         }
 
@@ -214,52 +206,18 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         // TODO pass window size?
         // TODO pass forbidden operations list?
 
-        // get all stream; redo this another way later
+        List<BinarySegment> allsequences = new ArrayList<BinarySegment>();
 
         /*
          * Construct sequences between given sizes
          */
         for (int size = 2; size < 10; size++) {
-
-            List<HashedSequence> sequences = getSequences(size);
-
-            for (Entry<Integer, List<Integer>> entry : hashes.entrySet()) {
-                var firstaddr = entry.getValue().get(0);
-                var idx = addrtoindex.get(firstaddr);
-
-                List<Instruction> sequence = new ArrayList<Instruction>();
-                Map<Integer, Integer> regremap = new HashMap<Integer, Integer>();
-
-                // Make register remap again
-                for (Instruction inst : insts.subList(idx, idx + size)) {
-
-                    var operands = inst.getData().getOperands();
-                    for (Operand op : operands) {
-
-                        // remap register numbering to start from zero
-                        if (!op.isRegister())
-                            continue;
-
-                        if (!regremap.containsKey(op.getValue()))
-                            regremap.put(op.getValue(), regremap.size());
-                    }
-
-                    sequence.add(inst.makeVague());
-                }
-
-                // Transform operands of all instructions to vague operands
-                for (Instruction inst : ilist) {
-                    var operands = inst.getData().getOperands();
-                    for (Operand op : operands) {
-
-                    }
-                }
-
-                sequences.add(new FrequentSequence(insts.subList(idx, idx + size), entry.getValue()));
+            for (HashedSequence seq : getSequences(size)) {
+                allsequences.add(new FrequentSequence(seq.instlist, seq.addrs));
             }
         }
 
-        return sequences;
+        return allsequences;
     }
 
     @Override
