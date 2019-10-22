@@ -13,7 +13,7 @@ public enum MicroBlazeOperandProperties implements OperandProperties {
     register("r", "", 32, REGISTER),
     immediate("0x", "", 32, IMMEDIATE),
     symbolic_register("r<", ">", 32, REGISTER, SYMBOLIC),
-    symbolic_immediate("<", ">", 32, IMMEDIATE, SYMBOLIC);
+    symbolic_immediate("imm<", ">", 32, IMMEDIATE, SYMBOLIC);
 
     private final String prefix;
     private final String suffix;

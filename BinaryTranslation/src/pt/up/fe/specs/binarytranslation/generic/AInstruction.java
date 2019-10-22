@@ -211,20 +211,16 @@ public abstract class AInstruction implements Instruction {
     /* 
      * 
      */
-    public void makeSymbolic(Number address, Map<Integer, String> regremap) {
+    public void makeSymbolic(Number address, Map<String, String> regremap) {
 
         // symbolify address
         this.address = address;
 
         // symbolify operands
-        int immctr = 0;
         for (Operand op : this.getData().getOperands()) {
+            op.setSymbolic(regremap.get(op.getRepresentation()));
 
-            if (op.isRegister())
-                op.setSymbolic(regremap.get(op.getIntegerValue()));
-
-            // else if (op.isImmediate())
-            // op.setSymbolic("imm" + String.valueOf(immctr++));
+            // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
         }
     }
 }

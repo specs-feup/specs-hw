@@ -197,5 +197,5 @@ public interface Instruction {
      * Used to abstract an instruction away from an 
      * executed representation, to a symbolic representation
      */
-    void makeSymbolic(Number address, Map<Integer, String> regremap);
+    void makeSymbolic(Number address, Map<String, String> regremap);
 }

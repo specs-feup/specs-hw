@@ -209,7 +209,7 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default void makeSymbolic(Number address, Map<Integer, String> regremap) {
+    default void makeSymbolic(Number address, Map<String, String> regremap) {
         // TODO Auto-generated method stub
 
     }

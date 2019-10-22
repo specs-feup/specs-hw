@@ -67,7 +67,7 @@ public class FrequentSequence implements BinarySegment {
         for (Integer addr : this.startAddresses)
             hexes.add("0x" + Integer.toHexString(addr));
 
-        System.out.print("Sequence=[" + hexes + "]\n");
+        System.out.print("Sequence occurs at=" + hexes + "\n");
         for (Instruction inst : this.instlist) {
             inst.printInstruction();
         }

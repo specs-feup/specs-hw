@@ -42,12 +42,14 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
      * sequence data, and prevent duplicate work
      */
     private class HashedSequence {
+        protected Map<String, String> regremap;
         protected List<Instruction> instlist;
         protected List<Integer> addrs;
 
-        HashedSequence(List<Instruction> instlist, Integer addr) {
+        HashedSequence(List<Instruction> instlist, Integer addr, Map<String, String> regremap) {
             this.instlist = instlist;
             this.addrs = new ArrayList<Integer>(addr);
+            this.regremap = regremap;
         }
     }
 
@@ -74,24 +76,21 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
     }
 
     /*
-     * Builds register replacement map for a given sequence (assumed valid)
+     * Builds operand value replacement map for a given sequence (assumed valid)
      */
-    private Map<Integer, String> makeRegReplaceMap(List<Instruction> ilist) {
+    private Map<String, String> makeRegReplaceMap(List<Instruction> ilist) {
 
         char symbol = 'a';
-        Map<Integer, String> regremap = new HashMap<Integer, String>();
+        Map<String, String> regremap = new HashMap<String, String>();
         for (Instruction i : ilist) {
 
             var operands = i.getData().getOperands();
             for (Operand op : operands) {
-
-                // remap register numbering to start from zero
-                if (!op.isRegister())
-                    continue;
-
-                if (!regremap.containsKey(op.getIntegerValue()))
-                    regremap.put(op.getIntegerValue(), String.valueOf(symbol++));
+                if (!regremap.containsKey(op.getRepresentation()))
+                    regremap.put(op.getRepresentation(), String.valueOf(symbol++));
             }
+
+            // TODO implement imm remapping strategies here??
         }
 
         return regremap;
@@ -100,14 +99,16 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
     /*
      * Makes a copy of each instruction, but turns operands symbolic
      */
-    private List<Instruction> makeSymbolic(List<Instruction> ilist, Map<Integer, String> regremap) {
+    private List<Instruction> makeSymbolic(List<Instruction> ilist, Map<String, String> regremap) {
 
         List<Instruction> symbolic = new ArrayList<Instruction>();
-
-        Integer addr = 0;
         for (Instruction i : ilist) {
             symbolic.add(i.copy());
-            symbolic.get(symbolic.size() - 1).makeSymbolic(addr, regremap);
+        }
+
+        Integer addr = 0;
+        for (Instruction i : symbolic) {
+            i.makeSymbolic(addr, regremap);
             addr += 4;
         }
 
@@ -140,43 +141,43 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
             // if candidate sequence window starts
             // breaking atomicity window, then advance
-            if (sequenceSize > atomicityCountDown) {
-                i += atomicityCountDown;
-                atomicityCountDown = 0;
-            }
+            if (atomicityCountDown > 0)
+                if (sequenceSize > atomicityCountDown) {
+                    i += atomicityCountDown;
+                    atomicityCountDown = 0;
+                    continue;
+                }
 
             // discard candidate?
             if (!validSequence(candidate))
                 continue;
 
-            // make vague
-            Map<Integer, String> regremap = makeRegReplaceMap(candidate);
+            // make register replacement map (for hash building)
+            Map<String, String> regremap = makeRegReplaceMap(candidate);
+            // TODO the replacement function should be a parameter here
 
             // need to make a copy of each instruction! so next detections dont break
-            List<Instruction> abstractedcandidate = makeSymbolic(candidate, regremap);
+            // List<Instruction> abstractedcandidate = makeSymbolic(candidate, regremap);
 
             String hashstring = "";
-            for (Instruction inst : abstractedcandidate) {
+            for (Instruction inst : candidate) {
 
                 // make part 1 of hashstring
                 hashstring += "_" + Integer.toHexString(inst.getProperties().getOpCode());
                 // TODO this unique id (the opcode) will not be unique for arm, since the
                 // specific instruction is resolved later with fields that arent being
                 // interpreted yet; how to solve?
-                // TODO replace getOpCode with getUniqueID()
+                // TODO replace getOpCode with getUniqueID() (as a string)
 
                 // make part 2 of hashstring
                 for (Operand op : inst.getData().getOperands()) {
-                    // if (op.isRegister()) {
-                    hashstring += "_" + op.getStringValue();
-                    // }
+                    hashstring += "_" + regremap.get(op.getRepresentation());
+                    // at this point, imms have either been (or not) all (or partially) symbolified
                 }
             }
 
             Integer hashCode = hashstring.hashCode();
             Integer startAddr = insts.get(i).getAddress().intValue();
-
-            System.out.print(hashstring + "\n");
 
             // if sequence was complete, add (or add addr to existing equal sequence)
             if (sequences.containsKey(hashCode)) {
@@ -185,7 +186,7 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
             // add new sequence
             else {
-                sequences.put(hashCode, new HashedSequence(abstractedcandidate, startAddr));
+                sequences.put(hashCode, new HashedSequence(candidate, startAddr, regremap));
             }
         }
 
@@ -202,11 +203,21 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         return new ArrayList<HashedSequence>(sequences.values());
     }
 
+    /*
+     * Returns frequenty occuring instruction sequences
+     */
     @Override
     public List<BinarySegment> detectSegments() {
 
         // TODO pass window size?
         // TODO pass forbidden operations list?
+
+        // IMPORTANT
+        // TODO: imms can be treated very differently!
+        // 1. can either allow them to be all different (not part of the hash)
+        // 2. can try to find common imms and leave only those to be literal (i.e., non symbolic)
+        // 3. can demand that all are equal in all ocurrences of sequence (all are non symbolic and hence all are
+        // hardware specilaized literals)
 
         List<BinarySegment> allsequences = new ArrayList<BinarySegment>();
 
@@ -215,7 +226,8 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
          */
         for (int size = 2; size < 4; size++) {
             for (HashedSequence seq : getSequences(size)) {
-                allsequences.add(new FrequentSequence(seq.instlist, seq.addrs));
+                List<Instruction> symbolicseq = makeSymbolic(seq.instlist, seq.regremap);
+                allsequences.add(new FrequentSequence(symbolicseq, seq.addrs));
             }
         }
 
