@@ -13,12 +13,14 @@
 
 package pt.up.fe.specs.binarytranslation.generic;
 
+import java.util.Map;
+
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionData;
-import pt.up.fe.specs.binarytranslation.Operand;
 import pt.up.fe.specs.binarytranslation.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
 import pt.up.fe.specs.binarytranslation.InstructionType;
+import pt.up.fe.specs.binarytranslation.Operand;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
@@ -204,5 +206,27 @@ public abstract class AInstruction implements Instruction {
         }
 
         System.out.print("\n");
+    }
+
+    /* 
+     * 
+     */
+    public void makeSymbolic(Number address, Map<Integer, String> regremap) {
+
+        // symbolify address
+        this.address = address;
+
+        // symbolify operands
+        int immctr = 0;
+        for (Operand op : this.getData().getOperands()) {
+
+            if (op.isRegister())
+                op.setSymbolic(regremap.get(op.getIntegerValue()));
+
+            else if (op.isImmediate())
+                op.setSymbolic("imm" + String.valueOf(immctr++));
+
+            System.out.print(op.getRepresentation() + "\n");
+        }
     }
 }

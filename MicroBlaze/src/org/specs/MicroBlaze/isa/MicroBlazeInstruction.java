@@ -57,6 +57,17 @@ public class MicroBlazeInstruction extends AInstruction {
         this.fieldData = fieldData;
     }
 
+    /*
+     * Copy "constructor"
+     */
+    public MicroBlazeInstruction copy() {
+
+        String copyaddr = new String(Integer.toHexString(this.getAddress().intValue()));
+        String copyinst = new String(this.getInstruction());
+
+        return new MicroBlazeInstruction(copyaddr, copyinst, this.getData(), this.getFieldData(), this.getProperties());
+    }
+
     @Override
     public MicroBlazeInstructionData getData() {
         // idata is guaranteed to be an (ArmInstructionData)

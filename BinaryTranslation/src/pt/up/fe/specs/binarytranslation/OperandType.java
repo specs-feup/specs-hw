@@ -23,9 +23,9 @@ public enum OperandType {
 
     REGISTER,
     IMMEDIATE,
-    VAGUE;
+    SYMBOLIC;
 
-    // VAGUE --> this is special type which appears in addition to register types
+    // SYMBOLIC --> this is special type which appears in addition to register types
     // it represents a register operand which has been abstracted from actual execution
     // e.g. "addi r5, r6, r3 ---> "addi r<a>, r<b>, r<c>"
 
@@ -33,16 +33,4 @@ public enum OperandType {
     // INDIRECT
     // POINTER (?)
     //
-
-    public Boolean isRegister() {
-        return this == REGISTER;
-    }
-
-    public Boolean isImmediate() {
-        return this == IMMEDIATE;
-    }
-
-    public Boolean isVague() {
-        return this == VAGUE;
-    }
 }

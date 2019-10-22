@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.legacy;
 
+import java.util.Map;
+
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionData;
 import pt.up.fe.specs.binarytranslation.InstructionProperties;
@@ -198,5 +200,17 @@ public interface SimpleInstruction32 extends Instruction {
     default String getRepresentaion() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    default Instruction copy() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    default void makeSymbolic(Number address, Map<Integer, String> regremap) {
+        // TODO Auto-generated method stub
+
     }
 }

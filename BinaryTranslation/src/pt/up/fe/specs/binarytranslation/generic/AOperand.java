@@ -28,15 +28,21 @@ import pt.up.fe.specs.binarytranslation.OperandProperties;
 public abstract class AOperand implements Operand {
 
     protected Integer value;
+    protected String svalue; // used for symbolic representation (TODO refactor to another class? e.g., SymbolicOperand)
     protected OperandProperties props;
 
     public AOperand(OperandProperties props, Integer value) {
         this.props = props;
         this.value = value;
+        this.svalue = String.valueOf(this.value);
     }
 
-    public Integer getValue() {
+    public Integer getIntegerValue() {
         return this.value;
+    }
+
+    public String getStringValue() {
+        return this.svalue;
     }
 
     public Boolean isRegister() {
@@ -47,19 +53,16 @@ public abstract class AOperand implements Operand {
         return (this.props.getTypes().contains(IMMEDIATE));
     }
 
+    public Boolean isSymbolic() {
+        return (this.props.getTypes().contains(SYMBOLIC));
+    }
+
     public OperandProperties getProperties() {
         return this.props;
     }
 
     @Override
     public String getRepresentation() {
-        String ret = "";
-        if (this.isRegister())
-            ret = (props.getPrefix() + Integer.toString(this.value)) + props.getSuffix();
-
-        else if (this.isImmediate())
-            ret = (props.getPrefix() + Integer.toHexString(this.value)) + props.getSuffix();
-
-        return ret;
+        return (props.getPrefix() + this.getStringValue() + props.getSuffix());
     }
 }

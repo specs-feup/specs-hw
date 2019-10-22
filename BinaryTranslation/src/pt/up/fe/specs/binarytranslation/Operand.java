@@ -22,9 +22,16 @@ package pt.up.fe.specs.binarytranslation;
 public interface Operand {
 
     /*
-     * Get value
+     * Get value as integer (good for non symbilic cases)
+     * If operand isnt symbolic, getStringValue returns the
+     * integer value as a String
      */
-    public Integer getValue();
+    public Integer getIntegerValue();
+
+    /*
+     * As string (good for symbolic values)
+     */
+    public String getStringValue();
 
     /*
      * Get properties of operand (can query for 
@@ -49,7 +56,7 @@ public interface Operand {
 
     /*
      * Used to abstract an operand away from an 
-     * executed representation, to a vague representation
+     * executed representation, to a symbolic representation
      */
-    public void setVague();
+    public void setSymbolic(String value);
 }
