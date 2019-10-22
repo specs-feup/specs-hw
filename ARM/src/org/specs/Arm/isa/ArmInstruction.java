@@ -2,6 +2,7 @@ package org.specs.Arm.isa;
 
 import java.util.Arrays;
 
+import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionData;
 import pt.up.fe.specs.binarytranslation.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.InstructionSet;
@@ -81,6 +82,12 @@ public class ArmInstruction extends AInstruction {
 
     public ArmAsmInstructionData getFieldData() {
         return this.fieldData;
+    }
+
+    @Override
+    public Instruction copy() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
