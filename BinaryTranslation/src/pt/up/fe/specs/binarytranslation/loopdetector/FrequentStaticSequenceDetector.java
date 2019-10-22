@@ -17,9 +17,6 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
     private List<Instruction> insts;
     private StaticStream elfstream;
 
-    // easy lookup of insts by converting addr to index
-    private Map<Integer, Integer> addrtoindex;
-
     /*
      * Since list needs revisiting, absorb all instructions in
      * the static dump into StaticBasicBlockDetector class instance
@@ -27,13 +24,10 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
     public FrequentStaticSequenceDetector(StaticStream istream) {
         this.elfstream = istream;
         this.insts = new ArrayList<Instruction>();
-        this.addrtoindex = new HashMap<Integer, Integer>();
 
-        int i = 0;
-        Instruction inst;
+        Instruction inst = null;
         while ((inst = elfstream.nextInstruction()) != null) {
             insts.add(inst);
-            addrtoindex.put(inst.getAddress().intValue(), i++);
         }
     }
 
@@ -173,20 +167,17 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
             Map<String, String> regremap = makeRegReplaceMap(candidate);
             // TODO the replacement function should be a parameter here
 
-            // need to make a copy of each instruction! so next detections dont break
-            // List<Instruction> abstractedcandidate = makeSymbolic(candidate, regremap);
-
             String hashstring = "";
             for (Instruction inst : candidate) {
 
-                // make part 1 of hashstring
+                // make part 1 of hash string
                 hashstring += "_" + Integer.toHexString(inst.getProperties().getOpCode());
                 // TODO this unique id (the opcode) will not be unique for arm, since the
                 // specific instruction is resolved later with fields that arent being
                 // interpreted yet; how to solve?
                 // TODO replace getOpCode with getUniqueID() (as a string)
 
-                // make part 2 of hashstring
+                // make part 2 of hash string
                 for (Operand op : inst.getData().getOperands()) {
                     hashstring += "_" + regremap.get(op.getRepresentation());
                     // at this point, imms have either been (or not) all (or partially) symbolified
@@ -221,7 +212,7 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
     }
 
     /*
-     * Returns frequenty occuring instruction sequences
+     * Returns frequently occurring instruction sequences
      */
     @Override
     public List<BinarySegment> detectSegments() {
@@ -238,9 +229,7 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
         List<BinarySegment> allsequences = new ArrayList<BinarySegment>();
 
-        /*
-         * Construct sequences between given sizes
-         */
+        // Construct sequences between given sizes
         for (int size = 2; size < 10; size++) {
             for (HashedSequence seq : getSequences(size)) {
                 List<Instruction> symbolicseq = makeSymbolic(seq.instlist, seq.regremap);
