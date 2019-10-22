@@ -223,10 +223,8 @@ public abstract class AInstruction implements Instruction {
             if (op.isRegister())
                 op.setSymbolic(regremap.get(op.getIntegerValue()));
 
-            else if (op.isImmediate())
-                op.setSymbolic("imm" + String.valueOf(immctr++));
-
-            System.out.print(op.getRepresentation() + "\n");
+            // else if (op.isImmediate())
+            // op.setSymbolic("imm" + String.valueOf(immctr++));
         }
     }
 }

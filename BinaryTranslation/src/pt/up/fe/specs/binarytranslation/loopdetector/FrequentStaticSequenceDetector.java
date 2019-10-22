@@ -167,14 +167,16 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
                 // make part 2 of hashstring
                 for (Operand op : inst.getData().getOperands()) {
-                    if (op.isRegister()) {
-                        hashstring += "_" + op.getStringValue();
-                    }
+                    // if (op.isRegister()) {
+                    hashstring += "_" + op.getStringValue();
+                    // }
                 }
             }
 
             Integer hashCode = hashstring.hashCode();
             Integer startAddr = insts.get(i).getAddress().intValue();
+
+            System.out.print(hashstring + "\n");
 
             // if sequence was complete, add (or add addr to existing equal sequence)
             if (sequences.containsKey(hashCode)) {
@@ -211,7 +213,7 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         /*
          * Construct sequences between given sizes
          */
-        for (int size = 2; size < 10; size++) {
+        for (int size = 2; size < 4; size++) {
             for (HashedSequence seq : getSequences(size)) {
                 allsequences.add(new FrequentSequence(seq.instlist, seq.addrs));
             }

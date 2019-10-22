@@ -19,4 +19,13 @@ public class MicroBlazeOperand extends AOperand {
         this.svalue = value;
         this.value = -1;
     }
+
+    /*
+     * Copy "constructor"
+     */
+    @Override
+    public MicroBlazeOperand copy() {
+        return new MicroBlazeOperand(
+                (MicroBlazeOperandProperties) this.props, Integer.valueOf(this.value));
+    }
 }
