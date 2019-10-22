@@ -48,7 +48,8 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
         HashedSequence(List<Instruction> instlist, Integer addr, Map<String, String> regremap) {
             this.instlist = instlist;
-            this.addrs = new ArrayList<Integer>(addr);
+            this.addrs = new ArrayList<Integer>();
+            this.addrs.add(addr);
             this.regremap = regremap;
         }
     }
@@ -80,14 +81,28 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
      */
     private Map<String, String> makeRegReplaceMap(List<Instruction> ilist) {
 
-        char symbol = 'a';
+        Map<String, Character> counter = new HashMap<String, Character>();
         Map<String, String> regremap = new HashMap<String, String>();
         for (Instruction i : ilist) {
 
             var operands = i.getData().getOperands();
             for (Operand op : operands) {
-                if (!regremap.containsKey(op.getRepresentation()))
-                    regremap.put(op.getRepresentation(), String.valueOf(symbol++));
+                if (!regremap.containsKey(op.getRepresentation())) {
+
+                    // get current count
+                    char c;
+                    var typeid = op.getProperties().getName();
+                    if (!counter.containsKey(typeid))
+                        counter.put(typeid, 'a');
+                    else {
+                        c = counter.get(typeid).charValue();
+                        counter.put(typeid, Character.valueOf(++c));
+                    }
+
+                    // remap
+                    c = counter.get(typeid).charValue();
+                    regremap.put(op.getRepresentation(), String.valueOf(c));
+                }
             }
 
             // TODO implement imm remapping strategies here??
@@ -101,11 +116,13 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
      */
     private List<Instruction> makeSymbolic(List<Instruction> ilist, Map<String, String> regremap) {
 
+        // Hard copy
         List<Instruction> symbolic = new ArrayList<Instruction>();
         for (Instruction i : ilist) {
             symbolic.add(i.copy());
         }
 
+        // Symbolify
         Integer addr = 0;
         for (Instruction i : symbolic) {
             i.makeSymbolic(addr, regremap);
@@ -224,7 +241,7 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         /*
          * Construct sequences between given sizes
          */
-        for (int size = 2; size < 4; size++) {
+        for (int size = 2; size < 10; size++) {
             for (HashedSequence seq : getSequences(size)) {
                 List<Instruction> symbolicseq = makeSymbolic(seq.instlist, seq.regremap);
                 allsequences.add(new FrequentSequence(symbolicseq, seq.addrs));

@@ -30,4 +30,9 @@ public interface OperandProperties {
      * Width of register or immediate operand
      */
     public int getWidth();
+
+    /*
+     * helper method too look up name the list
+     */
+    public String getName();
 }

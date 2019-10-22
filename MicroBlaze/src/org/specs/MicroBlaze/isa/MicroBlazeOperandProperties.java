@@ -42,4 +42,8 @@ public enum MicroBlazeOperandProperties implements OperandProperties {
     public List<OperandType> getTypes() {
         return this.genericType;
     }
+
+    public String getName() {
+        return this.name();
+    }
 }
