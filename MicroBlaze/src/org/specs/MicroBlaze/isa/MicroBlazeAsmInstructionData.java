@@ -1,6 +1,7 @@
 package org.specs.MicroBlaze.isa;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,14 @@ public class MicroBlazeAsmInstructionData extends AsmInstructionData {
      */
     public MicroBlazeAsmInstructionData(AsmInstructionData fieldData) {
         super(fieldData.get(TYPE), fieldData.get(FIELDS));
+    }
+
+    /*
+     * Copy "constructor"
+     */
+    public MicroBlazeAsmInstructionData copy() {
+        return new MicroBlazeAsmInstructionData(this.getType(),
+                new HashMap<String, String>(this.getFields()));
     }
 
     /*
@@ -48,5 +57,4 @@ public class MicroBlazeAsmInstructionData extends AsmInstructionData {
 
         return operands;
     }
-
 }

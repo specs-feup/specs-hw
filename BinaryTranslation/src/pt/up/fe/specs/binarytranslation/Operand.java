@@ -59,4 +59,9 @@ public interface Operand {
      * executed representation, to a symbolic representation
      */
     public void setSymbolic(String value);
+
+    /*
+     * Copy this object
+     */
+    public Operand copy();
 }

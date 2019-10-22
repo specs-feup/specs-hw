@@ -64,8 +64,9 @@ public class MicroBlazeInstruction extends AInstruction {
 
         String copyaddr = new String(Integer.toHexString(this.getAddress().intValue()));
         String copyinst = new String(this.getInstruction());
-
-        return new MicroBlazeInstruction(copyaddr, copyinst, this.getData(), this.getFieldData(), this.getProperties());
+        MicroBlazeInstructionData copyData = this.getData().copy();
+        MicroBlazeAsmInstructionData copyFieldData = this.getFieldData().copy();
+        return new MicroBlazeInstruction(copyaddr, copyinst, copyData, copyFieldData, this.getProperties());
     }
 
     @Override

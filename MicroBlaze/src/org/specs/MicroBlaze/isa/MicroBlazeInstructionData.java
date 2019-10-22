@@ -1,12 +1,43 @@
 package org.specs.MicroBlaze.isa;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.InstructionData;
 import pt.up.fe.specs.binarytranslation.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.InstructionType;
+import pt.up.fe.specs.binarytranslation.Operand;
 
 public class MicroBlazeInstructionData extends InstructionData {
 
+    /*
+     * Only public constructor
+     */
     public MicroBlazeInstructionData(InstructionProperties props, MicroBlazeAsmInstructionData fieldData) {
         super(props);
         this.operands = fieldData.getOperands();
+    }
+
+    /*
+     * Helper constructor for copy, calls super copy
+     */
+    private MicroBlazeInstructionData(String plainname,
+            int latency, int delay, List<InstructionType> genericType, List<Operand> ops) {
+        super(plainname, latency, delay, genericType);
+        this.operands = ops;
+    }
+
+    /*
+     * Copy "constructor"
+     */
+    public MicroBlazeInstructionData copy() {
+        String copyname = new String(this.plainname);
+        List<InstructionType> copytype = new ArrayList<InstructionType>(this.genericType);
+
+        List<Operand> copyops = new ArrayList<Operand>();
+        for (Operand op : this.operands)
+            copyops.add(op.copy());
+
+        return new MicroBlazeInstructionData(copyname, this.latency, this.delay, copytype, copyops);
     }
 }
