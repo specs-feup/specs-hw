@@ -17,6 +17,11 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
+/**
+ * 
+ * @author Nuno
+ *
+ */
 public class BasicBlock extends ABinarySegment {
 
     private boolean terminated = false;

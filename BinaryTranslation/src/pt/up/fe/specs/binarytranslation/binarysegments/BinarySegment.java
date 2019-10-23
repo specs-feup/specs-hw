@@ -18,6 +18,11 @@ import java.util.List;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
 
+/**
+ * 
+ * @author Nuno
+ *
+ */
 public interface BinarySegment {
 
     enum SegmentType {
