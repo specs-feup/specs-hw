@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class BasicBlock extends ABinarySegment {
 
