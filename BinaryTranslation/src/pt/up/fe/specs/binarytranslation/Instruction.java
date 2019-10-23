@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation;
 
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
 
 /**
  * Represents a generic assembly instruction.
@@ -176,7 +176,7 @@ public interface Instruction {
      * Returns Raw instruction fields as produced 
      * by respective parser (AsmInstructionParser)
      */
-    public AsmInstructionData getFieldData();
+    public AsmFieldData getFieldData();
 
     /*
      * Returns a unique hash representation of the instruction

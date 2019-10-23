@@ -14,7 +14,7 @@ public class MicroBlazeStaticBasicBlockDetectorTester {
 
     @Test
     public void test() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul_n4096_l1000.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/test.elf");
         fd.deleteOnExit();
 
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {

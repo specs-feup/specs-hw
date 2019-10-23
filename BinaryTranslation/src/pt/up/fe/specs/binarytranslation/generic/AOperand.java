@@ -57,6 +57,14 @@ public abstract class AOperand implements Operand {
         return (this.props.getTypes().contains(SYMBOLIC));
     }
 
+    public Boolean isRead() {
+        return (this.props.getTypes().contains(READ));
+    }
+
+    public Boolean isWrite() {
+        return (this.props.getTypes().contains(WRITE));
+    }
+
     public OperandProperties getProperties() {
         return this.props;
     }

@@ -50,6 +50,16 @@ public interface Operand {
     public Boolean isImmediate();
 
     /*
+     * 
+     */
+    public Boolean isRead();
+
+    /*
+     * 
+     */
+    public Boolean isWrite();
+
+    /*
      * Return formated string with <prefix><value>
      */
     public String getRepresentation();

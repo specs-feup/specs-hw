@@ -21,5 +21,5 @@ public interface IsaParser {
      * @param instruction
      * @return
      */
-    AsmInstructionData parse(String instruction);
+    AsmFieldData parse(String instruction);
 }

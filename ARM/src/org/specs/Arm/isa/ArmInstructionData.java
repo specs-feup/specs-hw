@@ -20,7 +20,7 @@ public class ArmInstructionData extends InstructionData {
     private final ArmInstructionCondition condition;
     private final int branchTarget;
 
-    public ArmInstructionData(InstructionProperties props, ArmAsmInstructionData fieldData) {
+    public ArmInstructionData(InstructionProperties props, ArmAsmFieldData fieldData) {
         super(props);
         this.bitwidth = fieldData.getBitWidth();
         this.isSimd = fieldData.isSimd();

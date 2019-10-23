@@ -1,6 +1,6 @@
 package org.specs.Arm.isa;
 
-import static org.specs.Arm.isa.ArmInstructionType.*;
+import static org.specs.Arm.isa.ArmAsmFieldType.*;
 import static pt.up.fe.specs.binarytranslation.InstructionType.*;
 
 import java.util.Arrays;
@@ -8,8 +8,8 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.InstructionType;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 
 public enum ArmInstructionProperties implements InstructionProperties {
@@ -333,16 +333,16 @@ public enum ArmInstructionProperties implements InstructionProperties {
     private final int reducedopcode; // only the bits that matter, built after parsing the fields
     private final int latency;
     private final int delay;
-    private final ArmInstructionType codetype;
+    private final ArmAsmFieldType codetype;
     private final List<InstructionType> genericType;
-    private final AsmInstructionData fieldData; // decoded fields of this instruction
+    private final AsmFieldData fieldData; // decoded fields of this instruction
     private final IsaParser parser = new ArmIsaParser();
 
     /*
      *  Helper constructor
      */
     private ArmInstructionProperties(int opcode, int latency,
-            int delay, ArmInstructionType mbtype, List<InstructionType> tp) {
+            int delay, ArmAsmFieldType mbtype, List<InstructionType> tp) {
         this.instructionName = "";
         this.enumName = name();
         this.opcode = opcode;
@@ -360,7 +360,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
      * Constructor
      */
     private ArmInstructionProperties(int opcode, int latency,
-            int delay, ArmInstructionType mbtype, InstructionType... tp) {
+            int delay, ArmAsmFieldType mbtype, InstructionType... tp) {
         this(opcode, latency, delay, mbtype, Arrays.asList(tp));
         this.instructionName = name();
         // System.out.print(this.codetype.toString() + ": " + this.instructionName + "\n");
@@ -371,7 +371,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
      * Helper constructor with explicit name for instruction
      */
     private ArmInstructionProperties(String explicitname, int opcode, int latency,
-            int delay, ArmInstructionType mbtype, InstructionType... tp) {
+            int delay, ArmAsmFieldType mbtype, InstructionType... tp) {
         this(opcode, latency, delay, mbtype, Arrays.asList(tp));
         this.instructionName = explicitname;
         // System.out.print(this.codetype.toString() + ": " + this.instructionName + "\n");
@@ -429,14 +429,14 @@ public enum ArmInstructionProperties implements InstructionProperties {
     /*
      * get code type of a particular instruction
      */
-    public AsmInstructionType getCodeType() {
+    public AsmFieldType getCodeType() {
         return this.codetype;
     }
 
     /*
      * Only used for Junit tests!
      */
-    public AsmInstructionData getFieldData() {
+    public AsmFieldData getFieldData() {
         return fieldData;
     }
 }

@@ -3,7 +3,7 @@ package org.specs.Arm.asm;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.specs.Arm.isa.ArmAsmInstructionData;
+import org.specs.Arm.isa.ArmAsmFieldData;
 import org.specs.Arm.isa.ArmInstruction;
 import org.specs.Arm.isa.ArmInstructionData;
 
@@ -1748,7 +1748,7 @@ public class ArmInstructionInstatiationTest {
     private void testDecode(String addr, String name, String expected, String binaryInstruction) {
         ArmInstruction testinst = ArmInstruction.newInstance(addr, binaryInstruction);
         ArmInstructionData idata = testinst.getData();
-        ArmAsmInstructionData fieldData = testinst.getFieldData();
+        ArmAsmFieldData fieldData = testinst.getFieldData();
 
         System.out.print(name + "\tresolved to\t->\t" + testinst.getName() +
                 "\t(SIMD: " + idata.isSimd() + ", width: " + idata.getBitWidth() + ")\n");

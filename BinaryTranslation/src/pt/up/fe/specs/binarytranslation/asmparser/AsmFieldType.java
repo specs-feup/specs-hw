@@ -11,17 +11,14 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.isa;
+package pt.up.fe.specs.binarytranslation.asmparser;
 
-public interface MicroBlazeInstructionFields {
+/**
+ * Represents the general type of a particular assembly instruction.
+ * 
+ * @author JoaoBispo
+ *
+ */
+public interface AsmFieldType {
 
-    static String OPCODEA = "opcodea";
-    static String OPCODEB = "opcodeb";
-    static String OPCODEC = "opcodec";
-    static String OPCODED = "opcoded";
-    static String RD = "registerd";
-    static String RA = "registera";
-    static String RB = "registerb";
-    static String IMM = "imm";
-    static String IMMW = "immw";
 }

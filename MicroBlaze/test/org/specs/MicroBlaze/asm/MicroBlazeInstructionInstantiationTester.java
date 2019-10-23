@@ -3,7 +3,7 @@ package org.specs.MicroBlaze.asm;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.isa.MicroBlazeAsmInstructionData;
+import org.specs.MicroBlaze.isa.MicroBlazeAsmFieldData;
 import org.specs.MicroBlaze.isa.MicroBlazeInstruction;
 import org.specs.MicroBlaze.isa.MicroBlazeInstructionData;
 
@@ -940,7 +940,7 @@ public class MicroBlazeInstructionInstantiationTester {
     private void testDecode(String addr, String name, String expected, String binaryInstruction) {
         MicroBlazeInstruction testinst = MicroBlazeInstruction.newInstance(addr, binaryInstruction);
         MicroBlazeInstructionData idata = testinst.getData();
-        MicroBlazeAsmInstructionData fieldData = testinst.getFieldData();
+        MicroBlazeAsmFieldData fieldData = testinst.getFieldData();
 
         System.out.print(name + "\tresolved to\t->\t" + testinst.getName() +
                 "\t(data width: " + idata.getBitWidth() + ")\n");

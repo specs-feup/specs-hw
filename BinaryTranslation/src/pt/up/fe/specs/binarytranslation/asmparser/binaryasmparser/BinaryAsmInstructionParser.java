@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmParser;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.stringparser.StringParser;
 
@@ -39,19 +39,19 @@ import pt.up.fe.specs.util.stringparser.StringParser;
  * @author JoaoBispo
  *
  */
-public class BinaryAsmInstructionParser implements AsmInstructionParser {
+public class BinaryAsmInstructionParser implements AsmParser {
 
-    private final AsmInstructionType type;
+    private final AsmFieldType type;
     private final List<BinaryAsmRule> rules;
     private final Predicate<Map<String, String>> predicate;
 
-    public BinaryAsmInstructionParser(AsmInstructionType type, String rule,
+    public BinaryAsmInstructionParser(AsmFieldType type, String rule,
             Predicate<Map<String, String>> predicate) {
 
         this(type, parseBinaryAsmRule(rule), predicate);
     }
 
-    private BinaryAsmInstructionParser(AsmInstructionType type, List<BinaryAsmRule> rules,
+    private BinaryAsmInstructionParser(AsmFieldType type, List<BinaryAsmRule> rules,
             Predicate<Map<String, String>> predicate) {
 
         this.type = type;
@@ -167,7 +167,7 @@ public class BinaryAsmInstructionParser implements AsmInstructionParser {
     }
 
     @Override
-    public Optional<AsmInstructionData> parse(String asmInstruction) {
+    public Optional<AsmFieldData> parse(String asmInstruction) {
 
         long aux = Long.parseLong(asmInstruction, 16);
         var binaryString = Long.toBinaryString(aux);
@@ -195,7 +195,7 @@ public class BinaryAsmInstructionParser implements AsmInstructionParser {
             return Optional.empty();
         }
 
-        return Optional.of(new AsmInstructionData(type, fields));
+        return Optional.of(new AsmFieldData(type, fields));
     }
 
 }

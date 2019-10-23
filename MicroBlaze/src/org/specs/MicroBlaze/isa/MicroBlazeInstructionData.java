@@ -13,7 +13,7 @@ public class MicroBlazeInstructionData extends InstructionData {
     /*
      * Only public constructor
      */
-    public MicroBlazeInstructionData(InstructionProperties props, MicroBlazeAsmInstructionData fieldData) {
+    public MicroBlazeInstructionData(InstructionProperties props, MicroBlazeAsmFieldData fieldData) {
         super(props);
         this.operands = fieldData.getOperands();
     }

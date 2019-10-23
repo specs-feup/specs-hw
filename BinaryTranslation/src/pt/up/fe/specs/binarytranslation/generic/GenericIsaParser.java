@@ -17,25 +17,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmParser;
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 
 public abstract class GenericIsaParser implements IsaParser {
 
-    private final List<AsmInstructionParser> instructionParsers;
+    private final List<AsmParser> instructionParsers;
     private final Set<String> allowedFields;
 
-    public GenericIsaParser(List<AsmInstructionParser> instructionParsers, Set<String> allowedFields) {
+    public GenericIsaParser(List<AsmParser> instructionParsers, Set<String> allowedFields) {
         this.instructionParsers = instructionParsers;
         this.allowedFields = allowedFields;
     }
 
-    public GenericIsaParser(List<AsmInstructionParser> instructionParsers) {
+    public GenericIsaParser(List<AsmParser> instructionParsers) {
         this(instructionParsers, null);
     }
 
-    protected AsmInstructionData doparse(String instruction) {
+    protected AsmFieldData doparse(String instruction) {
         // Iterate over all parsers
         for (var parser : instructionParsers) {
             var instData = parser.parse(instruction).orElse(null);
@@ -47,7 +47,7 @@ public abstract class GenericIsaParser implements IsaParser {
 
             // If allowed fields set, test parsed fields
             if (allowedFields != null) {
-                var fields = instData.get(AsmInstructionData.FIELDS);
+                var fields = instData.get(AsmFieldData.FIELDS);
 
                 if (!allowedFields.containsAll(fields.keySet())) {
                     Set<String> undefinedKeys = new HashSet<>(fields.keySet());

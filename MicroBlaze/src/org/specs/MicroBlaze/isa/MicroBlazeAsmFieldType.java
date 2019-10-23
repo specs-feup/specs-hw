@@ -13,9 +13,9 @@
 
 package org.specs.MicroBlaze.isa;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
 
-public enum MicroBlazeInstructionType implements AsmInstructionType {
+public enum MicroBlazeAsmFieldType implements AsmFieldType {
 
     SPECIAL,
     MBAR,

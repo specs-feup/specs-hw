@@ -17,6 +17,11 @@ public interface OperandProperties {
     public List<OperandType> getTypes();
 
     /*
+     * Should return a main archetype (i.e. REGISTER or IMMEDIATE)
+     */
+    public OperandType getMainType();
+
+    /*
      * Gets the human readable prefix of the operand, e.g. "r", or "q"
      */
     public String getPrefix();

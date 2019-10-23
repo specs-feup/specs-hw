@@ -10,8 +10,11 @@ public class MicroBlazeOperand extends AOperand {
 
     @Override
     public void setSymbolic(String value) {
-        if (this.props == MicroBlazeOperandProperties.register)
-            this.props = MicroBlazeOperandProperties.symbolic_register;
+        if (this.props == MicroBlazeOperandProperties.register_read)
+            this.props = MicroBlazeOperandProperties.symbolic_register_read;
+
+        else if (this.props == MicroBlazeOperandProperties.register_write)
+            this.props = MicroBlazeOperandProperties.symbolic_register_write;
 
         else if (this.props == MicroBlazeOperandProperties.immediate)
             this.props = MicroBlazeOperandProperties.symbolic_immediate;

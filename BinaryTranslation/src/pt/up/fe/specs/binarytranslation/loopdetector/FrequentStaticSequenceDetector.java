@@ -8,6 +8,7 @@ import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.Operand;
+import pt.up.fe.specs.binarytranslation.OperandType;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.FrequentSequence;
 import pt.up.fe.specs.binarytranslation.interfaces.StaticStream;
@@ -75,7 +76,7 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
      */
     private Map<String, String> makeRegReplaceMap(List<Instruction> ilist) {
 
-        Map<String, Character> counter = new HashMap<String, Character>();
+        Map<OperandType, Character> counter = new HashMap<OperandType, Character>();
         Map<String, String> regremap = new HashMap<String, String>();
         for (Instruction i : ilist) {
 
@@ -85,7 +86,13 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
                     // get current count
                     char c;
-                    var typeid = op.getProperties().getName();
+
+                    // OperandType
+                    var typeid = op.getProperties().getMainType();
+
+                    // TODO should be an exception here if operand is symbolic
+                    // must be non symbolic REGISTER or IMMEDIATE
+
                     if (!counter.containsKey(typeid))
                         counter.put(typeid, 'a');
                     else {

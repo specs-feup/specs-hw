@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.asmparser;
 
 import java.util.Optional;
 
-public interface AsmInstructionParser {
+public interface AsmParser {
 
     /**
      * Receives a string with the assembly instruction, if the given instruction respects the format, returns the parsed
@@ -24,5 +24,5 @@ public interface AsmInstructionParser {
      * @param binaryString
      * @return
      */
-    Optional<AsmInstructionData> parse(String asmInstruction);
+    Optional<AsmFieldData> parse(String asmInstruction);
 }
