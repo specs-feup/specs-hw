@@ -1,12 +1,14 @@
-package org.specs.MicroBlaze.isa;
+package org.specs.MicroBlaze.parsing;
 
-import static org.specs.MicroBlaze.isa.MicroBlazeAsmFields.*;
-import static org.specs.MicroBlaze.isa.MicroBlazeOperandProperties.*;
+import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.*;
+import static org.specs.MicroBlaze.parsing.MicroBlazeAsmFields.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.specs.MicroBlaze.instruction.MicroBlazeOperand;
 
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;

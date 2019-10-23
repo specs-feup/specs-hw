@@ -11,17 +11,28 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.isa;
+package org.specs.MicroBlaze.parsing;
 
-public interface MicroBlazeAsmFields {
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 
-    static String OPCODEA = "opcodea";
-    static String OPCODEB = "opcodeb";
-    static String OPCODEC = "opcodec";
-    static String OPCODED = "opcoded";
-    static String RD = "registerd";
-    static String RA = "registera";
-    static String RB = "registerb";
-    static String IMM = "imm";
-    static String IMMW = "immw";
+public enum MicroBlazeAsmFieldType implements AsmFieldType {
+
+    SPECIAL,
+    MBAR,
+    UBRANCH,
+    ULBRANCH,
+    UIBRANCH,
+    UILBRANCH,
+    CBRANCH,
+    CIBRANCH,
+    BARREL,
+    IBARREL_FMT1,
+    IBARREL_FMT2,
+    RETURN,
+    STREAM,
+    DSTREAM,
+    IMM,
+    TYPE_A,
+    TYPE_B,
+    UNDEFINED
 }

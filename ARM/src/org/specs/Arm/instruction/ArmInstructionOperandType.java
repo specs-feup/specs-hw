@@ -1,4 +1,4 @@
-package org.specs.Arm.isa;
+package org.specs.Arm.instruction;
 
 public class ArmInstructionOperandType {
 

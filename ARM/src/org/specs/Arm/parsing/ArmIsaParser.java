@@ -1,6 +1,8 @@
-package org.specs.Arm.isa;
+package org.specs.Arm.parsing;
 
 import java.util.HashSet;
+
+import org.specs.Arm.instruction.ArmInstructionFields;
 
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.parsing.GenericIsaParser;

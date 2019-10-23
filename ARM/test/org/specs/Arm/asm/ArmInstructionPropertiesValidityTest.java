@@ -3,7 +3,7 @@ package org.specs.Arm.asm;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.specs.Arm.isa.ArmInstructionProperties;
+import org.specs.Arm.instruction.ArmInstructionProperties;
 
 public class ArmInstructionPropertiesValidityTest {
 

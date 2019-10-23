@@ -3,6 +3,7 @@ package org.specs.Arm.asm;
 import java.io.File;
 
 import org.junit.Test;
+import org.specs.Arm.stream.ArmElfStream;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.util.SpecsIo;

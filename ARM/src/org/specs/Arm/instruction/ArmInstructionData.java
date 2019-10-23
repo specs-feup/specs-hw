@@ -1,4 +1,6 @@
-package org.specs.Arm.isa;
+package org.specs.Arm.instruction;
+
+import org.specs.Arm.parsing.ArmAsmFieldData;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;

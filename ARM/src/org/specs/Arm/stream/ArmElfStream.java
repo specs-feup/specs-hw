@@ -1,10 +1,10 @@
-package org.specs.Arm.asm;
+package org.specs.Arm.stream;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import org.specs.Arm.isa.ArmInstruction;
+import org.specs.Arm.instruction.ArmInstruction;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;

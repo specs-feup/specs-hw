@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.Arm.isa;
+package org.specs.Arm.instruction;
 
 public interface ArmInstructionFields {
 

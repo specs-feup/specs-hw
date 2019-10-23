@@ -1,7 +1,9 @@
-package org.specs.MicroBlaze.isa;
+package org.specs.MicroBlaze.instruction;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;

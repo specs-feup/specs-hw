@@ -3,6 +3,7 @@ package org.specs.MicroBlaze.asm;
 import java.io.File;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.util.SpecsIo;

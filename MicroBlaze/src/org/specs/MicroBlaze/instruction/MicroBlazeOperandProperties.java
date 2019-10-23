@@ -1,4 +1,4 @@
-package org.specs.MicroBlaze.isa;
+package org.specs.MicroBlaze.instruction;
 
 import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
 

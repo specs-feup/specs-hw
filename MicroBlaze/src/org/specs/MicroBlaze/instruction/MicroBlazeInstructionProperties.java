@@ -11,13 +11,16 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.isa;
+package org.specs.MicroBlaze.instruction;
 
-import static org.specs.MicroBlaze.isa.MicroBlazeAsmFieldType.*;
+import static org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType.*;
 import static pt.up.fe.specs.binarytranslation.instruction.InstructionType.*;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
+import org.specs.MicroBlaze.parsing.MicroBlazeIsaParser;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;

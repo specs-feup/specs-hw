@@ -1,6 +1,10 @@
-package org.specs.Arm.isa;
+package org.specs.Arm.instruction;
 
 import java.util.Arrays;
+
+import org.specs.Arm.parsing.ArmAsmFieldData;
+import org.specs.Arm.parsing.ArmAsmFieldType;
+import org.specs.Arm.parsing.ArmIsaParser;
 
 import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;

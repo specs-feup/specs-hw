@@ -3,7 +3,7 @@ package org.specs.MicroBlaze.asm;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.isa.MicroBlazeInstructionProperties;
+import org.specs.MicroBlaze.instruction.MicroBlazeInstructionProperties;
 
 public class MicroBlazeInstructionPropertiesTester {
 

@@ -11,9 +11,9 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.Arm.isa;
+package org.specs.Arm.parsing;
 
-import static org.specs.Arm.isa.ArmAsmFieldType.*;
+import static org.specs.Arm.parsing.ArmAsmFieldType.*;
 
 import java.util.Arrays;
 import java.util.List;

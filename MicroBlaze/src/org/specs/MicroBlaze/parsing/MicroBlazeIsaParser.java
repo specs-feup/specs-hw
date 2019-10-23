@@ -1,4 +1,4 @@
-package org.specs.MicroBlaze.isa;
+package org.specs.MicroBlaze.parsing;
 
 import java.util.HashSet;
 
