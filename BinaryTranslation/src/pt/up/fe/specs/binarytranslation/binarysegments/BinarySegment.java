@@ -50,7 +50,7 @@ public interface BinarySegment {
     List<Integer> getLiveOuts();
 
     /*
-     * Get list of the instructions in the segment (use with trace segments)
+     * Get list of the instructions in the segment
      */
     List<Instruction> getInstructions();
 

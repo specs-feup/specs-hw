@@ -13,9 +13,9 @@
 
 package org.specs.Arm.isa;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
 
-public enum ArmInstructionType implements AsmInstructionType {
+public enum ArmAsmFieldType implements AsmFieldType {
 
     // 1.
     DPI_PCREL,

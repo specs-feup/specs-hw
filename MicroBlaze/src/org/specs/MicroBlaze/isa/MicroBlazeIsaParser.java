@@ -2,7 +2,7 @@ package org.specs.MicroBlaze.isa;
 
 import java.util.HashSet;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.generic.GenericIsaParser;
 import pt.up.fe.specs.util.SpecsSystem;
 
@@ -10,13 +10,13 @@ public class MicroBlazeIsaParser extends GenericIsaParser {
 
     public MicroBlazeIsaParser() {
         super(MicroBlazeInstructionParsers.PARSERS, new HashSet<>(
-                SpecsSystem.getStaticFields(MicroBlazeInstructionFields.class, String.class)));
+                SpecsSystem.getStaticFields(MicroBlazeAsmFields.class, String.class)));
     }
 
     @Override
-    public MicroBlazeAsmInstructionData parse(String instruction) {
+    public MicroBlazeAsmFieldData parse(String instruction) {
 
-        AsmInstructionData fieldData = doparse(instruction);
-        return new MicroBlazeAsmInstructionData(fieldData);
+        AsmFieldData fieldData = doparse(instruction);
+        return new MicroBlazeAsmFieldData(fieldData);
     }
 }

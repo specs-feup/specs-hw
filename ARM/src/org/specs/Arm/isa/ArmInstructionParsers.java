@@ -13,26 +13,26 @@
 
 package org.specs.Arm.isa;
 
-import static org.specs.Arm.isa.ArmInstructionType.*;
+import static org.specs.Arm.isa.ArmAsmFieldType.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmParser;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
 import pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryAsmInstructionParser;
 
 public interface ArmInstructionParsers {
 
-    static AsmInstructionParser newInstance(AsmInstructionType type, String rule,
+    static AsmParser newInstance(AsmFieldType type, String rule,
             Predicate<Map<String, String>> predicate) {
 
         return new BinaryAsmInstructionParser(type, rule, predicate);
     }
 
-    static AsmInstructionParser newInstance(AsmInstructionType type, String rule) {
+    static AsmParser newInstance(AsmFieldType type, String rule) {
         return newInstance(type, rule, null);
     }
 
@@ -40,7 +40,7 @@ public interface ArmInstructionParsers {
      * For ARMv8 aarch64 instruction set
      */
 
-    List<AsmInstructionParser> PARSERS = Arrays.asList(
+    List<AsmParser> PARSERS = Arrays.asList(
 
             ///////////////////////////////////////////////////////////////////
             // 1. Data processing (Immediate) (C4.1.2) ////////////////////////

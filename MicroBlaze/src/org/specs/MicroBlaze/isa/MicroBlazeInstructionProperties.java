@@ -13,7 +13,7 @@
 
 package org.specs.MicroBlaze.isa;
 
-import static org.specs.MicroBlaze.isa.MicroBlazeInstructionType.*;
+import static org.specs.MicroBlaze.isa.MicroBlazeAsmFieldType.*;
 import static pt.up.fe.specs.binarytranslation.InstructionType.*;
 
 import java.util.Arrays;
@@ -21,8 +21,8 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.InstructionType;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
 import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
 
 public enum MicroBlazeInstructionProperties implements InstructionProperties {
@@ -114,7 +114,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
 
     // DSTREAM
     getd(0x4C00_0000, 1, 1, DSTREAM, G_OTHER),
-    putd(0x4C00_8000, 2, 1, DSTREAM, G_OTHER),
+    putd(0x4C00_0400, 2, 1, DSTREAM, G_OTHER),
 
     // IMM
     imm(0xB000_0000, 1, 0, IMM, G_OTHER),
@@ -228,16 +228,16 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     private final int reducedopcode; // only the bits that matter, built after parsing the fields
     private final int latency;
     private final int delay;
-    private final MicroBlazeInstructionType codetype;
+    private final MicroBlazeAsmFieldType codetype;
     private final List<InstructionType> genericType;
-    private final AsmInstructionData fieldData; // decoded fields of this instruction
+    private final AsmFieldData fieldData; // decoded fields of this instruction
     private final IsaParser parser = new MicroBlazeIsaParser();
 
     /*
      * Constructor
      */
     private MicroBlazeInstructionProperties(int opcode, int latency,
-            int delay, MicroBlazeInstructionType mbtype, List<InstructionType> tp) {
+            int delay, MicroBlazeAsmFieldType mbtype, List<InstructionType> tp) {
         this.instructionName = name();
         this.enumName = name();
         this.opcode = opcode;
@@ -255,7 +255,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
      * Constructor
      */
     private MicroBlazeInstructionProperties(int opcode, int latency,
-            int delay, MicroBlazeInstructionType mbtype, InstructionType... tp) {
+            int delay, MicroBlazeAsmFieldType mbtype, InstructionType... tp) {
         this(opcode, latency, delay, mbtype, Arrays.asList(tp));
         this.instructionName = name();
     }
@@ -264,7 +264,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
      * Helper constructor with explicit name for instruction
      */
     private MicroBlazeInstructionProperties(String explicitname, int opcode, int latency,
-            int delay, MicroBlazeInstructionType mbtype, InstructionType... tp) {
+            int delay, MicroBlazeAsmFieldType mbtype, InstructionType... tp) {
         this(opcode, latency, delay, mbtype, Arrays.asList(tp));
         this.instructionName = explicitname;
         // System.out.print(this.codetype.toString() + ": " + this.instructionName + "\n");
@@ -322,14 +322,14 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     /*
      * get code type of a particular instruction
      */
-    public AsmInstructionType getCodeType() {
+    public AsmFieldType getCodeType() {
         return this.codetype;
     }
 
     /*
      * Only used for Junit tests!
      */
-    public AsmInstructionData getFieldData() {
+    public AsmFieldData getFieldData() {
         return fieldData;
     }
 }

@@ -2,7 +2,7 @@ package org.specs.Arm.isa;
 
 import java.util.HashSet;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.generic.GenericIsaParser;
 import pt.up.fe.specs.util.SpecsSystem;
 
@@ -14,9 +14,9 @@ public class ArmIsaParser extends GenericIsaParser {
     }
 
     @Override
-    public ArmAsmInstructionData parse(String instruction) {
+    public ArmAsmFieldData parse(String instruction) {
 
-        AsmInstructionData fieldData = doparse(instruction);
-        return new ArmAsmInstructionData(fieldData);
+        AsmFieldData fieldData = doparse(instruction);
+        return new ArmAsmFieldData(fieldData);
     }
 }

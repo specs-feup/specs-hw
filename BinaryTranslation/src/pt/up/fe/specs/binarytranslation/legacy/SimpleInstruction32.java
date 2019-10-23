@@ -18,7 +18,7 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.InstructionData;
 import pt.up.fe.specs.binarytranslation.InstructionProperties;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
@@ -179,7 +179,7 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default AsmInstructionData getFieldData() {
+    default AsmFieldData getFieldData() {
         // TODO Auto-generated method stub
         return null;
     }

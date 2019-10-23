@@ -11,14 +11,27 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.asmparser;
+package org.specs.MicroBlaze.isa;
 
-/**
- * Represents the general type of a particular assembly instruction.
- * 
- * @author JoaoBispo
- *
- */
-public interface AsmInstructionType {
+public enum MicroBlazeAsmFields {
 
+    OPCODEA("opcodea"),
+    OPCODEB("opcodeb"),
+    OPCODEC("opcodec"),
+    OPCODED("opcoded"),
+    RD("registerd"),
+    RA("registera"),
+    RB("registerb"),
+    IMM("imm"),
+    IMMW("immw");
+
+    private String field;
+
+    private MicroBlazeAsmFields(String field) {
+        this.field = field;
+    }
+
+    public String getFieldName() {
+        return this.field;
+    }
 }

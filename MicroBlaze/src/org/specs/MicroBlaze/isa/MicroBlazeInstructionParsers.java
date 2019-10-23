@@ -13,30 +13,30 @@
 
 package org.specs.MicroBlaze.isa;
 
-import static org.specs.MicroBlaze.isa.MicroBlazeInstructionType.*;
+import static org.specs.MicroBlaze.isa.MicroBlazeAsmFieldType.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionParser;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmParser;
 import pt.up.fe.specs.binarytranslation.asmparser.binaryasmparser.BinaryAsmInstructionParser;
 
 public interface MicroBlazeInstructionParsers {
 
-    static AsmInstructionParser newInstance(AsmInstructionType type, String rule,
+    static AsmParser newInstance(AsmFieldType type, String rule,
             Predicate<Map<String, String>> predicate) {
 
         return new BinaryAsmInstructionParser(type, rule, predicate);
     }
 
-    static AsmInstructionParser newInstance(AsmInstructionType type, String rule) {
+    static AsmParser newInstance(AsmFieldType type, String rule) {
         return newInstance(type, rule, null);
     }
 
-    List<AsmInstructionParser> PARSERS = Arrays.asList(
+    List<AsmParser> PARSERS = Arrays.asList(
             newInstance(SPECIAL, "100101_opcodea(5)_opcodeb(5)_opcodec(2)_opcoded(14)"),
             newInstance(MBAR, "101110_imm(5)_00010_0(13)_100"),
             newInstance(UBRANCH, "100110_0(5)_opcodea(2)_000_registerb(5)_0(11)"),
@@ -49,7 +49,7 @@ public interface MicroBlazeInstructionParsers {
             newInstance(IBARREL_FMT1, "011001_registerd(5)_registera(5)_00000_opcodeb(2)_0000_imm(5)"),
             newInstance(IBARREL_FMT2, "011001_registerd(5)_registera(5)_opcodea(2)_000_immw(5)_0_imm(5)"),
             newInstance(STREAM, "011011_registerd(5)_registera(5)_opcodea(1)_0(15)"),
-            newInstance(DSTREAM, "010011_registerd(5)_registera(5)_opcodea(1)_0(15)"),
+            newInstance(DSTREAM, "010011_registerd(5)_registera(5)_registerb(5)_opcodea(1)_0(10)"),
             newInstance(IMM, "101100_00000_00000_imm(16)"),
             newInstance(TYPE_A, "opcodea(2)_0_opcodeb(3)_registerd(5)_registera(5)_registerb(5)_opcodec(11)"),
             newInstance(TYPE_B, "opcodea(2)_1_opcodeb(3)_registerd(5)_registera(5)_imm(16)"),

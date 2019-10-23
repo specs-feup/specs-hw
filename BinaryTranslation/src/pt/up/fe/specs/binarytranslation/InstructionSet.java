@@ -18,12 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
 
 /**
  * Represents the hook into an instruction set. Its initialized with a list of {@link InstructionProperties} and all
- * types of instructions {@link AsmInstructionType} in that set, and can decode a given instruction's parsed fields into
+ * types of instructions {@link AsmFieldType} in that set, and can decode a given instruction's parsed fields into
  * useful data.
  * 
  * @author JoaoBispo
@@ -32,14 +32,14 @@ import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
 public class InstructionSet {
 
     private List<InstructionProperties> instList;
-    private List<AsmInstructionType> codeTypes;
-    private Map<AsmInstructionType, List<InstructionProperties>> typeLists;
+    private List<AsmFieldType> codeTypes;
+    private Map<AsmFieldType, List<InstructionProperties>> typeLists;
 
     /*
      * Constructor of instruction set; set is constructed from list of instruction
      * implemented as an enum, which implements InstructionProperties
      */
-    public InstructionSet(List<InstructionProperties> instList, List<AsmInstructionType> codeTypes) {
+    public InstructionSet(List<InstructionProperties> instList, List<AsmFieldType> codeTypes) {
         this.instList = instList;
         this.codeTypes = codeTypes;
         this.typeLists = makeTypeLists();
@@ -48,7 +48,7 @@ public class InstructionSet {
     /*
      * Gets only the instructions which match format of type "type"
      */
-    private List<InstructionProperties> getTypeList(AsmInstructionType type) {
+    private List<InstructionProperties> getTypeList(AsmFieldType type) {
         return this.typeLists.get(type);
     }
 
@@ -56,12 +56,12 @@ public class InstructionSet {
      * Constructs a map where each key is a type of 
      * instruction format, and the list are the instructions of that format
      */
-    private Map<AsmInstructionType, List<InstructionProperties>> makeTypeLists() {
+    private Map<AsmFieldType, List<InstructionProperties>> makeTypeLists() {
 
-        var ret = new HashMap<AsmInstructionType, List<InstructionProperties>>();
+        var ret = new HashMap<AsmFieldType, List<InstructionProperties>>();
 
         // For each instruction format
-        for (AsmInstructionType codetype : codeTypes) {
+        for (AsmFieldType codetype : codeTypes) {
             var nlist = new ArrayList<InstructionProperties>();
 
             // For each instruction in the set, which fits that format, make the list
@@ -78,7 +78,7 @@ public class InstructionSet {
     /*
      * Gets all properties of instruction from ISA, based on raw field data
      */
-    private InstructionProperties getProperties(AsmInstructionData asmData) {
+    private InstructionProperties getProperties(AsmFieldData asmData) {
         InstructionProperties props = null;
         for (InstructionProperties inst : getTypeList(asmData.getType())) {
             if (inst.getReducedOpCode() == asmData.getReducedOpcode()) {
@@ -101,7 +101,7 @@ public class InstructionSet {
     /*
      * Get correct general properties from ISA
      */
-    public InstructionProperties process(AsmInstructionData fieldData) {
+    public InstructionProperties process(AsmFieldData fieldData) {
 
         // uses opcode fields to determine properties
         InstructionProperties props = getProperties(fieldData);

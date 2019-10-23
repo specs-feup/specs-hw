@@ -24,7 +24,7 @@ import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 public class MicroBlazeInstruction extends AInstruction {
 
     // raw field data
-    private final MicroBlazeAsmInstructionData fieldData;
+    private final MicroBlazeAsmFieldData fieldData;
 
     // shared by all instructions, so they can go parse themselves
     private static MicroBlazeIsaParser parser;
@@ -35,7 +35,7 @@ public class MicroBlazeInstruction extends AInstruction {
     static {
         parser = new MicroBlazeIsaParser();
         instSet = new InstructionSet(Arrays.asList(MicroBlazeInstructionProperties.values()),
-                Arrays.asList(MicroBlazeInstructionType.values()));
+                Arrays.asList(MicroBlazeAsmFieldType.values()));
     }
 
     /*
@@ -52,7 +52,7 @@ public class MicroBlazeInstruction extends AInstruction {
      * Create the instruction
      */
     private MicroBlazeInstruction(String address, String instruction, InstructionData idata,
-            MicroBlazeAsmInstructionData fieldData, InstructionProperties props) {
+            MicroBlazeAsmFieldData fieldData, InstructionProperties props) {
         super(Long.parseLong(address, 16), instruction, idata, props);
         this.fieldData = fieldData;
     }
@@ -65,7 +65,7 @@ public class MicroBlazeInstruction extends AInstruction {
         String copyaddr = new String(Integer.toHexString(this.getAddress().intValue()));
         String copyinst = new String(this.getInstruction());
         MicroBlazeInstructionData copyData = this.getData().copy();
-        MicroBlazeAsmInstructionData copyFieldData = this.getFieldData().copy();
+        MicroBlazeAsmFieldData copyFieldData = this.getFieldData().copy();
         return new MicroBlazeInstruction(copyaddr, copyinst, copyData, copyFieldData, this.getProperties());
     }
 
@@ -89,7 +89,7 @@ public class MicroBlazeInstruction extends AInstruction {
     }
 
     @Override
-    public MicroBlazeAsmInstructionData getFieldData() {
+    public MicroBlazeAsmFieldData getFieldData() {
         return this.fieldData;
     }
 }

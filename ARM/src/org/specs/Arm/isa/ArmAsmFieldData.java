@@ -3,22 +3,22 @@ package org.specs.Arm.isa;
 import java.math.BigInteger;
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionData;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
 
-public class ArmAsmInstructionData extends AsmInstructionData {
+public class ArmAsmFieldData extends AsmFieldData {
 
     /*
      * Create raw
      */
-    public ArmAsmInstructionData(AsmInstructionType type, Map<String, String> fields) {
+    public ArmAsmFieldData(AsmFieldType type, Map<String, String> fields) {
         super(type, fields);
     }
 
     /*
      * Create from parent class
      */
-    public ArmAsmInstructionData(AsmInstructionData fieldData) {
+    public ArmAsmFieldData(AsmFieldData fieldData) {
         super(fieldData.get(TYPE), fieldData.get(FIELDS));
     }
 
@@ -27,7 +27,7 @@ public class ArmAsmInstructionData extends AsmInstructionData {
      */
     public int getBitWidth() {
 
-        ArmInstructionType type = (ArmInstructionType) this.get(TYPE);
+        ArmAsmFieldType type = (ArmAsmFieldType) this.get(TYPE);
         var map1 = this.get(FIELDS);
         int sf = 0;
 
@@ -139,7 +139,7 @@ public class ArmAsmInstructionData extends AsmInstructionData {
      */
     public int getBranchTarget() {
 
-        ArmInstructionType type = (ArmInstructionType) this.get(TYPE);
+        ArmAsmFieldType type = (ArmAsmFieldType) this.get(TYPE);
         var map1 = this.get(FIELDS);
         var keys1 = map1.keySet();
         int imm = 0;

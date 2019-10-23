@@ -10,7 +10,7 @@ import pt.up.fe.specs.binarytranslation.InstructionType;
 import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 
 /**
- * Implementation of AInstruction, specialized for ARMv8 project and ISA Relies on {@link ArmAsmInstructionData} and
+ * Implementation of AInstruction, specialized for ARMv8 project and ISA Relies on {@link ArmAsmFieldData} and
  * {@link ArmIsaParser} to initialize internal data.
  * 
  * @author NunoPaulino
@@ -19,7 +19,7 @@ import pt.up.fe.specs.binarytranslation.generic.AInstruction;
 public class ArmInstruction extends AInstruction {
 
     // raw field data
-    private final ArmAsmInstructionData fieldData;
+    private final ArmAsmFieldData fieldData;
 
     // shared by all instructions, so they can go parse themselves
     private static ArmIsaParser parser;
@@ -30,7 +30,7 @@ public class ArmInstruction extends AInstruction {
     static {
         parser = new ArmIsaParser();
         instSet = new InstructionSet(Arrays.asList(ArmInstructionProperties.values()),
-                Arrays.asList(ArmInstructionType.values()));
+                Arrays.asList(ArmAsmFieldType.values()));
     }
 
     /*
@@ -47,7 +47,7 @@ public class ArmInstruction extends AInstruction {
      * Create the instruction
      */
     private ArmInstruction(String address, String instruction, InstructionData idata,
-            ArmAsmInstructionData fieldData, InstructionProperties props) {
+            ArmAsmFieldData fieldData, InstructionProperties props) {
         super(Long.parseLong(address, 16), instruction, idata, props);
         this.fieldData = fieldData;
     }
@@ -80,7 +80,7 @@ public class ArmInstruction extends AInstruction {
     }
     // TODO promote this into AInstruction??
 
-    public ArmAsmInstructionData getFieldData() {
+    public ArmAsmFieldData getFieldData() {
         return this.fieldData;
     }
 

@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmInstructionType;
+import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
 
 /**
  * Each instruction in an ISA is defined by properties. This class is to be implemented by an enum per ISA, which lists
@@ -55,7 +55,7 @@ public interface InstructionProperties {
     /*
      * helper method too look up type of instruction format
      */
-    public AsmInstructionType getCodeType();
+    public AsmFieldType getCodeType();
 
     /*
      * helper method too look up type in the list

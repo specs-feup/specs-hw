@@ -26,12 +26,12 @@ import org.suikasoft.jOptions.Datakey.KeyFactory;
  * @author NunoPaulino
  *
  */
-public class AsmInstructionData extends ADataClass<AsmInstructionData> {
+public class AsmFieldData extends ADataClass<AsmFieldData> {
 
     /*
      * This datakey only holds the instruction type (i.e., binary instruction format as specified in the parsers)
      */
-    public static final DataKey<AsmInstructionType> TYPE = KeyFactory.object("type", AsmInstructionType.class);
+    public static final DataKey<AsmFieldType> TYPE = KeyFactory.object("type", AsmFieldType.class);
 
     /*
      * This map contains the field names specified in the parsers, and their values
@@ -42,7 +42,7 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
     /*
      * Constructor
      */
-    public AsmInstructionData(AsmInstructionType type, Map<String, String> fields) {
+    public AsmFieldData(AsmFieldType type, Map<String, String> fields) {
         set(TYPE, type);
         set(FIELDS, fields);
     }
@@ -50,7 +50,7 @@ public class AsmInstructionData extends ADataClass<AsmInstructionData> {
     /*
      * Get type of instruction as defined by parsers, and in implementations of AsmInstructionType
      */
-    public AsmInstructionType getType() {
+    public AsmFieldType getType() {
         return this.get(TYPE);
     }
 
