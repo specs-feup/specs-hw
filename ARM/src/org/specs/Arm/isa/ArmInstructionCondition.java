@@ -1,6 +1,6 @@
 package org.specs.Arm.isa;
 
-import pt.up.fe.specs.binarytranslation.InstructionCondition;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionCondition;
 
 /*
  * Predicates for the execution of ARM instructions which contain a "cond" field

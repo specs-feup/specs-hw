@@ -2,7 +2,7 @@ package org.specs.MicroBlaze.isa;
 
 import static org.specs.MicroBlaze.isa.MicroBlazeOperandProperties.*;
 
-import pt.up.fe.specs.binarytranslation.generic.AOperand;
+import pt.up.fe.specs.binarytranslation.instruction.AOperand;
 
 public class MicroBlazeOperand extends AOperand {
 

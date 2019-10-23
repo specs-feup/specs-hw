@@ -4,14 +4,14 @@ import java.io.File;
 
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeElfStreamTester {
 
     @Test
     public void test() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/test.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/dump.txt");
         fd.deleteOnExit();
 
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {

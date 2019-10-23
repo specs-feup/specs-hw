@@ -2,8 +2,8 @@ package org.specs.MicroBlaze.isa;
 
 import java.util.HashSet;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
-import pt.up.fe.specs.binarytranslation.generic.GenericIsaParser;
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.parsing.GenericIsaParser;
 import pt.up.fe.specs.util.SpecsSystem;
 
 public class MicroBlazeIsaParser extends GenericIsaParser {

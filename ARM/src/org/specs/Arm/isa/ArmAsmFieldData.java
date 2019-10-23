@@ -3,8 +3,8 @@ package org.specs.Arm.isa;
 import java.math.BigInteger;
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 
 public class ArmAsmFieldData extends AsmFieldData {
 

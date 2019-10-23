@@ -1,7 +1,7 @@
 package org.specs.Arm.isa;
 
-import pt.up.fe.specs.binarytranslation.InstructionData;
-import pt.up.fe.specs.binarytranslation.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 
 /**
  * This class contains the interpreted fields, accessible trough getters, which are read from the raw parser field data,

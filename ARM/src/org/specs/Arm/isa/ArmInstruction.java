@@ -2,12 +2,12 @@ package org.specs.Arm.isa;
 
 import java.util.Arrays;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.binarytranslation.InstructionData;
-import pt.up.fe.specs.binarytranslation.InstructionProperties;
-import pt.up.fe.specs.binarytranslation.InstructionSet;
-import pt.up.fe.specs.binarytranslation.InstructionType;
-import pt.up.fe.specs.binarytranslation.generic.AInstruction;
+import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 
 /**
  * Implementation of AInstruction, specialized for ARMv8 project and ISA Relies on {@link ArmAsmFieldData} and
