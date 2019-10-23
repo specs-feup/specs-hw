@@ -11,6 +11,7 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.Operand;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
+import pt.up.fe.specs.util.SpecsSystem;
 
 public class MicroBlazeAsmFieldData extends AsmFieldData {
 
@@ -47,24 +48,104 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
         var map1 = this.get(FIELDS);
 
         // get int values from fields
-        Map<MicroBlazeAsmFields, Integer> operandmap = new HashMap<MicroBlazeAsmFields, Integer>();
-        for (MicroBlazeAsmFields field : MicroBlazeAsmFields.values()) {
-            if (map1.containsKey(field.getFieldName())) {
-                operandmap.put(field, Integer.parseInt(map1.get(field.getFieldName()), 2));
+        Map<String, Integer> operandmap = new HashMap<String, Integer>();
+
+        var fieldnames = new ArrayList<>(SpecsSystem.getStaticFields(MicroBlazeAsmFields.class, String.class));
+        for (String field : fieldnames) {
+            if (map1.containsKey(field)) {
+                operandmap.put(field, Integer.parseInt(map1.get(field), 2));
             }
         }
 
         // assign to Operand objects based on field format
         List<Operand> operands = new ArrayList<Operand>();
 
+        // order of operands MUST be preserved (or should be)
         switch (type) {
+
+        ///////////////////////////////////////////////////////////////////////
+        case MBAR:
+            operands.add(new MicroBlazeOperand(immediate, operandmap.get(IMM)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case ULBRANCH:
+            operands.add(new MicroBlazeOperand(register_write, operandmap.get(RD)));
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RB)));
+            break;
+
+        /////////////////////////////////////////////////////////////////
+        case UBRANCH:
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RB)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case UILBRANCH:
+            operands.add(new MicroBlazeOperand(register_write, operandmap.get(RD)));
+            operands.add(new MicroBlazeOperand(immediate, operandmap.get(IMM)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case UIBRANCH:
+            operands.add(new MicroBlazeOperand(immediate, operandmap.get(IMM)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case CIBRANCH:
+        case RETURN:
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RA)));
+            operands.add(new MicroBlazeOperand(immediate, operandmap.get(IMM)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case CBRANCH:
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RA)));
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RB)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case IBARREL_FMT1:
+            operands.add(new MicroBlazeOperand(register_write, operandmap.get(RD)));
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RA)));
+            operands.add(new MicroBlazeOperand(immediate, operandmap.get(IMM)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case IBARREL_FMT2:
+            operands.add(new MicroBlazeOperand(register_write, operandmap.get(RD)));
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RA)));
+            operands.add(new MicroBlazeOperand(immediate, operandmap.get(IMM)));
+            operands.add(new MicroBlazeOperand(immediate, operandmap.get(IMMW)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case STREAM:
+            operands.add(new MicroBlazeOperand(register_write, operandmap.get(RD)));
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RA)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case DSTREAM:
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RA)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case IMM:
+            operands.add(new MicroBlazeOperand(immediate, operandmap.get(IMM)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
         case TYPE_A:
-            var rd = Integer.parseInt(map1.get(RD), 2);
-            var ra = Integer.parseInt(map1.get(RA), 2);
-            var rb = Integer.parseInt(map1.get(RB), 2);
-            operands.add(new MicroBlazeOperand(register_write, operandmap.get(RD.getFieldName())));
-            operands.add(new MicroBlazeOperand(register_read, ra));
-            operands.add(new MicroBlazeOperand(register_read, rb));
+            operands.add(new MicroBlazeOperand(register_write, operandmap.get(RD)));
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RA)));
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RB)));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case TYPE_B:
+            operands.add(new MicroBlazeOperand(register_write, operandmap.get(RD)));
+            operands.add(new MicroBlazeOperand(register_read, operandmap.get(RA)));
+            operands.add(new MicroBlazeOperand(immediate, operandmap.get(IMM)));
             break;
 
         default:

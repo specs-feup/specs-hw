@@ -34,7 +34,7 @@ public abstract class AOperand implements Operand {
     public AOperand(OperandProperties props, Integer value) {
         this.props = props;
         this.value = value;
-        this.svalue = String.valueOf(this.value);
+        this.svalue = Integer.toHexString(this.value);
     }
 
     public Integer getIntegerValue() {

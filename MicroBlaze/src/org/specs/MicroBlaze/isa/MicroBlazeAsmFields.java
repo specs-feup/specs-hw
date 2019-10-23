@@ -13,25 +13,15 @@
 
 package org.specs.MicroBlaze.isa;
 
-public enum MicroBlazeAsmFields {
+public interface MicroBlazeAsmFields {
 
-    OPCODEA("opcodea"),
-    OPCODEB("opcodeb"),
-    OPCODEC("opcodec"),
-    OPCODED("opcoded"),
-    RD("registerd"),
-    RA("registera"),
-    RB("registerb"),
-    IMM("imm"),
-    IMMW("immw");
-
-    private String field;
-
-    private MicroBlazeAsmFields(String field) {
-        this.field = field;
-    }
-
-    public String getFieldName() {
-        return this.field;
-    }
+    static String OPCODEA = "opcodea";
+    static String OPCODEB = "opcodeb";
+    static String OPCODEC = "opcodec";
+    static String OPCODED = "opcoded";
+    static String RD = "registerd";
+    static String RA = "registera";
+    static String RB = "registerb";
+    static String IMM = "imm";
+    static String IMMW = "immw";
 }
