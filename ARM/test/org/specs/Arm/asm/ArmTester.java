@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.specs.Arm.isa.ArmIsaParser;
 
-import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
+import pt.up.fe.specs.binarytranslation.parsing.IsaParser;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.utilities.LineStream;

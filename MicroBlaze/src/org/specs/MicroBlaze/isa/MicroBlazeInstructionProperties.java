@@ -14,16 +14,16 @@
 package org.specs.MicroBlaze.isa;
 
 import static org.specs.MicroBlaze.isa.MicroBlazeAsmFieldType.*;
-import static pt.up.fe.specs.binarytranslation.InstructionType.*;
+import static pt.up.fe.specs.binarytranslation.instruction.InstructionType.*;
 
 import java.util.Arrays;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.InstructionProperties;
-import pt.up.fe.specs.binarytranslation.InstructionType;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
-import pt.up.fe.specs.binarytranslation.asmparser.IsaParser;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.parsing.IsaParser;
 
 public enum MicroBlazeInstructionProperties implements InstructionProperties {
 

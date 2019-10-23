@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.Operand;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldData;
-import pt.up.fe.specs.binarytranslation.asmparser.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.instruction.Operand;
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 import pt.up.fe.specs.util.SpecsSystem;
 
 public class MicroBlazeAsmFieldData extends AsmFieldData {

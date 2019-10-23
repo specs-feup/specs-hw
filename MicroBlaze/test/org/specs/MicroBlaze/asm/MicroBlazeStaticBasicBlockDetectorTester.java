@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.loopdetector.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeStaticBasicBlockDetectorTester {

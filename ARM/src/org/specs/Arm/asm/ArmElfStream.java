@@ -6,13 +6,13 @@ import java.util.regex.Pattern;
 
 import org.specs.Arm.isa.ArmInstruction;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.binarytranslation.interfaces.StaticStream;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public class ArmElfStream implements StaticStream {
+public class ArmElfStream implements StaticInstructionStream {
 
     private static final Pattern ARM_REGEX = Pattern.compile("([0-9a-f]+):\\s([0-9a-f]+)");
     private final LineStream insts;

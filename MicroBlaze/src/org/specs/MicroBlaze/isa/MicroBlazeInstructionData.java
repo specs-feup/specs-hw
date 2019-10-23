@@ -3,10 +3,10 @@ package org.specs.MicroBlaze.isa;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.InstructionData;
-import pt.up.fe.specs.binarytranslation.InstructionProperties;
-import pt.up.fe.specs.binarytranslation.InstructionType;
-import pt.up.fe.specs.binarytranslation.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
+import pt.up.fe.specs.binarytranslation.instruction.Operand;
 
 public class MicroBlazeInstructionData extends InstructionData {
 

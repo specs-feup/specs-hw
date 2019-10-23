@@ -1,12 +1,12 @@
 package org.specs.MicroBlaze.isa;
 
-import static pt.up.fe.specs.binarytranslation.OperandType.*;
+import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
 
 import java.util.Arrays;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.OperandProperties;
-import pt.up.fe.specs.binarytranslation.OperandType;
+import pt.up.fe.specs.binarytranslation.instruction.OperandProperties;
+import pt.up.fe.specs.binarytranslation.instruction.OperandType;
 
 public enum MicroBlazeOperandProperties implements OperandProperties {
 

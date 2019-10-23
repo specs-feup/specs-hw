@@ -16,10 +16,10 @@ package org.specs.MicroBlaze.isa;
 import java.math.BigInteger;
 import java.util.Arrays;
 
-import pt.up.fe.specs.binarytranslation.InstructionData;
-import pt.up.fe.specs.binarytranslation.InstructionProperties;
-import pt.up.fe.specs.binarytranslation.InstructionSet;
-import pt.up.fe.specs.binarytranslation.generic.AInstruction;
+import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
 
 public class MicroBlazeInstruction extends AInstruction {
 
