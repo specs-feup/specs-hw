@@ -69,8 +69,12 @@ public abstract class AOperand implements Operand {
         return this.props;
     }
 
-    @Override
     public String getRepresentation() {
         return (props.getPrefix() + this.getStringValue() + props.getSuffix());
+    }
+
+    public Boolean isEqual(Operand op) {
+        return (this.props.getName() == op.getProperties().getName())
+                && (this.getIntegerValue() == op.getIntegerValue());
     }
 }

@@ -74,4 +74,9 @@ public interface Operand {
      * Copy this object
      */
     public Operand copy();
+
+    /*
+     * Compare method
+     */
+    public Boolean isEqual(Operand op);
 }
