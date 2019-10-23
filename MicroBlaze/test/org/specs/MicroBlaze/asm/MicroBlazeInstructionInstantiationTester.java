@@ -3,9 +3,9 @@ package org.specs.MicroBlaze.asm;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.isa.MicroBlazeAsmFieldData;
-import org.specs.MicroBlaze.isa.MicroBlazeInstruction;
-import org.specs.MicroBlaze.isa.MicroBlazeInstructionData;
+import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
+import org.specs.MicroBlaze.instruction.MicroBlazeInstructionData;
+import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
 
 public class MicroBlazeInstructionInstantiationTester {
 

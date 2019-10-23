@@ -1,6 +1,6 @@
-package org.specs.MicroBlaze.isa;
+package org.specs.MicroBlaze.instruction;
 
-import static org.specs.MicroBlaze.isa.MicroBlazeOperandProperties.*;
+import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.*;
 
 import pt.up.fe.specs.binarytranslation.instruction.AOperand;
 

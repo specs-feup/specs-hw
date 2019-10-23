@@ -1,10 +1,13 @@
-package org.specs.Arm.isa;
+package org.specs.Arm.instruction;
 
-import static org.specs.Arm.isa.ArmAsmFieldType.*;
+import static org.specs.Arm.parsing.ArmAsmFieldType.*;
 import static pt.up.fe.specs.binarytranslation.instruction.InstructionType.*;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.specs.Arm.parsing.ArmAsmFieldType;
+import org.specs.Arm.parsing.ArmIsaParser;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;

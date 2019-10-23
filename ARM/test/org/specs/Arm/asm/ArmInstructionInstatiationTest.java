@@ -3,9 +3,9 @@ package org.specs.Arm.asm;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.specs.Arm.isa.ArmAsmFieldData;
-import org.specs.Arm.isa.ArmInstruction;
-import org.specs.Arm.isa.ArmInstructionData;
+import org.specs.Arm.instruction.ArmInstruction;
+import org.specs.Arm.instruction.ArmInstructionData;
+import org.specs.Arm.parsing.ArmAsmFieldData;
 
 public class ArmInstructionInstatiationTest {
 

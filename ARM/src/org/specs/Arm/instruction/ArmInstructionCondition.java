@@ -1,4 +1,4 @@
-package org.specs.Arm.isa;
+package org.specs.Arm.instruction;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionCondition;
 

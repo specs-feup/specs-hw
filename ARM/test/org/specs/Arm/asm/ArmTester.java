@@ -16,7 +16,7 @@ package org.specs.Arm.asm;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.specs.Arm.isa.ArmIsaParser;
+import org.specs.Arm.parsing.ArmIsaParser;
 
 import pt.up.fe.specs.binarytranslation.parsing.IsaParser;
 import pt.up.fe.specs.util.SpecsIo;
