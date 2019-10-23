@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.Instruction;
+import pt.up.fe.specs.binarytranslation.Operand;
 
 public interface BinarySegment {
 
@@ -38,16 +39,16 @@ public interface BinarySegment {
     int getTotalLatency();
 
     /*
-     * Retrieve list of numbers representing
+     * Retrieve list of Operands representing
      * registers which are inputs into the segment 
      */
-    List<Integer> getLiveIns();
+    List<Operand> getLiveIns();
 
     /*
-     * Retrieve list of numbers representing
+     * Retrieve list of Operands representing
      * registers which are output of the segment 
      */
-    List<Integer> getLiveOuts();
+    List<Operand> getLiveOuts();
 
     /*
      * Get list of the instructions in the segment

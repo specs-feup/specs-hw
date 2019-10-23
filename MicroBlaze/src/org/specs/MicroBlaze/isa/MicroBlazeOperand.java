@@ -1,5 +1,7 @@
 package org.specs.MicroBlaze.isa;
 
+import static org.specs.MicroBlaze.isa.MicroBlazeOperandProperties.*;
+
 import pt.up.fe.specs.binarytranslation.generic.AOperand;
 
 public class MicroBlazeOperand extends AOperand {
@@ -10,14 +12,14 @@ public class MicroBlazeOperand extends AOperand {
 
     @Override
     public void setSymbolic(String value) {
-        if (this.props == MicroBlazeOperandProperties.register_read)
-            this.props = MicroBlazeOperandProperties.symbolic_register_read;
+        if (this.props == register_read)
+            this.props = symbolic_register_read;
 
-        else if (this.props == MicroBlazeOperandProperties.register_write)
-            this.props = MicroBlazeOperandProperties.symbolic_register_write;
+        else if (this.props == register_write)
+            this.props = symbolic_register_write;
 
-        else if (this.props == MicroBlazeOperandProperties.immediate)
-            this.props = MicroBlazeOperandProperties.symbolic_immediate;
+        else if (this.props == immediate)
+            this.props = symbolic_immediate;
 
         this.svalue = value;
         this.value = -1;
