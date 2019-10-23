@@ -15,6 +15,11 @@ package pt.up.fe.specs.binarytranslation.parsing;
 
 import java.util.Optional;
 
+/**
+ * 
+ * @author Nuno
+ *
+ */
 public interface AsmParser {
 
     /**

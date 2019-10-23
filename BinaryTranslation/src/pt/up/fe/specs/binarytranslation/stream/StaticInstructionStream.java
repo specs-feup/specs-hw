@@ -13,6 +13,11 @@
 
 package pt.up.fe.specs.binarytranslation.stream;
 
+/**
+ * 
+ * @author Nuno
+ *
+ */
 public interface StaticInstructionStream extends InstructionStream {
 
     @Override

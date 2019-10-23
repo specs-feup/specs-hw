@@ -17,6 +17,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 
+ * @author Nuno
+ *
+ */
 public abstract class GenericIsaParser implements IsaParser {
 
     private final List<AsmParser> instructionParsers;
