@@ -1,18 +1,18 @@
-package org.specs.MicroBlaze.asm;
+package org.specs.MicroBlaze.stream;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import org.specs.MicroBlaze.isa.MicroBlazeInstruction;
+import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
-import pt.up.fe.specs.binarytranslation.Instruction;
-import pt.up.fe.specs.binarytranslation.interfaces.StaticStream;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public class MicroBlazeElfStream implements StaticStream {
+public class MicroBlazeElfStream implements StaticInstructionStream {
 
     private static final Pattern MB_REGEX = Pattern.compile("([0-9a-f]+):\\s([0-9a-f]+)");
     private LineStream insts;
