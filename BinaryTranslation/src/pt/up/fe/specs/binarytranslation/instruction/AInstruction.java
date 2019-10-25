@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.instruction;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import pt.up.fe.specs.util.SpecsStrings;
@@ -47,15 +48,7 @@ public abstract class AInstruction implements Instruction {
 
     ///////////////////////////////////////////////////////////////////////////
     public Integer getHash() {
-        return this.getRepresentaion().hashCode();
-    }
-
-    public String getRepresentaion() {
-        String str = this.getName();
-        for (Operand op : this.getData().getOperands()) {
-            str += " " + op.getRepresentation();
-        }
-        return str;
+        return this.getRepresentation().hashCode();
     }
 
     public InstructionData getData() {
@@ -181,25 +174,29 @@ public abstract class AInstruction implements Instruction {
 
     ///////////////////////////////////////////////////////////////////// Utils
     /*
+     * Gets string representation of instruction, including operands
+     */
+    public String getRepresentation() {
+        String str = this.getName() + "\t";
+        Iterator<Operand> it = this.getData().getOperands().iterator();
+
+        while (it.hasNext()) {
+            str += " " + it.next().getRepresentation();
+            if (it.hasNext())
+                str += ", ";
+        }
+
+        return str;
+    }
+
+    /*
      * Prints addr:instruction to system output
      */
     @Override
     public void printInstruction() {
-        String addr = Long.toHexString(this.getAddress().longValue());
-        System.out.print(addr + ":" + this.getInstruction() + ": " + this.getName() + "\t");
-
-        /*
-         * TODO operand printing will have to be ISA specific due to field ordering in parsing
-         */
-
-        int i = 0;
-        for (Operand op : this.idata.getOperands()) {
-            System.out.print(op.getRepresentation());
-            if (i++ < this.idata.getOperands().size() - 1)
-                System.out.print(", ");
-        }
-
-        System.out.print("\n");
+        String prt = "0x" + Long.toHexString(this.getAddress().longValue()) + ":";
+        prt += this.getInstruction() + "\t " + getRepresentation();
+        System.out.print(prt + "\n");
     }
 
     /* 

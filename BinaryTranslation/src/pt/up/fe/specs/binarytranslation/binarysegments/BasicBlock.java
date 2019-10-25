@@ -47,6 +47,12 @@ public class BasicBlock extends ABinarySegment {
         this.segtype = SegmentType.STATIC_BASIC_BLOCK;
         buildLiveInsAndLiveOuts();
     }
+
+    @Override
+    public int getUniqueId() {
+        return this.instlist.get(0).getAddress().intValue();
+    }
+
     /*
     public void addInst(Instruction newinst) {
     
