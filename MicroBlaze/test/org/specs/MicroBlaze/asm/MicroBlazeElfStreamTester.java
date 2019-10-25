@@ -12,7 +12,7 @@ public class MicroBlazeElfStreamTester {
 
     @Test
     public void test() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/dump.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/test.elf");
         fd.deleteOnExit();
 
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
