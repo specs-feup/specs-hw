@@ -60,6 +60,11 @@ public interface Operand {
     public Boolean isWrite();
 
     /*
+     * 
+     */
+    public Boolean isSymbolic();
+
+    /*
      * Return formated string with <prefix><value>
      */
     public String getRepresentation();
@@ -78,5 +83,10 @@ public interface Operand {
     /*
      * Compare method
      */
-    public Boolean isEqual(Operand op);
+    public boolean equals(Operand op);
+
+    /*
+     * Compare method for collection
+     */
+    public boolean equals(Object op);
 }
