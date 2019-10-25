@@ -14,7 +14,6 @@
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -87,37 +86,16 @@ public abstract class ABinarySegment implements BinarySegment {
             for (Operand op : i.getData().getOperands()) {
 
                 // everything that is a register is a livein
-                if (op.isRegister() && op.isRead() && !this.liveins.contains(op)) {
+                if (op.isSymbolic() && op.isRead() && !this.liveins.contains(op)) {
                     this.liveins.add(op);
                 }
 
                 // only liveout if written
-                if (op.isRegister() && op.isWrite() && !this.liveouts.contains(op)) {
+                if (op.isSymbolic() && op.isWrite() && !this.liveouts.contains(op)) {
                     this.liveouts.add(op);
                 }
             }
         }
-
-        // remove duplicates (a duplicate has same type (i.e., read or write) and value)
-        Iterator<Operand> it = this.liveins.iterator();
-        while (it.hasNext()) {
-            for (Operand op : this.liveins) {
-                var next = it.next();
-                if (next != op && next.isEqual(op))
-                    it.remove();
-            }
-        }
-
-        // remove duplicates (a duplicate has same type (i.e., read or write) and value)
-        it = this.liveouts.iterator();
-        while (it.hasNext()) {
-            for (Operand op : this.liveouts) {
-                var next = it.next();
-                if (next != op && next.isEqual(op))
-                    it.remove();
-            }
-        }
-
         return;
     }
 }

@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.hardwaregeneration;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 
 public interface HardwareGenerator {
 
