@@ -1,4 +1,4 @@
-package org.specs.MicroBlaze.asm;
+package org.specs.MicroBlaze.test;
 
 import java.io.File;
 

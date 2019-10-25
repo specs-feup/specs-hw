@@ -1,4 +1,4 @@
-package org.specs.MicroBlaze.asm;
+package org.specs.MicroBlaze.test;
 
 import java.io.File;
 import java.util.List;
@@ -7,11 +7,10 @@ import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.util.SpecsIo;
 
-public class MicroBlazeStaticBasicBlockDetectorTester {
+public class MicroBlazeFrequentStaticSequenceDetectorTester {
 
     @Test
     public void test() {
@@ -19,15 +18,12 @@ public class MicroBlazeStaticBasicBlockDetectorTester {
         fd.deleteOnExit();
 
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
-            var bbd = new StaticBasicBlockDetector(el);
+            var bbd = new FrequentStaticSequenceDetector(el);
             List<BinarySegment> bblist = bbd.detectSegments();
 
             for (BinarySegment bs : bblist) {
-                System.out.print("Basic Block: \n");
-                for (Instruction is : bs.getInstructions()) {
-                    is.printInstruction();
-                }
-                System.out.print("\n\n");
+                bs.printSegment();
+                System.out.print("\n");
             }
         }
         return;
