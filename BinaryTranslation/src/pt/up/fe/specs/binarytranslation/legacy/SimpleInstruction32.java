@@ -197,7 +197,7 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default String getRepresentaion() {
+    default String getRepresentation() {
         // TODO Auto-generated method stub
         return null;
     }

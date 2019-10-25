@@ -25,7 +25,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Operand;
  * @author Nuno
  *
  */
-public class ABinarySegment implements BinarySegment {
+public abstract class ABinarySegment implements BinarySegment {
 
     protected SegmentType segtype;
     protected List<Instruction> instlist;
@@ -62,10 +62,17 @@ public class ABinarySegment implements BinarySegment {
         return this.instlist;
     }
 
-    public void printSegment() {
+    public String getRepresentation() {
+        String ret = "";
         for (Instruction inst : this.instlist) {
-            inst.printInstruction();
+            ret += inst.getRepresentation();
         }
+        return ret;
+    }
+
+    public void printSegment() {
+        System.out.print(this.getRepresentation());
+        return;
     }
 
     /*

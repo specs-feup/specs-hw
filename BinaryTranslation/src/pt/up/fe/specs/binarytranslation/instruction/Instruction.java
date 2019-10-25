@@ -186,7 +186,7 @@ public interface Instruction {
     /*
      * Returns string representation of instruction (includes operands) 
      */
-    public String getRepresentaion();
+    public String getRepresentation();
 
     /*
      * Return copy of this object

@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -25,7 +24,6 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  */
 public class FrequentSequence extends ABinarySegment {
 
-    private SegmentType segtype = SegmentType.STATIC_FREQUENT;
     private List<Integer> startAddresses;
 
     /*
@@ -34,6 +32,7 @@ public class FrequentSequence extends ABinarySegment {
     private FrequentSequence(List<Instruction> ilist) {
         super();
         this.instlist = ilist;
+        this.segtype = SegmentType.STATIC_FREQUENT_SEQUENCE;
         buildLiveInsAndLiveOuts();
     }
 
@@ -46,14 +45,29 @@ public class FrequentSequence extends ABinarySegment {
     }
 
     @Override
-    public void printSegment() {
-        List<String> hexes = new ArrayList<String>();
-        for (Integer addr : this.startAddresses)
-            hexes.add("0x" + Integer.toHexString(addr));
-
-        System.out.print("Sequence occurs at=" + hexes + "\n");
-        for (Instruction inst : this.instlist) {
-            inst.printInstruction();
+    public int getUniqueId() {
+        String uniqueid = "";
+        for (Integer i : startAddresses) {
+            uniqueid += i.toString();
         }
+
+        return uniqueid.hashCode();
+    }
+
+    public String getRepresentation() {
+        String ret = "Sequence occurs at = [ ";
+
+        // start addrs
+        for (Integer addr : this.startAddresses) {
+            ret += "0x" + Integer.toHexString(addr) + " ";
+        }
+        ret += "]\n";
+
+        // instructions
+        for (Instruction inst : this.instlist) {
+            ret += inst.getRepresentation() + "\n";
+        }
+
+        return ret;
     }
 }

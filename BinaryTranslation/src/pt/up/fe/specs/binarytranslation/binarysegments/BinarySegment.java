@@ -26,11 +26,14 @@ import pt.up.fe.specs.binarytranslation.instruction.Operand;
 public interface BinarySegment {
 
     enum SegmentType {
-        STATIC_FREQUENT,
+        STATIC_FREQUENT_SEQUENCE,
         STATIC_BASIC_BLOCK,
         MEGA_BLOCK
     };
 
+    /*
+     * 
+     */
     SegmentType getSegmentType();
 
     /*
@@ -61,7 +64,17 @@ public interface BinarySegment {
     List<Instruction> getInstructions();
 
     /*
+     * returns a string containing what "printSegment" prints
+     */
+    public String getRepresentation();
+
+    /*
      * Prints the segment to system out
      */
     void printSegment();
+
+    /*
+     * get unique id
+     */
+    int getUniqueId();
 }
