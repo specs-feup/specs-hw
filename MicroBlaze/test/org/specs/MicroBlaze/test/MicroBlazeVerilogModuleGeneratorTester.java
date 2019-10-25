@@ -1,4 +1,4 @@
-package org.specs.MicroBlaze.asm;
+package org.specs.MicroBlaze.test;
 
 import java.io.File;
 import java.util.List;
@@ -8,24 +8,29 @@ import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.hardwaregeneration.VerilogModuleGenerator;
 import pt.up.fe.specs.util.SpecsIo;
 
-public class MicroBlazeFrequentStaticSequenceDetectorTester {
+public class MicroBlazeVerilogModuleGeneratorTester {
 
-    @Test
-    public void test() {
+    private List<BinarySegment> getSequences() {
         File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/test.elf");
         fd.deleteOnExit();
 
+        List<BinarySegment> bblist = null;
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
             var bbd = new FrequentStaticSequenceDetector(el);
-            List<BinarySegment> bblist = bbd.detectSegments();
-
-            for (BinarySegment bs : bblist) {
-                bs.printSegment();
-                System.out.print("\n");
-            }
+            bblist = bbd.detectSegments();
         }
+        return bblist;
+    }
+
+    @Test
+    public void test() {
+        List<BinarySegment> bblist = getSequences();
+        VerilogModuleGenerator gen1 = new VerilogModuleGenerator();
+        gen1.generateHardware(bblist.get(0));
         return;
     }
+
 }

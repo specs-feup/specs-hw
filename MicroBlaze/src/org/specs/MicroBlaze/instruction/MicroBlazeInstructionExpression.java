@@ -4,6 +4,10 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionExpression;
 
 public enum MicroBlazeInstructionExpression implements InstructionExpression {
 
-    // add_expr(ASSIGN, RD, SUM, RA, RB);
+    // add((a, b) -> (a + b));
+
+    // private MicroBlazeInstructionExpression() {
+    // TODO Auto-generated constructor stub
+    // }
 
 }
