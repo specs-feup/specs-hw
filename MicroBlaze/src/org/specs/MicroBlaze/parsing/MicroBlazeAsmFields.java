@@ -13,15 +13,39 @@
 
 package org.specs.MicroBlaze.parsing;
 
-public interface MicroBlazeAsmFields {
+import java.util.HashSet;
+import java.util.Set;
 
-    static String OPCODEA = "opcodea";
-    static String OPCODEB = "opcodeb";
-    static String OPCODEC = "opcodec";
-    static String OPCODED = "opcoded";
-    static String RD = "registerd";
-    static String RA = "registera";
-    static String RB = "registerb";
-    static String IMM = "imm";
-    static String IMMW = "immw";
+import pt.up.fe.specs.binarytranslation.expression.ExpressionSymbol;
+
+public enum MicroBlazeAsmFields implements ExpressionSymbol {
+
+    OPCODEA("opcodea"),
+    OPCODEB("opcodeb"),
+    OPCODEC("opcodec"),
+    OPCODED("opcoded"),
+    RD("registerd"),
+    RA("registera"),
+    RB("registerb"),
+    IMM("imm"),
+    IMMW("immw");
+    
+    private String fieldName;
+    
+    private MicroBlazeAsmFields(String fieldname) {
+        this.fieldName = fieldname;
+    }
+    
+    public String getFieldName() {
+        return fieldName;
+    }
+    
+    public static Set<String> getFields() {
+        Set<String> sset = new HashSet<String>();
+        for(MicroBlazeAsmFields val : MicroBlazeAsmFields.values()) {
+            sset.add(val.getFieldName());
+        }
+        
+        return sset;
+    }
 }
