@@ -1,11 +1,9 @@
 package pt.up.fe.specs.binarytranslation.expression;
 
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
-
 public class ExpressionOperand implements ExpressionSymbol {
 
-    private Operand innerOperand;
-
+    private String asmFieldName;
+/*
     public ExpressionOperand(Operand op) {
         this.innerOperand = op;
     }
@@ -17,4 +15,5 @@ public class ExpressionOperand implements ExpressionSymbol {
     Integer getIntegerValue() {
         return this.innerOperand.getIntegerValue();
     }
+    */
 }

@@ -28,8 +28,9 @@ public abstract class AOperand implements Operand {
     protected String svalue; // used for symbolic representation (TODO refactor to another class? e.g., SymbolicOperand)
     protected OperandProperties props;
 
-    // the field name where the operand value was packed into (this is used to solve the operation expression)
-    protected String asmfieldname;
+    // the field name where the operand value was packed into 
+    // (this is used to solve the operation expression)
+    //protected String asmfieldname;
 
     public AOperand(OperandProperties props, Integer value) {
         this.props = props;

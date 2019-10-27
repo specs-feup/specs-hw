@@ -9,13 +9,13 @@ import java.util.function.BinaryOperator;
  * @author nuno
  *
  */
-public enum ExpressionOperator implements BinaryOperator<String> {
+public enum ExpressionOperator implements ExpressionSymbol {
 
-    equals((a, b) -> a + " = " + b),
-    add((a, b) -> "(" + a + " + " + b + ")"),
-    sub((a, b) -> "(" + a + " - " + b + ")"),
-    shiftleft((a, b) -> "(" + a + " << " + b + ")"),
-    shiftright((a, b) -> "(" + a + " >> " + b + ")");
+    equals((b, a) -> a + " = " + b),
+    sum((b, a) -> "(" + a + " + " + b + ")"),
+    sub((b, a) -> "(" + a + " - " + b + ")"),
+    shiftleft((b, a) -> "(" + a + " << " + b + ")"),
+    shiftright((b, a) -> "(" + a + " >> " + b + ")");
 
     private final BinaryOperator<String> operator;
 
@@ -23,11 +23,9 @@ public enum ExpressionOperator implements BinaryOperator<String> {
         this.operator = operator;
     }
 
-    @Override
     public String apply(String arg0, String arg1) {
         return this.operator.apply(arg0, arg1);
     }
-
 }
 
 // LOOSE IDEAS
