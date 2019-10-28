@@ -71,4 +71,10 @@ public interface InstructionProperties {
      * Returns name of enum (should be unique)
      */
     public String getEnumName();
+
+    /*
+     * Returns an object which represents expression
+     * which implements the instruction (e.g., add r0, r1, r2 --> "r0 = r1 + r2")
+     */
+    public InstructionExpression getExpression();
 }

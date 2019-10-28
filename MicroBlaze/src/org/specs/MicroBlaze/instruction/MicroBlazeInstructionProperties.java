@@ -22,6 +22,7 @@ import java.util.List;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
 import org.specs.MicroBlaze.parsing.MicroBlazeIsaParser;
 
+import pt.up.fe.specs.binarytranslation.instruction.InstructionExpression;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
@@ -327,6 +328,14 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
      */
     public AsmFieldType getCodeType() {
         return this.codetype;
+    }
+    
+    /*
+     * 
+     */
+    public InstructionExpression getExpression() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /*

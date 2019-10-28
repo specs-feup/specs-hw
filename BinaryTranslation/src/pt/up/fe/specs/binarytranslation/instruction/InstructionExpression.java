@@ -13,6 +13,10 @@
 
 package pt.up.fe.specs.binarytranslation.instruction;
 
+import java.util.Stack;
+
+import pt.up.fe.specs.binarytranslation.expression.ExpressionSymbol;
+
 /**
  * 
  * @author nuno
@@ -29,4 +33,6 @@ public interface InstructionExpression {
      * 
      */
     // Number evaluate();
+    
+    public Stack<ExpressionSymbol> getSymbols();
 }
