@@ -6,7 +6,7 @@ import pt.up.fe.specs.binarytranslation.parsing.GenericIsaParser;
 public class MicroBlazeIsaParser extends GenericIsaParser {
 
     public MicroBlazeIsaParser() {
-        super(MicroBlazeInstructionParsers.PARSERS, MicroBlazeAsmFields.getFields());
+        super(MicroBlazeInstructionParsers.PARSERS, MicroBlazeAsmField.getFields());
     }
 
     @Override

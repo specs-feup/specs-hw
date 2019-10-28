@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.instruction;
 
+import pt.up.fe.specs.binarytranslation.parsing.AsmField;
+
 /**
  * A generic instruction operand, composed of type, and value
  * 
@@ -68,7 +70,12 @@ public interface Operand {
      * Return formated string with <prefix><value>
      */
     public String getRepresentation();
-
+    
+    /*
+     * 
+     */
+    public AsmField getAsmField();
+    
     /*
      * Used to abstract an operand away from an 
      * executed representation, to a symbolic representation

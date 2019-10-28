@@ -7,27 +7,21 @@ import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.symbo
 import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.symbolic_register_read;
 import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.symbolic_register_write;
 
-import org.specs.MicroBlaze.parsing.MicroBlazeAsmFields;
+import org.specs.MicroBlaze.parsing.MicroBlazeAsmField;
 
 import pt.up.fe.specs.binarytranslation.instruction.AOperand;
 
 public class MicroBlazeOperand extends AOperand {
 
-    private MicroBlazeAsmFields thisfieldtype;
-    
     public MicroBlazeOperand(MicroBlazeOperandProperties props, 
-            MicroBlazeAsmFields thisfieldtype, Integer value) {
+            MicroBlazeAsmField field, Integer value) {
         super(props, value);
-        this.thisfieldtype = thisfieldtype;
+        this.asmfield = field;
     }
     
     public MicroBlazeOperand(MicroBlazeOperandProperties props, Integer value) {
         super(props, value);
     }    
-    
-    public String getField() {
-        return this.thisfieldtype.getFieldName();
-    }
 
     @Override
     public void setSymbolic(String value) {

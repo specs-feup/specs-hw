@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.expression;
 
+import java.util.Arrays;
 import java.util.function.BinaryOperator;
 
 /**
@@ -19,12 +20,13 @@ public enum ExpressionOperator implements ExpressionSymbol {
 
     private final BinaryOperator<String> operator;
 
-    private ExpressionOperator(final BinaryOperator<String> operator) {
+    private ExpressionOperator(BinaryOperator<String> operator) {
         this.operator = operator;
     }
 
-    public String apply(String arg0, String arg1) {
-        return this.operator.apply(arg0, arg1);
+    public String apply(String... args) {
+        var ops = Arrays.asList(args);
+        return this.operator.apply(ops.get(0), ops.get(1));
     }
 }
 

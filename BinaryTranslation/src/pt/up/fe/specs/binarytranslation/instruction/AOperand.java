@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.instruction;
 
 import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
+import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 
 /**
  * An instruction operand implementation that can be used by all ISAs, in theory This class can be promoted to an
@@ -26,8 +27,8 @@ public abstract class AOperand implements Operand {
 
     protected Integer value;
     protected String svalue; // used for symbolic representation (TODO refactor to another class? e.g., SymbolicOperand)
-    protected OperandProperties props;
-
+    protected OperandProperties props; 
+    protected AsmField asmfield;
     // the field name where the operand value was packed into 
     // (this is used to solve the operation expression)
     //protected String asmfieldname;
@@ -38,6 +39,10 @@ public abstract class AOperand implements Operand {
         this.svalue = Integer.toHexString(this.value);
     }
 
+    public AsmField getAsmField() {
+        return this.asmfield;
+    }    
+    
     public Integer getIntegerValue() {
         return this.value;
     }

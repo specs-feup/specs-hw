@@ -15,19 +15,14 @@
  *  under the License.
  */
 
-package org.specs.MicroBlaze.test;
-
-import org.junit.Test;
-import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
-import org.specs.MicroBlaze.instruction.MicroBlazeInstructionExpression;
+package pt.up.fe.specs.binarytranslation.parsing;
 
 import pt.up.fe.specs.binarytranslation.expression.ExpressionSymbol;
 
-public class MicroBlazeInstructionExpressionTest {
+public interface AsmField extends ExpressionSymbol {
 
-    @Test
-    public void test() {
-        MicroBlazeInstruction inst = MicroBlazeInstruction.newInstance("00000000", "00000000");      
-       // System.out.print(MicroBlazeInstructionExpression.add.express((inst.getData().getOperands())));
-    }
+    /*
+     * 
+     */
+    public String getFieldName();
 }

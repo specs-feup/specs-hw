@@ -1,21 +1,16 @@
 package org.specs.MicroBlaze.instruction;
 
-import static org.specs.MicroBlaze.parsing.MicroBlazeAsmFields.RA;
-import static org.specs.MicroBlaze.parsing.MicroBlazeAsmFields.RB;
-import static org.specs.MicroBlaze.parsing.MicroBlazeAsmFields.RD;
+import static org.specs.MicroBlaze.parsing.MicroBlazeAsmField.RA;
+import static org.specs.MicroBlaze.parsing.MicroBlazeAsmField.RB;
+import static org.specs.MicroBlaze.parsing.MicroBlazeAsmField.RD;
 import static pt.up.fe.specs.binarytranslation.expression.ExpressionOperator.equals;
 import static pt.up.fe.specs.binarytranslation.expression.ExpressionOperator.sum;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
-import org.specs.MicroBlaze.parsing.MicroBlazeAsmFields;
-
-import pt.up.fe.specs.binarytranslation.expression.ExpressionOperator;
+import pt.up.fe.specs.binarytranslation.expression.ExpressionOperand;
 import pt.up.fe.specs.binarytranslation.expression.ExpressionSymbol;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionExpression;
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
 
 public enum MicroBlazeInstructionExpression implements InstructionExpression {
 
@@ -31,6 +26,11 @@ public enum MicroBlazeInstructionExpression implements InstructionExpression {
         }
     }
     
+    @Override
+    public Stack<ExpressionSymbol> getSymbols() {
+        return this.symbs;
+    }
+    /*
     public String express(List<Operand> operands) {
         String expression = "";
         
@@ -59,4 +59,5 @@ public enum MicroBlazeInstructionExpression implements InstructionExpression {
         } 
         return expression;
     }
+    */
 }

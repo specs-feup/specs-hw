@@ -13,9 +13,12 @@
 
 package pt.up.fe.specs.binarytranslation.instruction;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import pt.up.fe.specs.binarytranslation.expression.ExpressionSolver;
+import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
@@ -47,10 +50,6 @@ public abstract class AInstruction implements Instruction {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    public Integer getHash() {
-        return this.getRepresentation().hashCode();
-    }
-
     public InstructionData getData() {
         return idata;
     }
@@ -174,7 +173,7 @@ public abstract class AInstruction implements Instruction {
 
     ///////////////////////////////////////////////////////////////////// Utils
     /*
-     * Gets string representation of instruction, including operands
+     * Gets asm string representation of instruction, including operands
      */
     public String getRepresentation() {
         String str = this.getName() + "\t";
@@ -213,5 +212,24 @@ public abstract class AInstruction implements Instruction {
 
             // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
         }
+    }
+    
+    /*
+     * 
+     */
+    public String express() {
+       
+        if(this.getProperties().getExpression() == null) {
+            return "No expression set yet!";
+        }
+        
+        // helper map so i have refs from operands to asmfields
+        Map<AsmField, Operand> helper = new HashMap<AsmField, Operand>();
+        for(Operand op : this.getData().getOperands()) {
+            helper.put(op.getAsmField(), op);
+        }
+        
+        return ExpressionSolver.solve(
+                this.getProperties().getExpression(), helper);
     }
 }

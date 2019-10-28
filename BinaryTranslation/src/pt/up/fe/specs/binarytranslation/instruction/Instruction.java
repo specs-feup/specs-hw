@@ -181,10 +181,10 @@ public interface Instruction {
     /*
      * Returns a unique hash representation of the instruction
      */
-    public Integer getHash();
+    //public Integer getHash();
 
     /*
-     * Returns string representation of instruction (includes operands) 
+     * Returns an asm string representation of instruction (includes operands) 
      */
     public String getRepresentation();
 
@@ -198,4 +198,10 @@ public interface Instruction {
      * executed representation, to a symbolic representation
      */
     void makeSymbolic(Number address, Map<String, String> regremap);
+    
+    /*
+     * Returns a readable string representing the readable operation
+     * which the instruction implements
+     */
+    public String express();
 }

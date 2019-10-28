@@ -16,9 +16,9 @@ package org.specs.MicroBlaze.parsing;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.up.fe.specs.binarytranslation.expression.ExpressionSymbol;
+import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 
-public enum MicroBlazeAsmFields implements ExpressionSymbol {
+public enum MicroBlazeAsmField implements AsmField {
 
     OPCODEA("opcodea"),
     OPCODEB("opcodeb"),
@@ -32,17 +32,17 @@ public enum MicroBlazeAsmFields implements ExpressionSymbol {
     
     private String fieldName;
     
-    private MicroBlazeAsmFields(String fieldname) {
+    private MicroBlazeAsmField(String fieldname) {
         this.fieldName = fieldname;
     }
     
     public String getFieldName() {
         return fieldName;
     }
-    
+
     public static Set<String> getFields() {
         Set<String> sset = new HashSet<String>();
-        for(MicroBlazeAsmFields val : MicroBlazeAsmFields.values()) {
+        for(MicroBlazeAsmField val : MicroBlazeAsmField.values()) {
             sset.add(val.getFieldName());
         }
         
