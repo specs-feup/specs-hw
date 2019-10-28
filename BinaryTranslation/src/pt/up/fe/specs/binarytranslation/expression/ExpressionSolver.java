@@ -32,24 +32,23 @@ public class ExpressionSolver {
         String expression = "";
         
         List<String> stuff = new ArrayList<String>();
-        Stack<ExpressionSymbol> symbs = expr.getSymbols();
+        
+        @SuppressWarnings("unchecked")
+        Stack<ExpressionSymbol> symbs = (Stack<ExpressionSymbol>) expr.getSymbols().clone();
                 
         while(!symbs.empty()) {
             var s = symbs.pop(); 
             
             // apply operand
-            if(s.getClass() == ExpressionOperator.class) {
-                var sc = ((ExpressionOperator) (s));
-                expression = sc.apply(stuff.get(0), stuff.get(1));
+            if(s.isOperator()) {
+                expression = s.apply(stuff.get(0), stuff.get(1));
                 stuff.clear();
                 stuff.add(expression);
             }
  
-            // get values
-            else if(s.getClass() == AsmField.class) {
-                var sc = ((AsmField) (s)).getFieldName();
-                var op = helper.get(s);
-                stuff.add(op.getRepresentation());
+            // get values (symbolic or absolute, either one)
+            else if(s.isOperand()) {
+                stuff.add(helper.get(s).getRepresentation());
             }
         } 
         return expression;

@@ -191,12 +191,6 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default Integer getHash() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     default String getRepresentation() {
         // TODO Auto-generated method stub
         return null;
@@ -212,5 +206,11 @@ public interface SimpleInstruction32 extends Instruction {
     default void makeSymbolic(Number address, Map<String, String> regremap) {
         // TODO Auto-generated method stub
 
+    }
+    
+    @Override
+    default String express() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -24,9 +24,19 @@ public enum ExpressionOperator implements ExpressionSymbol {
         this.operator = operator;
     }
 
-    public String apply(String... args) {
-        var ops = Arrays.asList(args);
-        return this.operator.apply(ops.get(0), ops.get(1));
+    @Override
+    public String apply(String string, String string2) {
+        return this.operator.apply(string, string2);
+    }
+    
+    @Override
+    public boolean isOperator() {
+        return true;
+    }
+    
+    @Override
+    public boolean isOperand() {
+        return false;
     }
 }
 
