@@ -17,9 +17,9 @@
 
 package pt.up.fe.specs.binarytranslation.parsing;
 
-import pt.up.fe.specs.binarytranslation.expression.ExpressionSymbol;
+import pt.up.fe.specs.binarytranslation.expression.ExpressionOperand;
 
-public interface AsmField extends ExpressionSymbol {
+public interface AsmField extends ExpressionOperand {
 
     /*
      * 

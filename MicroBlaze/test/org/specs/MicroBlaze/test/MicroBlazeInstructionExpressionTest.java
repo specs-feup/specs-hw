@@ -19,15 +19,15 @@ package org.specs.MicroBlaze.test;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
-import org.specs.MicroBlaze.instruction.MicroBlazeInstructionExpression;
-
-import pt.up.fe.specs.binarytranslation.expression.ExpressionSymbol;
 
 public class MicroBlazeInstructionExpressionTest {
 
     @Test
     public void test() {
-        MicroBlazeInstruction inst = MicroBlazeInstruction.newInstance("00000000", "00000000");      
-       // System.out.print(MicroBlazeInstructionExpression.add.express((inst.getData().getOperands())));
+        MicroBlazeInstruction inst = MicroBlazeInstruction.newInstance("00000000", "20c00518");     
+        System.out.print(inst.express() + "\n");
+       
+        MicroBlazeInstruction instb = MicroBlazeInstruction.newInstance("00000000", "2021ffec");     
+        System.out.print(instb.express() + "\n");
     }
 }

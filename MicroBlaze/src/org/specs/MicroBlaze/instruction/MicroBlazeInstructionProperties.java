@@ -234,7 +234,6 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     private final int delay;
     private final MicroBlazeAsmFieldType codetype;
     private final List<InstructionType> genericType;
-    private final AsmFieldData fieldData; // decoded fields of this instruction
     private final IsaParser parser = new MicroBlazeIsaParser();
 
     /*
@@ -249,10 +248,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
         this.delay = delay;
         this.codetype = mbtype;
         this.genericType = tp;
-
-        // use the parser to initialize private fields of instruction set itself
-        this.fieldData = parser.parse(Integer.toHexString(opcode)); // TODO make new overload for "parse"
-        this.reducedopcode = this.fieldData.getReducedOpcode();
+        this.reducedopcode = parser.parse(Integer.toHexString(opcode)).getReducedOpcode();
     }
 
     /*
@@ -334,14 +330,15 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
      * 
      */
     public InstructionExpression getExpression() {
-        // TODO Auto-generated method stub
-        return null;
+        // get expression assuming that expression enum name is equal to
+        // enum name of properties enum
+        return MicroBlazeInstructionExpression.valueOf(this.enumName);
     }
 
     /*
      * Only used for Junit tests!
      */
     public AsmFieldData getFieldData() {
-        return fieldData;
+        return parser.parse(Integer.toHexString(opcode));
     }
 }

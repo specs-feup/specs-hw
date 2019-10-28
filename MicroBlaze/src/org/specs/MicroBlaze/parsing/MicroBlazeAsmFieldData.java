@@ -58,8 +58,8 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
         // get int values from fields
         Map<MicroBlazeAsmField, Integer> operandmap = new HashMap<MicroBlazeAsmField, Integer>();
         for (MicroBlazeAsmField field : MicroBlazeAsmField.values()) {
-            if (map1.containsKey(field)) {
-                operandmap.put(field, Integer.parseInt(map1.get(field), 2));
+            if (map1.containsKey(field.getFieldName())) {
+                operandmap.put(field, Integer.parseInt(map1.get(field.getFieldName()), 2));
             }
         }
         
