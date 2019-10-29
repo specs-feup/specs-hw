@@ -70,12 +70,12 @@ public interface Operand {
      * Return formated string with <prefix><value>
      */
     public String getRepresentation();
-    
+
     /*
      * 
      */
     public AsmField getAsmField();
-    
+
     /*
      * Used to abstract an operand away from an 
      * executed representation, to a symbolic representation
@@ -90,10 +90,10 @@ public interface Operand {
     /*
      * Compare method
      */
-    public boolean equals(Operand op);
+    // public boolean equals(Operand op);
 
     /*
      * Compare method for collection
      */
-    public boolean equals(Object op);
+    // public boolean equals(Object op);
 }

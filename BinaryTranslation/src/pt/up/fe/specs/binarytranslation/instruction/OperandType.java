@@ -21,16 +21,25 @@ package pt.up.fe.specs.binarytranslation.instruction;
  */
 public enum OperandType {
 
+    // types
     REGISTER,
     IMMEDIATE,
     SYMBOLIC,
 
+    // access
     READ,
-    WRITE;
+    WRITE,
 
-    // SYMBOLIC --> this is special type which appears in addition to register types
-    // it represents a register operand which has been abstracted from actual execution
-    // e.g. "addi r5, r6, r3 ---> "addi r<a>, r<b>, r<c>"
+    // data type
+    INTEGER,
+    FLOAT,
+
+    // data sizes
+    BYTE,
+    HALFWORD,
+    WORD,
+    DWORD,
+    QWORD;
 
     // DIRECT
     // INDIRECT

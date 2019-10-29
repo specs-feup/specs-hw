@@ -1,41 +1,32 @@
 package org.specs.MicroBlaze.instruction;
 
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.immediate;
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.register_read;
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.register_write;
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.symbolic_immediate;
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.symbolic_register_read;
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.symbolic_register_write;
+import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
 
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmField;
 
 import pt.up.fe.specs.binarytranslation.instruction.AOperand;
+import pt.up.fe.specs.binarytranslation.instruction.AOperandProperties;
+import pt.up.fe.specs.binarytranslation.instruction.OperandProperties;
 
 public class MicroBlazeOperand extends AOperand {
 
-    public MicroBlazeOperand(MicroBlazeOperandProperties props, 
-            MicroBlazeAsmField field, Integer value) {
+    private MicroBlazeOperand(OperandProperties props, int value) {
         super(props, value);
-        this.asmfield = field;
     }
-    
-    public MicroBlazeOperand(MicroBlazeOperandProperties props, Integer value) {
-        super(props, value);
-    }    
 
-    @Override
-    public void setSymbolic(String value) {
-        if (this.props == register_read)
-            this.props = symbolic_register_read;
+    public static MicroBlazeOperand newReadRegister(MicroBlazeAsmField field, int value) {
+        var props = new AOperandProperties(field, "r", "", 32, REGISTER, READ, WORD);
+        return new MicroBlazeOperand(props, value);
+    }
 
-        else if (this.props == register_write)
-            this.props = symbolic_register_write;
+    public static MicroBlazeOperand newWriteRegister(MicroBlazeAsmField field, int value) {
+        var props = new AOperandProperties(field, "r", "", 32, REGISTER, WRITE, WORD);
+        return new MicroBlazeOperand(props, value);
+    }
 
-        else if (this.props == immediate)
-            this.props = symbolic_immediate;
-
-        this.svalue = value;
-        this.value = -1;
+    public static MicroBlazeOperand newImmediate(MicroBlazeAsmField field, int value) {
+        var props = new AOperandProperties(field, "0x", "", 32, IMMEDIATE, READ, WORD);
+        return new MicroBlazeOperand(props, value);
     }
 
     /*
@@ -43,7 +34,7 @@ public class MicroBlazeOperand extends AOperand {
      */
     @Override
     public MicroBlazeOperand copy() {
-        return new MicroBlazeOperand(
-                (MicroBlazeOperandProperties) this.props, Integer.valueOf(this.value));
+        var props = this.getProperties().copy();
+        return new MicroBlazeOperand(props, this.getIntegerValue().intValue());
     }
 }

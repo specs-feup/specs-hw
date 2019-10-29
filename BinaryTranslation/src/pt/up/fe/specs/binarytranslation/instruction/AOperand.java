@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.instruction;
 
 import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
+
 import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 
 /**
@@ -27,11 +28,7 @@ public abstract class AOperand implements Operand {
 
     protected Integer value;
     protected String svalue; // used for symbolic representation (TODO refactor to another class? e.g., SymbolicOperand)
-    protected OperandProperties props; 
-    protected AsmField asmfield;
-    // the field name where the operand value was packed into 
-    // (this is used to solve the operation expression)
-    //protected String asmfieldname;
+    protected OperandProperties props;
 
     public AOperand(OperandProperties props, Integer value) {
         this.props = props;
@@ -39,10 +36,6 @@ public abstract class AOperand implements Operand {
         this.svalue = Integer.toHexString(this.value);
     }
 
-    public AsmField getAsmField() {
-        return this.asmfield;
-    }    
-    
     public Integer getIntegerValue() {
         return this.value;
     }
@@ -51,6 +44,7 @@ public abstract class AOperand implements Operand {
         return this.svalue;
     }
 
+    ///////////////////////////////////////////////////////////// Properties //
     public Boolean isRegister() {
         return (this.props.getTypes().contains(REGISTER));
     }
@@ -71,6 +65,14 @@ public abstract class AOperand implements Operand {
         return (this.props.getTypes().contains(WRITE));
     }
 
+    /*public Boolean isFloat() {
+    
+    }*/
+
+    public AsmField getAsmField() {
+        return this.props.getAsmField();
+    }
+
     public OperandProperties getProperties() {
         return this.props;
     }
@@ -78,18 +80,32 @@ public abstract class AOperand implements Operand {
     public String getRepresentation() {
         return (props.getPrefix() + this.getStringValue() + props.getSuffix());
     }
+    ///////////////////////////////////////////////////////////////////////////
 
+    ////////////////////////////////////////////////////////////////// Utils //
+
+    /*
+     * Symbolify instruction (currently only useful for static frequent sequences
+     */
+    public void setSymbolic(String value) {
+        this.props.setSymbolic();
+        this.svalue = value;
+        this.value = -1;
+        return;
+    }
+    /*
     public boolean equals(Operand op) {
         return this.equals((Object) op);
     }
-
+    
     @Override
     public boolean equals(Object op) {
         if (!(op instanceof Operand))
             return false;
-
+    
         Operand opr = (Operand) op;
         return (this.props.getName() == opr.getProperties().getName())
                 && (this.getStringValue() == opr.getStringValue());
     }
+    */
 }
