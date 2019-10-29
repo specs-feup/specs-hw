@@ -213,22 +213,22 @@ public abstract class AInstruction implements Instruction {
             // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
         }
     }
-    
+
     /*
      * 
      */
     public String express() {
-       
-        if(this.getProperties().getExpression() == null) {
+
+        if (this.getProperties().getExpression() == null) {
             return "No expression set yet!";
         }
-        
+
         // helper map so i have refs from operands to asmfields
         Map<AsmField, Operand> helper = new HashMap<AsmField, Operand>();
-        for(Operand op : this.getData().getOperands()) {
+        for (Operand op : this.getData().getOperands()) {
             helper.put(op.getAsmField(), op);
         }
-        
+
         return ExpressionSolver.solve(
                 this.getProperties().getExpression(), helper);
     }
