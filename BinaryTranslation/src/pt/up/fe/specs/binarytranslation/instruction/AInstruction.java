@@ -194,7 +194,7 @@ public abstract class AInstruction implements Instruction {
     @Override
     public void printInstruction() {
         String prt = "0x" + Long.toHexString(this.getAddress().longValue()) + ":";
-        prt += this.getInstruction() + "\t " + getRepresentation();
+        prt += this.getInstruction() + "\t " + getRepresentation() + "\t " + this.express();
         System.out.print(prt + "\n");
     }
 
