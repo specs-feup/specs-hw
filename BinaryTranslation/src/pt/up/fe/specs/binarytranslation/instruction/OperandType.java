@@ -21,11 +21,25 @@ package pt.up.fe.specs.binarytranslation.instruction;
  */
 public enum OperandType {
 
+    // types
     REGISTER,
     IMMEDIATE,
     SYMBOLIC,
+
+    // access
     READ,
-    WRITE;
+    WRITE,
+
+    // data type
+    INTEGER,
+    FLOAT,
+
+    // data sizes
+    BYTE,
+    HALFWORD,
+    WORD,
+    DWORD,
+    QWORD;
 
     // DIRECT
     // INDIRECT

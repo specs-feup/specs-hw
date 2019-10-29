@@ -1,10 +1,14 @@
 package org.specs.Arm.parsing;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.specs.Arm.instruction.ArmInstructionCondition;
 
+import pt.up.fe.specs.binarytranslation.instruction.Operand;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 
@@ -160,5 +164,46 @@ public class ArmAsmFieldData extends AsmFieldData {
         // TODO throw exception here??
         }
 
+    }
+
+    /*
+     * Gets a list of integers which represent the operands in the fields
+     * This manner of field parsing, maintains the operand order as parsed
+     * in the AsmFields
+     */
+    public List<Operand> getOperands() {
+
+        ArmAsmFieldType type = (ArmAsmFieldType) this.get(TYPE);
+        var map1 = this.get(FIELDS);
+
+        // get int values from fields
+        Map<ArmAsmField, Integer> operandmap = new HashMap<ArmAsmField, Integer>();
+        for (ArmAsmField field : ArmAsmField.values()) {
+            if (map1.containsKey(field.getFieldName())) {
+                operandmap.put(field, Integer.parseInt(map1.get(field.getFieldName()), 2));
+            }
+        }
+
+        // assign to Operand objects based on field format
+        List<Operand> operands = new ArrayList<Operand>();
+
+        // order of operands MUST be preserved (or should be)
+        switch (type) {
+
+        ///////////////////////////////////////////////////////////////////////
+        case DPI_PCREL:
+            // operands.add(new MicroBlazeOperand(immediate, IMM, operandmap.get(IMM)));
+            break;
+
+        default:
+            break;
+        }
+
+        /*
+         * for 
+         *  operaands.add(new MicroBlazeOperand(<type>, <fieldname>, <value>);
+         */
+
+        return operands;
     }
 }
