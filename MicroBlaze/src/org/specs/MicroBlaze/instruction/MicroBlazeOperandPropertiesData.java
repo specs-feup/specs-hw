@@ -5,27 +5,30 @@ import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
 import java.util.Arrays;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.instruction.OperandProperties;
+import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
+
+import pt.up.fe.specs.binarytranslation.instruction.OperandPropertiesData;
 import pt.up.fe.specs.binarytranslation.instruction.OperandType;
 
-public enum MicroBlazeOperandProperties implements OperandProperties {
+/**
+ * Enum is only a helper initializer to minimize verbosity in {@link MicroBlazeAsmFieldData}
+ * 
+ * @author nuno
+ *
+ */
+public enum MicroBlazeOperandPropertiesData implements OperandPropertiesData {
 
     register_read("r", "", 32, REGISTER, READ),
     register_write("r", "", 32, REGISTER, WRITE),
+    immediate("0x", "", 32, IMMEDIATE, READ);
 
-    symbolic_register_read("r<", ">", 32, REGISTER, SYMBOLIC, READ),
-    symbolic_register_write("r<", ">", 32, REGISTER, SYMBOLIC, WRITE),
+    protected final String prefix;
+    protected final String suffix;
+    protected final int width;
+    protected final List<OperandType> genericType;
+    protected final OperandType maintype;
 
-    immediate("0x", "", 32, IMMEDIATE, READ),
-    symbolic_immediate("imm<", ">", 32, IMMEDIATE, SYMBOLIC, READ);
-
-    private final String prefix;
-    private final String suffix;
-    private final int width;
-    private final List<OperandType> genericType;
-    private final OperandType maintype;
-
-    private MicroBlazeOperandProperties(String prefix, String suffix, int width, OperandType... type) {
+    private MicroBlazeOperandPropertiesData(String prefix, String suffix, int width, OperandType... type) {
         this.prefix = prefix;
         this.suffix = suffix;
         this.width = width;
@@ -33,6 +36,9 @@ public enum MicroBlazeOperandProperties implements OperandProperties {
         this.maintype = this.genericType.get(0);
     }
 
+    /*
+     * Getters
+     */
     public String getPrefix() {
         return this.prefix;
     }
@@ -50,10 +56,6 @@ public enum MicroBlazeOperandProperties implements OperandProperties {
     }
 
     public OperandType getMainType() {
-        return this.maintype;
-    }
-
-    public String getName() {
-        return this.name();
+        return this.genericType.get(0);
     }
 }
