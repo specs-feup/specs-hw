@@ -93,18 +93,19 @@ public abstract class AOperand implements Operand {
         this.value = -1;
         return;
     }
-
+    /*
     public boolean equals(Operand op) {
         return this.equals((Object) op);
     }
-
+    
     @Override
     public boolean equals(Object op) {
         if (!(op instanceof Operand))
             return false;
-
+    
         Operand opr = (Operand) op;
         return (this.props.getName() == opr.getProperties().getName())
                 && (this.getStringValue() == opr.getStringValue());
     }
+    */
 }

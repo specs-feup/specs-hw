@@ -9,6 +9,7 @@ import java.util.List;
 import org.specs.Arm.parsing.ArmAsmFieldType;
 import org.specs.Arm.parsing.ArmIsaParser;
 
+import pt.up.fe.specs.binarytranslation.instruction.InstructionExpression;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
@@ -421,7 +422,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     public String getName() {
         return this.instructionName;
     }
-    
+
     /*
      * Returns name of enum (should be unique)
      */
@@ -441,5 +442,11 @@ public enum ArmInstructionProperties implements InstructionProperties {
      */
     public AsmFieldData getFieldData() {
         return fieldData;
+    }
+
+    @Override
+    public InstructionExpression getExpression() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
