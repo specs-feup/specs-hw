@@ -2,6 +2,8 @@ package pt.up.fe.specs.binarytranslation.instruction;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.parsing.AsmField;
+
 /**
  * Each operand in an ISA is defined by properties. This class is to be implemented by an enum per ISA, which lists all
  * the operand types in the set, and implements the methods to retrieve properties about each operand type.
@@ -37,7 +39,12 @@ public interface OperandProperties {
     public int getWidth();
 
     /*
-     * helper method too look up name the list
+     * 
      */
-    public String getName();
+    public AsmField getAsmField();
+
+    /*
+     * 
+     */
+    public void setSymbolic();
 }

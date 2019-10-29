@@ -24,13 +24,8 @@ public enum OperandType {
     REGISTER,
     IMMEDIATE,
     SYMBOLIC,
-
     READ,
     WRITE;
-
-    // SYMBOLIC --> this is special type which appears in addition to register types
-    // it represents a register operand which has been abstracted from actual execution
-    // e.g. "addi r5, r6, r3 ---> "addi r<a>, r<b>, r<c>"
 
     // DIRECT
     // INDIRECT
