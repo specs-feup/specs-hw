@@ -1,42 +1,21 @@
 package org.specs.MicroBlaze.instruction;
 
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.immediate;
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.register_read;
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.register_write;
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.symbolic_immediate;
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.symbolic_register_read;
-import static org.specs.MicroBlaze.instruction.MicroBlazeOperandProperties.symbolic_register_write;
-
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmField;
 
 import pt.up.fe.specs.binarytranslation.instruction.AOperand;
+import pt.up.fe.specs.binarytranslation.instruction.AOperandProperties;
 
 public class MicroBlazeOperand extends AOperand {
 
-    public MicroBlazeOperand(MicroBlazeOperandProperties props, 
+    public MicroBlazeOperand(MicroBlazeOperandPropertiesData pdata,
             MicroBlazeAsmField field, Integer value) {
-        super(props, value);
-        this.asmfield = field;
+        super(new AOperandProperties(pdata, field), value);
     }
-    
-    public MicroBlazeOperand(MicroBlazeOperandProperties props, Integer value) {
-        super(props, value);
-    }    
 
-    @Override
-    public void setSymbolic(String value) {
-        if (this.props == register_read)
-            this.props = symbolic_register_read;
-
-        else if (this.props == register_write)
-            this.props = symbolic_register_write;
-
-        else if (this.props == immediate)
-            this.props = symbolic_immediate;
-
-        this.svalue = value;
-        this.value = -1;
-    }
+    /*  public MicroBlazeOperand newReadRegister() {
+        
+        return new
+    }*/
 
     /*
      * Copy "constructor"
@@ -44,6 +23,8 @@ public class MicroBlazeOperand extends AOperand {
     @Override
     public MicroBlazeOperand copy() {
         return new MicroBlazeOperand(
-                (MicroBlazeOperandProperties) this.props, Integer.valueOf(this.value));
+                (MicroBlazeOperandProperties) this.props,
+                (MicroBlazeAsmField) this.asmfield,
+                Integer.valueOf(this.value));
     }
 }
