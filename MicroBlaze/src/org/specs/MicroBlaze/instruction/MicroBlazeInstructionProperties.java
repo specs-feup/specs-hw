@@ -332,7 +332,11 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     public InstructionExpression getExpression() {
         // get expression assuming that expression enum name is equal to
         // enum name of properties enum
-        return MicroBlazeInstructionExpression.valueOf(this.enumName);
+        try {
+            return MicroBlazeInstructionExpression.valueOf(this.enumName);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     /*
