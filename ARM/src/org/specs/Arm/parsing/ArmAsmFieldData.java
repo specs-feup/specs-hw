@@ -1,5 +1,8 @@
 package org.specs.Arm.parsing;
 
+import static org.specs.Arm.instruction.ArmOperand.*;
+import static org.specs.Arm.parsing.ArmAsmField.*;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -177,10 +180,10 @@ public class ArmAsmFieldData extends AsmFieldData {
         var map1 = this.get(FIELDS);
 
         // get int values from fields
-        Map<ArmAsmField, Integer> operandmap = new HashMap<ArmAsmField, Integer>();
+        Map<ArmAsmField, Integer> map = new HashMap<ArmAsmField, Integer>();
         for (ArmAsmField field : ArmAsmField.values()) {
             if (map1.containsKey(field.getFieldName())) {
-                operandmap.put(field, Integer.parseInt(map1.get(field.getFieldName()), 2));
+                map.put(field, Integer.parseInt(map1.get(field.getFieldName()), 2));
             }
         }
 
@@ -192,17 +195,37 @@ public class ArmAsmFieldData extends AsmFieldData {
 
         ///////////////////////////////////////////////////////////////////////
         case DPI_PCREL:
-            // operands.add(new MicroBlazeOperand(immediate, IMM, operandmap.get(IMM)));
+            // first operand
+            operands.add(newWriteRegister64(RD, map.get(RD)));
+
+            // build second operand from "imm" and "imml"
+            var imml = map.get(IMML);
+            var imm = map.get(IMM);
+            Integer fullimm = 0;
+
+            // ADR
+            // imm = SignExtend(immhi:immlo, 64)
+            if (map.get(OPCODEA) == 0)
+                fullimm = ((imm << 2) | imml);
+
+            // ADRP
+            // imm = SignExtend(immhi:immlo:Zeros(12), 64);
+            else
+                fullimm = ((imm << (2 + 12)) | (imml << 12));
+
+            // TODO check if these casts work
+
+            operands.add(newImmediate64(IMM, fullimm));
+            break;
+
+        ///////////////////////////////////////////////////////////////////////
+        case DPI_ADDSUBIMM:
+
             break;
 
         default:
             break;
         }
-
-        /*
-         * for 
-         *  operaands.add(new MicroBlazeOperand(<type>, <fieldname>, <value>);
-         */
 
         return operands;
     }

@@ -35,6 +35,7 @@ public enum OperandType {
     FLOAT,
 
     // data sizes
+    NIBBLE,
     BYTE,
     HALFWORD,
     WORD,
