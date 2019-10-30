@@ -23,6 +23,9 @@ public class AOperandProperties implements OperandProperties {
         this.width = width;
         this.genericType = tp;
         this.asmfield = asmfield;
+
+        // TODO add switch case to determine if NIBBLE, BYTE, WORD, etc, and add that type to the type list
+        // or do it backwards
     }
 
     /*

@@ -41,7 +41,18 @@ public abstract class AOperand implements Operand {
     }
 
     public String getStringValue() {
-        return this.svalue;
+
+        if (this.isSymbolic())
+            return this.svalue;
+
+        else if (this.isRegister())
+            return Integer.toString(this.value);
+
+        else if (this.isImmediate())
+            return Integer.toHexString(this.value);
+
+        else
+            return this.svalue;
     }
 
     ///////////////////////////////////////////////////////////// Properties //
@@ -65,9 +76,9 @@ public abstract class AOperand implements Operand {
         return (this.props.getTypes().contains(WRITE));
     }
 
-    /*public Boolean isFloat() {
-    
-    }*/
+    public Boolean isFloat() {
+        return (this.props.getTypes().contains(FLOAT));
+    }
 
     public AsmField getAsmField() {
         return this.props.getAsmField();
