@@ -7,72 +7,76 @@ import org.specs.Arm.parsing.ArmAsmField;
 import pt.up.fe.specs.binarytranslation.instruction.AOperand;
 import pt.up.fe.specs.binarytranslation.instruction.AOperandProperties;
 import pt.up.fe.specs.binarytranslation.instruction.OperandProperties;
-import pt.up.fe.specs.binarytranslation.instruction.OperandType;
 
 public class ArmOperand extends AOperand {
 
+    static int SPvalue = 31;
+
     /*
-     * 
+     * Integer value constructor
      */
-    private ArmOperand(OperandProperties props, Integer value) {
+    private ArmOperand(OperandProperties props, Number value) {
         super(props, value);
     }
 
-    private static OperandType resolveWidth(int width) {
-        switch (width) {
-        case 4:
-            return NIBBLE;
-        case 8:
-            return BYTE;
-        case 16:
-            return HALFWORD;
-        case 32:
-            return WORD;
-        case 64:
-            return DWORD;
-        case 128:
-            return QWORD;
-        default:
-            return WORD;
-        }
+    /*
+     * String value constructor
+     */
+    private ArmOperand(OperandProperties props, String value) {
+        super(props, value);
+    }
+
+    private static ArmOperand newInstance(OperandProperties props, Number value) {
+        if (value.intValue() != SPvalue)
+            return new ArmOperand(props, value);
+        else
+            return new ArmOperand(props, "sp");
+
     }
 
     private static String getPrefix(int width) {
         switch (width) {
         case 32:
-            return "W";
+            return "w";
         case 64:
-            return "X";
+            return "x";
         default:
-            return "X";
+            return "x";
         }
     }
 
     /*
      * Read register
      */
-    public static ArmOperand newReadRegister(ArmAsmField field, Integer value, int width) {
-        OperandType wd = resolveWidth(width);
-        var props = new AOperandProperties(field, getPrefix(width), "", width, REGISTER, READ, wd);
-        return new ArmOperand(props, value);
+    public static ArmOperand newReadRegister(ArmAsmField field, Number value, int width) {
+        String prefix = (value.intValue() == SPvalue) ? "" : getPrefix(width);
+        var props = new AOperandProperties(field, prefix, "", width, REGISTER, READ);
+        return newInstance(props, value);
     }
 
     /*
      * Write register
      */
-    public static ArmOperand newWriteRegister(ArmAsmField field, Integer value, int width) {
-        OperandType wd = resolveWidth(width);
-        var props = new AOperandProperties(field, getPrefix(width), "", width, REGISTER, WRITE, wd);
-        return new ArmOperand(props, value);
+    public static ArmOperand newWriteRegister(ArmAsmField field, Number value, int width) {
+        String prefix = (value.intValue() == SPvalue) ? "" : getPrefix(width);
+        var props = new AOperandProperties(field, prefix, "", width, REGISTER, WRITE);
+        return newInstance(props, value);
     }
 
     /*
      * Immediate
      */
-    public static ArmOperand newImmediate(ArmAsmField field, Integer value, int width) {
-        OperandType wd = resolveWidth(width);
-        var props = new AOperandProperties(field, "", "", width, IMMEDIATE, READ, wd);
-        return new ArmOperand(props, value);
+    public static ArmOperand newImmediate(ArmAsmField field, Number value, int width) {
+        var props = new AOperandProperties(field, "#0x", "", width, IMMEDIATE, READ);
+        return newInstance(props, value);
+    }
+
+    /*
+     * Immediate without prefix (used for labels?)
+     */
+    public static ArmOperand newImmediateLabel(ArmAsmField field, Number value, int width) {
+        var props = new AOperandProperties(field, "", "", width, IMMEDIATE, READ);
+        return newInstance(props, value);
     }
 
     /*
