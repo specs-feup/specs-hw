@@ -251,20 +251,8 @@ public class ArmAsmFieldData extends AsmFieldData {
             // build second operand from "imm" and "imml"
             var imml = map.get(IMML);
             var imm = map.get(IMM);
-            Integer fullimm = 0;
-
-            // ADR
-            // imm = SignExtend(immhi:immlo, 64)
-            if (map.get(OPCODEA) == 0)
-                fullimm = ((imm << 2) | imml);
-
-            // ADRP
-            // imm = SignExtend(immhi:immlo:Zeros(12), 64);
-            else
-                fullimm = ((imm << (2 + 12)) | (imml << 12));
-
-            // TODO check if these casts work
-
+            var shift = (map.get(OPCODEA) == 0) ? 0 : 12;
+            Integer fullimm = ((imm << (2 + shift)) | (imml << shift));
             operands.add(newImmediateLabel(IMM, fullimm, 64));
             break;
         }
@@ -274,7 +262,7 @@ public class ArmAsmFieldData extends AsmFieldData {
             // first and second operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
             operands.add(newWriteRegister(RD, map.get(RD), wd));
-            operands.add(newWriteRegister(RN, map.get(RN), wd));
+            operands.add(newReadRegister(RN, map.get(RN), wd));
 
             // third operand
             var imm = map.get(IMM);
@@ -299,13 +287,55 @@ public class ArmAsmFieldData extends AsmFieldData {
             // first and second operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
             operands.add(newWriteRegister(RD, map.get(RD), wd));
-            operands.add(newWriteRegister(RN, map.get(RN), wd));
+            operands.add(newReadRegister(RN, map.get(RN), wd));
 
+            // third operand
             var immr = map.get(IMMR);
             var imms = map.get(IMMS);
             var N = map.get(OPCODEB);
             Number fullimm = DecodeBitMasks(N, imms, immr, true);
             operands.add(newImmediate(IMM, fullimm, wd));
+            break;
+        }
+
+        case MOVEW: {
+            // first operand
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RD, map.get(RD), wd));
+
+            var imm = map.get(IMM);
+            var hw = map.get(OPCODEB); // OPCODEB = "hw"
+            Number fullimm = imm << hw;
+            operands.add(newImmediate(IMM, fullimm, wd));
+            break;
+        }
+
+        case BITFIELD: {
+            // first and second operands
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RD, map.get(RD), wd));
+            operands.add(newReadRegister(RN, map.get(RN), wd));
+
+            // 3rd and 4th
+            operands.add(newImmediate(IMMR, map.get(IMMR), 8)); // actually 6 bits
+            operands.add(newImmediate(IMMS, map.get(IMMS), 8)); // actually 6 bits
+            break;
+        }
+
+        case EXTRACT: {
+            // first, second and third operands
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RD, map.get(RD), wd));
+            operands.add(newReadRegister(RN, map.get(RN), wd));
+            operands.add(newReadRegister(RM, map.get(RM), wd));
+
+            // fourth operand
+            operands.add(newImmediate(IMMS, map.get(IMMS), 8)); // actually 6 bits
+            break;
+        }
+
+        case CONDITIONALBRANCH: {
+
             break;
         }
 
