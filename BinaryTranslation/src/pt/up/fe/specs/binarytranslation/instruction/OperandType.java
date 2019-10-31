@@ -42,6 +42,8 @@ public enum OperandType {
     DWORD,
     QWORD;
 
+    // SIMD
+
     // DIRECT
     // INDIRECT
     // POINTER (?)
