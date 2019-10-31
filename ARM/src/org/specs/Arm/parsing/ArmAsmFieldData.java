@@ -194,9 +194,9 @@ public class ArmAsmFieldData extends AsmFieldData {
         switch (type) {
 
         ///////////////////////////////////////////////////////////////////////
-        case DPI_PCREL:
+        case DPI_PCREL: {
             // first operand
-            operands.add(newWriteRegister64(RD, map.get(RD)));
+            operands.add(newWriteRegister(RD, map.get(RD), 64));
 
             // build second operand from "imm" and "imml"
             var imml = map.get(IMML);
@@ -215,13 +215,23 @@ public class ArmAsmFieldData extends AsmFieldData {
 
             // TODO check if these casts work
 
-            operands.add(newImmediate64(IMM, fullimm));
+            operands.add(newImmediate(IMM, fullimm, 64));
             break;
+        }
 
         ///////////////////////////////////////////////////////////////////////
-        case DPI_ADDSUBIMM:
+        case DPI_ADDSUBIMM: {
+            // first operand
+            var wd = (map.get(OPCODEA) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RD, map.get(RD), wd));
 
+            // second operand
+            var bits = wd - 12;
+            var imm = map.get(IMM);
+            Integer fullimm = imm << bits >> bits;
+            operands.add(newImmediate(IMM, fullimm, wd));
             break;
+        }
 
         default:
             break;
