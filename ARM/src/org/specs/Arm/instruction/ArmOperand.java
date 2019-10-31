@@ -7,6 +7,7 @@ import org.specs.Arm.parsing.ArmAsmField;
 import pt.up.fe.specs.binarytranslation.instruction.AOperand;
 import pt.up.fe.specs.binarytranslation.instruction.AOperandProperties;
 import pt.up.fe.specs.binarytranslation.instruction.OperandProperties;
+import pt.up.fe.specs.binarytranslation.instruction.OperandType;
 
 public class ArmOperand extends AOperand {
 
@@ -17,23 +18,62 @@ public class ArmOperand extends AOperand {
         super(props, value);
     }
 
-    public static ArmOperand newReadRegister64(ArmAsmField field, Integer value) {
-        var props = new AOperandProperties(field, "X", "", 64, REGISTER, READ, DWORD);
+    private static OperandType resolveWidth(int width) {
+        switch (width) {
+        case 4:
+            return NIBBLE;
+        case 8:
+            return BYTE;
+        case 16:
+            return HALFWORD;
+        case 32:
+            return WORD;
+        case 64:
+            return DWORD;
+        case 128:
+            return QWORD;
+        default:
+            return WORD;
+        }
+    }
+
+    private static String getPrefix(int width) {
+        switch (width) {
+        case 32:
+            return "W";
+        case 64:
+            return "X";
+        default:
+            return "X";
+        }
+    }
+
+    /*
+     * Read register
+     */
+    public static ArmOperand newReadRegister(ArmAsmField field, Integer value, int width) {
+        OperandType wd = resolveWidth(width);
+        var props = new AOperandProperties(field, getPrefix(width), "", width, REGISTER, READ, wd);
         return new ArmOperand(props, value);
     }
 
-    public static ArmOperand newWriteRegister64(ArmAsmField field, Integer value) {
-        var props = new AOperandProperties(field, "X", "", 64, REGISTER, WRITE, DWORD);
+    /*
+     * Write register
+     */
+    public static ArmOperand newWriteRegister(ArmAsmField field, Integer value, int width) {
+        OperandType wd = resolveWidth(width);
+        var props = new AOperandProperties(field, getPrefix(width), "", width, REGISTER, WRITE, wd);
         return new ArmOperand(props, value);
     }
 
-    public static ArmOperand newImmediate64(ArmAsmField field, Integer value) {
-        var props = new AOperandProperties(field, "", "", 64, IMMEDIATE, READ, DWORD);
+    /*
+     * Immediate
+     */
+    public static ArmOperand newImmediate(ArmAsmField field, Integer value, int width) {
+        OperandType wd = resolveWidth(width);
+        var props = new AOperandProperties(field, "", "", width, IMMEDIATE, READ, wd);
         return new ArmOperand(props, value);
     }
-
-    // TODO make public methods newReadRegister, and newWriteRegister, with a data width argument
-    // and call newReadRegister32, or 64 only here, after parsing that argument
 
     /*
      * Copy "constructor"
