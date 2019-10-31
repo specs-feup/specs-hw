@@ -1745,12 +1745,41 @@ public class ArmInstructionInstatiationTest {
         testDecode("cls64", "cls", Integer.toHexString(0b1_10_11010110_00000_000101_00000_00000));
     }
 
+    // test "910003fd" --> should be a mov with 2 arguments "mov x29, sp"
+    // NOTE: its not a bug, a "mov" with the sp (where Rn = Rd) is an alias of "add"
+    @Test
+    public void test_mov() {
+        testDecode("mov", "mov", "910003fd");
+    }
+
+    // test 12001c21
+    @Test
+    public void test_and() {
+        testDecode("and", "and", "12001c21");
+    }
+
+    /*
+     * 0xa18:32150021    orr     w1,  w1,  #0xffffffff
+        0xa1c:32160021   orr     w1,  w1,  #0xffffffff
+        0xa20:321d0021   orr     w1,  w1,  #0xffffffff
+        0xa24:321e0021   orr     w1,  w1,  #0xffffffff
+        0xa28:321f0021   orr     w1,  w1,  #0xffffffff
+     */
+    @Test
+    public void test_orrs() {
+        testDecode("orr", "orr", "32150021");
+        testDecode("orr", "orr", "32160021");
+        testDecode("orr", "orr", "321d0021");
+        testDecode("orr", "orr", "321e0021");
+        testDecode("orr", "orr", "321f0021");
+    }
+
     private void testDecode(String addr, String name, String expected, String binaryInstruction) {
         ArmInstruction testinst = ArmInstruction.newInstance(addr, binaryInstruction);
         ArmInstructionData idata = testinst.getData();
         ArmAsmFieldData fieldData = testinst.getFieldData();
 
-        System.out.print(name + "\tresolved to\t->\t" + testinst.getName() +
+        System.out.print(name + "\tresolved to\t->\t" + testinst.getRepresentation() +
                 "\t(SIMD: " + idata.isSimd() + ", width: " + idata.getBitWidth() + ")\n");
 
         // System.out.print(name + "\tresolved to\t->\t" + testinst.getName() +
