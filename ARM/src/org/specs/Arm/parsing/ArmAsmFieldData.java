@@ -395,20 +395,21 @@ public class ArmAsmFieldData extends AsmFieldData {
             
             var sf = map.get(SF);
             var simd = map.get(SIMD);   
+            if(simd == 0)
+                sf = sf >> 1;
+            
             int wd = 32 * (int)Math.pow(2, sf);
             
-            if(simd == 0) {
-                wd = 32 * (int)Math.pow(2, sf);
-            } else {
-                wd = 32 * (int)Math.pow(2, sf);
-            }
-
             // first operand
-            operands.add(newWriteRegister(RT, map.get(RT), wd));
+            if(simd == 0) {   
+                operands.add(newWriteRegister(RT, map.get(RT), wd));
+            } else {
+                operands.add(newSIMDWriteRegister(RT, map.get(RT), wd));
+            }
          
             // second operand
             Number label = map.get(IMM) << 2;
-            operands.add(newImmediateLabel(IMM, label, 32));        
+            operands.add(newImmediate(IMM, label, 32));        
             break;
         }
         
@@ -421,7 +422,7 @@ public class ArmAsmFieldData extends AsmFieldData {
          
             // second operand
             Number label = map.get(IMM) << 2;
-            operands.add(newImmediateLabel(IMM, label, 32));        
+            operands.add(newImmediate(IMM, label, 32));        
             break;
         }
         
@@ -431,18 +432,47 @@ public class ArmAsmFieldData extends AsmFieldData {
             // STNP <Wt1>, <Wt2>, [<Xn|SP>{, #<imm>}]
             // LDNP <Wt1>, <Wt2>, [<Xn|SP>{, #<imm>}]
             
-            // first operand
-            var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RT, map.get(RT), wd));
-            operands.add(newWriteRegister(RM, map.get(RM), wd));
+            var sf = map.get(SF);
+            var simd = map.get(SIMD);   
+            if(simd == 0)
+                sf = sf >> 1;
             
+            int wd = 32 * (int)Math.pow(2, sf);
             
+            // first and second operands
+            if(simd == 0) {   
+                operands.add(newReadRegister(RT, map.get(RT), wd));
+                operands.add(newReadRegister(RM, map.get(RM), wd));           
+            } else {
+                operands.add(newSIMDReadRegister(RT, map.get(RT), wd));
+                operands.add(newSIMDReadRegister(RM, map.get(RM), wd));
+            }
+            
+            // third operand
+            operands.add(newReadRegister(RM, map.get(RM), wd));
+   
+            // fourth (optional) operand
+            Number imm = map.get(IMM) * (wd / 8);
+            operands.add(newImmediate(IMM, imm, (wd == 32) ? 8 : 16));   
             break;
         }
         
-        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1:
-        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2: {
+        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1: {
 
+            // first operand
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newReadRegister(RT, map.get(RT), wd));
+            operands.add(newReadRegister(RM, map.get(RM), wd));
+            operands.add(newReadRegister(RN, map.get(RN), wd));
+            
+            
+            // second operand
+            Number imm = map.get(IMM) * (wd / 8);
+            operands.add(newImmediate(IMM, imm, 16));   
+            break;
+        }
+        
+        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2: {
             break;
         }
         

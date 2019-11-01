@@ -44,6 +44,19 @@ public class ArmOperand extends AOperand {
             return "x";
         }
     }
+    
+    private static String getSIMDPrefix(int width) {
+        switch (width) {
+        case 32:
+            return "s";
+        case 64:
+            return "d";
+        case 128:
+            return "q";            
+        default:
+            return "s";
+        }
+    }
 
     /*
      * Read register
@@ -62,6 +75,24 @@ public class ArmOperand extends AOperand {
         var props = new AOperandProperties(field, prefix, "", width, REGISTER, WRITE);
         return newInstance(props, value);
     }
+    
+    /*
+     * Read simd register
+     */
+    public static ArmOperand newSIMDReadRegister(ArmAsmField field, Number value, int width) {
+        String prefix = getSIMDPrefix(width);
+        var props = new AOperandProperties(field, prefix, "", width, REGISTER, READ, SIMD);
+        return newInstance(props, value);
+    }
+
+    /*
+     * Write simd register
+     */
+    public static ArmOperand newSIMDWriteRegister(ArmAsmField field, Number value, int width) {
+        String prefix = getSIMDPrefix(width);
+        var props = new AOperandProperties(field, prefix, "", width, REGISTER, WRITE, SIMD);
+        return newInstance(props, value);
+    }    
 
     /*
      * Immediate
