@@ -19,7 +19,7 @@ package pt.up.fe.specs.binarytranslation.graphs;
 
 import pt.up.fe.specs.util.graphs.Graph;
 import pt.up.fe.specs.util.graphs.GraphNode;
-
+/*
 public class BinarySegmentGraph extends Graph<Object, Object, Object> {
 
     @Override
@@ -35,3 +35,4 @@ public class BinarySegmentGraph extends Graph<Object, Object, Object> {
     }
 
 }
+*/
