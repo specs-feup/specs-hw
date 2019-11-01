@@ -33,6 +33,7 @@ public enum OperandType {
     // data type
     INTEGER,
     FLOAT,
+    SIMD,
 
     // data sizes
     NIBBLE,
@@ -41,8 +42,6 @@ public enum OperandType {
     WORD,
     DWORD,
     QWORD;
-
-    // SIMD
 
     // DIRECT
     // INDIRECT
