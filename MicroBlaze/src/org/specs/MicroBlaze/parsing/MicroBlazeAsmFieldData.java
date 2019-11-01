@@ -149,11 +149,6 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
             break;
         }
 
-        /*
-         * for 
-         *  operaands.add(new MicroBlazeOperand(<type>, <fieldname>, <value>);
-         */
-
         return operands;
     }
 }

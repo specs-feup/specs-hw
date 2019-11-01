@@ -1,5 +1,7 @@
 package pt.up.fe.specs.binarytranslation.instruction;
 
+import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +14,29 @@ public class AOperandProperties implements OperandProperties {
     private String suffix;
     private final int width;
     private List<OperandType> genericType;
-    private AsmField asmfield;
+    private final AsmField asmfield;
+
+    /*
+     * Set additional type field based on operand bitwidth
+     */
+    private static OperandType resolveWidth(int width) {
+        switch (width) {
+        case 4:
+            return NIBBLE;
+        case 8:
+            return BYTE;
+        case 16:
+            return HALFWORD;
+        case 32:
+            return WORD;
+        case 64:
+            return DWORD;
+        case 128:
+            return QWORD;
+        default:
+            return WORD;
+        }
+    }
 
     /*
      * Base constructor (called by implementations of AOperand)
@@ -21,8 +45,14 @@ public class AOperandProperties implements OperandProperties {
         this.prefix = prefix;
         this.suffix = suffix;
         this.width = width;
-        this.genericType = tp;
         this.asmfield = asmfield;
+
+        // list enters as abstract list
+        this.genericType = new ArrayList<OperandType>();
+        for (OperandType type : tp) {
+            this.genericType.add(type);
+        }
+        this.genericType.add(resolveWidth(width));
     }
 
     /*
@@ -78,7 +108,7 @@ public class AOperandProperties implements OperandProperties {
     public void setSymbolic() {
         this.genericType.add(OperandType.SYMBOLIC);
         if (this.getMainType() == OperandType.REGISTER) {
-            this.prefix = "r<";
+            this.prefix += "<";
         } else {
             this.prefix = this.asmfield.toString() + "<";
         }
