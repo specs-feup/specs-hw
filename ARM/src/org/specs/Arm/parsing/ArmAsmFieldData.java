@@ -342,48 +342,48 @@ public class ArmAsmFieldData extends AsmFieldData {
             operands.add(newImmediateLabel(IMM, fullimm, 64));
             break;
         }
-        
+
         case EXCEPTION: {
             // first operand
             Number fullimm = map.get(IMM);
             operands.add(newImmediateLabel(IMM, fullimm, 16));
             break;
         }
-        
+
         case UCONDITIONALBRANCH_REG: {
             // first operand
             operands.add(newReadRegister(RM, map.get(RM), 64));
-            
+
             // for brab and braa
             var opa = map.get(OPCODEA); // contains bit "Z"
-            if((opa & 0x0001) != 0) {
+            if ((opa & 0x0001) != 0) {
                 operands.add(newReadRegister(RM, map.get(RM), 64));
             }
-            
+
             break;
         }
-        
+
         case COMPARE_AND_BRANCH_IMM: {
             // first operand
             var wd = (map.get(SF) == 1) ? 64 : 32;
             operands.add(newWriteRegister(RT, map.get(RT), wd));
-            
+
             // second operand
             Number fullimm = map.get(IMM) << 2;
             operands.add(newImmediateLabel(IMM, fullimm, 64));
             break;
         }
-        
+
         case TEST_AND_BRANCH: {
             // first operand
             var wd = (map.get(SF) == 1) ? 64 : 32;
             operands.add(newWriteRegister(RT, map.get(RT), wd));
-            
+
             // second operand
             var b5 = map.get(SF);
             var b40 = map.get(RM);
-            operands.add(newImmediate(RM, ((b5 << 5) | b40), 8)); 
-            
+            operands.add(newImmediate(RM, ((b5 << 5) | b40), 8));
+
             // third operand
             Number label = map.get(IMM) << 2;
             operands.add(newImmediateLabel(IMM, label, 64));
@@ -392,119 +392,134 @@ public class ArmAsmFieldData extends AsmFieldData {
 
         // ldr literal loads, scalar and simd
         case LOAD_REG_LITERAL_FMT1: {
-            
+
             var sf = map.get(SF);
-            var simd = map.get(SIMD);   
-            if(simd == 0)
+            var simd = map.get(SIMD);
+            if (simd == 0)
                 sf = sf >> 1;
-            
-            int wd = 32 * (int)Math.pow(2, sf);
-            
+
+            int wd = 32 * (int) Math.pow(2, sf);
+
             // first operand
-            if(simd == 0) {   
+            if (simd == 0) {
                 operands.add(newWriteRegister(RT, map.get(RT), wd));
             } else {
                 operands.add(newSIMDWriteRegister(RT, map.get(RT), wd));
             }
-         
+
             // second operand
             Number label = map.get(IMM) << 2;
-            operands.add(newImmediate(IMM, label, 32));        
+            operands.add(newImmediate(IMM, label, 32));
             break;
         }
-        
+
         // should only be for "prfm" and "ldrsw_reg"
         case LOAD_REG_LITERAL_FMT2: {
-                             
+
             // first operand
-            var wd = (map.get(OPCODEC) != 0) ? 64 : 32;        
+            var wd = (map.get(OPCODEC) != 0) ? 64 : 32;
             operands.add(newWriteRegister(RT, map.get(RT), wd));
-         
+
             // second operand
             Number label = map.get(IMM) << 2;
-            operands.add(newImmediate(IMM, label, 32));        
+            operands.add(newImmediate(IMM, label, 32));
             break;
         }
-        
-        // stnp and ldnp (scalar and simd)
-        case LOAD_STORE_PAIR_NO_ALLOC: {
 
-            // STNP <Wt1>, <Wt2>, [<Xn|SP>{, #<imm>}]
-            // LDNP <Wt1>, <Wt2>, [<Xn|SP>{, #<imm>}]
-            
+        // stnp and ldnp (scalar and simd)
+        case LOAD_STORE_PAIR_NO_ALLOC:
+        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1: {
+
             var sf = map.get(SF);
-            var simd = map.get(SIMD);   
-            if(simd == 0)
+            var simd = map.get(SIMD);
+            if (simd == 0)
                 sf = sf >> 1;
-            
-            int wd = 32 * (int)Math.pow(2, sf);
-            
+
+            int wd = 32 * (int) Math.pow(2, sf);
+
             // first and second operands
-            if(simd == 0) {   
+            if (simd == 0) {
                 operands.add(newReadRegister(RT, map.get(RT), wd));
-                operands.add(newReadRegister(RM, map.get(RM), wd));           
+                operands.add(newReadRegister(RM, map.get(RM), wd));
             } else {
                 operands.add(newSIMDReadRegister(RT, map.get(RT), wd));
                 operands.add(newSIMDReadRegister(RM, map.get(RM), wd));
             }
-            
+
             // third operand
-            operands.add(newReadRegister(RM, map.get(RM), wd));
-   
+            operands.add(newReadRegister(RN, map.get(RN), wd));
+
             // fourth (optional) operand
             Number imm = map.get(IMM) * (wd / 8);
-            operands.add(newImmediate(IMM, imm, (wd == 32) ? 8 : 16));   
-            break;
-        }
-        
-        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1: {
 
-            // first operand
-            var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newReadRegister(RT, map.get(RT), wd));
-            operands.add(newReadRegister(RM, map.get(RM), wd));
-            operands.add(newReadRegister(RN, map.get(RN), wd));
-            
-            
-            // second operand
-            Number imm = map.get(IMM) * (wd / 8);
-            operands.add(newImmediate(IMM, imm, 16));   
+            if (type == ArmAsmFieldType.LOAD_STORE_PAIR_NO_ALLOC)
+                wd = (wd == 32) ? 8 : 16;
+            else // if LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1
+                wd = 16;
+
+            operands.add(newImmediate(IMM, imm, wd));
             break;
         }
+        /*
+        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1: {
         
+            var sf = map.get(SF);
+            var simd = map.get(SIMD);
+            if (simd == 0)
+                sf = sf >> 1;
+        
+            int wd = 32 * (int) Math.pow(2, sf);
+        
+            // first, second, and third operands
+            if (simd == 0) {
+                operands.add(newReadRegister(RT, map.get(RT), wd));
+                operands.add(newReadRegister(RM, map.get(RM), wd));
+            } else {
+                operands.add(newSIMDReadRegister(RT, map.get(RT), wd));
+                operands.add(newSIMDReadRegister(RM, map.get(RM), wd));
+            }
+        
+            // third operand
+            operands.add(newReadRegister(RN, map.get(RN), wd));
+        
+            // fourth operand
+            Number imm = map.get(IMM) * (wd / 8);
+            operands.add(newImmediate(IMM, imm, 16));
+            break;
+        }
+        */
         case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2: {
             break;
         }
-        
+
         case LOAD_STORE_PAIR_IMM_FMT1:
         case LOAD_STORE_PAIR_IMM_FMT2:
-        case LOAD_STORE_PAIR_IMM_FMT3:{
+        case LOAD_STORE_PAIR_IMM_FMT3: {
 
             break;
         }
-        
+
         case LOAD_STORE_IMM_PREPOST_FMT1:
         case LOAD_STORE_IMM_PREPOST_FMT2:
-        case LOAD_STORE_IMM_PREPOST_FMT3:{
+        case LOAD_STORE_IMM_PREPOST_FMT3: {
 
             break;
         }
-        
+
         case LOAD_STORE_REG_OFF_FMT1:
         case LOAD_STORE_REG_OFF_FMT2:
-        case LOAD_STORE_REG_OFF_FMT3:{
+        case LOAD_STORE_REG_OFF_FMT3: {
 
             break;
         }
 
         case LOAD_STORE_REG_UIMM_FMT1:
         case LOAD_STORE_REG_UIMM_FMT2:
-        case LOAD_STORE_REG_UIMM_FMT3:{
+        case LOAD_STORE_REG_UIMM_FMT3: {
 
             break;
-        }        
-        
-        
+        }
+
         default:
             break;
         }
