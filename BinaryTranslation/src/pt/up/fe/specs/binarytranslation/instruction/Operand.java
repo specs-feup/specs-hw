@@ -28,7 +28,7 @@ public interface Operand {
      * If operand isnt symbolic, getStringValue returns the
      * integer value as a String
      */
-    public Integer getIntegerValue();
+    public Number getIntegerValue();
 
     /*
      * As string (good for symbolic values)

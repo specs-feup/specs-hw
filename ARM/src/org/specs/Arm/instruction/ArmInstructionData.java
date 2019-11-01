@@ -28,7 +28,7 @@ public class ArmInstructionData extends InstructionData {
         this.isSimd = fieldData.isSimd();
         this.condition = fieldData.getCond();
         this.branchTarget = fieldData.getBranchTarget();
-        // this.operands = fieldData.getOperands();
+        this.operands = fieldData.getOperands();
     }
 
     /*

@@ -61,5 +61,4 @@ public enum ArmAsmField implements AsmField {
 
         return sset;
     }
-
 }

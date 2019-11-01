@@ -26,21 +26,57 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmField;
  */
 public abstract class AOperand implements Operand {
 
-    protected Integer value;
-    protected String svalue; // used for symbolic representation (TODO refactor to another class? e.g., SymbolicOperand)
+    protected Number value;
+    protected String svalue;
     protected OperandProperties props;
 
-    public AOperand(OperandProperties props, Integer value) {
+    public AOperand(OperandProperties props, Number value) {
         this.props = props;
         this.value = value;
-        this.svalue = Integer.toHexString(this.value);
+
+        // ugly but works...
+        if (this.isImmediate() && props.getWidth() == 32)
+            this.svalue = Integer.toHexString(this.value.intValue());
+
+        else if (this.isImmediate() && props.getWidth() == 64)
+            this.svalue = Long.toHexString(this.value.longValue());
+
+        else if (this.isRegister() && props.getWidth() == 32)
+            this.svalue = Integer.toString(this.value.intValue());
+
+        else // if (this.isRegister() && props.getWidth() == 64)
+            this.svalue = Long.toString(this.value.longValue());
+
     }
 
-    public Integer getIntegerValue() {
+    /*
+     * necessary because some registers cannot be represented with numbers
+     * (e.g., "SF" for ARM)
+     */
+    public AOperand(OperandProperties props, String value) {
+        this.props = props;
+        this.svalue = value;
+        this.value = -1L;
+    }
+
+    public Number getIntegerValue() {
         return this.value;
     }
 
     public String getStringValue() {
+
+        /* if (this.isSymbolic() || this.value.longValue() == -1L)
+            return this.svalue;
+        
+        else if (this.isRegister())
+            return Long.toString(this.value.longValue());
+        
+        else if (this.isImmediate())
+            return Long.toHexString(this.value.longValue());
+        
+        else
+            return this.svalue;*/
+
         return this.svalue;
     }
 
@@ -65,9 +101,9 @@ public abstract class AOperand implements Operand {
         return (this.props.getTypes().contains(WRITE));
     }
 
-    /*public Boolean isFloat() {
-    
-    }*/
+    public Boolean isFloat() {
+        return (this.props.getTypes().contains(FLOAT));
+    }
 
     public AsmField getAsmField() {
         return this.props.getAsmField();
