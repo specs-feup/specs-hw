@@ -387,18 +387,56 @@ public class ArmAsmFieldData extends AsmFieldData {
             // third operand
             Number label = map.get(IMM) << 2;
             operands.add(newImmediateLabel(IMM, label, 64));
+            break;
+        }
 
+        // ldr literal loads, scalar and simd
+        case LOAD_REG_LITERAL_FMT1: {
+            
+            var sf = map.get(SF);
+            var simd = map.get(SIMD);   
+            int wd = 32 * (int)Math.pow(2, sf);
+            
+            if(simd == 0) {
+                wd = 32 * (int)Math.pow(2, sf);
+            } else {
+                wd = 32 * (int)Math.pow(2, sf);
+            }
+
+            // first operand
+            operands.add(newWriteRegister(RT, map.get(RT), wd));
+         
+            // second operand
+            Number label = map.get(IMM) << 2;
+            operands.add(newImmediateLabel(IMM, label, 32));        
             break;
         }
         
-        case LOAD_REG_LITERAL_FMT1:
+        // should only be for "prfm" and "ldrsw_reg"
         case LOAD_REG_LITERAL_FMT2: {
-
+                             
+            // first operand
+            var wd = (map.get(OPCODEC) != 0) ? 64 : 32;        
+            operands.add(newWriteRegister(RT, map.get(RT), wd));
+         
+            // second operand
+            Number label = map.get(IMM) << 2;
+            operands.add(newImmediateLabel(IMM, label, 32));        
             break;
         }
-
+        
+        // stnp and ldnp (scalar and simd)
         case LOAD_STORE_PAIR_NO_ALLOC: {
 
+            // STNP <Wt1>, <Wt2>, [<Xn|SP>{, #<imm>}]
+            // LDNP <Wt1>, <Wt2>, [<Xn|SP>{, #<imm>}]
+            
+            // first operand
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RT, map.get(RT), wd));
+            operands.add(newWriteRegister(RM, map.get(RM), wd));
+            
+            
             break;
         }
         
