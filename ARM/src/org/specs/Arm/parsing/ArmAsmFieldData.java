@@ -2,6 +2,8 @@ package org.specs.Arm.parsing;
 
 import static org.specs.Arm.instruction.ArmOperand.*;
 import static org.specs.Arm.parsing.ArmAsmField.*;
+import static org.specs.Arm.parsing.ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1;
+import static org.specs.Arm.parsing.ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -335,10 +337,106 @@ public class ArmAsmFieldData extends AsmFieldData {
         }
 
         case CONDITIONALBRANCH: {
+            // first operand
+            Number fullimm = map.get(IMM) << 2;
+            operands.add(newImmediateLabel(IMM, fullimm, 64));
+            break;
+        }
+        
+        case EXCEPTION: {
+            // first operand
+            Number fullimm = map.get(IMM);
+            operands.add(newImmediateLabel(IMM, fullimm, 16));
+            break;
+        }
+        
+        case UCONDITIONALBRANCH_REG: {
+            // first operand
+            operands.add(newReadRegister(RM, map.get(RM), 64));
+            
+            // for brab and braa
+            var opa = map.get(OPCODEA); // contains bit "Z"
+            if((opa & 0x0001) != 0) {
+                operands.add(newReadRegister(RM, map.get(RM), 64));
+            }
+            
+            break;
+        }
+        
+        case COMPARE_AND_BRANCH_IMM: {
+            // first operand
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RT, map.get(RT), wd));
+            
+            // second operand
+            Number fullimm = map.get(IMM) << 2;
+            operands.add(newImmediateLabel(IMM, fullimm, 64));
+            break;
+        }
+        
+        case TEST_AND_BRANCH: {
+            // first operand
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RT, map.get(RT), wd));
+            
+            // second operand
+            var b5 = map.get(SF);
+            var b40 = map.get(RM);
+            operands.add(newImmediate(RM, ((b5 << 5) | b40), 8)); 
+            
+            // third operand
+            Number label = map.get(IMM) << 2;
+            operands.add(newImmediateLabel(IMM, label, 64));
+
+            break;
+        }
+        
+        case LOAD_REG_LITERAL_FMT1:
+        case LOAD_REG_LITERAL_FMT2: {
 
             break;
         }
 
+        case LOAD_STORE_PAIR_NO_ALLOC: {
+
+            break;
+        }
+        
+        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1:
+        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2: {
+
+            break;
+        }
+        
+        case LOAD_STORE_PAIR_IMM_FMT1:
+        case LOAD_STORE_PAIR_IMM_FMT2:
+        case LOAD_STORE_PAIR_IMM_FMT3:{
+
+            break;
+        }
+        
+        case LOAD_STORE_IMM_PREPOST_FMT1:
+        case LOAD_STORE_IMM_PREPOST_FMT2:
+        case LOAD_STORE_IMM_PREPOST_FMT3:{
+
+            break;
+        }
+        
+        case LOAD_STORE_REG_OFF_FMT1:
+        case LOAD_STORE_REG_OFF_FMT2:
+        case LOAD_STORE_REG_OFF_FMT3:{
+
+            break;
+        }
+
+        case LOAD_STORE_REG_UIMM_FMT1:
+        case LOAD_STORE_REG_UIMM_FMT2:
+        case LOAD_STORE_REG_UIMM_FMT3:{
+
+            break;
+        }        
+        
+        
         default:
             break;
         }
