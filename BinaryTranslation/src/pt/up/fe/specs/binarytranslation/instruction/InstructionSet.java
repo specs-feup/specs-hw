@@ -86,7 +86,7 @@ public class InstructionSet {
             }
         }
 
-        // System.out.print(Integer.toBinaryString(asmData.getReducedOpcode()) + "\n");
+        System.out.print(Integer.toBinaryString(asmData.getReducedOpcode()) + "\n");
 
         // find the type labeled as generic unknown otherwise
         for (InstructionProperties inst : instList) {

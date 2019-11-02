@@ -55,7 +55,8 @@ public interface ArmInstructionParsers {
                     "sf(1)_opcodea(2)_100011_opcodeb(1)_immh(6)_opcodec(2)_imml(4)_registern(5)_registerd(5)"),
 
             newInstance(LOGICAL,
-                    "sf(1)_opcodea(2)_100100_opcodeb(1)_immr(6)_imms(6)_registern(5)_registerd(5)"),
+                    // "sf(1)_opcodea(2)_100100_opcodeb(1)_immr(6)_imms(6)_registern(5)_registerd(5)"),
+                    "sf(1)_opcodea(2)_100100_N(1)_immr(6)_imms(6)_registern(5)_registerd(5)"),
 
             newInstance(MOVEW,
                     "sf(1)_opcodea(2)_100101_opcodeb(2)_imm(16)_registerd(5)"),
