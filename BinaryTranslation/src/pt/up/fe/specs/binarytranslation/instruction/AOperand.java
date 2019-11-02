@@ -35,13 +35,13 @@ public abstract class AOperand implements Operand {
         this.value = value;
 
         // ugly but works...
-        if (this.isImmediate() && props.getWidth() == 32)
+        if (this.isImmediate() && props.getWidth() < 64)
             this.svalue = Integer.toHexString(this.value.intValue());
 
         else if (this.isImmediate() && props.getWidth() == 64)
             this.svalue = Long.toHexString(this.value.longValue());
 
-        else if (this.isRegister() && props.getWidth() == 32)
+        else if (this.isRegister() && props.getWidth() < 64)
             this.svalue = Integer.toString(this.value.intValue());
 
         else // if (this.isRegister() && props.getWidth() == 64)

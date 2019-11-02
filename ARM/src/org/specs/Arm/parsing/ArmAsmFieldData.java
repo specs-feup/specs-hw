@@ -2,8 +2,6 @@ package org.specs.Arm.parsing;
 
 import static org.specs.Arm.instruction.ArmOperand.*;
 import static org.specs.Arm.parsing.ArmAsmField.*;
-import static org.specs.Arm.parsing.ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1;
-import static org.specs.Arm.parsing.ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -157,7 +155,7 @@ public class ArmAsmFieldData extends AsmFieldData {
     }
 
     /*
-     * returns position of highermost bit at "1"
+     * returns position of higher most bit at "1"
      */
     private static int leadingbit(long x) {
         int nr = 0;
@@ -294,8 +292,8 @@ public class ArmAsmFieldData extends AsmFieldData {
             // third operand
             var immr = map.get(IMMR);
             var imms = map.get(IMMS);
-            var N = map.get(OPCODEB);
-            Number fullimm = DecodeBitMasks(N, imms, immr, true);
+            var Nval = map.get(N);
+            Number fullimm = DecodeBitMasks(Nval, imms, immr, true);
             operands.add(newImmediate(IMM, fullimm, wd));
             break;
         }
@@ -357,7 +355,7 @@ public class ArmAsmFieldData extends AsmFieldData {
             // for brab and braa
             var opa = map.get(OPCODEA); // contains bit "Z"
             if ((opa & 0x0001) != 0) {
-                operands.add(newReadRegister(RM, map.get(RM), 64));
+                operands.add(newReadRegister(RM, map.get(OPCODED), 64));
             }
 
             break;
@@ -384,7 +382,7 @@ public class ArmAsmFieldData extends AsmFieldData {
         case TEST_AND_BRANCH: {
             // first operand
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RT, map.get(RT), wd));
+            operands.add(newReadRegister(RT, map.get(RT), wd));
 
             // second operand
             var b5 = map.get(SF);
@@ -402,9 +400,6 @@ public class ArmAsmFieldData extends AsmFieldData {
 
             var sf = map.get(SF);
             var simd = map.get(SIMD);
-            if (simd == 0)
-                sf = sf >> 1;
-
             int wd = 32 * (int) Math.pow(2, sf);
 
             // first operand
@@ -414,9 +409,12 @@ public class ArmAsmFieldData extends AsmFieldData {
                 operands.add(newSIMDWriteRegister(RT, map.get(RT), wd));
             }
 
+            // TODO need addr of current instruction...
+
             // second operand
-            Number label = map.get(IMM) << 2;
-            operands.add(newImmediate(IMM, label, 32));
+            var imm = map.get(IMM) << 2;
+            Number label = (imm << (64 - 19)) >> (64 - 19);
+            operands.add(newImmediateLabel(IMM, label, 64));
             break;
         }
 
@@ -424,7 +422,7 @@ public class ArmAsmFieldData extends AsmFieldData {
         case LOAD_REG_LITERAL_FMT2: {
 
             // first operand
-            var wd = (map.get(OPCODEC) != 0) ? 64 : 32;
+            var wd = (map.get(OPCODEA) != 0) ? 64 : 32;
             operands.add(newWriteRegister(RT, map.get(RT), wd));
 
             // second operand
@@ -457,14 +455,15 @@ public class ArmAsmFieldData extends AsmFieldData {
             operands.add(newReadRegister(RN, map.get(RN), wd));
 
             // fourth (optional) operand
-            Number imm = map.get(IMM) * (wd / 8);
+            var imm = map.get(IMM) * (wd / 8);
+            Number fullimm = (imm << (64 - 7)) >> (64 - 7);
 
             if (type == ArmAsmFieldType.LOAD_STORE_PAIR_NO_ALLOC)
                 wd = (wd == 32) ? 8 : 16;
             else // if LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1
                 wd = 16;
 
-            operands.add(newImmediate(IMM, imm, wd));
+            operands.add(newImmediate(IMM, fullimm, wd));
             break;
         }
 
@@ -481,10 +480,24 @@ public class ArmAsmFieldData extends AsmFieldData {
             break;
         }
 
+        // sturb, ldurb, sturh, ldurh, ldursw, prfum
+        // ldursb, ldursh, stur, ldur
         case LOAD_STORE_PAIR_IMM_FMT1:
-        case LOAD_STORE_PAIR_IMM_FMT2:
-        case LOAD_STORE_PAIR_IMM_FMT3: {
+        case LOAD_STORE_PAIR_IMM_FMT2: {
+            // first, and second operands
+            var wd = (map.get(OPCODEA) != 0) ? 64 : 32;
+            operands.add(newReadRegister(RT, map.get(RT), wd));
+            operands.add(newReadRegister(RN, map.get(RN), 64));
 
+            // third operand
+            var imm = map.get(IMM);
+            Number fullimm = (imm << (64 - 9)) >> (64 - 9);
+            operands.add(newImmediate(IMM, fullimm, 64));
+            break;
+        }
+
+        // stur (simd), ldur (simd)
+        case LOAD_STORE_PAIR_IMM_FMT3: {
             break;
         }
 
@@ -506,6 +519,34 @@ public class ArmAsmFieldData extends AsmFieldData {
         case LOAD_STORE_REG_UIMM_FMT2:
         case LOAD_STORE_REG_UIMM_FMT3: {
 
+            break;
+        }
+
+        case DPR_TWOSOURCE: {
+            // first, second, and third operands
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RD, map.get(RD), wd));
+            operands.add(newReadRegister(RN, map.get(RN), wd));
+            operands.add(newReadRegister(RM, map.get(RM), wd));
+            break;
+        }
+
+        case DPR_ONESOURCE: {
+            // first, and second operands
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RD, map.get(RD), wd));
+            operands.add(newReadRegister(RN, map.get(RN), wd));
+            break;
+        }
+
+        case LOGICAL_SHIFT_REG: {
+            // first, second, and third operands
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RD, map.get(RD), wd));
+            operands.add(newReadRegister(RN, map.get(RN), wd));
+            operands.add(newReadRegister(RM, map.get(RM), wd));
+
+            // TODO fourth operand
             break;
         }
 
