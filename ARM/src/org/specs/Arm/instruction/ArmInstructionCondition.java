@@ -1,5 +1,7 @@
 package org.specs.Arm.instruction;
 
+import java.util.*;
+
 import pt.up.fe.specs.binarytranslation.instruction.InstructionCondition;
 
 /*
@@ -48,5 +50,21 @@ public enum ArmInstructionCondition implements InstructionCondition {
 
     public String getShorthandle() {
         return shorthandle;
+    }
+
+    /*
+     * maps the condition code to the enum
+     */
+    private static final Map<Integer, ArmInstructionCondition> DecodeCond;
+    static {
+        Map<Integer, ArmInstructionCondition> aMap = new HashMap<Integer, ArmInstructionCondition>();
+        for (ArmInstructionCondition cond : ArmInstructionCondition.values())
+            aMap.put(cond.getCondCode(), cond);
+
+        DecodeCond = Collections.unmodifiableMap(aMap);
+    }
+
+    public static ArmInstructionCondition decodeCondition(int condcode) {
+        return DecodeCond.get(condcode);
     }
 }
