@@ -5,74 +5,19 @@ import static org.specs.Arm.parsing.ArmAsmField.*;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.specs.Arm.instruction.ArmInstructionCondition;
+import org.specs.Arm.instruction.ArmInstructionShift;
+import org.specs.Arm.instruction.ArmInstructionExtend;
 
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 
 public class ArmAsmFieldData extends AsmFieldData {
-
-    /*
-     * Types of shifts for "shifted" register operations
-     */
-    private enum ShiftType {
-        LSL,
-        LSR,
-        ASR,
-        ROR
-    };
-
-    /*
-     * implements the "DecodeShift" pseudo-code in page 7390 of the armv8 instruction manual:
-     * https://static.docs.arm.com/ddi0487/ea/DDI0487E_a_armv8_arm.pdf
-     */
-    private static final Map<Integer, ShiftType> DecodeShift;
-    static {
-        Map<Integer, ShiftType> aMap = new HashMap<Integer, ShiftType>();
-        aMap.put(0, ShiftType.LSL);
-        aMap.put(1, ShiftType.LSR);
-        aMap.put(2, ShiftType.ASR);
-        aMap.put(3, ShiftType.ROR);
-        DecodeShift = Collections.unmodifiableMap(aMap);
-    }
-
-    /*
-     * Types of register extensions for "extended" register operations
-     */
-    private enum ExtendType {
-        UXTB,
-        UXTH,
-        UXTW,
-        UXTX,
-        SXTB,
-        SXTH,
-        SXTW,
-        SXTX
-    };
-
-    /*
-     * implements the "DecodeRegExtend" pseudo-code in page 7388 of the armv8 instruction manual:
-     * https://static.docs.arm.com/ddi0487/ea/DDI0487E_a_armv8_arm.pdf
-     */
-    private static final Map<Integer, ExtendType> DecodeExtend;
-    static {
-        Map<Integer, ExtendType> aMap = new HashMap<Integer, ExtendType>();
-        aMap.put(0, ExtendType.UXTB);
-        aMap.put(1, ExtendType.UXTH);
-        aMap.put(2, ExtendType.UXTW);
-        aMap.put(3, ExtendType.UXTX);
-        aMap.put(4, ExtendType.SXTB);
-        aMap.put(5, ExtendType.SXTH);
-        aMap.put(6, ExtendType.SXTW);
-        aMap.put(7, ExtendType.SXTX);
-        DecodeExtend = Collections.unmodifiableMap(aMap);
-    }
 
     /*
      * Create raw
@@ -182,11 +127,7 @@ public class ArmAsmFieldData extends AsmFieldData {
             return ArmInstructionCondition.NONE;
 
         int condcode = Integer.parseInt(map1.get("cond"), 2);
-        for (ArmInstructionCondition cond : ArmInstructionCondition.values()) {
-            if (cond.getCondCode() == condcode)
-                return cond;
-        }
-        return ArmInstructionCondition.NONE;
+        return ArmInstructionCondition.decodeCondition(condcode);
         // TODO throw something
     }
 
@@ -608,12 +549,12 @@ public class ArmAsmFieldData extends AsmFieldData {
 
             // fourth operand
             if (type != ArmAsmFieldType.ADD_SUB_EXT_REG) {
-                var subop = DecodeShift.get((map.get(SHIFT))).toString();
-                operands.add(newSubOperation(SHIFT, subop, 8));
+                var shift = ArmInstructionShift.decodeShift(map.get(SHIFT).intValue());
+                operands.add(newSubOperation(SHIFT, shift.toString(), 8));
 
             } else {
-                var subop = DecodeExtend.get((map.get(OPTION))).toString();
-                operands.add(newSubOperation(OPTION, subop, 8));
+                var ext = ArmInstructionExtend.decodeExtend(map.get(OPTION).intValue());
+                operands.add(newSubOperation(OPTION, ext.toString(), 8));
             }
 
             // fifth operand (first suboperation operand)
