@@ -18,7 +18,7 @@ public class ArmElfStream implements StaticInstructionStream {
     private final LineStream insts;
 
     public ArmElfStream(File elfname) {
-        var output = SpecsSystem.runProcess(Arrays.asList("cmd", "/C", "type", // "aarch64-none-elf-objdump", "-d",
+        var output = SpecsSystem.runProcess(Arrays.asList("cat", // "aarch64-none-elf-objdump", "-d",
                 elfname.getAbsolutePath()), new File("."), true, false);
 
         insts = LineStream.newInstance(output.getStdOut());

@@ -5,6 +5,7 @@ import static org.specs.Arm.parsing.ArmAsmField.*;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,62 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 
 public class ArmAsmFieldData extends AsmFieldData {
+
+    /*
+     * Types of shifts for "shifted" register operations
+     */
+    private enum ShiftType {
+        LSL,
+        LSR,
+        ASR,
+        ROR
+    };
+
+    /*
+     * implements the "DecodeShift" pseudo-code in page 7390 of the armv8 instruction manual:
+     * https://static.docs.arm.com/ddi0487/ea/DDI0487E_a_armv8_arm.pdf
+     */
+    private static final Map<Integer, ShiftType> DecodeShift;
+    static {
+        Map<Integer, ShiftType> aMap = new HashMap<Integer, ShiftType>();
+        aMap.put(0, ShiftType.LSL);
+        aMap.put(1, ShiftType.LSR);
+        aMap.put(2, ShiftType.ASR);
+        aMap.put(3, ShiftType.ROR);
+        DecodeShift = Collections.unmodifiableMap(aMap);
+    }
+
+    /*
+     * Types of register extensions for "extended" register operations
+     */
+    private enum ExtendType {
+        UXTB,
+        UXTH,
+        UXTW,
+        UXTX,
+        SXTB,
+        SXTH,
+        SXTW,
+        SXTX
+    };
+
+    /*
+     * implements the "DecodeRegExtend" pseudo-code in page 7388 of the armv8 instruction manual:
+     * https://static.docs.arm.com/ddi0487/ea/DDI0487E_a_armv8_arm.pdf
+     */
+    private static final Map<Integer, ExtendType> DecodeExtend;
+    static {
+        Map<Integer, ExtendType> aMap = new HashMap<Integer, ExtendType>();
+        aMap.put(0, ExtendType.UXTB);
+        aMap.put(1, ExtendType.UXTH);
+        aMap.put(2, ExtendType.UXTW);
+        aMap.put(3, ExtendType.UXTX);
+        aMap.put(4, ExtendType.SXTB);
+        aMap.put(5, ExtendType.SXTH);
+        aMap.put(6, ExtendType.SXTW);
+        aMap.put(7, ExtendType.SXTX);
+        DecodeExtend = Collections.unmodifiableMap(aMap);
+    }
 
     /*
      * Create raw
@@ -522,7 +579,8 @@ public class ArmAsmFieldData extends AsmFieldData {
             break;
         }
 
-        case DPR_TWOSOURCE: {
+        case DPR_TWOSOURCE:
+        case ADD_SUB_CARRY: {
             // first, second, and third operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
             operands.add(newWriteRegister(RD, map.get(RD), wd));
@@ -539,14 +597,46 @@ public class ArmAsmFieldData extends AsmFieldData {
             break;
         }
 
-        case LOGICAL_SHIFT_REG: {
+        case LOGICAL_SHIFT_REG:
+        case ADD_SUB_SHIFT_REG:
+        case ADD_SUB_EXT_REG: {
             // first, second, and third operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
             operands.add(newWriteRegister(RD, map.get(RD), wd));
             operands.add(newReadRegister(RN, map.get(RN), wd));
             operands.add(newReadRegister(RM, map.get(RM), wd));
 
-            // TODO fourth operand
+            // fourth operand
+            if (type != ArmAsmFieldType.ADD_SUB_EXT_REG) {
+                var subop = DecodeShift.get((map.get(SHIFT))).toString();
+                operands.add(newSubOperation(SHIFT, subop, 8));
+
+            } else {
+                var subop = DecodeExtend.get((map.get(OPTION))).toString();
+                operands.add(newSubOperation(OPTION, subop, 8));
+            }
+
+            // fifth operand (first suboperation operand)
+            var imm6 = (map.get(IMM));
+            operands.add(newImmediate(IMM, imm6, 8));
+
+            // NOTE
+            // there is a separate suboperation associated
+            // with this operand.... see page C6-777 of ARMv8 ISA manual
+            break;
+        }
+
+        case CONDITIONAL_CMP_REG: {
+            // first, second, and third operands
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newReadRegister(RN, map.get(RN), wd));
+            operands.add(newReadRegister(RM, map.get(RM), wd));
+
+            var nzcv = map.get(NZCV);
+            operands.add(newImmediate(NZCV, nzcv, 8));
+
+            var cond = map.get(COND);
+            // TODO get cond string field
             break;
         }
 
