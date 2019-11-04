@@ -41,7 +41,11 @@ public enum OperandType {
     HALFWORD,
     WORD,
     DWORD,
-    QWORD;
+    QWORD,
+
+    // representational
+    SUBOPERATION;
+    // SUBOPERATION?? --> expresses things to do to the registers in the shifted register operations for ARM?
 
     // DIRECT
     // INDIRECT
