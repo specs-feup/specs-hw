@@ -48,8 +48,7 @@ public interface ArmInstructionParsers {
                     "opcodea(1)_imml(2)_10000_imm(19)_registerd(5)"),
 
             newInstance(DPI_ADDSUBIMM,
-                    "sf(1)_opcodea(2)_100010_opcodeb(1)_imm(12)_registern(5)_registerd(5)",
-                    data -> !data.get("registerd").equals("11111")),
+                    "sf(1)_opcodea(2)_100010_opcodeb(1)_imm(12)_registern(5)_registerd(5)"),
 
             newInstance(DPI_ADDSUBIMM_TAGS,
                     "sf(1)_opcodea(2)_100011_opcodeb(1)_immh(6)_opcodec(2)_imml(4)_registern(5)_registerd(5)"),
@@ -195,22 +194,22 @@ public interface ArmInstructionParsers {
                     "sf(1)_1_opcodea(1)_11010110_opcodeb(5)_opcodec(6)_registern(5)_registerd(5)"),
 
             newInstance(LOGICAL_SHIFT_REG,
-                    "sf(1)_opcodea(2)_01010_imml(2)_S(1)_registerm(5)_imm(6)_registern(5)_registerd(5)"),
+                    "sf(1)_opcodea(2)_01010_shift(2)_S(1)_registerm(5)_imm(6)_registern(5)_registerd(5)"),
 
             newInstance(ADD_SUB_SHIFT_REG,
-                    "sf(1)_opcodea(2)_01011_imml(2)_0_registerm(5)_imm(6)_registern(5)_registerd(5)"),
+                    "sf(1)_opcodea(2)_01011_shift(2)_0_registerm(5)_imm(6)_registern(5)_registerd(5)"),
 
             newInstance(ADD_SUB_EXT_REG,
-                    "sf(1)_opcodea(2)_01011001_registerm(5)_imml(3)_immh(3)_registern(5)_registerd(5)"),
+                    "sf(1)_opcodea(2)_01011001_registerm(5)_option(3)_imm(3)_registern(5)_registerd(5)"),
 
             newInstance(ADD_SUB_CARRY,
                     "sf(1)_opcodea(2)_11010000_registerm(5)_000000_registern(5)_registerd(5)"),
 
             newInstance(CONDITIONAL_CMP_REG,
-                    "sf(1)_opcodea(2)_11010010_registerm(5)_cond(4)_0_opcodeb(1)_registern(5)_opcodec(1)_opcoded(4)"),
+                    "sf(1)_opcodea(2)_11010010_registerm(5)_cond(4)_0_opcodeb(1)_registern(5)_opcodec(1)_nzcv(4)"),
 
             newInstance(CONDITIONAL_CMP_IMM,
-                    "sf(1)_opcodea(2)_11010010_registerm(5)_cond(4)_1_opcodeb(1)_registern(5)_opcodec(1)_opcoded(4)"),
+                    "sf(1)_opcodea(2)_11010010_registerm(5)_cond(4)_1_opcodeb(1)_registern(5)_opcodec(1)_nzcv(4)"),
 
             newInstance(CONDITIONAL_SELECT,
                     "sf(1)_opcodea(2)_11010100_registerm(5)_cond(4)_opcodeb(2)_registern(5)_registerd(5)"),
