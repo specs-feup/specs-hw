@@ -1,11 +1,8 @@
 package org.specs.Arm.parsing;
 
-import static org.specs.Arm.instruction.ArmOperand.*;
 import static org.specs.Arm.parsing.ArmAsmField.*;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,52 +18,10 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 
 public class ArmAsmFieldData extends AsmFieldData {
 
-    interface ArmOperandProvider {
-        ArmOperand apply(ArmAsmField field, Number value, int width);
-    }
-
     /*
      * remmaping of <string, string> to <asmfield, string>
      */
     private final Map<ArmAsmField, Integer> map = new HashMap<ArmAsmField, Integer>();
-
-    /*
-     * Helper builders
-     
-    private ArmOperand newReadRegister(ArmAsmField field, int wd) {
-        return ArmOperand.newReadRegister(field, map.get(field), wd);
-    }
-    
-    private ArmOperand newWriteRegister(ArmAsmField field, int wd) {
-        return ArmOperand.newWriteRegister(field, map.get(field), wd);
-    }
-    
-    private ArmOperand newSIMDReadRegister(ArmAsmField field, int wd) {
-        return ArmOperand.newSIMDReadRegister(field, map.get(field), wd);
-    }
-    
-    private ArmOperand newSIMDWriteRegister(ArmAsmField field, int wd) {
-        return ArmOperand.newSIMDWriteRegister(field, map.get(field), wd);
-    }
-    */
-    /*
-     * helper mapping of constructors to reduce verbosity
-     */
-    private static final Map<Integer, ArmOperandProvider> newRegister;
-    static {
-        // Key:
-        // 00 - ~SIMD, READ
-        // 01 - ~SIMD, WRITE
-        // 10 - SIMD, READ
-        // 11 - SIMD, WRITE
-
-        Map<Integer, ArmOperandProvider> amap = new HashMap<Integer, ArmOperandProvider>();
-        amap.put(0b00, ArmOperand::newReadRegister);
-        amap.put(0b01, ArmOperand::newWriteRegister);
-        amap.put(0b10, ArmOperand::newSIMDReadRegister);
-        amap.put(0b11, ArmOperand::newSIMDWriteRegister);
-        newRegister = Collections.unmodifiableMap(amap);
-    }
 
     /*
      * Create raw
@@ -88,6 +43,13 @@ public class ArmAsmFieldData extends AsmFieldData {
      */
     public ArmAsmFieldData(AsmFieldData fieldData) {
         this(fieldData.get(TYPE), fieldData.get(FIELDS));
+    }
+
+    /*
+     * 
+     */
+    public Map<ArmAsmField, Integer> getMap() {
+        return map;
     }
 
     /*
@@ -187,89 +149,22 @@ public class ArmAsmFieldData extends AsmFieldData {
     }
 
     /*
-     * Repeat a bit (as string) "n" times (for sign extension of imm fields)
-     */
-    private static String repeat(String bit, int n) {
-        String extension = "";
-        for (int i = 0; i < n; i++)
-            extension = extension + bit;
-        return extension;
-    }
-
-    /*
-     * 
-     */
-    private static long replicate(long mask, int e) {
-        while (e < 64) {
-            mask |= mask << e;
-            e *= 2;
-        }
-        return mask;
-    }
-
-    /*
-     * returns position of higher most bit at "1"
-     */
-    private static int leadingbit(long x) {
-        int nr = 0;
-        while (x > 0) {
-            x = x >> 1;
-            nr++;
-        }
-        return nr - 1;
-    }
-
-    /*
-     * Set the bottom most "len" bits
-     */
-    private static long bitmask(long len) {
-        return -1L >>> (64 - len);
-    }
-
-    /*
-     * implements the pseudo-code in page 7389 of the armv8 instruction manual:
-     * https://static.docs.arm.com/ddi0487/ea/DDI0487E_a_armv8_arm.pdf
-     */
-    private static long DecodeBitMasks(long N, long imms, long immr, boolean imm) {
-
-        var aux = (N << 6) | (~imms & 0x3F);
-        var len = leadingbit(aux);
-        var esize = 1 << len;
-        var levels = esize - 1;
-        var S = imms & levels;
-        var R = immr & levels;
-
-        var wmask = bitmask(S + 1);
-        if (R != 0) {
-            wmask = (wmask >> R) | (wmask << (esize - R));
-            wmask &= bitmask(esize);
-        }
-        wmask = replicate(wmask, esize);
-        return wmask;
-    }
-
-    /*
-     * Get target of branch if instruction is branch
-     */
+    * Get target of branch if instruction is branch
+    */
     public int getBranchTarget() {
 
         ArmAsmFieldType type = (ArmAsmFieldType) this.get(TYPE);
-        var map1 = this.get(FIELDS);
 
         switch (type) {
 
         // conditional branches have a 19 bit IMM field
         case CONDITIONALBRANCH:
-            String immfield = map1.get("imm");
-            immfield = repeat(immfield.substring(0, 1), 32 - immfield.length()) + immfield;
-            var imm = new BigInteger(immfield, 2).intValue();
-            return imm;
+            return signExtend32(map.get(IMM), 9);
 
         default:
             return 0;
         // TODO throw exception here??
         }
-
     }
 
     /*
@@ -278,6 +173,7 @@ public class ArmAsmFieldData extends AsmFieldData {
      * in the AsmFields
      */
     public List<Operand> getOperands() {
+        // return ArmAsmOperandGetter.getFrom(this);
 
         ArmAsmFieldType type = (ArmAsmFieldType) this.get(TYPE);
 
@@ -288,32 +184,32 @@ public class ArmAsmFieldData extends AsmFieldData {
         switch (type) {
 
         ///////////////////////////////////////////////////////////////////////
-        case DPI_PCREL: {
+        /*case DPI_PCREL: {
             // first operand
-            operands.add(newWriteRegister(RD, map.get(RD), 64));
-
+            operands.add(newWriteRegister(RD, 64));
+        
             // build second operand from "imm" and "imml"
             var imml = map.get(IMML);
             var imm = map.get(IMM);
             var shift = (map.get(OPCODEA) == 0) ? 0 : 12;
             Integer fullimm = (((imm << 2) | (imml)) << shift) * 4096;
-            operands.add(newImmediateLabel(IMM, fullimm, 64));
+            operands.add(ArmOperand.newImmediateLabel(IMM, fullimm, 64));
             break;
-        }
+        }*/
 
         ///////////////////////////////////////////////////////////////////////
-        case DPI_ADDSUBIMM: {
+        /*case DPI_ADDSUBIMM: {
             // first and second operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RD, map.get(RD), wd));
-            operands.add(newReadRegister(RN, map.get(RN), wd));
-
+            operands.add(newWriteRegister(RD, wd));
+            operands.add(newReadRegister(RN, wd));
+        
             // third operand
             var imm = map.get(IMM);
             Number fullimm = (map.get(OPCODEB) == 1) ? imm << 12 : imm; // OPCODEB = "sh"
-            operands.add(newImmediate(IMM, fullimm, wd));
+            operands.add(ArmOperand.newImmediate(IMM, fullimm, wd));
             break;
-        }
+        }*/
 
         /* TODO: depends on architectural configuration (and is confusing...)
         case DPI_ADDSUBIMM_TAGS: {
@@ -326,118 +222,128 @@ public class ArmAsmFieldData extends AsmFieldData {
             break;
         }
         */
-
+        /*
         case LOGICAL: {
             // first and second operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RD, map.get(RD), wd));
-            operands.add(newReadRegister(RN, map.get(RN), wd));
-
+            operands.add(newWriteRegister(RD, wd));
+            operands.add(newReadRegister(RN, wd));
+        
             // third operand
             var immr = map.get(IMMR);
             var imms = map.get(IMMS);
             var Nval = map.get(N);
             Number fullimm = DecodeBitMasks(Nval, imms, immr, true);
-            operands.add(newImmediate(IMM, fullimm, wd));
+            operands.add(ArmOperand.newImmediate(IMM, fullimm, wd));
             break;
         }
-
+        */
+        /*
         case MOVEW: {
             // first operand
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RD, map.get(RD), wd));
-
+            operands.add(newWriteRegister(RD, wd));
+        
             var imm = map.get(IMM);
             var hw = map.get(OPCODEB); // OPCODEB = "hw"
             Number fullimm = imm << hw;
-            operands.add(newImmediate(IMM, fullimm, wd));
+            operands.add(ArmOperand.newImmediate(IMM, fullimm, wd));
             break;
         }
-
+        */
+        /*
         case BITFIELD: {
             // first and second operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RD, map.get(RD), wd));
-            operands.add(newReadRegister(RN, map.get(RN), wd));
-
+            operands.add(newWriteRegister(RD, wd));
+            operands.add(newReadRegister(RN, wd));
+        
             // 3rd and 4th
-            operands.add(newImmediate(IMMR, map.get(IMMR), 8)); // actually 6 bits
-            operands.add(newImmediate(IMMS, map.get(IMMS), 8)); // actually 6 bits
+            operands.add(newImmediate(IMMR, 8)); // actually 6 bits
+            operands.add(newImmediate(IMMS, 8)); // actually 6 bits
             break;
         }
-
+        */
+        /*
         case EXTRACT: {
             // first, second and third operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RD, map.get(RD), wd));
-            operands.add(newReadRegister(RN, map.get(RN), wd));
-            operands.add(newReadRegister(RM, map.get(RM), wd));
-
+            operands.add(newWriteRegister(RD, wd));
+            operands.add(newReadRegister(RN, wd));
+            operands.add(newReadRegister(RM, wd));
+        
             // fourth operand
-            operands.add(newImmediate(IMMS, map.get(IMMS), 8)); // actually 6 bits
+            operands.add(newImmediate(IMMS, 8)); // actually 6 bits
             break;
         }
-
+        */
+        /*
         case CONDITIONALBRANCH: {
             // first operand
             Number fullimm = map.get(IMM) << 2;
-            operands.add(newImmediateLabel(IMM, fullimm, 64));
+            operands.add(ArmOperand.newImmediateLabel(IMM, fullimm, 64));
             break;
         }
-
+        */
+        /*
         case EXCEPTION: {
             // first operand
             Number fullimm = map.get(IMM);
-            operands.add(newImmediateLabel(IMM, fullimm, 16));
+            operands.add(ArmOperand.newImmediateLabel(IMM, fullimm, 16));
             break;
         }
-
+        */
+        /*
         case UCONDITIONALBRANCH_REG: {
             // first operand
-            operands.add(newReadRegister(RN, map.get(RN), 64));
-
+            operands.add(newReadRegister(RN, 64));
+        
             // for brab and braa
             var opa = map.get(OPCODEA); // contains bit "Z"
             if ((opa & 0x0001) != 0) {
-                operands.add(newReadRegister(RM, map.get(OPCODED), 64));
+                operands.add(ArmOperand.newReadRegister(RM, map.get(OPCODED), 64));
             }
-
+        
             break;
         }
-
+        */
+        /*
         case UCONDITIONALBRANCH_IMM: {
             // first operand
             Number fullimm = map.get(IMM) << 2;
-            operands.add(newImmediateLabel(IMM, fullimm, 64));
+            operands.add(ArmOperand.newImmediateLabel(IMM, fullimm, 64));
             break;
         }
-
+        */
+        /*
         case COMPARE_AND_BRANCH_IMM: {
             // first operand
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RT, map.get(RT), wd));
-
+            operands.add(newWriteRegister(RT, wd));
+        
             // second operand
             Number fullimm = map.get(IMM) << 2;
-            operands.add(newImmediateLabel(IMM, fullimm, 64));
+            operands.add(ArmOperand.newImmediateLabel(IMM, fullimm, 64));
             break;
         }
-
+        */
+        /*
         case TEST_AND_BRANCH: {
             // first operand
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newReadRegister(RT, map.get(RT), wd));
-
+            operands.add(newReadRegister(RT, wd));
+        
             // second operand
             var b5 = map.get(SF);
             var b40 = map.get(RM);
-            operands.add(newImmediate(RM, ((b5 << 5) | b40), 8));
-
+            operands.add(ArmOperand.newImmediate(RM, ((b5 << 5) | b40), 8));
+        
             // third operand
             Number label = map.get(IMM) << 2;
-            operands.add(newImmediateLabel(IMM, label, 64));
+            operands.add(ArmOperand.newImmediateLabel(IMM, label, 64));
             break;
         }
+        */
 
         // ldr literal loads, scalar and simd
         case LOAD_REG_LITERAL_FMT1: {
@@ -448,14 +354,14 @@ public class ArmAsmFieldData extends AsmFieldData {
 
             // first operand
             var key = simd << 1;
-            operands.add(newRegister.get(key).apply(RT, map.get(RT), wd));
+            operands.add(OPERANDPROVIDE.get(key).apply(RT, map.get(RT), wd));
 
             // TODO need addr of current instruction...
 
             // second operand
             var imm = map.get(IMM) << 2;
             Number label = (imm << (64 - 19)) >> (64 - 19);
-            operands.add(newImmediateLabel(IMM, label, 64));
+            operands.add(ArmOperand.newImmediateLabel(IMM, label, 64));
             break;
         }
 
@@ -464,11 +370,11 @@ public class ArmAsmFieldData extends AsmFieldData {
 
             // first operand
             var wd = (map.get(OPCODEA) != 0) ? 64 : 32;
-            operands.add(newWriteRegister(RT, map.get(RT), wd));
+            operands.add(newWriteRegister(RT, wd));
 
             // second operand
             Number label = map.get(IMM) << 2;
-            operands.add(newImmediate(IMM, label, 32));
+            operands.add(ArmOperand.newImmediate(IMM, label, 32));
             break;
         }
 
@@ -489,11 +395,11 @@ public class ArmAsmFieldData extends AsmFieldData {
             var key = simd << 1 | isload;
 
             // first and second operands
-            operands.add(newRegister.get(key).apply(RT, map.get(RT), wd));
-            operands.add(newRegister.get(key).apply(RM, map.get(RM), wd));
+            operands.add(newRegister(key, RT, wd));
+            operands.add(newRegister(key, RM, wd));
 
             // third operand
-            operands.add(newReadRegister(RN, map.get(RN), wd));
+            operands.add(newReadRegister(RN, wd));
 
             // fourth (optional) operand
             var imm = map.get(IMM) * (wd / 8);
@@ -504,20 +410,19 @@ public class ArmAsmFieldData extends AsmFieldData {
             else // if LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1
                 wd = 16;
 
-            operands.add(newImmediate(IMM, fullimm, wd));
+            operands.add(ArmOperand.newImmediate(IMM, fullimm, wd));
             break;
         }
 
         // stgp and ldpsw
         case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2: {
             // first, second, and third operands
-            operands.add(newReadRegister(RT, map.get(RT), 64));
-            operands.add(newReadRegister(RM, map.get(RM), 64));
-            operands.add(newReadRegister(RN, map.get(RN), 64));
+            operands.add(newReadRegister(RT, 64));
+            operands.add(newReadRegister(RM, 64));
+            operands.add(newReadRegister(RN, 64));
 
             // fourth operand
-            Number imm = map.get(IMM);
-            operands.add(newImmediate(IMM, imm, 16));
+            operands.add(newImmediate(IMM, 16));
             break;
         }
 
@@ -527,13 +432,13 @@ public class ArmAsmFieldData extends AsmFieldData {
         case LOAD_STORE_PAIR_IMM_FMT2: {
             // first, and second operands
             var wd = (map.get(OPCODEA) != 0) ? 64 : 32;
-            operands.add(newReadRegister(RT, map.get(RT), wd));
-            operands.add(newReadRegister(RN, map.get(RN), 64));
+            operands.add(newReadRegister(RT, wd));
+            operands.add(newReadRegister(RN, 64));
 
             // third operand
             var imm = map.get(IMM);
             Number fullimm = (imm << (64 - 9)) >> (64 - 9);
-            operands.add(newImmediate(IMM, fullimm, 64));
+            operands.add(ArmOperand.newImmediate(IMM, fullimm, 64));
             break;
         }
 
@@ -575,16 +480,16 @@ public class ArmAsmFieldData extends AsmFieldData {
             // first operand
             var isload = (map.get(OPCODEB) != 0);
             if (isload)
-                operands.add(newWriteRegister(RT, map.get(RT), 32));
+                operands.add(newWriteRegister(RT, 32));
             else
-                operands.add(newReadRegister(RT, map.get(RT), 32));
+                operands.add(newReadRegister(RT, 32));
 
             // second operand
-            operands.add(newReadRegister(RN, map.get(RN), 64));
+            operands.add(newReadRegister(RN, 64));
 
             // third operand
             var wd = ((map.get(OPTION) & 0b001) == 0) ? 32 : 64;
-            operands.add(newReadRegister(RM, map.get(RM), wd));
+            operands.add(newReadRegister(RM, wd));
 
             // fourth operand
             var option = map.get(OPTION);
@@ -598,7 +503,7 @@ public class ArmAsmFieldData extends AsmFieldData {
             }
 
             // fifth operand
-            operands.add(newImmediate(IMM, map.get(S), 16));
+            operands.add(newImmediate(S, 16));
             break;
         }
 
@@ -613,17 +518,17 @@ public class ArmAsmFieldData extends AsmFieldData {
         case ADD_SUB_CARRY: {
             // first, second, and third operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RD, map.get(RD), wd));
-            operands.add(newReadRegister(RN, map.get(RN), wd));
-            operands.add(newReadRegister(RM, map.get(RM), wd));
+            operands.add(newWriteRegister(RD, wd));
+            operands.add(newReadRegister(RN, wd));
+            operands.add(newReadRegister(RM, wd));
             break;
         }
 
         case DPR_ONESOURCE: {
             // first, and second operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RD, map.get(RD), wd));
-            operands.add(newReadRegister(RN, map.get(RN), wd));
+            operands.add(newWriteRegister(RD, wd));
+            operands.add(newReadRegister(RN, wd));
             break;
         }
 
@@ -632,11 +537,14 @@ public class ArmAsmFieldData extends AsmFieldData {
         case ADD_SUB_EXT_REG: {
             // first, second, and third operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RD, map.get(RD), wd));
-            operands.add(newReadRegister(RN, map.get(RN), wd));
-            operands.add(newReadRegister(RM, map.get(RM), wd));
+            operands.add(newWriteRegister(RD, wd));
+            operands.add(newReadRegister(RN, wd));
+            operands.add(newReadRegister(RM, wd));
 
             // fourth operand
+            // NOTE
+            // there is a separate suboperation associated
+            // with this operand.... see page C6-777 of ARMv8 ISA manual
             if (type != ArmAsmFieldType.ADD_SUB_EXT_REG) {
                 var shift = ArmInstructionShift.decodeShift(map.get(SHIFT).intValue());
                 operands.add(newSubOperation(SHIFT, shift.toString(), 8));
@@ -647,12 +555,7 @@ public class ArmAsmFieldData extends AsmFieldData {
             }
 
             // fifth operand (first suboperation operand)
-            var imm6 = (map.get(IMM));
-            operands.add(newImmediate(IMM, imm6, 8));
-
-            // NOTE
-            // there is a separate suboperation associated
-            // with this operand.... see page C6-777 of ARMv8 ISA manual
+            operands.add(newImmediate(IMM, 8));
             break;
         }
 
@@ -660,17 +563,16 @@ public class ArmAsmFieldData extends AsmFieldData {
         case CONDITIONAL_CMP_IMM: {
             // first operand
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newReadRegister(RN, map.get(RN), wd));
+            operands.add(newReadRegister(RN, wd));
 
             // second operand
             if (type == ArmAsmFieldType.CONDITIONAL_CMP_REG)
-                operands.add(newReadRegister(RM, map.get(RM), wd));
+                operands.add(newReadRegister(RM, wd));
             else
-                operands.add(newImmediate(IMM, map.get(IMM), 8));
+                operands.add(newImmediate(IMM, 8));
 
             // third operand
-            var nzcv = map.get(NZCV);
-            operands.add(newImmediate(NZCV, nzcv, 8));
+            operands.add(newImmediate(NZCV, 8));
 
             // fourth operand
             var cond = map.get(COND);
@@ -682,9 +584,9 @@ public class ArmAsmFieldData extends AsmFieldData {
         case CONDITIONAL_SELECT: {
             // first, second, and third operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RD, map.get(RD), wd));
-            operands.add(newReadRegister(RN, map.get(RN), wd));
-            operands.add(newReadRegister(RM, map.get(RM), wd));
+            operands.add(newWriteRegister(RD, wd));
+            operands.add(newReadRegister(RN, wd));
+            operands.add(newReadRegister(RM, wd));
 
             // fourth operand
             var cond = map.get(COND);
@@ -696,10 +598,10 @@ public class ArmAsmFieldData extends AsmFieldData {
         case DPR_THREESOURCE: {
             // first, second, third, and fourth operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
-            operands.add(newWriteRegister(RD, map.get(RD), wd));
-            operands.add(newReadRegister(RN, map.get(RN), wd));
-            operands.add(newReadRegister(RM, map.get(RM), wd));
-            operands.add(newReadRegister(RA, map.get(RA), wd));
+            operands.add(newWriteRegister(RD, wd));
+            operands.add(newReadRegister(RN, wd));
+            operands.add(newReadRegister(RM, wd));
+            operands.add(newReadRegister(RA, wd));
             break;
         }
 
