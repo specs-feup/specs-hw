@@ -5,13 +5,15 @@ import static org.specs.Arm.parsing.ArmAsmField.*;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.specs.Arm.instruction.ArmInstructionCondition;
-import org.specs.Arm.instruction.ArmInstructionShift;
 import org.specs.Arm.instruction.ArmInstructionExtend;
+import org.specs.Arm.instruction.ArmInstructionShift;
+import org.specs.Arm.instruction.ArmOperand;
 
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
@@ -19,18 +21,73 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 
 public class ArmAsmFieldData extends AsmFieldData {
 
+    interface ArmOperandProvider {
+        ArmOperand apply(ArmAsmField field, Number value, int width);
+    }
+
+    /*
+     * remmaping of <string, string> to <asmfield, string>
+     */
+    private final Map<ArmAsmField, Integer> map = new HashMap<ArmAsmField, Integer>();
+
+    /*
+     * Helper builders
+     
+    private ArmOperand newReadRegister(ArmAsmField field, int wd) {
+        return ArmOperand.newReadRegister(field, map.get(field), wd);
+    }
+    
+    private ArmOperand newWriteRegister(ArmAsmField field, int wd) {
+        return ArmOperand.newWriteRegister(field, map.get(field), wd);
+    }
+    
+    private ArmOperand newSIMDReadRegister(ArmAsmField field, int wd) {
+        return ArmOperand.newSIMDReadRegister(field, map.get(field), wd);
+    }
+    
+    private ArmOperand newSIMDWriteRegister(ArmAsmField field, int wd) {
+        return ArmOperand.newSIMDWriteRegister(field, map.get(field), wd);
+    }
+    */
+    /*
+     * helper mapping of constructors to reduce verbosity
+     */
+    private static final Map<Integer, ArmOperandProvider> newRegister;
+    static {
+        // Key:
+        // 00 - ~SIMD, READ
+        // 01 - ~SIMD, WRITE
+        // 10 - SIMD, READ
+        // 11 - SIMD, WRITE
+
+        Map<Integer, ArmOperandProvider> amap = new HashMap<Integer, ArmOperandProvider>();
+        amap.put(0b00, ArmOperand::newReadRegister);
+        amap.put(0b01, ArmOperand::newWriteRegister);
+        amap.put(0b10, ArmOperand::newSIMDReadRegister);
+        amap.put(0b11, ArmOperand::newSIMDWriteRegister);
+        newRegister = Collections.unmodifiableMap(amap);
+    }
+
     /*
      * Create raw
      */
     public ArmAsmFieldData(AsmFieldType type, Map<String, String> fields) {
         super(type, fields);
+
+        // get int values from fields
+        var map1 = this.get(FIELDS);
+        for (ArmAsmField field : ArmAsmField.values()) {
+            if (map1.containsKey(field.getFieldName())) {
+                map.put(field, Integer.parseInt(map1.get(field.getFieldName()), 2));
+            }
+        }
     }
 
     /*
      * Create from parent class
      */
     public ArmAsmFieldData(AsmFieldData fieldData) {
-        super(fieldData.get(TYPE), fieldData.get(FIELDS));
+        this(fieldData.get(TYPE), fieldData.get(FIELDS));
     }
 
     /*
@@ -40,7 +97,6 @@ public class ArmAsmFieldData extends AsmFieldData {
 
         ArmAsmFieldType type = (ArmAsmFieldType) this.get(TYPE);
         var map1 = this.get(FIELDS);
-        int sf = 0;
 
         // sf, sfa, and sfb fields are treated differently based on the instruction format
         switch (type) {
@@ -56,42 +112,46 @@ public class ArmAsmFieldData extends AsmFieldData {
         case LOGICAL_SHIFT_REG:
         case ADD_SUB_SHIFT_REG:
         case ADD_SUB_EXT_REG:
-        case ADD_SUB_CARRY:
-            return (map1.get("sf").equals("1")) ? 64 : 32;
+        case ADD_SUB_CARRY: {
+            return (map.get(SF) != 0) ? 64 : 32;
+        }
 
         // when sf is two bits
-        case LOAD_REG_LITERAL_FMT1:
-            sf = Integer.parseInt(map1.get("sf"), 2);
-            return ((int) Math.pow(2, sf)) * 32;
+        case LOAD_REG_LITERAL_FMT1: {
+            return ((int) Math.pow(2, map.get(SF))) * 32;
+        }
 
         // when sf is two bits (again)
         case LOAD_STORE_PAIR_NO_ALLOC:
-        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1:
+        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1: {
 
-            sf = Integer.parseInt(map1.get("sf"), 2);
+            var sf = map.get(SF);
             if (this.isSimd()) {
                 sf = ((int) Math.pow(2, sf)) * 32;
             } else {
                 sf = (sf != 0) ? 64 : 32;
             }
             return sf;
+        }
 
         // fields "opcodea" and "opcodeb" used for size
-        case LOAD_STORE_PAIR_IMM_FMT2:
+        case LOAD_STORE_PAIR_IMM_FMT2: {
             Boolean a, b, c, d;
             a = map1.get("opcodea").substring(0, 1).equals("1");
             b = map1.get("opcodea").substring(1, 2).equals("1");
             c = map1.get("opcodeb").substring(0, 1).equals("1");
             d = map1.get("opcodeb").substring(1, 2).equals("1");
-            sf = ((!a & !d) | (b & !c)) ? 64 : 32;
+            var sf = ((!a & !d) | (b & !c)) ? 64 : 32;
             return sf;
+        }
 
         // two fields, sfa, and sfb
         case LOAD_STORE_PAIR_IMM_FMT3:
         case LOAD_STORE_IMM_PREPOST_FMT3:
-        case LOAD_STORE_REG_OFF_FMT3:
-            sf = Integer.parseInt(map1.get("sfb") + map1.get("sfa"), 2);
+        case LOAD_STORE_REG_OFF_FMT3: {
+            var sf = (map.get(SFB) << 2) | map.get(SFA);
             return ((int) Math.pow(2, sf)) * 8;
+        }
 
         default:
             return 32;
@@ -104,13 +164,12 @@ public class ArmAsmFieldData extends AsmFieldData {
      */
     public Boolean isSimd() {
         var map1 = this.get(FIELDS);
-        var keys1 = map1.keySet();
-
-        if (!keys1.contains("simd")) {
+        if (!map.containsKey(SIMD)) {
             return false; // default length
 
-        } else if (map1.get("simd").equals("1")) {
+        } else if (map.get(SIMD) != 0) {
             return true;
+
         } else {
             return false;
         }
@@ -120,14 +179,10 @@ public class ArmAsmFieldData extends AsmFieldData {
      * Decode "cond" field if present
      */
     public ArmInstructionCondition getCond() {
-        var map1 = this.get(FIELDS);
-        var keys1 = map1.keySet();
-
-        if (!keys1.contains("cond"))
+        if (!map.containsKey(COND))
             return ArmInstructionCondition.NONE;
 
-        int condcode = Integer.parseInt(map1.get("cond"), 2);
-        return ArmInstructionCondition.decodeCondition(condcode);
+        return ArmInstructionCondition.decodeCondition(map.get(COND));
         // TODO throw something
     }
 
@@ -225,15 +280,6 @@ public class ArmAsmFieldData extends AsmFieldData {
     public List<Operand> getOperands() {
 
         ArmAsmFieldType type = (ArmAsmFieldType) this.get(TYPE);
-        var map1 = this.get(FIELDS);
-
-        // get int values from fields
-        Map<ArmAsmField, Integer> map = new HashMap<ArmAsmField, Integer>();
-        for (ArmAsmField field : ArmAsmField.values()) {
-            if (map1.containsKey(field.getFieldName())) {
-                map.put(field, Integer.parseInt(map1.get(field.getFieldName()), 2));
-            }
-        }
 
         // assign to Operand objects based on field format
         List<Operand> operands = new ArrayList<Operand>();
@@ -401,11 +447,8 @@ public class ArmAsmFieldData extends AsmFieldData {
             int wd = 32 * (int) Math.pow(2, sf);
 
             // first operand
-            if (simd == 0) {
-                operands.add(newWriteRegister(RT, map.get(RT), wd));
-            } else {
-                operands.add(newSIMDWriteRegister(RT, map.get(RT), wd));
-            }
+            var key = simd << 1;
+            operands.add(newRegister.get(key).apply(RT, map.get(RT), wd));
 
             // TODO need addr of current instruction...
 
@@ -433,6 +476,7 @@ public class ArmAsmFieldData extends AsmFieldData {
         case LOAD_STORE_PAIR_NO_ALLOC:
         case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1: {
 
+            // bitwidth
             var sf = map.get(SF);
             var simd = map.get(SIMD);
             if (simd == 0)
@@ -440,14 +484,13 @@ public class ArmAsmFieldData extends AsmFieldData {
 
             int wd = 32 * (int) Math.pow(2, sf);
 
+            // load or store?
+            var isload = (map.get(OPCODEA));
+            var key = simd << 1 | isload;
+
             // first and second operands
-            if (simd == 0) {
-                operands.add(newReadRegister(RT, map.get(RT), wd));
-                operands.add(newReadRegister(RM, map.get(RM), wd));
-            } else {
-                operands.add(newSIMDReadRegister(RT, map.get(RT), wd));
-                operands.add(newSIMDReadRegister(RM, map.get(RM), wd));
-            }
+            operands.add(newRegister.get(key).apply(RT, map.get(RT), wd));
+            operands.add(newRegister.get(key).apply(RM, map.get(RM), wd));
 
             // third operand
             operands.add(newReadRegister(RN, map.get(RN), wd));
@@ -495,14 +538,33 @@ public class ArmAsmFieldData extends AsmFieldData {
         }
 
         // stur (simd), ldur (simd)
-        case LOAD_STORE_PAIR_IMM_FMT3: {
-            break;
-        }
+        case LOAD_STORE_PAIR_IMM_FMT3:
 
+            // Load/store register (immediate pre-indexed) - C4-286
+            // Load/store register (immediate post-indexed) - C4-284
         case LOAD_STORE_IMM_PREPOST_FMT1:
         case LOAD_STORE_IMM_PREPOST_FMT2:
         case LOAD_STORE_IMM_PREPOST_FMT3: {
 
+            int wd = 0;
+            if (map.containsKey(SIMD)) {
+                var sfa = map.get(SFA);
+                var sfb = map.get(SFB);
+                var sf = (sfb << 2) | sfa;
+                wd = 32 * (int) Math.pow(2, sf);
+
+            } else {
+                wd = 32;
+            }
+
+            // first, and second operands
+            operands.add(newSIMDReadRegister(RT, map.get(RT), wd));
+            operands.add(newReadRegister(RN, map.get(RN), 64));
+
+            // third operand
+            var imm = map.get(IMM);
+            Number fullimm = (imm << (16 - 9)) >> (16 - 9);
+            operands.add(newImmediate(IMM, fullimm, 16));
             break;
         }
 
@@ -510,6 +572,33 @@ public class ArmAsmFieldData extends AsmFieldData {
         case LOAD_STORE_REG_OFF_FMT2:
         case LOAD_STORE_REG_OFF_FMT3: {
 
+            // first operand
+            var isload = (map.get(OPCODEB) != 0);
+            if (isload)
+                operands.add(newWriteRegister(RT, map.get(RT), 32));
+            else
+                operands.add(newReadRegister(RT, map.get(RT), 32));
+
+            // second operand
+            operands.add(newReadRegister(RN, map.get(RN), 64));
+
+            // third operand
+            var wd = ((map.get(OPTION) & 0b001) == 0) ? 32 : 64;
+            operands.add(newReadRegister(RM, map.get(RM), wd));
+
+            // fourth operand
+            var option = map.get(OPTION);
+            if (option == 0b011) {
+                var shift = ArmInstructionShift.decodeShift(map.get(SHIFT).intValue());
+                operands.add(newSubOperation(SHIFT, shift.toString(), 8));
+
+            } else {
+                var ext = ArmInstructionExtend.decodeExtend(map.get(OPTION).intValue());
+                operands.add(newSubOperation(OPTION, ext.toString(), 8));
+            }
+
+            // fifth operand
+            operands.add(newImmediate(IMM, map.get(S), 16));
             break;
         }
 
