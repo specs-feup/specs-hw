@@ -50,9 +50,9 @@ public class ArmAsmOperandGetter {
         amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT1, ArmAsmOperandGetter::loadstore4);
         amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT2, ArmAsmOperandGetter::loadstore4);
         amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT3, ArmAsmOperandGetter::loadstore4);
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT1, ArmAsmOperandGetter::loadstore5);
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT2, ArmAsmOperandGetter::loadstore5);
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT3, ArmAsmOperandGetter::loadstore5);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT1, ArmAsmOperandGetter::loadstore5a);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT2, ArmAsmOperandGetter::loadstore5a);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT3, ArmAsmOperandGetter::loadstore5b);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmOperandGetter::loadstore6);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmOperandGetter::loadstore6);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmOperandGetter::loadstore6);
@@ -66,6 +66,7 @@ public class ArmAsmOperandGetter {
         amap.put(ArmAsmFieldType.CONDITIONAL_CMP_IMM, ArmAsmOperandGetter::conditionalCmp);
         amap.put(ArmAsmFieldType.CONDITIONAL_SELECT, ArmAsmOperandGetter::conditionalSel);
         amap.put(ArmAsmFieldType.DPR_THREESOURCE, ArmAsmOperandGetter::dprThreesource);
+        amap.put(ArmAsmFieldType.UNDEFINED, ArmAsmOperandGetter::undefined);
 
         OPERANDGET = Collections.unmodifiableMap(amap);
     }
@@ -75,7 +76,9 @@ public class ArmAsmOperandGetter {
         var h = new ArmOperandBuilder(map);
         List<Operand> operands = new ArrayList<Operand>();
         var tp = (ArmAsmFieldType) fielddata.getType(); // type is guaranteed
-        OPERANDGET.get(fielddata.get(ArmAsmFieldData.TYPE)).apply(tp, map, h, operands);
+        var func = OPERANDGET.get(fielddata.get(ArmAsmFieldData.TYPE));
+        if (func != null)
+            func.apply(tp, map, h, operands);
         return operands;
     }
 
@@ -446,7 +449,7 @@ public class ArmAsmOperandGetter {
         return;
     }
 
-    private static void loadstore5(ArmAsmFieldType tp,
+    private static void loadstore5a(ArmAsmFieldType tp,
             Map<ArmAsmField, Integer> map,
             ArmOperandBuilder h, List<Operand> operands) {
 
@@ -462,18 +465,25 @@ public class ArmAsmOperandGetter {
         operands.add(h.newReadRegister(RM, wd));
 
         // fourth operand
+        Object thing = null;
         var option = map.get(OPTION);
         if (option == 0b011) {
-            var shift = ArmInstructionShift.decodeShift(map.get(SHIFT).intValue());
-            operands.add(h.newSubOperation(SHIFT, shift.toString(), 8));
-
+            thing = ArmInstructionShift.decodeShift(map.get(OPTION).intValue());
         } else {
-            var ext = ArmInstructionExtend.decodeExtend(map.get(OPTION).intValue());
-            operands.add(h.newSubOperation(OPTION, ext.toString(), 8));
+            thing = ArmInstructionExtend.decodeExtend(map.get(OPTION).intValue());
         }
+
+        operands.add(h.newSubOperation(OPTION, thing.toString(), 8));
 
         // fifth operand
         operands.add(h.newImmediate(S, 16));
+        return;
+    }
+
+    private static void loadstore5b(ArmAsmFieldType tp,
+            Map<ArmAsmField, Integer> map,
+            ArmOperandBuilder h, List<Operand> operands) {
+
         return;
     }
 
@@ -588,4 +598,9 @@ public class ArmAsmOperandGetter {
         return;
     }
 
+    private static void undefined(ArmAsmFieldType tp,
+            Map<ArmAsmField, Integer> map,
+            ArmOperandBuilder h, List<Operand> operands) {
+        return;
+    }
 }
