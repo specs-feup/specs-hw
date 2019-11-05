@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.specs.Arm.parsing.ArmAsmField;
 
+import pt.up.fe.specs.binarytranslation.instruction.Operand;
+
 /*
  * this class only exists to provide a shorthandle to the providers
  */
@@ -81,5 +83,9 @@ public class ArmOperandBuilder {
 
     public ArmOperand newImmediateLabel(ArmAsmField field, Number value, int wd) {
         return ArmOperand.newImmediateLabel(field, value, wd);
+    }
+
+    public Operand newSubOperation(ArmAsmField field, String value, int wd) {
+        return ArmOperand.newSubOperation(field, value, wd);
     }
 }
