@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.specs.Arm.instruction.ArmInstructionCondition;
-import org.specs.Arm.instruction.ArmInstructionExtend;
-import org.specs.Arm.instruction.ArmInstructionShift;
-import org.specs.Arm.instruction.ArmOperand;
 
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
@@ -344,88 +341,92 @@ public class ArmAsmFieldData extends AsmFieldData {
             break;
         }
         */
-
+        /*
         // ldr literal loads, scalar and simd
         case LOAD_REG_LITERAL_FMT1: {
-
+        
             var sf = map.get(SF);
             var simd = map.get(SIMD);
             int wd = 32 * (int) Math.pow(2, sf);
-
+        
             // first operand
             var key = simd << 1;
             operands.add(OPERANDPROVIDE.get(key).apply(RT, map.get(RT), wd));
-
+        
             // TODO need addr of current instruction...
-
+        
             // second operand
             var imm = map.get(IMM) << 2;
             Number label = (imm << (64 - 19)) >> (64 - 19);
             operands.add(ArmOperand.newImmediateLabel(IMM, label, 64));
             break;
         }
-
+        */
+        /* 
         // should only be for "prfm" and "ldrsw_reg"
         case LOAD_REG_LITERAL_FMT2: {
-
+        
             // first operand
             var wd = (map.get(OPCODEA) != 0) ? 64 : 32;
             operands.add(newWriteRegister(RT, wd));
-
+        
             // second operand
             Number label = map.get(IMM) << 2;
             operands.add(ArmOperand.newImmediate(IMM, label, 32));
             break;
         }
-
+        */
+        /*
         // stnp and ldnp (scalar and simd)
         case LOAD_STORE_PAIR_NO_ALLOC:
         case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1: {
-
+        
             // bitwidth
             var sf = map.get(SF);
             var simd = map.get(SIMD);
             if (simd == 0)
                 sf = sf >> 1;
-
+        
             int wd = 32 * (int) Math.pow(2, sf);
-
+        
             // load or store?
             var isload = (map.get(OPCODEA));
             var key = simd << 1 | isload;
-
+        
             // first and second operands
             operands.add(newRegister(key, RT, wd));
             operands.add(newRegister(key, RM, wd));
-
+        
             // third operand
             operands.add(newReadRegister(RN, wd));
-
+        
             // fourth (optional) operand
             var imm = map.get(IMM) * (wd / 8);
             Number fullimm = (imm << (64 - 7)) >> (64 - 7);
-
+        
             if (type == ArmAsmFieldType.LOAD_STORE_PAIR_NO_ALLOC)
                 wd = (wd == 32) ? 8 : 16;
             else // if LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1
                 wd = 16;
-
+        
             operands.add(ArmOperand.newImmediate(IMM, fullimm, wd));
             break;
         }
-
+        */
+        /*   
         // stgp and ldpsw
         case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2: {
             // first, second, and third operands
             operands.add(newReadRegister(RT, 64));
             operands.add(newReadRegister(RM, 64));
             operands.add(newReadRegister(RN, 64));
-
+        
             // fourth operand
             operands.add(newImmediate(IMM, 16));
             break;
         }
-
+        */
+        /*
         // sturb, ldurb, sturh, ldurh, ldursw, prfum
         // ldursb, ldursh, stur, ldur
         case LOAD_STORE_PAIR_IMM_FMT1:
@@ -434,86 +435,90 @@ public class ArmAsmFieldData extends AsmFieldData {
             var wd = (map.get(OPCODEA) != 0) ? 64 : 32;
             operands.add(newReadRegister(RT, wd));
             operands.add(newReadRegister(RN, 64));
-
+        
             // third operand
             var imm = map.get(IMM);
             Number fullimm = (imm << (64 - 9)) >> (64 - 9);
             operands.add(ArmOperand.newImmediate(IMM, fullimm, 64));
             break;
         }
-
+        */
+        /*
         // stur (simd), ldur (simd)
         case LOAD_STORE_PAIR_IMM_FMT3:
-
+        
             // Load/store register (immediate pre-indexed) - C4-286
             // Load/store register (immediate post-indexed) - C4-284
         case LOAD_STORE_IMM_PREPOST_FMT1:
         case LOAD_STORE_IMM_PREPOST_FMT2:
         case LOAD_STORE_IMM_PREPOST_FMT3: {
-
+        
             int wd = 0;
             if (map.containsKey(SIMD)) {
                 var sfa = map.get(SFA);
                 var sfb = map.get(SFB);
                 var sf = (sfb << 2) | sfa;
                 wd = 32 * (int) Math.pow(2, sf);
-
+        
             } else {
                 wd = 32;
             }
-
+        
             // first, and second operands
             operands.add(newSIMDReadRegister(RT, map.get(RT), wd));
             operands.add(newReadRegister(RN, map.get(RN), 64));
-
+        
             // third operand
             var imm = map.get(IMM);
             Number fullimm = (imm << (16 - 9)) >> (16 - 9);
             operands.add(newImmediate(IMM, fullimm, 16));
             break;
         }
-
+        */
+        /*
         case LOAD_STORE_REG_OFF_FMT1:
         case LOAD_STORE_REG_OFF_FMT2:
         case LOAD_STORE_REG_OFF_FMT3: {
-
+        
             // first operand
             var isload = (map.get(OPCODEB) != 0);
             if (isload)
                 operands.add(newWriteRegister(RT, 32));
             else
                 operands.add(newReadRegister(RT, 32));
-
+        
             // second operand
             operands.add(newReadRegister(RN, 64));
-
+        
             // third operand
             var wd = ((map.get(OPTION) & 0b001) == 0) ? 32 : 64;
             operands.add(newReadRegister(RM, wd));
-
+        
             // fourth operand
             var option = map.get(OPTION);
             if (option == 0b011) {
                 var shift = ArmInstructionShift.decodeShift(map.get(SHIFT).intValue());
                 operands.add(newSubOperation(SHIFT, shift.toString(), 8));
-
+        
             } else {
                 var ext = ArmInstructionExtend.decodeExtend(map.get(OPTION).intValue());
                 operands.add(newSubOperation(OPTION, ext.toString(), 8));
             }
-
+        
             // fifth operand
             operands.add(newImmediate(S, 16));
             break;
         }
-
+        */
+        /*
         case LOAD_STORE_REG_UIMM_FMT1:
         case LOAD_STORE_REG_UIMM_FMT2:
         case LOAD_STORE_REG_UIMM_FMT3: {
-
+        
             break;
         }
-
+        */
+        /*
         case DPR_TWOSOURCE:
         case ADD_SUB_CARRY: {
             // first, second, and third operands
@@ -523,7 +528,8 @@ public class ArmAsmFieldData extends AsmFieldData {
             operands.add(newReadRegister(RM, wd));
             break;
         }
-
+        */
+        /*
         case DPR_ONESOURCE: {
             // first, and second operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
@@ -531,7 +537,8 @@ public class ArmAsmFieldData extends AsmFieldData {
             operands.add(newReadRegister(RN, wd));
             break;
         }
-
+        */
+        /*
         case LOGICAL_SHIFT_REG:
         case ADD_SUB_SHIFT_REG:
         case ADD_SUB_EXT_REG: {
@@ -540,7 +547,7 @@ public class ArmAsmFieldData extends AsmFieldData {
             operands.add(newWriteRegister(RD, wd));
             operands.add(newReadRegister(RN, wd));
             operands.add(newReadRegister(RM, wd));
-
+        
             // fourth operand
             // NOTE
             // there is a separate suboperation associated
@@ -548,53 +555,56 @@ public class ArmAsmFieldData extends AsmFieldData {
             if (type != ArmAsmFieldType.ADD_SUB_EXT_REG) {
                 var shift = ArmInstructionShift.decodeShift(map.get(SHIFT).intValue());
                 operands.add(newSubOperation(SHIFT, shift.toString(), 8));
-
+        
             } else {
                 var ext = ArmInstructionExtend.decodeExtend(map.get(OPTION).intValue());
                 operands.add(newSubOperation(OPTION, ext.toString(), 8));
             }
-
+        
             // fifth operand (first suboperation operand)
             operands.add(newImmediate(IMM, 8));
             break;
         }
-
+        */
+        /*
         case CONDITIONAL_CMP_REG:
         case CONDITIONAL_CMP_IMM: {
             // first operand
             var wd = (map.get(SF) == 1) ? 64 : 32;
             operands.add(newReadRegister(RN, wd));
-
+        
             // second operand
             if (type == ArmAsmFieldType.CONDITIONAL_CMP_REG)
                 operands.add(newReadRegister(RM, wd));
             else
                 operands.add(newImmediate(IMM, 8));
-
+        
             // third operand
             operands.add(newImmediate(NZCV, 8));
-
+        
             // fourth operand
             var cond = map.get(COND);
             var conds = ArmInstructionCondition.decodeCondition(cond).getShorthandle();
             operands.add(newSubOperation(COND, conds, 8));
             break;
         }
-
+        */
+        /* 
         case CONDITIONAL_SELECT: {
             // first, second, and third operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
             operands.add(newWriteRegister(RD, wd));
             operands.add(newReadRegister(RN, wd));
             operands.add(newReadRegister(RM, wd));
-
+        
             // fourth operand
             var cond = map.get(COND);
             var conds = ArmInstructionCondition.decodeCondition(cond).getShorthandle();
             operands.add(newSubOperation(COND, conds, 8));
             break;
         }
-
+        */
+        /*
         case DPR_THREESOURCE: {
             // first, second, third, and fourth operands
             var wd = (map.get(SF) == 1) ? 64 : 32;
@@ -604,7 +614,7 @@ public class ArmAsmFieldData extends AsmFieldData {
             operands.add(newReadRegister(RA, wd));
             break;
         }
-
+        */
         default:
             break;
         }
