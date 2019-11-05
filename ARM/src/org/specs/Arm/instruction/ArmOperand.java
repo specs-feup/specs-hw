@@ -63,27 +63,6 @@ public class ArmOperand extends AOperand {
     }
 
     /*
-     * Generic register
-     */
-    /*  public static ArmOperand newRegister(ArmAsmField field, Number value, int width, OperandType... tp) {
-    
-        var list = Arrays.asList(tp);
-    
-        if (list.contains(SIMD)) {
-            if (list.contains(READ)) {
-                return newSIMDReadRegister(field, value, width);
-            } else
-                return newSIMDWriteRegister(field, value, width);
-    
-        } else {
-            if (list.contains(READ)) {
-                return newReadRegister(field, value, width);
-            } else
-                return newWriteRegister(field, value, width);
-        }
-    }*/
-
-    /*
      * Read register
      */
     public static ArmOperand newReadRegister(ArmAsmField field, Number value, int width) {

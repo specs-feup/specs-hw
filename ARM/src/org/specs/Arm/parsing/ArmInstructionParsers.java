@@ -55,7 +55,6 @@ public interface ArmInstructionParsers {
                     "sf(1)_opcodea(2)_100011_opcodeb(1)_immh(6)_opcodec(2)_imml(4)_registern(5)_registerd(5)"),
 
             newInstance(LOGICAL,
-                    // "sf(1)_opcodea(2)_100100_opcodeb(1)_immr(6)_imms(6)_registern(5)_registerd(5)"),
                     "sf(1)_opcodea(2)_100100_N(1)_immr(6)_imms(6)_registern(5)_registerd(5)"),
 
             newInstance(MOVEW,
@@ -150,7 +149,8 @@ public interface ArmInstructionParsers {
                     isFmt1().and(isPrePostAccess())),
 
             newInstance(LOAD_STORE_IMM_PREPOST_FMT2,
-                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_memtype(1)_1_registern(5)_registert(5)", isPrePostAccess()),
+                    "opcodea(2)_111000_opcodeb(2)_0_imm(9)_memtype(1)_1_registern(5)_registert(5)",
+                    isPrePostAccess()),
 
             newInstance(LOAD_STORE_IMM_PREPOST_FMT3,
                     "sfa(2)_111_simd(1)_00_sfb(1)_opcodeb(1)_0_imm(9)_memtype(1)_1_registern(5)_registert(5)",
@@ -249,10 +249,4 @@ public interface ArmInstructionParsers {
     private static Predicate<Map<String, String>> isPrivorUnscaledAccess() {
         return data -> (data.get("opcodec").equals("1") || data.get("opcodec").equals("0"));
     }
-
-    /* static IsaParser getArmIsaParser() {
-        Set<String> allowedFields = new HashSet<>(
-                SpecsSystem.getStaticFields(ArmInstructionFields.class, String.class));
-        return new GenericIsaParser(PARSERS, allowedFields);
-    }*/
 }
