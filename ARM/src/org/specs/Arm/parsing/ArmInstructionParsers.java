@@ -209,7 +209,7 @@ public interface ArmInstructionParsers {
                     "sf(1)_opcodea(2)_11010010_registerm(5)_cond(4)_0_opcodeb(1)_registern(5)_opcodec(1)_nzcv(4)"),
 
             newInstance(CONDITIONAL_CMP_IMM,
-                    "sf(1)_opcodea(2)_11010010_registerm(5)_cond(4)_1_opcodeb(1)_registern(5)_opcodec(1)_nzcv(4)"),
+                    "sf(1)_opcodea(2)_11010010_imm(5)_cond(4)_1_opcodeb(1)_registern(5)_opcodec(1)_nzcv(4)"),
 
             newInstance(CONDITIONAL_SELECT,
                     "sf(1)_opcodea(2)_11010100_registerm(5)_cond(4)_opcodeb(2)_registern(5)_registerd(5)"),

@@ -567,17 +567,50 @@ public class ArmAsmFieldData extends AsmFieldData {
             break;
         }
 
-        case CONDITIONAL_CMP_REG: {
-            // first, second, and third operands
+        case CONDITIONAL_CMP_REG:
+        case CONDITIONAL_CMP_IMM: {
+            // first operand
             var wd = (map.get(SF) == 1) ? 64 : 32;
             operands.add(newReadRegister(RN, map.get(RN), wd));
-            operands.add(newReadRegister(RM, map.get(RM), wd));
 
+            // second operand
+            if (type == ArmAsmFieldType.CONDITIONAL_CMP_REG)
+                operands.add(newReadRegister(RM, map.get(RM), wd));
+            else
+                operands.add(newImmediate(IMM, map.get(IMM), 8));
+
+            // third operand
             var nzcv = map.get(NZCV);
             operands.add(newImmediate(NZCV, nzcv, 8));
 
+            // fourth operand
             var cond = map.get(COND);
-            // TODO get cond string field
+            var conds = ArmInstructionCondition.decodeCondition(cond).getShorthandle();
+            operands.add(newSubOperation(COND, conds, 8));
+            break;
+        }
+
+        case CONDITIONAL_SELECT: {
+            // first, second, and third operands
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RD, map.get(RD), wd));
+            operands.add(newReadRegister(RN, map.get(RN), wd));
+            operands.add(newReadRegister(RM, map.get(RM), wd));
+
+            // fourth operand
+            var cond = map.get(COND);
+            var conds = ArmInstructionCondition.decodeCondition(cond).getShorthandle();
+            operands.add(newSubOperation(COND, conds, 8));
+            break;
+        }
+
+        case DPR_THREESOURCE: {
+            // first, second, third, and fourth operands
+            var wd = (map.get(SF) == 1) ? 64 : 32;
+            operands.add(newWriteRegister(RD, map.get(RD), wd));
+            operands.add(newReadRegister(RN, map.get(RN), wd));
+            operands.add(newReadRegister(RM, map.get(RM), wd));
+            operands.add(newReadRegister(RA, map.get(RA), wd));
             break;
         }
 
