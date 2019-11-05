@@ -44,6 +44,7 @@ public interface ArmInstructionParsers {
 
             ///////////////////////////////////////////////////////////////////
             // 1. Data processing (Immediate) (C4.1.2) ////////////////////////
+
             newInstance(DPI_PCREL,
                     "opcodea(1)_imml(2)_10000_imm(19)_registerd(5)"),
 
@@ -69,6 +70,7 @@ public interface ArmInstructionParsers {
 
             ///////////////////////////////////////////////////////////////////
             // 2. Branches, Exception Generating and System instructions (C4.1.3)
+
             newInstance(CONDITIONALBRANCH,
                     "0101010_opcodea(1)_imm(19)_opcodeb(1)_cond(4)"),
 
@@ -159,14 +161,14 @@ public interface ArmInstructionParsers {
             // Load/store register (register offset) - C4-295
 
             newInstance(LOAD_STORE_REG_OFF_FMT1,
-                    "opcodea(2)_111000_opcodeb(2)_1_registerm(5)_option(3)_x10_registern(5)_registert(5)",
+                    "opcodea(2)_111000_opcodeb(2)_1_registerm(5)_option(3)_S(1)_10_registern(5)_registert(5)",
                     isFmt1()),
 
             newInstance(LOAD_STORE_REG_OFF_FMT2,
-                    "opcodea(2)_111000_opcodeb(2)_1_registerm(5)_option(3)_x10_registern(5)_registert(5)"),
+                    "opcodea(2)_111000_opcodeb(2)_1_registerm(5)_option(3)_S(1)_10_registern(5)_registert(5)"),
 
             newInstance(LOAD_STORE_REG_OFF_FMT3,
-                    "sfa(2)_111_simd(1)_00_sfb(1)_opcodeb(1)_1_registerm(5)_option(3)_x10_registern(5)_registert(5)",
+                    "sfa(2)_111_simd(1)_00_sfb(1)_opcodeb(1)_1_registerm(5)_option(3)_S(1)_10_registern(5)_registert(5)",
                     data -> data.get("simd").equals("1")),
 
             ////////////////////

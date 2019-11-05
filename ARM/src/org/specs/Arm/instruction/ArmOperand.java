@@ -47,6 +47,10 @@ public class ArmOperand extends AOperand {
 
     private static String getSIMDPrefix(int width) {
         switch (width) {
+        case 8:
+            return "b";
+        case 16:
+            return "h";
         case 32:
             return "s";
         case 64:
@@ -57,6 +61,27 @@ public class ArmOperand extends AOperand {
             return "s";
         }
     }
+
+    /*
+     * Generic register
+     */
+    /*  public static ArmOperand newRegister(ArmAsmField field, Number value, int width, OperandType... tp) {
+    
+        var list = Arrays.asList(tp);
+    
+        if (list.contains(SIMD)) {
+            if (list.contains(READ)) {
+                return newSIMDReadRegister(field, value, width);
+            } else
+                return newSIMDWriteRegister(field, value, width);
+    
+        } else {
+            if (list.contains(READ)) {
+                return newReadRegister(field, value, width);
+            } else
+                return newWriteRegister(field, value, width);
+        }
+    }*/
 
     /*
      * Read register
