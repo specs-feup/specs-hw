@@ -175,7 +175,7 @@ public class ArmAsmOperandGetter {
         switch (tp) {
 
         case LOAD_REG_LITERAL_FMT1: {
-            key = map.get(SIMD) << 1;
+            key = map.get(SIMD) << 1 | 0b01;
             break;
         }
 

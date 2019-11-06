@@ -93,7 +93,8 @@ public interface ArmInstructionParsers {
 
             newInstance(LOAD_REG_LITERAL_FMT1,
                     "sf(2)_011_simd(1)_00_imm(19)_registert(5)",
-                    data -> (data.get("sf").equals("10") || data.get("sf").equals("11"))),
+                    data -> !((data.get("sf").equals("10") && data.get("simd").equals("0"))
+                            || data.get("sf").equals("11"))),
 
             newInstance(LOAD_REG_LITERAL_FMT2,
                     "opcodea(2)_011000_imm(19)_registert(5)"),
