@@ -1,6 +1,5 @@
 package pt.up.fe.specs.binarytranslation.expression;
 
-import java.util.Arrays;
 import java.util.function.BinaryOperator;
 
 /**
@@ -28,12 +27,12 @@ public enum ExpressionOperator implements ExpressionSymbol {
     public String apply(String string, String string2) {
         return this.operator.apply(string, string2);
     }
-    
+
     @Override
     public boolean isOperator() {
         return true;
     }
-    
+
     @Override
     public boolean isOperand() {
         return false;

@@ -54,6 +54,11 @@ public interface Operand {
     /*
      * 
      */
+    public Boolean isSymbolic();
+
+    /*
+     * 
+     */
     public Boolean isRead();
 
     /*
@@ -64,7 +69,12 @@ public interface Operand {
     /*
      * 
      */
-    public Boolean isSymbolic();
+    public Boolean isFloat();
+
+    /*
+     * 
+     */
+    public Boolean isSubOperation();
 
     /*
      * Return formated string with <prefix><value>
