@@ -121,7 +121,6 @@ public class ArmAsmFieldData extends AsmFieldData {
      * Get "simd field"
      */
     public Boolean isSimd() {
-        var map1 = this.get(FIELDS);
         if (!map.containsKey(SIMD)) {
             return false; // default length
 
