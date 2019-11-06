@@ -21,7 +21,7 @@ public class ArmAsmOperandGetter {
      * map TYPE to a specific private operand init function (to avoid switch case)
      */
     interface ArmAsmOperandParse {
-        void apply(ArmAsmFieldType tp, Map<ArmAsmField, Integer> map, ArmOperandBuilder h, List<Operand> operands);
+        List<Operand> apply(ArmAsmFieldData fielddata, ArmOperandBuilder h, List<Operand> operands);
     }
 
     private static final Map<ArmAsmFieldType, ArmAsmOperandParse> OPERANDGET;
@@ -72,14 +72,13 @@ public class ArmAsmOperandGetter {
     }
 
     public static List<Operand> getFrom(ArmAsmFieldData fielddata) {
-        var map = fielddata.getMap();
-        var h = new ArmOperandBuilder(map);
-        List<Operand> operands = new ArrayList<Operand>();
-        var tp = (ArmAsmFieldType) fielddata.getType(); // type is guaranteed
+
+        var h = new ArmOperandBuilder(fielddata.getMap());
         var func = OPERANDGET.get(fielddata.get(ArmAsmFieldData.TYPE));
-        if (func != null)
-            func.apply(tp, map, h, operands);
-        return operands;
+        if (func == null)
+            func = ArmAsmOperandGetter::undefined;
+
+        return func.apply(fielddata, h, new ArrayList<Operand>());
     }
 
     /*
@@ -148,9 +147,17 @@ public class ArmAsmOperandGetter {
         return (value << (32 - currlen)) >> (32 - currlen);
     }
 
-    private static void dpi_pcrel(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    /*
+     * 
+     */
+    private static byte signExtend8(byte value, int currlen) {
+        return (byte) ((value << (8 - currlen)) >> (8 - currlen));
+    }
+
+    private static List<Operand> dpi_pcrel(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
+
+        var map = fielddata.getMap();
 
         // first operand
         operands.add(h.newWriteRegister(RD, 64));
@@ -161,15 +168,18 @@ public class ArmAsmOperandGetter {
         var shift = (map.get(OPCODEA) == 0) ? 0 : 12;
         Integer fullimm = (((imm << 2) | (imml)) << shift) * 4096;
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
-        return;
+
+        return operands;
     }
 
-    private static void dpi_addsubimm(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    // DPI_ADDSUBIMM (C4-253 to C4-254)
+    private static List<Operand> dpi_addsubimm(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
+        var map = fielddata.getMap();
+        var wd = fielddata.getBitWidth();
+
         // first and second operands
-        var wd = (map.get(SF) == 1) ? 64 : 32;
         operands.add(h.newWriteRegister(RD, wd));
         operands.add(h.newReadRegister(RN, wd));
 
@@ -177,15 +187,18 @@ public class ArmAsmOperandGetter {
         var imm = map.get(IMM);
         Number fullimm = (map.get(OPCODEB) == 1) ? imm << 12 : imm; // OPCODEB = "sh"
         operands.add(h.newImmediate(IMM, fullimm, wd));
-        return;
+
+        return operands;
     }
 
-    private static void logical(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    // LOGICAL (C4-255)
+    private static List<Operand> logical(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
+        var map = fielddata.getMap();
+        var wd = fielddata.getBitWidth();
+
         // first and second operands
-        var wd = (map.get(SF) == 1) ? 64 : 32;
         operands.add(h.newWriteRegister(RD, wd));
         operands.add(h.newReadRegister(RN, wd));
 
@@ -195,78 +208,91 @@ public class ArmAsmOperandGetter {
         var Nval = map.get(N);
         Number fullimm = DecodeBitMasks(Nval, imms, immr, true);
         operands.add(h.newImmediate(IMM, fullimm, wd));
-        return;
+
+        return operands;
     }
 
-    private static void movew(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    // MOVEW (C4-255)
+    private static List<Operand> movew(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
+        var map = fielddata.getMap();
+        var wd = fielddata.getBitWidth();
+
         // first operand
-        var wd = (map.get(SF) == 1) ? 64 : 32;
         operands.add(h.newWriteRegister(RD, wd));
 
         // second operand
-        var imm = map.get(IMM);
-        var hw = map.get(OPCODEB); // OPCODEB = "hw"
-        Number fullimm = imm << hw;
-        operands.add(h.newImmediate(IMM, fullimm, wd));
-        return;
+        operands.add(h.newImmediate(IMM, wd));
+
+        // third operand (always LSL)
+        operands.add(h.newSubOperation(SHIFT, ArmInstructionShift.LSL.getShorthandle(), 8));
+
+        // fourth operand
+        var shift = map.get(OPCODEB) * 16;
+        operands.add(h.newImmediate(SHIFT, shift, wd));
+
+        return operands;
     }
 
-    private static void bitfield(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    // BITFIELD (C4-256)
+    private static List<Operand> bitfield(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
+        var wd = fielddata.getBitWidth();
+
         // first and second operands
-        var wd = (map.get(SF) == 1) ? 64 : 32;
         operands.add(h.newWriteRegister(RD, wd));
         operands.add(h.newReadRegister(RN, wd));
 
         // 3rd and 4th
-        operands.add(h.newImmediate(IMMR, 8)); // actually 6 bits
-        operands.add(h.newImmediate(IMMS, 8)); // actually 6 bits
-        return;
+        operands.add(h.newImmediate(IMMR, 8));
+        operands.add(h.newImmediate(IMMS, 8));
+
+        return operands;
     }
 
-    private static void extract(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    // EXTRACT (C4-256)
+    private static List<Operand> extract(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
+        var wd = fielddata.getBitWidth();
+
         // first, second and third operands
-        var wd = (map.get(SF) == 1) ? 64 : 32;
         operands.add(h.newWriteRegister(RD, wd));
         operands.add(h.newReadRegister(RN, wd));
         operands.add(h.newReadRegister(RM, wd));
 
         // fourth operand
         operands.add(h.newImmediate(IMMS, 8)); // actually 6 bits
-        return;
+
+        return operands;
     }
 
-    private static void conditionalbranch(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> conditionalbranch(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first operand
-        Number fullimm = map.get(IMM) << 2;
+        Number fullimm = fielddata.getMap().get(IMM) << 2;
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
-        return;
+
+        return operands;
     }
 
-    private static void exception(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> exception(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first operand
-        Number fullimm = map.get(IMM);
+        Number fullimm = fielddata.getMap().get(IMM);
         operands.add(h.newImmediateLabel(IMM, fullimm, 16));
-        return;
+
+        return operands;
     }
 
-    private static void unconditionalbranchreg(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> unconditionalbranchreg(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
+
+        var map = fielddata.getMap();
 
         // first operand
         operands.add(h.newReadRegister(RN, 64));
@@ -276,40 +302,40 @@ public class ArmAsmOperandGetter {
         if ((opa & 0x0001) != 0) {
             operands.add(h.newReadRegister(RM, map.get(OPCODED), 64));
         }
-        return;
+
+        return operands;
     }
 
-    private static void unconditionalbranchimm(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> unconditionalbranchimm(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first operand
-        Number fullimm = map.get(IMM) << 2;
+        Number fullimm = fielddata.getMap().get(IMM) << 2;
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
-        return;
+
+        return operands;
     }
 
-    private static void compareandbranchimm(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> compareandbranchimm(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first operand
-        var wd = (map.get(SF) == 1) ? 64 : 32;
-        operands.add(h.newWriteRegister(RT, wd));
+        operands.add(h.newWriteRegister(RT, fielddata.getBitWidth()));
 
         // second operand
-        Number fullimm = map.get(IMM) << 2;
+        Number fullimm = fielddata.getMap().get(IMM) << 2;
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
-        return;
+
+        return operands;
     }
 
-    private static void testandbranch(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> testandbranch(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
+        var map = fielddata.getMap();
+
         // first operand
-        var wd = (map.get(SF) == 1) ? 64 : 32;
-        operands.add(h.newReadRegister(RT, wd));
+        operands.add(h.newReadRegister(RT, fielddata.getBitWidth()));
 
         // second operand
         var b5 = map.get(SF);
@@ -319,20 +345,18 @@ public class ArmAsmOperandGetter {
         // third operand
         Number label = map.get(IMM) << 2;
         operands.add(h.newImmediateLabel(IMM, label, 64));
-        return;
+
+        return operands;
     }
 
-    private static void loadregliteralfmt1(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> loadregliteralfmt1(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
-        var sf = map.get(SF);
-        var simd = map.get(SIMD);
-        int wd = 32 * (int) Math.pow(2, sf);
+        var map = fielddata.getMap();
 
         // first operand
-        var key = simd << 1;
-        operands.add(h.newRegister(key, RT, wd));
+        var key = map.get(SIMD) << 1;
+        operands.add(h.newRegister(key, RT, fielddata.getBitWidth()));
 
         // TODO need addr of current instruction...
 
@@ -340,36 +364,31 @@ public class ArmAsmOperandGetter {
         var imm = map.get(IMM) << 2;
         Number label = signExtend64(imm, 19);
         operands.add(h.newImmediateLabel(IMM, label, 64));
-        return;
+
+        return operands;
     }
 
-    private static void loadregliteralfmt2(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> loadregliteralfmt2(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first operand
-        var wd = (map.get(OPCODEA) != 0) ? 64 : 32;
-        operands.add(h.newWriteRegister(RT, wd));
+        operands.add(h.newWriteRegister(RT, fielddata.getBitWidth()));
 
         // second operand
-        Number label = map.get(IMM) << 2;
+        Number label = fielddata.getMap().get(IMM) << 2;
         operands.add(h.newImmediate(IMM, label, 32));
-        return;
+
+        return operands;
     }
 
-    private static void loadstore1(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> loadstore1(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
-        // bitwidth
-        var sf = map.get(SF);
-        var simd = map.get(SIMD);
-        if (simd == 0)
-            sf = sf >> 1;
-
-        int wd = 32 * (int) Math.pow(2, sf);
+        var map = fielddata.getMap();
+        var wd = fielddata.getBitWidth();
 
         // load or store?
+        var simd = map.get(SIMD);
         var isload = (map.get(OPCODEA));
         var key = simd << 1 | isload;
 
@@ -384,17 +403,17 @@ public class ArmAsmOperandGetter {
         var imm = map.get(IMM) * (wd / 8);
         Number fullimm = signExtend64(imm, 7);
 
-        if (tp == ArmAsmFieldType.LOAD_STORE_PAIR_NO_ALLOC)
+        if (fielddata.getType() == ArmAsmFieldType.LOAD_STORE_PAIR_NO_ALLOC)
             wd = (wd == 32) ? 8 : 16;
         else // if LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1
             wd = 16;
 
         operands.add(h.newImmediate(IMM, fullimm, wd));
-        return;
+
+        return operands;
     }
 
-    private static void loadstore2(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> loadstore2(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first, second, and third operands
@@ -404,157 +423,136 @@ public class ArmAsmOperandGetter {
 
         // fourth operand
         operands.add(h.newImmediate(IMM, 16));
-        return;
+
+        return operands;
     }
 
-    private static void loadstore3(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> loadstore3(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first, and second operands
-        var wd = (map.get(OPCODEA) != 0) ? 64 : 32;
-        operands.add(h.newReadRegister(RT, wd));
+        operands.add(h.newReadRegister(RT, fielddata.getBitWidth()));
         operands.add(h.newReadRegister(RN, 64));
 
         // third operand
-        var imm = map.get(IMM);
+        var imm = fielddata.getMap().get(IMM);
         Number fullimm = signExtend64(imm, 9);
         operands.add(h.newImmediate(IMM, fullimm, 64));
-        return;
+
+        return operands;
     }
 
-    private static void loadstore4(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> loadstore4(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
-        int wd = 0;
-        if (map.containsKey(SIMD)) {
-            var sfa = map.get(SFA);
-            var sfb = map.get(SFB);
-            var sf = (sfb << 2) | sfa;
-            wd = 32 * (int) Math.pow(2, sf);
-
-        } else {
-            wd = 32;
-        }
-
         // first, and second operands
-        operands.add(h.newRegister(0b10, RT, map.get(RT), wd));
-        operands.add(h.newReadRegister(RN, map.get(RN), 64));
+        operands.add(h.newRegister(0b10, RT, fielddata.getBitWidth()));
+        operands.add(h.newReadRegister(RN, 64));
 
         // third operand
-        var imm = map.get(IMM);
+        var imm = fielddata.getMap().get(IMM);
         Number fullimm = signExtend64(imm, 9);
         operands.add(h.newImmediate(IMM, fullimm, 16));
-        return;
+
+        return operands;
     }
 
-    private static void loadstore5a(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> loadstore5a(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first operand
-        var isload = (map.get(OPCODEB));
+        var isload = (fielddata.getMap().get(OPCODEB));
         operands.add(h.newRegister(isload, RT, 32));
 
         // second operand
         operands.add(h.newReadRegister(RN, 64));
 
         // third operand
-        var wd = ((map.get(OPTION) & 0b001) == 0) ? 32 : 64;
-        operands.add(h.newReadRegister(RM, wd));
+        operands.add(h.newReadRegister(RM, fielddata.getBitWidth()));
 
         // fourth operand
-        Object thing = null;
-        var option = map.get(OPTION);
+        String thing = null;
+        var option = fielddata.getMap().get(OPTION).intValue();
         if (option == 0b011) {
-            thing = ArmInstructionShift.decodeShift(map.get(OPTION).intValue());
+            thing = ArmInstructionShift.decode(option).getShorthandle();
         } else {
-            thing = ArmInstructionExtend.decodeExtend(map.get(OPTION).intValue());
+            thing = ArmInstructionExtend.decode(option).getShorthandle();
         }
-
-        operands.add(h.newSubOperation(OPTION, thing.toString(), 8));
+        operands.add(h.newSubOperation(OPTION, thing, 8));
 
         // fifth operand
         operands.add(h.newImmediate(S, 16));
-        return;
+
+        return operands;
     }
 
-    private static void loadstore5b(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> loadstore5b(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
-        return;
+        return operands;
     }
 
-    private static void loadstore6(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> loadstore6(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
-        return;
+        return operands;
     }
 
-    private static void dprTwoSource_addSubCarry(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> dprTwoSource_addSubCarry(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first, second, and third operands
-        var wd = (map.get(SF) == 1) ? 64 : 32;
+        var wd = fielddata.getBitWidth();
         operands.add(h.newWriteRegister(RD, wd));
         operands.add(h.newReadRegister(RN, wd));
         operands.add(h.newReadRegister(RM, wd));
-        return;
+        return operands;
     }
 
-    private static void dprOneSource(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> dprOneSource(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first, and second operands
-        var wd = (map.get(SF) == 1) ? 64 : 32;
+        var wd = fielddata.getBitWidth();
         operands.add(h.newWriteRegister(RD, wd));
         operands.add(h.newReadRegister(RN, wd));
-        return;
+        return operands;
     }
 
-    private static void shift_ext_reg1(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> shift_ext_reg1(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
+        var wd = fielddata.getBitWidth();
+
         // first, second, and third operands
-        var wd = (map.get(SF) == 1) ? 64 : 32;
         operands.add(h.newWriteRegister(RD, wd));
         operands.add(h.newReadRegister(RN, wd));
         operands.add(h.newReadRegister(RM, wd));
 
-        // fourth operand
-        // NOTE
-        // there is a separate suboperation associated
-        // with this operand.... see page C6-777 of ARMv8 ISA manual
-        if (tp != ArmAsmFieldType.ADD_SUB_EXT_REG) {
-            var shift = ArmInstructionShift.decodeShift(map.get(SHIFT).intValue());
-            operands.add(h.newSubOperation(SHIFT, shift.toString(), 8));
+        // fourth operand (sub operation; see page C6-777 of ARMv8 ISA manual)
+        var field = (fielddata.getType() != ArmAsmFieldType.ADD_SUB_EXT_REG) ? SHIFT : OPTION;
+        var code = fielddata.getMap().get(field).intValue();
+        var thing = (field == SHIFT) ? ArmInstructionShift.decode(code).getShorthandle()
+                : ArmInstructionExtend.decode(code).getShorthandle();
 
-        } else {
-            var ext = ArmInstructionExtend.decodeExtend(map.get(OPTION).intValue());
-            operands.add(h.newSubOperation(OPTION, ext.toString(), 8));
-        }
+        operands.add(h.newSubOperation(field, thing, 8));
 
-        // fifth operand (first suboperation operand)
+        // fifth operand (first sub operation operand)
         operands.add(h.newImmediate(IMM, 8));
-        return;
+
+        return operands;
     }
 
-    private static void conditionalCmp(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> conditionalCmp(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
+        var wd = fielddata.getBitWidth();
+
         // first operand
-        var wd = (map.get(SF) == 1) ? 64 : 32;
         operands.add(h.newReadRegister(RN, wd));
 
         // second operand
-        if (tp == ArmAsmFieldType.CONDITIONAL_CMP_REG)
+        if (fielddata.getType() == ArmAsmFieldType.CONDITIONAL_CMP_REG)
             operands.add(h.newReadRegister(RM, wd));
         else
             operands.add(h.newImmediate(IMM, 8));
@@ -563,45 +561,46 @@ public class ArmAsmOperandGetter {
         operands.add(h.newImmediate(NZCV, 8));
 
         // fourth operand
-        var cond = map.get(COND);
+        var cond = fielddata.getMap().get(COND);
         var conds = ArmInstructionCondition.decodeCondition(cond).getShorthandle();
         operands.add(h.newSubOperation(COND, conds, 8));
-        return;
+
+        return operands;
     }
 
-    private static void conditionalSel(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> conditionalSel(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first, second, and third operands
-        var wd = (map.get(SF) == 1) ? 64 : 32;
+        var wd = fielddata.getBitWidth();
         operands.add(h.newWriteRegister(RD, wd));
         operands.add(h.newReadRegister(RN, wd));
         operands.add(h.newReadRegister(RM, wd));
 
         // fourth operand
-        var cond = map.get(COND);
+        var cond = fielddata.getMap().get(COND);
         var conds = ArmInstructionCondition.decodeCondition(cond).getShorthandle();
         operands.add(h.newSubOperation(COND, conds, 8));
-        return;
+
+        return operands;
     }
 
-    private static void dprThreesource(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> dprThreesource(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first, second, third, and fourth operands
-        var wd = (map.get(SF) == 1) ? 64 : 32;
+        var wd = fielddata.getBitWidth();
         operands.add(h.newWriteRegister(RD, wd));
         operands.add(h.newReadRegister(RN, wd));
         operands.add(h.newReadRegister(RM, wd));
         operands.add(h.newReadRegister(RA, wd));
-        return;
+
+        return operands;
     }
 
-    private static void undefined(ArmAsmFieldType tp,
-            Map<ArmAsmField, Integer> map,
+    private static List<Operand> undefined(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
-        return;
+
+        return operands;
     }
 }

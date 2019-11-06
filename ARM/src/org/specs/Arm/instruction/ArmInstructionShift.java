@@ -29,7 +29,7 @@ public enum ArmInstructionShift {
     // TODO add a binaryoperator here to implement the shift?
 
     private ArmInstructionShift() {
-        this.shorthandle = name();
+        this.shorthandle = name().toLowerCase();
     }
 
     public String getShorthandle() {
@@ -51,7 +51,7 @@ public enum ArmInstructionShift {
         DecodeShift = Collections.unmodifiableMap(aMap);
     }
 
-    public static ArmInstructionShift decodeShift(int shiftcode) {
+    public static ArmInstructionShift decode(int shiftcode) {
         return DecodeShift.get(shiftcode);
     }
 }
