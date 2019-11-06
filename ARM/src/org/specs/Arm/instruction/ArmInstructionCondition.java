@@ -1,6 +1,8 @@
 package org.specs.Arm.instruction;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionCondition;
 
@@ -53,13 +55,14 @@ public enum ArmInstructionCondition implements InstructionCondition {
     }
 
     /*
-     * maps the condition code to the enum
+     * maps the condition code to the enum (EXCEPT "NONE"!!!)
      */
     private static final Map<Integer, ArmInstructionCondition> DecodeCond;
     static {
         Map<Integer, ArmInstructionCondition> aMap = new HashMap<Integer, ArmInstructionCondition>();
         for (ArmInstructionCondition cond : ArmInstructionCondition.values())
-            aMap.put(cond.getCondCode(), cond);
+            if (cond != ArmInstructionCondition.NONE)
+                aMap.put(cond.getCondCode(), cond);
 
         DecodeCond = Collections.unmodifiableMap(aMap);
     }
