@@ -52,69 +52,16 @@ public class ArmAsmFieldData extends AsmFieldData {
      * Get "sf" field from ARM instruction types and interpret
      */
     public int getBitWidth() {
+        return ArmAsmWidthGetter.getFrom(this);
+    }
 
-        ArmAsmFieldType type = (ArmAsmFieldType) this.get(TYPE);
-        var map1 = this.get(FIELDS);
-
-        // sf, sfa, and sfb fields are treated differently based on the instruction format
-        switch (type) {
-
-        // when "sf" is a single bit
-        case DPI_ADDSUBIMM:
-        case DPI_ADDSUBIMM_TAGS:
-        case LOGICAL:
-        case MOVEW:
-        case EXTRACT:
-        case BITFIELD:
-        case DPR_TWOSOURCE:
-        case LOGICAL_SHIFT_REG:
-        case ADD_SUB_SHIFT_REG:
-        case ADD_SUB_EXT_REG:
-        case ADD_SUB_CARRY: {
-            return (map.get(SF) != 0) ? 64 : 32;
-        }
-
-        // when sf is two bits
-        case LOAD_REG_LITERAL_FMT1: {
-            return ((int) Math.pow(2, map.get(SF))) * 32;
-        }
-
-        // when sf is two bits (again)
-        case LOAD_STORE_PAIR_NO_ALLOC:
-        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1: {
-
-            var sf = map.get(SF);
-            if (this.isSimd()) {
-                sf = ((int) Math.pow(2, sf)) * 32;
-            } else {
-                sf = (sf != 0) ? 64 : 32;
-            }
-            return sf;
-        }
-
-        // fields "opcodea" and "opcodeb" used for size
-        case LOAD_STORE_PAIR_IMM_FMT2: {
-            Boolean a, b, c, d;
-            a = map1.get("opcodea").substring(0, 1).equals("1");
-            b = map1.get("opcodea").substring(1, 2).equals("1");
-            c = map1.get("opcodeb").substring(0, 1).equals("1");
-            d = map1.get("opcodeb").substring(1, 2).equals("1");
-            var sf = ((!a & !d) | (b & !c)) ? 64 : 32;
-            return sf;
-        }
-
-        // two fields, sfa, and sfb
-        case LOAD_STORE_PAIR_IMM_FMT3:
-        case LOAD_STORE_IMM_PREPOST_FMT3:
-        case LOAD_STORE_REG_OFF_FMT3: {
-            var sf = (map.get(SFB) << 2) | map.get(SFA);
-            return ((int) Math.pow(2, sf)) * 8;
-        }
-
-        default:
-            return 32;
-        // TODO throw exception here??
-        }
+    /*
+     * Gets a list of integers which represent the operands in the fields
+     * This manner of field parsing, maintains the operand order as parsed
+     * in the AsmFields
+     */
+    public List<Operand> getOperands() {
+        return ArmAsmOperandGetter.getFrom(this);
     }
 
     /*
@@ -122,13 +69,10 @@ public class ArmAsmFieldData extends AsmFieldData {
      */
     public Boolean isSimd() {
         if (!map.containsKey(SIMD)) {
-            return false; // default length
-
-        } else if (map.get(SIMD) != 0) {
-            return true;
+            return false;
 
         } else {
-            return false;
+            return (map.get(SIMD) == 0);
         }
     }
 
@@ -154,7 +98,7 @@ public class ArmAsmFieldData extends AsmFieldData {
 
         // conditional branches have a 19 bit IMM field
         case CONDITIONALBRANCH:
-            return (map.get(IMM) << (32 - 9)) >> (32 - 9);
+            return ((map.get(IMM) << 2) << (32 - 19)) >> (32 - 19);
 
         default:
             return 0;
@@ -162,12 +106,4 @@ public class ArmAsmFieldData extends AsmFieldData {
         }
     }
 
-    /*
-     * Gets a list of integers which represent the operands in the fields
-     * This manner of field parsing, maintains the operand order as parsed
-     * in the AsmFields
-     */
-    public List<Operand> getOperands() {
-        return ArmAsmOperandGetter.getFrom(this);
-    }
 }

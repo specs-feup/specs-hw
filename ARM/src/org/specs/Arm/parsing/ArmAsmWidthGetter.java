@@ -13,7 +13,11 @@
 
 package org.specs.Arm.parsing;
 
-import java.util.*;
+import static org.specs.Arm.parsing.ArmAsmField.*;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ArmAsmWidthGetter {
 
@@ -27,62 +31,60 @@ public class ArmAsmWidthGetter {
     private static final Map<ArmAsmFieldType, ArmAsmWidthParse> WIDTHGET;
     static {
         Map<ArmAsmFieldType, ArmAsmWidthParse> amap = new HashMap<ArmAsmFieldType, ArmAsmWidthParse>();
-        /*        amap.put(ArmAsmFieldType.DPI_PCREL, ArmAsmOperandGetter::dpi_pcrel);
-        amap.put(ArmAsmFieldType.DPI_ADDSUBIMM, ArmAsmOperandGetter::dpi_addsubimm);
-        amap.put(ArmAsmFieldType.LOGICAL, ArmAsmOperandGetter::logical);
-        amap.put(ArmAsmFieldType.MOVEW, ArmAsmOperandGetter::movew);
-        amap.put(ArmAsmFieldType.BITFIELD, ArmAsmOperandGetter::bitfield);
-        amap.put(ArmAsmFieldType.EXTRACT, ArmAsmOperandGetter::extract);
-        amap.put(ArmAsmFieldType.CONDITIONALBRANCH, ArmAsmOperandGetter::conditionalbranch);
-        amap.put(ArmAsmFieldType.EXCEPTION, ArmAsmOperandGetter::exception);
-        amap.put(ArmAsmFieldType.UCONDITIONALBRANCH_REG, ArmAsmOperandGetter::unconditionalbranchreg);
-        amap.put(ArmAsmFieldType.UCONDITIONALBRANCH_IMM, ArmAsmOperandGetter::unconditionalbranchimm);
-        amap.put(ArmAsmFieldType.COMPARE_AND_BRANCH_IMM, ArmAsmOperandGetter::compareandbranchimm);
-        amap.put(ArmAsmFieldType.TEST_AND_BRANCH, ArmAsmOperandGetter::testandbranch);
-        amap.put(ArmAsmFieldType.LOAD_REG_LITERAL_FMT1, ArmAsmOperandGetter::loadregliteralfmt1);
-        amap.put(ArmAsmFieldType.LOAD_REG_LITERAL_FMT2, ArmAsmOperandGetter::loadregliteralfmt2);
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_NO_ALLOC, ArmAsmOperandGetter::loadstore1);
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1, ArmAsmOperandGetter::loadstore1);
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2, ArmAsmOperandGetter::loadstore2);
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT1, ArmAsmOperandGetter::loadstore3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT2, ArmAsmOperandGetter::loadstore3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT3, ArmAsmOperandGetter::loadstore4);
-        amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT1, ArmAsmOperandGetter::loadstore4);
-        amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT2, ArmAsmOperandGetter::loadstore4);
-        amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT3, ArmAsmOperandGetter::loadstore4);
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT1, ArmAsmOperandGetter::loadstore5a);
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT2, ArmAsmOperandGetter::loadstore5a);
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT3, ArmAsmOperandGetter::loadstore5b);
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmOperandGetter::loadstore6);
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmOperandGetter::loadstore6);
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmOperandGetter::loadstore6);
-        amap.put(ArmAsmFieldType.DPR_TWOSOURCE, ArmAsmOperandGetter::dprTwoSource_addSubCarry);
-        amap.put(ArmAsmFieldType.ADD_SUB_CARRY, ArmAsmOperandGetter::dprTwoSource_addSubCarry);
-        amap.put(ArmAsmFieldType.DPR_ONESOURCE, ArmAsmOperandGetter::dprOneSource);
-        amap.put(ArmAsmFieldType.LOGICAL_SHIFT_REG, ArmAsmOperandGetter::shift_ext_reg1);
-        amap.put(ArmAsmFieldType.ADD_SUB_SHIFT_REG, ArmAsmOperandGetter::shift_ext_reg1);
-        amap.put(ArmAsmFieldType.ADD_SUB_EXT_REG, ArmAsmOperandGetter::shift_ext_reg1);
-        amap.put(ArmAsmFieldType.CONDITIONAL_CMP_REG, ArmAsmOperandGetter::conditionalCmp);
-        amap.put(ArmAsmFieldType.CONDITIONAL_CMP_IMM, ArmAsmOperandGetter::conditionalCmp);
-        amap.put(ArmAsmFieldType.CONDITIONAL_SELECT, ArmAsmOperandGetter::conditionalSel);
-        amap.put(ArmAsmFieldType.DPR_THREESOURCE, ArmAsmOperandGetter::dprThreesource);
-        amap.put(ArmAsmFieldType.UNDEFINED, ArmAsmOperandGetter::undefined);
-        */
-        amap.put(ArmAsmFieldType.DPI_PCREL, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.DPI_ADDSUBIMM, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.LOGICAL, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.MOVEW, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.EXTRACT, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.BITFIELD, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.DPR_TWOSOURCE, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.LOGICAL_SHIFT_REG, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.ADD_SUB_SHIFT_REG, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.ADD_SUB_EXT_REG, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.ADD_SUB_CARRY, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_NO_ALLOC, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.LOAD_REG_LITERAL_FMT1, ArmAsmWidthGetter::getter2);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1, ArmAsmWidthGetter::getter2);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT2, ArmAsmWidthGetter::getter3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT3, ArmAsmWidthGetter::getter4);
+        amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT3, ArmAsmWidthGetter::getter4);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT3, ArmAsmWidthGetter::getter4);
 
         WIDTHGET = Collections.unmodifiableMap(amap);
     }
 
-    public int getFrom(ArmAsmFieldData fielddata) {
+    public static int getFrom(ArmAsmFieldData fielddata) {
         var map = fielddata.getMap();
         var func = WIDTHGET.get(fielddata.get(ArmAsmFieldData.TYPE));
         if (func != null)
             return func.apply(map);
-        return 32;
+        else
+            return 32; // default value
     }
 
+    // sf is one bit
     private static int getter1(Map<ArmAsmField, Integer> map) {
+        return (map.get(SF) != 0) ? 64 : 32;
+    }
 
-        return 32;
+    // sf is two bits
+    private static int getter2(Map<ArmAsmField, Integer> map) {
+        return ((int) Math.pow(2, map.get(SF))) * 32;
+    }
+
+    // fields "opcodea" and "opcodeb" used for size
+    private static int getter3(Map<ArmAsmField, Integer> map) {
+        Boolean a, b, c, d;
+        a = (map.get(OPCODEA) & 0b10) == 1;
+        b = (map.get(OPCODEA) & 0b01) == 1;
+        c = (map.get(OPCODEB) & 0b10) == 1;
+        d = (map.get(OPCODEB) & 0b01) == 1;
+        var sf = ((!a & !d) | (b & !c)) ? 64 : 32;
+        return sf;
+    }
+
+    // two fields, sfa, and sfb
+    private static int getter4(Map<ArmAsmField, Integer> map) {
+        var sf = (map.get(SFB) << 2) | map.get(SFA);
+        return ((int) Math.pow(2, sf)) * 8;
     }
 }
