@@ -26,27 +26,33 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmField;
  */
 public abstract class AOperand implements Operand {
 
+    /*
+     * members
+     */
     protected Number value;
     protected String svalue;
     protected OperandProperties props;
 
+    /*
+     * Constructor
+     */
     public AOperand(OperandProperties props, Number value) {
         this.props = props;
         this.value = value;
 
-        // ugly but works...
-        if (this.isImmediate() && props.getWidth() < 64)
-            this.svalue = Integer.toHexString(this.value.intValue());
-
-        else if (this.isImmediate() && props.getWidth() == 64)
-            this.svalue = Long.toHexString(this.value.longValue());
-
-        else if (this.isRegister() && props.getWidth() < 64)
+        // registers are decimals
+        if (this.isRegister()) {
             this.svalue = Integer.toString(this.value.intValue());
+        }
 
-        else // if (this.isRegister() && props.getWidth() == 64)
-            this.svalue = Long.toString(this.value.longValue());
-
+        // immediates are hexes (automatically chooses byte width from bit width)
+        else {
+            // var nbytes = Math.ceil((double) props.getWidth() / 4.0);
+            // var ibytes = (int) nbytes;
+            // String fmt = "%0" + Integer.toString(ibytes) + "X";
+            // this.svalue = String.format(fmt, value.longValue());
+            this.svalue = String.format("%x", value);
+        }
     }
 
     /*
@@ -64,19 +70,6 @@ public abstract class AOperand implements Operand {
     }
 
     public String getStringValue() {
-
-        /* if (this.isSymbolic() || this.value.longValue() == -1L)
-            return this.svalue;
-        
-        else if (this.isRegister())
-            return Long.toString(this.value.longValue());
-        
-        else if (this.isImmediate())
-            return Long.toHexString(this.value.longValue());
-        
-        else
-            return this.svalue;*/
-
         return this.svalue;
     }
 
@@ -103,6 +96,10 @@ public abstract class AOperand implements Operand {
 
     public Boolean isFloat() {
         return (this.props.getTypes().contains(FLOAT));
+    }
+
+    public Boolean isSubOperation() {
+        return (this.props.getTypes().contains(SUBOPERATION));
     }
 
     public AsmField getAsmField() {

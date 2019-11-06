@@ -180,8 +180,9 @@ public abstract class AInstruction implements Instruction {
         Iterator<Operand> it = this.getData().getOperands().iterator();
 
         while (it.hasNext()) {
-            str += " " + it.next().getRepresentation();
-            if (it.hasNext())
+            var curr = it.next();
+            str += " " + curr.getRepresentation();
+            if (it.hasNext() && !curr.isSubOperation())
                 str += ", ";
         }
 
@@ -209,7 +210,6 @@ public abstract class AInstruction implements Instruction {
         // symbolify operands
         for (Operand op : this.getData().getOperands()) {
             op.setSymbolic(regremap.get(op.getRepresentation()));
-
             // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
         }
     }
