@@ -137,14 +137,14 @@ public class ArmAsmOperandGetter {
     /*
      * 
      */
-    private long signExtend64(int value, int currlen) {
+    private static long signExtend64(int value, int currlen) {
         return (value << (64 - currlen)) >> (64 - currlen);
     }
 
     /*
      * 
      */
-    private int signExtend32(int value, int currlen) {
+    private static int signExtend32(int value, int currlen) {
         return (value << (32 - currlen)) >> (32 - currlen);
     }
 
@@ -338,7 +338,7 @@ public class ArmAsmOperandGetter {
 
         // second operand
         var imm = map.get(IMM) << 2;
-        Number label = (imm << (64 - 19)) >> (64 - 19);
+        Number label = signExtend64(imm, 19);
         operands.add(h.newImmediateLabel(IMM, label, 64));
         return;
     }
@@ -382,7 +382,7 @@ public class ArmAsmOperandGetter {
 
         // fourth (optional) operand
         var imm = map.get(IMM) * (wd / 8);
-        Number fullimm = (imm << (64 - 7)) >> (64 - 7);
+        Number fullimm = signExtend64(imm, 7);
 
         if (tp == ArmAsmFieldType.LOAD_STORE_PAIR_NO_ALLOC)
             wd = (wd == 32) ? 8 : 16;
@@ -418,7 +418,7 @@ public class ArmAsmOperandGetter {
 
         // third operand
         var imm = map.get(IMM);
-        Number fullimm = (imm << (64 - 9)) >> (64 - 9);
+        Number fullimm = signExtend64(imm, 9);
         operands.add(h.newImmediate(IMM, fullimm, 64));
         return;
     }
@@ -444,7 +444,7 @@ public class ArmAsmOperandGetter {
 
         // third operand
         var imm = map.get(IMM);
-        Number fullimm = (imm << (16 - 9)) >> (16 - 9);
+        Number fullimm = signExtend64(imm, 9);
         operands.add(h.newImmediate(IMM, fullimm, 16));
         return;
     }
@@ -589,6 +589,7 @@ public class ArmAsmOperandGetter {
     private static void dprThreesource(ArmAsmFieldType tp,
             Map<ArmAsmField, Integer> map,
             ArmOperandBuilder h, List<Operand> operands) {
+
         // first, second, third, and fourth operands
         var wd = (map.get(SF) == 1) ? 64 : 32;
         operands.add(h.newWriteRegister(RD, wd));
