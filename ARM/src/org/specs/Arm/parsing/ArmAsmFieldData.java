@@ -69,7 +69,7 @@ public class ArmAsmFieldData extends AsmFieldData {
      */
     public Boolean isSimd() {
         if (map.containsKey(SIMD)) {
-            return (map.get(SIMD) == 0);
+            return (map.get(SIMD) != 0);
 
         } else {
             return false;
