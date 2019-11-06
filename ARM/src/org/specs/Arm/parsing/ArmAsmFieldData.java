@@ -68,11 +68,11 @@ public class ArmAsmFieldData extends AsmFieldData {
      * Get "simd field"
      */
     public Boolean isSimd() {
-        if (!map.containsKey(SIMD)) {
-            return false;
+        if (map.containsKey(SIMD)) {
+            return (map.get(SIMD) == 0);
 
         } else {
-            return (map.get(SIMD) == 0);
+            return false;
         }
     }
 
@@ -80,10 +80,10 @@ public class ArmAsmFieldData extends AsmFieldData {
      * Decode "cond" field if present
      */
     public ArmInstructionCondition getCond() {
-        if (!map.containsKey(COND))
-            return ArmInstructionCondition.NONE;
+        if (map.containsKey(COND))
+            return ArmInstructionCondition.decodeCondition(map.get(COND));
 
-        return ArmInstructionCondition.decodeCondition(map.get(COND));
+        return ArmInstructionCondition.NONE;
         // TODO throw something
     }
 
