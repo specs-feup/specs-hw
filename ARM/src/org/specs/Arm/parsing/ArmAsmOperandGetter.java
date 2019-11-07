@@ -48,12 +48,12 @@ public class ArmAsmOperandGetter {
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1, ArmAsmOperandGetter::loadstore1);
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2, ArmAsmOperandGetter::loadstore2);
 
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT1, ArmAsmOperandGetter::loadstore3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT2, ArmAsmOperandGetter::loadstore3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT3, ArmAsmOperandGetter::loadstore3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT1, ArmAsmOperandGetter::loadstore3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT2, ArmAsmOperandGetter::loadstore3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT3, ArmAsmOperandGetter::loadstore3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT1, ArmAsmOperandGetter::loadstore3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT2, ArmAsmOperandGetter::loadstore3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT3, ArmAsmOperandGetter::loadstore3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT1, ArmAsmOperandGetter::loadstore3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT2, ArmAsmOperandGetter::loadstore3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT3, ArmAsmOperandGetter::loadstore3);
 
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT1, ArmAsmOperandGetter::loadstore5);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT2, ArmAsmOperandGetter::loadstore5);
@@ -185,12 +185,12 @@ public class ArmAsmOperandGetter {
             break;
         }
 
-        case LOAD_STORE_IMM_PREPOST_FMT1:
-        case LOAD_STORE_IMM_PREPOST_FMT2:
-        case LOAD_STORE_IMM_PREPOST_FMT3:
-        case LOAD_STORE_PAIR_IMM_FMT1:
-        case LOAD_STORE_PAIR_IMM_FMT2:
-        case LOAD_STORE_PAIR_IMM_FMT3: {
+        case LOAD_STORE_REG_IMM_PREPOST_FMT1:
+        case LOAD_STORE_REG_IMM_PREPOST_FMT2:
+        case LOAD_STORE_REG_IMM_PREPOST_FMT3:
+        case LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT1:
+        case LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT2:
+        case LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT3: {
             var isload = (map.get(OPCODEB) & 0b01);
             var issimd = map.get(SIMD) << 1;
             key = issimd | isload;

@@ -268,7 +268,7 @@ public class ArmInstructionInstatiationTest {
     }
 
     @Test
-    public void test_Extract(ArmAsmFieldType fmt) {
+    public void test_Extract() {
         test_Extr32(ArmAsmFieldType.EXTRACT);
         test_Extr64(ArmAsmFieldType.EXTRACT);
     }
@@ -348,7 +348,7 @@ public class ArmInstructionInstatiationTest {
     }
 
     // b.gt
-    public void test_Blgt(ArmAsmFieldType fmt) {
+    public void test_Bgt(ArmAsmFieldType fmt) {
         testDecode("b.gt", "b.gt", fmt,
                 Integer.toHexString(0b0101_0100_0000000000000000000_0_1100));
     }
@@ -394,7 +394,7 @@ public class ArmInstructionInstatiationTest {
         test_Bls(fmt);
         test_Bge(fmt);
         test_Blt(fmt);
-        test_Blgt(fmt);
+        test_Bgt(fmt);
         test_Ble(fmt);
         test_Bal(fmt);
         test_Bnvb(fmt);
@@ -1031,28 +1031,24 @@ public class ArmInstructionInstatiationTest {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // LOAD_STORE_PAIR_IMM_UNSCALED (C4-283 to C4-284) ///////////////////
     // sturb
-    @Test
     public void test_sturb(ArmAsmFieldType fmt) {
         testDecode("sturb", "sturb", fmt,
                 Integer.toHexString(0b00_111_0_00_00_0_000000000_00_00000_00000));
     }
 
     // ldurb
-    @Test
     public void test_ldurb(ArmAsmFieldType fmt) {
         testDecode("ldurb", "ldurb", fmt,
                 Integer.toHexString(0b00_111_0_00_01_0_000000000_00_00000_00000));
     }
 
     // sturh
-    @Test
     public void test_sturh(ArmAsmFieldType fmt) {
         testDecode("sturh", "sturh", fmt,
                 Integer.toHexString(0b01_111_0_00_00_0_000000000_00_00000_00000));
     }
 
     // ldurh
-    @Test
     public void test_ldurh(ArmAsmFieldType fmt) {
         testDecode("ldurh", "ldurh", fmt,
                 Integer.toHexString(0b01_111_0_00_01_0_000000000_00_00000_00000));
@@ -1071,8 +1067,8 @@ public class ArmInstructionInstatiationTest {
     }
 
     @Test
-    public void test_load_store_pair_imm_fmt1() {
-        var fmt = ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT1;
+    public void test_load_store_pair_imm_unscaled_fmt1() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT1;
         test_sturb(fmt);
         test_ldurb(fmt);
         test_sturh(fmt);
@@ -1082,959 +1078,1232 @@ public class ArmInstructionInstatiationTest {
     }
 
     // ldursb 32 bit
-    @Test
     public void test_ldursb32(ArmAsmFieldType fmt) {
         testDecode("ldursb32", "ldursb", fmt,
                 Integer.toHexString(0b00_111_0_00_11_0_000000000_00_00000_00000));
     }
 
     // ldursb 64 bit
-    @Test
     public void test_ldursb64(ArmAsmFieldType fmt) {
         testDecode("ldursb64", "ldursb", fmt,
                 Integer.toHexString(0b00_111_0_00_10_0_000000000_00_00000_00000));
     }
 
     // ldursh 32 bit
-    @Test
     public void test_ldursh32(ArmAsmFieldType fmt) {
         testDecode("ldursh32", "ldursh", fmt,
                 Integer.toHexString(0b01_111_0_00_11_0_000000000_00_00000_00000));
     }
 
     // ldursh 64 bit
-    @Test
     public void test_ldursh64(ArmAsmFieldType fmt) {
         testDecode("ldursh64", "ldursh", fmt,
                 Integer.toHexString(0b01_111_0_00_10_0_000000000_00_00000_00000));
     }
 
     // stur 32 bit
-    @Test
     public void test_stur32(ArmAsmFieldType fmt) {
         testDecode("stur_32", "stur", fmt,
                 Integer.toHexString(0b10_111_0_00_00_0_000000000_00_00000_00000));
     }
 
     // stur 64 bit
-    @Test
     public void test_stur64(ArmAsmFieldType fmt) {
         testDecode("stur_64", "stur", fmt,
                 Integer.toHexString(0b11_111_0_00_00_0_000000000_00_00000_00000));
     }
 
     // ldur 32 bit
-    @Test
     public void test_ldur32(ArmAsmFieldType fmt) {
         testDecode("ldur_32", "ldur", fmt,
                 Integer.toHexString(0b10_111_0_00_01_0_000000000_00_00000_00000));
     }
 
     // ldur 64 bit
-    @Test
     public void test_ldur64(ArmAsmFieldType fmt) {
         testDecode("ldur_64", "ldur", fmt,
                 Integer.toHexString(0b11_111_0_00_01_0_000000000_00_00000_00000));
     }
 
-    // stur simd 8 bit
     @Test
+    public void test_load_store_pair_imm_unscaled_fmt2() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT2;
+        test_ldursb32(fmt);
+        test_ldursb64(fmt);
+        test_ldursh32(fmt);
+        test_ldursh64(fmt);
+        test_stur32(fmt);
+        test_stur64(fmt);
+        test_ldur32(fmt);
+        test_ldur64(fmt);
+    }
+
+    // stur simd 8 bit
     public void test_stursimd8(ArmAsmFieldType fmt) {
         testDecode("stur_8_simd", "stur", fmt,
                 Integer.toHexString(0b00_111_1_00_00_0_000000000_00_00000_00000));
     }
 
     // stur simd 16 bit
-    @Test
     public void test_stursimd16(ArmAsmFieldType fmt) {
         testDecode("stur_16_simd", "stur", fmt,
                 Integer.toHexString(0b01_111_1_00_00_0_000000000_00_00000_00000));
     }
 
     // stur simd 32 bit
-    @Test
     public void test_stursimd32(ArmAsmFieldType fmt) {
         testDecode("stur_32_simd", "stur", fmt,
                 Integer.toHexString(0b10_111_1_00_00_0_000000000_00_00000_00000));
     }
 
     // stur simd 64 bit
-    @Test
     public void test_stursimd64(ArmAsmFieldType fmt) {
         testDecode("stur_64_simd", "stur", fmt,
                 Integer.toHexString(0b11_111_1_00_00_0_000000000_00_00000_00000));
     }
 
     // stur simd 128 bit
-    @Test
     public void test_stursimd128(ArmAsmFieldType fmt) {
         testDecode("stur_128_simd", "stur", fmt,
                 Integer.toHexString(0b00_111_1_00_10_0_000000000_00_00000_00000));
     }
 
     // ldur simd 8 bit
-    @Test
     public void test_ldursimd8(ArmAsmFieldType fmt) {
         testDecode("ldur_8_simd", "ldur", fmt,
                 Integer.toHexString(0b00_111_1_00_01_0_000000000_00_00000_00000));
     }
 
     // ldur simd 16 bit
-    @Test
     public void test_ldursimd16(ArmAsmFieldType fmt) {
         testDecode("ldur_16_simd", "ldur", fmt,
                 Integer.toHexString(0b01_111_1_00_01_0_000000000_00_00000_00000));
     }
 
     // ldur simd 32 bit
-    @Test
     public void test_ldursimd32(ArmAsmFieldType fmt) {
         testDecode("ldur_32_simd", "ldur", fmt,
                 Integer.toHexString(0b10_111_1_00_01_0_000000000_00_00000_00000));
     }
 
     // ldur simd 64 bit
-    @Test
     public void test_ldursimd64(ArmAsmFieldType fmt) {
         testDecode("ldur_64_simd", "ldur", fmt,
                 Integer.toHexString(0b11_111_1_00_01_0_000000000_00_00000_00000));
     }
 
     // ldur simd 128 bit
-    @Test
     public void test_ldursimd128(ArmAsmFieldType fmt) {
         testDecode("ldur_128_simd", "ldur", fmt,
                 Integer.toHexString(0b00_111_1_00_11_0_000000000_00_00000_00000));
     }
 
-    /*
+    @Test
+    public void test_load_store_pair_imm_unscaled_fmt3() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT3;
+        test_stursimd8(fmt);
+        test_stursimd16(fmt);
+        test_stursimd32(fmt);
+        test_stursimd64(fmt);
+        test_stursimd128(fmt);
+        test_ldursimd8(fmt);
+        test_ldursimd16(fmt);
+        test_ldursimd32(fmt);
+        test_ldursimd64(fmt);
+        test_ldursimd128(fmt);
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // LOAD_STORE_PAIR_UNPRIV (C4-286) ////////////////////////////////////////
     // sttrb
-    @Test
-    public void test_sttrb() {
-        testDecode("sttrb", "sttrb", Integer.toHexString(0b00_111_0_00_00_0_000000000_10_00000_00000));
+    public void test_sttrb(ArmAsmFieldType fmt) {
+        testDecode("sttrb", "sttrb", fmt,
+                Integer.toHexString(0b00_111_0_00_00_0_000000000_10_00000_00000));
     }
-    
+
     // ldtrb
-    @Test
-    public void test_ldtrb() {
-        testDecode("ldtrb", "ldtrb", Integer.toHexString(0b00_111_0_00_01_0_000000000_10_00000_00000));
+    public void test_ldtrb(ArmAsmFieldType fmt) {
+        testDecode("ldtrb", "ldtrb", fmt,
+                Integer.toHexString(0b00_111_0_00_01_0_000000000_10_00000_00000));
     }
-    
+
     // sttrh
-    @Test
-    public void test_sttrh() {
-        testDecode("sttrh", "sttrh", Integer.toHexString(0b01_111_0_00_00_0_000000000_10_00000_00000));
+    public void test_sttrh(ArmAsmFieldType fmt) {
+        testDecode("sttrh", "sttrh", fmt,
+                Integer.toHexString(0b01_111_0_00_00_0_000000000_10_00000_00000));
     }
-    
+
     // ldtrh
-    @Test
-    public void test_ldtrh() {
-        testDecode("ldtrh", "ldtrh", Integer.toHexString(0b01_111_0_00_01_0_000000000_10_00000_00000));
+    public void test_ldtrh(ArmAsmFieldType fmt) {
+        testDecode("ldtrh", "ldtrh", fmt,
+                Integer.toHexString(0b01_111_0_00_01_0_000000000_10_00000_00000));
     }
-    
+
+    // ldtrsw
+    public void test_ldtrsw(ArmAsmFieldType fmt) {
+        testDecode("ldtrsw", "ldtrsw", fmt,
+                Integer.toHexString(0b10_111_000_10_0_000000000_10_00000_00000));
+    }
+
+    @Test
+    public void test_load_store_pair_unpriv_fmt1() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT1;
+        test_sttrb(fmt);
+        test_ldtrb(fmt);
+        test_sttrh(fmt);
+        test_ldtrh(fmt);
+        test_ldtrsw(fmt);
+    }
+
     // ldtrsb 32 bit
-    @Test
-    public void test_ldtrsb32() {
-        testDecode("ldtrsb32", "ldtrsb", Integer.toHexString(0b00_111_0_00_11_0_000000000_10_00000_00000));
+    public void test_ldtrsb32(ArmAsmFieldType fmt) {
+        testDecode("ldtrsb32", "ldtrsb", fmt,
+                Integer.toHexString(0b00_111_0_00_11_0_000000000_10_00000_00000));
     }
-    
+
     // ldtrsb 64 bit
-    @Test
-    public void test_ldtrsb64() {
-        testDecode("ldtrsb64", "ldtrsb", Integer.toHexString(0b00_111_0_00_10_0_000000000_10_00000_00000));
+    public void test_ldtrsb64(ArmAsmFieldType fmt) {
+        testDecode("ldtrsb64", "ldtrsb", fmt,
+                Integer.toHexString(0b00_111_0_00_10_0_000000000_10_00000_00000));
     }
-    
+
     // ldtrsh 32 bit
-    @Test
-    public void test_ldtrsh32() {
-        testDecode("ldtrsh32", "ldtrsh", Integer.toHexString(0b01_111_0_00_11_0_000000000_10_00000_00000));
+    public void test_ldtrsh32(ArmAsmFieldType fmt) {
+        testDecode("ldtrsh32", "ldtrsh", fmt,
+                Integer.toHexString(0b01_111_0_00_11_0_000000000_10_00000_00000));
     }
-    
+
     // ldtrsh 64 bit
-    @Test
-    public void test_ldtrsh64() {
-        testDecode("ldtrsh64", "ldtrsh", Integer.toHexString(0b01_111_0_00_10_0_000000000_10_00000_00000));
+    public void test_ldtrsh64(ArmAsmFieldType fmt) {
+        testDecode("ldtrsh64", "ldtrsh", fmt,
+                Integer.toHexString(0b01_111_0_00_10_0_000000000_10_00000_00000));
     }
-    
+
     // sttr 32 bit
-    @Test
-    public void test_sttr32() {
-        testDecode("sttr_32", "sttr", Integer.toHexString(0b10_111_0_00_00_0_000000000_10_00000_00000));
+    public void test_sttr32(ArmAsmFieldType fmt) {
+        testDecode("sttr_32", "sttr", fmt,
+                Integer.toHexString(0b10_111_0_00_00_0_000000000_10_00000_00000));
     }
-    
+
     // sttr 64 bit
-    @Test
-    public void test_sttr64() {
-        testDecode("sttr_64", "sttr", Integer.toHexString(0b11_111_0_00_00_0_000000000_10_00000_00000));
+    public void test_sttr64(ArmAsmFieldType fmt) {
+        testDecode("sttr_64", "sttr", fmt,
+                Integer.toHexString(0b11_111_0_00_00_0_000000000_10_00000_00000));
     }
-    
+
     // ldtr 32 bit
-    @Test
-    public void test_ldtr32() {
-        testDecode("ldtr_32", "ldtr", Integer.toHexString(0b10_111_0_00_01_0_000000000_10_00000_00000));
+    public void test_ldtr32(ArmAsmFieldType fmt) {
+        testDecode("ldtr_32", "ldtr", fmt,
+                Integer.toHexString(0b10_111_0_00_01_0_000000000_10_00000_00000));
     }
-    
+
     // ldtr 64 bit
-    @Test
-    public void test_ldtr64() {
-        testDecode("ldtr_64", "ldtr", Integer.toHexString(0b11_111_0_00_01_0_000000000_10_00000_00000));
+    public void test_ldtr64(ArmAsmFieldType fmt) {
+        testDecode("ldtr_64", "ldtr", fmt,
+                Integer.toHexString(0b11_111_0_00_01_0_000000000_10_00000_00000));
     }
-    
-    // LOAD_STORE_PAIR_IMM_PREPOST_FMT1 (C4-284 to C4-285 and C4-286 to C4-287)
+
+    @Test
+    public void test_load_store_pair_unpriv_fmt2() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT2;
+        test_ldtrsb32(fmt);
+        test_ldtrsb64(fmt);
+        test_ldtrsh32(fmt);
+        test_ldtrsh64(fmt);
+        test_sttr32(fmt);
+        test_sttr64(fmt);
+        test_ldtr32(fmt);
+        test_ldtr64(fmt);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // LOAD_STORE_REG_IMM_PREPOST_FMT1 (C4-284 to C4-285 and C4-286 to C4-287)
     // strb
-    @Test
-    public void test_strb_pre() {
-        testDecode("strb_pre", "strb", Integer.toHexString(0b00_111_0_00_00_0_000000000_11_00000_00000));
+    public void test_strb_pre(ArmAsmFieldType fmt) {
+        testDecode("strb_pre", "strb", fmt,
+                Integer.toHexString(0b00_111_0_00_00_0_000000000_11_00000_00000));
     }
-    
+
     // ldrb
-    @Test
-    public void test_ldrb_pre() {
-        testDecode("ldrb_pre", "ldrb", Integer.toHexString(0b00_111_0_00_01_0_000000000_11_00000_00000));
+    public void test_ldrb_pre(ArmAsmFieldType fmt) {
+        testDecode("ldrb_pre", "ldrb", fmt,
+                Integer.toHexString(0b00_111_0_00_01_0_000000000_11_00000_00000));
     }
-    
+
     // strh
-    @Test
-    public void test_strh_pre() {
-        testDecode("strh_pre", "strh", Integer.toHexString(0b01_111_0_00_00_0_000000000_11_00000_00000));
+    public void test_strh_pre(ArmAsmFieldType fmt) {
+        testDecode("strh_pre", "strh", fmt,
+                Integer.toHexString(0b01_111_0_00_00_0_000000000_11_00000_00000));
     }
-    
+
     // ldrh
-    @Test
-    public void test_ldrh_pre() {
-        testDecode("ldrh_pre", "ldrh", Integer.toHexString(0b01_111_0_00_01_0_000000000_11_00000_00000));
+    public void test_ldrh_pre(ArmAsmFieldType fmt) {
+        testDecode("ldrh_pre", "ldrh", fmt,
+                Integer.toHexString(0b01_111_0_00_01_0_000000000_11_00000_00000));
     }
-    
+
+    // ldrsw
+    public void test_ldrsw_pre(ArmAsmFieldType fmt) {
+        testDecode("ldrsw_pre", "ldrsw", fmt,
+                Integer.toHexString(0b10_111_000_10_0_000000000_11_00000_00000));
+    }
+
+    @Test
+    public void test_load_store_reg_imm_pre_fmt1() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT1;
+        test_strb_pre(fmt);
+        test_ldrb_pre(fmt);
+        test_strh_pre(fmt);
+        test_ldrh_pre(fmt);
+        test_ldrsw_pre(fmt);
+    }
+
     // ldrsb 32 bit
-    @Test
-    public void test_ldrsb32_pre() {
-        testDecode("ldrsb32_pre", "ldrsb", Integer.toHexString(0b00_111_0_00_11_0_000000000_11_00000_00000));
+    public void test_ldrsb32_pre(ArmAsmFieldType fmt) {
+        testDecode("ldrsb32_pre", "ldrsb", fmt,
+                Integer.toHexString(0b00_111_0_00_11_0_000000000_11_00000_00000));
     }
-    
+
     // ldrsb 64 bit
-    @Test
-    public void test_ldrsb64_pre() {
-        testDecode("ldrsb64_pre", "ldrsb", Integer.toHexString(0b00_111_0_00_10_0_000000000_11_00000_00000));
+    public void test_ldrsb64_pre(ArmAsmFieldType fmt) {
+        testDecode("ldrsb64_pre", "ldrsb", fmt,
+                Integer.toHexString(0b00_111_0_00_10_0_000000000_11_00000_00000));
     }
-    
+
     // ldrsh 32 bit
-    @Test
-    public void test_ldrsh32_pre() {
-        testDecode("ldrsh32_pre", "ldrsh", Integer.toHexString(0b01_111_0_00_11_0_000000000_11_00000_00000));
+    public void test_ldrsh32_pre(ArmAsmFieldType fmt) {
+        testDecode("ldrsh32_pre", "ldrsh", fmt,
+                Integer.toHexString(0b01_111_0_00_11_0_000000000_11_00000_00000));
     }
-    
+
     // ldrsh 64 bit
-    @Test
-    public void test_ldrsh64_pre() {
-        testDecode("ldrsh64_pre", "ldrsh", Integer.toHexString(0b01_111_0_00_10_0_000000000_11_00000_00000));
+    public void test_ldrsh64_pre(ArmAsmFieldType fmt) {
+        testDecode("ldrsh64_pre", "ldrsh", fmt,
+                Integer.toHexString(0b01_111_0_00_10_0_000000000_11_00000_00000));
     }
-    
+
     // str 32 bit
-    @Test
-    public void test_str32_pre() {
-        testDecode("str_32_pre", "str", Integer.toHexString(0b10_111_0_00_00_0_000000000_11_00000_00000));
+    public void test_str32_pre(ArmAsmFieldType fmt) {
+        testDecode("str_32_pre", "str", fmt,
+                Integer.toHexString(0b10_111_0_00_00_0_000000000_11_00000_00000));
     }
-    
+
     // str 64 bit
-    @Test
-    public void test_str64_pre() {
-        testDecode("str_64_pre", "str", Integer.toHexString(0b11_111_0_00_00_0_000000000_11_00000_00000));
+    public void test_str64_pre(ArmAsmFieldType fmt) {
+        testDecode("str_64_pre", "str", fmt,
+                Integer.toHexString(0b11_111_0_00_00_0_000000000_11_00000_00000));
     }
-    
+
     // ldr 32 bit
-    @Test
-    public void test_ldr32_pre() {
-        testDecode("ldr_32_pre", "ldr", Integer.toHexString(0b10_111_0_00_01_0_000000000_11_00000_00000));
+    public void test_ldr32_pre(ArmAsmFieldType fmt) {
+        testDecode("ldr_32_pre", "ldr", fmt,
+                Integer.toHexString(0b10_111_0_00_01_0_000000000_11_00000_00000));
     }
-    
+
     // ldr 64 bit
-    @Test
-    public void test_ldr64_pre() {
-        testDecode("ldr_64_pre", "ldr", Integer.toHexString(0b11_111_0_00_01_0_000000000_11_00000_00000));
+    public void test_ldr64_pre(ArmAsmFieldType fmt) {
+        testDecode("ldr_64_pre", "ldr", fmt,
+                Integer.toHexString(0b11_111_0_00_01_0_000000000_11_00000_00000));
     }
-    
+
+    @Test
+    public void test_load_store_reg_imm_pre_fmt2() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT2;
+        test_ldrsb32_pre(fmt);
+        test_ldrsb64_pre(fmt);
+        test_ldrsh32_pre(fmt);
+        test_ldrsh64_pre(fmt);
+        test_str32_pre(fmt);
+        test_str64_pre(fmt);
+        test_ldr32_pre(fmt);
+        test_ldr64_pre(fmt);
+    }
+
     // str simd 8 bit
-    @Test
-    public void test_strsimd8_pre() {
-        testDecode("str_8_simd_pre", "str", Integer.toHexString(0b00_111_1_00_00_0_000000000_11_00000_00000));
+    public void test_strsimd8_pre(ArmAsmFieldType fmt) {
+        testDecode("str_8_simd_pre", "str", fmt,
+                Integer.toHexString(0b00_111_1_00_00_0_000000000_11_00000_00000));
     }
-    
+
     // str simd 16 bit
-    @Test
-    public void test_strsimd16_pre() {
-        testDecode("str_16_simd_pre", "str", Integer.toHexString(0b01_111_1_00_00_0_000000000_11_00000_00000));
+    public void test_strsimd16_pre(ArmAsmFieldType fmt) {
+        testDecode("str_16_simd_pre", "str", fmt,
+                Integer.toHexString(0b01_111_1_00_00_0_000000000_11_00000_00000));
     }
-    
+
     // str simd 32 bit
-    @Test
-    public void test_strsimd32_pre() {
-        testDecode("str_32_simd_pre", "str", Integer.toHexString(0b10_111_1_00_00_0_000000000_11_00000_00000));
+    public void test_strsimd32_pre(ArmAsmFieldType fmt) {
+        testDecode("str_32_simd_pre", "str", fmt,
+                Integer.toHexString(0b10_111_1_00_00_0_000000000_11_00000_00000));
     }
-    
+
     // str simd 64 bit
-    @Test
-    public void test_strsimd64_pre() {
-        testDecode("str_64_simd_pre", "str", Integer.toHexString(0b11_111_1_00_00_0_000000000_11_00000_00000));
+    public void test_strsimd64_pre(ArmAsmFieldType fmt) {
+        testDecode("str_64_simd_pre", "str", fmt,
+                Integer.toHexString(0b11_111_1_00_00_0_000000000_11_00000_00000));
     }
-    
+
     // str simd 128 bit
-    @Test
-    public void test_strsimd128_pre() {
-        testDecode("str_128_simd_pre", "str", Integer.toHexString(0b00_111_1_00_10_0_000000000_11_00000_00000));
+    public void test_strsimd128_pre(ArmAsmFieldType fmt) {
+        testDecode("str_128_simd_pre", "str", fmt,
+                Integer.toHexString(0b00_111_1_00_10_0_000000000_11_00000_00000));
     }
-    
+
     // ldr simd 8 bit
-    @Test
-    public void test_ldrsimd8_pre() {
-        testDecode("ldr_8_simd_pre", "ldr", Integer.toHexString(0b00_111_1_00_01_0_000000000_11_00000_00000));
+    public void test_ldrsimd8_pre(ArmAsmFieldType fmt) {
+        testDecode("ldr_8_simd_pre", "ldr", fmt,
+                Integer.toHexString(0b00_111_1_00_01_0_000000000_11_00000_00000));
     }
-    
+
     // ldr simd 16 bit
-    @Test
-    public void test_ldrsimd16_pre() {
-        testDecode("ldr_16_simd_pre", "ldr", Integer.toHexString(0b01_111_1_00_01_0_000000000_11_00000_00000));
+    public void test_ldrsimd16_pre(ArmAsmFieldType fmt) {
+        testDecode("ldr_16_simd_pre", "ldr", fmt,
+                Integer.toHexString(0b01_111_1_00_01_0_000000000_11_00000_00000));
     }
-    
+
     // ldr simd 32 bit
-    @Test
-    public void test_ldrsimd32_pre() {
-        testDecode("ldr_32_simd_pre", "ldr", Integer.toHexString(0b10_111_1_00_01_0_000000000_11_00000_00000));
+    public void test_ldrsimd32_pre(ArmAsmFieldType fmt) {
+        testDecode("ldr_32_simd_pre", "ldr", fmt,
+                Integer.toHexString(0b10_111_1_00_01_0_000000000_11_00000_00000));
     }
-    
+
     // ldr simd 64 bit
-    @Test
-    public void test_ldrsimd64_pre() {
-        testDecode("ldr_64_simd_pre", "ldr", Integer.toHexString(0b11_111_1_00_01_0_000000000_11_00000_00000));
+    public void test_ldrsimd64_pre(ArmAsmFieldType fmt) {
+        testDecode("ldr_64_simd_pre", "ldr", fmt,
+                Integer.toHexString(0b11_111_1_00_01_0_000000000_11_00000_00000));
     }
-    
+
     // ldr simd 128 bit
-    @Test
-    public void test_ldrsimd128_pre() {
-        testDecode("ldr_128_simd_pre", "ldr", Integer.toHexString(0b00_111_1_00_11_0_000000000_11_00000_00000));
+    public void test_ldrsimd128_pre(ArmAsmFieldType fmt) {
+        testDecode("ldr_128_simd_pre", "ldr", fmt,
+                Integer.toHexString(0b00_111_1_00_11_0_000000000_11_00000_00000));
     }
-    
-    // LOAD_STORE_PAIR_IMM_PREPOST_FMT1 (C4-284 to C4-285 and C4-286 to C4-287)
+
+    @Test
+    public void test_load_store_reg_imm_pre_fmt3() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT3;
+        test_strsimd8_pre(fmt);
+        test_strsimd16_pre(fmt);
+        test_strsimd32_pre(fmt);
+        test_strsimd64_pre(fmt);
+        test_strsimd128_pre(fmt);
+        test_ldrsimd8_pre(fmt);
+        test_ldrsimd16_pre(fmt);
+        test_ldrsimd32_pre(fmt);
+        test_ldrsimd64_pre(fmt);
+        test_ldrsimd128_pre(fmt);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // LOAD_STORE_REG_IMM_PREPOST_FMT1 (C4-284 to C4-285 and C4-286 to C4-287)
     // strb
-    @Test
-    public void test_strb_post() {
-        testDecode("strb_post", "strb", Integer.toHexString(0b00_111_0_00_00_0_000000000_01_00000_00000));
+    public void test_strb_post(ArmAsmFieldType fmt) {
+        testDecode("strb_post", "strb", fmt,
+                Integer.toHexString(0b00_111_0_00_00_0_000000000_01_00000_00000));
     }
-    
+
     // ldrb
-    @Test
-    public void test_ldrb_post() {
-        testDecode("ldrb_post", "ldrb", Integer.toHexString(0b00_111_0_00_01_0_000000000_01_00000_00000));
+    public void test_ldrb_post(ArmAsmFieldType fmt) {
+        testDecode("ldrb_post", "ldrb", fmt,
+                Integer.toHexString(0b00_111_0_00_01_0_000000000_01_00000_00000));
     }
-    
+
     // strh
-    @Test
-    public void test_strh_post() {
-        testDecode("strh_post", "strh", Integer.toHexString(0b01_111_0_00_00_0_000000000_01_00000_00000));
+    public void test_strh_post(ArmAsmFieldType fmt) {
+        testDecode("strh_post", "strh", fmt,
+                Integer.toHexString(0b01_111_0_00_00_0_000000000_01_00000_00000));
     }
-    
+
     // ldrh
-    @Test
-    public void test_ldrh_post() {
-        testDecode("ldrh_post", "ldrh", Integer.toHexString(0b01_111_0_00_01_0_000000000_01_00000_00000));
+    public void test_ldrh_post(ArmAsmFieldType fmt) {
+        testDecode("ldrh_post", "ldrh", fmt,
+                Integer.toHexString(0b01_111_0_00_01_0_000000000_01_00000_00000));
     }
-    
+
+    // ldrsw
+    public void test_ldrsw_post(ArmAsmFieldType fmt) {
+        testDecode("ldrsw_post", "ldrsw", fmt,
+                Integer.toHexString(0b10_111_000_10_0_000000000_01_00000_00000));
+    }
+
+    @Test
+    public void test_load_store_reg_imm_post_fmt1() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT1;
+        test_strb_post(fmt);
+        test_ldrb_post(fmt);
+        test_strh_post(fmt);
+        test_ldrh_post(fmt);
+        test_ldrsw_post(fmt);
+    }
+
     // ldrsb 32 bit
-    @Test
-    public void test_ldrsb32_post() {
-        testDecode("ldrsb32_post", "ldrsb", Integer.toHexString(0b00_111_0_00_11_0_000000000_01_00000_00000));
+    public void test_ldrsb32_post(ArmAsmFieldType fmt) {
+        testDecode("ldrsb32_post", "ldrsb", fmt,
+                Integer.toHexString(0b00_111_0_00_11_0_000000000_01_00000_00000));
     }
-    
+
     // ldrsb 64 bit
-    @Test
-    public void test_ldrsb64_post() {
-        testDecode("ldrsb64_post", "ldrsb", Integer.toHexString(0b00_111_0_00_10_0_000000000_01_00000_00000));
+    public void test_ldrsb64_post(ArmAsmFieldType fmt) {
+        testDecode("ldrsb64_post", "ldrsb", fmt,
+                Integer.toHexString(0b00_111_0_00_10_0_000000000_01_00000_00000));
     }
-    
+
     // ldrsh 32 bit
-    @Test
-    public void test_ldrsh32_post() {
-        testDecode("ldrsh32_post", "ldrsh", Integer.toHexString(0b01_111_0_00_11_0_000000000_01_00000_00000));
+    public void test_ldrsh32_post(ArmAsmFieldType fmt) {
+        testDecode("ldrsh32_post", "ldrsh", fmt,
+                Integer.toHexString(0b01_111_0_00_11_0_000000000_01_00000_00000));
     }
-    
+
     // ldrsh 64 bit
-    @Test
-    public void test_ldrsh64_post() {
-        testDecode("ldrsh64_post", "ldrsh", Integer.toHexString(0b01_111_0_00_10_0_000000000_01_00000_00000));
+    public void test_ldrsh64_post(ArmAsmFieldType fmt) {
+        testDecode("ldrsh64_post", "ldrsh", fmt,
+                Integer.toHexString(0b01_111_0_00_10_0_000000000_01_00000_00000));
     }
-    
+
     // str 32 bit
-    @Test
-    public void test_str32_post() {
-        testDecode("str_32_post", "str", Integer.toHexString(0b10_111_0_00_00_0_000000000_01_00000_00000));
+    public void test_str32_post(ArmAsmFieldType fmt) {
+        testDecode("str_32_post", "str", fmt,
+                Integer.toHexString(0b10_111_0_00_00_0_000000000_01_00000_00000));
     }
-    
+
     // str 64 bit
-    @Test
-    public void test_str64_post() {
-        testDecode("str_64_post", "str", Integer.toHexString(0b11_111_0_00_00_0_000000000_01_00000_00000));
+    public void test_str64_post(ArmAsmFieldType fmt) {
+        testDecode("str_64_post", "str", fmt,
+                Integer.toHexString(0b11_111_0_00_00_0_000000000_01_00000_00000));
     }
-    
+
     // ldr 32 bit
-    @Test
-    public void test_ldr32_post() {
-        testDecode("ldr_32_post", "ldr", Integer.toHexString(0b10_111_0_00_01_0_000000000_01_00000_00000));
+    public void test_ldr32_post(ArmAsmFieldType fmt) {
+        testDecode("ldr_32_post", "ldr", fmt,
+                Integer.toHexString(0b10_111_0_00_01_0_000000000_01_00000_00000));
     }
-    
+
     // ldr 64 bit
-    @Test
-    public void test_ldr64_post() {
-        testDecode("ldr_64_post", "ldr", Integer.toHexString(0b11_111_0_00_01_0_000000000_01_00000_00000));
+    public void test_ldr64_post(ArmAsmFieldType fmt) {
+        testDecode("ldr_64_post", "ldr", fmt,
+                Integer.toHexString(0b11_111_0_00_01_0_000000000_01_00000_00000));
     }
-    
+
     // str simd 8 bit
-    @Test
-    public void test_strsimd8_post() {
-        testDecode("str_8_simd_post", "str", Integer.toHexString(0b00_111_1_00_00_0_000000000_01_00000_00000));
+    public void test_strsimd8_post(ArmAsmFieldType fmt) {
+        testDecode("str_8_simd_post", "str", fmt,
+                Integer.toHexString(0b00_111_1_00_00_0_000000000_01_00000_00000));
     }
-    
+
+    @Test
+    public void test_load_store_reg_imm_post_fmt2() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT2;
+        test_ldrsb32_post(fmt);
+        test_ldrsb64_post(fmt);
+        test_ldrsh32_post(fmt);
+        test_ldrsh64_post(fmt);
+        test_str32_post(fmt);
+        test_str64_post(fmt);
+        test_ldr32_post(fmt);
+        test_ldr64_post(fmt);
+    }
+
     // str simd 16 bit
-    @Test
-    public void test_strsimd16_post() {
-        testDecode("str_16_simd_post", "str", Integer.toHexString(0b01_111_1_00_00_0_000000000_01_00000_00000));
+    public void test_strsimd16_post(ArmAsmFieldType fmt) {
+        testDecode("str_16_simd_post", "str", fmt,
+                Integer.toHexString(0b01_111_1_00_00_0_000000000_01_00000_00000));
     }
-    
+
     // str simd 32 bit
-    @Test
-    public void test_strsimd32_post() {
-        testDecode("str_32_simd_post", "str", Integer.toHexString(0b10_111_1_00_00_0_000000000_01_00000_00000));
+    public void test_strsimd32_post(ArmAsmFieldType fmt) {
+        testDecode("str_32_simd_post", "str", fmt,
+                Integer.toHexString(0b10_111_1_00_00_0_000000000_01_00000_00000));
     }
-    
+
     // str simd 64 bit
-    @Test
-    public void test_strsimd64_post() {
-        testDecode("str_64_simd_post", "str", Integer.toHexString(0b11_111_1_00_00_0_000000000_01_00000_00000));
+    public void test_strsimd64_post(ArmAsmFieldType fmt) {
+        testDecode("str_64_simd_post", "str", fmt,
+                Integer.toHexString(0b11_111_1_00_00_0_000000000_01_00000_00000));
     }
-    
+
     // str simd 128 bit
-    @Test
-    public void test_strsimd128_post() {
-        testDecode("str_128_simd_post", "str", Integer.toHexString(0b00_111_1_00_10_0_000000000_01_00000_00000));
+    public void test_strsimd128_post(ArmAsmFieldType fmt) {
+        testDecode("str_128_simd_post", "str", fmt,
+                Integer.toHexString(0b00_111_1_00_10_0_000000000_01_00000_00000));
     }
-    
+
     // ldr simd 8 bit
-    @Test
-    public void test_ldrsimd8_post() {
-        testDecode("ldr_8_simd_post", "ldr", Integer.toHexString(0b00_111_1_00_01_0_000000000_01_00000_00000));
+    public void test_ldrsimd8_post(ArmAsmFieldType fmt) {
+        testDecode("ldr_8_simd_post", "ldr", fmt,
+                Integer.toHexString(0b00_111_1_00_01_0_000000000_01_00000_00000));
     }
-    
+
     // ldr simd 16 bit
-    @Test
-    public void test_ldrsimd16_post() {
-        testDecode("ldr_16_simd_post", "ldr", Integer.toHexString(0b01_111_1_00_01_0_000000000_01_00000_00000));
+    public void test_ldrsimd16_post(ArmAsmFieldType fmt) {
+        testDecode("ldr_16_simd_post", "ldr", fmt,
+                Integer.toHexString(0b01_111_1_00_01_0_000000000_01_00000_00000));
     }
-    
+
     // ldr simd 32 bit
-    @Test
-    public void test_ldrsimd32_post() {
-        testDecode("ldr_32_simd_post", "ldr", Integer.toHexString(0b10_111_1_00_01_0_000000000_01_00000_00000));
+    public void test_ldrsimd32_post(ArmAsmFieldType fmt) {
+        testDecode("ldr_32_simd_post", "ldr", fmt,
+                Integer.toHexString(0b10_111_1_00_01_0_000000000_01_00000_00000));
     }
-    
+
     // ldr simd 64 bit
-    @Test
-    public void test_ldrsimd64_post() {
-        testDecode("ldr_64_simd_post", "ldr", Integer.toHexString(0b11_111_1_00_01_0_000000000_01_00000_00000));
+    public void test_ldrsimd64_post(ArmAsmFieldType fmt) {
+        testDecode("ldr_64_simd_post", "ldr", fmt,
+                Integer.toHexString(0b11_111_1_00_01_0_000000000_01_00000_00000));
     }
-    
+
     // ldr simd 128 bit
-    @Test
-    public void test_ldrsimd128_post() {
-        testDecode("ldr_128_simd_post", "ldr", Integer.toHexString(0b00_111_1_00_11_0_000000000_01_00000_00000));
+    public void test_ldrsimd128_post(ArmAsmFieldType fmt) {
+        testDecode("ldr_128_simd_post", "ldr", fmt,
+                Integer.toHexString(0b00_111_1_00_11_0_000000000_01_00000_00000));
     }
-    
+
+    @Test
+    public void test_load_store_reg_imm_post_fmt3() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT3;
+        test_strsimd8_post(fmt);
+        test_strsimd16_post(fmt);
+        test_strsimd32_post(fmt);
+        test_strsimd64_post(fmt);
+        test_strsimd128_post(fmt);
+        test_ldrsimd8_post(fmt);
+        test_ldrsimd16_post(fmt);
+        test_ldrsimd32_post(fmt);
+        test_ldrsimd64_post(fmt);
+        test_ldrsimd128_post(fmt);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     // LOAD_STORE_REG_OFF (C4-295 to C4-297) //////////////////////////////////
     // strb_reg_off
-    @Test
-    public void test_strb_reg_off() {
-        testDecode("strb_reg_off", "strb", Integer.toHexString(0b00_111_0_00_00_1_00000_000_0_10_00000_00000));
+    public void test_strb_reg_off(ArmAsmFieldType fmt) {
+        testDecode("strb_reg_off", "strb", fmt,
+                Integer.toHexString(0b00_111_0_00_00_1_00000_000_0_10_00000_00000));
     }
-    
+
     // ldrb_reg_off
-    @Test
-    public void test_ldrb_reg_off() {
-        testDecode("ldrb_reg_off", "ldrb", Integer.toHexString(0b00_111_0_00_01_1_00000_000_0_10_00000_00000));
+    public void test_ldrb_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldrb_reg_off", "ldrb", fmt,
+                Integer.toHexString(0b00_111_0_00_01_1_00000_000_0_10_00000_00000));
     }
-    
+
     // strh_reg_off
-    @Test
-    public void test_strh_reg_off() {
-        testDecode("strh_reg_off", "strh", Integer.toHexString(0b01_111_0_00_00_1_00000_000_0_10_00000_00000));
+    public void test_strh_reg_off(ArmAsmFieldType fmt) {
+        testDecode("strh_reg_off", "strh", fmt,
+                Integer.toHexString(0b01_111_0_00_00_1_00000_000_0_10_00000_00000));
     }
-    
+
     // ldrh_reg_off
-    @Test
-    public void test_ldrh_reg_off() {
-        testDecode("ldrh_reg_off", "ldrh", Integer.toHexString(0b01_111_0_00_01_1_00000_000_0_10_00000_00000));
+    public void test_ldrh_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldrh_reg_off", "ldrh", fmt,
+                Integer.toHexString(0b01_111_0_00_01_1_00000_000_0_10_00000_00000));
     }
-    
-    // ldrsw
-    
-    // prfm
-    
+
+    // ldrsw_reg_off
+    public void test_ldrsw_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldrsw_reg_off", "ldrsw", fmt,
+                Integer.toHexString(0b10_111_0_00_10_1_00000_000_0_10_00000_00000));
+    }
+
+    // prfm_reg_off
+    public void test_prfm_reg_off(ArmAsmFieldType fmt) {
+        testDecode("prfm_reg_off", "prfm", fmt,
+                Integer.toHexString(0b11_111_0_00_10_1_00000_000_0_10_00000_00000));
+    }
+
+    @Test
+    public void test_load_store_reg_off_fmt1() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT1;
+        test_strb_reg_off(fmt);
+        test_ldrb_reg_off(fmt);
+        test_strh_reg_off(fmt);
+        test_ldrh_reg_off(fmt);
+        test_ldrsw_reg_off(fmt);
+        test_prfm_reg_off(fmt);
+    }
+
     // ldrsb32_reg_off
-    @Test
-    public void test_ldrsb32_reg_off() {
-        testDecode("ldrsb32_reg_off", "ldrsb", Integer.toHexString(0b00_111_0_00_11_1_00000_000_0_10_00000_00000));
+    public void test_ldrsb32_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldrsb32_reg_off", "ldrsb", fmt,
+                Integer.toHexString(0b00_111_0_00_11_1_00000_000_0_10_00000_00000));
     }
-    
+
     // ldrsb64_reg_off
-    @Test
-    public void test_ldrsb64_reg_off() {
-        testDecode("ldrsb64_reg_off", "ldrsb", Integer.toHexString(0b00_111_0_00_10_1_00000_000_0_10_00000_00000));
+    public void test_ldrsb64_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldrsb64_reg_off", "ldrsb", fmt,
+                Integer.toHexString(0b00_111_0_00_10_1_00000_000_0_10_00000_00000));
     }
-    
+
     // ldrsh32_reg_off
-    @Test
-    public void test_ldrsh32_reg_off() {
-        testDecode("ldrsh32_reg_off", "ldrsh", Integer.toHexString(0b01_111_0_00_11_1_00000_000_0_10_00000_00000));
+    public void test_ldrsh32_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldrsh32_reg_off", "ldrsh", fmt,
+                Integer.toHexString(0b01_111_0_00_11_1_00000_000_0_10_00000_00000));
     }
-    
+
     // ldrsh64_reg_off
-    @Test
-    public void test_ldrsh64_reg_off() {
-        testDecode("ldrsh64_reg_off", "ldrsh", Integer.toHexString(0b01_111_0_00_10_1_00000_000_0_10_00000_00000));
+    public void test_ldrsh64_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldrsh64_reg_off", "ldrsh", fmt,
+                Integer.toHexString(0b01_111_0_00_10_1_00000_000_0_10_00000_00000));
     }
-    
+
     // str 32 bit reg_off
-    @Test
-    public void test_str32_reg_off() {
-        testDecode("str_32_reg_off", "str", Integer.toHexString(0b10_111_0_00_00_1_000000000_10_00000_00000));
+    public void test_str32_reg_off(ArmAsmFieldType fmt) {
+        testDecode("str_32_reg_off", "str", fmt,
+                Integer.toHexString(0b10_111_0_00_00_1_000000000_10_00000_00000));
     }
-    
+
     // str 64 reg_off
-    @Test
-    public void test_str64_reg_off() {
-        testDecode("str_64_reg_off", "str", Integer.toHexString(0b11_111_0_00_00_1_000000000_10_00000_00000));
+    public void test_str64_reg_off(ArmAsmFieldType fmt) {
+        testDecode("str_64_reg_off", "str", fmt,
+                Integer.toHexString(0b11_111_0_00_00_1_000000000_10_00000_00000));
     }
-    
+
     // ldr 32 reg_off
-    @Test
-    public void test_ldr32_reg_off() {
-        testDecode("ldr_32_reg_off", "ldr", Integer.toHexString(0b10_111_0_00_01_1_000000000_10_00000_00000));
+    public void test_ldr32_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldr_32_reg_off", "ldr", fmt,
+                Integer.toHexString(0b10_111_0_00_01_1_000000000_10_00000_00000));
     }
-    
+
     // ldr 64 reg_off
-    @Test
-    public void test_ldr64_reg_off() {
-        testDecode("ldr_64_reg_off", "ldr", Integer.toHexString(0b11_111_0_00_01_1_000000000_10_00000_00000));
+    public void test_ldr64_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldr_64_reg_off", "ldr", fmt,
+                Integer.toHexString(0b11_111_0_00_01_1_000000000_10_00000_00000));
     }
-    
+
+    @Test
+    public void test_load_store_reg_off_fmt2() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT2;
+        test_ldrsb32_reg_off(fmt);
+        test_ldrsb64_reg_off(fmt);
+        test_ldrsh32_reg_off(fmt);
+        test_ldrsh64_reg_off(fmt);
+        test_str32_reg_off(fmt);
+        test_str64_reg_off(fmt);
+        test_ldr32_reg_off(fmt);
+        test_ldr64_reg_off(fmt);
+    }
+
     // str simd 8 bit reg_off
-    @Test
-    public void test_strsimd8_reg_off() {
-        testDecode("str_8_simd_reg_off", "str", Integer.toHexString(0b00_111_1_00_00_1_000000000_10_00000_00000));
+    public void test_strsimd8_reg_off(ArmAsmFieldType fmt) {
+        testDecode("str_8_simd_reg_off", "str", fmt,
+                Integer.toHexString(0b00_111_1_00_00_1_000000000_10_00000_00000));
     }
-    
+
     // str simd 16 bit reg_off
-    @Test
-    public void test_strsimd16_reg_off() {
-        testDecode("str_16_simd_reg_off", "str", Integer.toHexString(0b01_111_1_00_00_1_000000000_10_00000_00000));
+    public void test_strsimd16_reg_off(ArmAsmFieldType fmt) {
+        testDecode("str_16_simd_reg_off", "str", fmt,
+                Integer.toHexString(0b01_111_1_00_00_1_000000000_10_00000_00000));
     }
-    
+
     // str simd 32 bit reg_off
-    @Test
-    public void test_strsimd32_reg_off() {
-        testDecode("str_32_simd_reg_off", "str", Integer.toHexString(0b10_111_1_00_00_1_000000000_10_00000_00000));
+    public void test_strsimd32_reg_off(ArmAsmFieldType fmt) {
+        testDecode("str_32_simd_reg_off", "str", fmt,
+                Integer.toHexString(0b10_111_1_00_00_1_000000000_10_00000_00000));
     }
-    
+
     // str simd 64 bit reg_off
-    @Test
-    public void test_strsimd64_reg_off() {
-        testDecode("str_64_simd_reg_off", "str", Integer.toHexString(0b11_111_1_00_00_1_000000000_10_00000_00000));
+    public void test_strsimd64_reg_off(ArmAsmFieldType fmt) {
+        testDecode("str_64_simd_reg_off", "str", fmt,
+                Integer.toHexString(0b11_111_1_00_00_1_000000000_10_00000_00000));
     }
-    
+
     // str simd 128 bit reg_off
-    @Test
-    public void test_strsimd128_reg_off() {
-        testDecode("str_128_simd_reg_off", "str", Integer.toHexString(0b00_111_1_00_10_1_000000000_10_00000_00000));
+    public void test_strsimd128_reg_off(ArmAsmFieldType fmt) {
+        testDecode("str_128_simd_reg_off", "str", fmt,
+                Integer.toHexString(0b00_111_1_00_10_1_000000000_10_00000_00000));
     }
-    
+
     // ldr simd 8 bit reg_off
-    @Test
-    public void test_ldrsimd8_reg_off() {
-        testDecode("ldr_8_simd_reg_off", "ldr", Integer.toHexString(0b00_111_1_00_01_1_000000000_10_00000_00000));
+    public void test_ldrsimd8_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldr_8_simd_reg_off", "ldr", fmt,
+                Integer.toHexString(0b00_111_1_00_01_1_000000000_10_00000_00000));
     }
-    
+
     // ldr simd 16 bit reg_off
-    @Test
-    public void test_ldrsimd16_reg_off() {
-        testDecode("ldr_16_simd_reg_off", "ldr", Integer.toHexString(0b01_111_1_00_01_1_000000000_10_00000_00000));
+    public void test_ldrsimd16_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldr_16_simd_reg_off", "ldr", fmt,
+                Integer.toHexString(0b01_111_1_00_01_1_000000000_10_00000_00000));
     }
-    
+
     // ldr simd 32 bit reg_off
-    @Test
-    public void test_ldrsimd32_reg_off() {
-        testDecode("ldr_32_simd_reg_off", "ldr", Integer.toHexString(0b10_111_1_00_01_1_000000000_10_00000_00000));
+    public void test_ldrsimd32_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldr_32_simd_reg_off", "ldr", fmt,
+                Integer.toHexString(0b10_111_1_00_01_1_000000000_10_00000_00000));
     }
-    
+
     // ldr simd 64 bit reg_off
-    @Test
-    public void test_ldrsimd64_reg_off() {
-        testDecode("ldr_64_simd_reg_off", "ldr", Integer.toHexString(0b11_111_1_00_01_1_000000000_10_00000_00000));
+    public void test_ldrsimd64_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldr_64_simd_reg_off", "ldr", fmt,
+                Integer.toHexString(0b11_111_1_00_01_1_000000000_10_00000_00000));
     }
-    
+
     // ldr simd 128 bit reg_off
-    @Test
-    public void test_ldrsimd128_reg_off() {
-        testDecode("ldr_128_simd_reg_off", "ldr", Integer.toHexString(0b00_111_1_00_11_1_000000000_10_00000_00000));
+    public void test_ldrsimd128_reg_off(ArmAsmFieldType fmt) {
+        testDecode("ldr_128_simd_reg_off", "ldr", fmt,
+                Integer.toHexString(0b00_111_1_00_11_1_000000000_10_00000_00000));
     }
-    
+
+    @Test
+    public void test_load_store_reg_off_fmt3() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT3;
+        test_strsimd8_reg_off(fmt);
+        test_strsimd16_reg_off(fmt);
+        test_strsimd32_reg_off(fmt);
+        test_strsimd64_reg_off(fmt);
+        test_strsimd128_reg_off(fmt);
+        test_ldrsimd8_reg_off(fmt);
+        test_ldrsimd16_reg_off(fmt);
+        test_ldrsimd32_reg_off(fmt);
+        test_ldrsimd64_reg_off(fmt);
+        test_ldrsimd128_reg_off(fmt);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     // LOAD_STORE_REG_UIMM ////////////////////////////////////////////////////
     // strb_uimm
-    @Test
-    public void test_strb_uimm() {
-        testDecode("strb_uimm", "strb", Integer.toHexString(0b00_111_0_01_00_0000000000000000000000));
+    public void test_strb_uimm(ArmAsmFieldType fmt) {
+        testDecode("strb_uimm", "strb", fmt,
+                Integer.toHexString(0b00_111_0_01_00_0000000000000000000000));
     }
-    
+
     // ldrb_uimm
-    @Test
-    public void test_ldrb_uimm() {
-        testDecode("ldrb_uimm", "ldrb", Integer.toHexString(0b00_111_0_01_01_0000000000000000000000));
+    public void test_ldrb_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldrb_uimm", "ldrb", fmt,
+                Integer.toHexString(0b00_111_0_01_01_0000000000000000000000));
     }
-    
+
     // strh_uimm
-    @Test
-    public void test_strh_uimm() {
-        testDecode("strh_uimm", "strh", Integer.toHexString(0b01_111_0_01_00_0000000000000000000000));
+    public void test_strh_uimm(ArmAsmFieldType fmt) {
+        testDecode("strh_uimm", "strh", fmt,
+                Integer.toHexString(0b01_111_0_01_00_0000000000000000000000));
     }
-    
+
     // ldrh_uimm
-    @Test
-    public void test_ldrh_uimm() {
-        testDecode("ldrh_uimm", "ldrh", Integer.toHexString(0b01_111_0_01_01_0000000000000000000000));
+    public void test_ldrh_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldrh_uimm", "ldrh", fmt,
+                Integer.toHexString(0b01_111_0_01_01_0000000000000000000000));
     }
-    
-    // ldrsw
-    
-    // prfm
-    
+
+    // ldrsw_uimm
+    public void test_ldrsw_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldrsw_uimm", "ldrsw", fmt,
+                Integer.toHexString(0b10_111_0_01_10_0000000000000000000000));
+    }
+
+    // prfm_uimm
+    public void test_prfm_uimm(ArmAsmFieldType fmt) {
+        testDecode("prfm_uimm", "prfm", fmt,
+                Integer.toHexString(0b11_111_0_01_10_0000000000000000000000));
+    }
+
+    @Test
+    public void test_load_store_uimm_fmt1() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1;
+        test_strb_uimm(fmt);
+        test_ldrb_uimm(fmt);
+        test_strh_uimm(fmt);
+        test_ldrh_uimm(fmt);
+        test_ldrsw_uimm(fmt);
+        test_prfm_uimm(fmt);
+    }
+
     // ldrsb32_uimm
-    @Test
-    public void test_ldrsb32_uimm() {
-        testDecode("ldrsb32_uimm", "ldrsb", Integer.toHexString(0b00_111_0_01_11_0000000000000000000000));
+    public void test_ldrsb32_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldrsb32_uimm", "ldrsb", fmt,
+                Integer.toHexString(0b00_111_0_01_11_0000000000000000000000));
     }
-    
+
     // ldrsb64_uimm
-    @Test
-    public void test_ldrsb64_uimm() {
-        testDecode("ldrsb64_uimm", "ldrsb", Integer.toHexString(0b00_111_0_01_10_0000000000000000000000));
+    public void test_ldrsb64_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldrsb64_uimm", "ldrsb", fmt,
+                Integer.toHexString(0b00_111_0_01_10_0000000000000000000000));
     }
-    
+
     // ldrsh32_uimm
-    @Test
-    public void test_ldrsh32_uimm() {
-        testDecode("ldrsh32_uimm", "ldrsh", Integer.toHexString(0b01_111_0_01_11_0000000000000000000000));
+    public void test_ldrsh32_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldrsh32_uimm", "ldrsh", fmt,
+                Integer.toHexString(0b01_111_0_01_11_0000000000000000000000));
     }
-    
+
     // ldrsh64_uimm
-    @Test
-    public void test_ldrsh64_uimm() {
-        testDecode("ldrsh64_uimm", "ldrsh", Integer.toHexString(0b01_111_0_01_10_0000000000000000000000));
+    public void test_ldrsh64_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldrsh64_uimm", "ldrsh", fmt,
+                Integer.toHexString(0b01_111_0_01_10_0000000000000000000000));
     }
-    
+
     // str 32 bit reg_off
-    @Test
-    public void test_str32_uimm() {
-        testDecode("str_32_uimm", "str", Integer.toHexString(0b10_111_0_01_00_0000000000000000000000));
+    public void test_str32_uimm(ArmAsmFieldType fmt) {
+        testDecode("str_32_uimm", "str", fmt,
+                Integer.toHexString(0b10_111_0_01_00_0000000000000000000000));
     }
-    
+
     // str 64 reg_off
-    @Test
-    public void test_str64_uimm() {
-        testDecode("str_64_uimm", "str", Integer.toHexString(0b11_111_0_01_00_0000000000000000000000));
+    public void test_str64_uimm(ArmAsmFieldType fmt) {
+        testDecode("str_64_uimm", "str", fmt,
+                Integer.toHexString(0b11_111_0_01_00_0000000000000000000000));
     }
-    
+
     // ldr 32 reg_off
-    @Test
-    public void test_ldr32_uimm() {
-        testDecode("ldr_32_uimm", "ldr", Integer.toHexString(0b10_111_0_01_01_0000000000000000000000));
+    public void test_ldr32_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldr_32_uimm", "ldr", fmt,
+                Integer.toHexString(0b10_111_0_01_01_0000000000000000000000));
     }
-    
+
     // ldr 64 reg_off
-    @Test
-    public void test_ldr64_uimm() {
-        testDecode("ldr_64_uimm", "ldr", Integer.toHexString(0b11_111_0_01_01_0000000000000000000000));
+    public void test_ldr64_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldr_64_uimm", "ldr", fmt,
+                Integer.toHexString(0b11_111_0_01_01_0000000000000000000000));
     }
-    
+
+    @Test
+    public void test_load_store_uimm_fmt2() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT2;
+        test_ldrsb32_uimm(fmt);
+        test_ldrsb64_uimm(fmt);
+        test_ldrsh32_uimm(fmt);
+        test_ldrsh64_uimm(fmt);
+        test_str32_uimm(fmt);
+        test_str64_uimm(fmt);
+        test_ldr32_uimm(fmt);
+        test_ldr64_uimm(fmt);
+    }
+
     // str simd 8 bit reg_off
-    @Test
-    public void test_strsimd8_uimm() {
-        testDecode("str_8_simd_uimm", "str", Integer.toHexString(0b00_111_1_01_00_0000000000000000000000));
+    public void test_strsimd8_uimm(ArmAsmFieldType fmt) {
+        testDecode("str_8_simd_uimm", "str", fmt,
+                Integer.toHexString(0b00_111_1_01_00_0000000000000000000000));
     }
-    
+
     // str simd 16 bit reg_off
-    @Test
-    public void test_strsimd16_uimm() {
-        testDecode("str_16_simd_uimm", "str", Integer.toHexString(0b01_111_1_01_00_0000000000000000000000));
+    public void test_strsimd16_uimm(ArmAsmFieldType fmt) {
+        testDecode("str_16_simd_uimm", "str", fmt,
+                Integer.toHexString(0b01_111_1_01_00_0000000000000000000000));
     }
-    
+
     // str simd 32 bit reg_off
-    @Test
-    public void test_strsimd32_uimm() {
-        testDecode("str_32_simd_uimm", "str", Integer.toHexString(0b10_111_1_01_00_0000000000000000000000));
+    public void test_strsimd32_uimm(ArmAsmFieldType fmt) {
+        testDecode("str_32_simd_uimm", "str", fmt,
+                Integer.toHexString(0b10_111_1_01_00_0000000000000000000000));
     }
-    
+
     // str simd 64 bit reg_off
-    @Test
-    public void test_strsimd64_uimm() {
-        testDecode("str_64_simd_uimm", "str", Integer.toHexString(0b11_111_1_01_00_0000000000000000000000));
+    public void test_strsimd64_uimm(ArmAsmFieldType fmt) {
+        testDecode("str_64_simd_uimm", "str", fmt,
+                Integer.toHexString(0b11_111_1_01_00_0000000000000000000000));
     }
-    
+
     // str simd 128 bit reg_off
-    @Test
-    public void test_strsimd128_uimm() {
-        testDecode("str_128_simd_uimm", "str", Integer.toHexString(0b00_111_1_01_10_0000000000000000000000));
+    public void test_strsimd128_uimm(ArmAsmFieldType fmt) {
+        testDecode("str_128_simd_uimm", "str", fmt,
+                Integer.toHexString(0b00_111_1_01_10_0000000000000000000000));
     }
-    
+
     // ldr simd 8 bit reg_off
-    @Test
-    public void test_ldrsimd8_uimm() {
-        testDecode("ldr_8_simd_uimm", "ldr", Integer.toHexString(0b00_111_1_01_01_0000000000000000000000));
+    public void test_ldrsimd8_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldr_8_simd_uimm", "ldr", fmt,
+                Integer.toHexString(0b00_111_1_01_01_0000000000000000000000));
     }
-    
+
     // ldr simd 16 bit reg_off
-    @Test
-    public void test_ldrsimd16_uimm() {
-        testDecode("ldr_16_simd_uimm", "ldr", Integer.toHexString(0b01_111_1_01_01_0000000000000000000000));
+    public void test_ldrsimd16_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldr_16_simd_uimm", "ldr", fmt,
+                Integer.toHexString(0b01_111_1_01_01_0000000000000000000000));
     }
-    
+
     // ldr simd 32 bit reg_off
-    @Test
-    public void test_ldrsimd32_uimm() {
-        testDecode("ldr_32_simd_uimm", "ldr", Integer.toHexString(0b10_111_1_01_01_0000000000000000000000));
+    public void test_ldrsimd32_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldr_32_simd_uimm", "ldr", fmt,
+                Integer.toHexString(0b10_111_1_01_01_0000000000000000000000));
     }
-    
+
     // ldr simd 64 bit reg_off
-    @Test
-    public void test_ldrsimd64_uimm() {
-        testDecode("ldr_64_simd_uimm", "ldr", Integer.toHexString(0b11_111_1_01_01_0000000000000000000000));
+    public void test_ldrsimd64_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldr_64_simd_uimm", "ldr", fmt,
+                Integer.toHexString(0b11_111_1_01_01_0000000000000000000000));
     }
-    
+
     // ldr simd 128 bit reg_off
-    @Test
-    public void test_ldrsimd128_uimm() {
-        testDecode("ldr_128_simd_uimm", "ldr", Integer.toHexString(0b00_111_1_01_11_0000000000000000000000));
+    public void test_ldrsimd128_uimm(ArmAsmFieldType fmt) {
+        testDecode("ldr_128_simd_uimm", "ldr", fmt,
+                Integer.toHexString(0b00_111_1_01_11_0000000000000000000000));
     }
-    
+
+    @Test
+    public void test_load_store_uimm_fmt3() {
+        var fmt = ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT3;
+        test_strsimd8_uimm(fmt);
+        test_strsimd16_uimm(fmt);
+        test_strsimd32_uimm(fmt);
+        test_strsimd64_uimm(fmt);
+        test_strsimd128_uimm(fmt);
+        test_ldrsimd8_uimm(fmt);
+        test_ldrsimd16_uimm(fmt);
+        test_ldrsimd32_uimm(fmt);
+        test_ldrsimd64_uimm(fmt);
+        test_ldrsimd128_uimm(fmt);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     // DPR_TWOSOURCE (C4-299) /////////////////////////////////////////////////
     // udiv32
-    @Test
-    public void test_udiv32() {
-        testDecode("udiv32", "udiv", Integer.toHexString(0b0_00_11010110_00000_000010_00000_00000));
+    public void test_udiv32(ArmAsmFieldType fmt) {
+        testDecode("udiv32", "udiv", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_000010_00000_00000));
     }
-    
+
     // udiv64
-    @Test
-    public void test_udiv64() {
-        testDecode("udiv64", "udiv", Integer.toHexString(0b1_00_11010110_00000_000010_00000_00000));
+    public void test_udiv64(ArmAsmFieldType fmt) {
+        testDecode("udiv64", "udiv", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_000010_00000_00000));
     }
-    
+
     // sdiv32
-    @Test
-    public void test_sdiv32() {
-        testDecode("sdiv32", "sdiv", Integer.toHexString(0b0_00_11010110_00000_000011_00000_00000));
+    public void test_sdiv32(ArmAsmFieldType fmt) {
+        testDecode("sdiv32", "sdiv", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_000011_00000_00000));
     }
-    
+
     // sdiv64
-    @Test
-    public void test_sdiv64() {
-        testDecode("sdiv64", "sdiv", Integer.toHexString(0b1_00_11010110_00000_000011_00000_00000));
+    public void test_sdiv64(ArmAsmFieldType fmt) {
+        testDecode("sdiv64", "sdiv", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_000011_00000_00000));
     }
-    
+
     // lslv32
-    @Test
-    public void test_lslv32() {
-        testDecode("lslv32", "lslv", Integer.toHexString(0b0_00_11010110_00000_001000_00000_00000));
+    public void test_lslv32(ArmAsmFieldType fmt) {
+        testDecode("lslv32", "lslv", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_001000_00000_00000));
     }
-    
+
     // lslv64
-    @Test
-    public void test_lslv64() {
-        testDecode("lslv64", "lslv", Integer.toHexString(0b1_00_11010110_00000_001000_00000_00000));
+    public void test_lslv64(ArmAsmFieldType fmt) {
+        testDecode("lslv64", "lslv", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_001000_00000_00000));
     }
-    
+
     // lsrv32
-    @Test
-    public void test_lsrv32() {
-        testDecode("lsrv32", "lsrv", Integer.toHexString(0b0_00_11010110_00000_001001_00000_00000));
+    public void test_lsrv32(ArmAsmFieldType fmt) {
+        testDecode("lsrv32", "lsrv", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_001001_00000_00000));
     }
-    
+
     // lsrv64
-    @Test
-    public void test_lsrv64() {
-        testDecode("lsrv64", "lsrv", Integer.toHexString(0b1_00_11010110_00000_001001_00000_00000));
+    public void test_lsrv64(ArmAsmFieldType fmt) {
+        testDecode("lsrv64", "lsrv", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_001001_00000_00000));
     }
-    
+
     // asrv32
-    @Test
-    public void test_asrv32() {
-        testDecode("asrv32", "asrv", Integer.toHexString(0b0_00_11010110_00000_001010_00000_00000));
+    public void test_asrv32(ArmAsmFieldType fmt) {
+        testDecode("asrv32", "asrv", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_001010_00000_00000));
     }
-    
+
     // asrv64
-    @Test
-    public void test_asrv64() {
-        testDecode("asrv64", "asrv", Integer.toHexString(0b1_00_11010110_00000_001010_00000_00000));
+    public void test_asrv64(ArmAsmFieldType fmt) {
+        testDecode("asrv64", "asrv", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_001010_00000_00000));
     }
-    
+
     // rorv32
-    @Test
-    public void test_rorv32() {
-        testDecode("rorv32", "rorv", Integer.toHexString(0b0_00_11010110_00000_001011_00000_00000));
+    public void test_rorv32(ArmAsmFieldType fmt) {
+        testDecode("rorv32", "rorv", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_001011_00000_00000));
     }
-    
+
     // rorv64
-    @Test
-    public void test_rorv64() {
-        testDecode("rorv64", "rorv", Integer.toHexString(0b1_00_11010110_00000_001011_00000_00000));
+    public void test_rorv64(ArmAsmFieldType fmt) {
+        testDecode("rorv64", "rorv", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_001011_00000_00000));
     }
-    
+
     // crc32b
-    @Test
-    public void test_crc32b() {
-        testDecode("crc32b", "crc32b", Integer.toHexString(0b0_00_11010110_00000_010000_00000_00000));
+    public void test_crc32b(ArmAsmFieldType fmt) {
+        testDecode("crc32b", "crc32b", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_010000_00000_00000));
     }
-    
+
     // crc32h
-    @Test
-    public void test_crc32h() {
-        testDecode("crc32h", "crc32h", Integer.toHexString(0b0_00_11010110_00000_010001_00000_00000));
+    public void test_crc32h(ArmAsmFieldType fmt) {
+        testDecode("crc32h", "crc32h", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_010001_00000_00000));
     }
-    
+
     // crc32w
-    @Test
-    public void test_crc32w() {
-        testDecode("crc32w", "crc32w", Integer.toHexString(0b0_00_11010110_00000_010010_00000_00000));
+    public void test_crc32w(ArmAsmFieldType fmt) {
+        testDecode("crc32w", "crc32w", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_010010_00000_00000));
     }
-    
+
     // crc32x
-    @Test
-    public void test_crc32x() {
-        testDecode("crc32x", "crc32x", Integer.toHexString(0b1_00_11010110_00000_010011_00000_00000));
+    public void test_crc32x(ArmAsmFieldType fmt) {
+        testDecode("crc32x", "crc32x", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_010011_00000_00000));
     }
-    
+
     // subp
-    @Test
-    public void test_subp() {
-        testDecode("subp", "subp", Integer.toHexString(0b1_00_11010110_00000_000000_00000_00000));
+    public void test_subp(ArmAsmFieldType fmt) {
+        testDecode("subp", "subp", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_000000_00000_00000));
     }
-    
+
     // irg
-    @Test
-    public void test_irg() {
-        testDecode("irg", "irg", Integer.toHexString(0b1_00_11010110_00000_000100_00000_00000));
+    public void test_irg(ArmAsmFieldType fmt) {
+        testDecode("irg", "irg", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_000100_00000_00000));
     }
-    
+
     // gmi
-    @Test
-    public void test_gmi() {
-        testDecode("gmi", "gmi", Integer.toHexString(0b1_00_11010110_00000_000101_00000_00000));
+    public void test_gmi(ArmAsmFieldType fmt) {
+        testDecode("gmi", "gmi", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_000101_00000_00000));
     }
-    
+
     // pacga
-    @Test
-    public void test_pacga() {
-        testDecode("pacga", "pacga", Integer.toHexString(0b1_00_11010110_00000_001100_00000_00000));
+    public void test_pacga(ArmAsmFieldType fmt) {
+        testDecode("pacga", "pacga", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_001100_00000_00000));
     }
-    
+
     // crc32cb
-    @Test
-    public void test_crc32cb() {
-        testDecode("crc32cb", "crc32cb", Integer.toHexString(0b0_00_11010110_00000_010100_00000_00000));
+    public void test_crc32cb(ArmAsmFieldType fmt) {
+        testDecode("crc32cb", "crc32cb", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_010100_00000_00000));
     }
-    
+
     // crc32ch
-    @Test
-    public void test_crc32ch() {
-        testDecode("crc32ch", "crc32ch", Integer.toHexString(0b0_00_11010110_00000_010101_00000_00000));
+    public void test_crc32ch(ArmAsmFieldType fmt) {
+        testDecode("crc32ch", "crc32ch", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_010101_00000_00000));
     }
-    
+
     // crc32cw
-    @Test
-    public void test_crc32cw() {
-        testDecode("crc32cw", "crc32cw", Integer.toHexString(0b0_00_11010110_00000_010110_00000_00000));
+    public void test_crc32cw(ArmAsmFieldType fmt) {
+        testDecode("crc32cw", "crc32cw", fmt,
+                Integer.toHexString(0b0_00_11010110_00000_010110_00000_00000));
     }
-    
+
     // crc32cx
-    @Test
-    public void test_crc32cx() {
-        testDecode("crc32cx", "crc32cx", Integer.toHexString(0b1_00_11010110_00000_010111_00000_00000));
+    public void test_crc32cx(ArmAsmFieldType fmt) {
+        testDecode("crc32cx", "crc32cx", fmt,
+                Integer.toHexString(0b1_00_11010110_00000_010111_00000_00000));
     }
-    
+
     // subps
-    @Test
-    public void test_subps() {
-        testDecode("subps", "subps", Integer.toHexString(0b1_01_11010110_00000_000000_00000_00000));
+    public void test_subps(ArmAsmFieldType fmt) {
+        testDecode("subps", "subps", fmt,
+                Integer.toHexString(0b1_01_11010110_00000_000000_00000_00000));
     }
-    
+
+    @Test
+    public void test_DprTwoSource() {
+        var fmt = ArmAsmFieldType.DPR_TWOSOURCE;
+        test_udiv32(fmt);
+        test_udiv64(fmt);
+        test_sdiv32(fmt);
+        test_sdiv64(fmt);
+        test_lslv32(fmt);
+        test_lslv64(fmt);
+        test_lsrv32(fmt);
+        test_lsrv64(fmt);
+        test_asrv32(fmt);
+        test_asrv64(fmt);
+        test_rorv32(fmt);
+        test_rorv64(fmt);
+        test_crc32b(fmt);
+        test_crc32h(fmt);
+        test_crc32w(fmt);
+        test_crc32x(fmt);
+        test_subp(fmt);
+        test_irg(fmt);
+        test_gmi(fmt);
+        test_pacga(fmt);
+        test_crc32cb(fmt);
+        test_crc32ch(fmt);
+        test_crc32cw(fmt);
+        test_crc32cx(fmt);
+        test_subps(fmt);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     // DPR_ONESOURCE (C4-301) /////////////////////////////////////////////////
     // rbit32
-    @Test
-    public void test_rbit32() {
-        testDecode("rbit32", "rbit", Integer.toHexString(0b0_10_11010110_00000_000000_00000_00000));
+    public void test_rbit32(ArmAsmFieldType fmt) {
+        testDecode("rbit32", "rbit", fmt,
+                Integer.toHexString(0b0_10_11010110_00000_000000_00000_00000));
     }
-    
+
     // rbit64
-    @Test
-    public void test_rbit() {
-        testDecode("rbit64", "rbit", Integer.toHexString(0b1_10_11010110_00000_000000_00000_00000));
+    public void test_rbit(ArmAsmFieldType fmt) {
+        testDecode("rbit64", "rbit", fmt,
+                Integer.toHexString(0b1_10_11010110_00000_000000_00000_00000));
     }
-    
+
     // rev16 32 bit
-    @Test
-    public void test_rev16_32() {
-        testDecode("rev16_32", "rev16", Integer.toHexString(0b0_10_11010110_00000_000001_00000_00000));
+    public void test_rev16_32(ArmAsmFieldType fmt) {
+        testDecode("rev16_32", "rev16", fmt,
+                Integer.toHexString(0b0_10_11010110_00000_000001_00000_00000));
     }
-    
+
     // rev16 64 bit
-    @Test
-    public void test_rev16_64() {
-        testDecode("rev16_64", "rev16", Integer.toHexString(0b1_10_11010110_00000_000001_00000_00000));
+    public void test_rev16_64(ArmAsmFieldType fmt) {
+        testDecode("rev16_64", "rev16", fmt,
+                Integer.toHexString(0b1_10_11010110_00000_000001_00000_00000));
     }
-    
+
     // rev32
-    @Test
-    public void test_rev32() {
-        testDecode("rev32", "rev", Integer.toHexString(0b0_10_11010110_00000_000010_00000_00000));
+    public void test_rev32(ArmAsmFieldType fmt) {
+        testDecode("rev32", "rev", fmt,
+                Integer.toHexString(0b0_10_11010110_00000_000010_00000_00000));
     }
-    
+
     // rev64
-    @Test
-    public void test_rev64() {
-        testDecode("rev64", "rev", Integer.toHexString(0b1_10_11010110_00000_000010_00000_00000));
+    public void test_rev64(ArmAsmFieldType fmt) {
+        testDecode("rev64", "rev", fmt,
+                Integer.toHexString(0b1_10_11010110_00000_000010_00000_00000));
     }
-    
+
     // clz32
-    @Test
-    public void test_clz32() {
-        testDecode("clz32", "clz", Integer.toHexString(0b0_10_11010110_00000_000100_00000_00000));
+    public void test_clz32(ArmAsmFieldType fmt) {
+        testDecode("clz32", "clz", fmt,
+                Integer.toHexString(0b0_10_11010110_00000_000100_00000_00000));
     }
-    
+
     // clz64
-    @Test
-    public void test_clz64() {
-        testDecode("clz64", "clz", Integer.toHexString(0b1_10_11010110_00000_000100_00000_00000));
+    public void test_clz64(ArmAsmFieldType fmt) {
+        testDecode("clz64", "clz", fmt,
+                Integer.toHexString(0b1_10_11010110_00000_000100_00000_00000));
     }
-    
+
     // cls32
-    @Test
-    public void test_cls32() {
-        testDecode("cls32", "cls", Integer.toHexString(0b0_10_11010110_00000_000101_00000_00000));
+    public void test_cls32(ArmAsmFieldType fmt) {
+        testDecode("cls32", "cls", fmt,
+                Integer.toHexString(0b0_10_11010110_00000_000101_00000_00000));
     }
-    
+
     // cls64
-    @Test
-    public void test_cls64() {
-        testDecode("cls64", "cls", Integer.toHexString(0b1_10_11010110_00000_000101_00000_00000));
+    public void test_cls64(ArmAsmFieldType fmt) {
+        testDecode("cls64", "cls", fmt,
+                Integer.toHexString(0b1_10_11010110_00000_000101_00000_00000));
     }
-    */
-    private void testDecode(String testname, String expected, ArmAsmFieldType fmt, String binaryInstruction) {
+
+    @Test
+    public void test_DprOneSource() {
+        var fmt = ArmAsmFieldType.DPR_ONESOURCE;
+        test_rbit32(fmt);
+        test_rbit(fmt);
+        test_rev16_32(fmt);
+        test_rev16_64(fmt);
+        test_rev32(fmt);
+        test_rev64(fmt);
+        test_clz32(fmt);
+        test_clz64(fmt);
+        test_cls32(fmt);
+        test_cls64(fmt);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    private void testDecode(String testname,
+            String expected, ArmAsmFieldType fmt, String binaryInstruction) {
 
         ArmInstruction testinst = ArmInstruction.newInstance("0", binaryInstruction);
         ArmInstructionData idata = testinst.getData();
@@ -2045,6 +2314,9 @@ public class ArmInstructionInstatiationTest {
         System.out.print(testname + "\tresolved to\t->\t" + testinst.getName() +
                 "\t(SIMD: " + idata.isSimd() + ", width: " + idata.getBitWidth() + ")\t" +
                 "type is correct: " + typecorrect + "\n");
+
+        if (fmt != testinst.getFieldData().getType())
+            System.out.print("\t\t" + fmt.toString() + "\tvs.\t" + testinst.getFieldData().getType() + "\n");
 
         assertEquals(expected, testinst.getName());
         assertEquals(fmt, testinst.getFieldData().getType());
