@@ -43,19 +43,19 @@ public class ArmAsmWidthGetter {
         amap.put(ArmAsmFieldType.ADD_SUB_CARRY, ArmAsmWidthGetter::getter1);
 
         amap.put(ArmAsmFieldType.LOAD_REG_LITERAL_FMT1, ArmAsmWidthGetter::getter2b);
-        amap.put(ArmAsmFieldType.LOAD_REG_LITERAL_FMT2, ArmAsmWidthGetter::getter1);
+        amap.put(ArmAsmFieldType.LOAD_REG_LITERAL_FMT2, ArmAsmWidthGetter::getter1b);
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_NO_ALLOC, ArmAsmWidthGetter::getter2a);
 
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1, ArmAsmWidthGetter::getter2a);
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2, ArmAsmWidthGetter::getter1);
 
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT1, ArmAsmWidthGetter::getter3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT2, ArmAsmWidthGetter::getter3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_IMM_FMT3, ArmAsmWidthGetter::getter4);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT1, ArmAsmWidthGetter::getter3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT2, ArmAsmWidthGetter::getter3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT3, ArmAsmWidthGetter::getter4);
 
-        amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT1, ArmAsmWidthGetter::getter3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT2, ArmAsmWidthGetter::getter3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_IMM_PREPOST_FMT3, ArmAsmWidthGetter::getter4);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT1, ArmAsmWidthGetter::getter3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT2, ArmAsmWidthGetter::getter3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT3, ArmAsmWidthGetter::getter4);
 
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT1, ArmAsmWidthGetter::getter3);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT2, ArmAsmWidthGetter::getter3);
@@ -78,9 +78,13 @@ public class ArmAsmWidthGetter {
     }
 
     // sf is one bit
-    // LOAD_REG_LITERAL_FMT2
     private static int getter1(Map<ArmAsmField, Integer> map) {
         return (map.get(SF) != 0) ? 64 : 32;
+    }
+
+    // sf is one bit
+    private static int getter1b(Map<ArmAsmField, Integer> map) {
+        return (map.get(OPCODEA) != 0) ? 64 : 32;
     }
 
     // sf is two bits

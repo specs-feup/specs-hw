@@ -124,15 +124,15 @@ public interface ArmInstructionParsers {
             // Load/store register (unprivileged) - C4-286
             // Load/store register (unscaled immediate) C4-283
 
-            newInstance(LOAD_STORE_PAIR_IMM_FMT1,
+            newInstance(LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT1,
                     "opcodea(2)_111_simd(1)_00_opcodeb(2)_0_imm(9)_opcodec(1)_0_registern(5)_registert(5)",
                     isFmt1().and(isPrivorUnscaledAccess()).and(data -> data.get("simd").equals("0"))),
 
-            newInstance(LOAD_STORE_PAIR_IMM_FMT2,
+            newInstance(LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT2,
                     "opcodea(2)_111_simd(1)_00_opcodeb(2)_0_imm(9)_opcodec(1)_0_registern(5)_registert(5)",
                     isPrivorUnscaledAccess().and(data -> data.get("simd").equals("0"))),
 
-            newInstance(LOAD_STORE_PAIR_IMM_FMT3,
+            newInstance(LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT3,
                     "sfa(2)_111_simd(1)_00_sfb(1)_opcodeb(1)_0_imm(9)_opcodec(1)_0_registern(5)_registert(5)",
                     isPrivorUnscaledAccess().and(data -> data.get("simd").equals("1"))),
 
@@ -142,15 +142,15 @@ public interface ArmInstructionParsers {
             // Load/store register (immediate pre-indexed) - C4-286
             // Load/store register (immediate post-indexed) - C4-284
 
-            newInstance(LOAD_STORE_IMM_PREPOST_FMT1,
+            newInstance(LOAD_STORE_REG_IMM_PREPOST_FMT1,
                     "opcodea(2)_111_simd(1)_00_opcodeb(2)_0_imm(9)_memtype(1)_1_registern(5)_registert(5)",
                     isFmt1().and(isPrePostAccess()).and(data -> data.get("simd").equals("0"))),
 
-            newInstance(LOAD_STORE_IMM_PREPOST_FMT2,
+            newInstance(LOAD_STORE_REG_IMM_PREPOST_FMT2,
                     "opcodea(2)_111_simd(1)_00_opcodeb(2)_0_imm(9)_memtype(1)_1_registern(5)_registert(5)",
                     isPrePostAccess().and(data -> data.get("simd").equals("0"))),
 
-            newInstance(LOAD_STORE_IMM_PREPOST_FMT3,
+            newInstance(LOAD_STORE_REG_IMM_PREPOST_FMT3,
                     "sfa(2)_111_simd(1)_00_sfb(1)_opcodeb(1)_0_imm(9)_memtype(1)_1_registern(5)_registert(5)",
                     isPrePostAccess().and(data -> data.get("simd").equals("1"))),
 
