@@ -54,14 +54,13 @@ public class ArmAsmOperandGetter {
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT1, ArmAsmOperandGetter::loadstore3);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT2, ArmAsmOperandGetter::loadstore3);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT3, ArmAsmOperandGetter::loadstore3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmOperandGetter::loadstore3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT2, ArmAsmOperandGetter::loadstore3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT3, ArmAsmOperandGetter::loadstore3);
 
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT1, ArmAsmOperandGetter::loadstore5);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT2, ArmAsmOperandGetter::loadstore5);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT3, ArmAsmOperandGetter::loadstore5);
-
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmOperandGetter::loadstore6);
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmOperandGetter::loadstore6);
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmOperandGetter::loadstore6);
 
         amap.put(ArmAsmFieldType.DPR_TWOSOURCE, ArmAsmOperandGetter::dprTwoSource_addSubCarry);
         amap.put(ArmAsmFieldType.ADD_SUB_CARRY, ArmAsmOperandGetter::dprTwoSource_addSubCarry);
@@ -205,21 +204,6 @@ public class ArmAsmOperandGetter {
 
         return key;
     }
-
-    /*
-     * LOAD_STORE_IMM_PREPOST_FMT3
-     *    newInstance(LOAD_STORE_PAIR_IMM_FMT3,
-                    "sfa(2)_111_simd(1)_00_sfb(1)_opcodeb(1)_0_imm(9)_opcodec(1)_0_registern(5)_registert(5)",
-                    isPrivorUnscaledAccess().and(data -> data.get("simd").equals("1"))),
-    
-            ////////////////////
-    
-            // these parsers gather LOAD_STORE_IMM Pre and post indexed
-            // Load/store register (immediate pre-indexed) - C4-286
-            // Load/store register (immediate post-indexed) - C4-284
-    
-            newInstance(,
-     */
 
     private static List<Operand> dpi_pcrel(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
@@ -496,6 +480,9 @@ public class ArmAsmOperandGetter {
     // LOAD_STORE_IMM_PREPOST_FMT1
     // LOAD_STORE_IMM_PREPOST_FMT2
     // LOAD_STORE_IMM_PREPOST_FMT3
+    // LOAD_STORE_REG_UIMM_FMT1
+    // LOAD_STORE_REG_UIMM_FMT2
+    // LOAD_STORE_REG_UIMM_FMT3
     private static List<Operand> loadstore3(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
@@ -504,9 +491,7 @@ public class ArmAsmOperandGetter {
         operands.add(h.newReadRegister(RN, 64));
 
         // third operand
-        var imm = fielddata.getMap().get(IMM);
-        Number fullimm = signExtend64(imm, 9);
-        operands.add(h.newImmediate(IMM, fullimm, 16));
+        operands.add(h.newImmediate(IMM, 16));
 
         return operands;
     }
@@ -519,10 +504,13 @@ public class ArmAsmOperandGetter {
 
         var wd = fielddata.getBitWidth();
 
-        // first, second, and third operands
+        // first and second operands
         operands.add(h.newRegister(makeKey(fielddata), RT, wd));
         operands.add(h.newReadRegister(RN, 64));
-        operands.add(h.newReadRegister(RM, wd));
+
+        // third operand
+        var wd2 = ((fielddata.getMap().get(OPTION) & 0b001) != 0) ? 64 : 32;
+        operands.add(h.newReadRegister(RM, wd2));
 
         // fourth operand
         String thing = null;
@@ -535,13 +523,7 @@ public class ArmAsmOperandGetter {
         operands.add(h.newSubOperation(OPTION, thing, 8));
 
         // fifth operand
-        operands.add(h.newImmediate(S, 16));
-
-        return operands;
-    }
-
-    private static List<Operand> loadstore6(ArmAsmFieldData fielddata,
-            ArmOperandBuilder h, List<Operand> operands) {
+        operands.add(h.newImmediate(S, 8));
 
         return operands;
     }

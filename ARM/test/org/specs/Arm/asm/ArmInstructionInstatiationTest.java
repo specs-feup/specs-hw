@@ -661,7 +661,7 @@ public class ArmInstructionInstatiationTest {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // LOAD_STORE_PAIR (LOAD_STORE_NOALLOC) (C4-280 to C4-281) ////////////////
+    // LOAD_STORE_PAIR_NO_ALLOC (C4-280 to C4-281) ////////////////
     // stnp 32
     public void test_stnp32(ArmAsmFieldType fmt) {
         testDecode("stnp_32_scalar", "stnp", fmt,
@@ -719,7 +719,7 @@ public class ArmInstructionInstatiationTest {
     // ldnp 128 simd
     public void test_ldnp128simd(ArmAsmFieldType fmt) {
         testDecode("ldnp_128_simd", "ldnp", fmt,
-                Integer.toHexString(0b00_101_0_000_1_0000000_00000_00000_00000));
+                Integer.toHexString(0b10_101_1_000_1_0000000_00000_00000_00000));
     }
 
     @Test
@@ -796,7 +796,7 @@ public class ArmInstructionInstatiationTest {
     // ldp 128 simd
     public void test_ldp128simdpost(ArmAsmFieldType fmt) {
         testDecode("ldp_128_simd_post", "ldp", fmt,
-                Integer.toHexString(0b00_101_0_001_1_0000000_00000_00000_00000));
+                Integer.toHexString(0b10_101_1_001_1_0000000_00000_00000_00000));
     }
 
     @Test
@@ -893,7 +893,7 @@ public class ArmInstructionInstatiationTest {
     // ldp 128 simd
     public void test_ldp128simdpre(ArmAsmFieldType fmt) {
         testDecode("ldp_128_simd_pre", "ldp", fmt,
-                Integer.toHexString(0b00_101_0_011_1_0000000_00000_00000_00000));
+                Integer.toHexString(0b10_101_1_011_1_0000000_00000_00000_00000));
     }
 
     @Test
@@ -990,7 +990,7 @@ public class ArmInstructionInstatiationTest {
     // ldp 128 simd
     public void test_ldp128simdoff(ArmAsmFieldType fmt) {
         testDecode("ldp_128_simd_off", "ldp", fmt,
-                Integer.toHexString(0b00_101_0_010_1_0000000_00000_00000_00000));
+                Integer.toHexString(0b10_101_1_010_1_0000000_00000_00000_00000));
     }
 
     @Test

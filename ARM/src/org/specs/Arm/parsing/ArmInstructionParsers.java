@@ -175,11 +175,11 @@ public interface ArmInstructionParsers {
             // Load/store register (unsigned immediate) - C4-297
 
             newInstance(LOAD_STORE_REG_UIMM_FMT1,
-                    "opcodea(2)_111_simd(1)01_opcodeb(2)_imm(12)_registern(5)_registert(5)",
+                    "opcodea(2)_111_simd(1)_01_opcodeb(2)_imm(12)_registern(5)_registert(5)",
                     isFmt1().and(data -> data.get("simd").equals("0"))),
 
             newInstance(LOAD_STORE_REG_UIMM_FMT2,
-                    "opcodea(2)_111_simd(1)01_opcodeb(2)_imm(12)_registern(5)_registert(5)",
+                    "opcodea(2)_111_simd(1)_01_opcodeb(2)_imm(12)_registern(5)_registert(5)",
                     data -> data.get("simd").equals("0")),
 
             newInstance(LOAD_STORE_REG_UIMM_FMT3,

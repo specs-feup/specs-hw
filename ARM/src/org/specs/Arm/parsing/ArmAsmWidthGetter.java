@@ -49,19 +49,19 @@ public class ArmAsmWidthGetter {
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1, ArmAsmWidthGetter::getter2a);
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2, ArmAsmWidthGetter::getter1);
 
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT1, ArmAsmWidthGetter::getter3);
-        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT2, ArmAsmWidthGetter::getter3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT1, ArmAsmWidthGetter::getter1b);
+        amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT2, ArmAsmWidthGetter::getter3b);
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT3, ArmAsmWidthGetter::getter4);
 
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT1, ArmAsmWidthGetter::getter3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT1, ArmAsmWidthGetter::getter1b);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT2, ArmAsmWidthGetter::getter3);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_IMM_PREPOST_FMT3, ArmAsmWidthGetter::getter4);
 
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT1, ArmAsmWidthGetter::getter3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT1, ArmAsmWidthGetter::getter1b);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT2, ArmAsmWidthGetter::getter3);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT3, ArmAsmWidthGetter::getter4);
 
-        amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmWidthGetter::getter3);
+        amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmWidthGetter::getter1b);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT2, ArmAsmWidthGetter::getter3);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT3, ArmAsmWidthGetter::getter4);
 
@@ -82,7 +82,7 @@ public class ArmAsmWidthGetter {
         return (map.get(SF) != 0) ? 64 : 32;
     }
 
-    // sf is one bit
+    // LOAD_REG_LITERAL_FMT2
     private static int getter1b(Map<ArmAsmField, Integer> map) {
         return (map.get(OPCODEA) != 0) ? 64 : 32;
     }
@@ -100,36 +100,33 @@ public class ArmAsmWidthGetter {
     }
 
     // sf is two bits
-    // LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1
-    // LOAD_REG_LITERAL_FMT1
     private static int getter2b(Map<ArmAsmField, Integer> map) {
         return ((int) Math.pow(2, map.get(SF))) * 32;
     }
 
     // fields "opcodea" and "opcodeb" used for size
-    // LOAD_STORE_REG_OFF_FMT1
-    // LOAD_STORE_REG_OFF_FMT2
-    // LOAD_STORE_PAIR_IMM_FMT1
-    // LOAD_STORE_PAIR_IMM_FMT2
-    // LOAD_STORE_IMM_PREPOST_FMT1
-    // LOAD_STORE_IMM_PREPOST_FMT2
-    // LOAD_STORE_REG_UIMM_FMT1
-    // LOAD_STORE_REG_UIMM_FMT2
     private static int getter3(Map<ArmAsmField, Integer> map) {
         Boolean a, b, c, d;
-        a = (map.get(OPCODEA) & 0b10) == 1;
-        b = (map.get(OPCODEA) & 0b01) == 1;
-        c = (map.get(OPCODEB) & 0b10) == 1;
-        d = (map.get(OPCODEB) & 0b01) == 1;
+        a = (map.get(OPCODEA) & 0b10) != 0;
+        b = (map.get(OPCODEA) & 0b01) != 0;
+        c = (map.get(OPCODEB) & 0b10) != 0;
+        d = (map.get(OPCODEB) & 0b01) != 0;
+        var sf = ((!a & !d) | (b & !c)) ? 64 : 32;
+        return sf;
+    }
+
+    // LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT2
+    private static int getter3b(Map<ArmAsmField, Integer> map) {
+        Boolean a, b, c, d;
+        a = (map.get(OPCODEA) & 0b10) != 0;
+        b = (map.get(OPCODEA) & 0b01) != 0;
+        c = (map.get(OPCODEB) & 0b10) != 0;
+        d = (map.get(OPCODEB) & 0b01) != 0;
         var sf = ((!a & !d) | (b & !c)) ? 64 : 32;
         return sf;
     }
 
     // two fields, sfa, and sfb
-    // LOAD_STORE_PAIR_IMM_FMT3
-    // LOAD_STORE_REG_OFF_FMT3
-    // LOAD_STORE_IMM_PREPOST_FMT3
-    // LOAD_STORE_REG_UIMM_FMT3
     private static int getter4(Map<ArmAsmField, Integer> map) {
         var sf = (map.get(SFB) << 2) | map.get(SFA);
         return ((int) Math.pow(2, sf)) * 8;
