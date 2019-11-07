@@ -460,7 +460,7 @@ public class ArmAsmOperandGetter {
         operands.add(h.newRegister(key, RM, wd));
 
         // third operand
-        operands.add(h.newReadRegister(RN, wd));
+        operands.add(h.newReadRegister(RN, 64));
 
         // fourth (optional) operand
         var imm = map.get(IMM) * (wd / 8);
