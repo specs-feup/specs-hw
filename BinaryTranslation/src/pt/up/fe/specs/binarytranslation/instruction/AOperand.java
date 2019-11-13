@@ -47,10 +47,6 @@ public abstract class AOperand implements Operand {
 
         // immediates are hexes (automatically chooses byte width from bit width)
         else {
-            // var nbytes = Math.ceil((double) props.getWidth() / 4.0);
-            // var ibytes = (int) nbytes;
-            // String fmt = "%0" + Integer.toString(ibytes) + "X";
-            // this.svalue = String.format(fmt, value.longValue());
             this.svalue = String.format("%x", value);
         }
     }

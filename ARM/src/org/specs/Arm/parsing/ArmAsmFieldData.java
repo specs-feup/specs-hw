@@ -90,20 +90,7 @@ public class ArmAsmFieldData extends AsmFieldData {
     /*
     * Get target of branch if instruction is branch
     */
-    public int getBranchTarget() {
-
-        ArmAsmFieldType type = (ArmAsmFieldType) this.get(TYPE);
-
-        switch (type) {
-
-        // conditional branches have a 19 bit IMM field
-        case CONDITIONALBRANCH:
-            return ((map.get(IMM) << 2) << (32 - 19)) >> (32 - 19);
-
-        default:
-            return 0;
-        // TODO throw exception here??
-        }
+    public Number getBranchTarget() {
+        return ArmAsmBranchTargetGetter.getFrom(this);
     }
-
 }

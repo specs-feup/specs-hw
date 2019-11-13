@@ -93,7 +93,7 @@ public abstract class InstructionData {
         return 32;
     }
 
-    public Boolean getIsSimd() {
+    public Boolean isSimd() {
         return false;
     }
 }
