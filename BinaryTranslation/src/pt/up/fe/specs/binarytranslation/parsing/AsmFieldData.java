@@ -29,6 +29,11 @@ import org.suikasoft.jOptions.Datakey.KeyFactory;
 public class AsmFieldData extends ADataClass<AsmFieldData> {
 
     /*
+     * Addr of this instruction
+     */
+    public static final DataKey<Number> ADDR = KeyFactory.object("addr", Number.class);
+
+    /*
      * This datakey only holds the instruction type (i.e., binary instruction format as specified in the parsers)
      */
     public static final DataKey<AsmFieldType> TYPE = KeyFactory.object("type", AsmFieldType.class);
@@ -43,6 +48,7 @@ public class AsmFieldData extends ADataClass<AsmFieldData> {
      * Constructor
      */
     public AsmFieldData(AsmFieldType type, Map<String, String> fields) {
+        // set(ADDR, addr);
         set(TYPE, type);
         set(FIELDS, fields);
     }

@@ -69,10 +69,10 @@ public class ArmInstruction extends AInstruction {
      */
     public Number getBranchTarget() {
         if (this.isJump()) {
-            int branchTarget = this.getData().getBranchTarget();
+            long branchTarget = (this.getData().getBranchTarget()).longValue();
 
             if (this.getData().getGenericTypes().contains(InstructionType.G_RJUMP)) {
-                var v = this.getAddress().intValue();
+                var v = this.getAddress().longValue();
                 return branchTarget = v + branchTarget;
             }
 

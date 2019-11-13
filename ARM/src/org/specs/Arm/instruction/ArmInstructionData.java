@@ -20,7 +20,7 @@ public class ArmInstructionData extends InstructionData {
     private final int bitwidth;
     private final Boolean isSimd;
     private final ArmInstructionCondition condition;
-    private final int branchTarget;
+    private final Number branchTarget;
 
     public ArmInstructionData(InstructionProperties props, ArmAsmFieldData fieldData) {
         super(props);
@@ -43,15 +43,17 @@ public class ArmInstructionData extends InstructionData {
         }
     }
 
+    @Override
     public int getBitWidth() {
         return bitwidth;
     }
 
+    @Override
     public Boolean isSimd() {
         return isSimd;
     }
 
-    public int getBranchTarget() {
+    public Number getBranchTarget() {
         return branchTarget;
     }
 }

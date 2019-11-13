@@ -324,7 +324,7 @@ public class ArmAsmOperandGetter {
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first operand
-        Number fullimm = fielddata.getMap().get(IMM) << 2;
+        Number fullimm = signExtend64(fielddata.getMap().get(IMM) << 2, 21);
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
 
         return operands;

@@ -1,0 +1,82 @@
+package org.specs.Arm.parsing;
+
+import static org.specs.Arm.parsing.ArmAsmField.IMM;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ArmAsmBranchTargetGetter {
+
+    /*
+     * map TYPE to a specific private branch target getter func
+     */
+    interface ArmAsmBranchParse {
+        Number apply(ArmAsmFieldData fielddata);
+    }
+
+    private static final Map<ArmAsmFieldType, ArmAsmBranchParse> TARGETGET;
+    static {
+        Map<ArmAsmFieldType, ArmAsmBranchParse> amap = new HashMap<ArmAsmFieldType, ArmAsmBranchParse>();
+        amap.put(ArmAsmFieldType.CONDITIONALBRANCH, ArmAsmBranchTargetGetter::conditionalbranch);
+        amap.put(ArmAsmFieldType.UCONDITIONALBRANCH_REG, ArmAsmBranchTargetGetter::unconditionalbranchreg);
+        amap.put(ArmAsmFieldType.UCONDITIONALBRANCH_IMM, ArmAsmBranchTargetGetter::unconditionalbranchimm);
+        amap.put(ArmAsmFieldType.COMPARE_AND_BRANCH_IMM, ArmAsmBranchTargetGetter::compareandbranchimm);
+        amap.put(ArmAsmFieldType.TEST_AND_BRANCH, ArmAsmBranchTargetGetter::testandbranch);
+        amap.put(ArmAsmFieldType.UNDEFINED, ArmAsmBranchTargetGetter::undefined);
+
+        TARGETGET = Collections.unmodifiableMap(amap);
+    }
+
+    public static Number getFrom(ArmAsmFieldData fielddata) {
+
+        var func = TARGETGET.get(fielddata.get(ArmAsmFieldData.TYPE));
+        if (func == null)
+            func = ArmAsmBranchTargetGetter::undefined;
+
+        return func.apply(fielddata);
+    }
+
+    /*
+     * 
+     */
+    private static int signExtend32(int value, int currlen) {
+        return (value << (32 - currlen)) >> (32 - currlen);
+    }
+
+    /*
+     * 
+     */
+    private static long signExtend64(int value, int currlen) {
+        return (value << (64 - currlen)) >> (64 - currlen);
+    }
+
+    private static Number conditionalbranch(ArmAsmFieldData fielddata) {
+        var map = fielddata.getMap();
+        return signExtend32(map.get(IMM) << 2, 21);
+    }
+
+    private static Number unconditionalbranchreg(ArmAsmFieldData fielddata) {
+        // TODO the return in this case is the value held in a register... how to treat??
+        return 0;
+    }
+
+    private static Number unconditionalbranchimm(ArmAsmFieldData fielddata) {
+        var map = fielddata.getMap();
+        return signExtend64(map.get(IMM) << 2, 28);
+    }
+
+    private static Number compareandbranchimm(ArmAsmFieldData fielddata) {
+        var map = fielddata.getMap();
+        return signExtend64(map.get(IMM) << 2, 21);
+    }
+
+    private static Number testandbranch(ArmAsmFieldData fielddata) {
+        var map = fielddata.getMap();
+        return signExtend64(map.get(IMM) << 2, 16);
+    }
+
+    private static Number undefined(ArmAsmFieldData fielddata) {
+        return 0;
+    }
+}

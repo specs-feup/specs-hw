@@ -2301,6 +2301,12 @@ public class ArmInstructionInstatiationTest {
         test_cls64(fmt);
     }
 
+    /*
+    @Test
+    public void testsingular() {
+        testDecode("b.ge", "b.ge", ArmAsmFieldType.CONDITIONALBRANCH, "54ffff2a");
+    }
+    */
     ///////////////////////////////////////////////////////////////////////////
     private void testDecode(String testname,
             String expected, ArmAsmFieldType fmt, String binaryInstruction) {
