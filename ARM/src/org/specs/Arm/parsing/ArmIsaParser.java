@@ -10,9 +10,9 @@ public class ArmIsaParser extends GenericIsaParser {
     }
 
     @Override
-    public ArmAsmFieldData parse(String instruction) {
+    public ArmAsmFieldData parse(String addr, String instruction) {
 
-        AsmFieldData fieldData = doparse(instruction);
+        AsmFieldData fieldData = doparse(addr, instruction);
         return new ArmAsmFieldData(fieldData);
     }
 }
