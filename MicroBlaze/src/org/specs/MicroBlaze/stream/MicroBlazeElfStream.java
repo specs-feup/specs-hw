@@ -17,8 +17,6 @@ public class MicroBlazeElfStream implements StaticInstructionStream {
     private static final Pattern MB_REGEX = Pattern.compile("([0-9a-f]+):\\s([0-9a-f]+)");
     private LineStream insts;
 
-    // TODO modify MB_REGEX
-
     public MicroBlazeElfStream(File elfname) {
         var output = SpecsSystem.runProcess(Arrays.asList("mb-objdump", "-d",
                 elfname.getAbsolutePath()), new File("."), true, false);
