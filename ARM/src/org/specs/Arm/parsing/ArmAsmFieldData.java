@@ -22,8 +22,8 @@ public class ArmAsmFieldData extends AsmFieldData {
     /*
      * Create raw
      */
-    public ArmAsmFieldData(AsmFieldType type, Map<String, String> fields) {
-        super(type, fields);
+    public ArmAsmFieldData(Number addr, AsmFieldType type, Map<String, String> fields) {
+        super(addr, type, fields);
 
         // get int values from fields
         var map1 = this.get(FIELDS);
@@ -38,7 +38,7 @@ public class ArmAsmFieldData extends AsmFieldData {
      * Create from parent class
      */
     public ArmAsmFieldData(AsmFieldData fieldData) {
-        this(fieldData.get(TYPE), fieldData.get(FIELDS));
+        this(fieldData.get(ADDR), fieldData.get(TYPE), fieldData.get(FIELDS));
     }
 
     /*

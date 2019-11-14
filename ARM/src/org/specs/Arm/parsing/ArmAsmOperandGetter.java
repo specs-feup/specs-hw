@@ -205,6 +205,7 @@ public class ArmAsmOperandGetter {
         return key;
     }
 
+    // DPI_PCREL (C4-253)
     private static List<Operand> dpi_pcrel(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
@@ -219,6 +220,9 @@ public class ArmAsmOperandGetter {
         var shift = (map.get(OPCODEA) == 0) ? 0 : 12;
         Integer fullimm = (((imm << 2) | (imml)) << shift) * 4096;
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
+
+        // TODO adr needs instruction addr
+        // TODO adpr needs instruction page addr
 
         return operands;
     }
@@ -320,26 +324,29 @@ public class ArmAsmOperandGetter {
         return operands;
     }
 
+    // CONDITIONALBRANCH (C4-257)
     private static List<Operand> conditionalbranch(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first operand
-        Number fullimm = signExtend64(fielddata.getMap().get(IMM) << 2, 21);
+        long addr = fielddata.getAddr().longValue();
+        Number fullimm = addr + signExtend64(fielddata.getMap().get(IMM) << 2, 21);
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
 
         return operands;
     }
 
+    // EXCEPTION (C4-258)
     private static List<Operand> exception(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first operand
-        Number fullimm = fielddata.getMap().get(IMM);
-        operands.add(h.newImmediateLabel(IMM, fullimm, 16));
+        operands.add(h.newImmediate(IMM, 16));
 
         return operands;
     }
 
+    // UNCONDITIONAL BRANCH (REGISTER) (C4-262 to C4-264)
     private static List<Operand> unconditionalbranchreg(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
@@ -357,16 +364,19 @@ public class ArmAsmOperandGetter {
         return operands;
     }
 
+    // UNCONDITIONAL BRANCH (IMMEDIATE) (C4-264 to C4-265)
     private static List<Operand> unconditionalbranchimm(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
         // first operand
-        Number fullimm = fielddata.getMap().get(IMM) << 2;
+        long addr = fielddata.getAddr().longValue();
+        Number fullimm = addr + signExtend64(fielddata.getMap().get(IMM) << 2, 28);
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
 
         return operands;
     }
 
+    // COMPARE AND BRANCH (C4-265)
     private static List<Operand> compareandbranchimm(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
@@ -374,12 +384,14 @@ public class ArmAsmOperandGetter {
         operands.add(h.newWriteRegister(RT, fielddata.getBitWidth()));
 
         // second operand
-        Number fullimm = fielddata.getMap().get(IMM) << 2;
+        long addr = fielddata.getAddr().longValue();
+        Number fullimm = addr + signExtend64(fielddata.getMap().get(IMM) << 2, 21);
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
 
         return operands;
     }
 
+    // TEST_AND_BRANCH (C4-265)
     private static List<Operand> testandbranch(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
@@ -394,12 +406,14 @@ public class ArmAsmOperandGetter {
         operands.add(h.newImmediate(RM, ((b5 << 5) | b40), 8));
 
         // third operand
-        Number label = map.get(IMM) << 2;
+        long addr = fielddata.getAddr().longValue();
+        Number label = addr + signExtend64(map.get(IMM) << 2, 16);
         operands.add(h.newImmediateLabel(IMM, label, 64));
 
         return operands;
     }
 
+    // LOAD_REG_LITERAL (C4-280)
     private static List<Operand> loadregliteralfmt1(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
@@ -409,29 +423,33 @@ public class ArmAsmOperandGetter {
         // first operand
         operands.add(h.newRegister(key, RT, fielddata.getBitWidth()));
 
-        // TODO need addr of current instruction...
-
         // second operand
-        var imm = map.get(IMM) << 2;
-        Number label = signExtend64(imm, 19);
+        long addr = fielddata.getAddr().longValue();
+        Number label = addr + signExtend64(map.get(IMM) << 2, 21);
         operands.add(h.newImmediateLabel(IMM, label, 64));
 
         return operands;
     }
 
+    // LOAD_REG_LITERAL (C4-280)
     private static List<Operand> loadregliteralfmt2(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
+
+        var map = fielddata.getMap();
 
         // first operand
         operands.add(h.newWriteRegister(RT, fielddata.getBitWidth()));
 
         // second operand
-        Number label = fielddata.getMap().get(IMM) << 2;
-        operands.add(h.newImmediate(IMM, label, 32));
+        long addr = fielddata.getAddr().longValue();
+        Number label = addr + signExtend64(map.get(IMM) << 2, 21);
+        operands.add(h.newImmediateLabel(IMM, label, 64));
 
         return operands;
     }
 
+    // LOAD_STORE_PAIR_NO_ALLOC (C4-280 to C4-281)
+    // LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1 (C4-281 to C4-282)
     private static List<Operand> loadstore1(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
@@ -460,6 +478,7 @@ public class ArmAsmOperandGetter {
         return operands;
     }
 
+    // LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2 (C4-282)
     private static List<Operand> loadstore2(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 

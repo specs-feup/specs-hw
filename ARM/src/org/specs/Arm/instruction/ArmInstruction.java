@@ -41,7 +41,7 @@ public class ArmInstruction extends AInstruction {
      * Static "constructor"
      */
     public static ArmInstruction newInstance(String address, String instruction) {
-        var fieldData = parser.parse(instruction);
+        var fieldData = parser.parse(address, instruction);
         var props = instSet.process(fieldData);
         var idata = new ArmInstructionData(props, fieldData);
         return new ArmInstruction(address, instruction, idata, fieldData, props);
