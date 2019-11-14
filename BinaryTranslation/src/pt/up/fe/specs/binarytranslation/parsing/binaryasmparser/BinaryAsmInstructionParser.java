@@ -167,7 +167,7 @@ public class BinaryAsmInstructionParser implements AsmParser {
     }
 
     @Override
-    public Optional<AsmFieldData> parse(String asmInstruction) {
+    public Optional<AsmFieldData> parse(String addr, String asmInstruction) {
 
         long aux = Long.parseLong(asmInstruction, 16);
         var binaryString = Long.toBinaryString(aux);
@@ -195,7 +195,7 @@ public class BinaryAsmInstructionParser implements AsmParser {
             return Optional.empty();
         }
 
-        return Optional.of(new AsmFieldData(type, fields));
+        return Optional.of(new AsmFieldData(Long.parseLong(addr, 16), type, fields));
     }
 
 }

@@ -10,9 +10,9 @@ public class MicroBlazeIsaParser extends GenericIsaParser {
     }
 
     @Override
-    public MicroBlazeAsmFieldData parse(String instruction) {
+    public MicroBlazeAsmFieldData parse(String addr, String instruction) {
 
-        AsmFieldData fieldData = doparse(instruction);
+        AsmFieldData fieldData = doparse(addr, instruction);
         return new MicroBlazeAsmFieldData(fieldData);
     }
 }

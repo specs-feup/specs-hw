@@ -47,10 +47,17 @@ public class AsmFieldData extends ADataClass<AsmFieldData> {
     /*
      * Constructor
      */
-    public AsmFieldData(AsmFieldType type, Map<String, String> fields) {
-        // set(ADDR, addr);
+    public AsmFieldData(Number addr, AsmFieldType type, Map<String, String> fields) {
+        set(ADDR, addr);
         set(TYPE, type);
         set(FIELDS, fields);
+    }
+
+    /*
+     * 
+     */
+    public Number getAddr() {
+        return this.get(ADDR);
     }
 
     /*
