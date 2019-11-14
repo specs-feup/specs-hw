@@ -36,10 +36,10 @@ public abstract class GenericIsaParser implements IsaParser {
         this(instructionParsers, null);
     }
 
-    protected AsmFieldData doparse(String instruction) {
+    protected AsmFieldData doparse(String addr, String instruction) {
         // Iterate over all parsers
         for (var parser : instructionParsers) {
-            var instData = parser.parse(instruction).orElse(null);
+            var instData = parser.parse(addr, instruction).orElse(null);
 
             // Parser not successful, try next one
             if (instData == null) {

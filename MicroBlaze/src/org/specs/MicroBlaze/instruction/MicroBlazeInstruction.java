@@ -46,7 +46,7 @@ public class MicroBlazeInstruction extends AInstruction {
      * Static "constructor"
      */
     public static MicroBlazeInstruction newInstance(String address, String instruction) {
-        var fieldData = parser.parse(instruction);
+        var fieldData = parser.parse(address, instruction);
         var props = instSet.process(fieldData);
         var idata = new MicroBlazeInstructionData(props, fieldData);
         return new MicroBlazeInstruction(address, instruction, idata, fieldData, props);

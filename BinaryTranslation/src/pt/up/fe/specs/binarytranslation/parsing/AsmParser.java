@@ -29,5 +29,5 @@ public interface AsmParser {
      * @param binaryString
      * @return
      */
-    Optional<AsmFieldData> parse(String asmInstruction);
+    Optional<AsmFieldData> parse(String addr, String asmInstruction);
 }

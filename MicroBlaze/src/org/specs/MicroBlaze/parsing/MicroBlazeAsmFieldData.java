@@ -17,22 +17,23 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
     /*
      * Create raw
      */
-    public MicroBlazeAsmFieldData(AsmFieldType type, Map<String, String> fields) {
-        super(type, fields);
+    public MicroBlazeAsmFieldData(Number addr, AsmFieldType type, Map<String, String> fields) {
+        super(addr, type, fields);
     }
 
     /*
      * Create from parent class
      */
     public MicroBlazeAsmFieldData(AsmFieldData fieldData) {
-        super(fieldData.get(TYPE), fieldData.get(FIELDS));
+        super(fieldData.get(ADDR), fieldData.get(TYPE), fieldData.get(FIELDS));
     }
 
     /*
      * Copy "constructor"
      */
     public MicroBlazeAsmFieldData copy() {
-        return new MicroBlazeAsmFieldData(this.getType(),
+        return new MicroBlazeAsmFieldData(
+                this.get(ADDR), this.getType(),
                 new HashMap<String, String>(this.getFields()));
     }
 

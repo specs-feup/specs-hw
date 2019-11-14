@@ -21,5 +21,9 @@ public interface IsaParser {
      * @param instruction
      * @return
      */
-    AsmFieldData parse(String instruction);
+    AsmFieldData parse(String addr, String instruction);
+
+    default AsmFieldData parse(String instruction) {
+        return this.parse("0", instruction);
+    }
 }
