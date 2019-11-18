@@ -11,19 +11,12 @@ public class MicroBlazeTraceStreamTester {
 
     @Test
     public void test() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/hello.elf");
+        File fd = SpecsIo.resourceCopy("./resources/org/specs/MicroBlaze/asm/test/test.elf");
         fd.deleteOnExit();
 
         try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(fd)) {
 
-            while (el.nextInstruction() != null)
-                ;
-
-            /*
-            Instruction inst = null;
-            while ((inst = el.nextInstruction()) != null) {
-                inst.printInstruction();
-            }*/
         }
     }
+
 }
