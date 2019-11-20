@@ -1,0 +1,162 @@
+<org.specs.DymaLib.MegablockRuntime.RuntimeMegablock>
+  <numIterations>11</numIterations>
+  <elements>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2072</address>
+      <instruction>imm 0</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>true</isFirstElement>
+      <id>2072</id>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2076</address>
+      <instruction>brlid r15, 528</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2080</address>
+      <instruction>addik r19, r19, 1</instruction>
+      <cycles>2</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2604</address>
+      <instruction>andi r6, r5, 255</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>true</isFirstElement>
+      <id>2604</id>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2608</address>
+      <instruction>imm 16480</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2612</address>
+      <instruction>addik r5, r0, 0</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2616</address>
+      <instruction>addik r1, r1, -4</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2620</address>
+      <instruction>swi r15, r1, 0</instruction>
+      <cycles>2</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2624</address>
+      <instruction>imm 0</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2628</address>
+      <instruction>brlid r15, 20</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2632</address>
+      <instruction>or r0, r0, r0</instruction>
+      <cycles>2</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2648</address>
+      <instruction>addik r4, r5, 8</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>true</isFirstElement>
+      <id>2648</id>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2652</address>
+      <instruction>lwi r3, r4, 0</instruction>
+      <cycles>8</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2656</address>
+      <instruction>andi r3, r3, 8</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2660</address>
+      <instruction>bnei r3, -8</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2664</address>
+      <instruction>swi r6, r5, 4</instruction>
+      <cycles>4</cycles>
+      <isFirstElement>true</isFirstElement>
+      <id>2664</id>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2668</address>
+      <instruction>rtsd r15, 8</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2672</address>
+      <instruction>or r0, r0, r0</instruction>
+      <cycles>2</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2636</address>
+      <instruction>lwi r15, r1, 0</instruction>
+      <cycles>2</cycles>
+      <isFirstElement>true</isFirstElement>
+      <id>2636</id>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2640</address>
+      <instruction>rtsd r15, 8</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2644</address>
+      <instruction>addik r1, r1, 4</instruction>
+      <cycles>2</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2084</address>
+      <instruction>lbui r5, r19, 0</instruction>
+      <cycles>2</cycles>
+      <isFirstElement>true</isFirstElement>
+      <id>2084</id>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2088</address>
+      <instruction>sext8 r5, r5</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2092</address>
+      <instruction>bneid r5, -20</instruction>
+      <cycles>1</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+    <org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+      <address>2096</address>
+      <instruction>lwi r15, r1, 0</instruction>
+      <cycles>2</cycles>
+      <isFirstElement>false</isFirstElement>
+    </org.specs.DymaLib.MegablockRuntime.MegablockInstruction>
+  </elements>
+  <exitInstructionIndex>23</exitInstructionIndex>
+</org.specs.DymaLib.MegablockRuntime.RuntimeMegablock>
