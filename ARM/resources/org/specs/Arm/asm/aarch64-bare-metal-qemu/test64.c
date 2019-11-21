@@ -9,7 +9,7 @@ void print_uart0(const char *s) {
  
 void c_entry() {
 	int i = 0;
-	for(i = 0; i < 1000; i++)
+	for(i = 0; i < 10; i++)
 	     print_uart0("Hello world!\n");
 }
 
