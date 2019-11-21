@@ -24,7 +24,8 @@ import pt.up.fe.specs.util.utilities.Replacer;
 public class ArmTraceStream implements TraceInstructionStream {
 
     private static final Pattern REGEX = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
-    private LineStream insts = null;
+    private volatile LineStream insts = null;
+    private volatile Exception simException = null;
 
     public ArmTraceStream(File elfname) {
 
@@ -33,25 +34,38 @@ public class ArmTraceStream implements TraceInstructionStream {
 
         var gdbScript = new Replacer(ArmResource.QEMU_GDB_TEMPLATE);
         gdbScript.replace("<ELFNAME>", elfpath);
-        gdbScript.replace("<QEMUBIN>", "/media/nuno/HDD/work/projects/qemu/aarch64-softmmu/qemu-system-aarch64");
+        gdbScript.replace("<QEMUBIN>", "/usr/bin/qemu-system-aarch64");
         SpecsIo.write(new File("tmpscript.gdb"), gdbScript.toString());
 
+        var executor = Executors.newSingleThreadScheduledExecutor();
+        executor.execute(this::runSimulator);
+        executor.shutdown();
+
+        while (insts == null && simException == null)
+            ;
+
+        // If null, means an error occured
+        if (insts == null) {
+            throw new RuntimeException("Could not launch simulator", simException);
+        }
+    }
+
+    private void runSimulator() {
         Function<InputStream, Boolean> stdout = inputStream -> {
             insts = LineStream.newInstance(inputStream, "gdb_stdout");
             return true;
         };
 
-        // Function<InputStream, String> stdout = new StreamToString(true, false, OutputType.StdOut);
         Function<InputStream, String> stderr = new StreamToString(false, true, OutputType.StdErr);
 
-        var executor = Executors.newSingleThreadScheduledExecutor();
-        executor.execute(() -> SpecsSystem.runProcess(
-                Arrays.asList("aarch64-none-elf-gdb", "-x", "tmpscript.gdb"), new File("."), stdout, stderr));
+        try {
+            SpecsSystem.runProcess(Arrays.asList("aarch64-none-elf-gdb", "-x", "tmpscript.gdb"), new File("."), stdout,
+                    stderr);
 
-        while (insts == null)
-            ;
+        } catch (Exception e) {
+            simException = e;
+        }
 
-        // insts = LineStream.newInstance(output.getStdOut());
     }
 
     public void rawDump() {
