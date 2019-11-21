@@ -40,7 +40,7 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
 
     @Override
     default int getInstructionWidth() {
-        return 32;
+        return 4; // bytes
         // TODO fix
     }
 
@@ -48,7 +48,9 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
      * 
      * @return the next instruction in the trace, or null if it reached the end
      */
-    Instruction nextTraceInstruction();
+    default Instruction nextTraceInstruction() {
+        return this.nextInstruction();
+    };
 
     /**
      * 

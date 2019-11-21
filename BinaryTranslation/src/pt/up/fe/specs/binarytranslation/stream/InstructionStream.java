@@ -31,18 +31,11 @@ public interface InstructionStream extends AutoCloseable {
 
     /**
      * 
-     * @return true if there are still instructions in the stream, false otherwise
-     */
-    // boolean hasNextInstruction();
-
-    /**
-     * 
      * @return the next instruction of the stream, or null if there are no more instructions in the stream
      */
     Instruction nextInstruction();
 
     /**
-     * 
      * 
      * @return the type of instruction stream.
      */
