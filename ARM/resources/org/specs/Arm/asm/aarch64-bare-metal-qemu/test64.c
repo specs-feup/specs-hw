@@ -8,5 +8,8 @@ void print_uart0(const char *s) {
 }
  
 void c_entry() {
-     print_uart0("Hello world!\n");
+	int i = 0;
+	for(i = 0; i < 1000; i++)
+	     print_uart0("Hello world!\n");
 }
+
