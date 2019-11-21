@@ -31,6 +31,7 @@ public class ArmTraceStream implements TraceInstructionStream {
     private static ArmTraceStream newInstance(File elfname) {
 
         ConcurrentChannel<LineStream> lineStreamChannel = new ConcurrentChannel<>(1);
+        ConcurrentChannel<Exception> exceptionChannel = new ConcurrentChannel<>(1);
 
         String elfpath = elfname.getAbsolutePath();
         var gdbScript = new Replacer(ArmResource.QEMU_AARCH64_GDB_TEMPLATE);
@@ -39,7 +40,7 @@ public class ArmTraceStream implements TraceInstructionStream {
         SpecsIo.write(new File("tmpscript.gdb"), gdbScript.toString());
 
         var executor = Executors.newSingleThreadScheduledExecutor();
-        executor.execute(() -> ArmTraceStream.runSimulator(lineStreamChannel));
+        executor.execute(() -> ArmTraceStream.runSimulator(lineStreamChannel, exceptionChannel));
         executor.shutdown();
 
         LineStream insts = null;
@@ -51,7 +52,8 @@ public class ArmTraceStream implements TraceInstructionStream {
         }
 
         if (insts == null) {
-            throw new RuntimeException("Could not launch simulator, timed-out after 5 seconds");
+            var gdbException = exceptionChannel.createConsumer().poll();
+            throw new RuntimeException("Could not launch simulator, timed-out after 2 seconds", gdbException);
         }
 
         return new ArmTraceStream(insts);
@@ -65,7 +67,8 @@ public class ArmTraceStream implements TraceInstructionStream {
         this(newInstance(elfname).insts);
     }
 
-    private static void runSimulator(ConcurrentChannel<LineStream> lineStreamChannel) {
+    private static void runSimulator(ConcurrentChannel<LineStream> lineStreamChannel,
+            ConcurrentChannel<Exception> exceptionChannel) {
 
         Function<InputStream, Boolean> stdout = inputStream -> {
             lineStreamChannel.createProducer().offer(LineStream.newInstance(inputStream, "gdb_stdout"));
@@ -79,7 +82,8 @@ public class ArmTraceStream implements TraceInstructionStream {
                     "-x", "tmpscript.gdb"), new File("."), stdout, stderr);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            exceptionChannel.createProducer().offer(e);
+            // e.printStackTrace();
         }
     }
 
