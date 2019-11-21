@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -16,6 +17,7 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.asm.processor.RegisterTable;
+import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 import pt.up.fe.specs.util.system.OutputType;
 import pt.up.fe.specs.util.system.StreamToString;
 import pt.up.fe.specs.util.utilities.LineStream;
@@ -24,48 +26,61 @@ import pt.up.fe.specs.util.utilities.Replacer;
 public class ArmTraceStream implements TraceInstructionStream {
 
     private static final Pattern REGEX = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
-    private volatile LineStream insts = null;
-    private volatile Exception simException = null;
+    private final LineStream insts;
 
-    public ArmTraceStream(File elfname) {
+    private static ArmTraceStream newInstance(File elfname) {
 
-        // 1. make the gdb script file
+        ConcurrentChannel<LineStream> lineStreamChannel = new ConcurrentChannel<>(1);
+
         String elfpath = elfname.getAbsolutePath();
-
-        var gdbScript = new Replacer(ArmResource.QEMU_GDB_TEMPLATE);
+        var gdbScript = new Replacer(ArmResource.QEMU_AARCH64_GDB_TEMPLATE);
         gdbScript.replace("<ELFNAME>", elfpath);
         gdbScript.replace("<QEMUBIN>", "/usr/bin/qemu-system-aarch64");
         SpecsIo.write(new File("tmpscript.gdb"), gdbScript.toString());
 
         var executor = Executors.newSingleThreadScheduledExecutor();
-        executor.execute(this::runSimulator);
+        executor.execute(() -> ArmTraceStream.runSimulator(lineStreamChannel));
         executor.shutdown();
 
-        while (insts == null && simException == null)
-            ;
+        LineStream insts = null;
 
-        // If null, means an error occured
-        if (insts == null) {
-            throw new RuntimeException("Could not launch simulator", simException);
+        try {
+            insts = lineStreamChannel.createConsumer().poll(2, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
+
+        if (insts == null) {
+            throw new RuntimeException("Could not launch simulator, timed-out after 5 seconds");
+        }
+
+        return new ArmTraceStream(insts);
     }
 
-    private void runSimulator() {
+    private ArmTraceStream(LineStream insts) {
+        this.insts = insts;
+    }
+
+    public ArmTraceStream(File elfname) {
+        this(newInstance(elfname).insts);
+    }
+
+    private static void runSimulator(ConcurrentChannel<LineStream> lineStreamChannel) {
+
         Function<InputStream, Boolean> stdout = inputStream -> {
-            insts = LineStream.newInstance(inputStream, "gdb_stdout");
+            lineStreamChannel.createProducer().offer(LineStream.newInstance(inputStream, "gdb_stdout"));
             return true;
         };
 
         Function<InputStream, String> stderr = new StreamToString(false, true, OutputType.StdErr);
 
         try {
-            SpecsSystem.runProcess(Arrays.asList("aarch64-none-elf-gdb", "-x", "tmpscript.gdb"), new File("."), stdout,
-                    stderr);
+            SpecsSystem.runProcess(Arrays.asList("aarch64-none-elf-gdb2",
+                    "-x", "tmpscript.gdb"), new File("."), stdout, stderr);
 
         } catch (Exception e) {
-            simException = e;
+            e.printStackTrace();
         }
-
     }
 
     public void rawDump() {

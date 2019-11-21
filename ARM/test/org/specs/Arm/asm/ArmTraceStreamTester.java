@@ -12,7 +12,8 @@ public class ArmTraceStreamTester {
 
     @Test
     public void test() {
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/aarch64-bare-metal-qemu/test64.elf");
+
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/aarch64_bare_metal_qemu/test64.elf");
         fd.deleteOnExit();
 
         try (ArmTraceStream el = new ArmTraceStream(fd)) {
