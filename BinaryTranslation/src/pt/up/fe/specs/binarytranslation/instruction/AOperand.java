@@ -61,7 +61,7 @@ public abstract class AOperand implements Operand {
         this.value = -1L;
     }
 
-    public Number getIntegerValue() {
+    public Number getValue() {
         return this.value;
     }
 
@@ -96,6 +96,10 @@ public abstract class AOperand implements Operand {
 
     public Boolean isSubOperation() {
         return (this.props.getTypes().contains(SUBOPERATION));
+    }
+
+    public Boolean isSpecial() {
+        return (this.props.getTypes().contains(SPECIAL));
     }
 
     public AsmField getAsmField() {

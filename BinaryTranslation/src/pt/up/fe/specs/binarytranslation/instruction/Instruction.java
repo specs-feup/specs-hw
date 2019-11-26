@@ -130,6 +130,13 @@ public interface Instruction {
      */
     public boolean isFloat();
 
+    /*
+     * Check if instruction is uknown to us (for now, this 
+     * applies to very special instructions, like 
+     * system, cache, or barrier instructions)
+     */
+    public boolean isUnknown();
+
     /////////////////////////////////////////////// Additional non basic types:
     /*
      * Check if instruction is backwards branch.
@@ -181,7 +188,7 @@ public interface Instruction {
     /*
      * Returns a unique hash representation of the instruction
      */
-    //public Integer getHash();
+    // public Integer getHash();
 
     /*
      * Returns an asm string representation of instruction (includes operands) 
@@ -198,7 +205,7 @@ public interface Instruction {
      * executed representation, to a symbolic representation
      */
     void makeSymbolic(Number address, Map<String, String> regremap);
-    
+
     /*
      * Returns a readable string representing the readable operation
      * which the instruction implements

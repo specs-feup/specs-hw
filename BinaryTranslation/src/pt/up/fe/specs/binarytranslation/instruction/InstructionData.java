@@ -46,11 +46,12 @@ public abstract class InstructionData {
      * Private helper
      */
     protected InstructionData(String plainname,
-            int latency, int delay, List<InstructionType> genericType) {
+            int latency, int delay, List<InstructionType> genericType, List<Operand> ops) {
         this.plainname = plainname;
         this.latency = latency;
         this.delay = delay;
         this.genericType = genericType;
+        this.operands = ops;
     }
 
     /*

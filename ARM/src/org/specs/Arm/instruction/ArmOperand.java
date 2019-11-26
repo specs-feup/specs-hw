@@ -27,11 +27,13 @@ public class ArmOperand extends AOperand {
     }
 
     private static ArmOperand newInstance(OperandProperties props, Number value) {
-        if (value.intValue() != SPvalue)
+        if (value.intValue() != SPvalue) {
             return new ArmOperand(props, value);
-        else
-            return new ArmOperand(props, "sp");
 
+        } else {
+            props.getTypes().add(SPECIAL);
+            return new ArmOperand(props, "sp");
+        }
     }
 
     private static String getPrefix(int width) {
@@ -128,6 +130,9 @@ public class ArmOperand extends AOperand {
     @Override
     public ArmOperand copy() {
         var props = this.getProperties().copy();
-        return new ArmOperand(props, this.getIntegerValue().intValue());
+        if (this.isSubOperation() || this.isSpecial())
+            return new ArmOperand(props, this.getStringValue());
+        else
+            return new ArmOperand(props, this.getValue());
     }
 }

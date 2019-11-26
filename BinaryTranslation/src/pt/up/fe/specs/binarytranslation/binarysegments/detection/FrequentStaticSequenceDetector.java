@@ -75,8 +75,12 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
             // TODO fail with stream instructions
 
+            if (inst.isUnknown()) {
+                return false;
+            }
+
             // do not form frequent sequences containing jumps
-            if (inst.isJump()) {
+            else if (inst.isJump()) {
                 return false;
             }
 
@@ -100,6 +104,11 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
             var operands = i.getData().getOperands();
             for (Operand op : operands) {
+
+                // register must not be special (e.g. stack pointer in ARM)
+                if (op.isSpecial())
+                    continue;
+
                 if (!regremap.containsKey(op.getRepresentation())) {
 
                     // get current count

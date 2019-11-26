@@ -26,10 +26,9 @@ public class ArmAsmFieldData extends AsmFieldData {
         super(addr, type, fields);
 
         // get int values from fields
-        var map1 = this.get(FIELDS);
         for (ArmAsmField field : ArmAsmField.values()) {
-            if (map1.containsKey(field.getFieldName())) {
-                map.put(field, Integer.parseInt(map1.get(field.getFieldName()), 2));
+            if (fields.containsKey(field.getFieldName())) {
+                map.put(field, Integer.parseInt(fields.get(field.getFieldName()), 2));
             }
         }
     }
@@ -39,6 +38,15 @@ public class ArmAsmFieldData extends AsmFieldData {
      */
     public ArmAsmFieldData(AsmFieldData fieldData) {
         this(fieldData.get(ADDR), fieldData.get(TYPE), fieldData.get(FIELDS));
+    }
+
+    /*
+     * Copy "constructor"
+     */
+    public ArmAsmFieldData copy() {
+        return new ArmAsmFieldData(
+                this.get(ADDR), this.getType(),
+                new HashMap<String, String>(this.getFields()));
     }
 
     /*

@@ -144,6 +144,10 @@ public abstract class AInstruction implements Instruction {
         return idata.getGenericTypes().contains(InstructionType.G_FLOAT);
     }
 
+    public final boolean isUnknown() {
+        return idata.getGenericTypes().contains(InstructionType.G_UNKN);
+    }
+
     ///////////////////////////////////////////// Additional non basic types:
     @Override
     public boolean isBackwardsJump() {
@@ -209,8 +213,14 @@ public abstract class AInstruction implements Instruction {
 
         // symbolify operands
         for (Operand op : this.getData().getOperands()) {
-            op.setSymbolic(regremap.get(op.getRepresentation()));
-            // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
+            if (!op.isSubOperation() && !op.isSpecial()) { // TODO move this condition to the construction of the
+                                                           // regremap
+                                                           // map
+                var tmp = op.getRepresentation();
+                var r = regremap.get(tmp);
+                op.setSymbolic(r);
+                // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
+            }
         }
     }
 

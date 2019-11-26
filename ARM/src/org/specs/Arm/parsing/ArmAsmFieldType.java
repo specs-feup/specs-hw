@@ -29,6 +29,9 @@ public enum ArmAsmFieldType implements AsmFieldType {
     // 2.
     CONDITIONALBRANCH,
     EXCEPTION,
+    HINTS,
+    BARRIER,
+    SYSREGMOVE,
     UCONDITIONALBRANCH_REG,
     UCONDITIONALBRANCH_IMM,
     COMPARE_AND_BRANCH_IMM,

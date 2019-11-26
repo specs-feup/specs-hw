@@ -70,6 +70,23 @@ public enum ArmInstructionProperties implements InstructionProperties {
     dcps2(0xD4A0_0002, 1, 0, EXCEPTION, G_OTHER),
     dcps3(0xD4A0_0003, 1, 0, EXCEPTION, G_OTHER),
 
+    // HINTS (C4-258)
+    nop(0xd503201f, 1, 0, HINTS, G_OTHER),
+    // TODO: WFI -> wait for interrupt instruction class could be useful in future!
+
+    // BARRIER (C4-260)
+    clrex(0xD503305F, 1, 0, BARRIER, G_OTHER),
+    dmb(0xD50330BF, 1, 0, BARRIER, G_OTHER),
+    isb(0xD50330DF, 1, 0, BARRIER, G_OTHER),
+    sb(0xD50330FF, 1, 0, BARRIER, G_OTHER),
+    // dsb(), one of the fields has to be any value except zero...
+    ssbb(0xD503309F, 1, 0, BARRIER, G_OTHER),
+    pssbb(0xD503349F, 1, 0, BARRIER, G_OTHER),
+
+    // SYSREGMOVE (C4-261)
+    msr_reg("msr", 0xD510_0000, 1, 0, SYSREGMOVE, G_OTHER),
+    msr(0xD530_0000, 1, 0, SYSREGMOVE, G_OTHER),
+
     // UNCONDITIONAL BRANCH (REGISTER) (C4-262 to C4-264)
     br(0xD61F_0000, 1, 0, UCONDITIONALBRANCH_REG, G_JUMP, G_UJUMP),
     braaz(0xD61F_0800, 1, 0, UCONDITIONALBRANCH_REG, G_JUMP, G_UJUMP),
