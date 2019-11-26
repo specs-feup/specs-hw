@@ -167,6 +167,12 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
+    default boolean isUnknown() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
     default int getDelay() {
         // TODO Auto-generated method stub
         return 0;
@@ -207,7 +213,7 @@ public interface SimpleInstruction32 extends Instruction {
         // TODO Auto-generated method stub
 
     }
-    
+
     @Override
     default String express() {
         // TODO Auto-generated method stub

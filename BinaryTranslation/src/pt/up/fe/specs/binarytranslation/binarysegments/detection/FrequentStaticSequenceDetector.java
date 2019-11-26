@@ -24,7 +24,7 @@ import pt.up.fe.specs.binarytranslation.binarysegments.FrequentSequence;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
 import pt.up.fe.specs.binarytranslation.instruction.OperandType;
-import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 /**
  * 
@@ -34,13 +34,13 @@ import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
 public class FrequentStaticSequenceDetector implements SegmentDetector {
 
     private List<Instruction> insts;
-    private StaticInstructionStream elfstream;
+    private InstructionStream elfstream;
 
     /*
      * Since list needs revisiting, absorb all instructions in
      * the static dump into StaticBasicBlockDetector class instance
      */
-    public FrequentStaticSequenceDetector(StaticInstructionStream istream) {
+    public FrequentStaticSequenceDetector(InstructionStream istream) {
         this.elfstream = istream;
         this.insts = new ArrayList<Instruction>();
 
