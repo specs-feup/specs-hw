@@ -7,7 +7,6 @@ import org.specs.Arm.parsing.ArmAsmFieldType;
 import org.specs.Arm.parsing.ArmIsaParser;
 
 import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
@@ -56,6 +55,18 @@ public class ArmInstruction extends AInstruction {
         this.fieldData = fieldData;
     }
 
+    /*
+     * Copy "constructor"
+     */
+    public ArmInstruction copy() {
+
+        String copyaddr = new String(Integer.toHexString(this.getAddress().intValue()));
+        String copyinst = new String(this.getInstruction());
+        ArmInstructionData copyData = this.getData().copy();
+        ArmAsmFieldData copyFieldData = this.getFieldData().copy();
+        return new ArmInstruction(copyaddr, copyinst, copyData, copyFieldData, this.getProperties());
+    }
+
     @Override
     public ArmInstructionData getData() {
         // idata is guaranteed to be an (ArmInstructionData)
@@ -87,11 +98,4 @@ public class ArmInstruction extends AInstruction {
     public ArmAsmFieldData getFieldData() {
         return this.fieldData;
     }
-
-    @Override
-    public Instruction copy() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

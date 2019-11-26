@@ -24,11 +24,11 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 public interface Operand {
 
     /*
-     * Get value as integer (good for non symbilic cases)
+     * Get value as Number (good for non symbilic cases)
      * If operand isnt symbolic, getStringValue returns the
      * integer value as a String
      */
-    public Number getIntegerValue();
+    public Number getValue();
 
     /*
      * As string (good for symbolic values)
@@ -75,6 +75,11 @@ public interface Operand {
      * 
      */
     public Boolean isSubOperation();
+
+    /*
+     * 
+     */
+    public Boolean isSpecial();
 
     /*
      * Return formated string with <prefix><value>

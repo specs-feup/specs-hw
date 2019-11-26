@@ -44,6 +44,7 @@ public enum OperandType {
     QWORD,
 
     // representational
+    SPECIAL, // e.g. special registers, like stack pointer or system registers, have this subtype
     SUBOPERATION;
     // SUBOPERATION?? --> expresses things to do to the registers in the shifted register operations for ARM?
 

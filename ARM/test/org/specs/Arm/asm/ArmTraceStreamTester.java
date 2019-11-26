@@ -21,8 +21,6 @@ public class ArmTraceStreamTester {
             while ((inst = el.nextInstruction()) != null) {
                 inst.printInstruction();
             }
-            // el.rawDump();
         }
     }
-
 }

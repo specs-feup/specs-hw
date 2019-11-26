@@ -62,7 +62,7 @@ public interface ArmInstructionParsers {
             // TODO predicates
 
             newInstance(BITFIELD,
-                    "sf(1)_opcodea(2)_100110_opcodeb(1)_immr(6)_imms(6)_registern(5)_registerd(5)"),
+                    "sf(1)_opcodea(2)_100110_x_immr(6)_imms(6)_registern(5)_registerd(5)"),
 
             newInstance(EXTRACT,
                     "sf(1)_001_0011_1x0_registerm(5)_imms(6)_registern(5)_registerd(5)"),
@@ -75,6 +75,15 @@ public interface ArmInstructionParsers {
 
             newInstance(EXCEPTION,
                     "11010100_opcodea(3)_imm(16)_opcodeb(3)_opcodec(2)"),
+
+            newInstance(HINTS,
+                    "11010101000000110010_registerm(4)_opcodea(3)_11111"),
+
+            newInstance(BARRIER,
+                    "11010101000000110011_registerm(4)_opcodea(3)_registert(5)"),
+
+            newInstance(SYSREGMOVE,
+                    "1101_0101_00_opcodea(1)_1_O(1)_immh(3)_registern(4)_registerm(4)_imml(3)_registert(5)"),
 
             newInstance(UCONDITIONALBRANCH_REG,
                     "1101011_opcodea(4)_opcodeb(5)_opcodec(6)_registern(5)_opcoded(5)"),

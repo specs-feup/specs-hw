@@ -25,8 +25,7 @@ public class MicroBlazeInstructionData extends InstructionData {
      */
     private MicroBlazeInstructionData(String plainname,
             int latency, int delay, List<InstructionType> genericType, List<Operand> ops) {
-        super(plainname, latency, delay, genericType);
-        this.operands = ops;
+        super(plainname, latency, delay, genericType, ops);
     }
 
     /*

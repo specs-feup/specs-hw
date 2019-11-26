@@ -464,6 +464,27 @@ public class ArmInstructionInstatiationTest {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
+    // SYSREGMOVE /////////////////////////////////////////////////////////////
+    // mrs reg
+    public void test_msr_reg(ArmAsmFieldType fmt) {
+        testDecode("msr_reg", "msr", fmt,
+                Integer.toHexString(0b1101_0101_0011_00000000000000000000));
+    }
+
+    // mrs
+    public void test_msr(ArmAsmFieldType fmt) {
+        testDecode("msr", "msr", fmt,
+                Integer.toHexString(0b1101_0101_0001_00000000000000000000));
+    }
+
+    @Test
+    public void test_Sysregmove() {
+        var fmt = ArmAsmFieldType.SYSREGMOVE;
+        test_msr_reg(fmt);
+        test_msr(fmt);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     // UNCONDITIONAL BRANCH (REGISTER) ////////////////////////////////////////
     // br
     public void test_Br(ArmAsmFieldType fmt) {
@@ -2301,12 +2322,13 @@ public class ArmInstructionInstatiationTest {
         test_cls64(fmt);
     }
 
-    /*
     @Test
     public void testsingular() {
-        testDecode("b.ge", "b.ge", ArmAsmFieldType.CONDITIONALBRANCH, "54ffff2a");
+        testDecode("sbfm", "sbfm", ArmAsmFieldType.BITFIELD, "93407c05");
+
+        // 0x1414:93407c05 unknown x5, x0, #0x0, #0xsp
     }
-    */
+
     ///////////////////////////////////////////////////////////////////////////
     private void testDecode(String testname,
             String expected, ArmAsmFieldType fmt, String binaryInstruction) {
