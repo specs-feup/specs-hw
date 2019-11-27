@@ -17,11 +17,13 @@ public class ArmElfStreamTester {
         fd.deleteOnExit();
 
         try (ArmElfStream el = new ArmElfStream(fd);) {
+
+            // el.rawDump();
+
             Instruction inst = null;
             while ((inst = el.nextInstruction()) != null) {
                 inst.printInstruction();
             }
         }
-
     }
 }

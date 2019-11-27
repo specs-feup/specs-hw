@@ -45,13 +45,33 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
      * 
      * @return the total number of returned instructions up to this moment
      */
-    long getNumInstructions();
+    default long getNumInstructions() {
+        return 0;
+    }
 
     /**
      * 
      * @return the total number of cycles up to this moment
      */
-    long getCycles();
+    default long getCycles() {
+        return 0;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    default int getInstructionWidth() {
+        return 0;
+    }
+
+    /**
+     * 
+     * @return True if stream has another line
+     */
+    default boolean hasNext() {
+        return false;
+    }
 
     /**
      * Optional: returns the values of the registers at the current moment.
