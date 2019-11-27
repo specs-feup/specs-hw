@@ -49,4 +49,9 @@ public class MicroBlazeElfStream implements StaticInstructionStream {
         return 4; // return in bytes
         // TODO replace this with something smarter
     }
+
+    @Override
+    public boolean hasNext() {
+        return this.insts.hasNextLine();
+    }
 }

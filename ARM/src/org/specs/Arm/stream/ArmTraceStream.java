@@ -34,6 +34,17 @@ public class ArmTraceStream extends ATraceInstructionStream {
         var addressAndInst = SpecsStrings.getRegex(line, REGEX);
         var addr = addressAndInst.get(0).trim();
         var inst = addressAndInst.get(1).trim();
+        var newinst = ArmInstruction.newInstance(addr, inst);
+
+        this.numcycles += newinst.getLatency();
+        this.numinsts++;
+
         return ArmInstruction.newInstance(addr, inst);
+    }
+
+    @Override
+    public int getInstructionWidth() {
+        return 4; // return in bytes
+        // TODO replace this with something smarter
     }
 }

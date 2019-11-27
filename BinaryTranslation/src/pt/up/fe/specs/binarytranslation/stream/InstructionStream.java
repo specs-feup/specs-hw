@@ -41,5 +41,15 @@ public interface InstructionStream extends AutoCloseable {
      */
     InstructionStreamType getType();
 
+    /**
+     * 
+     * @return
+     */
     int getInstructionWidth();
+
+    /**
+     * 
+     * @return True if stream has another line
+     */
+    boolean hasNext();
 }

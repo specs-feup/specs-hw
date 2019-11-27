@@ -1,14 +1,14 @@
-package org.specs.Arm;
+package org.specs.MicroBlaze;
 
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
-public enum ArmResource implements ResourceProvider {
+public enum MicroBlazeResource implements ResourceProvider {
 
-    QEMU_AARCH64_GDB_TEMPLATE("org/specs/Arm/gdb/qemutmpl.gdb");
+    QEMU_MICROBLAZE_GDB_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl.gdb");
 
     private final String resource;
 
-    private ArmResource(String resource) {
+    private MicroBlazeResource(String resource) {
         this.resource = resource;
     }
 

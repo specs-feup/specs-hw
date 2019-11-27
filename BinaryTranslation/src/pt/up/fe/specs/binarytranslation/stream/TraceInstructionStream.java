@@ -29,19 +29,8 @@ import pt.up.fe.specs.util.asm.processor.RegisterTable;
 public interface TraceInstructionStream extends Closeable, InstructionStream {
 
     @Override
-    default Instruction nextInstruction() {
-        return nextTraceInstruction();
-    }
-
-    @Override
     default InstructionStreamType getType() {
         return InstructionStreamType.TRACE;
-    }
-
-    @Override
-    default int getInstructionWidth() {
-        return 4; // bytes
-        // TODO fix
     }
 
     /**
@@ -59,22 +48,17 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
     long getNumInstructions();
 
     /**
-     * Optional: returns the values of the registers at the current moment.
-     * 
-     * @return null if not implemented.
-     */
-    // Map<RegisterId, Integer> getRegisters();
-    RegisterTable getRegisters();
-
-    /**
      * 
      * @return the total number of cycles up to this moment
      */
     long getCycles();
 
     /**
-     * Closes any pendent operations.
+     * Optional: returns the values of the registers at the current moment.
+     * 
+     * @return null if not implemented.
      */
-    @Override
-    void close();
+    default RegisterTable getRegisters() {
+        return null;
+    }
 }
