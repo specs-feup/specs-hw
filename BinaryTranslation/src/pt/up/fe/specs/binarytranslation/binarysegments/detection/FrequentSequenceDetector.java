@@ -31,23 +31,30 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
  * @author Nuno
  *
  */
-public class FrequentStaticSequenceDetector implements SegmentDetector {
+public class FrequentSequenceDetector implements SegmentDetector {
 
-    private List<Instruction> insts;
-    private InstructionStream elfstream;
+    /*
+     * An open instruction stream, either from elf dump, or simulator
+     */
+    private InstructionStream istream;
+
+    /*
+     * min and max size of windows 
+     */
+    private final int minsize = 2;
+    private final int maxsize = 10;
+
+    /*
+     * This map holds all hashed sequences for all instruction windows we analyse
+     */
+    private Map<Integer, HashedSequence> hashed = new HashMap<Integer, HashedSequence>();
 
     /*
      * Since list needs revisiting, absorb all instructions in
      * the static dump into StaticBasicBlockDetector class instance
      */
-    public FrequentStaticSequenceDetector(InstructionStream istream) {
-        this.elfstream = istream;
-        this.insts = new ArrayList<Instruction>();
-
-        Instruction inst = null;
-        while ((inst = elfstream.nextInstruction()) != null) {
-            insts.add(inst);
-        }
+    public FrequentSequenceDetector(InstructionStream istream) {
+        this.istream = istream;
     }
 
     /*
@@ -58,9 +65,11 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         protected Map<String, String> regremap;
         protected List<Instruction> instlist;
         protected List<Integer> addrs;
+        protected int size;
 
         HashedSequence(List<Instruction> instlist, Integer addr, Map<String, String> regremap) {
             this.instlist = instlist;
+            this.size = instlist.size();
             this.addrs = new ArrayList<Integer>();
             this.addrs.add(addr);
             this.regremap = regremap;
@@ -75,17 +84,9 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
             // TODO fail with stream instructions
 
-            if (inst.isUnknown()) {
-                return false;
-            }
-
             // do not form frequent sequences containing jumps
-            else if (inst.isJump()) {
-                return false;
-            }
-
             // do not form frequent sequences memory accesses
-            else if (inst.isMemory()) {
+            if (inst.isUnknown() || inst.isJump() || inst.isMemory()) {
                 return false;
             }
         }
@@ -93,7 +94,7 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         return true;
     }
 
-    /*
+    /*hashed
      * Builds operand value replacement map for a given sequence (assumed valid)
      */
     private Map<String, String> makeRegReplaceMap(List<Instruction> ilist) {
@@ -161,37 +162,17 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
     }
 
     /*
+     * For the given window "w", builds all hash sequences from
+     * sizes minsize to maxsize
      * Constructs a map with <instruction addr, sequence hash>
-     * Only returns hashes for sequences which happens more than once
-     * Returns a map with <sequence hash, List<instruction start addr(s)>>
      */
-    private List<HashedSequence> getSequences(int sequenceSize) {
+    private void hashSequences(List<Instruction> w) {
 
-        // Generate a hash code list of all sequences of size "sequenceSize"
-        Map<Integer, HashedSequence> sequences = new HashMap<Integer, HashedSequence>();
-        int atomicityCountDown = 0;
-        for (int i = 0; (i + sequenceSize) < insts.size(); i++) {
+        // compute all hashes for this window, for all sequence sizes
+        for (int i = this.minsize; i < this.maxsize; i++) {
 
-            List<Instruction> candidate = insts.subList(i, i + sequenceSize);
-
-            // count down if any atom in progress
-            if (atomicityCountDown > 0)
-                atomicityCountDown--;
-
-            // if last instruction in previous candidate
-            // had delay, next block must be atomic
-            // (e.g., sequence cannot span non atomic bounds)
-            if (i > 0)
-                atomicityCountDown = insts.get(i - 1).getDelay();
-
-            // if candidate sequence window starts
-            // breaking atomicity window, then advance
-            if (atomicityCountDown > 0)
-                if (sequenceSize > atomicityCountDown) {
-                    i += atomicityCountDown;
-                    atomicityCountDown = 0;
-                    continue;
-                }
+            // sub-window
+            List<Instruction> candidate = w.subList(0, i);
 
             // discard candidate?
             if (!validSequence(candidate))
@@ -219,35 +200,20 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
             }
 
             Integer hashCode = hashstring.hashCode();
-            Integer startAddr = insts.get(i).getAddress().intValue();
+            Integer startAddr = w.get(0).getAddress().intValue();
 
             // if sequence was complete, add (or add addr to existing equal sequence)
-            if (sequences.containsKey(hashCode)) {
-                sequences.get(hashCode).addrs.add(startAddr);
-            }
+            if (this.hashed.containsKey(hashCode))
+                this.hashed.get(hashCode).addrs.add(startAddr);
 
             // add new sequence
-            else {
-                sequences.put(hashCode, new HashedSequence(candidate, startAddr, regremap));
-            }
+            else
+                this.hashed.put(hashCode, new HashedSequence(candidate, startAddr, regremap));
         }
 
-        /*
-         * Remove all sequences which only happen once
-         */
-        Iterator<Integer> it = sequences.keySet().iterator();
-        while (it.hasNext()) {
-            var size = sequences.get(it.next()).addrs.size();
-            if (size <= 1)
-                it.remove();
-        }
-
-        return new ArrayList<HashedSequence>(sequences.values());
+        return;
     }
 
-    /*
-     * Returns frequently occurring instruction sequences
-     */
     @Override
     public List<BinarySegment> detectSegments() {
 
@@ -261,14 +227,67 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
         // 3. can demand that all are equal in all ocurrences of sequence (all are non symbolic and hence all are
         // hardware specilaized literals)
 
+        List<Instruction> window = new ArrayList<Instruction>(this.maxsize); // fixed sized window
+
+        // make 1st window
+        for (int i = 0; i < this.maxsize; i++)
+            window.set(i, this.istream.nextInstruction());
+
+        // process entire stream
+        while (istream.hasNext()) {
+
+            // sequences in this window, from sizes minsize to maxsize
+            hashSequences(window);
+
+            // shift window (i.e. new window)
+            for (int i = 0; i < this.maxsize - 1; i++)
+                window.set(i, window.get(i + 1));
+
+            // one new instruction in window
+            window.set(this.maxsize - 1, this.istream.nextInstruction());
+
+            // TODO must deal with atomicity when constructing new candidate window
+
+            /*
+            // count down if any atom in progress
+             * int atomicityCountDown = 0;
+            if (atomicityCountDown > 0)
+                atomicityCountDown--;
+            
+            // if last instruction in previous candidate
+            // had delay, next block must be atomic
+            // (e.g., sequence cannot span non atomic bounds)
+            if (i > 0)
+                atomicityCountDown = insts.get(i - 1).getDelay();
+            
+            
+            // if candidate sequence window starts
+            // breaking atomicity window, then advance
+            if (atomicityCountDown > 0)
+                if (sequenceSize > atomicityCountDown) {
+                    i += atomicityCountDown;
+                    atomicityCountDown = 0;
+                    continue;
+                }
+            */
+        }
+
+        /*
+         * Remove all sequences which only happen once
+         */
+        Iterator<Integer> it = this.hashed.keySet().iterator();
+        while (it.hasNext()) {
+            var size = this.hashed.get(it.next()).addrs.size();
+            if (size <= 1)
+                it.remove();
+        }
+
+        // for all unique sequences which occur more than once, symbolify and add to output
         List<BinarySegment> allsequences = new ArrayList<BinarySegment>();
 
-        // Construct sequences between given sizes
-        for (int size = 2; size < 10; size++) {
-            for (HashedSequence seq : getSequences(size)) {
-                List<Instruction> symbolicseq = makeSymbolic(seq.instlist, seq.regremap);
-                allsequences.add(new FrequentSequence(symbolicseq, seq.addrs));
-            }
+        for (HashedSequence seq : this.hashed.values()) {
+            List<Instruction> symbolicseq = makeSymbolic(seq.instlist, seq.regremap);
+            allsequences.add(new FrequentSequence(symbolicseq, seq.addrs));
         }
 
         return allsequences;
@@ -276,6 +295,6 @@ public class FrequentStaticSequenceDetector implements SegmentDetector {
 
     @Override
     public void close() throws Exception {
-        elfstream.close();
+        istream.close();
     }
 }

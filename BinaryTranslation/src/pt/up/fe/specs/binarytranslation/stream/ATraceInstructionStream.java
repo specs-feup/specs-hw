@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import pt.up.fe.specs.util.SpecsIo;
-import pt.up.fe.specs.util.asm.processor.RegisterTable;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.LineStream;
@@ -16,6 +15,8 @@ import pt.up.fe.specs.util.utilities.Replacer;
 public abstract class ATraceInstructionStream implements TraceInstructionStream {
 
     private final Process gdb;
+    protected long numinsts;
+    protected long numcycles;
     protected final LineStream insts;
 
     protected static Process newSimulator(File elfname, ResourceProvider gdbtmpl,
@@ -32,6 +33,7 @@ public abstract class ATraceInstructionStream implements TraceInstructionStream 
         try {
             ProcessBuilder builder = new ProcessBuilder(Arrays.asList(gdbexe, "-x", "tmpscript.gdb"));
             builder.directory(new File("."));
+            builder.redirectErrorStream(true); // redirects stderr to stdout
             gdb = builder.start();
 
         } catch (IOException e) {
@@ -66,6 +68,8 @@ public abstract class ATraceInstructionStream implements TraceInstructionStream 
             String gdbexe, String qemuexe) {
         this.gdb = ATraceInstructionStream.newSimulator(elfname, gdbtmpl, gdbexe, qemuexe);
         this.insts = ATraceInstructionStream.newLineStream(gdb);
+        this.numinsts = 0;
+        this.numcycles = 0;
     }
 
     public void rawDump() {
@@ -75,21 +79,22 @@ public abstract class ATraceInstructionStream implements TraceInstructionStream 
         }
     }
 
+    @Override
+    public boolean hasNext() {
+        return this.insts.hasNextLine();
+    }
+
+    @Override
     public long getNumInstructions() {
-        // TODO Auto-generated method stub
-        return 0;
+        return this.numinsts;
     }
 
-    public RegisterTable getRegisters() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
+    @Override
     public long getCycles() {
-        // TODO Auto-generated method stub
-        return 0;
+        return this.numcycles;
     }
 
+    @Override
     public void close() {
 
         // wait for gdb to die before closing everything

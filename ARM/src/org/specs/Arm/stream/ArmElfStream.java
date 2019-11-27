@@ -37,8 +37,12 @@ public class ArmElfStream implements StaticInstructionStream {
         var addressAndInst = SpecsStrings.getRegex(line, ARM_REGEX);
         var addr = addressAndInst.get(0).trim();
         var inst = addressAndInst.get(1).trim();
-        // System.out.print(addr + "\n");
         return ArmInstruction.newInstance(addr, inst);
+    }
+
+    @Override
+    public boolean hasNext() {
+        return this.insts.hasNextLine();
     }
 
     @Override

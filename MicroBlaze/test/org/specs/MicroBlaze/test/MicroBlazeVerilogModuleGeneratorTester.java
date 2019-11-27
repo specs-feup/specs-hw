@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentSequenceDetector;
 import pt.up.fe.specs.binarytranslation.hardwaregeneration.VerilogModuleGenerator;
 import pt.up.fe.specs.util.SpecsIo;
 
@@ -19,7 +19,7 @@ public class MicroBlazeVerilogModuleGeneratorTester {
 
         List<BinarySegment> bblist = null;
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
-            var bbd = new FrequentStaticSequenceDetector(el);
+            var bbd = new FrequentSequenceDetector(el);
             bblist = bbd.detectSegments();
         }
         return bblist;
