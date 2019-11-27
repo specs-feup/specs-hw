@@ -77,4 +77,9 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
     default Instruction nextInstruction() {
         return nextTraceInstruction();
     }
+
+    @Override
+    default void close() {
+        // Do nothing, do not throw Exception
+    }
 }
