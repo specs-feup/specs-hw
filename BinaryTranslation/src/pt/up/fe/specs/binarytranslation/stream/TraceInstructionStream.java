@@ -17,6 +17,7 @@ import java.io.Closeable;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.util.asm.processor.RegisterTable;
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
  * Represents a trace.
@@ -60,5 +61,20 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
      */
     default RegisterTable getRegisters() {
         return null;
+    }
+
+    @Override
+    default int getInstructionWidth() {
+        throw new NotImplementedException(this);
+    }
+
+    @Override
+    default boolean hasNext() {
+        throw new NotImplementedException(this);
+    }
+
+    @Override
+    default Instruction nextInstruction() {
+        return nextTraceInstruction();
     }
 }
