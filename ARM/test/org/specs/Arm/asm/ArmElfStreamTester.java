@@ -13,7 +13,7 @@ public class ArmElfStreamTester {
     @Test
     public void test() {
 
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/helloworld64_from_vivado_flow/helloworld64.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/aarch64_bare_metal_qemu/test64.elf");
         fd.deleteOnExit();
 
         try (ArmElfStream el = new ArmElfStream(fd);) {
