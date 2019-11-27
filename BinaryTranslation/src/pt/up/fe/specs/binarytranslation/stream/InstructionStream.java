@@ -52,4 +52,5 @@ public interface InstructionStream extends AutoCloseable {
      * @return True if stream has another line
      */
     boolean hasNext();
+
 }
