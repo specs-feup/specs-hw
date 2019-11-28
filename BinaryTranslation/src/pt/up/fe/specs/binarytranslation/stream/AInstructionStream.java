@@ -54,7 +54,7 @@ public abstract class AInstructionStream implements InstructionStream {
         }
 
         if (insts == null) {
-            throw new RuntimeException("Could not obtain output stream of GDB");
+            throw new RuntimeException("Could not obtain output stream of stream generation process");
         }
 
         return insts;

@@ -36,7 +36,6 @@ public class MicroBlazeElfStream extends AStaticInstructionStream {
 
         this.numcycles += newinst.getLatency();
         this.numinsts++;
-
         return newinst;
     }
 
