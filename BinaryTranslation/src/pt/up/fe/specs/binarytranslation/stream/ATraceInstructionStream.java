@@ -12,12 +12,11 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.LineStream;
 import pt.up.fe.specs.util.utilities.Replacer;
 
-public abstract class ATraceInstructionStream implements TraceInstructionStream {
+public abstract class ATraceInstructionStream extends AInstructionStream {
 
     private final Process gdb;
     protected long numinsts;
     protected long numcycles;
-    protected final LineStream insts;
 
     protected static Process newSimulator(File elfname, ResourceProvider gdbtmpl,
             String gdbexe, String qemuexe) {
@@ -72,38 +71,8 @@ public abstract class ATraceInstructionStream implements TraceInstructionStream 
         this.numcycles = 0;
     }
 
-    public void rawDump() {
-        String line = null;
-        while ((line = insts.nextLine()) != null) {
-            System.out.print(line + "\n");
-        }
-    }
-
     @Override
-    public boolean hasNext() {
-        return this.insts.hasNextLine();
-    }
-
-    @Override
-    public long getNumInstructions() {
-        return this.numinsts;
-    }
-
-    @Override
-    public long getCycles() {
-        return this.numcycles;
-    }
-
-    @Override
-    public void close() {
-
-        // wait for gdb to die before closing everything
-        try {
-            gdb.waitFor();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        insts.close();
+    public InstructionStreamType getType() {
+        return InstructionStreamType.TRACE;
     }
 }

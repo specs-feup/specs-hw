@@ -53,4 +53,19 @@ public interface InstructionStream extends AutoCloseable {
      */
     boolean hasNext();
 
+    /**
+     * 
+     * @return the total number of returned instructions up to this moment
+     */
+    default long getNumInstructions() {
+        return 0;
+    }
+
+    /**
+     * 
+     * @return the total number of cycles up to this moment
+     */
+    default long getCycles() {
+        return 0;
+    }
 }
