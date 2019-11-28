@@ -149,6 +149,12 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
+    default boolean isImmediateValue() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
     default boolean isJump() {
         // TODO Auto-generated method stub
         return false;
