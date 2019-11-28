@@ -227,14 +227,14 @@ public class FrequentSequenceDetector implements SegmentDetector {
         // 3. can demand that all are equal in all ocurrences of sequence (all are non symbolic and hence all are
         // hardware specilaized literals)
 
-        List<Instruction> window = new ArrayList<Instruction>(this.maxsize); // fixed sized window
+        List<Instruction> window = new ArrayList<Instruction>();
 
         // make 1st window
         for (int i = 0; i < this.maxsize; i++)
-            window.set(i, this.istream.nextInstruction());
+            window.add(this.istream.nextInstruction());
 
         // process entire stream
-        while (istream.hasNext()) {
+        do {
 
             // sequences in this window, from sizes minsize to maxsize
             hashSequences(window);
@@ -270,7 +270,7 @@ public class FrequentSequenceDetector implements SegmentDetector {
                     continue;
                 }
             */
-        }
+        } while (istream.hasNext());
 
         /*
          * Remove all sequences which only happen once
