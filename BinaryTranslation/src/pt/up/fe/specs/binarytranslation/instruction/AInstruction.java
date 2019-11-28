@@ -124,8 +124,12 @@ public abstract class AInstruction implements Instruction {
         return idata.getGenericTypes().contains(InstructionType.G_AJUMP);
     }
 
-    public final boolean isImmediate() {
+    public final boolean isImmediateJump() {
         return idata.getGenericTypes().contains(InstructionType.G_IJUMP);
+    }
+
+    public final boolean isImmediateValue() {
+        return idata.getGenericTypes().contains(InstructionType.G_IMMV);
     }
 
     public final boolean isStore() {

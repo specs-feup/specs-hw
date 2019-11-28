@@ -11,7 +11,10 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.stream;
+package pt.up.fe.specs.binarytranslation.legacy;
+
+import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.InstructionStream.InstructionStreamType;
 
 /**
  * 

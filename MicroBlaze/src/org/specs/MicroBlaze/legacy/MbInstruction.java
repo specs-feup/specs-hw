@@ -232,4 +232,10 @@ public class MbInstruction implements TraceInstruction32 {
         // TODO Auto-generated method stub
         return false;
     }
+
+    @Override
+    public boolean isImmediateValue() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

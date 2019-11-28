@@ -39,6 +39,7 @@ public enum InstructionType {
     G_RJUMP, // jump is relative
     G_AJUMP, // jump is absolute
     G_IJUMP, // jump with immediate value
+    G_IMMV, // immediate value specification
     G_STORE,
     G_LOAD,
     G_MEMORY,

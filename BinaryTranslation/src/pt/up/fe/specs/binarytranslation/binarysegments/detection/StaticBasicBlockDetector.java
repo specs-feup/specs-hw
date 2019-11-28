@@ -19,7 +19,8 @@ import java.util.List;
 import pt.up.fe.specs.binarytranslation.binarysegments.BasicBlock;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
+import pt.up.fe.specs.binarytranslation.legacy.StaticInstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 /**
  * Detects all basic blocks in an ELF dump (i.e., static code) ElF dump must be provided by any implementation of
@@ -33,13 +34,13 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
     private List<BinarySegment> loops;
     private List<Instruction> insts;
     private List<Integer> backBranchesIdx;
-    private StaticInstructionStream elfstream;
+    private InstructionStream elfstream;
 
     /*
      * Since list needs revisiting, absorb all instructions in
      * the static dump into StaticBasicBlockDetector class instance
      */
-    public StaticBasicBlockDetector(StaticInstructionStream istream) {
+    public StaticBasicBlockDetector(InstructionStream istream) {
         this.elfstream = istream;
         this.loops = new ArrayList<BinarySegment>();
         this.insts = new ArrayList<Instruction>();

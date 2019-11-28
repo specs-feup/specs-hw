@@ -13,7 +13,7 @@ import pt.up.fe.specs.util.SpecsStrings;
 public class ArmTraceStream extends ATraceInstructionStream {
 
     private static final String GDB_EXE = "aarch64-none-elf-gdb";
-    private static final String QEMU_EXE = "qemu-system-aarch64";
+    private static final String QEMU_EXE = "/usr/bin/qemu-system-aarch64";
     private static final Pattern REGEX = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
 
     public ArmTraceStream(File elfname) {

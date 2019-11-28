@@ -5,21 +5,22 @@ import java.io.File;
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeTraceStreamTester {
 
     @Test
     public void test() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
         fd.deleteOnExit();
 
         try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(fd)) {
-            /*Instruction inst = null;
+            Instruction inst = null;
             while ((inst = el.nextInstruction()) != null) {
                 inst.printInstruction();
-            }*/
-            el.rawDump();
+            }
+            // el.rawDump();
         }
     }
 }
