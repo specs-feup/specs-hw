@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public abstract class AStaticInstructionStream implements StaticInstructionStream {
+public abstract class AStaticInstructionStream extends AInstructionStream {
 
     private final Process objdump;
     protected long numinsts;
@@ -61,28 +61,8 @@ public abstract class AStaticInstructionStream implements StaticInstructionStrea
         this.numcycles = 0;
     }
 
-    public void rawDump() {
-        String line = null;
-        while ((line = insts.nextLine()) != null) {
-            System.out.print(line + "\n");
-        }
-    }
-
     @Override
-    public boolean hasNext() {
-        return this.insts.hasNextLine();
-    }
-
-    @Override
-    public void close() {
-
-        // wait for gdb to die before closing everything
-        try {
-            objdump.waitFor();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        insts.close();
+    public InstructionStreamType getType() {
+        return InstructionStreamType.STATIC_ELF;
     }
 }
