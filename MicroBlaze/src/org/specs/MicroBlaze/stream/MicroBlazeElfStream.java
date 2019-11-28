@@ -20,6 +20,7 @@ public class MicroBlazeElfStream extends AStaticInstructionStream {
 
     @Override
     public Instruction nextInstruction() {
+
         String line = null;
         while (((line = insts.nextLine()) != null) && !SpecsStrings.matches(line, REGEX))
             ;
@@ -31,17 +32,12 @@ public class MicroBlazeElfStream extends AStaticInstructionStream {
         var addressAndInst = SpecsStrings.getRegex(line, REGEX);
         var addr = addressAndInst.get(0).trim();
         var inst = addressAndInst.get(1).trim();
-        return MicroBlazeInstruction.newInstance(addr, inst);
-    }
+        var newinst = MicroBlazeInstruction.newInstance(addr, inst);
 
-    @Override
-    public boolean hasNext() {
-        return this.insts.hasNextLine();
-    }
+        this.numcycles += newinst.getLatency();
+        this.numinsts++;
 
-    @Override
-    public void close() {
-        insts.close();
+        return newinst;
     }
 
     @Override

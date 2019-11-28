@@ -121,7 +121,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     putd(0x4C00_0400, 2, 1, DSTREAM, G_OTHER),
 
     // IMM
-    imm(0xB000_0000, 1, 0, IMM, G_OTHER),
+    imm(0xB000_0000, 1, 0, IMM, G_IMMV),
 
     // TYPE A
     add(0x0000_0000, 1, 0, TYPE_A, G_ADD),
@@ -325,7 +325,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     public AsmFieldType getCodeType() {
         return this.codetype;
     }
-    
+
     /*
      * 
      */

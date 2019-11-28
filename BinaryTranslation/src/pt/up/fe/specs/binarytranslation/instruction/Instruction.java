@@ -108,7 +108,13 @@ public interface Instruction {
      * Check if instruction uses immediate 
      * value for either relative or absolute jump
      */
-    public boolean isImmediate();
+    public boolean isImmediateJump();
+
+    /*
+     * Check if instruction is "imm"
+     * (Works for Microblaze so far)
+     */
+    public boolean isImmediateValue();
 
     /*
      * Check if instruction is store

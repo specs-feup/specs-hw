@@ -10,12 +10,20 @@ import pt.up.fe.specs.util.utilities.LineStream;
 
 public abstract class AInstructionStream implements InstructionStream {
 
-    protected Process proc;
+    private final Process proc;
     protected long numinsts;
     protected long numcycles;
     protected final LineStream insts;
 
-    protected static Process newStreamGenerator(ProcessBuilder builder) {
+    public AInstructionStream(ProcessBuilder builder) {
+
+        this.proc = AInstructionStream.newStreamGenerator(builder);
+        this.insts = AInstructionStream.newLineStream(proc);
+        this.numinsts = 0;
+        this.numcycles = 0;
+    }
+
+    private static Process newStreamGenerator(ProcessBuilder builder) {
 
         // start gdb
         Process proc = null;
@@ -25,13 +33,13 @@ public abstract class AInstructionStream implements InstructionStream {
             proc = builder.start();
 
         } catch (IOException e) {
-            throw new RuntimeException("Could not run process bin with name: " + objdump);
+            throw new RuntimeException("Could not run process bin with name: " + proc);
         }
 
         return proc;
     }
 
-    protected static LineStream newLineStream(Process proc) {
+    private static LineStream newLineStream(Process proc) {
 
         // No error detected, obtain LineStream
         LineStream insts = null;
