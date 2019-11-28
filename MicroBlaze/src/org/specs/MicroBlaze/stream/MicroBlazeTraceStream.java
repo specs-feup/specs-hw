@@ -28,7 +28,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
     // two auxiliary vars to help with mb-gdb bug
     private final Map<Integer, Instruction> elfdump = new HashMap<Integer, Instruction>();
-    private Instruction afterimm = null;
+    private Instruction afterbug = null;
     private boolean haveStoredInst = false;
 
     public MicroBlazeTraceStream(File elfname) {
@@ -36,6 +36,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
         // Workaround for mb-gdb bug of stepping over
         // two instructions at once when it hits an "imm"
+        // NOTE: it also doesn't output the instructions in delay slots!!
         // 1. open the ELF
         // 2. dump all the ELF into a local list
         var elf = new MicroBlazeElfStream(elfname);
@@ -71,7 +72,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         Instruction i = null;
 
         if (haveStoredInst == true) {
-            i = afterimm;
+            i = afterbug;
             haveStoredInst = false;
         }
 
@@ -88,12 +89,12 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
             var addr = addressAndInst.get(0).trim();
             var inst = addressAndInst.get(1).trim();
             i = MicroBlazeInstruction.newInstance(addr, inst);
+        }
 
-            // get another one if true
-            if (i.isImmediateValue()) {
-                afterimm = elfdump.get(i.getAddress().intValue() + this.getInstructionWidth());
-                haveStoredInst = true;
-            }
+        // get another one if true
+        if (i.isImmediateValue() || (i.getDelay() > 0)) {
+            afterbug = elfdump.get(i.getAddress().intValue() + this.getInstructionWidth());
+            haveStoredInst = true;
         }
 
         this.numcycles += i.getLatency();
