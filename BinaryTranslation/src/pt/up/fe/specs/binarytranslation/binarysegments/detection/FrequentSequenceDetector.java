@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,7 +43,7 @@ public class FrequentSequenceDetector implements SegmentDetector {
      * min and max size of windows 
      */
     private final int minsize = 2;
-    private final int maxsize = 10;
+    private final int maxsize = 4;
 
     /*
      * This map holds all hashed sequences for all instruction windows we analyse
@@ -58,17 +59,60 @@ public class FrequentSequenceDetector implements SegmentDetector {
     }
 
     /*
+     * Helper Functional interface
+     
+    interface Rebuilder {
+        Instruction newInstance(String address, String instruction);
+    }*/
+
+    /*
+     * Private Helper class to hold a dumbed down instruction
+     * so as to consume less memory. Instructions can be rebuilt
+     * by reparsing calling the constructor that originated them
+     */
+    private class SimpleInstruction {
+        protected String address;
+        protected String instruction;
+        protected Method c;
+
+        public SimpleInstruction(Instruction i) {
+            this.address = i.getAddress().toString();
+            this.instruction = i.getInstruction();
+            try {
+                this.c = i.getClass().getMethod("newInstance", String.class, String.class);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getCause());
+            }
+        }
+
+        public Instruction rebuild() {
+            Instruction i = null;
+            try {
+                i = (Instruction) this.c.invoke(null, this.address, this.instruction);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getCause());
+            }
+            return i;
+        }
+    }
+
+    /*
      * Private helper class to hold hash 
      * sequence data, and prevent duplicate work
      */
     private class HashedSequence {
         protected Map<String, String> regremap;
-        protected List<Instruction> instlist;
+        protected List<SimpleInstruction> instlist;
         protected List<Integer> addrs;
         protected int size;
 
         HashedSequence(List<Instruction> instlist, Integer addr, Map<String, String> regremap) {
-            this.instlist = instlist;
+
+            // deep copy
+            this.instlist = new ArrayList<SimpleInstruction>();
+            for (Instruction i : instlist)
+                this.instlist.add(new SimpleInstruction(i));
+
             this.size = instlist.size();
             this.addrs = new ArrayList<Integer>();
             this.addrs.add(addr);
@@ -169,7 +213,7 @@ public class FrequentSequenceDetector implements SegmentDetector {
     private void hashSequences(List<Instruction> w) {
 
         // compute all hashes for this window, for all sequence sizes
-        for (int i = this.minsize; i < this.maxsize; i++) {
+        for (int i = this.minsize; i <= this.maxsize; i++) {
 
             // sub-window
             List<Instruction> candidate = w.subList(0, i);
@@ -286,7 +330,12 @@ public class FrequentSequenceDetector implements SegmentDetector {
         List<BinarySegment> allsequences = new ArrayList<BinarySegment>();
 
         for (HashedSequence seq : this.hashed.values()) {
-            List<Instruction> symbolicseq = makeSymbolic(seq.instlist, seq.regremap);
+
+            var rebuiltI = new ArrayList<Instruction>();
+            for (SimpleInstruction i : seq.instlist)
+                rebuiltI.add(i.rebuild());
+
+            List<Instruction> symbolicseq = makeSymbolic(rebuiltI, seq.regremap);
             allsequences.add(new FrequentSequence(symbolicseq, seq.addrs));
         }
 

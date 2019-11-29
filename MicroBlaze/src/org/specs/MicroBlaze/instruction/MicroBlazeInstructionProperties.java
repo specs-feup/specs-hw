@@ -121,7 +121,9 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     putd(0x4C00_0400, 2, 1, DSTREAM, G_OTHER),
 
     // IMM
-    imm(0xB000_0000, 1, 0, IMM, G_IMMV),
+    imm(0xB000_0000, 1, 1, IMM, G_IMMV),
+    // NOTE: I assign "1" to the delay value of imm
+    // since it emulates the atomicity of the instruction
 
     // TYPE A
     add(0x0000_0000, 1, 0, TYPE_A, G_ADD),
