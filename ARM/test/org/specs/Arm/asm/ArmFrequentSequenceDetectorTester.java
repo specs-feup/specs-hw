@@ -10,7 +10,7 @@ import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentSequenceDetector;
 import pt.up.fe.specs.util.SpecsIo;
 
-public class ArmFrequentStaticSequenceDetectorTester {
+public class ArmFrequentSequenceDetectorTester {
 
     @Test
     public void test() {
