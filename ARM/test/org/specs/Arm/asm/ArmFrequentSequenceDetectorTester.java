@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Test;
-import org.specs.Arm.stream.ArmElfStream;
+import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentSequenceDetector;
@@ -17,8 +17,8 @@ public class ArmFrequentSequenceDetectorTester {
         File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/aarch64_bare_metal_qemu/test64.elf");
         fd.deleteOnExit();
 
-        try (ArmElfStream el = new ArmElfStream(fd)) {
-            // try (ArmTraceStream el = new ArmTraceStream(fd)) {
+        // try (ArmElfStream el = new ArmElfStream(fd)) {
+        try (ArmTraceStream el = new ArmTraceStream(fd)) {
             var bbd = new FrequentSequenceDetector(el);
             List<BinarySegment> bblist = bbd.detectSegments();
 

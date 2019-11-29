@@ -43,7 +43,7 @@ public class FrequentSequenceDetector implements SegmentDetector {
      * min and max size of windows 
      */
     private final int minsize = 2;
-    private final int maxsize = 4;
+    private final int maxsize = 10;
 
     /*
      * This map holds all hashed sequences for all instruction windows we analyse
@@ -57,13 +57,6 @@ public class FrequentSequenceDetector implements SegmentDetector {
     public FrequentSequenceDetector(InstructionStream istream) {
         this.istream = istream;
     }
-
-    /*
-     * Helper Functional interface
-     
-    interface Rebuilder {
-        Instruction newInstance(String address, String instruction);
-    }*/
 
     /*
      * Private Helper class to hold a dumbed down instruction
@@ -218,6 +211,14 @@ public class FrequentSequenceDetector implements SegmentDetector {
             // sub-window
             List<Instruction> candidate = w.subList(0, i);
 
+            // if last inst has any kind of delay, must discard this subcandidate
+            // this delays with MicroBlaze delay branch instructions (for now)
+            var delay = candidate.get(candidate.size() - 1).getDelay();
+            if (delay > 0) {
+                i += delay - 1;
+                continue;
+            }
+
             // discard candidate?
             if (!validSequence(candidate))
                 continue;
@@ -284,36 +285,15 @@ public class FrequentSequenceDetector implements SegmentDetector {
             hashSequences(window);
 
             // shift window (i.e. new window)
-            for (int i = 0; i < this.maxsize - 1; i++)
-                window.set(i, window.get(i + 1));
+            int i = 0;
+            int atomicity = window.get(0).getDelay();
+            for (i = 0; i < this.maxsize - 1 - atomicity; i++)
+                window.set(i, window.get(i + 1 + atomicity));
 
-            // one new instruction in window
-            window.set(this.maxsize - 1, this.istream.nextInstruction());
+            // new instructions in window
+            for (; i < this.maxsize; i++)
+                window.set(i, this.istream.nextInstruction());
 
-            // TODO must deal with atomicity when constructing new candidate window
-
-            /*
-            // count down if any atom in progress
-             * int atomicityCountDown = 0;
-            if (atomicityCountDown > 0)
-                atomicityCountDown--;
-            
-            // if last instruction in previous candidate
-            // had delay, next block must be atomic
-            // (e.g., sequence cannot span non atomic bounds)
-            if (i > 0)
-                atomicityCountDown = insts.get(i - 1).getDelay();
-            
-            
-            // if candidate sequence window starts
-            // breaking atomicity window, then advance
-            if (atomicityCountDown > 0)
-                if (sequenceSize > atomicityCountDown) {
-                    i += atomicityCountDown;
-                    atomicityCountDown = 0;
-                    continue;
-                }
-            */
         } while (istream.hasNext());
 
         /*
