@@ -28,6 +28,9 @@ public interface BinarySegment {
     enum SegmentType {
         STATIC_FREQUENT_SEQUENCE,
         STATIC_BASIC_BLOCK,
+
+        TRACE_FREQUENT_SEQUENCE,
+
         MEGA_BLOCK
     };
 

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.FrequentSequence;
+import pt.up.fe.specs.binarytranslation.binarysegments.FrequentStaticSequence;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
 import pt.up.fe.specs.binarytranslation.instruction.OperandType;
@@ -61,7 +61,8 @@ public class FrequentSequenceDetector implements SegmentDetector {
     /*
      * Private Helper class to hold a dumbed down instruction
      * so as to consume less memory. Instructions can be rebuilt
-     * by reparsing calling the constructor that originated them
+     * by reparsing calling the constructor that originated them,
+     * after frequent hashed sequences are determined
      */
     private class SimpleInstruction {
         protected String address;
@@ -96,7 +97,7 @@ public class FrequentSequenceDetector implements SegmentDetector {
     private class HashedSequence {
         protected Map<String, String> regremap;
         protected List<SimpleInstruction> instlist;
-        protected List<Integer> addrs;
+        protected Map<Integer, Integer> addrs; // addr, count
         protected int size;
 
         HashedSequence(List<Instruction> instlist, Integer addr, Map<String, String> regremap) {
@@ -107,8 +108,8 @@ public class FrequentSequenceDetector implements SegmentDetector {
                 this.instlist.add(new SimpleInstruction(i));
 
             this.size = instlist.size();
-            this.addrs = new ArrayList<Integer>();
-            this.addrs.add(addr);
+            this.addrs = new HashMap<Integer, Integer>();
+            this.addrs.put(addr, 1);
             this.regremap = regremap;
         }
     }
@@ -121,6 +122,7 @@ public class FrequentSequenceDetector implements SegmentDetector {
 
             // TODO fail with stream instructions
 
+            // do not form sequences with unknown instructions
             // do not form frequent sequences containing jumps
             // do not form frequent sequences memory accesses
             if (inst.isUnknown() || inst.isJump() || inst.isMemory()) {
@@ -131,7 +133,7 @@ public class FrequentSequenceDetector implements SegmentDetector {
         return true;
     }
 
-    /*hashed
+    /*
      * Builds operand value replacement map for a given sequence (assumed valid)
      */
     private Map<String, String> makeRegReplaceMap(List<Instruction> ilist) {
@@ -248,12 +250,19 @@ public class FrequentSequenceDetector implements SegmentDetector {
             Integer startAddr = w.get(0).getAddress().intValue();
 
             // if sequence was complete, add (or add addr to existing equal sequence)
-            if (this.hashed.containsKey(hashCode))
-                this.hashed.get(hashCode).addrs.add(startAddr);
+            if (this.hashed.containsKey(hashCode)) {
+
+                Integer c = 0;
+                if (this.hashed.get(hashCode).addrs.containsKey(startAddr))
+                    c = this.hashed.get(hashCode).addrs.put(startAddr, 1);
+
+                this.hashed.get(hashCode).addrs.put(startAddr, c + 1);
+            }
 
             // add new sequence
-            else
+            else {
                 this.hashed.put(hashCode, new HashedSequence(candidate, startAddr, regremap));
+            }
         }
 
         return;
@@ -296,9 +305,7 @@ public class FrequentSequenceDetector implements SegmentDetector {
 
         } while (istream.hasNext());
 
-        /*
-         * Remove all sequences which only happen once
-         */
+        // Remove all sequences which only happen once
         Iterator<Integer> it = this.hashed.keySet().iterator();
         while (it.hasNext()) {
             var size = this.hashed.get(it.next()).addrs.size();
@@ -316,7 +323,7 @@ public class FrequentSequenceDetector implements SegmentDetector {
                 rebuiltI.add(i.rebuild());
 
             List<Instruction> symbolicseq = makeSymbolic(rebuiltI, seq.regremap);
-            allsequences.add(new FrequentSequence(symbolicseq, seq.addrs));
+            allsequences.add(new FrequentStaticSequence(symbolicseq, seq.addrs));
         }
 
         return allsequences;

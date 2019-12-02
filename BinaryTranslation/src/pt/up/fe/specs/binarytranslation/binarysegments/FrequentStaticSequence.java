@@ -22,52 +22,39 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  * @author Nuno
  *
  */
-public class FrequentSequence extends ABinarySegment {
+public class FrequentStaticSequence extends AFrequentSequence {
 
     private List<Integer> startAddresses;
+    // addr, frequency count
 
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
-    private FrequentSequence(List<Instruction> ilist) {
-        super();
-        this.instlist = ilist;
+    private FrequentStaticSequence(List<Instruction> ilist) {
+        super(ilist);
         this.segtype = SegmentType.STATIC_FREQUENT_SEQUENCE;
-        buildLiveInsAndLiveOuts();
     }
 
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
-    public FrequentSequence(List<Instruction> ilist, List<Integer> startAddresses) {
+    public FrequentStaticSequence(List<Instruction> ilist, List<Integer> startAddresses) {
         this(ilist);
         this.startAddresses = startAddresses;
     }
 
     @Override
-    public int getUniqueId() {
-        String uniqueid = "";
-        for (Integer i : startAddresses) {
-            uniqueid += i.toString();
-        }
-
-        return uniqueid.hashCode();
+    protected List<Integer> getAddresses() {
+        return this.startAddresses;
     }
 
-    public String getRepresentation() {
-        String ret = "Sequence occurs at = [ ";
-
-        // start addrs
+    @Override
+    protected String getAddressListRepresentation() {
+        String ret = "";
         for (Integer addr : this.startAddresses) {
             ret += "0x" + Integer.toHexString(addr) + " ";
         }
         ret += "]\n";
-
-        // instructions
-        for (Instruction inst : this.instlist) {
-            ret += inst.getRepresentation() + "\n";
-        }
-
         return ret;
     }
 }
