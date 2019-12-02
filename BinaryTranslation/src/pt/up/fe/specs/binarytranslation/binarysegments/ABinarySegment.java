@@ -30,7 +30,7 @@ public abstract class ABinarySegment implements BinarySegment {
     protected List<Instruction> instlist;
     protected List<Operand> liveins = null, liveouts = null;
 
-    public ABinarySegment() {
+    protected ABinarySegment() {
         this.instlist = new ArrayList<Instruction>();
     }
 
@@ -94,6 +94,8 @@ public abstract class ABinarySegment implements BinarySegment {
                 if (op.isSymbolic() && op.isWrite() && !this.liveouts.contains(op)) {
                     this.liveouts.add(op);
                 }
+
+                // TODO isbSymblic check required? what about constants and "sp" ?
             }
         }
         return;
