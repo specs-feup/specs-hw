@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class ArmFrequentSequenceDetectorTester {
@@ -19,7 +19,7 @@ public class ArmFrequentSequenceDetectorTester {
 
         // try (ArmElfStream el = new ArmElfStream(fd)) {
         try (ArmTraceStream el = new ArmTraceStream(fd)) {
-            var bbd = new FrequentSequenceDetector(el);
+            var bbd = new FrequentStaticSequenceDetector(el);
             List<BinarySegment> bblist = bbd.detectSegments();
 
             for (BinarySegment bs : bblist) {
