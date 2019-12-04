@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeFrequentSequenceDetectorTester {
@@ -18,7 +18,7 @@ public class MicroBlazeFrequentSequenceDetectorTester {
         fd.deleteOnExit();
 
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
-            var bbd = new FrequentSequenceDetector(el);
+            var bbd = new FrequentStaticSequenceDetector(el);
             List<BinarySegment> bblist = bbd.detectSegments();
 
             for (BinarySegment bs : bblist) {
