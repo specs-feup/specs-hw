@@ -40,6 +40,7 @@ public class FrequentTraceSequence extends AFrequentSequence {
             var count = entry.getValue();
             ret += "0x" + Integer.toHexString(addr) + "(" + count + ")" + " ";
         }
+        ret += "]\n";
         return ret;
     }
 }

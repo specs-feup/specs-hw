@@ -13,32 +13,33 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.FrequentStaticSequence;
+import pt.up.fe.specs.binarytranslation.binarysegments.AFrequentSequence;
+import pt.up.fe.specs.binarytranslation.binarysegments.FrequentTraceSequence;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 /**
  * 
- * @author Nuno
+ * @author nuno
  *
  */
-public class FrequentStaticSequenceDetector extends AFrequentSequenceDetector {
+public class FrequentTraceSequenceDetector extends AFrequentSequenceDetector {
 
     /*
      * This map holds all hash codes and list of occurring addresses for each
+     * HashCode --> (Addr --> occurence count)
      */
-    private Map<Integer, List<Integer>> addrs = new HashMap<Integer, List<Integer>>();
+    private Map<Integer, Map<Integer, Integer>> addrs = new HashMap<Integer, Map<Integer, Integer>>();
 
     /*
      * 
      */
-    public FrequentStaticSequenceDetector(InstructionStream istream) {
+    public FrequentTraceSequenceDetector(InstructionStream istream) {
         super(istream);
     }
 
@@ -47,18 +48,26 @@ public class FrequentStaticSequenceDetector extends AFrequentSequenceDetector {
 
         var startAddr = candidate.get(0).getAddress();
 
-        // add sequence addr to list, if equivalent already exists
-        if (this.hashed.containsKey(hashCode)) {
-            this.addrs.get(hashCode).add(startAddr.intValue());
+        // if hash exists
+        if (this.addrs.containsKey(hashCode)) {
+
+            var key = this.addrs.get(hashCode);
+
+            // if addr exists
+            Integer c = 0;
+            if (key.containsKey(startAddr.intValue())) {
+                c = key.get(startAddr.intValue());
+            }
+            key.put(startAddr.intValue(), c + 1);
         }
 
-        // add new sequence
+        // if doesn't
         else {
             this.hashed.put(hashCode, new HashedSequence(candidate, startAddr, regremap));
 
-            var l = new ArrayList<Integer>();
-            l.add(startAddr.intValue());
-            this.addrs.put(hashCode, l);
+            var newmap = new HashMap<Integer, Integer>();
+            newmap.put(startAddr.intValue(), 1);
+            this.addrs.put(hashCode, newmap);
         }
     }
 
@@ -69,14 +78,18 @@ public class FrequentStaticSequenceDetector extends AFrequentSequenceDetector {
         Iterator<Integer> it = this.hashed.keySet().iterator();
         while (it.hasNext()) {
             var addrlist = this.addrs.get(it.next());
-            if (addrlist.size() <= 1)
+            var sum = 0;
+            for (Integer i : addrlist.values())
+                sum += i;
+
+            if (sum <= 1)
                 it.remove();
         }
     }
 
     @Override
-    protected FrequentStaticSequence makeFrequentSequence(Integer hashcode, List<Instruction> ilist) {
+    protected AFrequentSequence makeFrequentSequence(Integer hashcode, List<Instruction> ilist) {
         var addrs = this.addrs.get(hashcode);
-        return new FrequentStaticSequence(ilist, addrs);
+        return new FrequentTraceSequence(ilist, addrs);
     }
 }

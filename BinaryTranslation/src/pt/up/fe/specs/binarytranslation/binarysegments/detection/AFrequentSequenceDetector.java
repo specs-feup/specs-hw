@@ -170,8 +170,8 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
             }
 
             // discard candidate?
-            if (!validSequence(candidate))
-                continue;
+            // if (!validSequence(candidate))
+            // continue;
 
             // make register replacement map (for hash building)
             Map<String, String> regremap = makeRegReplaceMap(candidate);

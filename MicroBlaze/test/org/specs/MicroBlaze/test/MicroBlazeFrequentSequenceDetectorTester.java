@@ -1,3 +1,16 @@
+/**
+ * Copyright 2019 SPeCS.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License. under the License.
+ */
+
 package org.specs.MicroBlaze.test;
 
 import java.io.File;
@@ -5,27 +18,46 @@ import java.util.List;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeFrequentSequenceDetectorTester {
 
+    public void test(SegmentDetector bbd) {
+
+        List<BinarySegment> bblist = bbd.detectSegments();
+
+        for (BinarySegment bs : bblist) {
+            bs.printSegment();
+            System.out.print("\n");
+        }
+        return;
+    }
+
     @Test
-    public void test() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.txt");
+    public void testStatic() {
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
         fd.deleteOnExit();
 
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
             var bbd = new FrequentStaticSequenceDetector(el);
-            List<BinarySegment> bblist = bbd.detectSegments();
-
-            for (BinarySegment bs : bblist) {
-                bs.printSegment();
-                System.out.print("\n");
-            }
+            test(bbd);
         }
-        return;
+    }
+
+    @Test
+    public void testTrace() {
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
+        fd.deleteOnExit();
+
+        try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(fd)) {
+            var bbd = new FrequentTraceSequenceDetector(el);
+            test(bbd);
+        }
     }
 }
