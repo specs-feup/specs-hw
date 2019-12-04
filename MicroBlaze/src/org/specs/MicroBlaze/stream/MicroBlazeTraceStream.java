@@ -40,8 +40,8 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         // 1. open the ELF
         // 2. dump all the ELF into a local list
         var elf = new MicroBlazeElfStream(elfname);
-        while (elf.hasNext()) {
-            var i = elf.nextInstruction();
+        Instruction i = null;
+        while ((i = elf.nextInstruction()) != null) {
             elfdump.put(i.getAddress().intValue(), i);
         }
         elf.close();
