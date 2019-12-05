@@ -3,11 +3,8 @@ package org.specs.Arm.stream;
 import java.io.File;
 import java.util.regex.Pattern;
 
-import org.specs.Arm.instruction.ArmInstruction;
-
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
-import pt.up.fe.specs.util.SpecsStrings;
 
 public class ArmElfStream extends AStaticInstructionStream {
 
@@ -20,33 +17,18 @@ public class ArmElfStream extends AStaticInstructionStream {
 
     @Override
     public Instruction nextInstruction() {
-        String line = null;
-        while (((line = insts.nextLine()) != null) && !SpecsStrings.matches(line, REGEX))
-            ;
 
-        if (line == null) {
+        var newinst = ArmInstructionStreamMethods.nextInstruction(this.insts, REGEX);
+        if (newinst == null) {
             return null;
         }
-
-        var addressAndInst = SpecsStrings.getRegex(line, REGEX);
-        var addr = addressAndInst.get(0).trim();
-        var inst = addressAndInst.get(1).trim();
-        return ArmInstruction.newInstance(addr, inst);
-    }
-
-    @Override
-    public boolean hasNext() {
-        return this.insts.hasNextLine();
-    }
-
-    @Override
-    public void close() {
-        insts.close();
+        this.numcycles += newinst.getLatency();
+        this.numinsts++;
+        return newinst;
     }
 
     @Override
     public int getInstructionWidth() {
-        return 4; // return in bytes
-        // TODO replace this with something smarter
+        return ArmInstructionStreamMethods.getInstructionWidth();
     }
 }

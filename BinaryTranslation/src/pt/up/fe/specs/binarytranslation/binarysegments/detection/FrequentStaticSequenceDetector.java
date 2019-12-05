@@ -36,7 +36,7 @@ public class FrequentStaticSequenceDetector extends AFrequentSequenceDetector {
     private Map<Integer, List<Integer>> addrs = new HashMap<Integer, List<Integer>>();
 
     /*
-     * 
+     * Public constructor
      */
     public FrequentStaticSequenceDetector(InstructionStream istream) {
         super(istream);

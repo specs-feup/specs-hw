@@ -21,11 +21,17 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
         return new ProcessBuilder(Arrays.asList(gdbexe, "-x", "tmpscript.gdb"));
     }
 
+    /*
+     * used by arm
+     */
     protected ATraceInstructionStream(File elfname, ResourceProvider gdbtmpl,
             String gdbexe, String qemuexe) {
         super(ATraceInstructionStream.newSimulatorBuilder(elfname, gdbtmpl, gdbexe, qemuexe));
     }
 
+    /*
+     * Constructor is only used by microblaze for now
+     */
     protected ATraceInstructionStream(ProcessBuilder pb) {
         super(pb);
     }

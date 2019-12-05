@@ -25,17 +25,20 @@ import pt.up.fe.specs.binarytranslation.instruction.Operand;
  */
 public interface BinarySegment {
 
-    enum SegmentType {
-        STATIC_FREQUENT_SEQUENCE,
-        STATIC_BASIC_BLOCK,
-        TRACE_FREQUENT_SEQUENCE,
-        MEGA_BLOCK
-    };
-
     /*
      * 
      */
-    SegmentType getSegmentType();
+    BinarySegmentType getSegmentType();
+
+    /*
+     * Returns the total number of cycles represented by the segment
+     */
+    Integer getSegmentCycles();
+
+    /*
+     * Returns the total number of cycles considering the number of times the segment executes
+     */
+    Integer getExecutionCycles();
 
     /*
      * Number of instructions in the segment

@@ -16,8 +16,8 @@ package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.BasicBlock;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.binarysegments.StaticBasicBlock;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.legacy.StaticInstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
@@ -31,10 +31,16 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
  */
 public final class StaticBasicBlockDetector implements SegmentDetector {
 
-    private List<BinarySegment> loops;
+    private List<BinarySegment> loops = null;
     private List<Instruction> insts;
     private List<Integer> backBranchesIdx;
     private InstructionStream elfstream;
+
+    /*
+     * Stuff for statistics (TODO: add more) TODO: move to abstract ABinarySegment 
+     */
+    protected long totalCycles;
+    protected long numInsts;
 
     /*
      * Since list needs revisiting, absorb all instructions in
@@ -42,13 +48,34 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
      */
     public StaticBasicBlockDetector(InstructionStream istream) {
         this.elfstream = istream;
-        this.loops = new ArrayList<BinarySegment>();
         this.insts = new ArrayList<Instruction>();
         this.backBranchesIdx = new ArrayList<Integer>();
     }
 
+    /*
+     * Basic block can only have one branch back, and zero branches forward
+     */
+    private boolean isValid(List<Instruction> candidate) {
+
+        int numbranches = 0;
+        for (Instruction i : candidate) {
+
+            if (i.isJump())
+                numbranches++;
+
+            if (i.isForwardsJump())
+                return false;
+        }
+
+        return (numbranches > 1) ? false : true;
+    }
+
     @Override
     public List<BinarySegment> detectSegments() {
+
+        // TODO: treat in another fashion
+        if (loops != null)
+            return this.loops;
 
         // identify all backwards branches, save indexes in list
         Integer idx = 0;
@@ -60,6 +87,9 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
             insts.add(inst);
             // save all instructions
         }
+
+        // make list
+        this.loops = new ArrayList<BinarySegment>();
 
         // starting from each target, add every following instruction to
         // the list of that Basic Block, until branch itself is reached
@@ -90,16 +120,34 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
             int bbSize = (int) ((thisAddr - startAddr) / elfstream.getInstructionWidth());
             int delay = is.getDelay();
 
-            // TODO possible bug here, instruction list skips some addrs in static elf
+            // candidate
+            List<Instruction> candidate = insts.subList(i - bbSize, i + 1 + delay);
+
+            // validate sequence
+            if (!isValid(candidate))
+                continue;
 
             // Create the block
-            BasicBlock bb = new BasicBlock(insts.subList(i - bbSize, i + 1 + delay));
+            StaticBasicBlock bb = new StaticBasicBlock(insts.subList(i - bbSize, i + 1 + delay));
 
             // Add to return list
             loops.add(bb);
         }
 
+        // finally, init some stats
+        this.totalCycles = elfstream.getCycles();
+        this.numInsts = elfstream.getNumInstructions();
+
         return loops;
+    }
+
+    @Override
+    public float getCoverage(int segmentSize) {
+        Integer detectedportion = 0;
+        for (BinarySegment seg : this.loops) {
+            detectedportion += seg.getExecutionCycles();
+        }
+        return (float) detectedportion / this.totalCycles;
     }
 
     @Override

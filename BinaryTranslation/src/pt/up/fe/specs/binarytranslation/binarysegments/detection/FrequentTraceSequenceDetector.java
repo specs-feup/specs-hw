@@ -37,7 +37,7 @@ public class FrequentTraceSequenceDetector extends AFrequentSequenceDetector {
     private Map<Integer, Map<Integer, Integer>> addrs = new HashMap<Integer, Map<Integer, Integer>>();
 
     /*
-     * 
+     * Public constructor
      */
     public FrequentTraceSequenceDetector(InstructionStream istream) {
         super(istream);

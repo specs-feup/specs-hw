@@ -26,7 +26,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Operand;
  */
 public abstract class ABinarySegment implements BinarySegment {
 
-    protected SegmentType segtype;
+    protected BinarySegmentType segtype;
     protected List<Instruction> instlist;
     protected List<Operand> liveins = null, liveouts = null;
 
@@ -38,7 +38,7 @@ public abstract class ABinarySegment implements BinarySegment {
         return instlist.size();
     }
 
-    public SegmentType getSegmentType() {
+    public BinarySegmentType getSegmentType() {
         return this.segtype;
     }
 
@@ -72,6 +72,14 @@ public abstract class ABinarySegment implements BinarySegment {
     public void printSegment() {
         System.out.print(this.getRepresentation());
         return;
+    }
+
+    public Integer getSegmentCycles() {
+        Integer cycles = 0;
+        for (Instruction i : this.instlist) {
+            cycles += i.getLatency();
+        }
+        return cycles;
     }
 
     /*

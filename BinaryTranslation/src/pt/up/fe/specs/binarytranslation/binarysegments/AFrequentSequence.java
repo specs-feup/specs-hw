@@ -38,6 +38,9 @@ public abstract class AFrequentSequence extends ABinarySegment {
         return uniqueid.hashCode();
     }
 
+    /*
+     * 
+     */
     public String getRepresentation() {
 
         // addresses
