@@ -30,4 +30,11 @@ public interface SegmentDetector extends AutoCloseable {
      * Example loops may include: megablock, basicblock, or frequent instruction sequences     
      */
     List<BinarySegment> detectSegments();
+
+    /*
+     * Returns how much of the program the detected segments represent
+     * for static segments, it represents how much of the ELF is covered (not very significant)
+     * for trace segments, it represents execution coverage 
+     */
+    public float getCoverage(int segmentSize);
 }

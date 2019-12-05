@@ -4,11 +4,9 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import org.specs.Arm.ArmResource;
-import org.specs.Arm.instruction.ArmInstruction;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.util.SpecsStrings;
 
 public class ArmTraceStream extends ATraceInstructionStream {
 
@@ -23,28 +21,17 @@ public class ArmTraceStream extends ATraceInstructionStream {
     @Override
     public Instruction nextInstruction() {
 
-        String line = null;
-        while (((line = insts.nextLine()) != null) && !SpecsStrings.matches(line, REGEX))
-            ;
-
-        if (line == null) {
+        var newinst = ArmInstructionStreamMethods.nextInstruction(this.insts, REGEX);
+        if (newinst == null) {
             return null;
         }
-
-        var addressAndInst = SpecsStrings.getRegex(line, REGEX);
-        var addr = addressAndInst.get(0).trim();
-        var inst = addressAndInst.get(1).trim();
-        var newinst = ArmInstruction.newInstance(addr, inst);
-
         this.numcycles += newinst.getLatency();
         this.numinsts++;
-
-        return ArmInstruction.newInstance(addr, inst);
+        return newinst;
     }
 
     @Override
     public int getInstructionWidth() {
-        return 4; // return in bytes
-        // TODO replace this with something smarter
+        return ArmInstructionStreamMethods.getInstructionWidth();
     }
 }

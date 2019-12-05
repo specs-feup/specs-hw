@@ -23,15 +23,32 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public abstract class AFrequentSequenceDetector implements SegmentDetector {
 
     /*
+     * The list this detector will construct
+     */
+    public List<BinarySegment> allsequences = null;
+
+    /*
      * An open instruction stream, either from elf dump, or simulator
      */
     private InstructionStream istream;
 
     /*
+     * Stuff for statistics (TODO: add more) 
+     */
+    protected long totalCycles;
+    protected long numInsts;
+    // protected int totalMemoryInsts;
+    // protected int totalLoads;
+    // protected int totalStores;
+    // protected int totalBranchInsts;
+    // protected int totalTakenBranches;
+    // protected int totalNonTakenBranches;
+
+    /*
      * min and max size of windows 
      */
     protected final int minsize = 2;
-    protected final int maxsize = 10;
+    protected final int maxsize = 20;
 
     /*
      * This map holds all hashed sequences for all instruction windows we analyse
@@ -73,7 +90,11 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
             // do not form sequences with unknown instructions
             // do not form frequent sequences containing jumps
             // do not form frequent sequences memory accesses
-            if (inst.isUnknown() || inst.isJump() || inst.isMemory()) {
+            // if (inst.isUnknown() || inst.isJump() || inst.isMemory()) {
+            // return false;
+            // }
+
+            if (inst.isUnknown() || inst.isJump()) {
                 return false;
             }
         }
@@ -170,8 +191,8 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
             }
 
             // discard candidate?
-            // if (!validSequence(candidate))
-            // continue;
+            if (!validSequence(candidate))
+                continue;
 
             // make register replacement map (for hash building)
             Map<String, String> regremap = makeRegReplaceMap(candidate);
@@ -204,6 +225,10 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
 
     @Override
     public List<BinarySegment> detectSegments() {
+
+        // TODO return an exception or something else
+        if (this.allsequences != null)
+            return null;
 
         // TODO pass window size?
         // TODO pass forbidden operations list?
@@ -243,7 +268,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
         removeUnique();
 
         // for all sequences which occur more than once, symbolify and add to output
-        List<BinarySegment> allsequences = new ArrayList<BinarySegment>();
+        this.allsequences = new ArrayList<BinarySegment>();
 
         Iterator<Integer> it = this.hashed.keySet().iterator();
         while (it.hasNext()) {
@@ -255,10 +280,29 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
                 rebuiltI.add(i.rebuild());
 
             List<Instruction> symbolicseq = makeSymbolic(rebuiltI, sequence.getRegremap());
-            allsequences.add(makeFrequentSequence(hashcode, symbolicseq));
+            this.allsequences.add(makeFrequentSequence(hashcode, symbolicseq));
         }
 
-        return allsequences;
+        // finally, init some stats
+        this.totalCycles = istream.getCycles();
+        this.numInsts = istream.getNumInstructions();
+
+        return this.allsequences;
+    }
+
+    /*
+     * For static: Return the percentage of the ELF code the segments detected represent
+     * For trace: Return the percentage of the executed instructions the segments detected represent
+     * NOTE: only considers segments of size "segmentSize", to avoid overlap
+     */
+    @Override
+    public float getCoverage(int segmentSize) {
+        Integer detectedportion = 0;
+        for (BinarySegment seg : this.allsequences) {
+            if (seg.getSegmentLength() == segmentSize)
+                detectedportion += seg.getExecutionCycles();
+        }
+        return (float) detectedportion / this.totalCycles;
     }
 
     @Override

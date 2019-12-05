@@ -25,14 +25,20 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 public class FrequentStaticSequence extends AFrequentSequence {
 
     private List<Integer> startAddresses;
-    // addr, frequency count
+    // list of addresses in the ELF where this sequence happens
 
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
     private FrequentStaticSequence(List<Instruction> ilist) {
         super(ilist);
-        this.segtype = SegmentType.STATIC_FREQUENT_SEQUENCE;
+        this.segtype = BinarySegmentType.STATIC_FREQUENT_SEQUENCE;
+    }
+
+    @Override
+    public Integer getExecutionCycles() {
+        Integer staticCycles = this.getSegmentCycles();
+        return staticCycles * this.startAddresses.size();
     }
 
     /*
@@ -54,7 +60,7 @@ public class FrequentStaticSequence extends AFrequentSequence {
         for (Integer addr : this.startAddresses) {
             ret += "0x" + Integer.toHexString(addr) + " ";
         }
-        ret += "]\n";
+        ret += "] " + "Total execution cycles: " + this.getExecutionCycles() + "\n";
         return ret;
     }
 }

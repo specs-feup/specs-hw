@@ -13,9 +13,11 @@ import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeStaticBasicBlockDetectorTester {
 
+    // /MicroBlaze/resources/org/specs/MicroBlaze/asm/test/matmul/matmul_n4096_l1000.elf
+
     @Test
     public void test() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/test.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmul_n4096_l1000.elf");
         fd.deleteOnExit();
 
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {

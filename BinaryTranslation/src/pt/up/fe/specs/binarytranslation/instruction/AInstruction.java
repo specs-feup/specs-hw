@@ -104,8 +104,9 @@ public abstract class AInstruction implements Instruction {
     }
 
     public final boolean isJump() {
-        return (this.isConditionalJump() || this.isUnconditionalJump()
-                || this.isAbsoluteJump() || this.isRelativeJump());
+        return (idata.getGenericTypes().contains(InstructionType.G_JUMP)
+                || this.isConditionalJump() || this.isUnconditionalJump()
+                || this.isAbsoluteJump() || this.isRelativeJump() || this.isImmediateJump());
     }
 
     public final boolean isConditionalJump() {

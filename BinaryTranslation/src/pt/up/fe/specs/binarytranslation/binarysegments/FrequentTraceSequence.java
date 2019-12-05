@@ -8,15 +8,29 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class FrequentTraceSequence extends AFrequentSequence {
 
+    /*
+     * Addr, Frequency Count
+     */
     private Map<Integer, Integer> startAddresses;
-    // addr, frequency count
 
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
     private FrequentTraceSequence(List<Instruction> ilist) {
         super(ilist);
-        this.segtype = SegmentType.TRACE_FREQUENT_SEQUENCE;
+        this.segtype = BinarySegmentType.TRACE_FREQUENT_SEQUENCE;
+    }
+
+    @Override
+    public Integer getExecutionCycles() {
+
+        Integer totalCycles = 0;
+        Integer staticCycles = this.getSegmentCycles();
+
+        for (Integer i : startAddresses.values()) {
+            totalCycles += (staticCycles * i);
+        }
+        return totalCycles;
     }
 
     /*
@@ -40,7 +54,7 @@ public class FrequentTraceSequence extends AFrequentSequence {
             var count = entry.getValue();
             ret += "0x" + Integer.toHexString(addr) + "(" + count + ")" + " ";
         }
-        ret += "]\n";
+        ret += "] " + "Total execution cycles: " + this.getExecutionCycles() + "\n";
         return ret;
     }
 }
