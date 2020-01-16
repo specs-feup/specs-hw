@@ -2,16 +2,13 @@ package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.AFrequentSequence;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
 import pt.up.fe.specs.binarytranslation.instruction.OperandType;
-import pt.up.fe.specs.binarytranslation.instruction.SimpleInstruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 /**
@@ -51,9 +48,10 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     protected final int maxsize = 20;
 
     /*
-     * This map holds all hashed sequences for all instruction windows we analyse
+     * This map holds all hashed sequences for all instruction windows we analyze
+     * Map: <hashcode_startaddr, hashedsequence>
      */
-    protected Map<Integer, HashedSequence> hashed = new HashMap<Integer, HashedSequence>();
+    protected Map<String, HashedSequence> hashed = new HashMap<String, HashedSequence>();
 
     /*
      * Since list needs revisiting, absorb all instructions in
@@ -66,8 +64,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     /*
      * Must be implemented by children
      */
-    protected abstract void addHashedSequence(Integer hashCode,
-            List<Instruction> candidate, Map<String, String> regremap);
+    protected abstract void listHashedSequence(Integer hashCode, Integer startAddr);
 
     /*
      * Remove sequences that only happen once
@@ -75,9 +72,9 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     protected abstract void removeUnique();
 
     /*
-     * Add detected frequent sequence
+     * For all valid hashcodes, make the symbolic sequence and its in/out contexts
      */
-    protected abstract AFrequentSequence makeFrequentSequence(Integer hashcode, List<Instruction> ilist);
+    protected abstract void makeFrequentSequences();
 
     // no point in starting to build hashes if sequence will fail at some point
     private Boolean validSequence(List<Instruction> insts) {
@@ -149,27 +146,6 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     }
 
     /*
-     * Makes a copy of each instruction, but turns operands symbolic
-     */
-    private List<Instruction> makeSymbolic(List<Instruction> ilist, Map<String, String> regremap) {
-
-        // Hard copy
-        List<Instruction> symbolic = new ArrayList<Instruction>();
-        for (Instruction i : ilist) {
-            symbolic.add(i.copy());
-        }
-
-        // Symbolify
-        Integer addr = 0;
-        for (Instruction i : symbolic) {
-            i.makeSymbolic(addr, regremap);
-            addr += 4;
-        }
-
-        return symbolic;
-    }
-
-    /*
      * For the given window "w", builds all hash sequences from
      * sizes minsize to maxsize
      * Constructs a map with <instruction addr, sequence hash>
@@ -217,7 +193,17 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
 
             // if sequence was complete, add (or add addr to existing equal sequence)
             Integer hashCode = hashstring.hashCode();
-            addHashedSequence(hashCode, candidate, regremap);
+
+            // sequence start addr
+            int startAddr = candidate.get(0).getAddress().intValue();
+
+            // add sequence to occurrence counters (counting varies between static to trace detection)
+            listHashedSequence(hashCode, startAddr);
+
+            // add sequence to map which is indexed by hashCode
+            var keyval = hashCode.toString() + "_" + Integer.toString(startAddr);
+            if (!this.hashed.containsKey(keyval))
+                this.hashed.put(keyval, new HashedSequence(hashCode, candidate, regremap));
         }
 
         return;
@@ -229,9 +215,6 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
         // TODO return an exception or something else
         if (this.allsequences != null)
             return null;
-
-        // TODO pass window size?
-        // TODO pass forbidden operations list?
 
         // IMPORTANT
         // TODO: imms can be treated very differently!
@@ -267,21 +250,8 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
         // Remove all sequences which only happen once
         removeUnique();
 
-        // for all sequences which occur more than once, symbolify and add to output
-        this.allsequences = new ArrayList<BinarySegment>();
-
-        Iterator<Integer> it = this.hashed.keySet().iterator();
-        while (it.hasNext()) {
-            var hashcode = it.next();
-            var sequence = this.hashed.get(hashcode);
-
-            var rebuiltI = new ArrayList<Instruction>();
-            for (SimpleInstruction i : sequence.getInstlist())
-                rebuiltI.add(i.rebuild());
-
-            List<Instruction> symbolicseq = makeSymbolic(rebuiltI, sequence.getRegremap());
-            this.allsequences.add(makeFrequentSequence(hashcode, symbolicseq));
-        }
+        // Make all valid sequences
+        makeFrequentSequences();
 
         // finally, init some stats
         this.totalCycles = istream.getCycles();

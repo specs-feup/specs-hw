@@ -11,6 +11,6 @@ public abstract class ABasicBlock extends ABinarySegment {
      */
     public ABasicBlock(List<Instruction> ilist) {
         this.instlist = ilist;
-        buildLiveInsAndLiveOuts();
+        // buildLiveInsAndLiveOuts();
     }
 }
