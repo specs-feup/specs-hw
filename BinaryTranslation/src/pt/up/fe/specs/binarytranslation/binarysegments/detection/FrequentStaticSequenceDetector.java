@@ -22,6 +22,7 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.FrequentStaticSequence;
 import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 /**
@@ -82,46 +83,18 @@ public class FrequentStaticSequenceDetector extends AFrequentSequenceDetector {
         }
     }
 
-    private FrequentStaticSequence makeFrequentSequence(List<HashedSequence> seqs) {
-
-        // use first sequence with this hash code to create symbolic sequence
-        var symbolicseq = seqs.get(0).makeSymbolic();
-
-        // Create all contexts
-        var contexts = new ArrayList<SegmentContext>();
-        for (HashedSequence seq : seqs.subList(0, seqs.size()))
-            contexts.add(new SegmentContext(seq.getStartAddresss(), seq.getRegremap()));
-
-        return new FrequentStaticSequence(symbolicseq, contexts);
+    @Override
+    protected List<Integer> getAddressList(Integer hashcode) {
+        return this.addrs.get(hashcode);
     }
 
     @Override
-    protected void makeFrequentSequences() {
+    protected Iterator<Integer> getHashIterator() {
+        return this.addrs.keySet().iterator();
+    }
 
-        // for all sequences which occur more than once, symbolify and add to output
-        this.allsequences = new ArrayList<BinarySegment>();
-
-        // all start addrs grouped by hashcode
-        Iterator<Integer> it = this.addrs.keySet().iterator();
-
-        // for each hashcode
-        while (it.hasNext()) {
-
-            // get hashcode
-            var hashcode = it.next();
-
-            // get all start addrs of all sequences with this hashcode
-            var addrlist = this.addrs.get(hashcode);
-
-            // get a list of the sequences by their hashcode_startaddr key
-            var seqlist = new ArrayList<HashedSequence>();
-            for (Integer startaddr : addrlist) {
-                var keyval = hashcode.toString() + "_" + Integer.toString(startaddr);
-                seqlist.add(this.hashed.get(keyval));
-            }
-
-            // make the frequent sequence
-            this.allsequences.add(makeFrequentSequence(seqlist));
-        }
+    @Override
+    protected BinarySegment makeFrequentSequence(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
+        return new FrequentStaticSequence(symbolicseq, contexts);
     }
 }

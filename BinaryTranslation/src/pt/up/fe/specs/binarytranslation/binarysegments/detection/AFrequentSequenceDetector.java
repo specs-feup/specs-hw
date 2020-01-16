@@ -2,10 +2,12 @@ package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
 import pt.up.fe.specs.binarytranslation.instruction.OperandType;
@@ -72,9 +74,19 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     protected abstract void removeUnique();
 
     /*
-     * For all valid hashcodes, make the symbolic sequence and its in/out contexts
+     * 
      */
-    protected abstract void makeFrequentSequences();
+    protected abstract List<Integer> getAddressList(Integer hashcode);
+
+    /*
+     * 
+     */
+    protected abstract Iterator<Integer> getHashIterator();
+
+    /*
+     * 
+     */
+    protected abstract BinarySegment makeFrequentSequence(List<Instruction> symbolicseq, List<SegmentContext> contexts);
 
     // no point in starting to build hashes if sequence will fail at some point
     private Boolean validSequence(List<Instruction> insts) {
@@ -204,9 +216,54 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
             var keyval = hashCode.toString() + "_" + Integer.toString(startAddr);
             if (!this.hashed.containsKey(keyval))
                 this.hashed.put(keyval, new HashedSequence(hashCode, candidate, regremap));
+            else
+                this.hashed.get(keyval).incrementOccurences();
+            // useful for traces
         }
 
         return;
+    }
+
+    /*
+     * For all valid hashcodes, make the symbolic sequence and its in/out contexts
+     */
+    private void makeFrequentSequences() {
+
+        // for all sequences which occur more than once, symbolify and add to output
+        this.allsequences = new ArrayList<BinarySegment>();
+
+        // all start addrs grouped by hashcode
+        Iterator<Integer> it = getHashIterator();
+
+        // this.addrs.keySet().iterator();
+
+        // for each hashcode
+        while (it.hasNext()) {
+
+            // get hashcode
+            var hashcode = it.next();
+
+            // get all start addrs of all sequences with this hashcode
+            var addrlist = getAddressList(hashcode);
+
+            // get a list of the sequences by their hashcode_startaddr key
+            var seqlist = new ArrayList<HashedSequence>();
+            for (Integer startaddr : addrlist) {
+                var keyval = hashcode.toString() + "_" + Integer.toString(startaddr);
+                seqlist.add(this.hashed.get(keyval));
+            }
+
+            // use first sequence with this hash code to create symbolic sequence
+            var symbolicseq = seqlist.get(0).makeSymbolic();
+
+            // Create all contexts
+            var contexts = new ArrayList<SegmentContext>();
+            for (HashedSequence seq : seqlist)
+                contexts.add(new SegmentContext(seq));
+
+            // make the frequent sequence
+            this.allsequences.add(makeFrequentSequence(symbolicseq, contexts));
+        }
     }
 
     @Override

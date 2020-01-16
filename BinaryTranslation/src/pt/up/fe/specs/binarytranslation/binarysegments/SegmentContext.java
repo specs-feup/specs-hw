@@ -15,6 +15,8 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 
 import java.util.Map;
 
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.HashedSequence;
+
 /**
  * Holds the mapping of a symbolic representation of a register or value (e.g., r<a>, r<b>.. to a specific register or
  * value of the originating processor instruction trace). This is required to generate CDFGs and/or final outputs for
@@ -25,16 +27,25 @@ import java.util.Map;
  */
 public class SegmentContext {
 
+    // TODO, for trace segments, the context could include the values of the registers if possible
+    // i think i can query this out of gdb...
+
     private Integer startaddr;
+    private int ocurrences;
     private Map<String, String> context;
 
-    public SegmentContext(Integer startaddr, Map<String, String> context) {
-        this.startaddr = startaddr;
-        this.context = context;
+    public SegmentContext(HashedSequence seq) {
+        this.startaddr = seq.getStartAddresss();
+        this.context = seq.getRegremap();
+        this.ocurrences = seq.getOcurrences();
     }
 
     public Integer getStartaddr() {
         return startaddr;
+    }
+
+    public int getOcurrences() {
+        return ocurrences;
     }
 
     /*
