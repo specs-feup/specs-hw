@@ -12,7 +12,7 @@ public abstract class AFrequentSequence extends ABinarySegment {
     protected AFrequentSequence(List<Instruction> ilist) {
         super();
         this.instlist = ilist;
-        buildLiveInsAndLiveOuts();
+        // buildLiveInsAndLiveOuts();
     }
 
     /*

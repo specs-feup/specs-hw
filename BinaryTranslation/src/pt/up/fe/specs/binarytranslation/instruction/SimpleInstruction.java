@@ -24,6 +24,14 @@ public class SimpleInstruction {
         }
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public String getInstruction() {
+        return instruction;
+    }
+
     public Instruction rebuild() {
         Instruction i = null;
         try {

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
 
 /**
  * 
@@ -28,7 +27,7 @@ public abstract class ABinarySegment implements BinarySegment {
 
     protected BinarySegmentType segtype;
     protected List<Instruction> instlist;
-    protected List<Operand> liveins = null, liveouts = null;
+    protected List<SegmentContext> contexts;
 
     protected ABinarySegment() {
         this.instlist = new ArrayList<Instruction>();
@@ -42,14 +41,15 @@ public abstract class ABinarySegment implements BinarySegment {
         return this.segtype;
     }
 
+    /*
     public List<Operand> getLiveIns() {
         return this.liveins;
     }
-
+    
     public List<Operand> getLiveOuts() {
         return this.liveouts;
     }
-
+    */
     public int getTotalLatency() {
         int totlat = 0;
         for (int i = 0; i < instlist.size(); i++)
@@ -85,27 +85,29 @@ public abstract class ABinarySegment implements BinarySegment {
     /*
      * Call to build liveins and liveouts list, only after segment is complete
      */
+    /*
     protected void buildLiveInsAndLiveOuts() {
-
+    
         this.liveins = new ArrayList<Operand>();
         this.liveouts = new ArrayList<Operand>();
-
+    
         for (Instruction i : this.instlist) {
             for (Operand op : i.getData().getOperands()) {
-
+    
                 // everything that is a register is a livein
                 if (op.isSymbolic() && op.isRead() && !this.liveins.contains(op)) {
                     this.liveins.add(op);
                 }
-
+    
                 // only liveout if written
                 if (op.isSymbolic() && op.isWrite() && !this.liveouts.contains(op)) {
                     this.liveouts.add(op);
                 }
-
+    
                 // TODO isbSymblic check required? what about constants and "sp" ?
             }
         }
         return;
     }
+    */
 }

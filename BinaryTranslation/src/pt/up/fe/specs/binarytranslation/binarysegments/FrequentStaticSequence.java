@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -38,15 +39,18 @@ public class FrequentStaticSequence extends AFrequentSequence {
     @Override
     public Integer getExecutionCycles() {
         Integer staticCycles = this.getSegmentCycles();
-        return staticCycles * this.startAddresses.size();
+        return staticCycles * this.contexts.size();
     }
 
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
-    public FrequentStaticSequence(List<Instruction> ilist, List<Integer> startAddresses) {
+    public FrequentStaticSequence(List<Instruction> ilist, List<SegmentContext> contexts) {
         this(ilist);
-        this.startAddresses = startAddresses;
+        this.contexts = contexts;
+        this.startAddresses = new ArrayList<Integer>();
+        for (SegmentContext context : contexts)
+            this.startAddresses.add(context.getStartaddr());
     }
 
     @Override
