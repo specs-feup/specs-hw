@@ -30,6 +30,7 @@ public class HashedSequence {
 
     private int hashcode;
     private Number startaddr;
+    private int ocurrences;
     private List<SimpleInstruction> instlist;
     private Map<String, String> regremap;
 
@@ -37,12 +38,21 @@ public class HashedSequence {
 
         this.hashcode = hashcode;
         this.regremap = regremap;
+        this.ocurrences = 1;
         this.startaddr = instlist.get(0).getAddress();
 
         // save only instruction as hex, and addr too
         this.instlist = new ArrayList<SimpleInstruction>();
         for (Instruction i : instlist)
             this.instlist.add(new SimpleInstruction(i));
+    }
+
+    public void incrementOccurences() {
+        this.ocurrences++;
+    }
+
+    public int getOcurrences() {
+        return ocurrences;
     }
 
     public int getHashcode() {

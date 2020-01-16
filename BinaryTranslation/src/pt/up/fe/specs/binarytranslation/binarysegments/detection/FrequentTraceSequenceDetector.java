@@ -13,13 +13,15 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.AFrequentSequence;
+import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.FrequentTraceSequence;
+import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
@@ -32,9 +34,9 @@ public class FrequentTraceSequenceDetector extends AFrequentSequenceDetector {
 
     /*
      * This map holds all hash codes and list of occurring addresses for each
-     * HashCode --> (Addr --> occurence count)
+     * Map: <hashcode, list of addresses>
      */
-    private Map<Integer, Map<Integer, Integer>> addrs = new HashMap<Integer, Map<Integer, Integer>>();
+    private Map<Integer, List<Integer>> addrs = new HashMap<Integer, List<Integer>>();
 
     /*
      * Public constructor
@@ -44,52 +46,59 @@ public class FrequentTraceSequenceDetector extends AFrequentSequenceDetector {
     }
 
     @Override
-    protected void addHashedSequence(Integer hashCode, List<Instruction> candidate, Map<String, String> regremap) {
+    protected void listHashedSequence(Integer hashCode, Integer startAddr) {
 
-        var startAddr = candidate.get(0).getAddress();
-
-        // if hash exists
+        // add sequence addr to list, if equivalent already exists
         if (this.addrs.containsKey(hashCode)) {
-
-            var key = this.addrs.get(hashCode);
-
-            // if addr exists
-            Integer c = 0;
-            if (key.containsKey(startAddr.intValue())) {
-                c = key.get(startAddr.intValue());
-            }
-            key.put(startAddr.intValue(), c + 1);
+            this.addrs.get(hashCode).add(startAddr);
         }
 
-        // if doesn't
+        // add hashcode to addr list map
         else {
-            this.hashed.put(hashCode, new HashedSequence(candidate, startAddr, regremap));
-
-            var newmap = new HashMap<Integer, Integer>();
-            newmap.put(startAddr.intValue(), 1);
-            this.addrs.put(hashCode, newmap);
+            var l = new ArrayList<Integer>();
+            l.add(startAddr);
+            this.addrs.put(hashCode, l);
         }
     }
 
     @Override
     protected void removeUnique() {
 
-        // Remove all sequences which only happen once
-        Iterator<Integer> it = this.hashed.keySet().iterator();
-        while (it.hasNext()) {
-            var addrlist = this.addrs.get(it.next());
-            var sum = 0;
-            for (Integer i : addrlist.values())
-                sum += i;
+        // iterate through hashcodes of sequences
+        Iterator<Integer> it = this.addrs.keySet().iterator();
 
-            if (sum <= 1)
+        while (it.hasNext()) {
+            var hashcode = it.next();
+            var addrlist = this.addrs.get(hashcode);
+
+            // number of executions of this segment
+            var sum = 0;
+            for (Integer i : addrlist.values()) {
+                var keyval = hashcode.toString() + "_" + Integer.toString(i);
+                sum += this.hashed.get(keyval).getOcurrences();
+            }
+
+            if (sum <= 1) {
+
+                // remove hashed sequence from hashed sequences list by its starting addr
+                var keyval = hashcode.toString() + "_" + Integer.toString(addrlist.get(0));
+                this.hashed.remove(keyval);
                 it.remove();
+            }
         }
     }
 
     @Override
-    protected AFrequentSequence makeFrequentSequence(Integer hashcode, List<Instruction> ilist) {
-        var addrs = this.addrs.get(hashcode);
-        return new FrequentTraceSequence(ilist, addrs);
+    protected List<Integer> getAddressList(Integer hashcode) {
+        return new ArrayList<>(this.addrs.get(hashcode).keySet());
+    }
+
+    @Override
+    protected Iterator<Integer> getHashIterator() {
+        return this.addrs.keySet().iterator();
+    }
+
+    protected BinarySegment makeFrequentSequence(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
+        return new FrequentTraceSequence(symbolicseq, contexts);
     }
 }
