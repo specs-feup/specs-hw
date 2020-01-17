@@ -19,12 +19,12 @@ public class ArmTraceStreamTester {
         // ArmTraceStream el = new ArmTraceStream(fd);
         try (ArmTraceStream el = new ArmTraceStream(fd)) {
 
-            // el.rawDump();
+            el.rawDump();
 
-            Instruction inst = null;
+            /*Instruction inst = null;
             while ((inst = el.nextInstruction()) != null) {
                 inst.printInstruction();
-            }
+            }*/
         }
     }
 }

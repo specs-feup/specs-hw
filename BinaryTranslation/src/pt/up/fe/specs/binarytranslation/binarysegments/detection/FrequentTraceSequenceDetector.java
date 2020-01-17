@@ -13,11 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.FrequentTraceSequence;
@@ -33,69 +29,10 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public class FrequentTraceSequenceDetector extends AFrequentSequenceDetector {
 
     /*
-     * This map holds all hash codes and list of occurring addresses for each
-     * Map: <hashcode, list of addresses>
-     */
-    private Map<Integer, List<Integer>> addrs = new HashMap<Integer, List<Integer>>();
-
-    /*
      * Public constructor
      */
     public FrequentTraceSequenceDetector(InstructionStream istream) {
         super(istream);
-    }
-
-    @Override
-    protected void listHashedSequence(Integer hashCode, Integer startAddr) {
-
-        // add sequence addr to list, if equivalent already exists
-        if (this.addrs.containsKey(hashCode)) {
-            this.addrs.get(hashCode).add(startAddr);
-        }
-
-        // add hashcode to addr list map
-        else {
-            var l = new ArrayList<Integer>();
-            l.add(startAddr);
-            this.addrs.put(hashCode, l);
-        }
-    }
-
-    @Override
-    protected void removeUnique() {
-
-        // iterate through hashcodes of sequences
-        Iterator<Integer> it = this.addrs.keySet().iterator();
-
-        while (it.hasNext()) {
-            var hashcode = it.next();
-            var addrlist = this.addrs.get(hashcode);
-
-            // number of executions of this segment
-            var sum = 0;
-            for (Integer i : addrlist.values()) {
-                var keyval = hashcode.toString() + "_" + Integer.toString(i);
-                sum += this.hashed.get(keyval).getOcurrences();
-            }
-
-            if (sum <= 1) {
-
-                // remove hashed sequence from hashed sequences list by its starting addr
-                var keyval = hashcode.toString() + "_" + Integer.toString(addrlist.get(0));
-                this.hashed.remove(keyval);
-                it.remove();
-            }
-        }
-    }
-
-    @Override
-    protected List<Integer> getAddressList(Integer hashcode) {
-        return new ArrayList<>(this.addrs.get(hashcode).keySet());
-    }
-
-    @Override
-    protected Iterator<Integer> getHashIterator() {
-        return this.addrs.keySet().iterator();
     }
 
     protected BinarySegment makeFrequentSequence(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
