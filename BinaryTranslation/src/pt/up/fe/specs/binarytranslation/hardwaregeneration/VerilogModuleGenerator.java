@@ -6,8 +6,6 @@ import java.util.List;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.VerilogModule;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
 
 /**
  * Generates a single dedicated verilog module for a single binary segment
@@ -41,27 +39,27 @@ public class VerilogModuleGenerator implements HardwareGenerator {
                 + " the following sequence:\n* " + segment.getRepresentation() + "*/\n");
 
         // TODO add more stuff to header
-
+        /*
         // put declaration
         int uniqueid = segment.getUniqueId();
         String segtype = segment.getSegmentType().toString().toLowerCase();
-
+        
         verilogCode.add("module " + segtype + "_" + uniqueid + ";\n");
-
+        
         // inputs
         for (Operand op : segment.getLiveIns()) {
             verilogCode.add("\tinput [" + op.getProperties().getWidth()
                     + "-1:0" + "] i_" + op.getRepresentation()
                     + ";\n");
         }
-
+        
         // outputs
         for (Operand op : segment.getLiveOuts()) {
             verilogCode.add("\toutput [" + op.getProperties().getWidth()
                     + "-1:0" + "] o_" + op.getRepresentation()
                     + ";\n");
         }
-
+        
         // put body
         // TODO a way to transform generic algorithm erxpressions into code...
         // i might need to transform segmenst into graphs first after all...
@@ -69,10 +67,10 @@ public class VerilogModuleGenerator implements HardwareGenerator {
             // String line = "assign " +
             // ??
         }
-
+        
         // end module
         verilogCode.add("endmodule; //" + segtype + "_" + uniqueid + "\n\n");
-
+        */
         System.out.print(verilogCode);
 
         return new VerilogModule(verilogCode);

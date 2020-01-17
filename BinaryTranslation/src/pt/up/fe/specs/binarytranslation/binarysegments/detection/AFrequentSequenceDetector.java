@@ -56,6 +56,12 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     protected Map<String, HashedSequence> hashed = new HashMap<String, HashedSequence>();
 
     /*
+     * This map holds all hash codes and list of occurring addresses for each
+     * Map: <hashcode, list of addresses>
+     */
+    private Map<Integer, List<Integer>> addrs = new HashMap<Integer, List<Integer>>();
+
+    /*
      * Since list needs revisiting, absorb all instructions in
      * the static dump into StaticBasicBlockDetector class instance
      */
@@ -66,29 +72,11 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     /*
      * Must be implemented by children
      */
-    protected abstract void listHashedSequence(Integer hashCode, Integer startAddr);
-
-    /*
-     * Remove sequences that only happen once
-     */
-    protected abstract void removeUnique();
-
-    /*
-     * 
-     */
-    protected abstract List<Integer> getAddressList(Integer hashcode);
-
-    /*
-     * 
-     */
-    protected abstract Iterator<Integer> getHashIterator();
-
-    /*
-     * 
-     */
     protected abstract BinarySegment makeFrequentSequence(List<Instruction> symbolicseq, List<SegmentContext> contexts);
 
-    // no point in starting to build hashes if sequence will fail at some point
+    /*
+     * Check if candidate sequence is valid
+     */
     private Boolean validSequence(List<Instruction> insts) {
 
         // check if this subsequence is at all apt
@@ -109,6 +97,45 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
         }
 
         return true;
+    }
+
+    /*
+     * Adds detected sequence to auxiliary list 
+     */
+    private void listHashedSequence(Integer hashCode, Integer startAddr) {
+
+        // add sequence addr to list, if equivalent already exists
+        if (this.addrs.containsKey(hashCode)) {
+            this.addrs.get(hashCode).add(startAddr);
+        }
+
+        // add hashcode to addr list map
+        else {
+            var l = new ArrayList<Integer>();
+            l.add(startAddr);
+            this.addrs.put(hashCode, l);
+        }
+    }
+
+    /*
+     * Remove all sequences which only happen once
+     */
+    private void removeUnique() {
+
+        // iterate through hashcodes of sequences
+        Iterator<Integer> it = this.addrs.keySet().iterator();
+
+        while (it.hasNext()) {
+            var hashcode = it.next();
+            var addrlist = this.addrs.get(hashcode);
+            if (addrlist.size() <= 1) {
+
+                // remove hashed sequence from hashed sequences list by its starting addr
+                var keyval = hashcode.toString() + "_" + Integer.toString(addrlist.get(0));
+                this.hashed.remove(keyval);
+                it.remove();
+            }
+        }
     }
 
     /*
@@ -216,9 +243,11 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
             var keyval = hashCode.toString() + "_" + Integer.toString(startAddr);
             if (!this.hashed.containsKey(keyval))
                 this.hashed.put(keyval, new HashedSequence(hashCode, candidate, regremap));
+
+            // useful for traces
             else
                 this.hashed.get(keyval).incrementOccurences();
-            // useful for traces
+
         }
 
         return;
@@ -233,9 +262,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
         this.allsequences = new ArrayList<BinarySegment>();
 
         // all start addrs grouped by hashcode
-        Iterator<Integer> it = getHashIterator();
-
-        // this.addrs.keySet().iterator();
+        Iterator<Integer> it = this.addrs.keySet().iterator();
 
         // for each hashcode
         while (it.hasNext()) {
@@ -244,7 +271,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
             var hashcode = it.next();
 
             // get all start addrs of all sequences with this hashcode
-            var addrlist = getAddressList(hashcode);
+            var addrlist = this.addrs.get(hashcode);
 
             // get a list of the sequences by their hashcode_startaddr key
             var seqlist = new ArrayList<HashedSequence>();
