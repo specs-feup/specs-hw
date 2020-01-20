@@ -5,8 +5,8 @@ import pt.up.fe.specs.binarytranslation.instruction.OperandType;
 
 public class GraphInput {
 
-    private final GraphInputType type;
-    private final String value;
+    private GraphInputType type;
+    private String value;
     // bitwidth?
 
     public GraphInput(GraphInputType tp, String value) {
@@ -38,5 +38,10 @@ public class GraphInput {
 
     public String getValue() {
         return value;
+    }
+
+    public void setInputAs(GraphInputType type, String value) {
+        this.type = type;
+        this.value = value;
     }
 }

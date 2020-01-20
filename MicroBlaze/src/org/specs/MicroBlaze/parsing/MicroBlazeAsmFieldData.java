@@ -134,16 +134,28 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
 
         ///////////////////////////////////////////////////////////////////////
         case TYPE_A:
+
+            // TODO add carry output here, after checking instruction type
+
             operands.add(newWriteRegister(RD, operandmap.get(RD)));
             operands.add(newReadRegister(RA, operandmap.get(RA)));
             operands.add(newReadRegister(RB, operandmap.get(RB)));
+
+            // TODO add carry input here, after checking instruction type
+
             break;
 
         ///////////////////////////////////////////////////////////////////////
         case TYPE_B:
+
+            // TODO add carry output here, after checking instruction type
+
             operands.add(newWriteRegister(RD, operandmap.get(RD)));
             operands.add(newReadRegister(RA, operandmap.get(RA)));
             operands.add(newImmediate(IMM, operandmap.get(IMM)));
+
+            // TODO add carry input here, after checking instruction type
+
             break;
 
         default:
