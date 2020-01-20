@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.graphs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,16 +32,37 @@ public class BinarySegmentGraph {
 
     /*
      * Which nodes are connected to which
+     * <child, List of parents>
      */
     private Map<GraphNode, List<GraphNode>> adjacencyTable;
+
+    /*
+     * Map input registers to nodes which have written over them?
+     */
+    private Map<String, GraphNode> lastwritter;
 
     public BinarySegmentGraph(BinarySegment seg) {
         this.seg = seg;
         this.nodes = new ArrayList<GraphNode>();
 
+        // get symbolic instruction list
         var insts = seg.getInstructions();
         for (Instruction i : insts) {
-            // this.nodes.add(
+
+            // add all instructions to node list, convert instruction to proper node
+            // also converts instruction AOperands into GraphInputs (TODO: conversion is still incomplete)
+            this.nodes.add(new GraphNode(i));
         }
+
+        // 1. analyze nodes in order of insertion
+        // mark registers which have been written too?
+        this.lastwritter = new HashMap<String, GraphNode>();
+        for (GraphNode n : this.nodes) {
+            // for(GraphInput in : n.getInputs()) {
+            // ???
+            // }
+        }
+
+        // compute CPL, and ILP, and expected speedup (depends on segment type and target hw?)
     }
 }
