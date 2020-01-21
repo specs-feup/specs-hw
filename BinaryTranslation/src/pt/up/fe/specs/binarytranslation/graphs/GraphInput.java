@@ -5,14 +5,10 @@ import pt.up.fe.specs.binarytranslation.instruction.OperandType;
 
 public class GraphInput {
 
+    private Operand op; // the originating operand
     private GraphInputType type;
     private String value;
     // bitwidth?
-
-    public GraphInput(GraphInputType tp, String value) {
-        this.type = tp;
-        this.value = value;
-    }
 
     public GraphInput(Operand op) {
 
@@ -30,13 +26,14 @@ public class GraphInput {
         }
 
         this.value = op.getRepresentation();
+        this.op = op;
     }
 
     public GraphInputType getType() {
         return type;
     }
 
-    public String getValue() {
+    public String getRepresentation() {
         return value;
     }
 

@@ -4,14 +4,10 @@ import pt.up.fe.specs.binarytranslation.instruction.Operand;
 
 public class GraphOutput {
 
-    private final GraphOutputType type;
-    private final String value;
+    private Operand op; // the originating operand
+    private GraphOutputType type;
+    private String value;
     // bitwidth?
-
-    public GraphOutput(GraphOutputType tp, String value) {
-        this.type = tp;
-        this.value = value;
-    }
 
     public GraphOutput(Operand op) {
 
@@ -27,13 +23,22 @@ public class GraphOutput {
         // if(op)
 
         this.type = GraphOutputType.data;
+        // default to "data", change to liveout if the owner of
+        // this output is the last one to write to this register (?)
+
+        this.op = op;
     }
 
     public GraphOutputType getType() {
         return type;
     }
 
-    public String getValue() {
+    public String getRepresentation() {
         return value;
+    }
+
+    public void setOutputAs(GraphOutputType type, String value) {
+        this.type = type;
+        this.value = value;
     }
 }
