@@ -38,7 +38,7 @@ public class ArmSymbolifyTest {
             if (regremap.containsKey(op.getRepresentation()))
                 continue;
 
-            regremap.put(op.getRepresentation(), String.valueOf(c));
+            regremap.put(op.getRepresentation(), op.getPossibleSymbolicRepresentation(String.valueOf(c)));
             c++;
         }
 

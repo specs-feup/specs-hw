@@ -1,10 +1,10 @@
-package org.specs.MicroBlaze.test;
+package org.specs.Arm.asm;
 
 import java.io.File;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
+import org.specs.Arm.stream.ArmElfStream;
+import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
@@ -14,10 +14,10 @@ import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBloc
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.util.SpecsIo;
 
-public class MicroBlazeBinarySegmentGraphTester {
+public class ArmBinarySegmentGraphTester {
 
     private File openFile() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/aarch64_bare_metal_qemu/test64.elf");
         fd.deleteOnExit();
         return fd;
     }
@@ -27,15 +27,14 @@ public class MicroBlazeBinarySegmentGraphTester {
 
         for (BinarySegment seg : segments) {
             var graph0 = BinarySegmentGraph.newInstance(seg);
-            if (graph0.getCpl() >= 1)
-                graph0.printDotty();
+            graph0.printDotty();
         }
     }
 
     @Test
     public void testStaticFrequentSequence() {
 
-        try (MicroBlazeElfStream el = new MicroBlazeElfStream(openFile())) {
+        try (ArmElfStream el = new ArmElfStream(openFile())) {
             var bbd = new FrequentStaticSequenceDetector(el);
             getSegments(bbd);
         }
@@ -44,7 +43,7 @@ public class MicroBlazeBinarySegmentGraphTester {
     @Test
     public void testStaticBasicBlock() {
 
-        try (MicroBlazeElfStream el = new MicroBlazeElfStream(openFile())) {
+        try (ArmElfStream el = new ArmElfStream(openFile())) {
             var bbd = new StaticBasicBlockDetector(el);
             getSegments(bbd);
         }
@@ -52,7 +51,7 @@ public class MicroBlazeBinarySegmentGraphTester {
 
     @Test
     public void testTraceFrequenceSequence() {
-        try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(openFile())) {
+        try (ArmTraceStream el = new ArmTraceStream(openFile())) {
             var bbd = new FrequentTraceSequenceDetector(el);
             getSegments(bbd);
         }
