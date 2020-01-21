@@ -32,9 +32,10 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  */
 public class BinarySegmentGraph {
 
+    private BinarySegmentGraphType type;
     private int numnodes;
     private int cpl;
-    private int maxwidth, minwidth;
+    private int maxwidth;
     private int numstores, numloads;
     BinarySegment seg;
     List<GraphNode> nodes;
@@ -61,6 +62,14 @@ public class BinarySegmentGraph {
 
         // core information
         this.seg = seg;
+
+        // segment super type
+        if (this.seg.getSegmentType().isCyclical())
+            this.type = BinarySegmentGraphType.cyclical;
+
+        else if (this.seg.getSegmentType().isAcyclical())
+            this.type = BinarySegmentGraphType.acyclical;
+
         this.nodes = nodes;
         this.adjacencyTable = adjacencyTable;
         this.liveins = liveins;
@@ -94,13 +103,18 @@ public class BinarySegmentGraph {
             var count = this.ilp.get(n.getLevel());
             this.ilp.set(n.getLevel(), count + 1);
         }
+
+        // max ilp
+        for (Integer i : this.ilp)
+            if (i > this.maxwidth)
+                this.maxwidth = i;
     }
 
     /*
      * Depth of graph
      */
     public int getCpl() {
-        return cpl;
+        return this.cpl;
     }
 
     /*
@@ -183,7 +197,7 @@ public class BinarySegmentGraph {
         Set<String> liveins = new LinkedHashSet<String>();
         for (GraphNode n : nodes) {
             for (GraphInput in : n.getInputs()) {
-                if (in.getType() == GraphInputType.livein) {
+                if (in.isLivein()) {
                     liveins.add(in.getRepresentation());
                 }
             }
@@ -193,7 +207,7 @@ public class BinarySegmentGraph {
         Set<String> liveouts = new LinkedHashSet<String>();
         for (GraphNode n : nodes) {
             for (GraphOutput out : n.getOutputs()) {
-                if (out.getType() == GraphOutputType.liveout)
+                if (out.isLiveout())
                     liveouts.add(out.getRepresentation());
                 // NOTE: value here equals representation, e.g. r<d>
             }
@@ -221,38 +235,8 @@ public class BinarySegmentGraph {
             System.out.print("\t\"out_" + s + "\"[shape = box, label=\"" + s + "\"];\n");
         }
 
-        for (GraphNode n : this.adjacencyTable.keySet()) {
-
-            // connections to self
-            for (GraphInput in : n.getInputs()) {
-
-                // registers
-                if (in.getType() == GraphInputType.livein) {
-                    System.out.print("\t\"in_" + in.getRepresentation() + "\" -> \"" + n.getRepresentation() + "\";\n");
-                }
-
-                // connections from parents
-                else if (in.getType() == GraphInputType.noderesult) {
-                    System.out.print("\t\"" + in.getRepresentation() + "\" -> \"" + n.getRepresentation() + "\";\n");
-                }
-
-                // imms
-                else if (in.getType() == GraphInputType.immediate) {
-                    System.out.print("\t\"" + in.getRepresentation() + "\" -> \"" + n.getRepresentation() + "\";\n");
-                }
-            }
-
-            /*var parents = this.adjacencyTable.get(n);
-            for (GraphNode p : parents) {
-                System.out.print("\t\"" + p.getRepresentation() + "\" -> \"" + n.getRepresentation() + "\";\n");
-            }*/
-
-            // connections to liveouts
-            for (GraphOutput out : n.getOutputs()) {
-                if (out.getType() == GraphOutputType.liveout)
-                    System.out
-                            .print("\t\"" + n.getRepresentation() + "\" -> \"out_" + out.getRepresentation() + "\";\n");
-            }
+        for (GraphNode n : this.nodes) {
+            System.out.print(n.rawDotty());
         }
         System.out.print("}\n");
     }

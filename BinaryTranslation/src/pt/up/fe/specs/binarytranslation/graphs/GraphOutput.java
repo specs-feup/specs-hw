@@ -7,11 +7,8 @@ public class GraphOutput {
     private Operand op; // the originating operand
     private GraphOutputType type;
     private String value;
-    // bitwidth?
 
     public GraphOutput(Operand op) {
-
-        // TODO Complete this conversion to account for datawidths
 
         this.value = op.getRepresentation();
 
@@ -37,8 +34,23 @@ public class GraphOutput {
         return value;
     }
 
+    public Boolean isLiveout() {
+        return this.type == GraphOutputType.liveout;
+    }
+
+    public Boolean isInternal() {
+        return this.type == GraphOutputType.data;
+    }
+
     public void setOutputAs(GraphOutputType type, String value) {
         this.type = type;
         this.value = value;
+    }
+
+    /*
+     * 
+     */
+    public String rawDotty() {
+        return "out_" + this.getRepresentation();
     }
 }
