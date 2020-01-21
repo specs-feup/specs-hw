@@ -113,6 +113,11 @@ public abstract class AOperand implements Operand {
     public String getRepresentation() {
         return (props.getPrefix() + this.getStringValue() + props.getSuffix());
     }
+
+    public String getPossibleSymbolicRepresentation(String val) {
+        return (props.getPrefix() + "<" + val + ">" + props.getSuffix());
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////// Utils //
