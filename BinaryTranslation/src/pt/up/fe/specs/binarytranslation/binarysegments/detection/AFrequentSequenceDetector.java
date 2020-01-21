@@ -134,6 +134,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
                 var keyval = hashcode.toString() + "_" + Integer.toString(addrlist.get(0));
                 this.hashed.remove(keyval);
                 it.remove();
+
             }
         }
     }
@@ -174,7 +175,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
 
                     // remap
                     c = counter.get(typeid).charValue();
-                    regremap.put(op.getRepresentation(), String.valueOf(c));
+                    regremap.put(op.getRepresentation(), op.getPossibleSymbolicRepresentation(String.valueOf(c)));
                 }
             }
 

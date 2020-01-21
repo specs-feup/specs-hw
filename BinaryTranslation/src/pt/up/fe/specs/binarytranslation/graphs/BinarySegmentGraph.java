@@ -48,6 +48,11 @@ public class BinarySegmentGraph {
      */
     private Map<String, GraphNode> lastwriter;
 
+    /*
+     * ILP per graph level
+     */
+    private List<Integer> ilp;
+
     public BinarySegmentGraph(BinarySegment seg) {
         this.numloads = 0;
         this.numstores = 0;
@@ -72,9 +77,8 @@ public class BinarySegmentGraph {
             this.adjacencyTable.put(n, new ArrayList<GraphNode>());
         }
 
-        // bubble sort?
-        // 1. analyze nodes in order of insertion
-        // mark registers which have been written too?
+        // analyze nodes in order of insertion
+        // mark registers which have been written too
         this.lastwriter = new HashMap<String, GraphNode>();
         for (GraphNode n : this.nodes) {
 
@@ -112,6 +116,24 @@ public class BinarySegmentGraph {
 
             else if (n.getInst().isStore())
                 this.numstores++;
+
+            // CPL
+            if (n.getLevel() > this.cpl)
+                this.cpl = n.getLevel();
+        }
+
+        // account for 0
+        this.cpl++;
+
+        // init ILP counters
+        this.ilp = new ArrayList<Integer>();
+        for (int i = 0; i < this.cpl; i++)
+            this.ilp.add(0);
+
+        // ILP
+        for (GraphNode n : this.nodes) {
+            var count = this.ilp.get(n.getLevel());
+            this.ilp.set(n.getLevel(), count + 1);
         }
 
         // compute CPL, and ILP, and expected speedup (depends on segment type and target hw?)
@@ -122,20 +144,22 @@ public class BinarySegmentGraph {
      */
     public void printDotty() {
 
+        // this.seg.printSegment();
+
         System.out.print("digraph G {\n");
         for (GraphNode n : this.adjacencyTable.keySet()) {
 
             // connections to self from register inputs
             for (GraphInput in : n.getInputs()) {
                 if (in.getType() != GraphInputType.noderesult) {
-                    System.out.print("\t" + in.getValue() + " -> " + n.getRepresentation() + ";\n");
+                    System.out.print("\t\"" + in.getValue() + "\" -> \"" + n.getRepresentation() + "\";\n");
                 }
             }
 
-            // connections to children
-            var children = this.adjacencyTable.get(n);
-            for (GraphNode c : children) {
-                System.out.print("\t" + n.getRepresentation() + " -> " + c.getRepresentation() + ";\n");
+            // connections from parents
+            var parents = this.adjacencyTable.get(n);
+            for (GraphNode p : parents) {
+                System.out.print("\t\"" + p.getRepresentation() + "\" -> \"" + n.getRepresentation() + "\";\n");
             }
         }
         System.out.print("}\n");

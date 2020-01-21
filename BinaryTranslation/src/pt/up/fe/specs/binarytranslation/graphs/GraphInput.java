@@ -29,7 +29,7 @@ public class GraphInput {
             this.type = GraphInputType.immediate;
         }
 
-        this.value = op.getStringValue();
+        this.value = op.getRepresentation();
     }
 
     public GraphInputType getType() {

@@ -82,9 +82,16 @@ public interface Operand {
     public Boolean isSpecial();
 
     /*
-     * Return formated string with <prefix><value>
+     * Return formated string with <prefix><value><sufix>
      */
     public String getRepresentation();
+
+    /*
+     * Returns what this operand would look like 
+     * (in terms of representation) if its value was replaced by a symbolic symbol "val"
+     * This method is required to compute the register remapping tables during segment detection
+     */
+    public String getPossibleSymbolicRepresentation(String val);
 
     /*
      * 
@@ -94,6 +101,9 @@ public interface Operand {
     /*
      * Used to abstract an operand away from an 
      * executed representation, to a symbolic representation
+     * This method is employed after segment detection, to abstract the instructions
+     * away from their execution context (useful for frequent sequences which occurs in multiple points
+     * of the code, both static and trace based)
      */
     public void setSymbolic(String value);
 

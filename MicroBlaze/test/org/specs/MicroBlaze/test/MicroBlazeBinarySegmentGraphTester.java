@@ -1,37 +1,49 @@
 package org.specs.MicroBlaze.test;
 
 import java.io.File;
-import java.util.List;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeBinarySegmentGraphTester {
 
-    public List<BinarySegment> getFrequentStatiSegments() {
+    private File openFile() {
         File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
         fd.deleteOnExit();
+        return fd;
+    }
 
-        try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
-            var bbd = new FrequentStaticSequenceDetector(el);
-            var segments = bbd.detectSegments();
-            return segments;
+    private void getSegments(SegmentDetector bbd) {
+        var segments = bbd.detectSegments();
+
+        for (BinarySegment seg : segments) {
+            var graph0 = new BinarySegmentGraph(seg);
+            graph0.printDotty();
         }
     }
 
     @Test
-    public void test() {
-        var segs = getFrequentStatiSegments();
+    public void testStatic() {
 
-        var graph0 = new BinarySegmentGraph(segs.get(0));
-        graph0.printDotty();
+        try (MicroBlazeElfStream el = new MicroBlazeElfStream(openFile())) {
+            var bbd = new FrequentStaticSequenceDetector(el);
+            getSegments(bbd);
+        }
+    }
 
-        var graph1 = new BinarySegmentGraph(segs.get(1));
-        graph1.printDotty();
+    @Test
+    public void testTrace() {
+        try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(openFile())) {
+            var bbd = new FrequentTraceSequenceDetector(el);
+            getSegments(bbd);
+        }
     }
 }

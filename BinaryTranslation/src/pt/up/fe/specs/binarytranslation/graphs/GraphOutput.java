@@ -17,7 +17,7 @@ public class GraphOutput {
 
         // TODO Complete this conversion to account for datawidths
 
-        this.value = op.getStringValue();
+        this.value = op.getRepresentation();
 
         // TODO how to determine is operand is a data or control output? would need instruction, or to add a field to
 
