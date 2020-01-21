@@ -88,4 +88,19 @@ public class GraphNode {
     public String getRepresentation() {
         return Integer.toString(this.nodenr) + ":" + this.inst.getName();
     }
+
+    public String rawDotty() {
+        String ret = "";
+
+        for (GraphInput in : this.inputs) {
+            ret += "\t\"" + in.rawDotty() + "\" -> \"" + this.getRepresentation() + "\";\n";
+        }
+
+        for (GraphOutput out : this.outputs) {
+            if (out.isLiveout())
+                ret += "\t\"" + this.getRepresentation() + "\" -> \"" + out.rawDotty() + "\";\n";
+        }
+
+        return ret;
+    }
 }
