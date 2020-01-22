@@ -13,6 +13,10 @@
 
 package pt.up.fe.specs.binarytranslation.graphs;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -193,7 +197,7 @@ public class BinarySegmentGraph {
             }
         }
 
-        // init liveins node list
+        // init liveins list
         Set<String> liveins = new LinkedHashSet<String>();
         for (GraphNode n : nodes) {
             for (GraphInput in : n.getInputs()) {
@@ -203,7 +207,7 @@ public class BinarySegmentGraph {
             }
         }
 
-        // init liveouts node list
+        // init liveouts list
         Set<String> liveouts = new LinkedHashSet<String>();
         for (GraphNode n : nodes) {
             for (GraphOutput out : n.getOutputs()) {
@@ -220,24 +224,37 @@ public class BinarySegmentGraph {
      * Tester function to print this graph as a dotty, into the console
      */
     public void printDotty() {
+        this.printDotty(System.out);
+    }
 
-        // this.seg.printSegment();
+    /*
+     * Write to a given output stream (file or stdio)
+     */
+    private void printDotty(OutputStream os) {
 
-        System.out.print("digraph G {\n");
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+        try {
+            bw.write("digraph G {\n");
 
-        // livein nodes
-        for (String s : this.liveins) {
-            System.out.print("\t\"in_" + s + "\"[shape = box, label=\"" + s + "\"];\n");
+            // livein nodes
+            for (String s : this.liveins) {
+                bw.write("\t\"in_" + s + "\"[shape = box, label=\"" + s + "\"];\n");
+            }
+
+            // liveout nodes
+            for (String s : this.liveouts) {
+                bw.write("\t\"out_" + s + "\"[shape = box, label=\"" + s + "\"];\n");
+            }
+
+            for (GraphNode n : this.nodes) {
+                bw.write(n.rawDotty());
+            }
+            bw.write("}\n");
+            bw.close();
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-
-        // liveout nodes
-        for (String s : this.liveouts) {
-            System.out.print("\t\"out_" + s + "\"[shape = box, label=\"" + s + "\"];\n");
-        }
-
-        for (GraphNode n : this.nodes) {
-            System.out.print(n.rawDotty());
-        }
-        System.out.print("}\n");
     }
 }
