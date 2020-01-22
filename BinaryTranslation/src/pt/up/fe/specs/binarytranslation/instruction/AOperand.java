@@ -39,6 +39,10 @@ public abstract class AOperand implements Operand {
     public AOperand(OperandProperties props, Number value) {
         this.props = props;
         this.value = value;
+        this.setStringValue(value);
+    }
+
+    public void setStringValue(Number value) {
 
         // registers are decimals
         if (this.isRegister()) {
@@ -131,6 +135,15 @@ public abstract class AOperand implements Operand {
         this.value = -1;
         return;
     }
+
+    /*
+     * Override operand value (currently only works for overriding non symbolic operands...)
+     */
+    public void overrideValue(Number value) {
+        this.value = value;
+        this.setStringValue(value);
+    }
+
     /*
     public boolean equals(Operand op) {
         return this.equals((Object) op);

@@ -14,6 +14,8 @@
 package pt.up.fe.specs.binarytranslation.graphs;
 
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -41,6 +43,8 @@ public class BinarySegmentGraph {
     private int cpl;
     private int maxwidth;
     private int numstores, numloads;
+    private int initiationInterval = 1; // 1 for non cyclical segments
+    private float estimatedIPC = -1;
     BinarySegment seg;
     List<GraphNode> nodes;
 
@@ -112,6 +116,18 @@ public class BinarySegmentGraph {
         for (Integer i : this.ilp)
             if (i > this.maxwidth)
                 this.maxwidth = i;
+
+        // initiation interval
+        if (this.type == BinarySegmentGraphType.cyclical) {
+            for (GraphNode n : this.nodes) {
+                if (n.getInst().isBackwardsJump())
+                    if (this.initiationInterval < n.getLevel() + 1)
+                        this.initiationInterval = n.getLevel() + 1;
+            }
+        }
+
+        // estimated IPC
+        this.estimatedIPC = (float) this.numnodes / (float) this.initiationInterval;
     }
 
     /*
@@ -119,6 +135,27 @@ public class BinarySegmentGraph {
      */
     public int getCpl() {
         return this.cpl;
+    }
+
+    /*
+     * Get originating segment
+     */
+    public BinarySegment getSegment() {
+        return this.seg;
+    }
+
+    /*
+     * initiation interval; applicable for cyclical loops, equals 1 for acyclical loops
+     */
+    public int getInitiationInterval() {
+        return this.initiationInterval;
+    }
+
+    /*
+     * 
+     */
+    public float getEstimatedIPC() {
+        return estimatedIPC;
     }
 
     /*
@@ -228,6 +265,27 @@ public class BinarySegmentGraph {
     }
 
     /*
+     * Print dotty representation to file
+     */
+    public void printDotty(String filename) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(filename);
+            this.printDotty(fos);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        try {
+            fos.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /*
      * Write to a given output stream (file or stdio)
      */
     private void printDotty(OutputStream os) {
@@ -237,20 +295,37 @@ public class BinarySegmentGraph {
             bw.write("digraph G {\n");
 
             // livein nodes
+            bw.write("{ rank = source;\n");
             for (String s : this.liveins) {
-                bw.write("\t\"in_" + s + "\"[shape = box, label=\"" + s + "\"];\n");
+                bw.write("\t\"in_" + s
+                        + "\"[shape = box, fillcolor=\"#8080ff\", style=filled, label=\"" + s
+                        + "\"];\n");
             }
+            bw.write("}\n");
 
+            bw.write("{ rank = sink;\n");
             // liveout nodes
             for (String s : this.liveouts) {
-                bw.write("\t\"out_" + s + "\"[shape = box, label=\"" + s + "\"];\n");
+                bw.write("\t\"out_" + s
+                        + "\"[shape = box, fillcolor=\"#ff8080\", style=filled, label=\"" + s
+                        + "\"];\n");
             }
+            bw.write("}\n");
 
             for (GraphNode n : this.nodes) {
                 bw.write(n.rawDotty());
             }
+
+            for (int rank = 0; rank < this.cpl; rank++) {
+                bw.write("{ rank = same;\n");
+                for (GraphNode n : this.nodes) {
+                    if (n.getLevel() == rank)
+                        bw.write("\t\"" + n.getRepresentation() + "\"\n");
+                }
+                bw.write("}\n");
+            }
             bw.write("}\n");
-            bw.close();
+            bw.flush();
 
         } catch (IOException e) {
             // TODO Auto-generated catch block

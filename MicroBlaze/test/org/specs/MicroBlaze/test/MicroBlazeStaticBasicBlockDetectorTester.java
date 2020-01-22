@@ -8,7 +8,6 @@ import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeStaticBasicBlockDetectorTester {
@@ -25,11 +24,10 @@ public class MicroBlazeStaticBasicBlockDetectorTester {
             List<BinarySegment> bblist = bbd.detectSegments();
 
             for (BinarySegment bs : bblist) {
+
                 System.out.print("Basic Block: \n");
-                for (Instruction is : bs.getInstructions()) {
-                    is.printInstruction();
-                }
-                System.out.print("\n\n");
+                bs.printSegment();
+                System.out.print("\n");
             }
         }
         return;

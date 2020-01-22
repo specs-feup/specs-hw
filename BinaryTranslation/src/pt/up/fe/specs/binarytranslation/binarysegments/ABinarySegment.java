@@ -64,7 +64,7 @@ public abstract class ABinarySegment implements BinarySegment {
     public String getRepresentation() {
         String ret = "";
         for (Instruction inst : this.instlist) {
-            ret += inst.getRepresentation();
+            ret += inst.getRepresentation() + "\n";
         }
         return ret;
     }
