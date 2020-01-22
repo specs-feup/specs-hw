@@ -29,6 +29,7 @@ public class StaticBasicBlock extends ABasicBlock {
      */
     public StaticBasicBlock(List<Instruction> ilist) {
         super(ilist);
+        this.segtype = BinarySegmentType.STATIC_BASIC_BLOCK;
     }
 
     @Override
