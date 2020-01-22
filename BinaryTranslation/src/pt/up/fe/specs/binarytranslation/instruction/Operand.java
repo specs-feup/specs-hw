@@ -113,6 +113,11 @@ public interface Operand {
     public Operand copy();
 
     /*
+     * Override operand value (currently only works for overriding non symbolic operands...)
+     */
+    public void overrideValue(Number value);
+
+    /*
      * Compare method
      */
     // public boolean equals(Operand op);
