@@ -17,7 +17,8 @@ import pt.up.fe.specs.util.SpecsIo;
 public class ArmBinarySegmentGraphTester {
 
     private File openFile() {
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/aarch64_bare_metal_qemu/test64.elf");
+        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/helloworld64_from_vivado_flow/helloworld64.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/test.txt");
         fd.deleteOnExit();
         return fd;
     }
@@ -27,7 +28,7 @@ public class ArmBinarySegmentGraphTester {
 
         for (BinarySegment seg : segments) {
             var graph0 = BinarySegmentGraph.newInstance(seg);
-            graph0.printDotty();
+            graph0.generateOutput();
         }
     }
 

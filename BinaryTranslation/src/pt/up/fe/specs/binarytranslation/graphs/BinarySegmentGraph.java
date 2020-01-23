@@ -444,7 +444,7 @@ public class BinarySegmentGraph {
             bw.write("<h3>Segment Contexts </h3>\n");
             for (SegmentContext context : this.seg.getContexts()) {
                 bw.write(context.getRepresentation().replaceAll("<", "&lt;")
-                        .replaceAll(">", "&gt;").replaceAll("\n", "<br>") + "<br><br>");
+                        .replaceAll(">", "&gt;").replaceAll("\n", "<br>") + "<br>");
             }
 
             // Graph

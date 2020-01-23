@@ -34,7 +34,7 @@ public class HashedSequence {
     private List<SimpleInstruction> instlist;
     private Map<String, String> regremap;
 
-    HashedSequence(int hashcode, List<Instruction> instlist, Map<String, String> regremap) {
+    public HashedSequence(int hashcode, List<Instruction> instlist, Map<String, String> regremap) {
 
         this.hashcode = hashcode;
         this.regremap = regremap;
@@ -43,8 +43,10 @@ public class HashedSequence {
 
         // save only instruction as hex, and addr too
         this.instlist = new ArrayList<SimpleInstruction>();
-        for (Instruction i : instlist)
+        for (Instruction i : instlist) {
+            i.printInstruction();
             this.instlist.add(new SimpleInstruction(i));
+        }
     }
 
     public void incrementOccurences() {
@@ -74,8 +76,11 @@ public class HashedSequence {
 
         // rebuilt complete instructions from SimpleInstructions
         var rebuiltI = new ArrayList<Instruction>();
-        for (SimpleInstruction i : this.instlist)
-            rebuiltI.add(i.rebuild());
+        for (SimpleInstruction i : this.instlist) {
+            var inst = i.rebuild();
+            inst.printInstruction();
+            rebuiltI.add(inst);
+        }
 
         // Symbolify
         Integer addr = 0;
