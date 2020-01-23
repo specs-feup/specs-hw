@@ -124,9 +124,9 @@ public class AOperandProperties implements OperandProperties {
      * Setters
      */
     public void setSymbolic() {
-        this.genericType.add(OperandType.SYMBOLIC);
         this.prefix = this.getSymbolicPrefix();
         this.suffix = this.getSymbolicSuffix();
+        this.genericType.add(OperandType.SYMBOLIC);
         return;
     }
 }

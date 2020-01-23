@@ -216,7 +216,7 @@ public abstract class AInstruction implements Instruction {
         // symbolify address
         this.address = address;
 
-        this.printInstruction();
+        // this.printInstruction();
 
         // symbolify operands
         for (Operand op : this.getData().getOperands()) {
@@ -224,16 +224,16 @@ public abstract class AInstruction implements Instruction {
                                                            // regremap
                                                            // map
 
-                System.out.print(regremap.toString() + "\n");
+                // System.out.print(regremap.toString() + "\n");
 
                 var tmp = op.getRepresentation();
-                System.out.println(tmp);
+                // System.out.println(tmp);
 
                 var r = regremap.get(tmp);
-                System.out.println(r);
+                // System.out.println(r);
 
                 var r2 = r.substring(r.indexOf('<') + 1, r.indexOf('>')); // NOTE: and ugly hack, but works...
-                System.out.println(r2);
+                // System.out.println(r2);
 
                 op.setSymbolic(r2);
                 // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
