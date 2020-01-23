@@ -25,6 +25,10 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  */
 public abstract class ABinarySegment implements BinarySegment {
 
+    // TODO: move these 2 things to a future BinaryApplication class, or something
+    protected String appName;
+    protected String compilationFlags;
+
     protected BinarySegmentType segtype;
     protected List<Instruction> instlist;
     protected List<SegmentContext> contexts;

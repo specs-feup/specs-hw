@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import org.specs.MicroBlaze.MicroBlazeResource;
 
+import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 import pt.up.fe.specs.util.SpecsIo;
@@ -24,6 +25,9 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
     public MicroBlazeTraceStream(File elfname) {
         super(MicroBlazeTraceStream.newSimulatorBuilder(elfname));
+        this.appName = elfname.getName();
+        this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
+                MicroBlazeResource.MICROBLAZE_READELF.getResource());
     }
 
     /*

@@ -11,6 +11,8 @@ import pt.up.fe.specs.util.utilities.LineStream;
 public abstract class AInstructionStream implements InstructionStream {
 
     private final Process proc;
+    protected String appName;
+    protected String compilationInfo;
     protected long numinsts;
     protected long numcycles;
     protected final LineStream insts;
@@ -80,6 +82,16 @@ public abstract class AInstructionStream implements InstructionStream {
     @Override
     public long getCycles() {
         return this.numcycles;
+    }
+
+    @Override
+    public String getApplicationName() {
+        return this.appName;
+    }
+
+    @Override
+    public String getCompilationInfo() {
+        return this.compilationInfo;
     }
 
     @Override

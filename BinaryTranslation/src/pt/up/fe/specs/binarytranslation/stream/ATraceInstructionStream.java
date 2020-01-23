@@ -27,6 +27,7 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
     protected ATraceInstructionStream(File elfname, ResourceProvider gdbtmpl,
             String gdbexe, String qemuexe) {
         super(ATraceInstructionStream.newSimulatorBuilder(elfname, gdbtmpl, gdbexe, qemuexe));
+        this.appName = elfname.getName();
     }
 
     /*

@@ -3,6 +3,9 @@ package org.specs.Arm.stream;
 import java.io.File;
 import java.util.regex.Pattern;
 
+import org.specs.Arm.ArmResource;
+
+import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
 
@@ -13,6 +16,9 @@ public class ArmElfStream extends AStaticInstructionStream {
 
     public ArmElfStream(File elfname) {
         super(elfname, OBJDUMP_EXE);
+        this.appName = elfname.getName();
+        this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
+                ArmResource.AARCH64_READELF.getResource());
     }
 
     @Override

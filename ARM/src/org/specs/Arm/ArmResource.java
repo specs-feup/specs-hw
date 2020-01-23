@@ -4,7 +4,9 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public enum ArmResource implements ResourceProvider {
 
-    QEMU_AARCH64_GDB_TEMPLATE("org/specs/Arm/gdb/qemutmpl.gdb");
+    QEMU_AARCH64_GDB_TEMPLATE("org/specs/Arm/gdb/qemutmpl.gdb"),
+    AARCH64_GCC("aarch64-none-elf-gcc"),
+    AARCH64_READELF("aarch64-none-elf-readelf");
 
     private final String resource;
 

@@ -13,6 +13,7 @@ public abstract class AStaticInstructionStream extends AInstructionStream {
      */
     protected AStaticInstructionStream(File elfname, String objdumpexe) {
         super(getProperProcess(elfname, objdumpexe));
+        this.appName = elfname.getName();
     }
 
     private static ProcessBuilder getProperProcess(File elfname, String objdumpexe) {
