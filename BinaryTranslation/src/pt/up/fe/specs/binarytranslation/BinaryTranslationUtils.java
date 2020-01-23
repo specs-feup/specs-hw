@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 
 public class BinaryTranslationUtils {
 
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
+
     /*
      * 
      */
@@ -89,6 +91,10 @@ public class BinaryTranslationUtils {
      * Output compilation flags for a given elf, using a given variant of a GNU based "readelf"
      */
     public static String getCompilationInfo(String elfname, String readelbinary) {
+
+        // assume that windows doesnt have tools
+        if (BinaryTranslationUtils.IS_WINDOWS)
+            return "GNU tools unavailable to extract compilation information!";
 
         // call readelf
         var internalcmd = readelbinary + " -wi " + elfname + " | grep -i compilation -A6";

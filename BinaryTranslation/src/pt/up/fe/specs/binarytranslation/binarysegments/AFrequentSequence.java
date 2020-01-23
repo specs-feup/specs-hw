@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
+import java.util.Iterator;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -9,10 +10,25 @@ public abstract class AFrequentSequence extends ABinarySegment {
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
-    protected AFrequentSequence(List<Instruction> ilist) {
+    protected AFrequentSequence(List<Instruction> ilist, List<SegmentContext> contexts) {
         super();
         this.instlist = ilist;
-        // buildLiveInsAndLiveOuts();
+        this.contexts = contexts;
+
+        // merge duplicate contexts
+        for (SegmentContext contexta : this.contexts) {
+
+            Iterator<SegmentContext> it = this.contexts.iterator();
+            while (it.hasNext()) {
+                var contextb = it.next();
+                if (contexta == contextb)
+                    continue;
+
+                else if (contexta.equals(contextb))
+                    contexta.merge(contextb);
+            }
+        }
+
     }
 
     /*

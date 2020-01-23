@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.HashedSequence;
@@ -30,27 +32,37 @@ public class SegmentContext {
     // TODO, for trace segments, the context could include the values of the registers if possible
     // i think i can query this out of gdb...
 
-    private Integer startaddr;
+    private List<Integer> startaddr;
     private int ocurrences;
     private Map<String, String> context;
 
     public SegmentContext(HashedSequence seq) {
-        this.startaddr = seq.getStartAddresss();
+
+        this.startaddr = new ArrayList<Integer>();
+        this.startaddr.add(seq.getStartAddresss());
+
         this.context = seq.getRegremap();
         this.ocurrences = seq.getOcurrences();
     }
 
-    public Integer getStartaddr() {
-        return startaddr;
+    public List<Integer> getStartaddresses() {
+        return this.startaddr;
     }
 
     public int getOcurrences() {
         return ocurrences;
     }
 
+    /*
+     * Retrieves the register remmaping map
+     */
     public String getRepresentation() {
-        String ret = "Start Address: 0x" + Integer.toHexString(startaddr) + "\n";
-        ret += "Number of ocurrences: " + Integer.toString(this.ocurrences) + "\n";
+
+        String ret = "Start Addresses: 0x";
+        for (Integer i : this.startaddr)
+            ret += "0x" + Integer.toHexString(i) + ", ";
+
+        ret += "\nNumber of ocurrences: " + Integer.toString(this.ocurrences) + "\n";
 
         for (String str : this.context.keySet())
             ret += this.context.get(str) + "\t:\t" + str + "\n";
@@ -63,5 +75,18 @@ public class SegmentContext {
      */
     public String resolve(String symbol) {
         return this.context.get(symbol);
+    }
+
+    /*
+     * Compare two contexts by mapping values
+     */
+    public Boolean equals(SegmentContext that) {
+        return this.context.equals(that.context);
+    }
+
+    public void merge(SegmentContext that) {
+
+        // add start addrs of that to this
+        var newaddrs = that.getStartaddresses();
     }
 }
