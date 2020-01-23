@@ -1,6 +1,7 @@
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,14 +13,6 @@ public class FrequentTraceSequence extends AFrequentSequence {
      * Addr, Frequency Count
      */
     private Map<Integer, Integer> startAddresses;
-
-    /*
-     * Constructor builds the sequence on the spot with an existing list
-     */
-    /* private FrequentTraceSequence(List<Instruction> ilist) {
-        super(ilist);
-    
-    }*/
 
     @Override
     public Integer getExecutionCycles() {
@@ -40,10 +33,10 @@ public class FrequentTraceSequence extends AFrequentSequence {
         super(ilist, contexts);
         this.segtype = BinarySegmentType.TRACE_FREQUENT_SEQUENCE;
 
-        /* this.startAddresses = new HashMap<Integer, Integer>();
+        this.startAddresses = new HashMap<Integer, Integer>();
         for (SegmentContext context : contexts) {
             this.startAddresses.put(context.getStartaddresses(), context.getOcurrences());
-        }*/
+        }
     }
 
     @Override

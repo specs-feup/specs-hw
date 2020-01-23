@@ -13,8 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.HashedSequence;
@@ -32,20 +30,18 @@ public class SegmentContext {
     // TODO, for trace segments, the context could include the values of the registers if possible
     // i think i can query this out of gdb...
 
-    private List<Integer> startaddr;
+    private Integer startaddr;
     private int ocurrences;
     private Map<String, String> context;
 
     public SegmentContext(HashedSequence seq) {
 
-        this.startaddr = new ArrayList<Integer>();
-        this.startaddr.add(seq.getStartAddresss());
-
+        this.startaddr = seq.getStartAddress();
         this.context = seq.getRegremap();
         this.ocurrences = seq.getOcurrences();
     }
 
-    public List<Integer> getStartaddresses() {
+    public Integer getStartaddresses() {
         return this.startaddr;
     }
 
@@ -58,12 +54,8 @@ public class SegmentContext {
      */
     public String getRepresentation() {
 
-        String ret = "Start Addresses: 0x";
-        for (Integer i : this.startaddr)
-            ret += "0x" + Integer.toHexString(i) + ", ";
-
+        String ret = "Start Addresses: 0x" + Integer.toHexString(this.startaddr) + "\n";
         ret += "\nNumber of ocurrences: " + Integer.toString(this.ocurrences) + "\n";
-
         for (String str : this.context.keySet())
             ret += this.context.get(str) + "\t:\t" + str + "\n";
 
@@ -82,11 +74,5 @@ public class SegmentContext {
      */
     public Boolean equals(SegmentContext that) {
         return this.context.equals(that.context);
-    }
-
-    public void merge(SegmentContext that) {
-
-        // add start addrs of that to this
-        var newaddrs = that.getStartaddresses();
     }
 }
