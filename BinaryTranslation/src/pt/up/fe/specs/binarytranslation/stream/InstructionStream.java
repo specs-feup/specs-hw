@@ -43,6 +43,16 @@ public interface InstructionStream extends AutoCloseable {
 
     /**
      * 
+     */
+    public String getApplicationName();
+
+    /**
+     * Get compilation flags from file being processed (if ELF file)
+     */
+    public String getCompilationInfo();
+
+    /**
+     * 
      * @return
      */
     int getInstructionWidth();
