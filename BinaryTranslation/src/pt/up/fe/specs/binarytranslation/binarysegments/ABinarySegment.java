@@ -41,15 +41,6 @@ public abstract class ABinarySegment implements BinarySegment {
         return this.segtype;
     }
 
-    /*
-    public List<Operand> getLiveIns() {
-        return this.liveins;
-    }
-    
-    public List<Operand> getLiveOuts() {
-        return this.liveouts;
-    }
-    */
     public int getTotalLatency() {
         int totlat = 0;
         for (int i = 0; i < instlist.size(); i++)
