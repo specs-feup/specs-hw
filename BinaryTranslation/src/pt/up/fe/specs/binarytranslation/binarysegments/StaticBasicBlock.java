@@ -27,8 +27,8 @@ public class StaticBasicBlock extends ABasicBlock {
     /*
      * 
      */
-    public StaticBasicBlock(List<Instruction> ilist) {
-        super(ilist);
+    public StaticBasicBlock(List<Instruction> ilist, List<SegmentContext> contexts) {
+        super(ilist, contexts);
         this.segtype = BinarySegmentType.STATIC_BASIC_BLOCK;
     }
 

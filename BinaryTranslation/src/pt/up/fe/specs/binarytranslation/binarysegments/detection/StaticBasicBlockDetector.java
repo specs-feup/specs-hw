@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.binarysegments.StaticBasicBlock;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.legacy.StaticInstructionStream;
@@ -103,18 +104,10 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
             long startAddr = is.getBranchTarget().longValue();
             // these values are in bytes
 
-            // TODO check for Imm...
-            // OR accept that we cant capture basicblocks above 32k jumps
-
             // actually, each ISA should have a method to getBranchTarget,
             // for all of its branch types!
             // every instruction has a targetaddr
             // its +4 for every instruction, except branches
-
-            // TODO
-            // solution for imm: during elfstream parsing, if absorbed instruction
-            // is imm, then absorb another, and set the imm value as a field
-            // in the absorbed instruction
 
             // Size of the Basic Block + any delay gaps from branch instruction
             int bbSize = (int) ((thisAddr - startAddr) / istream.getInstructionWidth());
@@ -127,8 +120,15 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
             if (!isValid(candidate))
                 continue;
 
+            // context
+            var regremap = BinarySegmentDetectionUtils.makeRegReplaceMap(candidate);
+            var hashedseq = new HashedSequence(candidate.hashCode(), candidate, regremap);
+            var context = new SegmentContext(hashedseq);
+
             // Create the block
-            var newbb = new StaticBasicBlock(insts.subList(i - bbSize, i + 1 + delay));
+            var auxlist = new ArrayList<SegmentContext>();
+            auxlist.add(context);
+            var newbb = new StaticBasicBlock(candidate, auxlist);
             newbb.setAppName(this.istream.getApplicationName());
             newbb.setCompilationFlags(this.istream.getCompilationInfo());
 
