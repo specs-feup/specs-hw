@@ -64,7 +64,7 @@ public class FrequentStaticSequence extends AFrequentSequence {
         for (Integer addr : this.startAddresses) {
             ret += "0x" + Integer.toHexString(addr) + " ";
         }
-        ret += "] " + "Total execution cycles: " + this.getExecutionCycles() + "\n";
+        ret += "]\n" + "Total execution cycles: " + this.getExecutionCycles() + "\n";
         return ret;
     }
 }

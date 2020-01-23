@@ -50,6 +50,31 @@ public interface BinarySegment {
     int getTotalLatency();
 
     /*
+     * 
+     */
+    public void setAppName(String appName);
+
+    /*
+     * 
+     */
+    public void setCompilationFlags(String compilationFlags);
+
+    /*
+     * 
+     */
+    public String getAppName();
+
+    /*
+     * 
+     */
+    public String getCompilationFlags();
+
+    /*
+     * 
+     */
+    public List<SegmentContext> getContexts();
+
+    /*
      * Retrieve list of Operands representing
      * registers which are inputs into the segment 
      */
