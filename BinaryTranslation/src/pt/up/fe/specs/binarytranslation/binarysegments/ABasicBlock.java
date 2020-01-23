@@ -9,8 +9,8 @@ public abstract class ABasicBlock extends ABinarySegment {
     /*
      * Constructor builds the BB on the spot with an existing list
      */
-    public ABasicBlock(List<Instruction> ilist) {
+    public ABasicBlock(List<Instruction> ilist, List<SegmentContext> contexts) {
         this.instlist = ilist;
-        // buildLiveInsAndLiveOuts();
+        this.contexts = contexts;
     }
 }

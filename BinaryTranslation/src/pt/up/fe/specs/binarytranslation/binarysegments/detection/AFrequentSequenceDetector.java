@@ -10,7 +10,6 @@ import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
-import pt.up.fe.specs.binarytranslation.instruction.OperandType;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 /**
@@ -140,52 +139,6 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     }
 
     /*
-     * Builds operand value replacement map for a given sequence (assumed valid)
-     */
-    private Map<String, String> makeRegReplaceMap(List<Instruction> ilist) {
-
-        Map<OperandType, Character> counter = new HashMap<OperandType, Character>();
-        Map<String, String> regremap = new HashMap<String, String>();
-        for (Instruction i : ilist) {
-
-            var operands = i.getData().getOperands();
-            for (Operand op : operands) {
-
-                // register must not be special (e.g. stack pointer in ARM)
-                if (op.isSpecial())
-                    continue;
-
-                if (!regremap.containsKey(op.getRepresentation())) {
-
-                    // get current count
-                    char c;
-
-                    // OperandType
-                    var typeid = op.getProperties().getMainType();
-
-                    // TODO should be an exception here if operand is symbolic
-                    // must be non symbolic REGISTER or IMMEDIATE
-
-                    if (!counter.containsKey(typeid))
-                        counter.put(typeid, 'a');
-                    else {
-                        c = counter.get(typeid).charValue();
-                        counter.put(typeid, Character.valueOf(++c));
-                    }
-
-                    // remap
-                    c = counter.get(typeid).charValue();
-                    regremap.put(op.getRepresentation(), op.getPossibleSymbolicRepresentation(String.valueOf(c)));
-                }
-            }
-
-            // TODO implement imm remapping strategies here??
-        }
-
-        return regremap;
-    }
-
-    /*
      * For the given window "w", builds all hash sequences from
      * sizes minsize to maxsize
      * Constructs a map with <instruction addr, sequence hash>
@@ -211,7 +164,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
                 continue;
 
             // make register replacement map (for hash building)
-            Map<String, String> regremap = makeRegReplaceMap(candidate);
+            Map<String, String> regremap = BinarySegmentDetectionUtils.makeRegReplaceMap(candidate);
             // TODO the replacement function should be a parameter here
 
             String hashstring = "";
