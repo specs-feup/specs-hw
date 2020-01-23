@@ -17,7 +17,7 @@ import pt.up.fe.specs.util.SpecsIo;
 public class MicroBlazeBinarySegmentGraphTester {
 
     private File openFile() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmul_n4096_l1000.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.txt");
         fd.deleteOnExit();
         return fd;
     }
@@ -27,12 +27,14 @@ public class MicroBlazeBinarySegmentGraphTester {
 
         for (BinarySegment seg : segments) {
             var graph0 = BinarySegmentGraph.newInstance(seg);
-            if (graph0.getCpl() >= 4) {
+            if (graph0.getCpl() >= 2) {
                 // graph0.getSegment().printSegment();
                 // System.out.println(graph0.getInitiationInterval());
-                System.out.println(graph0.getEstimatedIPC());
-                graph0.printDotty();
+                // System.out.println(graph0.getEstimatedIPC());
+                // graph0.printDotty();
                 // graph0.printDotty("graph_" + Integer.toString(seg.hashCode()) + ".dot");
+
+                graph0.generateOutput();
             }
         }
     }

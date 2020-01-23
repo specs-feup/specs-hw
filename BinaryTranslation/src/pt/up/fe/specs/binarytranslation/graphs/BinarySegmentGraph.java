@@ -14,18 +14,21 @@
 package pt.up.fe.specs.binarytranslation.graphs;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
@@ -326,6 +329,106 @@ public class BinarySegmentGraph {
             }
             bw.write("}\n");
             bw.flush();
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     * Generatre a folder and output all relevant info for this graph into it
+     */
+    public void generateOutput() {
+
+        // output folder
+        String foldername = "./graph_" + Integer.toString(this.hashCode());
+        var f = new File(foldername);
+        f.mkdir();
+
+        // generate dotty
+        String dotfilename = foldername + "/" + "graph_" + Integer.toString(seg.hashCode()) + ".dot";
+        this.printDotty(dotfilename);
+
+        // render dotty
+        this.renderDotty(dotfilename);
+
+        // generate HTML summary
+        String htmlfilename = foldername + "/" + "graph_" + Integer.toString(seg.hashCode()) + ".html";
+        this.printHTML(htmlfilename);
+
+        return;
+    }
+
+    /*
+     * 
+     */
+    private void renderDotty(String dotfilename) {
+
+        // render dotty
+        var pngfilename = dotfilename.replaceFirst(".dot", ".png");
+        var arguments = Arrays.asList(BinaryTranslationResource.DOTTY_BINARY.getResource(),
+                "-Tpng", dotfilename, "-o", pngfilename);
+        ProcessBuilder pb = new ProcessBuilder(arguments);
+
+        // dot -Tps filename.dot -o outfile.ps
+        Process proc = null;
+        try {
+            pb.directory(new File("."));
+            pb.redirectErrorStream(true); // redirects stderr to stdout
+            proc = pb.start();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Could not run process bin with name: " + proc);
+        }
+
+        try {
+            proc.waitFor();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     * 
+     */
+    private void printHTML(String htmlfilename) {
+
+        FileOutputStream fos = null;
+        BufferedWriter bw = null;
+        try {
+            fos = new FileOutputStream(htmlfilename);
+            bw = new BufferedWriter(new OutputStreamWriter(fos));
+
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        try {
+            bw.write("<!DOCTYPE html>\r\n<html>\r\n<body>\n\n");
+            bw.write("<h1>Summary: </h1>\n\n");
+
+            bw.write("Segment type: " + this.type.toString() + "<br>\n");
+            bw.write("Number of nodes: " + Integer.toString(this.numnodes) + "<br>\n");
+            bw.write("Number of memory reads: " + Integer.toString(this.numloads) + "<br>\n");
+            bw.write("Number of memory writes: " + Integer.toString(this.numstores) + "<br>\n");
+            bw.write("Maximum ILP of graph (widest row): " + Integer.toString(this.maxwidth) + "<br>\n");
+            bw.write("Critical Path Length: " + Integer.toString(this.cpl) + "<br>\n");
+            if (this.type == BinarySegmentGraphType.cyclical)
+                bw.write("Initiation Interval: " + this.initiationInterval + "<br>\n");
+            bw.write("Instructions per clock cycle (ideal): " + this.estimatedIPC + "<br>\n\n");
+
+            bw.write("<h2>Segment Graph: </h2>\n");
+
+            // TODO avoid repeating these 2 following lines:
+            String pngfilename = "./graph_" + Integer.toString(seg.hashCode()) + ".png";
+            bw.write("<img src=\"" + pngfilename + "\"><br>\n\n");
+
+            bw.write("</body>\n</html>\n");
+            bw.flush();
+            bw.close();
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
