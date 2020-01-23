@@ -61,7 +61,7 @@ public class HashedSequence {
         return hashcode;
     }
 
-    public Integer getStartAddresss() {
+    public Integer getStartAddress() {
         return this.startaddr.intValue();
     }
 
