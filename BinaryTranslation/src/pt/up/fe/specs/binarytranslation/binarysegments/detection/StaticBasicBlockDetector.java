@@ -34,7 +34,7 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
     private List<BinarySegment> loops = null;
     private List<Instruction> insts;
     private List<Integer> backBranchesIdx;
-    private InstructionStream elfstream;
+    private InstructionStream istream;
 
     /*
      * Stuff for statistics (TODO: add more) TODO: move to abstract ABinarySegment 
@@ -47,7 +47,7 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
      * the static dump into StaticBasicBlockDetector class instance
      */
     public StaticBasicBlockDetector(InstructionStream istream) {
-        this.elfstream = istream;
+        this.istream = istream;
         this.insts = new ArrayList<Instruction>();
         this.backBranchesIdx = new ArrayList<Integer>();
     }
@@ -80,7 +80,7 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
         // identify all backwards branches, save indexes in list
         Integer idx = 0;
         Instruction inst = null;
-        while ((inst = elfstream.nextInstruction()) != null) {
+        while ((inst = istream.nextInstruction()) != null) {
             if (inst.isBackwardsJump() && inst.isConditionalJump() && inst.isRelativeJump())
                 backBranchesIdx.add(idx);
             idx++;
@@ -117,7 +117,7 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
             // in the absorbed instruction
 
             // Size of the Basic Block + any delay gaps from branch instruction
-            int bbSize = (int) ((thisAddr - startAddr) / elfstream.getInstructionWidth());
+            int bbSize = (int) ((thisAddr - startAddr) / istream.getInstructionWidth());
             int delay = is.getDelay();
 
             // candidate
@@ -128,15 +128,17 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
                 continue;
 
             // Create the block
-            StaticBasicBlock bb = new StaticBasicBlock(insts.subList(i - bbSize, i + 1 + delay));
+            var newbb = new StaticBasicBlock(insts.subList(i - bbSize, i + 1 + delay));
+            newbb.setAppName(this.istream.getApplicationName());
+            newbb.setCompilationFlags(this.istream.getCompilationInfo());
 
             // Add to return list
-            loops.add(bb);
+            loops.add(newbb);
         }
 
         // finally, init some stats
-        this.totalCycles = elfstream.getCycles();
-        this.numInsts = elfstream.getNumInstructions();
+        this.totalCycles = istream.getCycles();
+        this.numInsts = istream.getNumInstructions();
 
         return loops;
     }
@@ -152,6 +154,6 @@ public final class StaticBasicBlockDetector implements SegmentDetector {
 
     @Override
     public void close() throws Exception {
-        elfstream.close();
+        istream.close();
     }
 }

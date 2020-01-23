@@ -77,6 +77,26 @@ public abstract class ABinarySegment implements BinarySegment {
         return cycles;
     }
 
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public void setCompilationFlags(String compilationFlags) {
+        this.compilationFlags = compilationFlags;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public String getCompilationFlags() {
+        return compilationFlags;
+    }
+
+    public List<SegmentContext> getContexts() {
+        return contexts;
+    }
+
     /*
      * Call to build liveins and liveouts list, only after segment is complete
      */

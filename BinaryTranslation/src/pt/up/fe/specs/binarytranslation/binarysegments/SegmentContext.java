@@ -48,6 +48,13 @@ public class SegmentContext {
         return ocurrences;
     }
 
+    public String getRepresentation() {
+        String ret = "Start Address: " + startaddr.toString() + "\n";
+        ret += "Number of ocurrences: " + Integer.toString(this.ocurrences) + "\n";
+        ret += this.context.toString();
+        return ret;
+    }
+
     /*
      * returns String representation of non symbolic originating operand (i.e. r4, or w7)
      */

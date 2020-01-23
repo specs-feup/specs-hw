@@ -290,7 +290,11 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
                 contexts.add(new SegmentContext(seq));
 
             // make the frequent sequence
-            this.allsequences.add(makeFrequentSequence(symbolicseq, contexts));
+            var newseq = makeFrequentSequence(symbolicseq, contexts);
+            newseq.setAppName(this.istream.getApplicationName());
+            newseq.setCompilationFlags(this.istream.getCompilationInfo());
+            this.allsequences.add(newseq);
+
         }
     }
 
