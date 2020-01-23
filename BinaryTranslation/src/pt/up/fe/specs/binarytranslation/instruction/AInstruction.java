@@ -216,16 +216,32 @@ public abstract class AInstruction implements Instruction {
         // symbolify address
         this.address = address;
 
+        this.printInstruction();
+
         // symbolify operands
         for (Operand op : this.getData().getOperands()) {
             if (!op.isSubOperation() && !op.isSpecial()) { // TODO move this condition to the construction of the
                                                            // regremap
                                                            // map
+
+                System.out.print(regremap.toString() + "\n");
+
                 var tmp = op.getRepresentation();
+                System.out.println(tmp);
+
                 var r = regremap.get(tmp);
+                System.out.println(r);
+
                 var r2 = r.substring(r.indexOf('<') + 1, r.indexOf('>')); // NOTE: and ugly hack, but works...
+                System.out.println(r2);
+
                 op.setSymbolic(r2);
                 // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
+
+                // TODO: BIG ISSUE
+                // for ARM, i cannot symbolify the address, since one of the IMM operands is computed from it...
+                // this happens for ldr for instance, and others
+                // check for "fielddata.getAddr()" in arm operand getter
             }
         }
     }

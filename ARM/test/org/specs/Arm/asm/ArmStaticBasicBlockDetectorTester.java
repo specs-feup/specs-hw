@@ -15,7 +15,7 @@ public class ArmStaticBasicBlockDetectorTester {
 
     @Test
     public void test() {
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/test/dump.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/helloworld64_from_vivado_flow/helloworld64.elf");
         fd.deleteOnExit();
 
         try (ArmElfStream el = new ArmElfStream(fd)) {

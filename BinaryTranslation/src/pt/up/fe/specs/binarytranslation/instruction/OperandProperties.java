@@ -34,6 +34,16 @@ public interface OperandProperties {
     public String getSuffix();
 
     /*
+     * 
+     */
+    public String getSymbolicPrefix();
+
+    /*
+     * 
+     */
+    public String getSymbolicSuffix();
+
+    /*
      * Width of register or immediate operand
      */
     public int getWidth();

@@ -102,18 +102,31 @@ public class AOperandProperties implements OperandProperties {
         return this.asmfield;
     }
 
+    public String getSymbolicPrefix() {
+
+        // if already symbolic, return currently set prefix
+        if (this.genericType.contains(SYMBOLIC))
+            return this.prefix;
+
+        if (this.getMainType() == OperandType.REGISTER) {
+            return this.prefix + "<";
+
+        } else {
+            return this.asmfield.toString() + "<";
+        }
+    }
+
+    public String getSymbolicSuffix() {
+        return ">";
+    }
+
     /*
      * Setters
      */
     public void setSymbolic() {
         this.genericType.add(OperandType.SYMBOLIC);
-        if (this.getMainType() == OperandType.REGISTER) {
-            this.prefix += "<";
-        } else {
-            this.prefix = this.asmfield.toString() + "<";
-        }
-
-        this.suffix = ">";
+        this.prefix = this.getSymbolicPrefix();
+        this.suffix = this.getSymbolicSuffix();
         return;
     }
 }

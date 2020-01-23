@@ -114,12 +114,18 @@ public abstract class AOperand implements Operand {
         return this.props;
     }
 
+    /*
+     * Get current representation of operand
+     */
     public String getRepresentation() {
         return (props.getPrefix() + this.getStringValue() + props.getSuffix());
     }
 
+    /*
+     * Get what the operand WOULD look like if symbolified 
+     */
     public String getPossibleSymbolicRepresentation(String val) {
-        return (props.getPrefix() + "<" + val + ">" + props.getSuffix());
+        return (props.getSymbolicPrefix() + val + props.getSymbolicSuffix());
     }
 
     ///////////////////////////////////////////////////////////////////////////

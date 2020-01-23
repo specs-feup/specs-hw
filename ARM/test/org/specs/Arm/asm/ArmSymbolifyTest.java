@@ -1,11 +1,14 @@
 package org.specs.Arm.asm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
 import org.specs.Arm.instruction.ArmInstruction;
 
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.HashedSequence;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
 
 public class ArmSymbolifyTest {
@@ -25,7 +28,10 @@ public class ArmSymbolifyTest {
 
         // 9277f821
         // and x1, x1, #0xfffffffffffffeff
-        ArmInstruction i = ArmInstruction.newInstance("0", "9277f821");
+        // ArmInstruction i = ArmInstruction.newInstance("0", "9277f821");
+        // i.printInstruction();
+
+        ArmInstruction i = ArmInstruction.newInstance("0", "58002a60");
         i.printInstruction();
 
         char c = 'a';
@@ -42,9 +48,10 @@ public class ArmSymbolifyTest {
             c++;
         }
 
-        //
-        i.makeSymbolic(0, regremap);
-        i.printInstruction();
+        var list = new ArrayList<Instruction>();
+        list.add(i);
+        HashedSequence h1 = new HashedSequence(0, list, regremap);
+        h1.makeSymbolic();
     }
 
 }
