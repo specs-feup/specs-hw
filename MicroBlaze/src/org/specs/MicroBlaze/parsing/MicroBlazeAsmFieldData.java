@@ -143,6 +143,9 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
 
             // TODO add carry input here, after checking instruction type
 
+            // TODO BUG HERE FOR SWI
+            // swi only has 2 oeprands!
+
             break;
 
         ///////////////////////////////////////////////////////////////////////
