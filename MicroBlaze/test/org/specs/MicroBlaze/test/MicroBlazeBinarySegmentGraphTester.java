@@ -17,7 +17,7 @@ import pt.up.fe.specs.util.SpecsIo;
 public class MicroBlazeBinarySegmentGraphTester {
 
     private File openFile() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
         fd.deleteOnExit();
         return fd;
     }
