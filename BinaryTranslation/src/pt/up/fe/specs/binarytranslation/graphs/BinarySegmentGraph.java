@@ -397,6 +397,8 @@ public class BinarySegmentGraph {
      */
     private void printHTML() {
 
+        // TODO: Use Replacer instead
+
         FileOutputStream fos = null;
         BufferedWriter bw = null;
         try {
@@ -482,7 +484,7 @@ public class BinarySegmentGraph {
                     + "Binary Translation Framework developed at <a href=\"https://www.inesctec.pt/\">INESC TEC</a> (CTM and CSIG) and UP/FEUP<br>"
                     + "<br>Contact the developers:<br>"
                     + "<a href=\"mailto:nuno.m.paulino@inesctec.pt\">Dr. Nuno Paulino</a><br>"
-                    + "<a href=\"mailto:joao.bispo@inesctec.pt\">Dr. Jo„o Bispo</a>"
+                    + "<a href=\"mailto:joao.bispo@inesctec.pt\">Dr. Jo√£o Bispo</a>"
                     + "</footer>");
             bw.flush();
             bw.close();
