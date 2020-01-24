@@ -9,7 +9,6 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 /**
@@ -133,7 +132,6 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
                 var keyval = hashcode.toString() + "_" + Integer.toString(addrlist.get(0));
                 this.hashed.remove(keyval);
                 it.remove();
-
             }
         }
     }
@@ -146,7 +144,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     private void hashSequences(List<Instruction> w) {
 
         // compute all hashes for this window, for all sequence sizes
-        for (int i = this.minsize; i <= this.maxsize; i++) {
+        for (int i = minsize; i <= maxsize; i++) {
 
             // sub-window
             List<Instruction> candidate = w.subList(0, i);
@@ -163,45 +161,24 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
             if (!validSequence(candidate))
                 continue;
 
-            // make register replacement map (for hash building)
-            Map<String, String> regremap = BinarySegmentDetectionUtils.makeRegReplaceMap(candidate);
-            // TODO the replacement function should be a parameter here
+            // create new candidate hash sequence
+            var newseq = BinarySegmentDetectionUtils.hashSequence(candidate);
 
-            String hashstring = "";
-            for (Instruction inst : candidate) {
-
-                // make part 1 of hash string
-                hashstring += "_" + Integer.toHexString(inst.getProperties().getOpCode());
-                // TODO this unique id (the opcode) will not be unique for arm, since the
-                // specific instruction is resolved later with fields that arent being
-                // interpreted yet; how to solve?
-                // TODO replace getOpCode with getUniqueID() (as a string)
-
-                // make part 2 of hash string
-                for (Operand op : inst.getData().getOperands()) {
-                    hashstring += "_" + regremap.get(op.getRepresentation());
-                    // at this point, imms have either been (or not) all (or partially) symbolified
-                }
-            }
-
-            // if sequence was complete, add (or add addr to existing equal sequence)
-            Integer hashCode = hashstring.hashCode();
-
-            // sequence start addr
-            int startAddr = candidate.get(0).getAddress().intValue();
+            // sequence start addr and hascode
+            int startAddr = newseq.getStartAddress();
+            int hashcode = newseq.getHashcode();
 
             // add sequence to occurrence counters (counting varies between static to trace detection)
-            listHashedSequence(hashCode, startAddr);
+            listHashedSequence(hashcode, startAddr);
 
             // add sequence to map which is indexed by hashCode
-            var keyval = hashCode.toString() + "_" + Integer.toString(startAddr);
+            var keyval = Integer.toString(hashcode) + "_" + Integer.toString(startAddr);
             if (!this.hashed.containsKey(keyval))
-                this.hashed.put(keyval, new HashedSequence(hashCode, candidate, regremap));
+                this.hashed.put(keyval, newseq);
 
             // useful for traces
             else
                 this.hashed.get(keyval).incrementOccurences();
-
         }
 
         return;
@@ -273,7 +250,6 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
 
         // process entire stream
         do {
-
             // sequences in this window, from sizes minsize to maxsize
             hashSequences(window);
 
