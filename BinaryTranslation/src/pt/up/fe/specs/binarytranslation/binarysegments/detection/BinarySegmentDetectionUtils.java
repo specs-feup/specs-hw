@@ -11,9 +11,39 @@ import pt.up.fe.specs.binarytranslation.instruction.OperandType;
 public class BinarySegmentDetectionUtils {
 
     /*
+     * 
+     */
+    protected static HashedSequence hashSequence(List<Instruction> candidate) {
+
+        // make register replacement map (for hash building)
+        Map<String, String> regremap = BinarySegmentDetectionUtils.makeRegReplaceMap(candidate);
+
+        String hashstring = "";
+        for (Instruction inst : candidate) {
+
+            // make part 1 of hash string
+            hashstring += "_" + Integer.toHexString(inst.getProperties().getOpCode());
+            // TODO this unique id (the opcode) will not be unique for arm, since the
+            // specific instruction is resolved later with fields that arent being
+            // interpreted yet; how to solve?
+            // TODO replace getOpCode with getUniqueID() (as a string)
+
+            // make part 2 of hash string
+            for (Operand op : inst.getData().getOperands()) {
+                hashstring += "_" + regremap.get(op.getRepresentation());
+                // at this point, imms have either been (or not) all (or partially) symbolified
+            }
+        }
+
+        // return hashed sequence
+        Integer hashCode = hashstring.hashCode();
+        return new HashedSequence(hashCode, candidate, regremap);
+    }
+
+    /*
      * Builds operand value replacement map for a given sequence (assumed valid)
      */
-    public static Map<String, String> makeRegReplaceMap(List<Instruction> ilist) {
+    protected static Map<String, String> makeRegReplaceMap(List<Instruction> ilist) {
 
         Map<OperandType, Character> counter = new HashMap<OperandType, Character>();
         Map<String, String> regremap = new HashMap<String, String>();
