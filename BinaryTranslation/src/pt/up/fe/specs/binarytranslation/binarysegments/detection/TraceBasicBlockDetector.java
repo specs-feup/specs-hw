@@ -17,11 +17,17 @@ public class TraceBasicBlockDetector extends ABasicBlockDetector {
         IDLING,
         WAITING,
         RECORDING,
-        CLEARING
+        HASHING,
+        COUNTING
     }
 
     @Override
     public List<BinarySegment> detectSegments() {
+
+        // ALTERNATIVE:
+        // read entire elf like the static detector
+        // count only the backwards branch frequencies
+        // then fetch the basic blocks using the StaticDetectorCode?
 
         DetectState state = DetectState.IDLING;
         int delay = 0;
@@ -54,16 +60,20 @@ public class TraceBasicBlockDetector extends ABasicBlockDetector {
 
             // record basic block
             case RECORDING:
+
+                // TODO if instruction is branch different from branchref, discard candidate
+                // ...otherwise this FSM can be used for megablocks and superblocks too, I think...
+
                 candidate.add(inst);
                 if (inst == branchref) {
                     delay = inst.getDelay();
                 }
-                if(delay > 0) {
+                if (delay > 0) {
                     delay--;
-                    if(delay == 0)
-                        state = 
+                    if (delay == 0)
+                        state = DetectState.HASHING;
                 }
-                    
+
                 break;
             }
 
