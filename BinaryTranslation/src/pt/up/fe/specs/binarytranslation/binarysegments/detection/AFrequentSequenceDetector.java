@@ -22,7 +22,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     /*
      * The list this detector will construct
      */
-    public List<BinarySegment> allsequences = null;
+    private List<BinarySegment> allsequences = null;
 
     /*
      * An open instruction stream, either from elf dump, or simulator
@@ -98,45 +98,6 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     }
 
     /*
-     * Adds detected sequence to auxiliary list 
-     */
-    private void listHashedSequence(Integer hashCode, Integer startAddr) {
-
-        // add sequence addr to list, if equivalent already exists
-        if (this.addrs.containsKey(hashCode)) {
-            this.addrs.get(hashCode).add(startAddr);
-        }
-
-        // add hashcode to addr list map
-        else {
-            var l = new ArrayList<Integer>();
-            l.add(startAddr);
-            this.addrs.put(hashCode, l);
-        }
-    }
-
-    /*
-     * Remove all sequences which only happen once
-     */
-    private void removeUnique() {
-
-        // iterate through hashcodes of sequences
-        Iterator<Integer> it = this.addrs.keySet().iterator();
-
-        while (it.hasNext()) {
-            var hashcode = it.next();
-            var addrlist = this.addrs.get(hashcode);
-            if (addrlist.size() <= 1) {
-
-                // remove hashed sequence from hashed sequences list by its starting addr
-                var keyval = hashcode.toString() + "_" + Integer.toString(addrlist.get(0));
-                this.hashed.remove(keyval);
-                it.remove();
-            }
-        }
-    }
-
-    /*
      * For the given window "w", builds all hash sequences from
      * sizes minsize to maxsize
      * Constructs a map with <instruction addr, sequence hash>
@@ -164,21 +125,11 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
             // create new candidate hash sequence
             var newseq = BinarySegmentDetectionUtils.hashSequence(candidate);
 
-            // sequence start addr and hascode
-            int startAddr = newseq.getStartAddress();
-            int hashcode = newseq.getHashcode();
-
             // add sequence to occurrence counters (counting varies between static to trace detection)
-            listHashedSequence(hashcode, startAddr);
+            BinarySegmentDetectionUtils.addAddrToList(this.addrs, newseq);
 
-            // add sequence to map which is indexed by hashCode
-            var keyval = Integer.toString(hashcode) + "_" + Integer.toString(startAddr);
-            if (!this.hashed.containsKey(keyval))
-                this.hashed.put(keyval, newseq);
-
-            // useful for traces
-            else
-                this.hashed.get(keyval).incrementOccurences();
+            // add sequence to map which is indexed by hashCode + startaddr
+            BinarySegmentDetectionUtils.addHashSequenceToList(this.hashed, newseq);
         }
 
         return;
@@ -224,7 +175,6 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
             newseq.setAppName(this.istream.getApplicationName());
             newseq.setCompilationFlags(this.istream.getCompilationInfo());
             this.allsequences.add(newseq);
-
         }
     }
 
@@ -239,8 +189,8 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
         // TODO: imms can be treated very differently!
         // 1. can either allow them to be all different (not part of the hash)
         // 2. can try to find common imms and leave only those to be literal (i.e., non symbolic)
-        // 3. can demand that all are equal in all ocurrences of sequence (all are non symbolic and hence all are
-        // hardware specilaized literals)
+        // 3. can demand that all are equal in all occurrences of sequence (all are non symbolic and hence all are
+        // hardware specialized literals)
 
         List<Instruction> window = new ArrayList<Instruction>();
 
@@ -266,7 +216,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
         } while (istream.hasNext());
 
         // Remove all sequences which only happen once
-        removeUnique();
+        BinarySegmentDetectionUtils.removeUnique(this.addrs, this.hashed);
 
         // Make all valid sequences
         makeFrequentSequences();
