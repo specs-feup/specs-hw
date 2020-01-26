@@ -1,6 +1,8 @@
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +11,67 @@ import pt.up.fe.specs.binarytranslation.instruction.Operand;
 import pt.up.fe.specs.binarytranslation.instruction.OperandType;
 
 public class BinarySegmentDetectionUtils {
+
+    /*
+     * Remove all sequences which only happen once
+     */
+    protected static void removeUnique(Map<Integer, List<Integer>> addrs, Map<String, HashedSequence> hashed) {
+
+        // iterate through hashcodes of sequences
+        Iterator<Integer> it = addrs.keySet().iterator();
+
+        while (it.hasNext()) {
+            var hashcode = it.next();
+            var addrlist = addrs.get(hashcode);
+            if (addrlist.size() <= 1) {
+
+                // remove hashed sequence from hashed sequences list by its starting addr
+                var keyval = hashcode.toString() + "_" + Integer.toString(addrlist.get(0));
+                hashed.remove(keyval);
+                it.remove();
+            }
+        }
+    }
+
+    /*
+     * Adds address of detected sequence to auxiliary list "this.addrs"
+     */
+    protected static void addAddrToList(Map<Integer, List<Integer>> addrs, HashedSequence newseq) {
+
+        var hashCode = newseq.getHashcode();
+        var startAddr = newseq.getStartAddress();
+
+        // add sequence addr to list, if equivalent already exists
+        if (addrs.containsKey(hashCode)) {
+            addrs.get(hashCode).add(startAddr);
+        }
+
+        // add hashcode to addr list map
+        else {
+            var l = new ArrayList<Integer>();
+            l.add(startAddr);
+            addrs.put(hashCode, l);
+        }
+    }
+
+    /*
+     * Adds detected sequence to list "this.hashed"
+     */
+    protected static void addHashSequenceToList(Map<String, HashedSequence> hashed, HashedSequence newseq) {
+
+        var hashCode = newseq.getHashcode();
+        var startAddr = newseq.getStartAddress();
+
+        // add sequence to map which is indexed by hashCode + startaddr
+        var keyval = Integer.toString(hashCode)
+                + "_" + Integer.toString(startAddr);
+        if (!hashed.containsKey(keyval))
+            hashed.put(keyval, newseq);
+
+        // useful for traces
+        else
+            hashed.get(keyval).incrementOccurences();
+    }
 
     /*
      * 
