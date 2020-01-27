@@ -1,7 +1,6 @@
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
@@ -18,11 +17,6 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public class TraceBasicBlockDetector extends ABasicBlockDetector {
 
     /*
-     * max size of window for capture of basicblock 
-     */
-    private final int maxsize = 20;
-
-    /*
      * 
      */
     public TraceBasicBlockDetector(InstructionStream istream) {
@@ -37,63 +31,12 @@ public class TraceBasicBlockDetector extends ABasicBlockDetector {
         return new TraceBasicBlock(symbolicseq, contexts);
     }
 
-    private void hashSequences(List<Instruction> window) {
-
-        var baseaddr = window.get(0).getAddress().intValue();
-        Iterator<Instruction> it = window.iterator();
-
-        // look for backwards branches in window, which has size up to this.maxsize
-        while (it.hasNext()) {
-            var is = it.next();
-
-            if (is.isBackwardsJump() == false)
-                continue;
-
-            if (is.isConditionalJump() == false)
-                continue;
-
-            if (is.isRelativeJump() == false)
-                continue;
-
-            // Address of the backwards branch
-            int thisAddr = is.getAddress().intValue();
-            int startAddr = is.getBranchTarget().intValue();
-
-            // backwards branch has left the window
-            if (startAddr < baseaddr)
-                continue;
-
-            // compute indexes
-            int sidx = (startAddr - baseaddr) / this.istream.getInstructionWidth();
-            int eidx = (thisAddr - baseaddr) / this.istream.getInstructionWidth();
-
-            // cant get candidate if delay goes beyond window
-            int delay = is.getDelay();
-            if (eidx + delay > window.size())
-                continue;
-
-            // sub-window
-            List<Instruction> candidate = window.subList(sidx, eidx);
-
-            // create new candidate hash sequence
-            var newseq = BinarySegmentDetectionUtils.hashSequence(candidate);
-
-            // add sequence to occurrence counters (counting varies between static to trace detection)
-            BinarySegmentDetectionUtils.addAddrToList(this.addrs, newseq);
-
-            // add sequence to map which is indexed by hashCode + startaddr
-            BinarySegmentDetectionUtils.addHashSequenceToList(this.hashed, newseq);
-        }
-
-    }
-
     @Override
     public List<BinarySegment> detectSegments() {
 
-        // ALTERNATIVE:
-        // read entire elf like the static detector
-        // count only the backwards branch frequencies
-        // then fetch the basic blocks using the StaticDetectorCode?
+        // TODO: treat in another fashion
+        if (loops != null)
+            return this.loops;
 
         List<Instruction> window = new ArrayList<Instruction>();
 
@@ -103,7 +46,7 @@ public class TraceBasicBlockDetector extends ABasicBlockDetector {
 
         // process entire stream
         do {
-            // sequences in this window, from sizes minsize to maxsize
+            // sequences in this window
             hashSequences(window);
 
             // shift window (i.e. new window)

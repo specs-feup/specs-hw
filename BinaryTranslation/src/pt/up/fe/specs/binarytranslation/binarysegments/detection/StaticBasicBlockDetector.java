@@ -14,7 +14,6 @@
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
@@ -44,34 +43,26 @@ public class StaticBasicBlockDetector extends ABasicBlockDetector {
         super(istream);
 
         // save entire dump
+        Integer idx = 0;
         Instruction inst = null;
         this.insts = new ArrayList<Instruction>();
+        this.backBranchesIdx = new ArrayList<Integer>();
+
         while ((inst = istream.nextInstruction()) != null) {
-            insts.add(inst);
+
             // save all instructions
+            insts.add(inst);
+
+            // record backwards branches
+            if (inst.isBackwardsJump() && inst.isConditionalJump() && inst.isRelativeJump())
+                backBranchesIdx.add(idx);
+            idx++;
         }
     }
 
     @Override
     protected BinarySegment makeBasicBlock(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
         return new StaticBasicBlock(symbolicseq, contexts);
-    }
-
-    /*
-     * Gathers all backwards branches in the ELF dump
-     */
-    private void listBackwardsBranches() {
-
-        // identify all backwards branches, save indexes in list
-        this.backBranchesIdx = new ArrayList<Integer>();
-        Integer idx = 0;
-        Iterator<Instruction> it = insts.iterator();
-        while (it.hasNext()) {
-            var inst = it.next();
-            if (inst.isBackwardsJump() && inst.isConditionalJump() && inst.isRelativeJump())
-                backBranchesIdx.add(idx);
-            idx++;
-        }
     }
 
     @Override
@@ -81,42 +72,15 @@ public class StaticBasicBlockDetector extends ABasicBlockDetector {
         if (loops != null)
             return this.loops;
 
-        // identify all backwards branches, save indexes in list
-        listBackwardsBranches();
-
         // starting from each target, add every following instruction to
         // the list of that Basic Block, until branch itself is reached
         for (Integer i : backBranchesIdx) {
 
-            // The backwards branch
-            Instruction is = insts.get(i);
+            // window
+            List<Instruction> window = insts.subList(i - this.maxsize, i);
 
-            // Address of the backwards branch
-            long thisAddr = is.getAddress().longValue();
-            long startAddr = is.getBranchTarget().longValue();
-
-            // actually, each ISA should have a method to getBranchTarget, for all of its branch types!
-            // every instruction has a targetaddr its +4 for every instruction, except branches
-
-            // Size of the Basic Block + any delay gaps from branch instruction
-            int bbSize = (int) ((thisAddr - startAddr) / istream.getInstructionWidth());
-            int delay = is.getDelay();
-
-            // candidate
-            List<Instruction> candidate = insts.subList(i - bbSize, i + 1 + delay);
-
-            // validate sequence
-            if (!isValid(candidate))
-                continue;
-
-            // create new candidate hash sequence
-            var newseq = BinarySegmentDetectionUtils.hashSequence(candidate);
-
-            // add sequence to occurrence counters (counting varies between static to trace detection)
-            BinarySegmentDetectionUtils.addAddrToList(this.addrs, newseq);
-
-            // add sequence to map which is indexed by hashCode + startaddr
-            BinarySegmentDetectionUtils.addHashSequenceToList(this.hashed, newseq);
+            // sequences in this window
+            hashSequences(window);
         }
 
         // for all valid hashed sequences, make the StaticBasicBlock objects
