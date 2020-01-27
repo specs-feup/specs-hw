@@ -4,13 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
+/**
+ * 
+ * @author nuno
+ *
+ */
 public class TraceBasicBlockDetector extends ABasicBlockDetector {
 
     public TraceBasicBlockDetector(InstructionStream istream) {
         super(istream);
+    }
+
+    @Override
+    protected BinarySegment makeBasicBlock(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
+        return new TraceBasicBlock(symbolicseq, contexts);
     }
 
     private enum DetectState {
