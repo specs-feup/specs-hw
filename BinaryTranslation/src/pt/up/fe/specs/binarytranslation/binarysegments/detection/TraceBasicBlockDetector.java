@@ -5,6 +5,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
+import pt.up.fe.specs.binarytranslation.binarysegments.TraceBasicBlock;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
