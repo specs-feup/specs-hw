@@ -1,6 +1,7 @@
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
@@ -16,21 +17,74 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
  */
 public class TraceBasicBlockDetector extends ABasicBlockDetector {
 
+    /*
+     * max size of window for capture of basicblock 
+     */
+    private final int maxsize = 20;
+
+    /*
+     * 
+     */
     public TraceBasicBlockDetector(InstructionStream istream) {
         super(istream);
     }
 
+    /*
+     * Must be implemented by children: StaticBasicBlockDetector, and TraceBasicBlockDetector
+     */
     @Override
     protected BinarySegment makeBasicBlock(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
         return new TraceBasicBlock(symbolicseq, contexts);
     }
 
-    private enum DetectState {
-        IDLING,
-        WAITING,
-        RECORDING,
-        HASHING,
-        COUNTING
+    private void hashSequences(List<Instruction> window) {
+
+        var baseaddr = window.get(0).getAddress().intValue();
+        Iterator<Instruction> it = window.iterator();
+
+        // look for backwards branches in window, which has size up to this.maxsize
+        while (it.hasNext()) {
+            var is = it.next();
+
+            if (is.isBackwardsJump() == false)
+                continue;
+
+            if (is.isConditionalJump() == false)
+                continue;
+
+            if (is.isRelativeJump() == false)
+                continue;
+
+            // Address of the backwards branch
+            int thisAddr = is.getAddress().intValue();
+            int startAddr = is.getBranchTarget().intValue();
+
+            // backwards branch has left the window
+            if (startAddr < baseaddr)
+                continue;
+
+            // compute indexes
+            int sidx = (startAddr - baseaddr) / this.istream.getInstructionWidth();
+            int eidx = (thisAddr - baseaddr) / this.istream.getInstructionWidth();
+
+            // cant get candidate if delay goes beyond window
+            int delay = is.getDelay();
+            if (eidx + delay > window.size())
+                continue;
+
+            // sub-window
+            List<Instruction> candidate = window.subList(sidx, eidx);
+
+            // create new candidate hash sequence
+            var newseq = BinarySegmentDetectionUtils.hashSequence(candidate);
+
+            // add sequence to occurrence counters (counting varies between static to trace detection)
+            BinarySegmentDetectionUtils.addAddrToList(this.addrs, newseq);
+
+            // add sequence to map which is indexed by hashCode + startaddr
+            BinarySegmentDetectionUtils.addHashSequenceToList(this.hashed, newseq);
+        }
+
     }
 
     @Override
@@ -41,78 +95,37 @@ public class TraceBasicBlockDetector extends ABasicBlockDetector {
         // count only the backwards branch frequencies
         // then fetch the basic blocks using the StaticDetectorCode?
 
-        DetectState state = DetectState.IDLING;
-        int delay = 0;
-        Instruction branchref = null;
-        List<Instruction> candidate = null;
-        Instruction inst = null;
-        while ((inst = istream.nextInstruction()) != null) {
+        List<Instruction> window = new ArrayList<Instruction>();
 
-            switch (state) {
+        // make 1st window
+        for (int i = 0; i < this.maxsize; i++)
+            window.add(this.istream.nextInstruction());
 
-            // wait for a backwards branch
-            case IDLING:
-                if (inst.isBackwardsJump() && inst.isConditionalJump() && inst.isRelativeJump()) {
-                    branchref = inst;
-                    delay = inst.getDelay();
-                    candidate = new ArrayList<Instruction>();
-                    if (delay > 0)
-                        state = DetectState.WAITING;
-                    else
-                        state = DetectState.RECORDING;
-                }
-                break;
+        // process entire stream
+        do {
+            // sequences in this window, from sizes minsize to maxsize
+            hashSequences(window);
 
-            // allow for the delay slot to clear
-            case WAITING:
-                delay--;
-                if (delay == 0)
-                    state = DetectState.RECORDING;
-                break;
+            // shift window (i.e. new window)
+            int i = 0;
+            int atomicity = window.get(0).getDelay();
+            for (i = 0; i < this.maxsize - 1 - atomicity; i++)
+                window.set(i, window.get(i + 1 + atomicity));
 
-            // record basic block
-            case RECORDING:
+            // new instructions in window
+            for (; i < this.maxsize; i++)
+                window.set(i, this.istream.nextInstruction());
 
-                // TODO if instruction is branch different from branchref, discard candidate
-                // ...otherwise this FSM can be used for megablocks and superblocks too, I think...
+        } while (istream.hasNext());
 
-                candidate.add(inst);
-                if (inst == branchref) {
-                    delay = inst.getDelay();
-                }
-                if (delay > 0) {
-                    delay--;
-                    if (delay == 0)
-                        state = DetectState.HASHING;
-                }
+        // for all valid hashed sequences, make the StaticBasicBlock objects
+        makeBasicBlocks();
 
-                break;
-            }
+        // finally, init some stats
+        this.totalCycles = istream.getCycles();
+        this.numInsts = istream.getNumInstructions();
 
-            /*
-            // starting building the candidate after the
-            // backwards jump, but allow for the delay slot to clear
-            if (buildingCandidate == true && delay == 0) {
-            
-                candidate.add(inst);
-                if (inst == branchref) {
-            
-                }
-            
-                // buildingCandidate = false;
-            }
-            
-            // if backwards branch, start constructing the candidate on the next instruction
-            else if (inst.isBackwardsJump() && inst.isConditionalJump() && inst.isRelativeJump()) {
-                branchref = inst;
-                delay = inst.getDelay();
-                candidate = new ArrayList<Instruction>();
-                buildingCandidate = true;
-            }
-            */
-        }
-
-        return null;
+        return loops;
     }
 
     @Override

@@ -119,8 +119,8 @@ public class StaticBasicBlockDetector extends ABasicBlockDetector {
             BinarySegmentDetectionUtils.addHashSequenceToList(this.hashed, newseq);
         }
 
-        // for all valid hashed sequences, make the StatiBasicBlock objects
-        makeStaticBasicBlocks();
+        // for all valid hashed sequences, make the StaticBasicBlock objects
+        makeBasicBlocks();
 
         // finally, init some stats
         this.totalCycles = istream.getCycles();

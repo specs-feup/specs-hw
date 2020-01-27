@@ -5,6 +5,11 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
+/**
+ * 
+ * @author Nuno
+ *
+ */
 public class TraceBasicBlock extends ABasicBlock {
 
     /*
