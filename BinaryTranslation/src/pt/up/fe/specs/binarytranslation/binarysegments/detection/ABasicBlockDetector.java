@@ -24,7 +24,7 @@ public abstract class ABasicBlockDetector implements SegmentDetector {
     protected InstructionStream istream;
 
     /*
-     * 
+     * Final list of detected basic blocks
      */
     protected List<BinarySegment> loops = null;
 
@@ -80,7 +80,7 @@ public abstract class ABasicBlockDetector implements SegmentDetector {
     /*
      * For all valid hashcodes, make the symbolic basic block and its in/out contexts
      */
-    protected void makeStaticBasicBlocks() {
+    protected void makeBasicBlocks() {
 
         // make list of segments
         this.loops = new ArrayList<BinarySegment>();
