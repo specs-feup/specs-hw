@@ -40,24 +40,29 @@ public class TraceBasicBlockDetector extends ABasicBlockDetector {
 
         List<Instruction> window = new ArrayList<Instruction>();
 
-        // make 1st window
-        for (int i = 0; i < this.maxsize; i++)
-            window.add(this.istream.nextInstruction());
-
         // process entire stream
         do {
-            // sequences in this window
-            hashSequences(window);
 
-            // shift window (i.e. new window)
-            int i = 0;
-            int atomicity = window.get(0).getDelay();
-            for (i = 0; i < this.maxsize - 1 - atomicity; i++)
-                window.set(i, window.get(i + 1 + atomicity));
+            var is = this.istream.nextInstruction();
+            window.add(is);
 
-            // new instructions in window
-            for (; i < this.maxsize; i++)
-                window.set(i, this.istream.nextInstruction());
+            // "is" isn't a possible backwards branch that could generate a basic block
+            if (!is.isBackwardsJump() || !is.isConditionalJump() || !is.isRelativeJump())
+                continue;
+
+            // try to hash it
+            else {
+
+                // absorb as many instructions as there are in the delay slot
+                var delay = is.getDelay();
+                while (delay > 0) {
+                    window.add(this.istream.nextInstruction());
+                    delay--;
+                }
+
+                // try to hash the possible candidate terminated by backwards branch "is"
+                checkCandidate(window, is);
+            }
 
         } while (istream.hasNext());
 

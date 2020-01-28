@@ -44,7 +44,6 @@ public class HashedSequence {
         // save only instruction as hex, and addr too
         this.instlist = new ArrayList<SimpleInstruction>();
         for (Instruction i : instlist) {
-            // i.printInstruction();
             this.instlist.add(new SimpleInstruction(i));
         }
     }
@@ -78,7 +77,6 @@ public class HashedSequence {
         var rebuiltI = new ArrayList<Instruction>();
         for (SimpleInstruction i : this.instlist) {
             var inst = i.rebuild();
-            // inst.printInstruction();
             rebuiltI.add(inst);
         }
 

@@ -11,15 +11,16 @@ import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticS
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeBinarySegmentGraphTester {
 
     private File openFile() {
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
         // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmul_n4096_l1000.elf");
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmuldump.txt");
+        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmuldump.txt");
         fd.deleteOnExit();
         return fd;
     }
@@ -61,6 +62,14 @@ public class MicroBlazeBinarySegmentGraphTester {
     public void testTraceFrequenceSequence() {
         try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(openFile())) {
             var bbd = new FrequentTraceSequenceDetector(el);
+            getSegments(bbd);
+        }
+    }
+
+    @Test
+    public void testTraceBasicBlock() {
+        try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(openFile())) {
+            var bbd = new TraceBasicBlockDetector(el);
             getSegments(bbd);
         }
     }

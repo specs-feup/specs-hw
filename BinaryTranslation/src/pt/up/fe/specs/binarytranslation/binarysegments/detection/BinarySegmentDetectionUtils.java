@@ -13,6 +13,13 @@ import pt.up.fe.specs.binarytranslation.instruction.OperandType;
 public class BinarySegmentDetectionUtils {
 
     /*
+     * NOTE: most of these methods operate under the assumption that the "hashed" map is configured as such:
+     * <hashcode_startaddr, HashedSequence>
+     * Where "hashcode_startaddr" is built by concatenating the string 
+     * representations of the the hashcode of the sequence and its starting address
+     */
+
+    /*
      * Remove all sequences which only happen once
      */
     protected static void removeUnique(Map<Integer, List<Integer>> addrs, Map<String, HashedSequence> hashed) {
@@ -43,7 +50,8 @@ public class BinarySegmentDetectionUtils {
 
         // add sequence addr to list, if equivalent already exists
         if (addrs.containsKey(hashCode)) {
-            addrs.get(hashCode).add(startAddr);
+            if (!addrs.get(hashCode).contains(startAddr))
+                addrs.get(hashCode).add(startAddr);
         }
 
         // add hashcode to addr list map

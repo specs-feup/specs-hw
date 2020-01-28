@@ -55,7 +55,7 @@ public class SegmentContext {
     public String getRepresentation() {
 
         String ret = "Start Addresses: 0x" + Integer.toHexString(this.startaddr) + "\n";
-        ret += "\nNumber of ocurrences: " + Integer.toString(this.ocurrences) + "\n";
+        ret += "Number of ocurrences: " + Integer.toString(this.ocurrences) + "\n";
         for (String str : this.context.keySet())
             ret += this.context.get(str) + "\t:\t" + str + "\n";
 

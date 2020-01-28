@@ -96,33 +96,4 @@ public abstract class ABinarySegment implements BinarySegment {
     public List<SegmentContext> getContexts() {
         return contexts;
     }
-
-    /*
-     * Call to build liveins and liveouts list, only after segment is complete
-     */
-    /*
-    protected void buildLiveInsAndLiveOuts() {
-    
-        this.liveins = new ArrayList<Operand>();
-        this.liveouts = new ArrayList<Operand>();
-    
-        for (Instruction i : this.instlist) {
-            for (Operand op : i.getData().getOperands()) {
-    
-                // everything that is a register is a livein
-                if (op.isSymbolic() && op.isRead() && !this.liveins.contains(op)) {
-                    this.liveins.add(op);
-                }
-    
-                // only liveout if written
-                if (op.isSymbolic() && op.isWrite() && !this.liveouts.contains(op)) {
-                    this.liveouts.add(op);
-                }
-    
-                // TODO isbSymblic check required? what about constants and "sp" ?
-            }
-        }
-        return;
-    }
-    */
 }
