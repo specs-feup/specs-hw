@@ -1,7 +1,6 @@
 package org.specs.MicroBlaze.stream;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -12,17 +11,12 @@ import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
-import pt.up.fe.specs.util.utilities.Replacer;
 
 public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
     private static final String GDB_EXE = "mb-gdb";
-
-    // private static final String QEMU_EXE = "qemu-system-microblazeel";
     private static final String QEMU_EXE = "/media/nuno/HDD/work/projects/myqemus/qemu-system-microblazeel";
-
     private static final Pattern REGEX = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
     private static final MicroBlazeResource QEMU_DTB = MicroBlazeResource.QEMU_MICROBLAZE_BAREMETAL_DTB;
     private static final MicroBlazeResource QEMU_GDB_TMPL = MicroBlazeResource.QEMU_MICROBLAZE_GDB_TEMPLATE;
@@ -33,7 +27,10 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
     private boolean haveStoredInst = false;
 
     public MicroBlazeTraceStream(File elfname) {
-        super(MicroBlazeTraceStream.newSimulatorBuilder(elfname));
+        // super(MicroBlazeTraceStream.newSimulatorBuilder(elfname));
+
+        super(elfname, QEMU_GDB_TMPL, GDB_EXE, QEMU_DTB, QEMU_EXE);
+
         this.appName = elfname.getName();
         this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
                 MicroBlazeResource.MICROBLAZE_READELF.getResource());
@@ -58,25 +55,6 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
          *  an IMM always executes, and therefore we can go fetch it. For branches, there is 
          *  no way to know which instruction to fetch...
          */
-    }
-
-    /*
-     * Need this method instead of the method in ATraceInstructionStream due to the need to specify DTB
-     */
-    private static ProcessBuilder newSimulatorBuilder(File elfname) {
-
-        // copy dtb to local folder
-        File fd = SpecsIo.resourceCopy(QEMU_DTB.getResource());
-        fd.deleteOnExit();
-
-        String elfpath = elfname.getAbsolutePath();
-        var gdbScript = new Replacer(QEMU_GDB_TMPL);
-        gdbScript.replace("<ELFNAME>", elfpath);
-        gdbScript.replace("<QEMUBIN>", QEMU_EXE);
-        gdbScript.replace("<DTBFILE>", fd.getAbsolutePath());
-        SpecsIo.write(new File("tmpscript.gdb"), gdbScript.toString());
-
-        return new ProcessBuilder(Arrays.asList(GDB_EXE, "-x", "tmpscript.gdb"));
     }
 
     /*

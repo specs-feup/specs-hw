@@ -9,32 +9,58 @@ import pt.up.fe.specs.util.utilities.Replacer;
 
 public abstract class ATraceInstructionStream extends AInstructionStream {
 
-    public static ProcessBuilder newSimulatorBuilder(File elfname, ResourceProvider gdbtmpl,
-            String gdbexe, String qemuexe) {
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
+
+    /*
+     * 
+     */
+    protected ATraceInstructionStream(File elfname, ResourceProvider gdbtmpl,
+            String gdbexe, ResourceProvider dtbfile, String qemuexe) {
+
+        super(ATraceInstructionStream.getProperProcess(elfname,
+                gdbtmpl, gdbexe, dtbfile, qemuexe));
+        this.appName = elfname.getName();
+    }
+
+    /*
+     * Determine process to use based on file extension and OS
+     */
+    private static ProcessBuilder getProperProcess(File elfname,
+            ResourceProvider gdbtmpl, String gdbexe, ResourceProvider dtbfile, String qemuexe) {
+
+        var name = elfname.getName();
+        var extension = name.subSequence(name.length() - 3, name.length());
+
+        // Output from GNU based objdump
+        if (extension.equals("elf"))
+            return ATraceInstructionStream.newSimulatorBuilder(elfname, gdbtmpl, gdbexe, dtbfile, qemuexe);
+
+        // Output from file (previous dump)
+        else if (IS_WINDOWS)
+            return new ProcessBuilder(Arrays.asList("cmd", "/c", "type", elfname.getAbsolutePath()));
+
+        else // if (IS_LINUX)
+            return new ProcessBuilder(Arrays.asList("cat", elfname.getAbsolutePath()));
+    }
+
+    public static ProcessBuilder newSimulatorBuilder(File elfname,
+            ResourceProvider gdbtmpl, String gdbexe, ResourceProvider dtbfile, String qemuexe) {
 
         String elfpath = elfname.getAbsolutePath();
         var gdbScript = new Replacer(gdbtmpl);
         gdbScript.replace("<ELFNAME>", elfpath);
         gdbScript.replace("<QEMUBIN>", qemuexe);
+
+        // DTB only required by microblaze, for now
+        if (dtbfile != null) {
+            // copy dtb to local folder
+            File fd = SpecsIo.resourceCopy(dtbfile.getResource());
+            fd.deleteOnExit();
+            gdbScript.replace("<DTBFILE>", fd.getAbsolutePath());
+        }
+
         SpecsIo.write(new File("tmpscript.gdb"), gdbScript.toString());
-
         return new ProcessBuilder(Arrays.asList(gdbexe, "-x", "tmpscript.gdb"));
-    }
-
-    /*
-     * used by arm
-     */
-    protected ATraceInstructionStream(File elfname, ResourceProvider gdbtmpl,
-            String gdbexe, String qemuexe) {
-        super(ATraceInstructionStream.newSimulatorBuilder(elfname, gdbtmpl, gdbexe, qemuexe));
-        this.appName = elfname.getName();
-    }
-
-    /*
-     * Constructor is only used by microblaze for now
-     */
-    protected ATraceInstructionStream(ProcessBuilder pb) {
-        super(pb);
     }
 
     @Override
