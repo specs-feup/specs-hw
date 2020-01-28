@@ -30,11 +30,4 @@ public class TraceBasicBlock extends ABasicBlock {
         // TODO Auto-generated method stub
         return null;
     }
-
-    @Override
-    public int getUniqueId() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
 }

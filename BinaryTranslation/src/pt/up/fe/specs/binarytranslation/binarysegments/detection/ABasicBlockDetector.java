@@ -49,7 +49,7 @@ public abstract class ABasicBlockDetector implements SegmentDetector {
     /*
      * max size of window for capture of basicblock 
      */
-    protected final int maxsize = 20;
+    protected final int maxsize = 40;
 
     /*
      * Since list needs revisiting, absorb all instructions in
@@ -83,59 +83,46 @@ public abstract class ABasicBlockDetector implements SegmentDetector {
     }
 
     /*
-     * For a window of this.maxsize, check for valid candidates, and hash all valid ones
+     * For a window of this.maxsize, check for valid candidate, and hash if valid
+     * Should only be necessary to check for one valid sequence for the last branch in the window
      */
-    protected void hashSequences(List<Instruction> window) {
+    protected void checkCandidate(List<Instruction> window, Instruction backbranch) {
 
+        // Address of the backwards branch
         var baseaddr = window.get(0).getAddress().intValue();
-        Iterator<Instruction> it = window.iterator();
+        int startAddr = backbranch.getBranchTarget().intValue();
 
-        // look for backwards branches in window, which has size up to this.maxsize
-        while (it.hasNext()) {
-            var is = it.next();
+        // backwards branch has left the window
+        if (startAddr < baseaddr)
+            return;
 
-            if (is.isBackwardsJump() == false)
-                continue;
-
-            if (is.isConditionalJump() == false)
-                continue;
-
-            if (is.isRelativeJump() == false)
-                continue;
-
-            // Address of the backwards branch
-            int thisAddr = is.getAddress().intValue();
-            int startAddr = is.getBranchTarget().intValue();
-
-            // backwards branch has left the window
-            if (startAddr < baseaddr)
-                continue;
-
-            // compute indexes
-            int sidx = (startAddr - baseaddr) / this.istream.getInstructionWidth();
-            int eidx = ((thisAddr - baseaddr) / this.istream.getInstructionWidth()) + 1;
-
-            // cant get candidate if delay goes beyond window
-            int delay = is.getDelay();
-            if (eidx + delay > window.size())
-                continue;
-
-            // sub-window
-            List<Instruction> candidate = window.subList(sidx, eidx + delay);
-
-            // discard candidate?
-            if (!validSequence(candidate))
-                continue;
-
-            // create new candidate hash sequence
-            var newseq = BinarySegmentDetectionUtils.hashSequence(candidate);
-
-            // add sequence to occurrence counters (counting varies between static to trace detection)
-            BinarySegmentDetectionUtils.addAddrToList(this.addrs, newseq);
-
-            // add sequence to map which is indexed by hashCode + startaddr
-            BinarySegmentDetectionUtils.addHashSequenceToList(this.hashed, newseq);
+        // compute indexes
+        int sidx = 0;
+        while (window.get(sidx).getAddress().intValue() != startAddr) {
+            sidx++;
         }
+
+        int eidx = 0;
+        while (window.get(eidx) != backbranch) {
+            eidx++;
+        }
+        eidx += 1;
+
+        // sub-window
+        List<Instruction> candidate = window.subList(sidx, eidx + backbranch.getDelay());
+
+        // discard candidate?
+        if (!validSequence(candidate))
+            return;
+
+        // create new candidate hash sequence
+        var newseq = BinarySegmentDetectionUtils.hashSequence(candidate);
+
+        // add sequence to occurrence counters (counting varies between static to trace detection)
+        BinarySegmentDetectionUtils.addAddrToList(this.addrs, newseq);
+
+        // add sequence to map which is indexed by hashCode + startaddr
+        BinarySegmentDetectionUtils.addHashSequenceToList(this.hashed, newseq);
     }
 
     /*

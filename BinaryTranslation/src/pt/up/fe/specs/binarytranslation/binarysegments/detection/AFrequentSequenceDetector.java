@@ -44,7 +44,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     /*
      * min and max size of windows 
      */
-    protected final int minsize = 2;
+    protected final int minsize = 4;
     protected final int maxsize = 20;
 
     /*

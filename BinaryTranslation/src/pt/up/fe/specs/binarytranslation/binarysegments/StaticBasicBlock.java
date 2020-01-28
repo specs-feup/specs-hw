@@ -37,22 +37,4 @@ public class StaticBasicBlock extends ABasicBlock {
         super(ilist, Arrays.asList(context));
         this.segtype = BinarySegmentType.STATIC_BASIC_BLOCK;
     }
-
-    @Override
-    public int getUniqueId() {
-        String hashstring = "";
-        for (Instruction i : this.instlist) {
-            hashstring += i.getAddress().toString();
-        }
-        return hashstring.hashCode();
-    }
-
-    @Override
-    public Integer getExecutionCycles() {
-        Integer cycles = 0;
-        for (Instruction i : this.instlist) {
-            cycles += i.getLatency();
-        }
-        return cycles;
-    }
 }
