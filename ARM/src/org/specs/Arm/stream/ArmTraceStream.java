@@ -16,7 +16,7 @@ public class ArmTraceStream extends ATraceInstructionStream {
     private static final Pattern REGEX = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
 
     public ArmTraceStream(File elfname) {
-        super(elfname, ArmResource.QEMU_AARCH64_GDB_TEMPLATE, GDB_EXE, QEMU_EXE);
+        super(elfname, ArmResource.QEMU_AARCH64_GDB_TEMPLATE, GDB_EXE, null, QEMU_EXE);
         this.appName = elfname.getName();
         this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
                 ArmResource.AARCH64_READELF.getResource());
