@@ -88,20 +88,27 @@ public abstract class ABasicBlockDetector implements SegmentDetector {
      */
     protected void checkCandidate(List<Instruction> window, Instruction backbranch) {
 
-        // Address of the backwards branch
-        var baseaddr = window.get(0).getAddress().intValue();
+        // try to find start of basic block in window, and its index
+        int sidx = 0;
+        Instruction target = null;
         int startAddr = backbranch.getBranchTarget().intValue();
 
-        // backwards branch has left the window
-        if (startAddr < baseaddr)
-            return;
-
-        // compute indexes
-        int sidx = 0;
-        while (window.get(sidx).getAddress().intValue() != startAddr) {
-            sidx++;
+        try {
+            while (sidx < window.size() && target == null) {
+                var is = window.get(sidx);
+                if (is.getAddress().intValue() == startAddr)
+                    target = is;
+                sidx++;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
         }
 
+        // wasn't there
+        if (target == null)
+            return;
+
+        // find index of branch instruction
         int eidx = 0;
         while (window.get(eidx) != backbranch) {
             eidx++;
@@ -168,6 +175,59 @@ public abstract class ABasicBlockDetector implements SegmentDetector {
             // Add to return list
             loops.add(newbb);
         }
+
+    }
+
+    /*
+     * 
+     */
+    @Override
+    public List<BinarySegment> detectSegments() {
+
+        // TODO: treat in another fashion
+        if (loops != null)
+            return this.loops;
+
+        List<Instruction> window = new ArrayList<Instruction>();
+
+        // process entire stream
+        int insertcount = 0;
+        Instruction is = null;
+        while ((is = this.istream.nextInstruction()) != null) {
+
+            window.add(is);
+            insertcount++;
+
+            // "is" is a possible backwards branch that could generate a basic block, so, try to hash it
+            if (is.isBackwardsJump() && is.isConditionalJump() && is.isRelativeJump()) {
+
+                // absorb as many instructions as there are in the delay slot
+                var delay = is.getDelay();
+                while (delay-- > 0) {
+                    window.add(this.istream.nextInstruction());
+                    insertcount++;
+                }
+
+                // try to hash the possible candidate terminated by backwards branch "is"
+                checkCandidate(window, is);
+            }
+
+            // pop one
+            while (insertcount > 0 && window.size() > this.maxsize) {
+                insertcount--;
+                window.remove(0);
+            }
+
+        }
+
+        // for all valid hashed sequences, make the StaticBasicBlock objects
+        makeBasicBlocks();
+
+        // finally, init some stats
+        this.totalCycles = istream.getCycles();
+        this.numInsts = istream.getNumInstructions();
+
+        return loops;
     }
 
     /*

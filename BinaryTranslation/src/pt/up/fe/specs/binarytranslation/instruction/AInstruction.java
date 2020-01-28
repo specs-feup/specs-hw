@@ -211,12 +211,12 @@ public abstract class AInstruction implements Instruction {
     /* 
      * 
      */
-    public void makeSymbolic(Number address, Map<String, String> regremap) {
+    public void makeSymbolic(Number address, Map<String, String> regremap) throws NullPointerException {
+
+        this.printInstruction();
 
         // symbolify address
         this.address = address;
-
-        // this.printInstruction();
 
         // symbolify operands
         for (Operand op : this.getData().getOperands()) {
@@ -232,8 +232,14 @@ public abstract class AInstruction implements Instruction {
                 var r = regremap.get(tmp);
                 // System.out.println(r);
 
-                var r2 = r.substring(r.indexOf('<') + 1, r.indexOf('>')); // NOTE: and ugly hack, but works...
-                // System.out.println(r2);
+                String r2 = null;
+                try {
+                    r2 = r.substring(r.indexOf('<') + 1, r.indexOf('>')); // NOTE: and ugly hack, but works...
+                    // System.out.println(r2);
+
+                } catch (NullPointerException e) {
+                    throw e;
+                }
 
                 op.setSymbolic(r2);
                 // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!

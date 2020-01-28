@@ -18,8 +18,8 @@ import pt.up.fe.specs.util.SpecsIo;
 public class MicroBlazeBinarySegmentGraphTester {
 
     private File openFile() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmul_n4096_l1000.elf");
+        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmul_n4096_l1000.elf");
         // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmuldump.txt");
         fd.deleteOnExit();
         return fd;
@@ -30,7 +30,7 @@ public class MicroBlazeBinarySegmentGraphTester {
 
         for (BinarySegment seg : segments) {
             var graph0 = BinarySegmentGraph.newInstance(seg);
-            if (graph0.getCpl() >= 0 && graph0.getSegment().getContexts().size() >= 2) {
+            if (graph0.getCpl() >= 0 && graph0.getSegment().getContexts().size() >= 1) {
                 // graph0.getSegment().printSegment();
                 // System.out.println(graph0.getInitiationInterval());
                 // System.out.println(graph0.getEstimatedIPC());

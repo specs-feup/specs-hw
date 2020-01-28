@@ -12,7 +12,8 @@ public class MicroBlazeTraceStreamTester {
 
     @Test
     public void test() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
+        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmul_n4096_l1000.elf");
         fd.deleteOnExit();
 
         try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(fd)) {
