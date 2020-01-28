@@ -83,7 +83,13 @@ public class HashedSequence {
         // Symbolify
         Integer addr = 0;
         for (Instruction i : rebuiltI) {
-            i.makeSymbolic(addr, this.regremap);
+
+            try {
+                i.makeSymbolic(addr, this.regremap);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+
             addr += 4;
         }
 

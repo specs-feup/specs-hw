@@ -15,7 +15,7 @@ public class SimpleInstruction {
     private Method c;
 
     public SimpleInstruction(Instruction i) {
-        this.address = i.getAddress().toString();
+        this.address = Long.toHexString(i.getAddress().longValue());
         this.instruction = i.getInstruction();
         try {
             this.c = i.getClass().getMethod("newInstance", String.class, String.class);

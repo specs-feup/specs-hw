@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
@@ -32,105 +31,19 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
  */
 public class StaticBasicBlockDetector extends ABasicBlockDetector {
 
-    // private List<Instruction> insts;
-    // private List<Integer> backBranchesIdx;
-
     /*
-     * Since list needs revisiting, absorb all instructions in
-     * the static dump into StaticBasicBlockDetector class instance
+     * 
      */
     public StaticBasicBlockDetector(InstructionStream istream) {
         super(istream);
-
-        // save entire dump
-        /*Integer idx = 0;
-        Instruction inst = null;
-        this.insts = new ArrayList<Instruction>();
-        this.backBranchesIdx = new ArrayList<Integer>();
-        
-        while ((inst = istream.nextInstruction()) != null) {
-        
-            // save all instructions
-            insts.add(inst);
-        
-            // record backwards branches
-            if (inst.isBackwardsJump() && inst.isConditionalJump() && inst.isRelativeJump())
-                backBranchesIdx.add(idx);
-            idx++;
-        }*/
     }
 
+    /*
+     * 
+     */
     @Override
     protected BinarySegment makeBasicBlock(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
         return new StaticBasicBlock(symbolicseq, contexts);
-    }
-
-    @Override
-    public List<BinarySegment> detectSegments() {
-        /*
-        // TODO: treat in another fashion
-        if (loops != null)
-            return this.loops;
-        
-        // starting from each target, add every following instruction to
-        // the list of that Basic Block, until branch itself is reached
-        for (Integer i : backBranchesIdx) {
-        
-            // sequences in this window (should only be one valid one)
-            var backbranch = insts.get(i);
-        
-            // build a window of up to this size
-            var iidx = i - this.maxsize;
-            if (iidx < 0)
-                iidx = 0;
-        
-            List<Instruction> candidate = insts.subList(iidx, i + 1 + backbranch.getDelay());
-            checkCandidate(candidate, backbranch);
-        }
-        
-        // for all valid hashed sequences, make the StaticBasicBlock objects
-        makeBasicBlocks();*/
-
-        // TODO: treat in another fashion
-        if (loops != null)
-            return this.loops;
-
-        List<Instruction> window = new ArrayList<Instruction>();
-
-        // process entire stream
-        do {
-
-            var is = this.istream.nextInstruction();
-            window.add(is);
-
-            // "is" isn't a possible backwards branch that could generate a basic block
-            if (!is.isBackwardsJump() || !is.isConditionalJump() || !is.isRelativeJump())
-                continue;
-
-            // try to hash it
-            else {
-
-                // absorb as many instructions as there are in the delay slot
-                var delay = is.getDelay();
-                while (delay > 0) {
-                    window.add(this.istream.nextInstruction());
-                    delay--;
-                }
-
-                // try to hash the possible candidate terminated by backwards branch "is"
-                checkCandidate(window, is);
-            }
-
-        } while (istream.hasNext());
-
-        // for all valid hashed sequences, make the StaticBasicBlock objects
-        makeBasicBlocks();
-
-        // finally, init some stats
-        this.totalCycles = istream.getCycles();
-        this.numInsts = istream.getNumInstructions();
-
-        return loops;
     }
 
     @Override
