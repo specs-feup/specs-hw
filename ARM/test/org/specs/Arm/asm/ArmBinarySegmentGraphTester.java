@@ -11,14 +11,15 @@ import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticS
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class ArmBinarySegmentGraphTester {
 
     private File openFile() {
-        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/helloworld64_from_vivado_flow/helloworld64.elf");
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/test.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/helloworld64_from_vivado_flow/helloworld64.elf");
+        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/test.txt");
         fd.deleteOnExit();
         return fd;
     }
@@ -54,6 +55,14 @@ public class ArmBinarySegmentGraphTester {
     public void testTraceFrequenceSequence() {
         try (ArmTraceStream el = new ArmTraceStream(openFile())) {
             var bbd = new FrequentTraceSequenceDetector(el);
+            getSegments(bbd);
+        }
+    }
+
+    @Test
+    public void testTraceBasicBlock() {
+        try (ArmTraceStream el = new ArmTraceStream(openFile())) {
+            var bbd = new TraceBasicBlockDetector(el);
             getSegments(bbd);
         }
     }
