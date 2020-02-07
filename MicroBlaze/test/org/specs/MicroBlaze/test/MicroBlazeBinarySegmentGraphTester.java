@@ -19,8 +19,10 @@ public class MicroBlazeBinarySegmentGraphTester {
 
     private File openFile() {
         // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/helloworld/helloworld.elf");
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmul_n4096_l1000.elf");
+        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmul_n4096_l1000.elf");
         // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/matmul/matmuldump.txt");
+
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/test/cholesky/executable_t2_n4096_l1000.elf");
         fd.deleteOnExit();
         return fd;
     }
