@@ -213,8 +213,6 @@ public abstract class AInstruction implements Instruction {
      */
     public void makeSymbolic(Number address, Map<String, String> regremap) throws NullPointerException {
 
-        this.printInstruction();
-
         // symbolify address
         this.address = address;
 

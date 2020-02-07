@@ -89,20 +89,21 @@ public abstract class ABasicBlockDetector implements SegmentDetector {
     protected void checkCandidate(List<Instruction> window, Instruction backbranch) {
 
         // try to find start of basic block in window, and its index
-        int sidx = 0;
+        int sidx = window.size() - 1;
         Instruction target = null;
         int startAddr = backbranch.getBranchTarget().intValue();
 
         try {
-            while (sidx < window.size() && target == null) {
+            while (sidx >= 0 && target == null) {
                 var is = window.get(sidx);
                 if (is.getAddress().intValue() == startAddr)
                     target = is;
-                sidx++;
+                sidx--;
             }
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
+        sidx += 1;
 
         // wasn't there
         if (target == null)
