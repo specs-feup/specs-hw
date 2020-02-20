@@ -106,6 +106,9 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
         this.numcycles += i.getLatency();
         this.numinsts++;
+
+        // i.printInstruction();
+
         return i;
     }
 

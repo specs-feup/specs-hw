@@ -73,12 +73,22 @@ public class BinarySegmentDetectionUtils {
         // add sequence to map which is indexed by hashCode + startaddr
         var keyval = Integer.toString(hashCode)
                 + "_" + Integer.toString(startAddr);
-        if (!hashed.containsKey(keyval))
+
+        if (!hashed.containsKey(keyval)) {
             hashed.put(keyval, newseq);
 
+            // Info prints
+            System.out.println("Found Basic Block at 0x" + newseq.getStartAddress());
+        }
+
         // useful for traces
-        else
+        else {
             hashed.get(keyval).incrementOccurences();
+
+            // Info prints
+            System.out.println("\tincremented count of basic block "
+                    + keyval + " to " + hashed.get(keyval).getOcurrences());
+        }
     }
 
     /*
