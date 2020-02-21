@@ -18,9 +18,7 @@ import pt.up.fe.specs.util.SpecsIo;
 public class ArmBinarySegmentGraphTester {
 
     private File openFile() {
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/helloworld64_from_vivado_flow/helloworld64.elf");
-        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/aarch64_bare_metal_qemu/test64.elf");
-        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/test.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/matmul.elf");
         fd.deleteOnExit();
         return fd;
     }
@@ -28,10 +26,14 @@ public class ArmBinarySegmentGraphTester {
     private void getSegments(SegmentDetector bbd) {
         var segments = bbd.detectSegments();
 
+        int safetycounter = 0; // to prevent lots of printing (just for testing purposes)
         for (BinarySegment seg : segments) {
             var graph0 = BinarySegmentGraph.newInstance(seg);
-            if (graph0.getCpl() >= 1 && graph0.getSegment().getContexts().size() >= 1) {
-                graph0.generateOutput();
+            if (safetycounter < 10) {
+                if (graph0.getCpl() >= 1 && graph0.getSegment().getContexts().size() >= 1) {
+                    graph0.generateOutput();
+                    safetycounter++;
+                }
             }
         }
     }
