@@ -18,7 +18,8 @@ import pt.up.fe.specs.util.SpecsIo;
 public class ArmBinarySegmentGraphTester {
 
     private File openFile() {
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/matmul.elf");
+        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/matmul.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.elf");
         fd.deleteOnExit();
         return fd;
     }

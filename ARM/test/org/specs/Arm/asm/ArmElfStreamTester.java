@@ -13,7 +13,8 @@ public class ArmElfStreamTester {
     @Test
     public void test() {
 
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/matmul.elf");
+        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/matmul.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.elf");
         fd.deleteOnExit();
 
         try (ArmElfStream el = new ArmElfStream(fd);) {

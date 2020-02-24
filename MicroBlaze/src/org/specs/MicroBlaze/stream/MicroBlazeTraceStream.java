@@ -18,8 +18,6 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
     private static final String GDB_EXE = "mb-gdb";
     private static final String QEMU_EXE = "/media/nuno/HDD/work/projects/myqemus/qemu-system-microblazeel";
     private static final Pattern REGEX = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
-    private static final MicroBlazeResource QEMU_DTB = MicroBlazeResource.QEMU_MICROBLAZE_BAREMETAL_DTB;
-    private static final MicroBlazeResource QEMU_GDB_TMPL = MicroBlazeResource.QEMU_MICROBLAZE_GDB_TEMPLATE;
 
     // two auxiliary vars to help with mb-gdb bug
     private final Map<Integer, Instruction> elfdump = new HashMap<Integer, Instruction>();
@@ -29,7 +27,8 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
     public MicroBlazeTraceStream(File elfname) {
         // super(MicroBlazeTraceStream.newSimulatorBuilder(elfname));
 
-        super(elfname, QEMU_GDB_TMPL, GDB_EXE, QEMU_DTB, QEMU_EXE);
+        super(elfname, MicroBlazeResource.QEMU_MICROBLAZE_GDB_TEMPLATE,
+                GDB_EXE, MicroBlazeResource.QEMU_MICROBLAZE_BAREMETAL_DTB, QEMU_EXE);
 
         this.appName = elfname.getName();
         this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
