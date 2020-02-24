@@ -12,7 +12,8 @@ public class ArmTraceStreamTester {
     @Test
     public void test() {
 
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/matmul.elf");
+        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/helloworld.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.elf");
         fd.deleteOnExit();
 
         // ArmTraceStream el = new ArmTraceStream(fd);

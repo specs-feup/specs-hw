@@ -10,4 +10,3 @@ x/x $pc
 end
 kill
 quit
-
