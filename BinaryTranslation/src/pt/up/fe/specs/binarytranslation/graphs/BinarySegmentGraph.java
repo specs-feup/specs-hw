@@ -299,7 +299,10 @@ public class BinarySegmentGraph {
 
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
         try {
-            bw.write("digraph G {\n");
+            bw.write("digraph G {\n\n");
+
+            bw.write("graph [ dpi = 300 ];\n");
+            bw.write("bgcolor=\"#ffffff00\";\n\n");
 
             // livein nodes
             bw.write("{ rank = source;\n");
@@ -319,6 +322,7 @@ public class BinarySegmentGraph {
             }
             bw.write("}\n");
 
+            bw.write("subgraph nodes {\n\tnode [style=filled, fillcolor=\"#ffffff\"];\n");
             for (GraphNode n : this.nodes) {
                 bw.write(n.rawDotty());
             }
