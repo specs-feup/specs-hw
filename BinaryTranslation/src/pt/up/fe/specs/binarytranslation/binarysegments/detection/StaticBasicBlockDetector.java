@@ -45,7 +45,7 @@ public class StaticBasicBlockDetector extends ABasicBlockDetector {
     protected BinarySegment makeBasicBlock(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
         return new StaticBasicBlock(symbolicseq, contexts);
     }
-
+    /*
     @Override
     public float getCoverage(int segmentSize) {
         Integer detectedportion = 0;
@@ -53,5 +53,5 @@ public class StaticBasicBlockDetector extends ABasicBlockDetector {
             detectedportion += seg.getExecutionCycles();
         }
         return (float) detectedportion / this.totalCycles;
-    }
+    }*/
 }
