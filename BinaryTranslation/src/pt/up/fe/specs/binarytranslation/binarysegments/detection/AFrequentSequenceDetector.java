@@ -32,8 +32,8 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     /*
      * Stuff for statistics (TODO: add more) 
      */
-    protected long totalCycles;
-    protected long numInsts;
+    // protected long totalCycles;
+    // protected long numInsts;
     // protected int totalMemoryInsts;
     // protected int totalLoads;
     // protected int totalStores;
@@ -222,8 +222,8 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
         makeFrequentSequences();
 
         // finally, init some stats
-        this.totalCycles = istream.getCycles();
-        this.numInsts = istream.getNumInstructions();
+        // this.totalCycles = istream.getCycles();
+        // this.numInsts = istream.getNumInstructions();
 
         return this.allsequences;
     }
@@ -233,15 +233,16 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
      * For trace: Return the percentage of the executed instructions the segments detected represent
      * NOTE: only considers segments of size "segmentSize", to avoid overlap
      */
-    @Override
-    public float getCoverage(int segmentSize) {
+    /*@Override
+        public float getCoverage(int segmentSize) {
         Integer detectedportion = 0;
         for (BinarySegment seg : this.allsequences) {
             if (seg.getSegmentLength() == segmentSize)
                 detectedportion += seg.getExecutionCycles();
         }
         return (float) detectedportion / this.totalCycles;
-    }
+    }*/
+    // NOTE: moved this method to {@ SegmentBundle}
 
     @Override
     public void close() throws Exception {

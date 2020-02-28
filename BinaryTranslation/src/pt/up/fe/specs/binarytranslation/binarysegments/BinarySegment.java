@@ -40,6 +40,16 @@ public interface BinarySegment {
     Integer getExecutionCycles();
 
     /*
+     * 
+     */
+    void setStaticCoverage(float scoverage);
+
+    /*
+     * 
+     */
+    void setDynamicCoverage(float dcoverage);
+
+    /*
      * Number of instructions in the segment
      */
     int getSegmentLength();
@@ -73,18 +83,6 @@ public interface BinarySegment {
      * 
      */
     public List<SegmentContext> getContexts();
-
-    /*
-     * Retrieve list of Operands representing
-     * registers which are inputs into the segment 
-     */
-    // List<Operand> getLiveIns();
-
-    /*
-     * Retrieve list of Operands representing
-     * registers which are output of the segment 
-     */
-    // List<Operand> getLiveOuts();
 
     /*
      * Get list of the instructions in the segment

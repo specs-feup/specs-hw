@@ -301,7 +301,7 @@ public class BinarySegmentGraph {
         try {
             bw.write("digraph G {\n\n");
 
-            bw.write("graph [ dpi = 300 ];\n");
+            bw.write("graph [ dpi = 300, nodesep=\"0.1\" ];\n");
             bw.write("bgcolor=\"#ffffff00\";\n\n");
 
             // livein nodes

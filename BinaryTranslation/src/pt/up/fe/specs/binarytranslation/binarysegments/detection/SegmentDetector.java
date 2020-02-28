@@ -36,5 +36,5 @@ public interface SegmentDetector extends AutoCloseable {
      * for static segments, it represents how much of the ELF is covered (not very significant)
      * for trace segments, it represents execution coverage 
      */
-    public float getCoverage(int segmentSize);
+    // public float getCoverage(int segmentSize);
 }
