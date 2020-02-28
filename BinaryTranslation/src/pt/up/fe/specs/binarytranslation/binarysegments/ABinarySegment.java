@@ -33,8 +33,21 @@ public abstract class ABinarySegment implements BinarySegment {
     protected List<Instruction> instlist;
     protected List<SegmentContext> contexts;
 
+    protected float staticCoverage;
+    protected float dynamicCoverage;
+
     protected ABinarySegment() {
         this.instlist = new ArrayList<Instruction>();
+    }
+
+    @Override
+    public void setDynamicCoverage(float dcoverage) {
+        this.dynamicCoverage = dcoverage;
+    }
+
+    @Override
+    public void setStaticCoverage(float scoverage) {
+        this.staticCoverage = scoverage;
     }
 
     public int getSegmentLength() {
