@@ -19,7 +19,7 @@ public class ArmFrequentSequenceDetectorTester {
 
         List<BinarySegment> bblist = bbd.detectSegments();
 
-        System.out.println("Coverage: " + bbd.getCoverage(2) + "\n");
+        // System.out.println("Coverage: " + bbd.getCoverage(2) + "\n");
 
         for (BinarySegment bs : bblist) {
             bs.printSegment();
