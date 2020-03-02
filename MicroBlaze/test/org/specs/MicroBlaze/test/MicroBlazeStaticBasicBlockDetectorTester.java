@@ -1,7 +1,6 @@
 package org.specs.MicroBlaze.test;
 
 import java.io.File;
-import java.util.List;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
@@ -21,7 +20,8 @@ public class MicroBlazeStaticBasicBlockDetectorTester {
 
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
             var bbd = new StaticBasicBlockDetector(el);
-            List<BinarySegment> bblist = bbd.detectSegments();
+            var bundle = bbd.detectSegments();
+            var bblist = bundle.getSegments();
 
             for (BinarySegment bs : bblist) {
 

@@ -18,21 +18,21 @@ import pt.up.fe.specs.util.SpecsIo;
 public class MicroBlazeBinarySegmentGraphTester {
 
     private File openFile() {
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/matmul/matmul.elf");
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/innerprod/innerprod.elf");
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky/cholesky.elf");
+        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/matmul.elf");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/innerprod.elf");
+        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.elf");
         fd.deleteOnExit();
         return fd;
     }
 
     private void getSegments(SegmentDetector bbd) {
-        var segments = bbd.detectSegments();
+        var bundle = bbd.detectSegments();
 
         int safetycounter = 0; // to prevent lots of printing (just for testing purposes)
-        for (BinarySegment seg : segments) {
+        for (BinarySegment seg : bundle.getSegments()) {
             var graph0 = BinarySegmentGraph.newInstance(seg);
             if (safetycounter < 50) {
-                if (graph0.getCpl() >= 1 && graph0.getSegment().getContexts().size() >= 1) {
+                if (graph0.getCpl() >= 3 && graph0.getSegment().getContexts().size() >= 1) {
                     // graph0.getSegment().printSegment();
                     // System.out.println(graph0.getInitiationInterval());
                     // System.out.println(graph0.getEstimatedIPC());

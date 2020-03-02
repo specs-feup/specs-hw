@@ -20,7 +20,9 @@ public class MicroBlazeVerilogModuleGeneratorTester {
         List<BinarySegment> bblist = null;
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
             var bbd = new FrequentStaticSequenceDetector(el);
-            bblist = bbd.detectSegments();
+            var bundle = bbd.detectSegments();
+            bblist = bundle.getSegments();
+
         }
         return bblist;
     }

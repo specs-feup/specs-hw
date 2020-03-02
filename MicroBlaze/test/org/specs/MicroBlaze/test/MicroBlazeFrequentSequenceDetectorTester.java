@@ -30,7 +30,8 @@ public class MicroBlazeFrequentSequenceDetectorTester {
 
     public void test(SegmentDetector bbd) {
 
-        List<BinarySegment> bblist = bbd.detectSegments();
+        var bundle = bbd.detectSegments();
+        List<BinarySegment> bblist = bundle.getSegments();
 
         for (BinarySegment bs : bblist) {
             bs.printSegment();
