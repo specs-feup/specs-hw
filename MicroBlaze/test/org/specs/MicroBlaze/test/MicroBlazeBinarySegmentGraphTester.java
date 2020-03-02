@@ -33,11 +33,6 @@ public class MicroBlazeBinarySegmentGraphTester {
             var graph0 = BinarySegmentGraph.newInstance(seg);
             if (safetycounter < 50) {
                 if (graph0.getCpl() >= 3 && graph0.getSegment().getContexts().size() >= 1) {
-                    // graph0.getSegment().printSegment();
-                    // System.out.println(graph0.getInitiationInterval());
-                    // System.out.println(graph0.getEstimatedIPC());
-                    // graph0.printDotty();
-                    // graph0.printDotty("graph_" + Integer.toString(seg.hashCode()) + ".dot");
 
                     graph0.generateOutput();
                     safetycounter++;
