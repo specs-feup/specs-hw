@@ -91,6 +91,7 @@ public class HashedSequence {
             }
 
             addr += 4;
+            // TODO Fix this width...
         }
 
         return rebuiltI;

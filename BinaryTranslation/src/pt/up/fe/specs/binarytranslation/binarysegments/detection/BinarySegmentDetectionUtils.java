@@ -78,7 +78,7 @@ public class BinarySegmentDetectionUtils {
             hashed.put(keyval, newseq);
 
             // Info prints
-            System.out.println("Found Basic Block at 0x" + newseq.getStartAddress());
+            // System.out.println("Found Basic Block at 0x" + newseq.getStartAddress());
         }
 
         // useful for traces
@@ -86,8 +86,8 @@ public class BinarySegmentDetectionUtils {
             hashed.get(keyval).incrementOccurences();
 
             // Info prints
-            System.out.println("\tincremented count of basic block "
-                    + keyval + " to " + hashed.get(keyval).getOcurrences());
+            // System.out.println("\tincremented count of basic block "
+            // + keyval + " to " + hashed.get(keyval).getOcurrences());
         }
     }
 
