@@ -84,11 +84,6 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
 
             // do not form sequences with unknown instructions
             // do not form frequent sequences containing jumps
-            // do not form frequent sequences memory accesses
-            // if (inst.isUnknown() || inst.isJump() || inst.isMemory()) {
-            // return false;
-            // }
-
             if (inst.isUnknown() || inst.isJump()) {
                 return false;
             }
@@ -179,7 +174,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     }
 
     @Override
-    public List<BinarySegment> detectSegments() {
+    public SegmentBundle detectSegments() {
 
         // TODO return an exception or something else
         if (this.allsequences != null)
@@ -222,10 +217,8 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
         makeFrequentSequences();
 
         // finally, init some stats
-        // this.totalCycles = istream.getCycles();
-        // this.numInsts = istream.getNumInstructions();
-
-        return this.allsequences;
+        SegmentBundle bundle = new SegmentBundle(this.allsequences, this.istream);
+        return bundle;
     }
 
     /*

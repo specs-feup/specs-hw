@@ -43,8 +43,8 @@ public abstract class ABasicBlockDetector implements SegmentDetector {
     /*
      * Stuff for statistics (TODO: add more) TODO: move to abstract ABinarySegment 
      */
-    protected long totalCycles;
-    protected long numInsts;
+    // protected long totalCycles;
+    // protected long numInsts;
 
     /*
      * max size of window for capture of basicblock 
@@ -183,11 +183,11 @@ public abstract class ABasicBlockDetector implements SegmentDetector {
      * 
      */
     @Override
-    public List<BinarySegment> detectSegments() {
+    public SegmentBundle detectSegments() {
 
         // TODO: treat in another fashion
-        if (loops != null)
-            return this.loops;
+        // if (loops != null)
+        // return this.loops;
 
         List<Instruction> window = new ArrayList<Instruction>();
 
@@ -225,10 +225,8 @@ public abstract class ABasicBlockDetector implements SegmentDetector {
         makeBasicBlocks();
 
         // finally, init some stats
-        this.totalCycles = istream.getCycles();
-        this.numInsts = istream.getNumInstructions();
-
-        return loops;
+        SegmentBundle bundle = new SegmentBundle(this.loops, this.istream);
+        return bundle;
     }
 
     /*

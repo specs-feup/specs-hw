@@ -24,7 +24,7 @@ public abstract class ABasicBlock extends ABinarySegment {
     }
 
     @Override
-    public Integer getExecutionCycles() {
+    public int getExecutionCycles() {
 
         // instruction cycles of the segment
         Integer cycles = 0;

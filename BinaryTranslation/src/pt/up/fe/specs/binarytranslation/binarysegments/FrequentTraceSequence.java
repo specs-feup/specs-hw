@@ -15,10 +15,10 @@ public class FrequentTraceSequence extends AFrequentSequence {
     private Map<Integer, Integer> startAddresses;
 
     @Override
-    public Integer getExecutionCycles() {
+    public int getExecutionCycles() {
 
         Integer totalCycles = 0;
-        Integer staticCycles = this.getSegmentCycles();
+        Integer staticCycles = this.getLatency();
 
         for (Integer i : startAddresses.values()) {
             totalCycles += (staticCycles * i);

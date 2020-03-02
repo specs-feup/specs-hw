@@ -40,14 +40,11 @@ public abstract class ABinarySegment implements BinarySegment {
         this.instlist = new ArrayList<Instruction>();
     }
 
-    @Override
-    public void setDynamicCoverage(float dcoverage) {
-        this.dynamicCoverage = dcoverage;
-    }
-
-    @Override
-    public void setStaticCoverage(float scoverage) {
-        this.staticCoverage = scoverage;
+    /*
+     * Basics
+     */
+    public List<Instruction> getInstructions() {
+        return this.instlist;
     }
 
     public int getSegmentLength() {
@@ -58,17 +55,46 @@ public abstract class ABinarySegment implements BinarySegment {
         return this.segtype;
     }
 
-    public int getTotalLatency() {
+    public List<SegmentContext> getContexts() {
+        return contexts;
+    }
+
+    /*
+     * Execution
+     */
+    public int getLatency() {
         int totlat = 0;
         for (int i = 0; i < instlist.size(); i++)
             totlat += instlist.get(i).getLatency();
         return totlat;
     }
 
-    public List<Instruction> getInstructions() {
-        return this.instlist;
+    // TODO: execution cycles, i.e. total cycles taking into account the occurrences of all contexts of the segment
+
+    /*
+     * Coverage functions
+     */
+    public void setDynamicCoverage(float dcoverage) {
+        this.dynamicCoverage = dcoverage;
+        // TODO throw something if already set
     }
 
+    public void setStaticCoverage(float scoverage) {
+        this.staticCoverage = scoverage;
+        // TODO throw something if already set
+    }
+
+    public float getStaticCoverage() {
+        return staticCoverage;
+    }
+
+    public float getDynamicCoverage() {
+        return dynamicCoverage;
+    }
+
+    /*
+     * Printing Functions
+     */
     public String getRepresentation() {
         String ret = "";
         for (Instruction inst : this.instlist) {
@@ -82,14 +108,9 @@ public abstract class ABinarySegment implements BinarySegment {
         return;
     }
 
-    public Integer getSegmentCycles() {
-        Integer cycles = 0;
-        for (Instruction i : this.instlist) {
-            cycles += i.getLatency();
-        }
-        return cycles;
-    }
-
+    /*
+     * TODO: move this to SegmentBundle
+     */
     public void setAppName(String appName) {
         this.appName = appName;
     }
@@ -104,9 +125,5 @@ public abstract class ABinarySegment implements BinarySegment {
 
     public String getCompilationFlags() {
         return compilationFlags;
-    }
-
-    public List<SegmentContext> getContexts() {
-        return contexts;
     }
 }

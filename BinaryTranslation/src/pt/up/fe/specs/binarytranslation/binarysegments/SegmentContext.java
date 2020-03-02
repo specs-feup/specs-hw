@@ -63,13 +63,6 @@ public class SegmentContext {
     }
 
     /*
-     * returns String representation of non symbolic originating operand (i.e. r4, or w7)
-     */
-    public String resolve(String symbol) {
-        return this.context.get(symbol);
-    }
-
-    /*
      * Compare two contexts by mapping values
      */
     public Boolean equals(SegmentContext that) {

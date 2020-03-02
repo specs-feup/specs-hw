@@ -24,10 +24,4 @@ public class TraceBasicBlock extends ABasicBlock {
         super(ilist, Arrays.asList(context));
         this.segtype = BinarySegmentType.TRACE_BASIC_BLOCK;
     }
-
-    @Override
-    public Integer getExecutionCycles() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }
