@@ -32,10 +32,4 @@ public class TraceBasicBlockDetector extends ABasicBlockDetector {
     protected BinarySegment makeBasicBlock(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
         return new TraceBasicBlock(symbolicseq, contexts);
     }
-    /*
-    @Override
-    public float getCoverage(int segmentSize) {
-        // TODO Auto-generated method stub
-        return 0;
-    }*/
 }

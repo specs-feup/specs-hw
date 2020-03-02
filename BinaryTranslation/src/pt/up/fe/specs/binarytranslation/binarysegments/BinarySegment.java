@@ -30,14 +30,14 @@ public interface BinarySegment {
     BinarySegmentType getSegmentType();
 
     /*
-     * Returns the total number of cycles represented by the segment
+     * Total execution latency of segment 
      */
-    Integer getSegmentCycles();
+    int getLatency();
 
     /*
      * Returns the total number of cycles considering the number of times the segment executes
      */
-    Integer getExecutionCycles();
+    int getExecutionCycles();
 
     /*
      * 
@@ -50,14 +50,19 @@ public interface BinarySegment {
     void setDynamicCoverage(float dcoverage);
 
     /*
+     * 
+     */
+    public float getStaticCoverage();
+
+    /*
+     * 
+     */
+    public float getDynamicCoverage();
+
+    /*
      * Number of instructions in the segment
      */
     int getSegmentLength();
-
-    /*
-     * Total execution latency of segment 
-     */
-    int getTotalLatency();
 
     /*
      * 

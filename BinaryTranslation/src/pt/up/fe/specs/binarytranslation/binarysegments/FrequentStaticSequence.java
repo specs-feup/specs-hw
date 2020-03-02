@@ -41,8 +41,8 @@ public class FrequentStaticSequence extends AFrequentSequence {
     }
 
     @Override
-    public Integer getExecutionCycles() {
-        Integer staticCycles = this.getSegmentCycles();
+    public int getExecutionCycles() {
+        Integer staticCycles = this.getLatency();
         return staticCycles * this.contexts.size();
     }
 

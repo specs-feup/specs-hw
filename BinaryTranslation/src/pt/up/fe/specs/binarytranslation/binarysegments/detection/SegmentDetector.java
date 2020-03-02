@@ -13,10 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
-import java.util.List;
-
-import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-
 /**
  * Detects PipelinableLoops
  * 
@@ -29,7 +25,7 @@ public interface SegmentDetector extends AutoCloseable {
      * Returns (eventually) objects of type "Loop" or list of "Loop", or other segments,
      * Example loops may include: megablock, basicblock, or frequent instruction sequences     
      */
-    List<BinarySegment> detectSegments();
+    SegmentBundle detectSegments();
 
     /*
      * Returns how much of the program the detected segments represent

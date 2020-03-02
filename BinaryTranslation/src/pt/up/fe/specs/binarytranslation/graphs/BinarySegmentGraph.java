@@ -301,7 +301,7 @@ public class BinarySegmentGraph {
         try {
             bw.write("digraph G {\n\n");
 
-            bw.write("graph [ dpi = 300, nodesep=\"0.1\" ];\n");
+            bw.write("graph [ dpi = 72, nodesep=\"0.1\" ];\n");
             bw.write("bgcolor=\"#ffffff00\";\n\n");
 
             // livein nodes
@@ -326,6 +326,7 @@ public class BinarySegmentGraph {
             for (GraphNode n : this.nodes) {
                 bw.write(n.rawDotty());
             }
+            bw.write("}\n");
 
             for (int rank = 0; rank < this.cpl; rank++) {
                 bw.write("{ rank = same;\n");
@@ -430,6 +431,8 @@ public class BinarySegmentGraph {
             bw.write("Number of memory writes: " + Integer.toString(this.numstores) + "<br>\n");
             bw.write("Maximum ILP of graph (widest row): " + Integer.toString(this.maxwidth) + "<br>\n");
             bw.write("Critical Path Length: " + Integer.toString(this.cpl) + "<br>\n");
+            bw.write("Static Coverage: " + Float.toString(this.seg.getStaticCoverage()) + "<br>\n");
+            bw.write("Dynamic Coverage: " + Float.toString(this.seg.getDynamicCoverage()) + "<br>\n");
 
             if (this.type == BinarySegmentGraphType.cyclical)
                 bw.write("Initiation Interval: " + this.initiationInterval + "<br>\n");
