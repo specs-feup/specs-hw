@@ -1,7 +1,6 @@
 package org.specs.Arm.asm;
 
 import java.io.File;
-import java.util.List;
 
 import org.junit.Test;
 import org.specs.Arm.stream.ArmElfStream;
@@ -17,11 +16,12 @@ public class ArmFrequentSequenceDetectorTester {
 
     public void test(SegmentDetector bbd) {
 
-        List<BinarySegment> bblist = bbd.detectSegments();
+        var bundle = bbd.detectSegments();
+        var segments = bundle.getSegments();
 
-        System.out.println("Coverage: " + bbd.getCoverage(2) + "\n");
+        // System.out.println("Coverage: " + bbd.getCoverage(2) + "\n");
 
-        for (BinarySegment bs : bblist) {
+        for (BinarySegment bs : segments) {
             bs.printSegment();
             System.out.print("\n");
         }
