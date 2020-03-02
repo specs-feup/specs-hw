@@ -25,7 +25,9 @@ public class ArmBinarySegmentGraphTester {
     }
 
     private void getSegments(SegmentDetector bbd) {
-        var segments = bbd.detectSegments();
+
+        var bundle = bbd.detectSegments();
+        var segments = bundle.getSegments();
 
         int safetycounter = 0; // to prevent lots of printing (just for testing purposes)
         for (BinarySegment seg : segments) {

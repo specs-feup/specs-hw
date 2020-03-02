@@ -1,7 +1,6 @@
 package org.specs.Arm.asm;
 
 import java.io.File;
-import java.util.List;
 
 import org.junit.Test;
 import org.specs.Arm.stream.ArmElfStream;
@@ -20,9 +19,10 @@ public class ArmStaticBasicBlockDetectorTester {
 
         try (ArmElfStream el = new ArmElfStream(fd)) {
             var bbd = new StaticBasicBlockDetector(el);
-            List<BinarySegment> bblist = bbd.detectSegments();
+            var bundle = bbd.detectSegments();
+            var segments = bundle.getSegments();
 
-            for (BinarySegment bs : bblist) {
+            for (BinarySegment bs : segments) {
                 System.out.print("Basic Block: \n");
                 for (Instruction is : bs.getInstructions()) {
                     is.printInstruction();
