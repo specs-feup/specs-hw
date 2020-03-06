@@ -221,26 +221,26 @@ public abstract class AInstruction implements Instruction {
             if (!op.isSubOperation() && !op.isSpecial()) { // TODO move this condition to the construction of the
                                                            // regremap
                                                            // map
-
-                // System.out.print(regremap.toString() + "\n");
-
                 var tmp = op.getRepresentation();
-                // System.out.println(tmp);
 
-                var r = regremap.get(tmp);
-                // System.out.println(r);
+                String r = null;
+                try {
+                    r = regremap.get(tmp);
+
+                } catch (NullPointerException e) {
+                    throw e;
+                }
+                // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
 
                 String r2 = null;
                 try {
                     r2 = r.substring(r.indexOf('<') + 1, r.indexOf('>')); // NOTE: and ugly hack, but works...
-                    // System.out.println(r2);
 
                 } catch (NullPointerException e) {
                     throw e;
                 }
 
                 op.setSymbolic(r2);
-                // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
 
                 // TODO: BIG ISSUE
                 // for ARM, i cannot symbolify the address, since one of the IMM operands is computed from it...

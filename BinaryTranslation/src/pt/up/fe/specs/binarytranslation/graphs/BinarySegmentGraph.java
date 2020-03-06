@@ -352,7 +352,7 @@ public class BinarySegmentGraph {
 
         // output folder
         var f = new File(this.getOutputFolder());
-        f.mkdir();
+        f.mkdirs();
 
         // generate dotty
         // String dotfilename = foldername + "/" + "graph_" + Integer.toString(seg.hashCode()) + ".dot";
@@ -503,7 +503,9 @@ public class BinarySegmentGraph {
     }
 
     private String getOutputFolder() {
-        return "./graph_" + Integer.toString(this.hashCode());
+        var foldername = this.seg.getAppName();
+        foldername = foldername.substring(0, foldername.lastIndexOf('.'));
+        return "./" + foldername + "/graph_" + Integer.toString(this.hashCode());
     }
 
     private String getHTMLFilename() {
