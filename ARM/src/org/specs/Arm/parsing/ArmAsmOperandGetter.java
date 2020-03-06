@@ -77,6 +77,12 @@ public class ArmAsmOperandGetter {
         OPERANDGET = Collections.unmodifiableMap(amap);
     }
 
+    /*
+     * Required since some operations have implicit operands
+     * which are the results of the previous instruction (e.g., conditional branches)
+     */
+    static List<Operand> previousInstructionOperands;
+
     public static List<Operand> getFrom(ArmAsmFieldData fielddata) {
 
         var h = new ArmOperandBuilder(fielddata.getMap());
@@ -84,7 +90,9 @@ public class ArmAsmOperandGetter {
         if (func == null)
             func = ArmAsmOperandGetter::undefined;
 
-        return func.apply(fielddata, h, new ArrayList<Operand>());
+        var ops = func.apply(fielddata, h, new ArrayList<Operand>());
+        previousInstructionOperands = ops;
+        return ops;
     }
 
     /*
@@ -280,6 +288,10 @@ public class ArmAsmOperandGetter {
         // second operand
         operands.add(h.newImmediate(IMM, wd));
 
+        // if shift value is 0, then there is no LSL
+        if (fielddata.getMap().get(OPCODEB).intValue() == 0)
+            return operands;
+
         // third operand (always LSL)
         operands.add(h.newSubOperation(SHIFT, ArmInstructionShift.LSL.getShorthandle(), 8));
 
@@ -327,6 +339,11 @@ public class ArmAsmOperandGetter {
     // CONDITIONALBRANCH (C4-257)
     private static List<Operand> conditionalbranch(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
+
+        // fetch result of previous operation from "previousInstructionOperands"
+        var op = previousInstructionOperands.get(0);
+        operands.add(h.newReadRegister((ArmAsmField) op.getAsmField(),
+                op.getValue(), op.getProperties().getWidth()));
 
         // first operand
         long addr = fielddata.getAddr().longValue();
@@ -579,7 +596,14 @@ public class ArmAsmOperandGetter {
         operands.add(h.newReadRegister(RM, wd));
 
         // fourth operand (sub operation; see page C6-777 of ARMv8 ISA manual)
-        var field = (fielddata.getType() != ArmAsmFieldType.ADD_SUB_EXT_REG) ? SHIFT : OPTION;
+        var type = fielddata.getType();
+        var immval = fielddata.getMap().get(IMM).intValue();
+
+        // if IMM is 0, then there is no extend operation or shift
+        if (immval == 0)
+            return operands;
+
+        var field = (type != ArmAsmFieldType.ADD_SUB_EXT_REG) ? SHIFT : OPTION;
         var code = fielddata.getMap().get(field).intValue();
         var thing = (field == SHIFT) ? ArmInstructionShift.decode(code).getShorthandle()
                 : ArmInstructionExtend.decode(code).getShorthandle();
@@ -590,6 +614,7 @@ public class ArmAsmOperandGetter {
         operands.add(h.newImmediate(IMM, 8));
 
         return operands;
+
     }
 
     private static List<Operand> conditionalCmp(ArmAsmFieldData fielddata,

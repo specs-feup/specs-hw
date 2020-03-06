@@ -27,13 +27,13 @@ public class ArmBinarySegmentGraphTester {
     private void getSegments(SegmentDetector bbd) {
 
         var bundle = bbd.detectSegments();
-        var segments = bundle.getSegments();
 
         int safetycounter = 0; // to prevent lots of printing (just for testing purposes)
-        for (BinarySegment seg : segments) {
+        for (BinarySegment seg : bundle.getSegments()) {
             var graph0 = BinarySegmentGraph.newInstance(seg);
-            if (safetycounter < 10) {
-                if (graph0.getCpl() >= 1 && graph0.getSegment().getContexts().size() >= 1) {
+            if (safetycounter < 50) {
+                if (graph0.getCpl() >= 3 && graph0.getSegment().getContexts().size() >= 1) {
+
                     graph0.generateOutput();
                     safetycounter++;
                 }
