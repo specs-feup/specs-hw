@@ -124,7 +124,7 @@ public class BinarySegmentDetectionUtils {
     /*
      * Builds operand value replacement map for a given sequence (assumed valid)
      */
-    protected static Map<String, String> makeRegReplaceMap(List<Instruction> ilist) {
+    private static Map<String, String> makeRegReplaceMap(List<Instruction> ilist) {
 
         Map<OperandType, Character> counter = new HashMap<OperandType, Character>();
         Map<String, String> regremap = new HashMap<String, String>();
@@ -147,6 +147,8 @@ public class BinarySegmentDetectionUtils {
 
                     // TODO should be an exception here if operand is symbolic
                     // must be non symbolic REGISTER or IMMEDIATE
+                    if (typeid != OperandType.REGISTER && typeid != OperandType.IMMEDIATE)
+                        continue;
 
                     if (!counter.containsKey(typeid))
                         counter.put(typeid, 'a');
