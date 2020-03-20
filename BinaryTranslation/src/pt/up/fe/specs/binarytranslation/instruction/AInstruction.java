@@ -218,9 +218,10 @@ public abstract class AInstruction implements Instruction {
 
         // symbolify operands
         for (Operand op : this.getData().getOperands()) {
-            if (!op.isSubOperation() && !op.isSpecial()) { // TODO move this condition to the construction of the
-                                                           // regremap
-                                                           // map
+            if (!op.isSubOperation() && !op.isSpecial()) {
+                // TODO move this condition to the construction of the
+                // regremap map
+
                 var tmp = op.getRepresentation();
 
                 String r = null;
