@@ -35,6 +35,11 @@ public class ArmTraceStream extends ATraceInstructionStream {
         }
         this.numcycles += newinst.getLatency();
         this.numinsts++;
+
+        if (this.numinsts % 1000 == 0) {
+            System.out.println(this.numinsts + " instructions simulated...");
+        }
+
         return newinst;
     }
 
