@@ -18,9 +18,16 @@ import pt.up.fe.specs.util.SpecsIo;
 public class MicroBlazeBinarySegmentGraphTester {
 
     private File openFile() {
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/matmul.elf");
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/innerprod.elf");
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.elf");
+
+        // static
+        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/matmul.txt");
+        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/innerprod.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.txt");
+        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/innerprod.txt");
+
+        // dynamic
+        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky_trace.txt");
+
         fd.deleteOnExit();
         return fd;
     }

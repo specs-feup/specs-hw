@@ -11,7 +11,7 @@ import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.util.SpecsStrings;
+import pt.up.fe.specs.util.*;
 
 public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
@@ -39,7 +39,20 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         // NOTE: it also doesn't output the instructions in delay slots!!
         // 1. open the ELF
         // 2. dump all the ELF into a local list
-        var elf = new MicroBlazeElfStream(elfname);
+
+        var auxfd = elfname;
+        var auxname = elfname.getPath();
+        var extension = auxname.subSequence(auxname.length() - 3, auxname.length());
+
+        // quickfix for DATE2020 demo
+        if (extension.equals("txt")) {
+            // auxname = auxname.replaceFirst("_trace", "");
+            // auxfd = SpecsIo.resourceCopy(auxname);
+            auxfd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/dump.txt");
+            auxfd.deleteOnExit();
+        }
+
+        var elf = new MicroBlazeElfStream(auxfd);
         Instruction i = null;
         while ((i = elf.nextInstruction()) != null) {
             elfdump.put(i.getAddress().intValue(), i);
@@ -105,6 +118,10 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
         this.numcycles += i.getLatency();
         this.numinsts++;
+
+        if (this.numinsts % 1000 == 0) {
+            System.out.println(this.numinsts + " instructions simulated...");
+        }
 
         // i.printInstruction();
 
