@@ -505,9 +505,7 @@ public class BinarySegmentGraph {
     private String getOutputFolder() {
         var foldername = this.seg.getAppName();
         foldername = foldername.substring(0, foldername.lastIndexOf('.'));
-        // return "./" + foldername + "/graph_" + Integer.toString(this.hashCode());
-        return "C:\\Users\\Nuno Paulino\\Desktop\\DATE2020\\"
-                + foldername + "/graph_" + Integer.toString(this.hashCode());
+        return "./output/" + foldername + "/graph_" + Integer.toString(this.hashCode());
     }
 
     private String getHTMLFilename() {
