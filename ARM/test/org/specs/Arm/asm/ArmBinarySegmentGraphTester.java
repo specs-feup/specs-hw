@@ -19,7 +19,9 @@ public class ArmBinarySegmentGraphTester {
 
     private File openFile() {
         // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/matmul.elf");
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.elf");
+        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.elf");
+
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky_trace.txt");
         fd.deleteOnExit();
         return fd;
     }
@@ -32,7 +34,7 @@ public class ArmBinarySegmentGraphTester {
         for (BinarySegment seg : bundle.getSegments()) {
             var graph0 = BinarySegmentGraph.newInstance(seg);
             if (safetycounter < 50) {
-                if (graph0.getCpl() >= 3 && graph0.getSegment().getContexts().size() >= 1) {
+                if (graph0.getCpl() >= 2 && graph0.getSegment().getContexts().size() >= 1) {
 
                     graph0.generateOutput();
                     safetycounter++;
