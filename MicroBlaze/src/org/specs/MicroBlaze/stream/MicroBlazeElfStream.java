@@ -30,6 +30,11 @@ public class MicroBlazeElfStream extends AStaticInstructionStream {
         }
         this.numcycles += newinst.getLatency();
         this.numinsts++;
+
+        if (this.numinsts % 1000 == 0) {
+            System.out.println(this.numinsts + " instructions processed...");
+        }
+
         return newinst;
     }
 

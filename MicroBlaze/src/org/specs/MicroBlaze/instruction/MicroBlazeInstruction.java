@@ -57,25 +57,25 @@ public class MicroBlazeInstruction extends AInstruction {
         var props = instSet.process(fieldData);
         var idata = new MicroBlazeInstructionData(props, fieldData);
         var inst = new MicroBlazeInstruction(address, instruction, idata, fieldData, props);
-
+        /*
         // store imm value if instruction is imm
         if (inst.isImmediateValue() && MicroBlazeInstruction.postedImm == false) {
             MicroBlazeInstruction.postedImm = true;
             MicroBlazeInstruction.immValue = inst.getData().getOperands().get(0).getValue().intValue();
         }
-
+        
         // process previous imm value if any
         else if (MicroBlazeInstruction.postedImm == true) {
             inst.completeImm(MicroBlazeInstruction.immValue);
             MicroBlazeInstruction.postedImm = false;
-
+        
         }
-
+        
         // if only lower 16 is given
         else {
             inst.extendImm();
         }
-
+        */
         return inst;
     }
 
@@ -104,7 +104,7 @@ public class MicroBlazeInstruction extends AInstruction {
         for (Operand op : this.getData().getOperands())
             if (op.isImmediate()) {
                 int upper16 = MicroBlazeInstruction.immValue << 16;
-                int lower16 = op.getValue().intValue() >> 16;
+                int lower16 = op.getValue().intValue();
                 Number fullimm = upper16 | lower16;
                 op.overrideValue(fullimm);
             }
