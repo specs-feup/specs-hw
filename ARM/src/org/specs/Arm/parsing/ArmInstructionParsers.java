@@ -228,6 +228,13 @@ public interface ArmInstructionParsers {
             newInstance(DPR_THREESOURCE,
                     "sf(1)_opcodea(2)_11011_opcodeb(3)_registerm(5)_opcodec(1)_registera(5)_registern(5)_registerd(5)"),
 
+            ///////////////////////////////////////////////////////////////////////////////
+            // 5. Data Processing -- Scalar Floating-Point and Advanced SIMD (C4.1.6) /////
+
+            // Floating-point data-processing (1 source)- C4-352
+            newInstance(FP_DPR_ONESOURCE,
+                    "m(1)_0_s(1)_11110_ptype(2)_1_opcodea(6)_10000_registern(5)_register(5)"),
+
             ////////////////////
 
             newInstance(UNDEFINED, "x(32)"));

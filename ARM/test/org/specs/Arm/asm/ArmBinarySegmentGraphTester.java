@@ -21,7 +21,8 @@ public class ArmBinarySegmentGraphTester {
         // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/matmul.elf");
         // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.elf");
 
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky_trace.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.txt");
+        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky_trace.txt");
         fd.deleteOnExit();
         return fd;
     }

@@ -342,6 +342,8 @@ public class ArmAsmOperandGetter {
 
         // fetch result of previous operation from "previousInstructionOperands"
         var op = previousInstructionOperands.get(0);
+        // first "operand" should be the result register
+
         operands.add(h.newReadRegister((ArmAsmField) op.getAsmField(),
                 op.getValue(), op.getProperties().getWidth()));
 
