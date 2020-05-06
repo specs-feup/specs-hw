@@ -76,6 +76,12 @@ public enum ArmAsmFieldType implements AsmFieldType {
     // 5. Data Processing -- Scalar Floating-Point and Advanced SIMD (C4.1.6) //////////////////
     // TODO: SIMD instructions
     FP_DPR_ONESOURCE,
+    FP_COMPARE,
+    FP_IMMEDIATE,
+    FP_COND_COMPARE,
+    FP_DPR_TWOSOURCE,
+    FP_COND_SELECT,
+    FP_DPR_THREESOURCE,
 
     UNDEFINED;
 }
