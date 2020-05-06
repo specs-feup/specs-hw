@@ -341,6 +341,70 @@ public enum ArmInstructionProperties implements InstructionProperties {
     umsubl(0x9BA0_8000, 1, 0, DPR_THREESOURCE, G_SUB),
     umulh(0x9BC0_0000, 1, 0, DPR_THREESOURCE, G_MUL),
 
+    ///////////////////////////////////////////////////////////////////////////
+
+    // FP_DPR_ONESOURCE (C4-352) //////////////////////////////////////////////
+    fmov_register("fmov", 0x1E20_4000, 1, 0, FP_DPR_ONESOURCE),
+    fabs_scalar("fabs", 0x1E20_C000, 1, 0, FP_DPR_ONESOURCE),
+    fneg_scalar("fneg", 0x1E21_4000, 1, 0, FP_DPR_ONESOURCE),
+    fsqrt_scalar("fsqrt", 0x1E21_C000, 1, 0, FP_DPR_ONESOURCE),
+    // field ptype distinguishes from single precision, double precision, and half
+
+    fctv_dp("fctv", 0x1E22_C000, 1, 0, FP_DPR_ONESOURCE),
+    // 000101 FCVT - Single-precision to double-precision variant on page C7-1512
+
+    fctv_sp("fctv", 0x1E23_4000, 1, 0, FP_DPR_ONESOURCE),
+    // 000100 FCVT - Double-precision to single-precision variant on page C7-1512
+
+    fctv_hp("fctv", 0x1E23_C000, 1, 0, FP_DPR_ONESOURCE),
+    // 000111 FCVT - Single-precision to half-precision variant on page C7-1512
+    // 000111 FCVT - Double-precision to half-precision variant on page C7-1512
+    // field ptype distinguishes from single precision, double precision, and half
+
+    frintn_scalar("frintn", 0x1E24_4000, 1, 0, FP_DPR_ONESOURCE),
+    frintp_scalar("frintp", 0x1E24_C000, 1, 0, FP_DPR_ONESOURCE),
+    frintm_scalar("frintm", 0x1E24_C000, 1, 0, FP_DPR_ONESOURCE),
+    frintz_scalar("frintz", 0x1E25_C000, 1, 0, FP_DPR_ONESOURCE),
+    frinta_scalar("frinta", 0x1E26_4000, 1, 0, FP_DPR_ONESOURCE),
+    frintx_scalar("frintx", 0x1E27_4000, 1, 0, FP_DPR_ONESOURCE),
+    frinti_scalar("frinti", 0x1E27_C000, 1, 0, FP_DPR_ONESOURCE),
+    // field ptype distinguishes from single precision, double precision, and half
+
+    frint32z_scalar("frint32z", 0x1E28_4000, 1, 0, FP_DPR_ONESOURCE),
+    frint32x_scalar("frint32x", 0x1E28_C000, 1, 0, FP_DPR_ONESOURCE),
+    frint64z_scalar("frint64z", 0x1E29_4000, 1, 0, FP_DPR_ONESOURCE),
+    frint64x_scalar("frint64x", 0x1E29_C000, 1, 0, FP_DPR_ONESOURCE),
+    // field ptype distinguishes from single precision, double precision, and half
+
+    /*
+     *     fmov_register_fp("fmov", 0x1E20_4000, 1, 0, FP_DPR_ONESOURCE),
+    fabs_scalar_fp("fabs", 0x1E20_C000, 1, 0, FP_DPR_ONESOURCE),
+    fneg_scalar_fp("fneg", 0x1E21_4000, 1, 0, FP_DPR_ONESOURCE),
+    fsqrt_scalar_fp("fsqrt", 0x1E21_C000, 1, 0, FP_DPR_ONESOURCE),
+    fmov_register_dp("fmov", 0x1E60_4000, 1, 0, FP_DPR_ONESOURCE),
+    fabs_scalar_dp("fabs", 0x1E60_C000, 1, 0, FP_DPR_ONESOURCE),
+    fneg_scalar_dp("fneg", 0x1E61_4000, 1, 0, FP_DPR_ONESOURCE),
+    fsqrt_scalar_dp("fsqrt", 0x1E61_C000, 1, 0, FP_DPR_ONESOURCE),    
+    
+    fctv_spdp("fctv", 0x1E22_C000, 1, 0, FP_DPR_ONESOURCE),
+    fctv_sphp("fctv", 0x1E23_C000, 1, 0, FP_DPR_ONESOURCE),    
+    fctv_dpsp("fctv", 0x1E62_4000, 1, 0, FP_DPR_ONESOURCE),
+    fctv_dphp("fctv", 0x1E63_C000, 1, 0, FP_DPR_ONESOURCE),    
+    
+    frintn_scalar_sp("frintn", 0x1E24_4000, 1, 0, FP_DPR_ONESOURCE),
+    frintp_scalar_sp("frintp", 0x1E24_C000, 1, 0, FP_DPR_ONESOURCE),
+    frintm_scalar_sp("frintm", 0x1E24_C000, 1, 0, FP_DPR_ONESOURCE),
+    frintz_scalar_sp("frintz", 0x1E25_C000, 1, 0, FP_DPR_ONESOURCE),
+    frinta_scalar_sp("frinta", 0x1E26_4000, 1, 0, FP_DPR_ONESOURCE),
+    frintx_scalar_sp("frintx", 0x1E27_4000, 1, 0, FP_DPR_ONESOURCE),
+    frinti_scalar_sp("frinti", 0x1E27_C000, 1, 0, FP_DPR_ONESOURCE),
+    
+    frint32z_scalar("frint32z", 0x1E28_4000, 1, 0, FP_DPR_ONESOURCE),
+    frint32x_scalar("frint32x", 0x1E28_C000, 1, 0, FP_DPR_ONESOURCE),
+    frint64z_scalar("frint64z", 0x1E29_4000, 1, 0, FP_DPR_ONESOURCE),
+    frint64x_scalar("frint64x", 0x1E29_C000, 1, 0, FP_DPR_ONESOURCE),
+     */
+
     unknown(0x000000000, 1, 0, UNDEFINED, G_UNKN);
 
     ///////////////////////////////////////////////////////////////////////////

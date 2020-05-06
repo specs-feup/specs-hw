@@ -73,5 +73,9 @@ public enum ArmAsmFieldType implements AsmFieldType {
     CONDITIONAL_SELECT,
     DPR_THREESOURCE,
 
+    // 5. Data Processing -- Scalar Floating-Point and Advanced SIMD (C4.1.6) //////////////////
+    // TODO: SIMD instructions
+    FP_DPR_ONESOURCE,
+
     UNDEFINED;
 }
