@@ -376,34 +376,44 @@ public enum ArmInstructionProperties implements InstructionProperties {
     frint64x_scalar("frint64x", 0x1E29_C000, 1, 0, FP_DPR_ONESOURCE),
     // field ptype distinguishes from single precision, double precision, and half
 
-    /*
-     *     fmov_register_fp("fmov", 0x1E20_4000, 1, 0, FP_DPR_ONESOURCE),
-    fabs_scalar_fp("fabs", 0x1E20_C000, 1, 0, FP_DPR_ONESOURCE),
-    fneg_scalar_fp("fneg", 0x1E21_4000, 1, 0, FP_DPR_ONESOURCE),
-    fsqrt_scalar_fp("fsqrt", 0x1E21_C000, 1, 0, FP_DPR_ONESOURCE),
-    fmov_register_dp("fmov", 0x1E60_4000, 1, 0, FP_DPR_ONESOURCE),
-    fabs_scalar_dp("fabs", 0x1E60_C000, 1, 0, FP_DPR_ONESOURCE),
-    fneg_scalar_dp("fneg", 0x1E61_4000, 1, 0, FP_DPR_ONESOURCE),
-    fsqrt_scalar_dp("fsqrt", 0x1E61_C000, 1, 0, FP_DPR_ONESOURCE),    
-    
-    fctv_spdp("fctv", 0x1E22_C000, 1, 0, FP_DPR_ONESOURCE),
-    fctv_sphp("fctv", 0x1E23_C000, 1, 0, FP_DPR_ONESOURCE),    
-    fctv_dpsp("fctv", 0x1E62_4000, 1, 0, FP_DPR_ONESOURCE),
-    fctv_dphp("fctv", 0x1E63_C000, 1, 0, FP_DPR_ONESOURCE),    
-    
-    frintn_scalar_sp("frintn", 0x1E24_4000, 1, 0, FP_DPR_ONESOURCE),
-    frintp_scalar_sp("frintp", 0x1E24_C000, 1, 0, FP_DPR_ONESOURCE),
-    frintm_scalar_sp("frintm", 0x1E24_C000, 1, 0, FP_DPR_ONESOURCE),
-    frintz_scalar_sp("frintz", 0x1E25_C000, 1, 0, FP_DPR_ONESOURCE),
-    frinta_scalar_sp("frinta", 0x1E26_4000, 1, 0, FP_DPR_ONESOURCE),
-    frintx_scalar_sp("frintx", 0x1E27_4000, 1, 0, FP_DPR_ONESOURCE),
-    frinti_scalar_sp("frinti", 0x1E27_C000, 1, 0, FP_DPR_ONESOURCE),
-    
-    frint32z_scalar("frint32z", 0x1E28_4000, 1, 0, FP_DPR_ONESOURCE),
-    frint32x_scalar("frint32x", 0x1E28_C000, 1, 0, FP_DPR_ONESOURCE),
-    frint64z_scalar("frint64z", 0x1E29_4000, 1, 0, FP_DPR_ONESOURCE),
-    frint64x_scalar("frint64x", 0x1E29_C000, 1, 0, FP_DPR_ONESOURCE),
-     */
+    // FP_COMPARE (C4-355) ////////////////////////////////////////////////////
+    fcmp_a("fcmp", 0x1E20_2000, 1, 0, FP_COMPARE),
+    fcmp_b("fcmp", 0x1E20_2008, 1, 0, FP_COMPARE),
+    fcmpe_a("fcmpe", 0x1E20_2010, 1, 0, FP_COMPARE),
+    fcmpe_b("fcmpe", 0x1E20_2018, 1, 0, FP_COMPARE),
+    // fields ftype and opc (bits 4 and 3 of opcodeb) will determine variants
+
+    // FP_IMMEDIATE (C4-356) //////////////////////////////////////////////////
+    fmov_imm(0x1E20_1000, 1, 0, FP_IMMEDIATE),
+    // field ftype will distinguish precision
+
+    // FP_COND_COMPARE (C4-356) ///////////////////////////////////////////////
+    fccmp(0x1E20_0400, 1, 0, FP_COND_COMPARE),
+    fccmpe(0x1E20_0410, 1, 0, FP_COND_COMPARE),
+    // field ftype will distinguish precision
+
+    // FP_DPR_TWOSOURCE (C4-357) ///////////////////////////////////////////////
+    fmul_scalar("fmul", 0x1E20_0800, 1, 0, FP_DPR_TWOSOURCE),
+    fdiv_scalar("fdiv", 0x1E20_1800, 1, 0, FP_DPR_TWOSOURCE),
+    fadd_scalar("fadd", 0x1E20_2800, 1, 0, FP_DPR_TWOSOURCE),
+    fsub_scalar("fsub", 0x1E20_3800, 1, 0, FP_DPR_TWOSOURCE),
+    fmax_scalar("fmax", 0x1E20_4800, 1, 0, FP_DPR_TWOSOURCE),
+    fmin_scalar("fmin", 0x1E20_5800, 1, 0, FP_DPR_TWOSOURCE),
+    fmaxnm_scalar("fmaxnm", 0x1E20_6800, 1, 0, FP_DPR_TWOSOURCE),
+    fminnm_scalar("fminnm", 0x1E20_7800, 1, 0, FP_DPR_TWOSOURCE),
+    fnmul_scalar("fnmul", 0x1E20_8800, 1, 0, FP_DPR_TWOSOURCE),
+    // field ftype will distinguish precision
+
+    // FP_COND_SELECT (C4-358) ////////////////////////////////////////////////
+    fcsel(0x1E00_0C00, 1, 0, FP_COND_SELECT),
+    // field ftype will distinguish precision
+
+    // FP_DPR_THREESOURCE (C4-359) ////////////////////////////////////////////
+    fmadd(0x1F00_0000, 1, 0, FP_DPR_THREESOURCE),
+    fmsub(0x1F00_8000, 1, 0, FP_DPR_THREESOURCE),
+    fnmadd(0x1F20_0000, 1, 0, FP_DPR_THREESOURCE),
+    fnmsub(0x1F20_8000, 1, 0, FP_DPR_THREESOURCE),
+    // field ftype will distinguish precision
 
     unknown(0x000000000, 1, 0, UNDEFINED, G_UNKN);
 

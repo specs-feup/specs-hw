@@ -23,6 +23,7 @@ public enum ArmAsmField implements AsmField {
     COND("cond"),
     S("S"),
     N("N"),
+    M("M"),
     O("O"),
     SHIFT("shift"),
     NZCV("nzcv"),
