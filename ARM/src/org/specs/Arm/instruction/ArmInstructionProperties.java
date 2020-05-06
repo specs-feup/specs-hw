@@ -405,7 +405,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     // field ftype will distinguish precision
 
     // FP_COND_SELECT (C4-358) ////////////////////////////////////////////////
-    fcsel(0x1E00_0C00, 1, 0, FP_COND_SELECT),
+    fcsel(0x1E20_0C00, 1, 0, FP_COND_SELECT),
     // field ftype will distinguish precision
 
     // FP_DPR_THREESOURCE (C4-359) ////////////////////////////////////////////

@@ -16,8 +16,12 @@ public class ArmInstructionPropertiesValidityTest {
         for (ArmInstructionProperties props : ArmInstructionProperties.values()) {
             var v1 = props.getCodeType().toString();
             var v2 = props.getFieldData().getType().toString();
-            System.out.print(props.name() + ":\t\t" + v1 + "\tvs.\t" + v2 + "\n");
-            assertEquals(v1, v2);
+
+            try {
+                assertEquals(v1, v2);
+            } catch (AssertionError e) {
+                System.out.print(props.name() + ":\t\t" + v1 + "\tvs.\t" + v2 + "\n");
+            }
         }
     }
 }

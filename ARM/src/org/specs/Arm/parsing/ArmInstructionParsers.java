@@ -233,31 +233,31 @@ public interface ArmInstructionParsers {
 
             // Floating-point data-processing (1 source)- C4-352
             newInstance(FP_DPR_ONESOURCE,
-                    "m(1)_0_s(1)_11110_ptype(2)_1_opcodea(6)_10000_registern(5)_register(5)"),
+                    "M(1)_0_S(1)_11110_ptype(2)_1_opcodea(6)_10000_registern(5)_registerd(5)"),
 
             // Floating-point compare C4-355
             newInstance(FP_COMPARE,
-                    "m(1)_0_s(1)_11110_ptype(2)_1_registerm(5)_opcodea(2)_1000_registern(5)_opcodeb(5)"),
+                    "M(1)_0_S(1)_11110_ptype(2)_1_registerm(5)_opcodea(2)_1000_registern(5)_opcodeb(5)"),
 
             // Floating-point immediate C4-356
             newInstance(FP_IMMEDIATE,
-                    "m(1)_0_s(1)_11110_ptype(2)_1_imm(8)_opcodea(2)_100_imms(5)_registerd(5)"),
+                    "M(1)_0_S(1)_11110_ptype(2)_1_imm(8)_100_imms(5)_registerd(5)"),
 
             // Floating-point conditional compare C4-356
             newInstance(FP_COND_COMPARE,
-                    "m(1)_0_s(1)_11110_ptype(2)_1_registerm(5)_cond(4)_01_registern(5)_opcodea(1)_nzcv(4)"),
+                    "M(1)_0_S(1)_11110_ptype(2)_1_registerm(5)_cond(4)_01_registern(5)_opcodea(1)_nzcv(4)"),
 
             // Floating-point data-processing (2 source) C4-357
             newInstance(FP_DPR_TWOSOURCE,
-                    "m(1)_0_s(1)_11110_ptype(2)_1_registerm(5)_opcodea(4)_10_registern(5)_registed(5)"),
+                    "M(1)_0_S(1)_11110_ptype(2)_1_registerm(5)_opcodea(4)_10_registern(5)_registerd(5)"),
 
             // Floating-point conditional select C4-358
             newInstance(FP_COND_SELECT,
-                    "m(1)_0_s(1)_11110_ptype(2)_1_registerm(5)_cond(4)_11_registern(5)_registed(5)"),
+                    "M(1)_0_S(1)_11110_ptype(2)_1_registerm(5)_cond(4)_11_registern(5)_registerd(5)"),
 
             // Floating-point data-processing (3 source) C4-359
             newInstance(FP_DPR_THREESOURCE,
-                    "m(1)_0_s(1)_11111_ptype(2)_opcodea(1)_registerm(5)_opcodeb(1)_registera(5)_registern(5)_registed(5)"),
+                    "M(1)_0_S(1)_11111_ptype(2)_opcodea(1)_registerm(5)_opcodeb(1)_registera(5)_registern(5)_registerd(5)"),
 
             ////////////////////
 
