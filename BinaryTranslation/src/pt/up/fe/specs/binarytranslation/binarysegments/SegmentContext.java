@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.HashedSequence;
@@ -25,10 +26,15 @@ import pt.up.fe.specs.binarytranslation.binarysegments.detection.HashedSequence;
  * @author nuno
  *
  */
-public class SegmentContext {
+public class SegmentContext implements Serializable {
 
     // TODO, for trace segments, the context could include the values of the registers if possible
     // i think i can query this out of gdb...
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3695796307347378568L;
 
     private Integer startaddr;
     private int ocurrences;

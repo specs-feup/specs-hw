@@ -15,6 +15,8 @@ package pt.up.fe.specs.binarytranslation.instruction;
 
 import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
 
+import java.io.Serializable;
+
 import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 
 /**
@@ -24,7 +26,12 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmField;
  * @author NunoPaulino
  *
  */
-public abstract class AOperand implements Operand {
+public abstract class AOperand implements Operand, Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7403586195612171177L;
 
     /*
      * members
@@ -51,7 +58,11 @@ public abstract class AOperand implements Operand {
 
         // immediates are hexes (automatically chooses byte width from bit width)
         else {
-            this.svalue = String.format("%x", value);
+            if (value instanceof Long || value instanceof Integer)
+                this.svalue = String.format("%x", value);
+
+            else if (value instanceof Float)
+                this.svalue = String.format("%f", value);
         }
     }
 

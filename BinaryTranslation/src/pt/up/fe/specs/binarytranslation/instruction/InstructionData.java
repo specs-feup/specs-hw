@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.instruction;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -21,7 +22,12 @@ import java.util.List;
  * @author NunoPaulino
  *
  */
-public abstract class InstructionData {
+public abstract class InstructionData implements Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8117716656185017317L;
 
     // from enum properties
     protected final String plainname;

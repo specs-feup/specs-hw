@@ -13,8 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
@@ -23,7 +23,12 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  * @author Nuno
  *
  */
-public abstract class ABinarySegment implements BinarySegment {
+public abstract class ABinarySegment implements BinarySegment, Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2260035887787499004L;
 
     // TODO: move these 2 things to a future BinaryApplication class, or something
     protected String appName;
@@ -69,7 +74,8 @@ public abstract class ABinarySegment implements BinarySegment {
         return totlat;
     }
 
-    // TODO: execution cycles, i.e. total cycles taking into account the occurrences of all contexts of the segment
+    // TODO: execution cycles, i.e. total cycles taking into
+    // account the occurrences of all contexts of the segment
 
     /*
      * Coverage functions
