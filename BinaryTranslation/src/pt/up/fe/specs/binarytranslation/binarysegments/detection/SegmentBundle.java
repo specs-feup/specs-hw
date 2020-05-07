@@ -1,7 +1,8 @@
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
-import java.util.Date;
-import java.util.List;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
@@ -14,7 +15,12 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream.InstructionStre
  * @author nuno
  *
  */
-public class SegmentBundle {
+public class SegmentBundle implements Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
     private Date date;
     private String appName;
@@ -64,6 +70,11 @@ public class SegmentBundle {
         return date;
     }
 
+    /*
+    public BinarySegment getSegment(Integer addr) {
+        
+    }*/
+
     // TODO methods that can compute the coverage and/or acceleration only for a filtered set of this bundle
     // look up what kind of java trickery can be used to do this
 
@@ -81,4 +92,40 @@ public class SegmentBundle {
         }
         return (float) detectedportion / this.totalCycles;
     }*/
+
+    /*
+     * Serialize this segment to file (useful for processing only past this point)
+     */
+    public void serializeToFile(String filename) throws IOException {
+        FileOutputStream fos = new FileOutputStream(filename);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(this);
+        oos.flush();
+        oos.close();
+    }
+
+    public void serializeToFile() throws IOException {
+        String date = new SimpleDateFormat("yyyyMMdd").format(this.date);
+        this.serializeToFile(this.appName + "_" + date + ".bundle");
+
+        // TODO add cpu architecture to filename
+    }
+
+    /*
+     * Serialize this segment from file (useful for processing only past this point)
+     */
+    public static SegmentBundle serializeFromFile(String filename) throws IOException {
+
+        FileInputStream fis = new FileInputStream(filename);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        SegmentBundle bundle = null;
+        try {
+            bundle = (SegmentBundle) ois.readObject();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        ois.close();
+        return bundle;
+    }
 }

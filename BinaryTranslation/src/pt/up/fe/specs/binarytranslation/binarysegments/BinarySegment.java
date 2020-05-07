@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
+import java.io.Serializable;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;

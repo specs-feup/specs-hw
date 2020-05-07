@@ -13,9 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.instruction;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.*;
 
 import pt.up.fe.specs.binarytranslation.expression.ExpressionSolver;
 import pt.up.fe.specs.binarytranslation.parsing.AsmField;
@@ -27,7 +26,12 @@ import pt.up.fe.specs.util.SpecsStrings;
  * @author NunoPaulino
  * 
  */
-public abstract class AInstruction implements Instruction {
+public abstract class AInstruction implements Instruction, Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1450984418310887398L;
 
     private Number address;
     private String instruction;
