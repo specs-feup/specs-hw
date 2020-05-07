@@ -42,12 +42,9 @@ public class ArmAsmOperandGetter {
 
         amap.put(ArmAsmFieldType.LOAD_REG_LITERAL_FMT1, ArmAsmOperandGetter::loadregliteralfmt1);
         amap.put(ArmAsmFieldType.LOAD_REG_LITERAL_FMT2, ArmAsmOperandGetter::loadregliteralfmt2);
-
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_NO_ALLOC, ArmAsmOperandGetter::loadstore1);
-
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1, ArmAsmOperandGetter::loadstore1);
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2, ArmAsmOperandGetter::loadstore2);
-
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT1, ArmAsmOperandGetter::loadstore3);
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT2, ArmAsmOperandGetter::loadstore3);
         amap.put(ArmAsmFieldType.LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT3, ArmAsmOperandGetter::loadstore3);
@@ -57,7 +54,6 @@ public class ArmAsmOperandGetter {
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT1, ArmAsmOperandGetter::loadstore3);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT2, ArmAsmOperandGetter::loadstore3);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT3, ArmAsmOperandGetter::loadstore3);
-
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT1, ArmAsmOperandGetter::loadstore5);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT2, ArmAsmOperandGetter::loadstore5);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_OFF_FMT3, ArmAsmOperandGetter::loadstore5);
@@ -72,6 +68,15 @@ public class ArmAsmOperandGetter {
         amap.put(ArmAsmFieldType.CONDITIONAL_CMP_IMM, ArmAsmOperandGetter::conditionalCmp);
         amap.put(ArmAsmFieldType.CONDITIONAL_SELECT, ArmAsmOperandGetter::conditionalSel);
         amap.put(ArmAsmFieldType.DPR_THREESOURCE, ArmAsmOperandGetter::dprThreesource);
+
+        amap.put(ArmAsmFieldType.FP_DPR_ONESOURCE, ArmAsmOperandGetter::fp_dprOneSource);
+        amap.put(ArmAsmFieldType.FP_COMPARE, ArmAsmOperandGetter::fp_compare);
+        amap.put(ArmAsmFieldType.FP_IMMEDIATE, ArmAsmOperandGetter::fp_immediate);
+        amap.put(ArmAsmFieldType.FP_COND_COMPARE, ArmAsmOperandGetter::fp_condcompare);
+        amap.put(ArmAsmFieldType.FP_DPR_TWOSOURCE, ArmAsmOperandGetter::fp_dprTwoSource);
+        amap.put(ArmAsmFieldType.FP_COND_SELECT, ArmAsmOperandGetter::fp_condSelect);
+        amap.put(ArmAsmFieldType.FP_DPR_THREESOURCE, ArmAsmOperandGetter::fp_dprThreeSource);
+
         amap.put(ArmAsmFieldType.UNDEFINED, ArmAsmOperandGetter::undefined);
 
         OPERANDGET = Collections.unmodifiableMap(amap);
@@ -341,13 +346,14 @@ public class ArmAsmOperandGetter {
             ArmOperandBuilder h, List<Operand> operands) {
 
         // fetch result of previous operation from "previousInstructionOperands"
-        var op = previousInstructionOperands.get(0);
+        // var op = previousInstructionOperands.get(0);
         // first "operand" should be the result register
 
-        operands.add(h.newReadRegister((ArmAsmField) op.getAsmField(),
-                op.getValue(), op.getProperties().getWidth()));
+        // first operand (result of previous operation)
+        // operands.add(h.newReadRegister((ArmAsmField) op.getAsmField(),
+        // op.getValue(), op.getProperties().getWidth()));
 
-        // first operand
+        // second operand (target branch addr = this inst addr + offset)
         long addr = fielddata.getAddr().longValue();
         Number fullimm = addr + signExtend64(fielddata.getMap().get(IMM) << 2, 21);
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
@@ -566,6 +572,8 @@ public class ArmAsmOperandGetter {
         return operands;
     }
 
+    // DPR_TWOSOURCE
+    // ADD_SUB_CARRY
     private static List<Operand> dprTwoSource_addSubCarry(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
@@ -577,6 +585,7 @@ public class ArmAsmOperandGetter {
         return operands;
     }
 
+    // DPR_ONESOURCE
     private static List<Operand> dprOneSource(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
@@ -661,6 +670,7 @@ public class ArmAsmOperandGetter {
         return operands;
     }
 
+    // DPR_THREESOURCE (C4-308)
     private static List<Operand> dprThreesource(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
@@ -671,6 +681,122 @@ public class ArmAsmOperandGetter {
         operands.add(h.newReadRegister(RM, wd));
         operands.add(h.newReadRegister(RA, wd));
 
+        return operands;
+    }
+
+    // FP_DPR_ONESOURCE (C4-352)
+    private static List<Operand> fp_dprOneSource(ArmAsmFieldData fielddata,
+            ArmOperandBuilder h, List<Operand> operands) {
+
+        // first, second, operands
+        operands.add(h.newRegister(0b11, RD, fielddata.getBitWidth()));
+        operands.add(h.newRegister(0b10, RN, fielddata.getBitWidth()));
+        return operands;
+    }
+
+    // FP_COMPARE (C4-355)
+    private static List<Operand> fp_compare(ArmAsmFieldData fielddata,
+            ArmOperandBuilder h, List<Operand> operands) {
+
+        // opcodeb (determines zero variant encoding (see page C7-1506))
+        var cond = fielddata.getMap().get(OPCODEB);
+
+        // non zero variant
+        if (cond == 0) {
+
+            // first, second, operands
+            operands.add(h.newRegister(0b11, RN, fielddata.getBitWidth()));
+            operands.add(h.newRegister(0b10, RM, fielddata.getBitWidth()));
+        }
+
+        // zero variant
+        else {
+
+            // first, second, operands
+            operands.add(h.newRegister(0b11, RN, fielddata.getBitWidth()));
+            operands.add(h.newImmediate(RM, 0, fielddata.getBitWidth()));
+        }
+
+        return operands;
+    }
+
+    // FP_IMMEDIATE (C4-356)
+    private static List<Operand> fp_immediate(ArmAsmFieldData fielddata,
+            ArmOperandBuilder h, List<Operand> operands) {
+
+        // first, second, operands
+        operands.add(h.newRegister(0b11, RD, fielddata.getBitWidth()));
+
+        var imm = fielddata.getMap().get(IMM);
+        var sign = (imm & 0x80) == 0 ? 1 : -1;
+        var exponent = (((imm & 0b01110000) >> 4) ^ 0b100) - 3;
+        var mantissa = (16 + (imm & 0b00001111)) / 16;
+        float immf = sign * mantissa * (float) Math.pow(2, exponent);
+        // this immediate must be a floating point number...
+        // 3bit exponent, 4 bit precision (encoded in 8 bits of the imm field)
+        // see page C2-186 for imm encodings
+
+        operands.add(h.newImmediate(IMM, immf, fielddata.getBitWidth()));
+
+        return operands;
+    }
+
+    // FP_COND_COMPARE (C4-356)
+    private static List<Operand> fp_condcompare(ArmAsmFieldData fielddata,
+            ArmOperandBuilder h, List<Operand> operands) {
+
+        // first, second, operands
+        operands.add(h.newRegister(0b11, RN, fielddata.getBitWidth()));
+        operands.add(h.newRegister(0b10, RM, fielddata.getBitWidth()));
+
+        // third operand
+        operands.add(h.newImmediate(NZCV, 8));
+
+        // fourth operand
+        var cond = fielddata.getMap().get(COND);
+        var conds = ArmInstructionCondition.decodeCondition(cond).getShorthandle();
+        operands.add(h.newSubOperation(COND, conds, 8));
+
+        return operands;
+    }
+
+    // FP_DPR_TWOSOURCE (C4-357)
+    private static List<Operand> fp_dprTwoSource(ArmAsmFieldData fielddata,
+            ArmOperandBuilder h, List<Operand> operands) {
+
+        // first, second, and third operands
+        operands.add(h.newRegister(0b11, RD, fielddata.getBitWidth()));
+        operands.add(h.newRegister(0b10, RN, fielddata.getBitWidth()));
+        operands.add(h.newRegister(0b10, RM, fielddata.getBitWidth()));
+        return operands;
+    }
+
+    // FP_COND_SELECT (C4-358)
+    private static List<Operand> fp_condSelect(ArmAsmFieldData fielddata,
+            ArmOperandBuilder h, List<Operand> operands) {
+
+        // first, second, and third operands
+        operands.add(h.newRegister(0b11, RD, fielddata.getBitWidth()));
+        operands.add(h.newRegister(0b10, RN, fielddata.getBitWidth()));
+        operands.add(h.newRegister(0b10, RM, fielddata.getBitWidth()));
+
+        // fourth operand
+        var cond = fielddata.getMap().get(COND);
+        var conds = ArmInstructionCondition.decodeCondition(cond).getShorthandle();
+        operands.add(h.newSubOperation(COND, conds, 8));
+
+        return operands;
+    }
+
+    // FP_DPR_THREESOURCE (C4-359)
+    private static List<Operand> fp_dprThreeSource(ArmAsmFieldData fielddata,
+            ArmOperandBuilder h, List<Operand> operands) {
+
+        // first, second, and third operands
+        operands.add(h.newRegister(0b11, RD, fielddata.getBitWidth()));
+        operands.add(h.newRegister(0b10, RN, fielddata.getBitWidth()));
+        operands.add(h.newRegister(0b10, RM, fielddata.getBitWidth()));
+        operands.add(h.newRegister(0b10, RA, fielddata.getBitWidth()));
         return operands;
     }
 
