@@ -65,6 +65,14 @@ public class ArmAsmWidthGetter {
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT2, ArmAsmWidthGetter::getter3);
         amap.put(ArmAsmFieldType.LOAD_STORE_REG_UIMM_FMT3, ArmAsmWidthGetter::getter4);
 
+        amap.put(ArmAsmFieldType.FP_DPR_ONESOURCE, ArmAsmWidthGetter::getter5);
+        amap.put(ArmAsmFieldType.FP_COMPARE, ArmAsmWidthGetter::getter5);
+        amap.put(ArmAsmFieldType.FP_IMMEDIATE, ArmAsmWidthGetter::getter5);
+        amap.put(ArmAsmFieldType.FP_COND_COMPARE, ArmAsmWidthGetter::getter5);
+        amap.put(ArmAsmFieldType.FP_DPR_TWOSOURCE, ArmAsmWidthGetter::getter5);
+        amap.put(ArmAsmFieldType.FP_COND_SELECT, ArmAsmWidthGetter::getter5);
+        amap.put(ArmAsmFieldType.FP_DPR_THREESOURCE, ArmAsmWidthGetter::getter5);
+
         WIDTHGET = Collections.unmodifiableMap(amap);
     }
 
@@ -130,5 +138,26 @@ public class ArmAsmWidthGetter {
     private static int getter4(Map<ArmAsmField, Integer> map) {
         var sf = (map.get(SFB) << 2) | map.get(SFA);
         return ((int) Math.pow(2, sf)) * 8;
+    }
+
+    // FP_DPR_ONESOURCE (C4-352)
+    // one field: ptype
+    private static int getter5(Map<ArmAsmField, Integer> map) {
+        var ptype = (map.get(PTYPE));
+        var bitwidth = 0;
+        switch (ptype) {
+        case 0:
+            bitwidth = 32;
+            break;
+        case 1:
+            bitwidth = 64;
+            break;
+        case 2:
+            bitwidth = 16;
+            break;
+        default:
+            bitwidth = 32;
+        }
+        return bitwidth;
     }
 }

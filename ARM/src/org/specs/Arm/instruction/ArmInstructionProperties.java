@@ -384,7 +384,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     // fields ftype and opc (bits 4 and 3 of opcodeb) will determine variants
 
     // FP_IMMEDIATE (C4-356) //////////////////////////////////////////////////
-    fmov_imm(0x1E20_1000, 1, 0, FP_IMMEDIATE),
+    fmov_imm("fmov", 0x1E20_1000, 1, 0, FP_IMMEDIATE),
     // field ftype will distinguish precision
 
     // FP_COND_COMPARE (C4-356) ///////////////////////////////////////////////

@@ -104,7 +104,8 @@ public class ArmOperand extends AOperand {
      * Immediate
      */
     public static ArmOperand newImmediate(ArmAsmField field, Number value, int width) {
-        var props = new AOperandProperties(field, "#0x", "", width, IMMEDIATE, READ);
+        String prefix = (value instanceof Float) ? "" : "#0x";
+        var props = new AOperandProperties(field, prefix, "", width, IMMEDIATE, READ);
         return newInstance(props, value);
     }
 
