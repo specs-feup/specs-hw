@@ -13,12 +13,11 @@
 
 package pt.up.fe.specs.binarytranslation.parsing;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.*;
 
 import org.suikasoft.jOptions.DataStore.ADataClass;
-import org.suikasoft.jOptions.Datakey.DataKey;
-import org.suikasoft.jOptions.Datakey.KeyFactory;
+import org.suikasoft.jOptions.Datakey.*;
 
 /**
  * Raw field data as extracted by an {@link IsaParser}
@@ -26,7 +25,12 @@ import org.suikasoft.jOptions.Datakey.KeyFactory;
  * @author NunoPaulino
  *
  */
-public class AsmFieldData extends ADataClass<AsmFieldData> {
+public class AsmFieldData extends ADataClass<AsmFieldData> implements Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7457507990835654072L;
 
     /*
      * Addr of this instruction

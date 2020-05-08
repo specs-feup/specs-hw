@@ -35,6 +35,9 @@ import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.providers.ResourceProvider;
+import pt.up.fe.specs.util.utilities.Replacer;
 
 /**
  * This class represents a binary segment as a graph, by hosting the instructions of the segment as the data transported
@@ -402,104 +405,55 @@ public class BinarySegmentGraph {
      */
     private void printHTML() {
 
-        // TODO: Use Replacer instead
+        ResourceProvider htmltmpl = BinaryTranslationResource.GRAPH_HTML_TEMPLATE;
+        var htmlplage = new Replacer(htmltmpl);
 
-        FileOutputStream fos = null;
-        BufferedWriter bw = null;
-        try {
-            fos = new FileOutputStream(this.getOutputFolder() + "/" + this.getHTMLFilename());
-            bw = new BufferedWriter(new OutputStreamWriter(fos));
+        // Summary
+        htmlplage.replace("<SEGMENTTYPE>", this.type.toString());
+        htmlplage.replace("<NUMNODES>", Integer.toString(this.numnodes));
+        htmlplage.replace("<NUMREADS>", Integer.toString(this.numloads));
+        htmlplage.replace("<NUMWRITES>", Integer.toString(this.numstores));
+        htmlplage.replace("<MAXILP>", Integer.toString(this.maxwidth));
+        htmlplage.replace("<CPL>", Integer.toString(this.cpl));
+        htmlplage.replace("<STATICCOVERAGE>", Float.toString(this.seg.getStaticCoverage()));
+        htmlplage.replace("<DYNAMICCOVERAGE>", Float.toString(this.seg.getDynamicCoverage()));
+        htmlplage.replace("<INITIATIONINTERVAL>",
+                (this.type == BinarySegmentGraphType.cyclical) ? this.initiationInterval : "N/A");
+        htmlplage.replace("<IPC>", Float.toString(this.estimatedIPC));
 
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        // Program info
+        htmlplage.replace("<APPNAME>", this.seg.getAppName());
+
+        var compileinfo = this.seg.getCompilationFlags();
+        compileinfo.replace(" -", "<br>-");
+        htmlplage.replace("<COMPILEINFO>", compileinfo);
+
+        // Segment dump
+        var segtext = this.seg.getRepresentation();
+        htmlplage.replace("<SEGMENT>",
+                segtext.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
+
+        // Contexts
+        var contextString = "";
+        for (SegmentContext context : this.seg.getContexts()) {
+            contextString += context.getRepresentation() + "\n\n";
         }
+        htmlplage.replace("<CONTEXTS>",
+                contextString.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
 
-        try {
-            bw.write("<!DOCTYPE html>\r\n<html><head><style>\r\n" +
-                    ".box {background-color:lightgrey; width:50%;}\r\n</style></head><body>\n\n");
+        // Graph
+        htmlplage.replace("<IMAGEFILE>", this.getBitmapFilename());
 
-            // Header info
-            bw.write("<h1>Binary Segment Graph Information</h1>\n\n");
+        // git commit
+        htmlplage.replace("<GITDESCRIPTION>", BinaryTranslationUtils.getCommitDescription());
 
-            // Summary
-            bw.write("<div class=box>");
-            bw.write("<h2>Summary</h2>\n\n");
-            bw.write("Segment type: " + this.type.toString() + "<br>\n");
-            bw.write("Number of nodes: " + Integer.toString(this.numnodes) + "<br>\n");
-            bw.write("Number of memory reads: " + Integer.toString(this.numloads) + "<br>\n");
-            bw.write("Number of memory writes: " + Integer.toString(this.numstores) + "<br>\n");
-            bw.write("Maximum ILP of graph (widest row): " + Integer.toString(this.maxwidth) + "<br>\n");
-            bw.write("Critical Path Length: " + Integer.toString(this.cpl) + "<br>\n");
-            bw.write("Static Coverage: " + Float.toString(this.seg.getStaticCoverage()) + "<br>\n");
-            bw.write("Dynamic Coverage: " + Float.toString(this.seg.getDynamicCoverage()) + "<br>\n");
+        // date of generation
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+        htmlplage.replace("<GENERATIONDATE>", formatter.format(new Date(System.currentTimeMillis())));
 
-            if (this.type == BinarySegmentGraphType.cyclical)
-                bw.write("Initiation Interval: " + this.initiationInterval + "<br>\n");
-
-            bw.write("Instructions per clock cycle (ideal): " + this.estimatedIPC + "<br>\n\n");
-            bw.write("</div>");
-
-            // Program info
-            bw.write("<div class=box>");
-            bw.write("<h2>Program information</h2>\n");
-            bw.write("Program name: " + this.seg.getAppName() + "<br>\n");
-            bw.write("</div>");
-
-            bw.write("<div class=box>");
-            bw.write("<h3>Compilation information:</h3>\n");
-            var compileinfo = this.seg.getCompilationFlags();
-            bw.write(compileinfo.replace(" -", "<br>-") + "<br>\n\n");
-            bw.write("</div>");
-
-            // Segment dump
-            bw.write("<div class=box>");
-            bw.write("<h2>Segment:</h2>\n");
-            var segtext = this.seg.getRepresentation();
-            bw.write(segtext.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
-            bw.write("<br>\n");
-            bw.write("</div>");
-
-            // Contexts
-            bw.write("<div class=box>");
-            bw.write("<h3>Segment Contexts</h3>\n");
-            for (SegmentContext context : this.seg.getContexts()) {
-                bw.write(context.getRepresentation().replaceAll("<", "&lt;")
-                        .replaceAll(">", "&gt;").replaceAll("\n", "<br>") + "<br>");
-            }
-            bw.write("</div>");
-
-            // Graph
-            bw.write("<div class=box>");
-            bw.write("<h2>Segment Graph:</h2>\n");
-            bw.write("<img src=\"" + this.getBitmapFilename() + "\"><br>\n\n");
-            bw.write("</div>");
-
-            bw.write("</body>\n</html>\n");
-
-            // git commit
-            String gitDescription = BinaryTranslationUtils.getCommitDescription();
-
-            // date of generation
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-            Date date = new Date(System.currentTimeMillis());
-
-            bw.write("<br><footer>&copy; Copyright 2019 SPeCS<br>"
-                    + "Generated by Binary Translation Framework, " + gitDescription + "<br>"
-                    + "Generation date: " + formatter.format(date) + "<br>"
-                    + "Find the repository at <a href=\"https://github.com/specs-feup/specs-hw\">SPeCS Hardware</a><br>"
-                    + "Binary Translation Framework developed at <a href=\"https://www.inesctec.pt/\">INESC TEC</a> (CTM and CSIG) and UP/FEUP<br>"
-                    + "<br>Contact the developers:<br>"
-                    + "<a href=\"mailto:nuno.m.paulino@inesctec.pt\">Dr. Nuno Paulino</a><br>"
-                    + "<a href=\"mailto:joao.bispo@inesctec.pt\">Dr. João Bispo</a>"
-                    + "</footer>");
-            bw.flush();
-            bw.close();
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // write to file
+        String filename = this.getOutputFolder() + "/" + this.getHTMLFilename();
+        SpecsIo.write(new File(filename), htmlplage.toString());
     }
 
     private String getOutputFolder() {
