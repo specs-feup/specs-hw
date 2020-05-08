@@ -4,7 +4,8 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public enum BinaryTranslationResource implements ResourceProvider {
 
-    DOTTY_BINARY("dot");
+    DOTTY_BINARY("dot"),
+    GRAPH_HTML_TEMPLATE("org/specs/BinaryTranslation/graph/graph_template.html");
 
     private final String resource;
 
