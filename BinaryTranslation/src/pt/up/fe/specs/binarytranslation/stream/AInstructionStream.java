@@ -13,6 +13,7 @@ public abstract class AInstructionStream implements InstructionStream {
     private final Process proc;
     protected String appName;
     protected String compilationInfo;
+    protected String cpuArchitectureName;
     protected long numinsts;
     protected long numcycles;
     protected final LineStream insts;
@@ -92,6 +93,11 @@ public abstract class AInstructionStream implements InstructionStream {
     @Override
     public String getCompilationInfo() {
         return this.compilationInfo;
+    }
+
+    @Override
+    public String getCpuArchitecture() {
+        return this.cpuArchitectureName;
     }
 
     @Override

@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Predicate;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
@@ -25,6 +26,7 @@ public class SegmentBundle implements Serializable {
     private Date date;
     private String appName;
     private String compilationFlags;
+    private String cpuArchitecture;
     private List<BinarySegment> segments;
 
     // stats from the stream
@@ -36,6 +38,7 @@ public class SegmentBundle implements Serializable {
 
         this.appName = istream.getApplicationName();
         this.compilationFlags = istream.getCompilationInfo();
+        this.cpuArchitecture = istream.getCpuArchitecture();
         this.segments = segments;
         this.date = new Date(System.currentTimeMillis());
         this.totalCycles = istream.getCycles();
@@ -54,8 +57,36 @@ public class SegmentBundle implements Serializable {
         }
     }
 
+    /*
+     * Returns basic info string for this bundle
+     */
+    public String getSummary() {
+        return "Bundle Summary: \n" +
+                "Application: " + this.appName + "\n" +
+                "Architecture: " + this.cpuArchitecture + "\n" +
+                "Stream type: " + this.itype + "\n" +
+                "Segment Type:" + this.segments.get(0).getSegmentType() + "\n" +
+                "Num segments: " + this.segments.size() + "\n";
+    }
+
+    /*
+     * Returns all segments in this bundle
+     */
     public List<BinarySegment> getSegments() {
         return segments;
+    }
+
+    /*
+     * Returns segments based on any given predicate applied over a single BinarySegment
+     */
+    public List<BinarySegment> getSegments(Predicate<BinarySegment> predicate) {
+
+        var list = new ArrayList<BinarySegment>();
+        for (var seg : this.segments) {
+            if (predicate.test(seg))
+                list.add(seg);
+        }
+        return list;
     }
 
     public String getCompilationFlags() {
@@ -105,10 +136,14 @@ public class SegmentBundle implements Serializable {
     }
 
     public void serializeToFile() throws IOException {
-        String date = new SimpleDateFormat("yyyyMMdd").format(this.date);
-        this.serializeToFile(this.appName + "_" + date + ".bundle");
 
-        // TODO add cpu architecture to filename
+        // output folder
+        var f = new File("./output/bundles/");
+        f.mkdirs();
+
+        String date = new SimpleDateFormat("yyyyMMdd").format(this.date);
+        this.serializeToFile("./output/bundles/" + this.appName + "_"
+                + this.cpuArchitecture + "_" + date + ".bundle");
     }
 
     /*

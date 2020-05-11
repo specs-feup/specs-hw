@@ -43,13 +43,20 @@ public interface InstructionStream extends AutoCloseable {
 
     /**
      * 
+     * @return The name of the application connected to the stream (i.e., filename)
      */
     public String getApplicationName();
 
     /**
-     * Get compilation flags from file being processed (if ELF file)
+     * @return Compilation flags from file being processed, if available (i.e., if ELF file)
      */
     public String getCompilationInfo();
+
+    /**
+     * 
+     * @return Processor architecture of this stream
+     */
+    public String getCpuArchitecture();
 
     /**
      * 
@@ -65,7 +72,7 @@ public interface InstructionStream extends AutoCloseable {
 
     /**
      * 
-     * @return the total number of returned instructions up to this moment
+     * @return Total number of returned instructions up to this moment
      */
     default long getNumInstructions() {
         return 0;
@@ -73,7 +80,7 @@ public interface InstructionStream extends AutoCloseable {
 
     /**
      * 
-     * @return the total number of cycles up to this moment
+     * @return Total number of cycles up to this moment
      */
     default long getCycles() {
         return 0;
