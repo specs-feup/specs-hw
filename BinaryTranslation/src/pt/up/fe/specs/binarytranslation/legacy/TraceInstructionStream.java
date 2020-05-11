@@ -47,6 +47,7 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
      * 
      * @return the total number of returned instructions up to this moment
      */
+    @Override
     default long getNumInstructions() {
         return 0;
     }
@@ -55,6 +56,7 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
      * 
      * @return the total number of cycles up to this moment
      */
+    @Override
     default long getCycles() {
         return 0;
     }
@@ -63,6 +65,7 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
      * 
      * @return
      */
+    @Override
     default int getInstructionWidth() {
         return 0;
     }
@@ -71,6 +74,7 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
      * 
      * @return True if stream has another line
      */
+    @Override
     default boolean hasNext() {
         return false;
     }
@@ -101,6 +105,11 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
 
     @Override
     default String getCompilationInfo() {
+        throw new NotImplementedException(this);
+    }
+
+    @Override
+    default String getCpuArchitecture() {
         throw new NotImplementedException(this);
     }
 }
