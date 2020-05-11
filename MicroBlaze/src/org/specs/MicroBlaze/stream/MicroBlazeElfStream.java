@@ -16,6 +16,7 @@ public class MicroBlazeElfStream extends AStaticInstructionStream {
 
     public MicroBlazeElfStream(File elfname) {
         super(elfname, OBJDUMP_EXE);
+        this.cpuArchitectureName = MicroBlazeResource.MICROBLAZE_CPU_NAME.getResource();
         this.appName = elfname.getName();
         this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
                 MicroBlazeResource.MICROBLAZE_READELF.getResource());
