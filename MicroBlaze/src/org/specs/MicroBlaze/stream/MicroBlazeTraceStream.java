@@ -30,6 +30,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         super(elfname, MicroBlazeResource.QEMU_MICROBLAZE_GDB_TEMPLATE,
                 GDB_EXE, MicroBlazeResource.QEMU_MICROBLAZE_BAREMETAL_DTB, QEMU_EXE);
 
+        this.cpuArchitectureName = MicroBlazeResource.MICROBLAZE_CPU_NAME.getResource();
         this.appName = elfname.getName();
         this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
                 MicroBlazeResource.MICROBLAZE_READELF.getResource());
@@ -44,6 +45,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         var auxname = elfname.getPath();
         var extension = auxname.subSequence(auxname.length() - 3, auxname.length());
 
+        // TODO remove this later
         // quickfix for DATE2020 demo
         if (extension.equals("txt")) {
             // auxname = auxname.replaceFirst("_trace", "");

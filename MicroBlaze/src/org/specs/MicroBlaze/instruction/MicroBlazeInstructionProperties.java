@@ -37,66 +37,66 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     // TODO add if operands are permutable
 
     // SPECIAL
-    mts(0x9400_C000, 1, 0, SPECIAL, G_OTHER),
-    mtse(0x9500_C000, 1, 0, SPECIAL, G_OTHER),
-    mfs(0x9400_8000, 1, 0, SPECIAL, G_OTHER),
-    mfse(0x9408_8000, 1, 0, SPECIAL, G_OTHER),
-    msrclr(0x9411_0000, 1, 0, SPECIAL, G_OTHER),
-    msrset(0x9410_0000, 1, 0, SPECIAL, G_OTHER),
+    mts(0x9400_C000, SPECIAL, G_OTHER),
+    mtse(0x9500_C000, SPECIAL, G_OTHER),
+    mfs(0x9400_8000, SPECIAL, G_OTHER),
+    mfse(0x9408_8000, SPECIAL, G_OTHER),
+    msrclr(0x9411_0000, SPECIAL, G_OTHER),
+    msrset(0x9410_0000, SPECIAL, G_OTHER),
 
     // MBAR
-    mbar(0xB802_0004, 1, 0, MBAR, G_OTHER),
+    mbar(0xB802_0004, MBAR, G_OTHER),
 
     // UBRANCH
-    br(0x9800_0000, 1, 0, UBRANCH, G_UJUMP, G_RJUMP),
-    bra(0x9808_0000, 1, 0, UBRANCH, G_UJUMP, G_AJUMP),
+    br(0x9800_0000, UBRANCH, G_UJUMP, G_RJUMP),
+    bra(0x9808_0000, UBRANCH, G_UJUMP, G_AJUMP),
     brd(0x9810_0000, 1, 1, UBRANCH, G_UJUMP, G_RJUMP),
     brad(0x9818_0000, 1, 1, UBRANCH, G_UJUMP, G_AJUMP),
 
     // ULBRANCH
     brld(0x9814_0000, 1, 1, ULBRANCH, G_UJUMP, G_RJUMP),
     brald(0x981C_0000, 1, 1, ULBRANCH, G_UJUMP, G_AJUMP),
-    brk(0x980C_0000, 1, 0, ULBRANCH, G_UJUMP, G_RJUMP),
+    brk(0x980C_0000, ULBRANCH, G_UJUMP, G_RJUMP),
 
     // UIBRANCH
-    bri(0xB800_0000, 1, 0, UIBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
-    brai(0xB808_0000, 1, 0, UIBRANCH, G_UJUMP, G_AJUMP, G_IJUMP),
+    bri(0xB800_0000, UIBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
+    brai(0xB808_0000, UIBRANCH, G_UJUMP, G_AJUMP, G_IJUMP),
     brid(0xB810_0000, 1, 1, UIBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
     braid(0xB818_0000, 1, 1, UIBRANCH, G_UJUMP, G_AJUMP, G_IJUMP),
 
     // UILBRANCH
     brlid(0xB814_0000, 1, 1, UILBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
     bralid(0xB81C_0000, 1, 1, UILBRANCH, G_UJUMP, G_AJUMP, G_IJUMP),
-    brki(0xB80C_0000, 1, 0, UILBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
+    brki(0xB80C_0000, UILBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
 
     // brk and brald are same instruction??
 
     // CBRANCH
-    beq(0x9C00_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
+    beq(0x9C00_0000, CBRANCH, G_CJUMP, G_RJUMP),
     beqd(0x9E00_0000, 1, 1, CBRANCH, G_CJUMP, G_RJUMP),
-    bge(0x9CA0_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
+    bge(0x9CA0_0000, CBRANCH, G_CJUMP, G_RJUMP),
     bged(0x9EA0_0000, 1, 1, CBRANCH, G_CJUMP, G_RJUMP),
-    bgt(0x9C80_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
+    bgt(0x9C80_0000, CBRANCH, G_CJUMP, G_RJUMP),
     bgtd(0x9E80_0000, 1, 1, CBRANCH, G_CJUMP, G_RJUMP),
-    ble(0x9C60_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
+    ble(0x9C60_0000, CBRANCH, G_CJUMP, G_RJUMP),
     bled(0x9E60_0000, 1, 1, CBRANCH, G_CJUMP, G_RJUMP),
-    blt(0x9C40_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
+    blt(0x9C40_0000, CBRANCH, G_CJUMP, G_RJUMP),
     bltd(0x9E40_0000, 1, 1, CBRANCH, G_CJUMP, G_RJUMP),
-    bne(0x9C20_0000, 1, 0, CBRANCH, G_CJUMP, G_RJUMP),
+    bne(0x9C20_0000, CBRANCH, G_CJUMP, G_RJUMP),
     bned(0x9E20_0000, 1, 1, CBRANCH, G_CJUMP, G_RJUMP),
 
     // CIBRANCH
-    beqi(0xBC00_0000, 1, 0, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
+    beqi(0xBC00_0000, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
     beqid(0xBE00_0000, 1, 1, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
-    bgei(0xBCA0_0000, 1, 0, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
+    bgei(0xBCA0_0000, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
     bgeid(0xBEA0_0000, 1, 1, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
-    bgti(0xBC80_0000, 1, 0, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
+    bgti(0xBC80_0000, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
     bgtid(0xBE80_0000, 1, 1, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
-    blei(0xBC60_0000, 1, 0, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
+    blei(0xBC60_0000, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
     bleid(0xBE60_0000, 1, 1, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
-    blti(0xBC40_0000, 1, 0, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
+    blti(0xBC40_0000, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
     bltid(0xBE40_0000, 1, 1, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
-    bnei(0xBC20_0000, 1, 0, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
+    bnei(0xBC20_0000, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
     bneid(0xBE20_0000, 1, 1, CIBRANCH, G_CJUMP, G_RJUMP, G_IJUMP),
 
     // RETURN
@@ -106,14 +106,14 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     rtsd(0xB600_0000, 1, 1, RETURN, G_UJUMP, G_RJUMP, G_IJUMP),
 
     // IBARREL
-    bsrli(0x6400_0000, 1, 0, IBARREL_FMT1, G_LOGICAL),
-    bsrai(0x6400_0200, 1, 0, IBARREL_FMT1, G_LOGICAL),
-    bslli(0x6400_0400, 1, 0, IBARREL_FMT1, G_LOGICAL),
-    bsefi(0x6400_4000, 1, 0, IBARREL_FMT2, G_LOGICAL),
-    bsifi(0x6400_8000, 1, 0, IBARREL_FMT2, G_LOGICAL),
+    bsrli(0x6400_0000, IBARREL_FMT1, G_LOGICAL),
+    bsrai(0x6400_0200, IBARREL_FMT1, G_LOGICAL),
+    bslli(0x6400_0400, IBARREL_FMT1, G_LOGICAL),
+    bsefi(0x6400_4000, IBARREL_FMT2, G_LOGICAL),
+    bsifi(0x6400_8000, IBARREL_FMT2, G_LOGICAL),
 
     // STREAM
-    get(0x6C00_0000, 1, 0, STREAM, G_OTHER),
+    get(0x6C00_0000, STREAM, G_OTHER),
     put(0x6C00_8000, 2, 0, STREAM, G_OTHER),
 
     // DSTREAM
@@ -126,23 +126,23 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     // since it emulates the atomicity of the instruction
 
     // TYPE A
-    add(0x0000_0000, 1, 0, TYPE_A, G_ADD),
-    addc(0x0800_0000, 1, 0, TYPE_A, G_ADD),
-    addk(0x1000_0000, 1, 0, TYPE_A, G_ADD),
-    addkc(0x1800_0000, 1, 0, TYPE_A, G_ADD),
-    rsub(0x0400_0000, 1, 0, TYPE_A, G_SUB),
-    rsubc(0x0C00_0000, 1, 0, TYPE_A, G_SUB),
-    rsubk(0x1400_0000, 1, 0, TYPE_A, G_SUB),
-    rsubkc(0x1C00_0000, 1, 0, TYPE_A, G_SUB),
-    cmp(0x1400_0001, 1, 0, TYPE_A, G_CMP),
-    cmpu(0x1400_0003, 1, 0, TYPE_A, G_CMP),
+    add(0x0000_0000, TYPE_A, G_ADD),
+    addc(0x0800_0000, TYPE_A, G_ADD),
+    addk(0x1000_0000, TYPE_A, G_ADD),
+    addkc(0x1800_0000, TYPE_A, G_ADD),
+    rsub(0x0400_0000, TYPE_A, G_SUB),
+    rsubc(0x0C00_0000, TYPE_A, G_SUB),
+    rsubk(0x1400_0000, TYPE_A, G_SUB),
+    rsubkc(0x1C00_0000, TYPE_A, G_SUB),
+    cmp(0x1400_0001, TYPE_A, G_CMP),
+    cmpu(0x1400_0003, TYPE_A, G_CMP),
     mul(0x4000_0000, 3, 0, TYPE_A, G_MUL),
     mulh(0x4000_0001, 3, 0, TYPE_A, G_MUL),
     mulhu(0x4000_0003, 3, 0, TYPE_A, G_MUL),
     mulhsu(0x4000_0002, 3, 0, TYPE_A, G_MUL),
-    bsrl(0x4400_0000, 1, 0, TYPE_A, G_LOGICAL),
-    bsra(0x4400_0200, 1, 0, TYPE_A, G_LOGICAL),
-    bsll(0x4400_0400, 1, 0, TYPE_A, G_LOGICAL),
+    bsrl(0x4400_0000, TYPE_A, G_LOGICAL),
+    bsra(0x4400_0200, TYPE_A, G_LOGICAL),
+    bsll(0x4400_0400, TYPE_A, G_LOGICAL),
     idiv(0x4800_0000, 34, 0, TYPE_A, G_OTHER),
     idivu(0x4800_0002, 34, 0, TYPE_A, G_OTHER),
     fadd(0x5800_0000, 6, 0, TYPE_A, G_FLOAT, G_ADD),
@@ -159,28 +159,28 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     flt(0x5800_0280, 6, 0, TYPE_A, G_FLOAT),
     fint(0x5800_0300, 5, 0, TYPE_A, G_FLOAT),
     fsqrt(0x5800_0380, 29, 0, TYPE_A, G_FLOAT),
-    or(0x8000_0000, 1, 0, TYPE_A, G_LOGICAL),
-    pcmpbf(0x8000_0400, 1, 0, TYPE_A, G_CMP),
-    and(0x8400_0000, 1, 0, TYPE_A, G_LOGICAL),
-    xor(0x8800_0000, 1, 0, TYPE_A, G_LOGICAL),
-    pcmpeq(0x8800_0400, 1, 0, TYPE_A, G_CMP),
-    andn(0x8C00_0000, 1, 0, TYPE_A, G_LOGICAL),
-    pcmpne(0x8C00_0400, 1, 0, TYPE_A, G_CMP),
-    sra(0x9000_0001, 1, 0, TYPE_A, G_UNARY, G_LOGICAL),
-    src(0x9000_0021, 1, 0, TYPE_A, G_UNARY, G_LOGICAL),
-    srl(0x9000_0041, 1, 0, TYPE_A, G_UNARY, G_LOGICAL),
-    sext8(0x9000_0060, 1, 0, TYPE_A, G_OTHER),
-    sext16(0x9000_0061, 1, 0, TYPE_A, G_OTHER),
-    clz(0x9000_00E0, 1, 0, TYPE_A, G_OTHER),
-    swapb(0x9000_01E0, 1, 0, TYPE_A, G_OTHER),
-    swaph(0x9000_01E2, 1, 0, TYPE_A, G_OTHER),
-    wic(0x9000_0068, 1, 0, TYPE_A, G_OTHER),
-    wdc(0x9000_0064, 1, 0, TYPE_A, G_OTHER),
-    wdc_flush("wdc.flush", 0x9000_0074, 1, 0, TYPE_A, G_OTHER),
-    wdc_clear("wdc.clear", 0x9000_0066, 1, 0, TYPE_A, G_OTHER),
-    wdc_clear_ea("wdc.clear.ea", 0x9000_00E6, 1, 0, TYPE_A, G_OTHER),
-    wdc_ext_flush("wdc.ext.flush", 0x9000_0476, 1, 0, TYPE_A, G_OTHER),
-    wdc_ext_clear("wdc.ext.clear", 0x9000_0466, 1, 0, TYPE_A, G_OTHER),
+    or(0x8000_0000, TYPE_A, G_LOGICAL),
+    pcmpbf(0x8000_0400, TYPE_A, G_CMP),
+    and(0x8400_0000, TYPE_A, G_LOGICAL),
+    xor(0x8800_0000, TYPE_A, G_LOGICAL),
+    pcmpeq(0x8800_0400, TYPE_A, G_CMP),
+    andn(0x8C00_0000, TYPE_A, G_LOGICAL),
+    pcmpne(0x8C00_0400, TYPE_A, G_CMP),
+    sra(0x9000_0001, TYPE_A, G_UNARY, G_LOGICAL),
+    src(0x9000_0021, TYPE_A, G_UNARY, G_LOGICAL),
+    srl(0x9000_0041, TYPE_A, G_UNARY, G_LOGICAL),
+    sext8(0x9000_0060, TYPE_A, G_OTHER),
+    sext16(0x9000_0061, TYPE_A, G_OTHER),
+    clz(0x9000_00E0, TYPE_A, G_OTHER),
+    swapb(0x9000_01E0, TYPE_A, G_OTHER),
+    swaph(0x9000_01E2, TYPE_A, G_OTHER),
+    wic(0x9000_0068, TYPE_A, G_OTHER),
+    wdc(0x9000_0064, TYPE_A, G_OTHER),
+    wdc_flush("wdc.flush", 0x9000_0074, TYPE_A, G_OTHER),
+    wdc_clear("wdc.clear", 0x9000_0066, TYPE_A, G_OTHER),
+    wdc_clear_ea("wdc.clear.ea", 0x9000_00E6, TYPE_A, G_OTHER),
+    wdc_ext_flush("wdc.ext.flush", 0x9000_0476, TYPE_A, G_OTHER),
+    wdc_ext_clear("wdc.ext.clear", 0x9000_0466, TYPE_A, G_OTHER),
     lbu(0xC000_0000, 2, 0, TYPE_A, G_LOAD),
     lbur(0xC000_0200, 2, 0, TYPE_A, G_LOAD),
     lbuea(0xC000_0080, 2, 0, TYPE_A, G_LOAD),
@@ -203,19 +203,19 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     swea(0xD800_0080, 2, 0, TYPE_A, G_STORE),
 
     // TYPE B
-    addi(0x2000_0000, 1, 0, TYPE_B, G_ADD),
-    addic(0x2800_0000, 1, 0, TYPE_B, G_ADD),
-    addik(0x3000_0000, 1, 0, TYPE_B, G_ADD),
-    addikc(0x3800_0000, 1, 0, TYPE_B, G_ADD),
-    rsubi(0x2400_0000, 1, 0, TYPE_B, G_SUB),
-    rsubic(0x2C00_0000, 1, 0, TYPE_B, G_SUB),
-    rsubik(0x3400_0000, 1, 0, TYPE_B, G_SUB),
-    rsubikc(0x3C00_0000, 1, 0, TYPE_B, G_SUB),
+    addi(0x2000_0000, TYPE_B, G_ADD),
+    addic(0x2800_0000, TYPE_B, G_ADD),
+    addik(0x3000_0000, TYPE_B, G_ADD),
+    addikc(0x3800_0000, TYPE_B, G_ADD),
+    rsubi(0x2400_0000, TYPE_B, G_SUB),
+    rsubic(0x2C00_0000, TYPE_B, G_SUB),
+    rsubik(0x3400_0000, TYPE_B, G_SUB),
+    rsubikc(0x3C00_0000, TYPE_B, G_SUB),
     muli(0x6000_0000, 3, 0, TYPE_B, G_MUL),
-    ori(0xA000_0000, 1, 0, TYPE_B, G_LOGICAL),
-    andi(0xA400_0000, 1, 0, TYPE_B, G_LOGICAL),
-    xori(0xA800_0000, 1, 0, TYPE_B, G_LOGICAL),
-    andni(0xAC00_0000, 1, 0, TYPE_B, G_LOGICAL),
+    ori(0xA000_0000, TYPE_B, G_LOGICAL),
+    andi(0xA400_0000, TYPE_B, G_LOGICAL),
+    xori(0xA800_0000, TYPE_B, G_LOGICAL),
+    andni(0xAC00_0000, TYPE_B, G_LOGICAL),
     lbui(0xE000_0000, 2, 0, TYPE_B, G_LOAD),
     lhui(0xE400_0000, 2, 0, TYPE_B, G_LOAD),
     lwi(0xE800_0000, 2, 0, TYPE_B, G_LOAD),
@@ -269,7 +269,23 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
             int delay, MicroBlazeAsmFieldType mbtype, InstructionType... tp) {
         this(opcode, latency, delay, mbtype, Arrays.asList(tp));
         this.instructionName = explicitname;
-        // System.out.print(this.codetype.toString() + ": " + this.instructionName + "\n");
+    }
+
+    /*
+     * Helper constructor with default latency and delay slot
+     */
+    private MicroBlazeInstructionProperties(String explicitname, int opcode,
+            MicroBlazeAsmFieldType mbtype, InstructionType... tp) {
+        this(opcode, 1, 0, mbtype, Arrays.asList(tp));
+        this.instructionName = explicitname;
+    }
+
+    /*
+     * Helper constructor with default latency and delay slot
+     */
+    private MicroBlazeInstructionProperties(int opcode,
+            MicroBlazeAsmFieldType mbtype, InstructionType... tp) {
+        this(opcode, 1, 0, mbtype, Arrays.asList(tp));
     }
 
     /*

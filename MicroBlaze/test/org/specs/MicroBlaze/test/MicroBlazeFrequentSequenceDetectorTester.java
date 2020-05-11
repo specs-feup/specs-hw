@@ -13,7 +13,7 @@
 
 package org.specs.MicroBlaze.test;
 
-import java.io.File;
+import java.io.*;
 import java.util.List;
 
 import org.junit.Test;
@@ -38,6 +38,25 @@ public class MicroBlazeFrequentSequenceDetectorTester {
             System.out.print("\n");
         }
         return;
+    }
+
+    private void bundleToFile(SegmentDetector bbd) {
+        var bundle = bbd.detectSegments();
+        try {
+            bundle.serializeToFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void bundleStatic() {
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.txt");
+        fd.deleteOnExit();
+        try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
+            var bbd = new FrequentStaticSequenceDetector(el);
+            bundleToFile(bbd);
+        }
     }
 
     @Test
