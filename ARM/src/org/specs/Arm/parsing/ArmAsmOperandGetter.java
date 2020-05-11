@@ -247,6 +247,9 @@ public class ArmAsmOperandGetter {
         var map = fielddata.getMap();
         var wd = fielddata.getBitWidth();
 
+        // zero'th operand (pstate register)
+        operands.add(h.newWritePSTATERegister());
+
         // first and second operands
         operands.add(h.newWriteRegister(RD, wd));
         operands.add(h.newReadRegister(RN, wd));
@@ -353,7 +356,11 @@ public class ArmAsmOperandGetter {
         // operands.add(h.newReadRegister((ArmAsmField) op.getAsmField(),
         // op.getValue(), op.getProperties().getWidth()));
 
-        // second operand (target branch addr = this inst addr + offset)
+        // zero'th operand (state flags)
+        operands.add(h.newReadPSTATERegister());
+        // TODO: operation only actually needs the Z bit!..
+
+        // first operand (target branch addr = this inst addr + offset)
         long addr = fielddata.getAddr().longValue();
         Number fullimm = addr + signExtend64(fielddata.getMap().get(IMM) << 2, 21);
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
@@ -577,6 +584,11 @@ public class ArmAsmOperandGetter {
     private static List<Operand> dprTwoSource_addSubCarry(ArmAsmFieldData fielddata,
             ArmOperandBuilder h, List<Operand> operands) {
 
+        // S bit (for ADCS and SUBS - add/sub with carry and flag set = 1);
+        var S = fielddata.getMap().get(OPCODEA).intValue() & 0b01;
+        if (fielddata.getType() == ArmAsmFieldType.ADD_SUB_CARRY && S == 1)
+            operands.add(h.newWritePSTATERegister());
+
         // first, second, and third operands
         var wd = fielddata.getBitWidth();
         operands.add(h.newWriteRegister(RD, wd));
@@ -600,6 +612,10 @@ public class ArmAsmOperandGetter {
             ArmOperandBuilder h, List<Operand> operands) {
 
         var wd = fielddata.getBitWidth();
+
+        // zero'th operand
+        if (fielddata.getType() == ArmAsmFieldType.ADD_SUB_SHIFT_REG)
+            operands.add(h.newWritePSTATERegister());
 
         // first, second, and third operands
         operands.add(h.newWriteRegister(RD, wd));
@@ -643,7 +659,7 @@ public class ArmAsmOperandGetter {
             operands.add(h.newImmediate(IMM, 8));
 
         // third operand
-        operands.add(h.newImmediate(NZCV, 8));
+        operands.add(h.newReadPSTATERegister());
 
         // fourth operand
         var cond = fielddata.getMap().get(COND);
@@ -750,7 +766,7 @@ public class ArmAsmOperandGetter {
         operands.add(h.newRegister(0b10, RM, fielddata.getBitWidth()));
 
         // third operand
-        operands.add(h.newImmediate(NZCV, 8));
+        operands.add(h.newReadPSTATERegister());
 
         // fourth operand
         var cond = fielddata.getMap().get(COND);

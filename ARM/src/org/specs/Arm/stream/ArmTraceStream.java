@@ -21,6 +21,7 @@ public class ArmTraceStream extends ATraceInstructionStream {
         super(elfname, ArmResource.QEMU_AARCH64_GDB_TEMPLATE, GDB_EXE,
                 ArmResource.QEMU_AARCH64_BAREMETAL_DTB, QEMU_EXE);
 
+        this.cpuArchitectureName = ArmResource.ARMv8_CPU_NAME.getResource();
         this.appName = elfname.getName();
         this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
                 ArmResource.AARCH64_READELF.getResource());

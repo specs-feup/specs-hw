@@ -4,6 +4,7 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public enum ArmResource implements ResourceProvider {
 
+    ARMv8_CPU_NAME("aarch64"),
     QEMU_AARCH64_GDB_TEMPLATE("org/specs/Arm/gdb/qemutmpl.gdb"),
     QEMU_AARCH64_BAREMETAL_DTB("org/specs/Arm/qemu/zcu102-arm.dtb"),
     AARCH64_GCC("aarch64-none-elf-gcc"),

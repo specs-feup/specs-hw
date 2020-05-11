@@ -4,9 +4,7 @@ import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
 
 import org.specs.Arm.parsing.ArmAsmField;
 
-import pt.up.fe.specs.binarytranslation.instruction.AOperand;
-import pt.up.fe.specs.binarytranslation.instruction.AOperandProperties;
-import pt.up.fe.specs.binarytranslation.instruction.OperandProperties;
+import pt.up.fe.specs.binarytranslation.instruction.*;
 
 public class ArmOperand extends AOperand {
 
@@ -123,6 +121,15 @@ public class ArmOperand extends AOperand {
     public static ArmOperand newSubOperation(ArmAsmField field, String value, int width) {
         var props = new AOperandProperties(field, "", "", width, SUBOPERATION);
         return new ArmOperand(props, value);
+    }
+
+    /*
+     * Special PSTATE Register (can only be an output)
+     * (see C6.1.4 to check which instructions write to the PSTATE register)
+     */
+    public static ArmOperand newPSTATERegister(OperandType rw) {
+        var props = new AOperandProperties(ArmAsmField.IMPLICIT, "[", "]", 4, REGISTER, SPECIAL, rw);
+        return new ArmOperand(props, "nzvc");
     }
 
     /*
