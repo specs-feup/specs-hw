@@ -3,15 +3,10 @@ package org.specs.Arm.asm;
 import java.io.*;
 
 import org.junit.Test;
-import org.specs.Arm.stream.ArmElfStream;
-import org.specs.Arm.stream.ArmTraceStream;
+import org.specs.Arm.stream.*;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.*;
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.util.SpecsIo;
 
@@ -27,13 +22,14 @@ public class ArmBinarySegmentGraphTester {
         return fd;
     }
 
-    private void getSegments(SegmentDetector bbd) {
+    private BinarySegmentGraph convertSegmentToGraph(BinarySegment seg) {
+        return BinarySegmentGraph.newInstance(seg);
+    }
 
-        var bundle = bbd.detectSegments();
-
+    private void convertBundleToGraph(SegmentBundle bund) {
         int safetycounter = 0; // to prevent lots of printing (just for testing purposes)
-        for (BinarySegment seg : bundle.getSegments()) {
-            var graph0 = BinarySegmentGraph.newInstance(seg);
+        for (BinarySegment seg : bund.getSegments()) {
+            var graph0 = convertSegmentToGraph(seg);
             if (safetycounter < 50) {
                 if (graph0.getCpl() >= 2 && graph0.getSegment().getContexts().size() >= 1) {
 
@@ -43,6 +39,40 @@ public class ArmBinarySegmentGraphTester {
             }
         }
     }
+
+    private void getSegments(SegmentDetector bbd) {
+        var bundle = bbd.detectSegments();
+        convertBundleToGraph(bundle);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    private SegmentBundle testDeserializeBundle(String filename) {
+
+        SegmentBundle bund = null;
+        try {
+            bund = SegmentBundle.serializeFromFile(filename);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bund;
+    }
+
+    @Test
+    public void testGraphFromBundle() {
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/bundles/cholesky.txt_aarch64_20200508.bundle");
+        fd.deleteOnExit();
+
+        var bund = testDeserializeBundle(fd.getAbsolutePath());
+        var segs = bund.getSegments(data -> data.getSegmentLength() > 30);
+        for (var seg : segs) {
+            convertSegmentToGraph(seg).generateOutput();
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
 
     @Test
     public void testStaticFrequentSequence() {

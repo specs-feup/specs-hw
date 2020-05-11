@@ -47,7 +47,10 @@ public enum ArmAsmField implements AsmField {
     IMML("imml"),
     IMMH("immh"),
     IMMR("immr"),
-    IMMS("imms");
+    IMMS("imms"),
+    IMPLICIT("implicit"); // special field name for destination
+                          // operands that are implicit to the instruction,
+                          // e.g. PSTATE register (aka NZVC)
 
     private String fieldName;
 

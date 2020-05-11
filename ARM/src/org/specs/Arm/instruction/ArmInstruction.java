@@ -90,7 +90,7 @@ public class ArmInstruction extends AInstruction {
             else if (this.getData().getGenericTypes().contains(InstructionType.G_AJUMP))
                 return branchTarget;
         }
-        return 4; // if not a jump, just jumps to next instruction
+        return null; // if not a jump, just jumps to next instruction
         // TODO either replace this with empty, or replace with getInstructionWidth
     }
     // TODO promote this into AInstruction??

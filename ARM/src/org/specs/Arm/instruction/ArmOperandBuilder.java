@@ -1,12 +1,10 @@
 package org.specs.Arm.instruction;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.specs.Arm.parsing.ArmAsmField;
 
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.*;
 
 /*
  * this class only exists to provide a shorthandle to the providers
@@ -87,5 +85,13 @@ public class ArmOperandBuilder {
 
     public Operand newSubOperation(ArmAsmField field, String value, int wd) {
         return ArmOperand.newSubOperation(field, value, wd);
+    }
+
+    public Operand newWritePSTATERegister() {
+        return ArmOperand.newPSTATERegister(OperandType.WRITE);
+    }
+
+    public Operand newReadPSTATERegister() {
+        return ArmOperand.newPSTATERegister(OperandType.READ);
     }
 }

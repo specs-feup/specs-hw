@@ -16,6 +16,7 @@ public class ArmElfStream extends AStaticInstructionStream {
 
     public ArmElfStream(File elfname) {
         super(elfname, OBJDUMP_EXE);
+        this.cpuArchitectureName = ArmResource.ARMv8_CPU_NAME.getResource();
         this.appName = elfname.getName();
         this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
                 ArmResource.AARCH64_READELF.getResource());
