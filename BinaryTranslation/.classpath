@@ -9,8 +9,8 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/XStreamPlus"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/SpecsUtils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jOptions"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SpecsUtils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/XStreamPlus"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
