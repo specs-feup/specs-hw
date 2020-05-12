@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.specs.Arm.ArmResource;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
@@ -21,10 +22,10 @@ public class ArmTraceStream extends ATraceInstructionStream {
         super(elfname, ArmResource.QEMU_AARCH64_GDB_TEMPLATE, GDB_EXE,
                 ArmResource.QEMU_AARCH64_BAREMETAL_DTB, QEMU_EXE);
 
-        this.cpuArchitectureName = ArmResource.ARMv8_CPU_NAME.getResource();
-        this.appName = elfname.getName();
-        this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
-                ArmResource.AARCH64_READELF.getResource());
+        this.appInfo = new ApplicationInformation(
+                ArmResource.ARMv8_CPU_NAME.getResource(), elfname.getName(),
+                BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
+                        ArmResource.AARCH64_READELF.getResource()));
     }
 
     @Override

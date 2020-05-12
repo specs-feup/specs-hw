@@ -7,7 +7,7 @@ import org.specs.Arm.stream.*;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.*;
-import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graphs.*;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class ArmBinarySegmentGraphTester {
@@ -16,8 +16,8 @@ public class ArmBinarySegmentGraphTester {
         // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/matmul.elf");
         // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.elf");
 
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.txt");
-        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky_trace.txt");
+        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky_trace.txt");
         fd.deleteOnExit();
         return fd;
     }
@@ -32,7 +32,6 @@ public class ArmBinarySegmentGraphTester {
             var graph0 = convertSegmentToGraph(seg);
             if (safetycounter < 50) {
                 if (graph0.getCpl() >= 2 && graph0.getSegment().getContexts().size() >= 1) {
-
                     graph0.generateOutput();
                     safetycounter++;
                 }
@@ -42,7 +41,8 @@ public class ArmBinarySegmentGraphTester {
 
     private void getSegments(SegmentDetector bbd) {
         var bundle = bbd.detectSegments();
-        convertBundleToGraph(bundle);
+        var graphbundle = GraphBundle.newInstance(bundle);
+        graphbundle.generateOutput();
     }
 
     ///////////////////////////////////////////////////////////////////////////
