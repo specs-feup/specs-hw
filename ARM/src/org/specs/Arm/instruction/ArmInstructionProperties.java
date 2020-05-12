@@ -484,6 +484,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     private ArmInstructionProperties(int opcode,
             ArmAsmFieldType mbtype, InstructionType... tp) {
         this(opcode, 1, 0, mbtype, Arrays.asList(tp));
+        this.instructionName = name();
     }
 
     /*
