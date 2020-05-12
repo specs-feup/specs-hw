@@ -170,8 +170,6 @@ public abstract class ABasicBlockDetector implements SegmentDetector {
 
             // Create the block
             var newbb = makeBasicBlock(symbolicseq, contexts);
-            newbb.setAppName(this.istream.getApplicationName());
-            newbb.setCompilationFlags(this.istream.getCompilationInfo());
 
             // Add to return list
             loops.add(newbb);

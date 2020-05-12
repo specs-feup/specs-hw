@@ -93,14 +93,4 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
     default void close() {
         // Do nothing, do not throw Exception
     }
-
-    @Override
-    default String getApplicationName() {
-        throw new NotImplementedException(this);
-    }
-
-    @Override
-    default String getCompilationInfo() {
-        throw new NotImplementedException(this);
-    }
 }

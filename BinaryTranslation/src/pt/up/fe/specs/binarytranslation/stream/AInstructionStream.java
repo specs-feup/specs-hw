@@ -1,25 +1,21 @@
 package pt.up.fe.specs.binarytranslation.stream;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.concurrent.TimeUnit;
 
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 public abstract class AInstructionStream implements InstructionStream {
 
-    private final Process proc;
-    protected String appName;
-    protected String compilationInfo;
-    protected String cpuArchitectureName;
     protected long numinsts;
     protected long numcycles;
+    private final Process proc;
     protected final LineStream insts;
+    protected ApplicationInformation appInfo;
 
     public AInstructionStream(ProcessBuilder builder) {
-
         this.proc = AInstructionStream.newStreamGenerator(builder);
         this.insts = AInstructionStream.newLineStream(proc);
         this.numinsts = 0;
@@ -86,18 +82,8 @@ public abstract class AInstructionStream implements InstructionStream {
     }
 
     @Override
-    public String getApplicationName() {
-        return this.appName;
-    }
-
-    @Override
-    public String getCompilationInfo() {
-        return this.compilationInfo;
-    }
-
-    @Override
-    public String getCpuArchitecture() {
-        return this.cpuArchitectureName;
+    public ApplicationInformation getApplicationInformation() {
+        return appInfo;
     }
 
     @Override

@@ -2,16 +2,22 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public abstract class ABasicBlock extends ABinarySegment {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2615607635750210706L;
+
     /*
      * Constructor builds the BB on the spot with an existing list
      */
-    public ABasicBlock(List<Instruction> ilist, List<SegmentContext> contexts) {
-        this.instlist = ilist;
-        this.contexts = contexts;
+    public ABasicBlock(List<Instruction> ilist,
+            List<SegmentContext> contexts, ApplicationInformation appinfo) {
+        super(ilist, contexts, appinfo);
     }
 
     @Override
