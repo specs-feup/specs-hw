@@ -36,6 +36,7 @@ public class FrequentTraceSequenceDetector extends AFrequentSequenceDetector {
     }
 
     protected BinarySegment makeFrequentSequence(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
-        return new FrequentTraceSequence(symbolicseq, contexts);
+        return new FrequentTraceSequence(symbolicseq,
+                contexts, this.istream.getApplicationInformation());
     }
 }

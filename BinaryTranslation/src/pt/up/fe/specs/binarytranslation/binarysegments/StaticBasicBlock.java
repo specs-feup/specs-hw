@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 import java.util.Arrays;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -25,16 +26,23 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  */
 public class StaticBasicBlock extends ABasicBlock {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8885262487137930693L;
+
     /*
      * 
      */
-    public StaticBasicBlock(List<Instruction> ilist, List<SegmentContext> contexts) {
-        super(ilist, contexts);
+    public StaticBasicBlock(List<Instruction> ilist,
+            List<SegmentContext> contexts, ApplicationInformation appinfo) {
+        super(ilist, contexts, appinfo);
         this.segtype = BinarySegmentType.STATIC_BASIC_BLOCK;
     }
 
-    public StaticBasicBlock(List<Instruction> ilist, SegmentContext context) {
-        super(ilist, Arrays.asList(context));
+    public StaticBasicBlock(List<Instruction> ilist,
+            SegmentContext context, ApplicationInformation appinfo) {
+        super(ilist, Arrays.asList(context), appinfo);
         this.segtype = BinarySegmentType.STATIC_BASIC_BLOCK;
     }
 }

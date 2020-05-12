@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -25,16 +26,21 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  */
 public class FrequentStaticSequence extends AFrequentSequence {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -9078068719313215363L;
+
     private List<Integer> startAddresses;
     // list of addresses in the ELF where this sequence happens
 
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
-    public FrequentStaticSequence(List<Instruction> ilist, List<SegmentContext> contexts) {
-        super(ilist, contexts);
+    public FrequentStaticSequence(List<Instruction> ilist,
+            List<SegmentContext> contexts, ApplicationInformation appinfo) {
+        super(ilist, contexts, appinfo);
         this.segtype = BinarySegmentType.STATIC_FREQUENT_SEQUENCE;
-
         this.startAddresses = new ArrayList<Integer>();
         for (SegmentContext context : contexts)
             this.startAddresses.add(context.getStartaddresses());

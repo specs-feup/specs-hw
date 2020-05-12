@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Predicate;
 
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream.InstructionStreamType;
@@ -23,11 +24,9 @@ public class SegmentBundle implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    private Date date;
-    private String appName;
-    private String compilationFlags;
-    private String cpuArchitecture;
-    private List<BinarySegment> segments;
+    private final Date date;
+    private final ApplicationInformation appinfo;
+    private final List<BinarySegment> segments;
 
     // stats from the stream
     private long totalCycles;
@@ -36,9 +35,7 @@ public class SegmentBundle implements Serializable {
 
     public SegmentBundle(List<BinarySegment> segments, InstructionStream istream) {
 
-        this.appName = istream.getApplicationName();
-        this.compilationFlags = istream.getCompilationInfo();
-        this.cpuArchitecture = istream.getCpuArchitecture();
+        this.appinfo = istream.getApplicationInformation();
         this.segments = segments;
         this.date = new Date(System.currentTimeMillis());
         this.totalCycles = istream.getCycles();
@@ -62,8 +59,8 @@ public class SegmentBundle implements Serializable {
      */
     public String getSummary() {
         return "Bundle Summary: \n" +
-                "Application: " + this.appName + "\n" +
-                "Architecture: " + this.cpuArchitecture + "\n" +
+                "Application: " + this.appinfo.getAppName() + "\n" +
+                "Architecture: " + this.appinfo.getCpuArchitectureName() + "\n" +
                 "Stream type: " + this.itype + "\n" +
                 "Segment Type:" + this.segments.get(0).getSegmentType() + "\n" +
                 "Num segments: " + this.segments.size() + "\n";
@@ -89,22 +86,13 @@ public class SegmentBundle implements Serializable {
         return list;
     }
 
-    public String getCompilationFlags() {
-        return compilationFlags;
-    }
-
-    public String getAppName() {
-        return appName;
+    public ApplicationInformation getApplicationInformation() {
+        return this.appinfo;
     }
 
     public Date getDate() {
         return date;
     }
-
-    /*
-    public BinarySegment getSegment(Integer addr) {
-        
-    }*/
 
     // TODO methods that can compute the coverage and/or acceleration only for a filtered set of this bundle
     // look up what kind of java trickery can be used to do this
@@ -142,8 +130,8 @@ public class SegmentBundle implements Serializable {
         f.mkdirs();
 
         String date = new SimpleDateFormat("yyyyMMdd").format(this.date);
-        this.serializeToFile("./output/bundles/" + this.appName + "_"
-                + this.cpuArchitecture + "_" + date + ".bundle");
+        this.serializeToFile("./output/bundles/" + this.appinfo.getAppName() + "_"
+                + this.appinfo.getCpuArchitectureName() + "_" + date + ".bundle");
     }
 
     /*

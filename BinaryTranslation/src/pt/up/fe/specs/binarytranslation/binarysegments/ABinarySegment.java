@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 import java.io.Serializable;
 import java.util.*;
 
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -30,19 +31,18 @@ public abstract class ABinarySegment implements BinarySegment, Serializable {
      */
     private static final long serialVersionUID = 2260035887787499004L;
 
-    // TODO: move these 2 things to a future BinaryApplication class, or something
-    protected String appName;
-    protected String compilationFlags;
-
+    protected ApplicationInformation appinfo;
     protected BinarySegmentType segtype;
     protected List<Instruction> instlist;
     protected List<SegmentContext> contexts;
-
     protected float staticCoverage;
     protected float dynamicCoverage;
 
-    protected ABinarySegment() {
-        this.instlist = new ArrayList<Instruction>();
+    protected ABinarySegment(List<Instruction> ilist,
+            List<SegmentContext> contexts, ApplicationInformation appinfo) {
+        this.instlist = ilist;
+        this.appinfo = appinfo;
+        this.contexts = contexts;
     }
 
     /*
@@ -62,6 +62,10 @@ public abstract class ABinarySegment implements BinarySegment, Serializable {
 
     public List<SegmentContext> getContexts() {
         return contexts;
+    }
+
+    public ApplicationInformation getAppinfo() {
+        return appinfo;
     }
 
     /*
@@ -112,24 +116,5 @@ public abstract class ABinarySegment implements BinarySegment, Serializable {
     public void printSegment() {
         System.out.print(this.getRepresentation());
         return;
-    }
-
-    /*
-     * TODO: move this to SegmentBundle
-     */
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-
-    public void setCompilationFlags(String compilationFlags) {
-        this.compilationFlags = compilationFlags;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public String getCompilationFlags() {
-        return compilationFlags;
     }
 }

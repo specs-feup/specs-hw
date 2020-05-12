@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.stream;
 
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -43,20 +44,9 @@ public interface InstructionStream extends AutoCloseable {
 
     /**
      * 
-     * @return The name of the application connected to the stream (i.e., filename)
+     * @return The final {@ApplicationInformation} object containing appname, compile info, and cpu architecture
      */
-    public String getApplicationName();
-
-    /**
-     * @return Compilation flags from file being processed, if available (i.e., if ELF file)
-     */
-    public String getCompilationInfo();
-
-    /**
-     * 
-     * @return Processor architecture of this stream
-     */
-    public String getCpuArchitecture();
+    public ApplicationInformation getApplicationInformation();
 
     /**
      * 

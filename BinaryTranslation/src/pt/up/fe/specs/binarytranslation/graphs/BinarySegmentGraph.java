@@ -13,31 +13,10 @@
 
 package pt.up.fe.specs.binarytranslation.graphs;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
-import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.util.SpecsIo;
-import pt.up.fe.specs.util.providers.ResourceProvider;
-import pt.up.fe.specs.util.utilities.Replacer;
 
 /**
  * This class represents a binary segment as a graph, by hosting the instructions of the segment as the data transported
@@ -148,6 +127,13 @@ public class BinarySegmentGraph {
     }
 
     /*
+     * Type
+     */
+    public BinarySegmentGraphType getType() {
+        return type;
+    }
+
+    /*
      * Get originating segment
      */
     public BinarySegment getSegment() {
@@ -166,6 +152,48 @@ public class BinarySegmentGraph {
      */
     public float getEstimatedIPC() {
         return estimatedIPC;
+    }
+
+    /*
+     * 
+     */
+    public Set<String> getLiveins() {
+        return liveins;
+    }
+
+    /*
+     * 
+     */
+    public Set<String> getLiveouts() {
+        return liveouts;
+    }
+
+    /*
+     * 
+     */
+    public List<GraphNode> getNodes() {
+        return nodes;
+    }
+
+    /*
+     * 
+     */
+    public int getNumLoads() {
+        return this.numloads;
+    }
+
+    /*
+     * 
+     */
+    public int getNumStores() {
+        return numstores;
+    }
+
+    /*
+     * 
+     */
+    public int getMaxwidth() {
+        return maxwidth;
     }
 
     /*
@@ -271,206 +299,21 @@ public class BinarySegmentGraph {
      * Tester function to print this graph as a dotty, into the console
      */
     public void printDotty() {
-        this.printDotty(System.out);
+        BinarySegmentGraphUtils.generateDotty(this, System.out);
     }
 
     /*
-     * Print dotty representation to file
-     */
-    public void printDotty(String filename) {
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(filename);
-            this.printDotty(fos);
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        try {
-            fos.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    /*
-     * Write to a given output stream (file or stdio)
-     */
-    private void printDotty(OutputStream os) {
-
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
-        try {
-            bw.write("digraph G {\n\n");
-
-            bw.write("graph [ dpi = 72, nodesep=\"0.1\" ];\n");
-            bw.write("bgcolor=\"#ffffff00\";\n\n");
-
-            // livein nodes
-            bw.write("{ rank = source;\n");
-            for (String s : this.liveins) {
-                bw.write("\t\"in_" + s
-                        + "\"[shape = box, fillcolor=\"#8080ff\", style=filled, label=\"" + s
-                        + "\"];\n");
-            }
-            bw.write("}\n");
-
-            bw.write("{ rank = sink;\n");
-            // liveout nodes
-            for (String s : this.liveouts) {
-                bw.write("\t\"out_" + s
-                        + "\"[shape = box, fillcolor=\"#ff8080\", style=filled, label=\"" + s
-                        + "\"];\n");
-            }
-            bw.write("}\n");
-
-            bw.write("subgraph nodes {\n\tnode [style=filled, fillcolor=\"#ffffff\"];\n");
-            for (GraphNode n : this.nodes) {
-                bw.write(n.rawDotty());
-            }
-            bw.write("}\n");
-
-            for (int rank = 0; rank < this.cpl; rank++) {
-                bw.write("{ rank = same;\n");
-                for (GraphNode n : this.nodes) {
-                    if (n.getLevel() == rank)
-                        bw.write("\t\"" + n.getRepresentation() + "\"\n");
-                }
-                bw.write("}\n");
-            }
-            bw.write("}\n");
-            bw.flush();
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    /*
-     * Generatre a folder and output all relevant info for this graph into it
+     * Generate a folder and output all relevant info for this graph into it
+     * but use current working dir as parent directory
      */
     public void generateOutput() {
-
-        // output folder
-        var f = new File(this.getOutputFolder());
-        f.mkdirs();
-
-        // generate dotty
-        // String dotfilename = foldername + "/" + "graph_" + Integer.toString(seg.hashCode()) + ".dot";
-        this.printDotty(this.getOutputFolder() + "/" + this.getDotFilename());
-
-        // render dotty
-        this.renderDotty();
-
-        // generate HTML summary
-        this.printHTML();
-
-        return;
+        generateOutput(null);
     }
 
     /*
-     * 
+     * Generate a folder and output all relevant info for this graph into it
      */
-    private void renderDotty() {
-
-        // render dotty
-        var arguments = Arrays.asList(BinaryTranslationResource.DOTTY_BINARY.getResource(),
-                "-Tpng", this.getOutputFolder() + "/" + this.getDotFilename(),
-                "-o", this.getOutputFolder() + "/" + this.getBitmapFilename());
-        ProcessBuilder pb = new ProcessBuilder(arguments);
-
-        // dot -Tps filename.dot -o outfile.ps
-        Process proc = null;
-        try {
-            pb.directory(new File("."));
-            pb.redirectErrorStream(true); // redirects stderr to stdout
-            proc = pb.start();
-
-        } catch (IOException e) {
-            throw new RuntimeException("Could not run process bin with name: " + proc);
-        }
-
-        try {
-            proc.waitFor();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    /*
-     * 
-     */
-    private void printHTML() {
-
-        ResourceProvider htmltmpl = BinaryTranslationResource.GRAPH_HTML_TEMPLATE;
-        var htmlplage = new Replacer(htmltmpl);
-
-        // Summary
-        htmlplage.replace("<SEGMENTTYPE>", this.type.toString());
-        htmlplage.replace("<NUMNODES>", Integer.toString(this.numnodes));
-        htmlplage.replace("<NUMREADS>", Integer.toString(this.numloads));
-        htmlplage.replace("<NUMWRITES>", Integer.toString(this.numstores));
-        htmlplage.replace("<MAXILP>", Integer.toString(this.maxwidth));
-        htmlplage.replace("<CPL>", Integer.toString(this.cpl));
-        htmlplage.replace("<STATICCOVERAGE>", Float.toString(this.seg.getStaticCoverage()));
-        htmlplage.replace("<DYNAMICCOVERAGE>", Float.toString(this.seg.getDynamicCoverage()));
-        htmlplage.replace("<INITIATIONINTERVAL>",
-                (this.type == BinarySegmentGraphType.cyclical) ? this.initiationInterval : "N/A");
-        htmlplage.replace("<IPC>", Float.toString(this.estimatedIPC));
-
-        // Program info
-        htmlplage.replace("<APPNAME>", this.seg.getAppName());
-
-        var compileinfo = this.seg.getCompilationFlags();
-        compileinfo.replace(" -", "<br>-");
-        htmlplage.replace("<COMPILEINFO>", compileinfo);
-
-        // Segment dump
-        var segtext = this.seg.getRepresentation();
-        htmlplage.replace("<SEGMENT>",
-                segtext.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
-
-        // Contexts
-        var contextString = "";
-        for (SegmentContext context : this.seg.getContexts()) {
-            contextString += context.getRepresentation() + "\n\n";
-        }
-        htmlplage.replace("<CONTEXTS>",
-                contextString.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
-
-        // Graph
-        htmlplage.replace("<IMAGEFILE>", this.getBitmapFilename());
-
-        // git commit
-        htmlplage.replace("<GITDESCRIPTION>", BinaryTranslationUtils.getCommitDescription());
-
-        // date of generation
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-        htmlplage.replace("<GENERATIONDATE>", formatter.format(new Date(System.currentTimeMillis())));
-
-        // write to file
-        String filename = this.getOutputFolder() + "/" + this.getHTMLFilename();
-        SpecsIo.write(new File(filename), htmlplage.toString());
-    }
-
-    private String getOutputFolder() {
-        var foldername = this.seg.getAppName();
-        foldername = foldername.substring(0, foldername.lastIndexOf('.'));
-        return "./output/" + foldername + "/graph_" + Integer.toString(this.hashCode());
-    }
-
-    private String getHTMLFilename() {
-        return "graph_" + Integer.toString(seg.hashCode()) + ".html";
-    }
-
-    private String getDotFilename() {
-        return "graph_" + Integer.toString(seg.hashCode()) + ".dot";
-    }
-
-    private String getBitmapFilename() {
-        return this.getDotFilename().replaceFirst(".dot", ".png");
+    public void generateOutput(String parentfolder) {
+        BinarySegmentGraphUtils.generateOutput(this, parentfolder);
     }
 }

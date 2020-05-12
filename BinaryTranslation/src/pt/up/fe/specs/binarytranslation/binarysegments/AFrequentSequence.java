@@ -2,17 +2,22 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public abstract class AFrequentSequence extends ABinarySegment {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3528223632861256L;
+
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
-    protected AFrequentSequence(List<Instruction> ilist, List<SegmentContext> contexts) {
-        super();
-        this.instlist = ilist;
-        this.contexts = contexts;
+    protected AFrequentSequence(List<Instruction> ilist,
+            List<SegmentContext> contexts, ApplicationInformation appinfo) {
+        super(ilist, contexts, appinfo);
     }
 
     /*

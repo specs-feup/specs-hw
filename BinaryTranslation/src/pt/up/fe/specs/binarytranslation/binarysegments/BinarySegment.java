@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 import java.io.Serializable;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -43,6 +44,11 @@ public interface BinarySegment {
     /*
      * 
      */
+    public ApplicationInformation getAppinfo();
+
+    /*
+     * 
+     */
     void setStaticCoverage(float scoverage);
 
     /*
@@ -64,26 +70,6 @@ public interface BinarySegment {
      * Number of instructions in the segment
      */
     int getSegmentLength();
-
-    /*
-     * 
-     */
-    public void setAppName(String appName);
-
-    /*
-     * 
-     */
-    public void setCompilationFlags(String compilationFlags);
-
-    /*
-     * 
-     */
-    public String getAppName();
-
-    /*
-     * 
-     */
-    public String getCompilationFlags();
 
     /*
      * 

@@ -27,7 +27,7 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     /*
      * An open instruction stream, either from elf dump, or simulator
      */
-    private InstructionStream istream;
+    protected InstructionStream istream;
 
     /*
      * Stuff for statistics (TODO: add more) 
@@ -44,8 +44,8 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     /*
      * min and max size of windows 
      */
-    protected final int minsize = 4;
-    protected final int maxsize = 20;
+    private final int minsize = 4;
+    private final int maxsize = 20;
 
     /*
      * This map holds all hashed sequences for all instruction windows we analyze
@@ -167,8 +167,6 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
 
             // make the frequent sequence
             var newseq = makeFrequentSequence(symbolicseq, contexts);
-            newseq.setAppName(this.istream.getApplicationName());
-            newseq.setCompilationFlags(this.istream.getCompilationInfo());
             this.allsequences.add(newseq);
         }
     }

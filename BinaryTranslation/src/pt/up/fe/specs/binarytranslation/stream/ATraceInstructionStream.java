@@ -19,7 +19,6 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
 
         super(ATraceInstructionStream.getProperProcess(elfname,
                 gdbtmpl, gdbexe, dtbfile, qemuexe));
-        this.appName = elfname.getName();
     }
 
     /*
