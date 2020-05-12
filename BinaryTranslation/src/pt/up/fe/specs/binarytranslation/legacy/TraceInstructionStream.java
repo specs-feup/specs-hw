@@ -15,6 +15,7 @@ package pt.up.fe.specs.binarytranslation.legacy;
 
 import java.io.Closeable;
 
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.util.asm.processor.RegisterTable;
@@ -96,5 +97,10 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
     @Override
     default void close() {
         // Do nothing, do not throw Exception
+    }
+
+    @Override
+    default ApplicationInformation getApplicationInformation() {
+        throw new NotImplementedException(this);
     }
 }
