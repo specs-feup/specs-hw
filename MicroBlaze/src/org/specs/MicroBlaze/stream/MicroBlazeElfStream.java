@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.specs.MicroBlaze.MicroBlazeResource;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
 
@@ -16,10 +17,10 @@ public class MicroBlazeElfStream extends AStaticInstructionStream {
 
     public MicroBlazeElfStream(File elfname) {
         super(elfname, OBJDUMP_EXE);
-        this.cpuArchitectureName = MicroBlazeResource.MICROBLAZE_CPU_NAME.getResource();
-        this.appName = elfname.getName();
-        this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
-                MicroBlazeResource.MICROBLAZE_READELF.getResource());
+        this.appInfo = new ApplicationInformation(
+                MicroBlazeResource.MICROBLAZE_CPU_NAME.getResource(), elfname.getName(),
+                BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
+                        MicroBlazeResource.MICROBLAZE_READELF.getResource()));
     }
 
     @Override

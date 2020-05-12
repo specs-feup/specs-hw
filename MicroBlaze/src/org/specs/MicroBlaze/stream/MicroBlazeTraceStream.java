@@ -9,6 +9,7 @@ import org.specs.MicroBlaze.MicroBlazeResource;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
+import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 import pt.up.fe.specs.util.*;
@@ -30,10 +31,10 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         super(elfname, MicroBlazeResource.QEMU_MICROBLAZE_GDB_TEMPLATE,
                 GDB_EXE, MicroBlazeResource.QEMU_MICROBLAZE_BAREMETAL_DTB, QEMU_EXE);
 
-        this.cpuArchitectureName = MicroBlazeResource.MICROBLAZE_CPU_NAME.getResource();
-        this.appName = elfname.getName();
-        this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
-                MicroBlazeResource.MICROBLAZE_READELF.getResource());
+        this.appInfo = new ApplicationInformation(
+                MicroBlazeResource.MICROBLAZE_CPU_NAME.getResource(), elfname.getName(),
+                BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
+                        MicroBlazeResource.MICROBLAZE_READELF.getResource()));
 
         // Workaround for mb-gdb bug of stepping over
         // two instructions at once when it hits an "imm"
