@@ -33,17 +33,10 @@ public class Data {
         return name;
     }
 
-    private String getRange(int rangesize) {
-        if (rangesize == 1)
-            return "";
-        else
-            return " [ " + Integer.toString(rangesize - 1) + " : 0 ]";
-    }
-
     public String represent() {
         return this.type.getTypeName() +
-                this.getRange(this.type.getTypeUnpackedSize()) + " "
-                + this.name + this.getRange(this.type.getTypePackedSize());
+                this.type.getRange(this.type.getTypeUnpackedSize()) + " "
+                + this.name + this.type.getRange(this.type.getTypePackedSize());
     }
 
     public String declare() {

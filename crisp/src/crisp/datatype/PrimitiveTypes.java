@@ -36,6 +36,11 @@ public enum PrimitiveTypes implements DataType {
     }
 
     @Override
+    public String define() {
+        return this.typename.toString();
+    }
+
+    @Override
     public TypeQualifier getQualifier() {
         return qualifier;
     }
