@@ -26,4 +26,12 @@ public interface DataType {
     default public int getTypeUnpackedSize() {
         return 1;
     }
+
+    default public String define() {
+        return "";
+    };
+
+    default String getRange(int rangesize) {
+        return "";
+    }
 }

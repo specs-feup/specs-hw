@@ -19,18 +19,12 @@ import crisp.data.Data;
 
 public class Struct extends ADataType {
 
-    String structname;
     private final Map<String, DataType> data;
 
     public Struct(String structname, HashMap<String, DataType> map) {
+        super(structname);
         this.data = map;
-        this.structname = structname;
         this.qualifier = TypeQualifier.struct;
-    }
-
-    @Override
-    public String getTypeName() {
-        return this.structname;
     }
 
     public Map<String, DataType> getFields() {
@@ -39,5 +33,20 @@ public class Struct extends ADataType {
 
     public DataType getField(String name) {
         return this.data.get(name);
+    }
+
+    @Override
+    public String getTypeName() {
+        return "struct " + super.getTypeName();
+    }
+
+    @Override
+    public String define() {
+        String ret = this.qualifier.toString() + " " + this.getTypeName() + " {\n";
+        for (String name : this.data.keySet()) {
+            ret += "\t" + this.data.get(name).define() + " " + name + ";\n";
+        }
+        ret += "};\n";
+        return ret;
     }
 }

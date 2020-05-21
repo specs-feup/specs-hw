@@ -15,22 +15,16 @@ package crisp.datatype;
 
 public class Typedef extends ADataType {
 
-    private String typename;
     private DataType basetype;
 
-    public Typedef(DataType type, String typename) {
+    public Typedef(String typename, DataType type) {
+        super(typename);
         this.basetype = type;
         this.qualifier = TypeQualifier.typedef;
-        this.typename = typename;
     }
 
     public DataType getDefinedType() {
         return this.basetype;
-    }
-
-    @Override
-    public String getTypeName() {
-        return this.typename;
     }
 
     @Override
@@ -41,5 +35,10 @@ public class Typedef extends ADataType {
     @Override
     public int getTypeUnpackedSize() {
         return 1;
+    }
+
+    @Override
+    public String define() {
+        return "typedef " + this.basetype.define() + " " + this.typename + ";";
     }
 }

@@ -13,6 +13,8 @@
 
 package crisp;
 
+import java.util.HashMap;
+
 import org.junit.Test;
 
 import crisp.data.Data;
@@ -23,33 +25,68 @@ public class TestPortDataTypes {
 
     @Test
     public void test() {
-        /*
-        var dtype1 = new ADataType(PrimitiveTypes.logic, new int[] { 32, 4 });
+
+        var dtype1 = new DataArray(PrimitiveTypes.logic, new int[] { 32, 4 });
         var d1 = new Data(dtype1, "data1");
         System.out.println(d1.declare());
-        
-        var dtype2 = new ADataType(PrimitiveTypes.integer, new int[] { 32, 4 });
+
+        var dtype2 = new DataArray(PrimitiveTypes.integer, new int[] { 32, 4 });
         var d2 = new Data(dtype2, "data2");
         System.out.println(d2.declare());
-        
-        var t2 = new Typedef(new ADataType(PrimitiveTypes.logic, new int[] { 32, 1 }), "Data32");
-        var t3 = new ADataType(t2, new int[] { 1, 4 });
+
+        var t2 = new Typedef("data32", new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 }));
+        var t3 = new DataArray(t2, new int[] { 1, 4 });
         var d3 = new Data(t3, "data3");
-        System.out.println(d3.declare());*/
+        System.out.println(d3.declare());
+    }
+
+    @Test
+    public void testTypedef() {
+        var t2 = new Typedef("data32", new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 }));
+        System.out.println(t2.define());
+    }
+
+    @Test
+    public void testStructWithArrays() {
+        var map = new HashMap<String, DataType>();
+
+        var dtype = new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 });
+        map.put("operands", dtype);
+        map.put("results", dtype);
+        map.put("carrybit", PrimitiveTypes.logic);
+        var struct1 = new Struct("fuData", map);
+        System.out.println(struct1.define());
+
+        var data1 = new Data(struct1, "st1");
+        System.out.println(data1.declare());
+    }
+
+    @Test
+    public void testArrayOfStruct() {
+        var map = new HashMap<String, DataType>();
+        var dtype = new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 });
+        map.put("operands", dtype);
+        map.put("results", dtype);
+        map.put("carrybit", PrimitiveTypes.logic);
+        var struct1 = new Struct("fuData", map);
+        System.out.println(struct1.define());
+
+        var data1 = new Data(new DataArray(struct1, new int[] { 1, 1 }), "arr1");
+        System.out.println(data1.declare());
     }
 
     @Test
     public void testAdder32() {
-        /*
+
         var add1 = Adder.newInstance();
         add1.getDefinition();
-        
-        var add2 = Adder.newInstance(new ADataType(PrimitiveTypes.logic, new int[] { 32, 1 }));
+
+        var add2 = Adder.newInstance(new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 }));
         add2.getDefinition();
-        
-        var t1 = new Typedef(new ADataType(PrimitiveTypes.logic, new int[] { 32, 1 }), "Data32");
+
+        var t1 = new Typedef("data32", new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 }));
         var add3 = Adder.newInstance(t1);
-        add3.getDefinition();*/
+        add3.getDefinition();
     }
 
 }
