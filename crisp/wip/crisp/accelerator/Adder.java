@@ -11,17 +11,17 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package crisp.module;
+package crisp.accelerator;
 
 import crisp.data.Data;
 import crisp.datatype.*;
+import crisp.module.Module;
 import crisp.port.*;
 
 public class Adder extends Module {
 
     private Adder(String name, Port... ports) {
-        super(ports);
-        this.name = name;
+        super(name, ports);
     }
 
     public static Adder newInstance() {

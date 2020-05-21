@@ -41,7 +41,7 @@ public class Struct extends ADataType {
 
     @Override
     public String getTypeName() {
-        return "struct " + super.getTypeName();
+        return this.qualifier.toString() + " " + super.getTypeName();
     }
 
     @Override
