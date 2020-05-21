@@ -19,20 +19,24 @@ import crisp.data.Data;
 
 public class Struct extends ADataType {
 
-    private final Map<String, DataType> data;
+    private final List<Data> data;
 
-    public Struct(String structname, HashMap<String, DataType> map) {
+    public Struct(String structname, List<Data> map) {
         super(structname);
         this.data = map;
         this.qualifier = TypeQualifier.struct;
     }
 
-    public Map<String, DataType> getFields() {
+    public List<Data> getFields() {
         return this.data;
     }
 
-    public DataType getField(String name) {
-        return this.data.get(name);
+    public Data getField(String name) {
+        for (Data d : this.data) {
+            if (d.getName() == name)
+                return d;
+        }
+        return null;
     }
 
     @Override
@@ -42,11 +46,11 @@ public class Struct extends ADataType {
 
     @Override
     public String define() {
-        String ret = this.qualifier.toString() + " " + this.getTypeName() + " {\n";
-        for (String name : this.data.keySet()) {
-            ret += "\t" + this.data.get(name).define() + " " + name + ";\n";
+        String ret = this.getTypeName() + " {\n";
+        for (Data d : this.data) {
+            ret += "\t" + d.declare() + "\n";
         }
-        ret += "};\n";
+        ret += "}";
         return ret;
     }
 }

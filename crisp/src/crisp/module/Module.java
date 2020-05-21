@@ -54,6 +54,10 @@ public class Module {
         System.out.println(");");
         // (input fudata_input indat, output fudata_output outdat);");
 
+        // this.getBody();
+
+        System.out.println("endmodule\n");
+
         /*
         assign {outdat.carryBit, outdat.results[0]} = indat.operands[0] + indat.operands[1];
         assign outdat.results[1] = {'0, outdat.carryBit};

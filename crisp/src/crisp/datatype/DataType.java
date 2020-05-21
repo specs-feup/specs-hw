@@ -31,7 +31,11 @@ public interface DataType {
         return "";
     };
 
-    default String getRange(int rangesize) {
+    default public String getUnpackedRange() {
         return "";
-    }
+    };
+
+    default public String getPackedRange() {
+        return "";
+    };
 }
