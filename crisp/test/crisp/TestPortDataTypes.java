@@ -17,10 +17,9 @@ import java.util.*;
 
 import org.junit.Test;
 
-import crisp.accelerator.AcceleratorDataTypes;
+import crisp.accelerator.*;
 import crisp.data.Data;
 import crisp.datatype.*;
-import crisp.module.Adder;
 
 public class TestPortDataTypes {
 

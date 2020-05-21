@@ -19,7 +19,7 @@ import crisp.port.Port;
 
 public class Module {
 
-    String name;
+    private String name;
     final List<Port> ports;
 
     // TODO: ... a module may have other modules inside...

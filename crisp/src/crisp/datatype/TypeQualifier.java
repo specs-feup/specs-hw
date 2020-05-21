@@ -18,12 +18,16 @@ public enum TypeQualifier {
     primitive,
     struct,
     typedef,
-    svclass;
+    svclass("class");
 
     private String qualifier;
 
     private TypeQualifier() {
         this.qualifier = name();
+    }
+
+    private TypeQualifier(String name) {
+        this.qualifier = name;
     }
 
     public String getQualifier() {
