@@ -19,16 +19,25 @@ import crisp.data.Data;
 
 public class Struct extends ADataType {
 
-    private final Map<String, Data> data;
+    String structname;
+    private final Map<String, DataType> data;
 
-    public Struct(String typename, HashMap<String, Data> map) {
-        super(typename);
+    public Struct(String structname, HashMap<String, DataType> map) {
         this.data = map;
+        this.structname = structname;
         this.qualifier = TypeQualifier.struct;
     }
 
     @Override
     public String getTypeName() {
-        return this.typename;
+        return this.structname;
+    }
+
+    public Map<String, DataType> getFields() {
+        return this.data;
+    }
+
+    public DataType getField(String name) {
+        return this.data.get(name);
     }
 }

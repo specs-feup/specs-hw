@@ -18,4 +18,12 @@ public interface DataType {
     public String getTypeName();
 
     public TypeQualifier getQualifier();
+
+    default public int getTypePackedSize() {
+        return 1;
+    }
+
+    default public int getTypeUnpackedSize() {
+        return 1;
+    }
 }

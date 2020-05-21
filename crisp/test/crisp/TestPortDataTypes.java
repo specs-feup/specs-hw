@@ -17,24 +17,39 @@ import org.junit.Test;
 
 import crisp.data.Data;
 import crisp.datatype.*;
+import crisp.module.Adder;
 
 public class TestPortDataTypes {
 
     @Test
     public void test() {
-
-        var t1 = new Data(PrimitiveTypes.logic, "testdat", 32);
-        System.out.println(t1.declare());
-
-        var t2 = new Data(PrimitiveTypes.logic, "testdat", 32, 4);
-        System.out.println(t2.declare());
+        /*
+        var dtype1 = new ADataType(PrimitiveTypes.logic, new int[] { 32, 4 });
+        var d1 = new Data(dtype1, "data1");
+        System.out.println(d1.declare());
+        
+        var dtype2 = new ADataType(PrimitiveTypes.integer, new int[] { 32, 4 });
+        var d2 = new Data(dtype2, "data2");
+        System.out.println(d2.declare());
+        
+        var t2 = new Typedef(new ADataType(PrimitiveTypes.logic, new int[] { 32, 1 }), "Data32");
+        var t3 = new ADataType(t2, new int[] { 1, 4 });
+        var d3 = new Data(t3, "data3");
+        System.out.println(d3.declare());*/
     }
 
     @Test
-    public void testdata32() {
-
-        // var t1 = new Typedef("Data32", new Data("testdat", 32));
-        // System.out.println(t1.declare());
+    public void testAdder32() {
+        /*
+        var add1 = Adder.newInstance();
+        add1.getDefinition();
+        
+        var add2 = Adder.newInstance(new ADataType(PrimitiveTypes.logic, new int[] { 32, 1 }));
+        add2.getDefinition();
+        
+        var t1 = new Typedef(new ADataType(PrimitiveTypes.logic, new int[] { 32, 1 }), "Data32");
+        var add3 = Adder.newInstance(t1);
+        add3.getDefinition();*/
     }
 
 }
