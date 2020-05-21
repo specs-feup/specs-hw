@@ -19,7 +19,6 @@ import java.util.*;
 
 import pt.up.fe.specs.binarytranslation.*;
 import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
-import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
 
@@ -35,23 +34,72 @@ public class BinarySegmentGraphUtils {
         void apply(BinarySegmentGraph graph, OutputStream os);
     }
 
+    // quick hack fix
+    static String outputfolder;
+
     public static void generateOutput(BinarySegmentGraph graph, String parentfolder) {
 
         // output folder
-        String aux = null;
+        outputfolder = null;
         if (parentfolder != null)
-            aux = parentfolder + "/" + getOutputFolder(graph);
+            outputfolder = parentfolder;
         else
-            aux = "./output/" + getOutputFolder(graph);
+            outputfolder = "./output/";
 
-        var f = new File(aux);
+        var f = new File(getOutputFolder(graph));
         f.mkdirs();
 
         // generate dotty and render dotty
-        generateDotty(graph, aux + "/" + getDotFilename(graph));
+        generateDotty(graph, getDotPathname(graph));
 
         // generate HTML summary
-        generateHTML(graph, aux + "/" + getHTMLFilename(graph));
+        generateHTML(graph, getHTMLPathname(graph));
+    }
+
+    /*
+     * Return full path for output folder (includes upper most parent)
+     */
+    private static String getOutputFolder(BinarySegmentGraph graph) {
+        var foldername = graph.getSegment().getAppinfo().getAppName();
+        foldername = foldername.substring(0, foldername.lastIndexOf('.'));
+        return outputfolder + "/" + foldername + "/graph_"
+                + Integer.toString(graph.getSegment().hashCode());
+    }
+
+    /*
+     * Return full path for HTML file
+     */
+    private static String getHTMLPathname(BinarySegmentGraph graph) {
+        return getOutputFolder(graph) + "/graph_"
+                + Integer.toString(graph.getSegment().hashCode()) + ".html";
+    }
+
+    /*
+     * Return only the filename for DOT file
+     */
+    private static String getDotFilename(BinarySegmentGraph graph) {
+        return "graph_" + Integer.toString(graph.getSegment().hashCode()) + ".dot";
+    }
+
+    /*
+     * Return full path for dot file
+     */
+    private static String getDotPathname(BinarySegmentGraph graph) {
+        return getOutputFolder(graph) + "/" + getDotFilename(graph);
+    }
+
+    /*
+     * Return only the filename for PNG file
+     */
+    private static String getBitmapFilename(BinarySegmentGraph graph) {
+        return getDotFilename(graph).replaceFirst(".dot", ".png");
+    }
+
+    /*
+     * Return full path for PNG file
+     */
+    private static String getBitmapPathname(BinarySegmentGraph graph) {
+        return getDotPathname(graph).replaceFirst(".dot", ".png");
     }
 
     /*
@@ -77,24 +125,6 @@ public class BinarySegmentGraphUtils {
      */
     public static void generateDotty(BinarySegmentGraph graph, OutputStream os) {
         printDotty(graph, os);
-    }
-
-    private static String getOutputFolder(BinarySegmentGraph graph) {
-        var foldername = graph.getSegment().getAppinfo().getAppName();
-        foldername = foldername.substring(0, foldername.lastIndexOf('.'));
-        return foldername + "/graph_" + Integer.toString(graph.getSegment().hashCode());
-    }
-
-    private static String getHTMLFilename(BinarySegmentGraph graph) {
-        return "graph_" + Integer.toString(graph.getSegment().hashCode()) + ".html";
-    }
-
-    private static String getDotFilename(BinarySegmentGraph graph) {
-        return "graph_" + Integer.toString(graph.getSegment().hashCode()) + ".dot";
-    }
-
-    private static String getBitmapFilename(BinarySegmentGraph graph) {
-        return getDotFilename(graph).replaceFirst(".dot", ".png");
     }
 
     /*
@@ -165,6 +195,7 @@ public class BinarySegmentGraphUtils {
             }
             bw.write("}\n");
             bw.flush();
+            bw.close();
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -179,8 +210,7 @@ public class BinarySegmentGraphUtils {
 
         // render dotty
         var arguments = Arrays.asList(BinaryTranslationResource.DOTTY_BINARY.getResource(),
-                "-Tpng", getOutputFolder(graph) + "/" + getDotFilename(graph),
-                "-o", getOutputFolder(graph) + "/" + getBitmapFilename(graph));
+                "-Tpng", getDotPathname(graph), "-o", getBitmapPathname(graph));
 
         ProcessBuilder pb = new ProcessBuilder(arguments);
 
@@ -257,9 +287,12 @@ public class BinarySegmentGraphUtils {
         htmlplage.replace("<GENERATIONDATE>", formatter.format(new Date(System.currentTimeMillis())));
 
         // write to file
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
         try {
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
             bw.write(htmlplage.toString());
+            bw.flush();
+            bw.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
