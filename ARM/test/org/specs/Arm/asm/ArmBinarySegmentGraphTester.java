@@ -16,8 +16,8 @@ public class ArmBinarySegmentGraphTester {
         // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/matmul.elf");
         // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.elf");
 
-        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.txt");
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky_trace.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.txt");
+        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky_trace.txt");
         fd.deleteOnExit();
         return fd;
     }
@@ -42,7 +42,8 @@ public class ArmBinarySegmentGraphTester {
     private void getSegments(SegmentDetector bbd) {
         var bundle = bbd.detectSegments();
         var graphbundle = GraphBundle.newInstance(bundle);
-        graphbundle.generateOutput();
+        // graphbundle.generateOutput();
+        System.out.println(graphbundle.getAverageIPC());
     }
 
     ///////////////////////////////////////////////////////////////////////////
