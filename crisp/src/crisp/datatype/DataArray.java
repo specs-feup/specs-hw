@@ -50,18 +50,19 @@ public class DataArray extends ADataType {
     }
 
     @Override
-    public String getRange(int rangesize) {
-        if (rangesize == 1)
-            return "";
+    public String getPackedRange() {
+        if (this.packedsize == 1)
+            return super.getPackedRange();
+
         else
-            return " [ " + Integer.toString(rangesize - 1) + " : 0 ]";
+            return "[" + Integer.toString(this.getTypePackedSize()) + "]";
     }
 
     @Override
-    public String define() {
-        return this.type.getTypeName() + this.getRange(this.getTypeUnpackedSize())
-                + this.getRange(this.getTypePackedSize());
+    public String getUnpackedRange() {
+        if (this.unpackedsize == 1)
+            return super.getUnpackedRange();
 
-        // TODO: arrays dont need to be defined!
+        return " [" + Integer.toString(this.getTypeUnpackedSize() - 1) + ":" + "0]";
     }
 }

@@ -13,10 +13,11 @@
 
 package crisp;
 
-import java.util.HashMap;
+import java.util.*;
 
 import org.junit.Test;
 
+import crisp.accelerator.AcceleratorDataTypes;
 import crisp.data.Data;
 import crisp.datatype.*;
 import crisp.module.Adder;
@@ -48,12 +49,11 @@ public class TestPortDataTypes {
 
     @Test
     public void testStructWithArrays() {
-        var map = new HashMap<String, DataType>();
-
+        var map = new ArrayList<Data>();
         var dtype = new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 });
-        map.put("operands", dtype);
-        map.put("results", dtype);
-        map.put("carrybit", PrimitiveTypes.logic);
+        map.add(new Data(dtype, "operands"));
+        map.add(new Data(dtype, "results"));
+        map.add(new Data(PrimitiveTypes.logic, "carrybit"));
         var struct1 = new Struct("fuData", map);
         System.out.println(struct1.define());
 
@@ -63,15 +63,15 @@ public class TestPortDataTypes {
 
     @Test
     public void testArrayOfStruct() {
-        var map = new HashMap<String, DataType>();
+        var map = new ArrayList<Data>();
         var dtype = new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 });
-        map.put("operands", dtype);
-        map.put("results", dtype);
-        map.put("carrybit", PrimitiveTypes.logic);
+        map.add(new Data(dtype, "operands"));
+        map.add(new Data(dtype, "results"));
+        map.add(new Data(PrimitiveTypes.logic, "carrybit"));
         var struct1 = new Struct("fuData", map);
         System.out.println(struct1.define());
 
-        var data1 = new Data(new DataArray(struct1, new int[] { 1, 1 }), "arr1");
+        var data1 = new Data(new DataArray(struct1, new int[] { 1, 4 }), "arr1");
         System.out.println(data1.declare());
     }
 
@@ -87,6 +87,15 @@ public class TestPortDataTypes {
         var t1 = new Typedef("data32", new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 }));
         var add3 = Adder.newInstance(t1);
         add3.getDefinition();
+    }
+
+    @Test
+    public void testAcceleratorDatTypes() {
+        var testindat = AcceleratorDataTypes.FUInputData();
+        System.out.println(testindat.define());
+
+        var testoutdat = AcceleratorDataTypes.FUOutputData();
+        System.out.println(testoutdat.define());
     }
 
 }

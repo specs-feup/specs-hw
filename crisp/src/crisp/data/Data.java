@@ -34,9 +34,8 @@ public class Data {
     }
 
     public String represent() {
-        return this.type.getTypeName() +
-                this.type.getRange(this.type.getTypeUnpackedSize()) + " "
-                + this.name + this.type.getRange(this.type.getTypePackedSize());
+        return this.type.getTypeName() + this.type.getUnpackedRange()
+                + " " + this.name + this.type.getPackedRange();
     }
 
     public String declare() {
