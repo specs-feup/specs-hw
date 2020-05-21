@@ -14,6 +14,7 @@
 package crisp.module;
 
 import crisp.data.Data;
+import crisp.datatype.*;
 import crisp.port.*;
 
 public class Adder extends Module {
@@ -23,23 +24,17 @@ public class Adder extends Module {
         this.name = name;
     }
 
-    // public static Adder newInstance() {
-    // var p1 = new PlainPort(PortDirection.input, new Data("indat", 32));
-    // var p2 = new PlainPort(PortDirection.output, new Data("outdat", 32));
-    // return new Adder("adder", p1, p2);
-    // }
+    public static Adder newInstance() {
+        var p1 = new PlainPort(PortDirection.input, new Data(PrimitiveTypes.logic, "indat"));
+        var p2 = new PlainPort(PortDirection.output, new Data(PrimitiveTypes.logic, "oudat"));
+        return new Adder("adder", p1, p2);
+    }
 
-    /*
-    // static??
-    String getDefinition() {
-    
-        System.out.println("module adder(input fudata_input indat, output fudata_output outdat);");
-    
-        
-        assign {outdat.carryBit, outdat.results[0]} = indat.operands[0] + indat.operands[1];
-        assign outdat.results[1] = {'0, outdat.carryBit};
-                endmodule
-    }*/
+    public static Adder newInstance(DataType type) {
+        var p1 = new PlainPort(PortDirection.input, new Data(type, "indat"));
+        var p2 = new PlainPort(PortDirection.output, new Data(type, "oudat"));
+        return new Adder("adder", p1, p2);
+    }
 
     // method getInstantiation??
 }

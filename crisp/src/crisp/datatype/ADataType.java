@@ -16,15 +16,29 @@ package crisp.datatype;
 public abstract class ADataType implements DataType {
 
     protected TypeQualifier qualifier;
-    protected String typename;
+    protected int packedsize = 1, unpackedsize = 1;
 
-    public ADataType(String typename) {
-        this.typename = typename;
+    public ADataType() {
+    }
+
+    public ADataType(int sizes[]) {
+        this.unpackedsize = sizes[0];
+        this.packedsize = sizes[1];
+
+        // TODO exception if basestype already has a packed or unpacked size
+        //
+
+        // exception if packedsize on types which do not permit it
     }
 
     @Override
-    public String getTypeName() {
-        return this.typename;
+    public int getTypePackedSize() {
+        return this.packedsize;
+    }
+
+    @Override
+    public int getTypeUnpackedSize() {
+        return this.unpackedsize;
     }
 
     @Override

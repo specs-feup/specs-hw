@@ -19,21 +19,10 @@ public class Data {
 
     protected DataType type;
     protected String name;
-    protected int packedsize = 1, unpackedsize = 1;
 
     public Data(DataType type, String name) {
         this.name = name;
         this.type = type;
-    }
-
-    public Data(DataType type, String name, int unpackedsize) {
-        this(type, name);
-        this.unpackedsize = unpackedsize;
-    }
-
-    public Data(DataType type, String name, int unpackedsize, int packedsize) {
-        this(type, name, unpackedsize);
-        this.packedsize = packedsize;
     }
 
     public DataType getType() {
@@ -44,14 +33,6 @@ public class Data {
         return name;
     }
 
-    public int getPackedSize() {
-        return this.packedsize;
-    }
-
-    public int getUnpackedSize() {
-        return this.unpackedsize;
-    }
-
     private String getRange(int rangesize) {
         if (rangesize == 1)
             return "";
@@ -59,9 +40,13 @@ public class Data {
             return " [ " + Integer.toString(rangesize - 1) + " : 0 ]";
     }
 
-    public String declare() {
+    public String represent() {
         return this.type.getTypeName() +
-                this.getRange(this.unpackedsize) + " "
-                + this.name + this.getRange(this.packedsize) + ";";
+                this.getRange(this.type.getTypeUnpackedSize()) + " "
+                + this.name + this.getRange(this.type.getTypePackedSize());
+    }
+
+    public String declare() {
+        return this.represent() + ";";
     }
 }
