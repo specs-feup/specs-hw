@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.graphs;
 import java.util.*;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.graphs.edge.*;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -37,9 +38,11 @@ public class BinarySegmentGraph {
     BinarySegment seg;
     List<GraphNode> nodes;
 
-    // representation strings of liveins and liveouts; computed after graph is resolved
-    Set<String> liveins;
-    Set<String> liveouts;
+    // references to the node inputs/outputs which
+    // are top/bottom level on this graph
+    // i.e., liveins and liveouts
+    private Set<GraphInput> liveins;
+    private Set<GraphOutput> liveouts;
 
     /*
      * Which nodes are connected to which: <child, List of parents>
@@ -55,7 +58,7 @@ public class BinarySegmentGraph {
      * Constructor
      */
     private BinarySegmentGraph(BinarySegment seg, List<GraphNode> nodes,
-            Map<GraphNode, List<GraphNode>> adjacencyTable, Set<String> liveins, Set<String> liveouts) {
+            Map<GraphNode, List<GraphNode>> adjacencyTable, Set<GraphInput> liveins, Set<GraphOutput> liveouts) {
 
         // core information
         this.seg = seg;
@@ -157,14 +160,14 @@ public class BinarySegmentGraph {
     /*
      * 
      */
-    public Set<String> getLiveins() {
+    public Set<GraphInput> getLiveins() {
         return liveins;
     }
 
     /*
      * 
      */
-    public Set<String> getLiveouts() {
+    public Set<GraphOutput> getLiveouts() {
         return liveouts;
     }
 
@@ -246,7 +249,7 @@ public class BinarySegmentGraph {
 
                     // producer node ID; set node input as producer node instead of livein
                     var producer = lastwriter.get(inputval);
-                    in.setInputAs(GraphInputType.noderesult, producer.getRepresentation());
+                    in.setInputAs(GraphEdgeType.noderesult, producer.getRepresentation());
 
                     // set level
                     if (n.getLevel() <= producer.getLevel())
@@ -267,28 +270,27 @@ public class BinarySegmentGraph {
         for (GraphNode n : nodes) {
             for (GraphOutput out : n.getOutputs()) {
                 if (lastwriter.get(out.getRepresentation()) == n) {
-                    out.setOutputAs(GraphOutputType.liveout, out.getRepresentation());
+                    out.setOutputAs(GraphEdgeType.liveout, out.getRepresentation());
                 }
             }
         }
 
         // init liveins list
-        Set<String> liveins = new LinkedHashSet<String>();
+        Set<GraphInput> liveins = new LinkedHashSet<GraphInput>();
         for (GraphNode n : nodes) {
             for (GraphInput in : n.getInputs()) {
                 if (in.isLivein()) {
-                    liveins.add(in.getRepresentation());
+                    liveins.add(in);
                 }
             }
         }
 
         // init liveouts list
-        Set<String> liveouts = new LinkedHashSet<String>();
+        Set<GraphOutput> liveouts = new LinkedHashSet<GraphOutput>();
         for (GraphNode n : nodes) {
             for (GraphOutput out : n.getOutputs()) {
                 if (out.isLiveout())
-                    liveouts.add(out.getRepresentation());
-                // NOTE: value here equals representation, e.g. r<d>
+                    liveouts.add(out);
             }
         }
 

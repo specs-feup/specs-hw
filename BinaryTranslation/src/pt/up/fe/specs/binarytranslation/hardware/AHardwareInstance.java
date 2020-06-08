@@ -5,11 +5,11 @@ import java.util.List;
 
 public abstract class AHardwareInstance implements HardwareInstance {
 
-    private HardwareModuleHeader header;
-    private List<String> code;
+    protected HardwareModuleHeader header;
+    protected List<String> code;
 
-    public AHardwareInstance(List<String> code) {
-        this.code = code;
+    public AHardwareInstance() {
+
     }
 
     // TODO: replace list of strings with more sophisticated

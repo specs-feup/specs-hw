@@ -19,6 +19,7 @@ import java.util.*;
 
 import pt.up.fe.specs.binarytranslation.*;
 import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
+import pt.up.fe.specs.binarytranslation.graphs.edge.*;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
 
@@ -163,7 +164,8 @@ public class BinarySegmentGraphUtils {
 
             // livein nodes
             bw.write("{ rank = source;\n");
-            for (String s : graph.getLiveins()) {
+            for (GraphInput in : graph.getLiveins()) {
+                var s = in.getRepresentation();
                 bw.write("\t\"in_" + s
                         + "\"[shape = box, fillcolor=\"#8080ff\", style=filled, label=\"" + s
                         + "\"];\n");
@@ -172,7 +174,8 @@ public class BinarySegmentGraphUtils {
 
             bw.write("{ rank = sink;\n");
             // liveout nodes
-            for (String s : graph.getLiveouts()) {
+            for (GraphOutput out : graph.getLiveouts()) {
+                var s = out.getRepresentation();
                 bw.write("\t\"out_" + s
                         + "\"[shape = box, fillcolor=\"#ff8080\", style=filled, label=\"" + s
                         + "\"];\n");
