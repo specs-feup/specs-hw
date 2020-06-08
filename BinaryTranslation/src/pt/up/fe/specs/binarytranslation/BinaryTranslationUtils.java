@@ -4,9 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import pt.up.fe.specs.util.providers.ResourceProvider;
+import pt.up.fe.specs.util.utilities.Replacer;
 
 public class BinaryTranslationUtils {
 
@@ -107,5 +111,15 @@ public class BinaryTranslationUtils {
             return mat.group(0);
         else
             return "Could not retrieve build informatiomn!";
+    }
+
+    /*
+     * Get SPeCS copyright text with current year
+     */
+    public static String getSPeCSCopyright() {
+        ResourceProvider crtext = BinaryTranslationResource.SPECS_COPYRIGHT_TEXT;
+        var crreplacer = new Replacer(crtext);
+        crreplacer.replace("<THEYEAR>", LocalDateTime.now().getYear());
+        return crreplacer.toString();
     }
 }
