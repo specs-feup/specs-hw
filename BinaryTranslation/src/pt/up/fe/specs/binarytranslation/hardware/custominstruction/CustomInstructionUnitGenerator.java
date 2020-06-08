@@ -1,11 +1,10 @@
-package pt.up.fe.specs.binarytranslation.hardwaregeneration;
+package pt.up.fe.specs.binarytranslation.hardware.custominstruction;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
-import pt.up.fe.specs.binarytranslation.hardware.VerilogModule;
+import pt.up.fe.specs.binarytranslation.hardware.*;
 
 /**
  * Generates a single dedicated verilog module for a single binary segment
@@ -13,23 +12,18 @@ import pt.up.fe.specs.binarytranslation.hardware.VerilogModule;
  * @author nuno
  *
  */
-public class VerilogModuleGenerator implements HardwareGenerator {
+public class CustomInstructionUnitGenerator extends AHardwareGenerator {
 
-    public VerilogModuleGenerator() {
+    // todo pass parameter to constructor of generator?
+    // e.g. float enable, max latency, max units, etc?
+
+    public CustomInstructionUnitGenerator() {
         // TODO pass options to constructor
         // like generation hints
     }
 
-    // TODO maybe this module should be an abstract class to, since theres lots of "verlig modules" i can generate
-    // either that, or i reverse the relationship between stuff:
-    // ....// HardwareGenerator (I)
-    // ....// AHardwareGenerator (AC)
-    // ......// SingleCycleModule (C) --> could internally resolve the language?
-    // ......// PipelinedDataPathModule (C) --> could internally resolve the language?
-    // ......// LoopAcceleratorModule (C) --> could internally resolve the language?
-
     @Override
-    public HardwareInstance generateHardware(BinarySegment segment) {
+    public HardwareInstance generateHardware(BinarySegmentGraph graph) {
 
         // all lines of code
         List<String> verilogCode = new ArrayList<String>();
@@ -73,16 +67,6 @@ public class VerilogModuleGenerator implements HardwareGenerator {
         */
         System.out.print(verilogCode);
 
-        return new VerilogModule(verilogCode);
+        return new CustomInstructionUnit(verilogCode);
     }
-
-    @Override
-    public HardwareInstance generateHardware(List<BinarySegment> segments) {
-
-        for (BinarySegment seg : segments)
-            this.generateHardware(seg);
-
-        return null; // TODO actually return something
-    }
-
 }

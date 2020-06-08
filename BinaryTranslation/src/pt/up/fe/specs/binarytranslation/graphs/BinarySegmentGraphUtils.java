@@ -121,7 +121,7 @@ public class BinarySegmentGraphUtils {
     }
 
     /*
-     * Print dotty to console for testing purposes 
+     * Print dotty to given outputstream (e.g., system.out, or file) 
      */
     public static void generateDotty(BinarySegmentGraph graph, OutputStream os) {
         printDotty(graph, os);

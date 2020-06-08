@@ -1,5 +1,7 @@
 package pt.up.fe.specs.binarytranslation.hardware;
 
+import java.io.OutputStream;
+
 public interface HardwareInstance {
 
     // possible methods:
@@ -8,4 +10,10 @@ public interface HardwareInstance {
     // simulate, or something like generating a Junit with stimuli
     // estimatePerformance
     // generateVivadoScripts --> produces TCL scripts to generate the hardware netlist?
+
+    void emit(OutputStream os);
+
+    // possible method: HardwareReport estimateResources(HardwareTarget target)
+    // where HardwareTarget has a type, like FPGA etc
+    // the underlying implementations call the synthesis tools etc
 }
