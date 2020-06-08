@@ -2,7 +2,8 @@ package pt.up.fe.specs.binarytranslation.hardware.custominstruction;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.hardware.*;
 
 public class CustomInstructionUnit extends AHardwareInstance {
 
@@ -24,8 +25,24 @@ public class CustomInstructionUnit extends AHardwareInstance {
     // but I can generate that list to emit, using the private fields of
     // each hardwareinstance subtype
 
-    public CustomInstructionUnit(List<String> code) {
-        super(code);
+    // TODO: constructor which makes use of all the fields above
+
+    /*
+     * Custom Instruction Units represent a single graph implemented as single-cycle operation
+     */
+    private BinarySegmentGraph graph;
+
+    /**
+     * Should be called by {@code CustomInstructionUnitGenerator}. Basic constructor which receives a list of lines of
+     * code directly. Most naive method of definition of hardware module.
+     * 
+     * @param code
+     * @return
+     */
+    protected CustomInstructionUnit(BinarySegmentGraph graph, List<String> code) {
+        this.graph = graph;
+        this.header = new HardwareModuleHeader(graph);
+        this.code = code;
     }
 
     // methods for custominstructionunitgenreation:

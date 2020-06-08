@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.graphs;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.graphs.edge.*;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.Operand;
 

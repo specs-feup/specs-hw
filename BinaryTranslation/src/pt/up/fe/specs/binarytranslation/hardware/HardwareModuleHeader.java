@@ -35,6 +35,8 @@ public class HardwareModuleHeader {
 
     public HardwareModuleHeader(BinarySegmentGraph graph) {
 
+        // TODO add more stuff to header
+
         this.headertext = BinaryTranslationUtils.getSPeCSCopyright()
                 + "\n\n/* \n* This module represents the following graph:\n\t" +
                 "Application: " + graph.getSegment().getAppinfo().getAppName() + "\n\t" +

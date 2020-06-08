@@ -1,10 +1,11 @@
 package pt.up.fe.specs.binarytranslation.hardware.custominstruction;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.graphs.*;
+import pt.up.fe.specs.binarytranslation.graphs.edge.*;
 import pt.up.fe.specs.binarytranslation.hardware.*;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
  * Generates a single dedicated verilog module for a single binary segment
@@ -25,33 +26,36 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
     @Override
     public HardwareInstance generateHardware(BinarySegmentGraph graph) {
 
-        // all lines of code
-        List<String> verilogCode = new ArrayList<String>();
-
-        // put header
-        verilogCode.add("/* \n* This module represents"
-                + " the following sequence:\n* " + segment.getRepresentation() + "*/\n");
-
-        // TODO add more stuff to header
-        /*
-        // put declaration
-        int uniqueid = segment.getUniqueId();
-        String segtype = segment.getSegmentType().toString().toLowerCase();
+        // NOTE: graph is necessary instead of segment so we can make 
+        // good use of blocking and non blocking statements 
+        // in a combinatorial Verilog block, by relying on node levels
         
-        verilogCode.add("module " + segtype + "_" + uniqueid + ";\n");
+        // TODO: exception here if graph type is different than a frequent sequence! (static or dynamic)
+        
+        // all lines of code
+        List<String> code = new ArrayList<String>();
+        
+        // put declaration
+        int uniqueid = graph.getSegment().getUniqueId();
+        String segtype = graph.getSegment().getSegmentType().toString().toLowerCase();
+        code.add("module " + segtype + "_" + uniqueid + ";\n");
         
         // inputs
-        for (Operand op : segment.getLiveIns()) {
-            verilogCode.add("\tinput [" + op.getProperties().getWidth()
-                    + "-1:0" + "] i_" + op.getRepresentation()
-                    + ";\n");
+        int i = 0;
+        for (GraphInput gi : graph.getLiveins()) {
+            code.add("\tinput [" + gi.getWidth()
+                    + "-1:0" + "] i_" + Integer.toString(i) 
+                    + ",\t//" + gi.getRepresentation() + "\n");
+            i++;
         }
         
         // outputs
-        for (Operand op : segment.getLiveOuts()) {
-            verilogCode.add("\toutput [" + op.getProperties().getWidth()
-                    + "-1:0" + "] o_" + op.getRepresentation()
-                    + ";\n");
+        i = 0;
+        for (GraphOutput go : graph.getLiveouts()) {
+            code.add("\toutput [" + go.getWidth()
+            + "-1:0" + "] i_" + Integer.toString(i) 
+            + ",\t//" + go.getRepresentation() + "\n");
+            i++;
         }
         
         // put body
