@@ -11,33 +11,15 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package crisp.datatype;
+package crisp.base;
 
-import crisp.base.Element;
+/**
+ * An "Element" is anything that can be expressed as a string e.g., a type definition, variable declaration, module
+ * definition or instantiation, etc
+ * 
+ * @author Nuno
+ *
+ */
+public interface Element {
 
-public interface DataType extends Element {
-
-    public String getTypeName();
-
-    public TypeQualifier getQualifier();
-
-    default public int getTypePackedSize() {
-        return 1;
-    }
-
-    default public int getTypeUnpackedSize() {
-        return 1;
-    }
-
-    default public String define() {
-        return "";
-    };
-
-    default public String getUnpackedRange() {
-        return "";
-    };
-
-    default public String getPackedRange() {
-        return "";
-    };
 }

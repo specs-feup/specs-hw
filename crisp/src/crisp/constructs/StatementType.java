@@ -11,33 +11,16 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package crisp.datatype;
+package crisp.constructs;
 
-import crisp.base.Element;
+public enum StatementType {
+    assignment,
+    declaration,
+    definition,
+    instantiation,
+    when,
+    whenElse;
 
-public interface DataType extends Element {
-
-    public String getTypeName();
-
-    public TypeQualifier getQualifier();
-
-    default public int getTypePackedSize() {
-        return 1;
+    private StatementType() {
     }
-
-    default public int getTypeUnpackedSize() {
-        return 1;
-    }
-
-    default public String define() {
-        return "";
-    };
-
-    default public String getUnpackedRange() {
-        return "";
-    };
-
-    default public String getPackedRange() {
-        return "";
-    };
 }
