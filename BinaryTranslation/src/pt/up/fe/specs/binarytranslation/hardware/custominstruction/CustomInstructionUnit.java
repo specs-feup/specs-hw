@@ -3,8 +3,8 @@ package pt.up.fe.specs.binarytranslation.hardware.custominstruction;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.hardware.*;
-import pt.up.fe.specs.binarytranslation.hardware.component.ModuleHeader;
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.component.HardwareComponent;
 
 public class CustomInstructionUnit extends AHardwareInstance {
 
@@ -40,10 +40,9 @@ public class CustomInstructionUnit extends AHardwareInstance {
      * @param code
      * @return
      */
-    protected CustomInstructionUnit(BinarySegmentGraph graph, List<String> code) {
+    protected CustomInstructionUnit(BinarySegmentGraph graph, List<HardwareComponent> components) {
+        super(components);
         this.graph = graph;
-        this.header = new ModuleHeader(graph);
-        this.code = code;
     }
 
     // methods for custominstructionunitgenreation:

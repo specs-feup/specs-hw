@@ -14,17 +14,36 @@
 package pt.up.fe.specs.binarytranslation.hardware.component;
 
 import java.io.OutputStream;
+import java.util.*;
 
-public interface HardwareComponent {
-
-    /*
-     * Fetches the representation of the component as 
-     * a string of HDL code (Verilog for now)
-     */
-    public String getAsString();
+public class PlainCode implements HardwareComponent {
 
     /*
-     * Emits the code into an output stream (should emit the same contents as getAsString)
+     * Just string of code (useful for stuff i havent moved into its own class yet)
      */
-    public void emit(OutputStream os);
+    List<String> code;
+
+    public PlainCode(List<String> code) {
+        this.code = code;
+    }
+
+    public PlainCode(String code) {
+        this.code = Arrays.asList(code);
+    }
+
+    public PlainCode(String... code) {
+        this.code = Arrays.asList(code);
+    }
+
+    @Override
+    public String getAsString() {
+        return String.join("\n", this.code);
+    }
+
+    @Override
+    public void emit(OutputStream os) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

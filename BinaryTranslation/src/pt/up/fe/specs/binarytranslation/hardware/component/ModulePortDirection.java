@@ -13,18 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.component;
 
-import java.io.OutputStream;
-
-public interface HardwareComponent {
-
-    /*
-     * Fetches the representation of the component as 
-     * a string of HDL code (Verilog for now)
-     */
-    public String getAsString();
-
-    /*
-     * Emits the code into an output stream (should emit the same contents as getAsString)
-     */
-    public void emit(OutputStream os);
+public enum ModulePortDirection {
+    input,
+    output;
 }
