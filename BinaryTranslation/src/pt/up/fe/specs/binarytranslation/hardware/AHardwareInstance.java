@@ -3,17 +3,18 @@ package pt.up.fe.specs.binarytranslation.hardware;
 import java.io.*;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.hardware.component.ModuleHeader;
+import pt.up.fe.specs.binarytranslation.hardware.component.*;
 
 public abstract class AHardwareInstance implements HardwareInstance {
 
-    protected ModuleHeader header;
-    protected List<String> code;
+    /*
+     * Each component should have an "emit" method
+     * Components include: includes header, module declaration, body, plain code list, etc (?) 
+     */
+    private List<HardwareComponent> components;
 
-    // List<HardwareComponent> components; // includes header, module declaration, body, etc (?)
-
-    public AHardwareInstance() {
-
+    public AHardwareInstance(List<HardwareComponent> components) {
+        this.components = components;
     }
 
     // TODO: replace list of strings with more sophisticated
@@ -23,8 +24,8 @@ public abstract class AHardwareInstance implements HardwareInstance {
     public void emit(OutputStream os) {
         try {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
-            for (String s : code) {
-                bw.write(s);
+            for (HardwareComponent comp : this.components) {
+                bw.write(comp.getAsString());
             }
             bw.flush();
             bw.close();

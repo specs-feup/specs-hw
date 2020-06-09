@@ -57,6 +57,16 @@ public interface GraphEdge {
     public Boolean isInternal();
 
     /*
+     * An edge is modified during the resolving of the graph, when a BinarySegmentGraph is instantiated
+     */
+    public void setEdgeAs(GraphEdgeType etype, String value);
+
+    /*
+     * Wrapper for Operand method getWidth to reduce verbosity downstream
+     */
+    public int getWidth();
+
+    /*
      * 
      */
     @Override

@@ -39,9 +39,9 @@ public class ModuleHeader implements HardwareComponent {
         // TODO add more stuff to header
 
         this.headertext = BinaryTranslationUtils.getSPeCSCopyright()
-                + "\n\n/* \n* This module represents the following graph:\n\t" +
+                + "\n\n/* \n * This module represents the following graph:\n\t" +
                 "Application: " + graph.getSegment().getAppinfo().getAppName() + "\n\t" +
-                "Graph Type: " + graph.getType().toString() + "\n\n*/";
+                "Graph Type: " + graph.getType().toString() + "\n */\n";
 
         // TODO: do something better...
         // like a getHeader module for the graph, or something..
