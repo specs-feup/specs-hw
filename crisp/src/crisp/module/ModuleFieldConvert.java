@@ -11,33 +11,10 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package crisp.datatype;
+package crisp.module;
 
-import crisp.base.Element;
+import crisp.data.Data;
 
-public interface DataType extends Element {
-
-    public String getTypeName();
-
-    public TypeQualifier getQualifier();
-
-    default public int getTypePackedSize() {
-        return 1;
-    }
-
-    default public int getTypeUnpackedSize() {
-        return 1;
-    }
-
-    default public String define() {
-        return "";
-    };
-
-    default public String getUnpackedRange() {
-        return "";
-    };
-
-    default public String getPackedRange() {
-        return "";
-    };
+public interface ModuleFieldConvert {
+    String apply(Data d);
 }

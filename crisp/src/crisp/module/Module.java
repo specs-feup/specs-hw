@@ -15,13 +15,15 @@ package crisp.module;
 
 import java.util.*;
 
+import crisp.datatype.DataType;
 import crisp.port.Port;
 
 public class Module {
 
-    private String name;
-    final List<Port> ports;
-
+    protected String name;
+    protected List<Port> ports;
+    protected List<ModuleField> fields;
+    // protected List<Module> innerModules;
     // TODO: ... a module may have other modules inside...
 
     public Module(String name, Port... ports) {
@@ -33,7 +35,7 @@ public class Module {
         this.ports = new ArrayList<Port>(Arrays.asList(ports));
     }
 
-    Port getPort(int idx) {
+    public Port getPort(int idx) {
         return this.ports.get(idx);
     }
 
@@ -41,10 +43,18 @@ public class Module {
         return name;
     }
 
+    public List<ModuleField> getFields() {
+        return fields;
+    }
+
+    // must be overridden by children
+    protected String getBody() {
+        return "";
+    };
+
     /// write module?
     // static??
     public void getDefinition() {
-
         System.out.print("module " + this.name + "(");
         String delim = "";
         for (Port p : this.ports) {
@@ -52,16 +62,8 @@ public class Module {
             delim = ", ";
         }
         System.out.println(");");
-        // (input fudata_input indat, output fudata_output outdat);");
-
-        // this.getBody();
-
+        System.out.print(this.getBody());
         System.out.println("endmodule\n");
-
-        /*
-        assign {outdat.carryBit, outdat.results[0]} = indat.operands[0] + indat.operands[1];
-        assign outdat.results[1] = {'0, outdat.carryBit};
-                endmodule*/
     }
 
     // method "define"? use some kind of lamba expression or set of them?

@@ -48,12 +48,12 @@ public class TestPortDataTypes {
 
     @Test
     public void testStructWithArrays() {
-        var map = new ArrayList<Data>();
+        var list = new ArrayList<Data>();
         var dtype = new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 });
-        map.add(new Data(dtype, "operands"));
-        map.add(new Data(dtype, "results"));
-        map.add(new Data(PrimitiveTypes.logic, "carrybit"));
-        var struct1 = new Struct("fuData", map);
+        list.add(new Data(dtype, "operands"));
+        list.add(new Data(dtype, "results"));
+        list.add(new Data(PrimitiveTypes.logic, "carrybit"));
+        var struct1 = new Struct("fuData", list);
         System.out.println(struct1.define());
 
         var data1 = new Data(struct1, "st1");
@@ -62,12 +62,12 @@ public class TestPortDataTypes {
 
     @Test
     public void testArrayOfStruct() {
-        var map = new ArrayList<Data>();
+        var list = new ArrayList<Data>();
         var dtype = new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 });
-        map.add(new Data(dtype, "operands"));
-        map.add(new Data(dtype, "results"));
-        map.add(new Data(PrimitiveTypes.logic, "carrybit"));
-        var struct1 = new Struct("fuData", map);
+        list.add(new Data(dtype, "operands"));
+        list.add(new Data(dtype, "results"));
+        list.add(new Data(PrimitiveTypes.logic, "carrybit"));
+        var struct1 = new Struct("fuData", list);
         System.out.println(struct1.define());
 
         var data1 = new Data(new DataArray(struct1, new int[] { 1, 4 }), "arr1");
@@ -75,19 +75,36 @@ public class TestPortDataTypes {
     }
 
     @Test
-    public void testAdder32() {
+    public void testStrucInStruct() {
+        var list = new ArrayList<Data>();
+        list.add(new Data(PrimitiveTypes.logic, "abit"));
+        var struct1 = new Struct("struct1_t", list);
 
+        var list2 = new ArrayList<Data>();
+        list2.add(new Data(struct1, "ts1"));
+        list2.add(new Data(struct1, "ts2"));
+        list2.add(new Data(PrimitiveTypes.logic, "bbit"));
+        var struct2 = new Struct("struct2_t", list2);
+
+        System.out.println(struct1.define());
+        System.out.println(struct2.define());
+    }
+
+    /*
+    @Test
+    public void testAdder32() {
+    
         var add1 = Adder.newInstance();
         add1.getDefinition();
-
+    
         var add2 = Adder.newInstance(new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 }));
         add2.getDefinition();
-
+    
         var t1 = new Typedef("data32", new DataArray(PrimitiveTypes.logic, new int[] { 32, 1 }));
         var add3 = Adder.newInstance(t1);
         add3.getDefinition();
     }
-
+    */
     @Test
     public void testAcceleratorDatTypes() {
         var testindat = AcceleratorDataTypes.FUInputData();

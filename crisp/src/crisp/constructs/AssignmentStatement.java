@@ -11,33 +11,27 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package crisp.datatype;
+package crisp.constructs;
+
+import java.util.List;
 
 import crisp.base.Element;
 
-public interface DataType extends Element {
+public class AssignmentStatement extends AStatement {
 
-    public String getTypeName();
+    private List<Element> els;
 
-    public TypeQualifier getQualifier();
+    // TODO: pass single string argument as statement, and then parse?
+    //
 
-    default public int getTypePackedSize() {
-        return 1;
+    public AssignmentStatement() {
+        super(StatementType.assignment);
+
     }
 
-    default public int getTypeUnpackedSize() {
-        return 1;
+    @Override
+    public String emit() {
+        // TODO Auto-generated method stub
+        return null;
     }
-
-    default public String define() {
-        return "";
-    };
-
-    default public String getUnpackedRange() {
-        return "";
-    };
-
-    default public String getPackedRange() {
-        return "";
-    };
 }

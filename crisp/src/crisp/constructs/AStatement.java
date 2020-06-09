@@ -11,33 +11,18 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package crisp.datatype;
+package crisp.constructs;
 
-import crisp.base.Element;
+public abstract class AStatement implements Statement {
 
-public interface DataType extends Element {
+    private StatementType type;
 
-    public String getTypeName();
-
-    public TypeQualifier getQualifier();
-
-    default public int getTypePackedSize() {
-        return 1;
+    protected AStatement(StatementType type) {
+        this.type = type;
+        // this body = body?
     }
 
-    default public int getTypeUnpackedSize() {
-        return 1;
+    public StatementType getType() {
+        return type;
     }
-
-    default public String define() {
-        return "";
-    };
-
-    default public String getUnpackedRange() {
-        return "";
-    };
-
-    default public String getPackedRange() {
-        return "";
-    };
 }

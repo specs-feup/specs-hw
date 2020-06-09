@@ -11,39 +11,23 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package crisp.data;
+package crisp.module;
 
-import crisp.datatype.*;
+public class ModuleField {
 
-public class Data {
+    private String name;
+    ModuleFieldConvert convert;
 
-    protected DataType type;
-    protected String name;
-
-    public Data(DataType type, String name) {
+    public ModuleField(String name, ModuleFieldConvert convert) {
         this.name = name;
-        this.type = type;
+        this.convert = convert;
     }
 
-    public DataType getType() {
-        return this.type;
+    public String convert() {
+        return this.convert();
     }
 
-    public String getName() {
-        return name;
+    public void setConvert(ModuleFieldConvert convert) {
+        this.convert = convert;
     }
-
-    public String represent() {
-        return this.type.getTypeName() + this.type.getUnpackedRange()
-                + " " + this.name + this.type.getPackedRange();
-    }
-
-    public String declare() {
-        return this.represent() + ";";
-    }
-
-    /*
-    static public Data add(Data a, Data b) {
-        return a.getType()
-    }*/
 }
