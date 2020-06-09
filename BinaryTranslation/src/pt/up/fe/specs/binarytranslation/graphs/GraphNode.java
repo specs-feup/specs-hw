@@ -1,7 +1,6 @@
 package pt.up.fe.specs.binarytranslation.graphs;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import pt.up.fe.specs.binarytranslation.graphs.edge.*;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -63,6 +62,16 @@ public class GraphNode {
 
     public List<GraphOutput> getOutputs() {
         return outputs;
+    }
+
+    /*
+     * Concatenated list of both getInputs and getOutputs
+     */
+    public List<GraphEdge> getEdges() {
+        var list = new ArrayList<GraphEdge>();
+        list.addAll(this.getInputs());
+        list.addAll(this.getOutputs());
+        return list;
     }
 
     public int getLevel() {

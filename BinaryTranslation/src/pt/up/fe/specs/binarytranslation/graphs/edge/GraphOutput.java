@@ -22,7 +22,7 @@ public class GraphOutput extends AGraphEdge {
     }
 
     public void setOutputAs(GraphEdgeType type, String value) {
-        this.setEdgeAs(etype, value);
+        this.setEdgeAs(type, value);
     }
 
     /*

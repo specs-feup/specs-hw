@@ -11,7 +11,7 @@ public interface HardwareInstance {
     // estimatePerformance
     // generateVivadoScripts --> produces TCL scripts to generate the hardware netlist?
 
-    void emit(OutputStream os);
+    public void emit(OutputStream os);
 
     // possible method: HardwareReport estimateResources(HardwareTarget target)
     // where HardwareTarget has a type, like FPGA etc

@@ -21,7 +21,7 @@ public class GraphInput extends AGraphEdge {
      * An input is modified during the resolving of the graph, when a BinarySegmentGraph is instantiated
      */
     public void setInputAs(GraphEdgeType type, String value) {
-        this.setEdgeAs(etype, value);
+        this.setEdgeAs(type, value);
     }
 
     /*

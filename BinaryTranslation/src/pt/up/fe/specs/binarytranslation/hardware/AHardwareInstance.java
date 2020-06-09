@@ -3,10 +3,14 @@ package pt.up.fe.specs.binarytranslation.hardware;
 import java.io.*;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.hardware.component.ModuleHeader;
+
 public abstract class AHardwareInstance implements HardwareInstance {
 
-    protected HardwareModuleHeader header;
+    protected ModuleHeader header;
     protected List<String> code;
+
+    // List<HardwareComponent> components; // includes header, module declaration, body, etc (?)
 
     public AHardwareInstance() {
 

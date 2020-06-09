@@ -118,6 +118,19 @@ public class GraphBundle implements Serializable {
     }
 
     /*
+     * Returns graphs based on any given predicate applied over a single BinarySegmentGraph
+     */
+    public List<BinarySegmentGraph> getGraphs(Predicate<BinarySegmentGraph> predicate) {
+
+        var list = new ArrayList<BinarySegmentGraph>();
+        for (var seg : this.graphs) {
+            if (predicate.test(seg))
+                list.add(seg);
+        }
+        return list;
+    }
+
+    /*
      * Returns average ideal instructions per clock cycle, 
      * weighed by the number of occurrences of each segment
      */
