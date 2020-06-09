@@ -3,16 +3,11 @@ package org.specs.MicroBlaze.test;
 import java.io.File;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
+import org.specs.MicroBlaze.stream.*;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.*;
+import pt.up.fe.specs.binarytranslation.graphs.*;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeBinarySegmentGraphTester {
@@ -34,17 +29,11 @@ public class MicroBlazeBinarySegmentGraphTester {
 
     private void getSegments(SegmentDetector bbd) {
         var bundle = bbd.detectSegments();
+        var gbundle = GraphBundle.newInstance(bundle);
 
-        int safetycounter = 0; // to prevent lots of printing (just for testing purposes)
-        for (BinarySegment seg : bundle.getSegments()) {
-            var graph0 = BinarySegmentGraph.newInstance(seg);
-            if (safetycounter < 50) {
-                if (graph0.getCpl() >= 3 && graph0.getSegment().getContexts().size() >= 1) {
-
-                    graph0.generateOutput();
-                    safetycounter++;
-                }
-            }
+        var list = gbundle.getGraphs(data -> data.getCpl() >= 3);
+        for (BinarySegmentGraph graph : list) {
+            graph.generateOutput();
         }
     }
 
