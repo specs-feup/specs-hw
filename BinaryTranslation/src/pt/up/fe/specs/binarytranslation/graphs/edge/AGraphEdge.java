@@ -28,17 +28,14 @@ public abstract class AGraphEdge implements GraphEdge {
         this.value = value;
     }
 
-    @Override
     public GraphEdgeDirection getDirection() {
         return this.edirection;
     }
 
-    @Override
     public GraphEdgeType getType() {
         return this.etype;
     }
 
-    @Override
     public String getRepresentation() {
         return this.value;
     }
