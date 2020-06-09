@@ -55,4 +55,16 @@ public interface GraphEdge {
      * 
      */
     public Boolean isInternal();
+
+    /*
+     * 
+     */
+    @Override
+    public boolean equals(Object obj);
+
+    /*
+     * 
+     */
+    @Override
+    public int hashCode();
 }

@@ -231,6 +231,8 @@ public class BinarySegmentGraph {
             nodes.add(node);
         }
 
+        // TODO GraphInput/Output fuser? to remove "duplicate" liveins and outs?
+
         // create empty lists for adjacency table
         adjacencyTable = new HashMap<GraphNode, List<GraphNode>>();
         for (GraphNode n : nodes) {
@@ -279,7 +281,7 @@ public class BinarySegmentGraph {
         Set<GraphInput> liveins = new LinkedHashSet<GraphInput>();
         for (GraphNode n : nodes) {
             for (GraphInput in : n.getInputs()) {
-                if (in.isLivein()) {
+                if (in.isLivein() && !liveins.contains(in)) {
                     liveins.add(in);
                 }
             }
@@ -289,7 +291,7 @@ public class BinarySegmentGraph {
         Set<GraphOutput> liveouts = new LinkedHashSet<GraphOutput>();
         for (GraphNode n : nodes) {
             for (GraphOutput out : n.getOutputs()) {
-                if (out.isLiveout())
+                if (out.isLiveout() && !liveouts.contains(out))
                     liveouts.add(out);
             }
         }

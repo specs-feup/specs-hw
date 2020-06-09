@@ -57,7 +57,7 @@ public abstract class AGraphEdge implements GraphEdge {
     }
 
     /*
-     * An input is modified during the resolving of the graph, when a BinarySegmentGraph is instantiated
+     * An edge is modified during the resolving of the graph, when a BinarySegmentGraph is instantiated
      */
     public void setEdgeAs(GraphEdgeType etype, String value) {
         this.etype = etype;
@@ -69,5 +69,25 @@ public abstract class AGraphEdge implements GraphEdge {
      */
     public int getWidth() {
         return this.op.getProperties().getWidth();
+    }
+
+    /*
+     * A graph edge is equal if the representation (getRepresentation) is equal
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof GraphEdge))
+            return false;
+        if (obj == this)
+            return true;
+        return this.getRepresentation().equals(((GraphEdge) obj).getRepresentation());
+    }
+
+    /*
+     * TODO: Somewhat flimsy.. but it will do for now
+     */
+    @Override
+    public int hashCode() {
+        return this.getRepresentation().hashCode() + this.getType().hashCode();
     }
 }

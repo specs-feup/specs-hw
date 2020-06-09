@@ -11,8 +11,9 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware;
+package pt.up.fe.specs.binarytranslation.hardware.component;
 
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 
 import pt.up.fe.specs.binarytranslation.*;
@@ -25,7 +26,7 @@ import pt.up.fe.specs.util.utilities.Replacer;
  * @author Nuno
  *
  */
-public class HardwareModuleHeader {
+public class ModuleHeader implements HardwareComponent {
 
     /*
      * Complete header text for this hardware module
@@ -33,7 +34,7 @@ public class HardwareModuleHeader {
      */
     final private String headertext;
 
-    public HardwareModuleHeader(BinarySegmentGraph graph) {
+    public ModuleHeader(BinarySegmentGraph graph) {
 
         // TODO add more stuff to header
 
@@ -50,7 +51,11 @@ public class HardwareModuleHeader {
     
     }*/
 
-    public String getHeadertext() {
+    public String getAsString() {
         return headertext;
+    }
+
+    public void emit(OutputStream os) {
+        // TODO
     }
 }

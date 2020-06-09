@@ -4,6 +4,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.hardware.*;
+import pt.up.fe.specs.binarytranslation.hardware.component.ModuleHeader;
 
 public class CustomInstructionUnit extends AHardwareInstance {
 
@@ -41,7 +42,7 @@ public class CustomInstructionUnit extends AHardwareInstance {
      */
     protected CustomInstructionUnit(BinarySegmentGraph graph, List<String> code) {
         this.graph = graph;
-        this.header = new HardwareModuleHeader(graph);
+        this.header = new ModuleHeader(graph);
         this.code = code;
     }
 
