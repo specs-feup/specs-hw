@@ -20,11 +20,8 @@ import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
 import org.specs.MicroBlaze.parsing.MicroBlazeIsaParser;
 
-import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.*;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class MicroBlazeInstruction extends AInstruction {
 
