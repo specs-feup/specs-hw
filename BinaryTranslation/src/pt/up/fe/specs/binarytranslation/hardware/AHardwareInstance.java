@@ -25,7 +25,7 @@ public abstract class AHardwareInstance implements HardwareInstance {
         try {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
             for (HardwareComponent comp : this.components) {
-                bw.write(comp.getAsString());
+                bw.write(comp.getAsString() + "\n");
             }
             bw.flush();
             bw.close();

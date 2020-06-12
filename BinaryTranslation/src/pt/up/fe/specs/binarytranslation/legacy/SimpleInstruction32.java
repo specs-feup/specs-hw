@@ -219,10 +219,4 @@ public interface SimpleInstruction32 extends Instruction {
         // TODO Auto-generated method stub
 
     }
-
-    @Override
-    default String express() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }

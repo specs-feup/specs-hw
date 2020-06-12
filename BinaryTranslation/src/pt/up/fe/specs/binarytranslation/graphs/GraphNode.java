@@ -4,7 +4,7 @@ import java.util.*;
 
 import pt.up.fe.specs.binarytranslation.graphs.edge.*;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class GraphNode {
 

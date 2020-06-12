@@ -39,9 +39,13 @@ public class ModuleHeader implements HardwareComponent {
         // TODO add more stuff to header
 
         this.headertext = BinaryTranslationUtils.getSPeCSCopyright()
-                + "\n\n/* \n * This module represents the following graph:\n\t" +
-                "Application: " + graph.getSegment().getAppinfo().getAppName() + "\n\t" +
-                "Graph Type: " + graph.getType().toString() + "\n */\n";
+                + "\n\n/* \n * This module represents the following graph:\n" +
+                " * Application: " + graph.getSegment().getAppinfo().getAppName() + "\n" +
+                " * Graph Type: " + graph.getType().toString() + "\n" +
+                " * Number of contexts: " + graph.getSegment().getContexts().size() + "\n" +
+                " * Number of nodes: " + graph.getNodes().size() + "\n" +
+                " * Achieved IPC: " + graph.getEstimatedIPC() + "\n" +
+                " */\n";
 
         // TODO: do something better...
         // like a getHeader module for the graph, or something..

@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.instruction;
+package pt.up.fe.specs.binarytranslation.instruction.operand;
 
 import java.util.List;
 

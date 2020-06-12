@@ -52,7 +52,7 @@ public class ModulePort implements HardwareComponent {
     @Override
     public String getAsString() {
         return this.direction.toString() + " "
-                + "[" + (this.portWidth - 1) + " : 0] " + this.portname + ";\n";
+                + "[" + (this.portWidth - 1) + " : 0] " + this.portname + ";";
     }
 
     @Override

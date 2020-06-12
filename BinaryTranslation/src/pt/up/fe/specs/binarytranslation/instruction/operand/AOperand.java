@@ -11,9 +11,9 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction;
+package pt.up.fe.specs.binarytranslation.instruction.operand;
 
-import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
+import static pt.up.fe.specs.binarytranslation.instruction.operand.OperandType.*;
 
 import java.io.Serializable;
 

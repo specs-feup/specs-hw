@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
-import pt.up.fe.specs.binarytranslation.instruction.OperandType;
+import pt.up.fe.specs.binarytranslation.instruction.operand.*;
 
 public class BinarySegmentDetectionUtils {
 

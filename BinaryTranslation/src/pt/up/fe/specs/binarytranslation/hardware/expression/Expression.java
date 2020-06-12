@@ -11,28 +11,28 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.component;
+package pt.up.fe.specs.binarytranslation.hardware.expression;
 
-import java.io.OutputStream;
+import java.util.Stack;
 
-public interface HardwareComponent {
+import pt.up.fe.specs.binarytranslation.expression.ExpressionSymbol;
 
-    /*
-     * Fetches the representation of the component as 
-     * a string of HDL code (Verilog for now)
+/**
+ * 
+ * @author Nuno
+ *
+ */
+public interface Expression {
+
+    /**
+     * 
+     * Returns the stack of symbols to evaluate using an {@code ExpressionSolver}
      */
-    public String getAsString();
+    public Stack<ExpressionSymbol> getSymbols();
 
-    /*
-     * Emits the code into an output stream (should emit the same contents as getAsString)
+    /**
+     * 
+     * Solves the expression, returning another Expression object with a single (?) ExpressionSymbol
      */
-    public void emit(OutputStream os);
-
-    // getDeclaration
-
-    // getName
-
-    // getInstantiation
-
-    // getDrivers?
+    public String solve();
 }

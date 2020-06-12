@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import pt.up.fe.specs.binarytranslation.expression.ExpressionSolver;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 import pt.up.fe.specs.util.SpecsStrings;
 
@@ -213,7 +214,7 @@ public abstract class AInstruction implements Instruction, Serializable {
     }
 
     /* 
-     * 
+     * TODO: very clunky here
      */
     public void makeSymbolic(Number address, Map<String, String> regremap) throws NullPointerException {
 
@@ -257,20 +258,20 @@ public abstract class AInstruction implements Instruction, Serializable {
 
     /*
      * 
-     */
+     *
     public String express() {
-
+    
         if (this.getProperties().getExpression() == null) {
             return "No expression set yet!";
         }
-
+    
         // helper map so i have refs from operands to asmfields
         Map<AsmField, Operand> helper = new HashMap<AsmField, Operand>();
         for (Operand op : this.getData().getOperands()) {
             helper.put(op.getAsmField(), op);
         }
-
+    
         return ExpressionSolver.solve(
                 this.getProperties().getExpression(), helper);
-    }
+    }*/
 }

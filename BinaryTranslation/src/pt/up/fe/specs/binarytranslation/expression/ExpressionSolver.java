@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionExpression;
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 
 public class ExpressionSolver {
