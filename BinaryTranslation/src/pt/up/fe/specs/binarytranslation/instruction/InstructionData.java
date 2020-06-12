@@ -16,6 +16,8 @@ package pt.up.fe.specs.binarytranslation.instruction;
 import java.io.Serializable;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+
 /**
  * Holds data taken from an executed or static instruction, after decoding its raw parsed fields
  * 

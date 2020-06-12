@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.graphs.edge;
 
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public abstract class AGraphEdge implements GraphEdge {
 

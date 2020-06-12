@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.hardware.custominstruction;
+package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.hardware.custominstruction;
+package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
 import java.util.*;
 
@@ -66,7 +66,7 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
         components.add(new ModuleHeader(graph));
 
         // module declaration
-        var segtype = graph.getSegment().getSegmentType().toString();
+        var segtype = graph.getSegment().getSegmentType().toString().toLowerCase();
         var id = graph.getSegment().getUniqueId();
         components.add(new PlainCode("module " + segtype + "_" + id + ";"));
 

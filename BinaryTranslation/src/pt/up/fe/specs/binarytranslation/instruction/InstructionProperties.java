@@ -66,7 +66,7 @@ public interface InstructionProperties {
      * helper method too look up name the list
      */
     public String getName();
-    
+
     /*
      * Returns name of enum (should be unique)
      */
@@ -76,5 +76,5 @@ public interface InstructionProperties {
      * Returns an object which represents expression
      * which implements the instruction (e.g., add r0, r1, r2 --> "r0 = r1 + r2")
      */
-    public InstructionExpression getExpression();
+    // public InstructionExpression getExpression();
 }

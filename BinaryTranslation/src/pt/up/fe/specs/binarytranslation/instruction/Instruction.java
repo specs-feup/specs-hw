@@ -160,7 +160,7 @@ public interface Instruction {
      * this instruction addr + the instruction 
      * set's instruction width 
      */
-    Number getBranchTarget();
+    public Number getBranchTarget();
 
     ///////////////////////////////////////////////////////////////////// Utils
     /*
@@ -192,11 +192,6 @@ public interface Instruction {
     public AsmFieldData getFieldData();
 
     /*
-     * Returns a unique hash representation of the instruction
-     */
-    // public Integer getHash();
-
-    /*
      * Returns an asm string representation of instruction (includes operands) 
      */
     public String getRepresentation();
@@ -216,5 +211,5 @@ public interface Instruction {
      * Returns a readable string representing the readable operation
      * which the instruction implements
      */
-    public String express();
+    // public String express();
 }

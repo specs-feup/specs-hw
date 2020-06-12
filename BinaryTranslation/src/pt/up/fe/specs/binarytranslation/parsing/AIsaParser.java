@@ -22,17 +22,17 @@ import java.util.Set;
  * @author Nuno
  *
  */
-public abstract class GenericIsaParser implements IsaParser {
+public abstract class AIsaParser implements IsaParser {
 
     private final List<AsmParser> instructionParsers;
     private final Set<String> allowedFields;
 
-    public GenericIsaParser(List<AsmParser> instructionParsers, Set<String> allowedFields) {
+    public AIsaParser(List<AsmParser> instructionParsers, Set<String> allowedFields) {
         this.instructionParsers = instructionParsers;
         this.allowedFields = allowedFields;
     }
 
-    public GenericIsaParser(List<AsmParser> instructionParsers) {
+    public AIsaParser(List<AsmParser> instructionParsers) {
         this(instructionParsers, null);
     }
 

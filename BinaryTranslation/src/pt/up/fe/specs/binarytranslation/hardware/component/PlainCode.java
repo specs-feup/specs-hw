@@ -43,7 +43,5 @@ public class PlainCode implements HardwareComponent {
     @Override
     public void emit(OutputStream os) {
         // TODO Auto-generated method stub
-
     }
-
 }
