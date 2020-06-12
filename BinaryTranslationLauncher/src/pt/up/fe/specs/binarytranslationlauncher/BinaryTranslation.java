@@ -1,3 +1,4 @@
+package pt.up.fe.specs.binarytranslationlauncher;
 /**
  *  Copyright 2020 SPeCS.
  * 

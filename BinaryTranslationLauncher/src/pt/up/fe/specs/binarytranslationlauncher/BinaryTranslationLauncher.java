@@ -1,3 +1,5 @@
+package pt.up.fe.specs.binarytranslationlauncher;
+
 import java.io.*;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
@@ -62,8 +64,7 @@ public class BinaryTranslationLauncher implements AppDefaultConfig, AppSource {
 
     @Override
     public SetupDefinition getEnumKeys() {
-        // TODO Auto-generated method stub
-        return null;
+        return SetupDefinition.create(BinaryTranslationSetup.class);
     }
 
     @Override
