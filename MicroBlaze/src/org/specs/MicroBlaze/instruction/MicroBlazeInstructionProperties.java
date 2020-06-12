@@ -346,7 +346,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
 
     /*
      * 
-     */
+     *
     public InstructionExpression getExpression() {
         // get expression assuming that expression enum name is equal to
         // enum name of properties enum
@@ -355,7 +355,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
         } catch (Exception ex) {
             return null;
         }
-    }
+    }*/
 
     /*
      * Only used for Junit tests!

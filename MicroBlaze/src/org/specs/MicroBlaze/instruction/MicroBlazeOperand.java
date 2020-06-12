@@ -1,12 +1,10 @@
 package org.specs.MicroBlaze.instruction;
 
-import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
+import static pt.up.fe.specs.binarytranslation.instruction.operand.OperandType.*;
 
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmField;
 
-import pt.up.fe.specs.binarytranslation.instruction.AOperand;
-import pt.up.fe.specs.binarytranslation.instruction.AOperandProperties;
-import pt.up.fe.specs.binarytranslation.instruction.OperandProperties;
+import pt.up.fe.specs.binarytranslation.instruction.operand.*;
 
 public class MicroBlazeOperand extends AOperand {
 

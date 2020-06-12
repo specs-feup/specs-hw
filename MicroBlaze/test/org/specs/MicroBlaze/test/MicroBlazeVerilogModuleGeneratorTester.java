@@ -8,7 +8,7 @@ import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.hardware.custominstruction.CustomInstructionUnitGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.CustomInstructionUnitGenerator;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeVerilogModuleGeneratorTester {
