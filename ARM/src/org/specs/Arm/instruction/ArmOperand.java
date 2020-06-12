@@ -1,10 +1,11 @@
 package org.specs.Arm.instruction;
 
-import static pt.up.fe.specs.binarytranslation.instruction.OperandType.*;
+import static pt.up.fe.specs.binarytranslation.instruction.operand.OperandType.*;
 
 import org.specs.Arm.parsing.ArmAsmField;
 
 import pt.up.fe.specs.binarytranslation.instruction.*;
+import pt.up.fe.specs.binarytranslation.instruction.operand.*;
 
 public class ArmOperand extends AOperand {
 

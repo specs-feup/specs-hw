@@ -9,7 +9,7 @@ import org.specs.Arm.instruction.ArmInstruction;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.HashedSequence;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class ArmSymbolifyTest {
 
