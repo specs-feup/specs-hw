@@ -1,9 +1,9 @@
 package org.specs.Arm.parsing;
 
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
-import pt.up.fe.specs.binarytranslation.parsing.GenericIsaParser;
+import pt.up.fe.specs.binarytranslation.parsing.AIsaParser;
 
-public class ArmIsaParser extends GenericIsaParser {
+public class ArmIsaParser extends AIsaParser {
 
     public ArmIsaParser() {
         super(ArmInstructionParsers.PARSERS, ArmAsmField.getFields());

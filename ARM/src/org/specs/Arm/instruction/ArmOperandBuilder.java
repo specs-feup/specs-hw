@@ -5,6 +5,7 @@ import java.util.*;
 import org.specs.Arm.parsing.ArmAsmField;
 
 import pt.up.fe.specs.binarytranslation.instruction.*;
+import pt.up.fe.specs.binarytranslation.instruction.operand.*;
 
 /*
  * this class only exists to provide a shorthandle to the providers

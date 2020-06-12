@@ -13,7 +13,7 @@ import org.specs.Arm.instruction.ArmInstructionExtend;
 import org.specs.Arm.instruction.ArmInstructionShift;
 import org.specs.Arm.instruction.ArmOperandBuilder;
 
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class ArmAsmOperandGetter {
 

@@ -549,10 +549,4 @@ public enum ArmInstructionProperties implements InstructionProperties {
     public AsmFieldData getFieldData() {
         return fieldData;
     }
-
-    @Override
-    public InstructionExpression getExpression() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }

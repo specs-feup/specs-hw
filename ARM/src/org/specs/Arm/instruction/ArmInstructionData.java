@@ -5,10 +5,8 @@ import java.util.List;
 
 import org.specs.Arm.parsing.ArmAsmFieldData;
 
-import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
-import pt.up.fe.specs.binarytranslation.instruction.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.*;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 /**
  * This class contains the interpreted fields, accessible trough getters, which are read from the raw parser field data,
