@@ -13,17 +13,11 @@
 
 package pt.up.fe.specs.simulator;
 
-/**
- * Registers of the machine.
- * 
- * @author jbispo
- *
- */
-public interface Registers {
+public interface MemoryElement {
 
-    Number read(String register);
+    Number read(Number address);
 
-    Number write(String register, Number value);
+    Number write(Number address, Number value);
 
     /*
     default Number read(Enum<?> register) {
@@ -34,4 +28,5 @@ public interface Registers {
     
     }
     */
+
 }

@@ -15,9 +15,9 @@ package pt.up.fe.specs.simulator;
 
 public interface Machine {
 
-    Memory getMemory();
+    MemoryElement getMemory();
 
-    Registers getRegisters();
+    MemoryElement getRegisters();
 
-    String getPCRegister();
+    Number getPCRegister();
 }
