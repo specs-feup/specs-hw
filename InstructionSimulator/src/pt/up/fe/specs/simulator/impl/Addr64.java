@@ -63,4 +63,8 @@ public class Addr64 implements Addr {
         return true;
     }
 
+    @Override
+    public int compareTo(Addr o) {
+        return addr.compareTo(o.toNumber().longValue());
+    }
 }
