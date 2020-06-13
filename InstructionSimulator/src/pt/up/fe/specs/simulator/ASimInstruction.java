@@ -16,9 +16,9 @@ package pt.up.fe.specs.simulator;
 public abstract class ASimInstruction implements SimInstruction {
 
     private final Machine machine;
-    private final Number address;
+    private final Addr address;
 
-    public ASimInstruction(Machine machine, Number address) {
+    public ASimInstruction(Machine machine, Addr address) {
         this.machine = machine;
         this.address = address;
     }
@@ -29,7 +29,7 @@ public abstract class ASimInstruction implements SimInstruction {
     }
 
     @Override
-    public Number getAddress() {
+    public Addr getAddress() {
         return address;
     }
 

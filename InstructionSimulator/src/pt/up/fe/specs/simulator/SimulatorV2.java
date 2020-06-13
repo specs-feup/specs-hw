@@ -23,6 +23,10 @@ public class SimulatorV2 {
         this.machine = machine;
     }
 
+    public Machine getMachine() {
+        return machine;
+    }
+
     public void execute(Number startAddress) {
         // Set address
         machine.setStartAddress(startAddress);

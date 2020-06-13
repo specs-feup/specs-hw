@@ -16,12 +16,13 @@ package pt.up.fe.specs.simulator.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import pt.up.fe.specs.simulator.Addr;
 import pt.up.fe.specs.simulator.MemoryElement;
 
 public class GenericMemoryElement implements MemoryElement {
 
     private final String name;
-    private final Map<Number, Number> memory;
+    private final Map<Addr, Number> memory;
 
     public GenericMemoryElement(String name) {
         this.name = name;
@@ -29,14 +30,14 @@ public class GenericMemoryElement implements MemoryElement {
     }
 
     @Override
-    public Number read(Number address) {
+    public Number read(Addr address) {
         var value = memory.get(address);
 
         return value;
     }
 
     @Override
-    public Number write(Number address, Number value) {
+    public Number write(Addr address, Number value) {
         return memory.put(address, value);
     }
 

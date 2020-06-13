@@ -17,7 +17,7 @@ public interface SimInstruction {
 
     void execute();
 
-    Number getAddress();
+    Addr getAddress();
 
     Machine getMachine();
 }

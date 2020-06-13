@@ -13,18 +13,23 @@
 
 package pt.up.fe.specs.simulator;
 
-public interface Machine {
+import pt.up.fe.specs.util.SpecsStrings;
 
-    MemoryElement getMemory();
+/**
+ * Represents an address of a machine (e.g., 32-bit or 64-bit number)
+ * 
+ * @author jbispo
+ *
+ */
+public interface Addr {
 
-    MemoryElement getRegisters();
+    Number toNumber();
 
-    boolean hasStopped();
+    int getBitwidth();
 
-    SimInstruction nextInstruction();
+    Addr add(Number value);
 
-    void setStartAddress(Number startAddress);
-
-    Addr toAddr(Number addr);
-    // int getPCIncrement();
+    default String getHexString() {
+        return SpecsStrings.toHexString(toNumber().longValue(), getBitwidth() / 4);
+    }
 }
