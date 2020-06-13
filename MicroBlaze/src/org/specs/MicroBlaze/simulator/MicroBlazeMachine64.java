@@ -13,15 +13,22 @@
 
 package org.specs.MicroBlaze.simulator;
 
-public class MicroBlazeMachine64 extends MicroBlazeMachine<Long> {
+import pt.up.fe.specs.simulator.Addr;
+import pt.up.fe.specs.simulator.impl.Addr64;
+
+public class MicroBlazeMachine64 extends MicroBlazeMachine {
 
     @Override
-    protected Long toAddr(Number number) {
-        return number.longValue();
+    public Addr toAddr(Number number) {
+        if (number == null) {
+            return null;
+        }
+
+        return new Addr64(number.longValue());
     }
 
-    @Override
-    protected int getAddrBitwidth() {
-        return 64;
-    }
+    // @Override
+    // protected int getAddrBitwidth() {
+    // return 64;
+    // }
 }

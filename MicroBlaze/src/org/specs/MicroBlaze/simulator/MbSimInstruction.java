@@ -14,10 +14,11 @@
 package org.specs.MicroBlaze.simulator;
 
 import pt.up.fe.specs.simulator.ASimInstruction;
+import pt.up.fe.specs.simulator.Addr;
 
 public abstract class MbSimInstruction extends ASimInstruction {
 
-    public MbSimInstruction(MicroBlazeMachine machine, Number address) {
+    public MbSimInstruction(MicroBlazeMachine machine, Addr address) {
         super(machine, address);
     }
 

@@ -16,10 +16,12 @@ package org.specs.MicroBlaze.simulator.insts;
 import org.specs.MicroBlaze.simulator.MbSimInstruction;
 import org.specs.MicroBlaze.simulator.MicroBlazeMachine;
 
+import pt.up.fe.specs.simulator.Addr;
+
 public class Bri extends MbSimInstruction {
 
     private final int imm;
-    private final Number linkRegister;
+    private final Addr linkRegister;
 
     private final boolean isAbsolute;
     private final boolean hasDelaySlot;
@@ -27,9 +29,9 @@ public class Bri extends MbSimInstruction {
     public Bri(MicroBlazeMachine machine, Number address, int imm, Number linkRegister, boolean isAbsolute,
             boolean hasDelaySlot) {
 
-        super(machine, address);
+        super(machine, machine.toAddr(address));
         this.imm = imm;
-        this.linkRegister = linkRegister;
+        this.linkRegister = machine.toAddr(linkRegister);
 
         this.isAbsolute = isAbsolute;
         this.hasDelaySlot = hasDelaySlot;
@@ -47,7 +49,7 @@ public class Bri extends MbSimInstruction {
     protected void executeProper() {
         // System.out.println("BRI IMM Original: " + imm);
         if (linkRegister != null) {
-            getMachine().getRegisters().write(linkRegister, getAddress());
+            getMachine().getRegisters().write(linkRegister, getAddress().toNumber());
         }
 
         // System.out.println("IMM INST: " + getMachine().getImmValue());
@@ -60,7 +62,8 @@ public class Bri extends MbSimInstruction {
         }
 
         // Calculate jump
-        var jumpTarget = isAbsolute ? adjustedImm : getAddress().intValue() + adjustedImm;
+        // var jumpTarget = isAbsolute ? adjustedImm : getAddress().intValue() + adjustedImm;
+        var jumpTarget = isAbsolute ? getMachine().toAddr(adjustedImm) : getAddress().add(adjustedImm);
         // System.out.println("BRI JUMP: " + jumpTarget);
         getMachine().setJump(jumpTarget);
 
