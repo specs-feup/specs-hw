@@ -33,28 +33,28 @@ public abstract class ASimInstruction implements SimInstruction {
         return address;
     }
 
-    @Override
-    public void execute() {
-        // Execute proper
-        executeProper();
-
-        // Increment PC
-        updatePC();
-
-    }
-
-    protected abstract void executeProper();
-
-    /**
-     * By default increments PC by 4.
-     * 
-     * @param machine
-     */
-    protected void updatePC() {
-        var pcReg = getMachine().getPCRegister();
-        // var inc = machine.getPCIncrement();
-        // var newPC = machine.getRegisters().read(pcReg).longValue() + inc;
-        var newPC = getMachine().getRegisters().read(pcReg).longValue() + 4;
-        getMachine().getRegisters().write(pcReg, newPC);
-    }
+    // @Override
+    // public void execute() {
+    // // Execute proper
+    // executeProper();
+    //
+    // // Increment PC
+    // updatePC();
+    //
+    // }
+    //
+    // protected abstract void executeProper();
+    //
+    // /**
+    // * By default increments PC by 4.
+    // *
+    // * @param machine
+    // */
+    // protected void updatePC() {
+    // var pcReg = getMachine().getPCRegister();
+    // // var inc = machine.getPCIncrement();
+    // // var newPC = machine.getRegisters().read(pcReg).longValue() + inc;
+    // var newPC = getMachine().getRegisters().read(pcReg).longValue() + 4;
+    // getMachine().getRegisters().write(pcReg, newPC);
+    // }
 }
