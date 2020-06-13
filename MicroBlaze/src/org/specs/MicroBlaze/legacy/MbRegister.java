@@ -117,7 +117,7 @@ public enum MbRegister implements RegisterId {
     RTLBHI(Integer.parseInt("1004", 16)),
     RTLBSX(Integer.parseInt("1005", 16)),
 
-    IMM(Integer.parseInt("10_000", 16)); // Special register, for representing MicroBlaze IMM
+    IMM(Integer.parseInt("10000", 16)); // Special register, for representing MicroBlaze IMM
 
     /*
         public int getPvrRegEnd() {
