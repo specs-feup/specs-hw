@@ -32,7 +32,7 @@ public class MbInstsConverter {
         this.machine = machine;
     }
 
-    private static final Map<String, BiFunction<MbInstsConverter, Instruction, SimInstruction>> CONVERTERS;
+    private static final Map<String, BiFunction<MbInstsConverter, Instruction, MbSimInstruction>> CONVERTERS;
     static {
         CONVERTERS = new HashMap<>();
 
@@ -43,10 +43,15 @@ public class MbInstsConverter {
         var converter = CONVERTERS.get(instruction.getName());
         SpecsCheck.checkNotNull(converter, () -> "No converter for instruction " + instruction.getName());
 
-        return converter.apply(this, instruction);
+        var simInst = converter.apply(this, instruction);
+
+        // Add instruction to the machine
+        machine.addInstruction(simInst);
+
+        return simInst;
     }
 
-    public static SimInstruction imm(MbInstsConverter converter, Instruction imm) {
+    public static MbSimInstruction imm(MbInstsConverter converter, Instruction imm) {
         var immString = imm.getFieldData().get(AsmFieldData.FIELDS).get("imm");
 
         // Convert imm value to int (is it always positive?)

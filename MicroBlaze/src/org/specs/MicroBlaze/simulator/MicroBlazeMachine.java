@@ -13,29 +13,92 @@
 
 package org.specs.MicroBlaze.simulator;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.specs.MicroBlaze.legacy.MbRegister;
 
+import pt.up.fe.specs.simulator.SimInstruction;
 import pt.up.fe.specs.simulator.impl.AMachine;
 import pt.up.fe.specs.util.SpecsCheck;
+import pt.up.fe.specs.util.SpecsLogs;
 
 public class MicroBlazeMachine extends AMachine {
+
+    private final Map<Number, MbSimInstruction> instructions;
+
+    private Number currentAddr;
+    private Number nextAddr;
 
     // Status of delay slot:
     // > 0 - The is a delay slot down the line
     // 0 - Is currently in the last instruction of the delay slot
     // < 0 - Not in a delay slot currently
-    int currentDelaySlot;
-    Number delaySlotJump;
+    private int currentDelaySlot;
+    private Number delaySlotJump;
 
     // If set, next PC will jump to this value
-    Number jump;
+    private Number jump;
 
     public MicroBlazeMachine() {
+        instructions = new HashMap<>();
+
+        // No current instruction yet
+        currentAddr = null;
+        // By default, start address is 0
+        nextAddr = 0;
+
         this.currentDelaySlot = -1;
         this.delaySlotJump = null;
         this.jump = null;
+    }
+
+    public void addInstruction(MbSimInstruction instruction) {
+        var previousValue = instructions.put(instruction.getAddress(), instruction);
+
+        if (previousValue != null) {
+            SpecsLogs.info("Overwriting instruction at address '" + instruction.getAddress() + "'\nPrevious value: '"
+                    + previousValue + "'\nNew value: '" + instruction + "'");
+        }
+    }
+
+    /**
+     * @return true if current instruction is the same as the next instruction, false otherwise
+     */
+    @Override
+    public boolean hasStopped() {
+        return currentAddr.equals(nextAddr);
+    }
+
+    @Override
+    public SimInstruction nextInstruction() {
+        if (nextAddr == null) {
+            throw new RuntimeException(
+                    "Not address set for next instruction. Make sure previous instruction has executed");
+        }
+
+        // Update addresses
+        currentAddr = nextAddr;
+        nextAddr = null;
+
+        // Get instruction
+        return getInstruction(currentAddr);
+    }
+
+    @Override
+    public void setStartAddress(Number startAddress) {
+        this.currentAddr = null;
+        this.nextAddr = startAddress;
+    }
+
+    private SimInstruction getInstruction(Number address) {
+        var inst = instructions.get(address);
+
+        SpecsCheck.checkNotNull(inst,
+                () -> "No instruction found at address " + Long.toHexString(address.longValue()));
+
+        return inst;
     }
 
     @Override
@@ -90,10 +153,11 @@ public class MicroBlazeMachine extends AMachine {
         return nextPC;
     }
 
-    public Number advancePC() {
-        var nextPC = nextPC();
-        getRegisters().write(getPCRegister(), nextPC);
-        return nextPC;
+    public Number updatePC() {
+        nextAddr = nextPC();
+        // var nextPC = nextPC();
+        getRegisters().write(getPCRegister(), nextAddr);
+        return nextAddr;
     }
 
 }

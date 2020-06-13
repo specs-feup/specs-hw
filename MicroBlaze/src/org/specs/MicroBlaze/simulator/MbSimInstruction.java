@@ -30,15 +30,26 @@ public abstract class MbSimInstruction extends ASimInstruction {
     // getMachine().getRegisters().write(reg, value);
     // }
 
+    @Override
+    public void execute() {
+        // Execute instruction
+        executeProper();
+
+        // Calculate next addr
+        getMachine().updatePC();
+    }
+
+    protected abstract void executeProper();
+
     protected Number getPCReg() {
         return getMachine().getPCRegister();
     }
 
-    @Override
-    protected void updatePC() {
-        getMachine().advancePC();
-        // var nextPC = nextPC();
-        // getMachine().getRegisters().write(getPCReg(), nextPC);
-    }
+    // @Override
+    // protected void updatePC() {
+    // getMachine().advancePC();
+    // // var nextPC = nextPC();
+    // // getMachine().getRegisters().write(getPCReg(), nextPC);
+    // }
 
 }
