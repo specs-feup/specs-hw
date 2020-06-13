@@ -22,8 +22,8 @@ public abstract class AMachine implements Machine {
     private final MemoryElement memory;
 
     public AMachine() {
-        this.registers = new GenericMemoryElement();
-        this.memory = new GenericMemoryElement();
+        this.registers = new GenericMemoryElement("Registers");
+        this.memory = new GenericMemoryElement("RAM");
     }
 
     @Override

@@ -13,20 +13,35 @@
 
 package pt.up.fe.specs.simulator;
 
+import pt.up.fe.specs.util.SpecsLogs;
+
 public interface MemoryElement {
+
+    String getName();
 
     Number read(Number address);
 
     Number write(Number address, Number value);
 
-    /*
+    default Number readSafe(Number address) {
+
+        var value = read(address);
+
+        if (value == null) {
+            SpecsLogs.debug(() -> "Accessing uninitialized memory '" + getName() + "' at address "
+                    + Long.toHexString(address.longValue()));
+            value = 0;
+        }
+
+        return value;
+    }
+
     default Number read(Enum<?> register) {
-        return read(register.);
+        return read(register.ordinal());
     }
-    
+
     default Number write(Enum<?> register, Number value) {
-    
+        return write(register.ordinal(), value);
     }
-    */
 
 }

@@ -20,4 +20,6 @@ public interface Machine {
     MemoryElement getRegisters();
 
     Number getPCRegister();
+
+    int getPCIncrement();
 }
