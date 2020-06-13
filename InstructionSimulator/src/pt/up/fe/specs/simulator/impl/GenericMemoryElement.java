@@ -17,13 +17,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pt.up.fe.specs.simulator.MemoryElement;
-import pt.up.fe.specs.util.SpecsLogs;
 
 public class GenericMemoryElement implements MemoryElement {
 
+    private final String name;
     private final Map<Number, Number> memory;
 
-    public GenericMemoryElement() {
+    public GenericMemoryElement(String name) {
+        this.name = name;
         this.memory = new HashMap<>();
     }
 
@@ -31,17 +32,17 @@ public class GenericMemoryElement implements MemoryElement {
     public Number read(Number address) {
         var value = memory.get(address);
 
-        if (value == null) {
-            SpecsLogs.debug(() -> "Accessing uninitialized memory at address " + Long.toHexString(address.longValue()));
-            value = 0;
-        }
-
         return value;
     }
 
     @Override
     public Number write(Number address, Number value) {
         return memory.put(address, value);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
 }

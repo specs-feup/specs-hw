@@ -42,15 +42,22 @@ public class Simulator {
     }
 
     public void execute(Number startAddress) {
+        // Get instruction
         SimInstruction currentInstruction = getInstruction(startAddress);
+
+        // PC register
+        var pcReg = machine.getPCRegister();
+
+        // Set PC
+        machine.getRegisters().write(pcReg, startAddress);
 
         // Stop when the same instruction is executed twice (e.g., jump to itself)
         while (true) {
+
             // Execute
             currentInstruction.execute(machine);
 
             // Get next instruction
-            var pcReg = machine.getPCRegister();
             var nextInst = machine.getRegisters().read(pcReg);
 
             // Check if should stop
