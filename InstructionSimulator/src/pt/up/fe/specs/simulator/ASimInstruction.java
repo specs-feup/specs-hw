@@ -15,10 +15,17 @@ package pt.up.fe.specs.simulator;
 
 public abstract class ASimInstruction implements SimInstruction {
 
+    private final Machine machine;
     private final Number address;
 
-    public ASimInstruction(Number address) {
+    public ASimInstruction(Machine machine, Number address) {
+        this.machine = machine;
         this.address = address;
+    }
+
+    @Override
+    public Machine getMachine() {
+        return machine;
     }
 
     @Override
@@ -27,27 +34,27 @@ public abstract class ASimInstruction implements SimInstruction {
     }
 
     @Override
-    public void execute(Machine machine) {
+    public void execute() {
         // Execute proper
-        executeProper(machine);
+        executeProper();
 
         // Increment PC
-        updatePC(machine);
+        updatePC();
 
     }
 
-    protected abstract void executeProper(Machine machine);
+    protected abstract void executeProper();
 
     /**
      * By default increments PC by 4.
      * 
      * @param machine
      */
-    protected void updatePC(Machine machine) {
-        var pcReg = machine.getPCRegister();
+    protected void updatePC() {
+        var pcReg = getMachine().getPCRegister();
         // var inc = machine.getPCIncrement();
         // var newPC = machine.getRegisters().read(pcReg).longValue() + inc;
-        var newPC = machine.getRegisters().read(pcReg).longValue() + 4;
-        machine.getRegisters().write(pcReg, newPC);
+        var newPC = getMachine().getRegisters().read(pcReg).longValue() + 4;
+        getMachine().getRegisters().write(pcReg, newPC);
     }
 }

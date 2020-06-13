@@ -22,28 +22,35 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 public class Simulator {
 
-    private final Machine machine;
+    // private final Machine machine;
     private final Map<Number, SimInstruction> instructions;
 
-    public Simulator(Machine machine) {
-        this.machine = machine;
+    // public Simulator(Machine machine) {
+    public Simulator(Collection<SimInstruction> instructions) {
+        // this.machine = machine;
         this.instructions = new HashMap<>();
-    }
-
-    public void setInstructions(Collection<SimInstruction> instructions) {
-        if (this.instructions.isEmpty()) {
-            this.instructions.clear();
-        }
-
         for (var inst : instructions) {
             this.instructions.put(inst.getAddress(), inst);
         }
-
     }
+
+    // public void setInstructions(Collection<SimInstruction> instructions) {
+    // if (this.instructions.isEmpty()) {
+    // this.instructions.clear();
+    // }
+    //
+    // for (var inst : instructions) {
+    // this.instructions.put(inst.getAddress(), inst);
+    // }
+    //
+    // }
 
     public void execute(Number startAddress) {
         // Get instruction
         SimInstruction currentInstruction = getInstruction(startAddress);
+
+        // Get machine
+        var machine = currentInstruction.getMachine();
 
         // PC register
         var pcReg = machine.getPCRegister();
@@ -55,7 +62,8 @@ public class Simulator {
         while (true) {
 
             // Execute
-            currentInstruction.execute(machine);
+            // currentInstruction.execute(machine);
+            currentInstruction.execute();
 
             // Get next instruction
             var nextInst = machine.getRegisters().read(pcReg);
