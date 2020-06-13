@@ -32,7 +32,7 @@ public abstract class ASimInstruction implements SimInstruction {
         executeProper(machine);
 
         // Increment PC
-        incrementPC(machine);
+        updatePC(machine);
 
     }
 
@@ -43,10 +43,11 @@ public abstract class ASimInstruction implements SimInstruction {
      * 
      * @param machine
      */
-    protected void incrementPC(Machine machine) {
+    protected void updatePC(Machine machine) {
         var pcReg = machine.getPCRegister();
-        var inc = machine.getPCIncrement();
-        var newPC = machine.getRegisters().read(pcReg).longValue() + inc;
+        // var inc = machine.getPCIncrement();
+        // var newPC = machine.getRegisters().read(pcReg).longValue() + inc;
+        var newPC = machine.getRegisters().read(pcReg).longValue() + 4;
         machine.getRegisters().write(pcReg, newPC);
     }
 }

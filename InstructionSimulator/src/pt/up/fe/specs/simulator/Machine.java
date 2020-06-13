@@ -21,5 +21,5 @@ public interface Machine {
 
     Number getPCRegister();
 
-    int getPCIncrement();
+    // int getPCIncrement();
 }
