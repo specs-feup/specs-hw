@@ -41,10 +41,6 @@ public abstract class MbSimInstruction extends ASimInstruction {
 
     protected abstract void executeProper();
 
-    protected Number getPCReg() {
-        return getMachine().getPCRegister();
-    }
-
     // @Override
     // protected void updatePC() {
     // getMachine().advancePC();

@@ -41,6 +41,9 @@ public class MicroBlazeMachine extends AMachine {
     // If set, next PC will jump to this value
     private Number jump;
 
+    // IMM value
+    private Integer immValue;
+
     public MicroBlazeMachine() {
         instructions = new HashMap<>();
 
@@ -52,6 +55,8 @@ public class MicroBlazeMachine extends AMachine {
         this.currentDelaySlot = -1;
         this.delaySlotJump = null;
         this.jump = null;
+
+        this.immValue = null;
     }
 
     public void addInstruction(MbSimInstruction instruction) {
@@ -101,7 +106,6 @@ public class MicroBlazeMachine extends AMachine {
         return inst;
     }
 
-    @Override
     public Number getPCRegister() {
         return MbRegister.RPC.ordinal();
     }
@@ -158,6 +162,13 @@ public class MicroBlazeMachine extends AMachine {
         // var nextPC = nextPC();
         getRegisters().write(getPCRegister(), nextAddr);
         return nextAddr;
+    }
+
+    public void setImmValue(int immValue) {
+        SpecsCheck.checkArgument(this.immValue == null,
+                () -> "Current imm value is not null (" + this.immValue + "), tried to set it with value " + immValue);
+
+        this.immValue = immValue;
     }
 
 }

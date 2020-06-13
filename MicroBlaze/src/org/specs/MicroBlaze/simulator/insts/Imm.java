@@ -28,8 +28,8 @@ public class Imm extends MbSimInstruction {
 
     @Override
     protected void executeProper() {
-        // Set register value
-
+        // Set imm value
+        getMachine().setImmValue(immValue);
     }
 
 }
