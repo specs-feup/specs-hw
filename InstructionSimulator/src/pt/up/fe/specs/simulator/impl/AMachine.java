@@ -14,26 +14,25 @@
 package pt.up.fe.specs.simulator.impl;
 
 import pt.up.fe.specs.simulator.Machine;
-import pt.up.fe.specs.simulator.Memory;
-import pt.up.fe.specs.simulator.Registers;
+import pt.up.fe.specs.simulator.MemoryElement;
 
 public abstract class AMachine implements Machine {
 
-    private final Registers registers;
-    private final Memory memory;
+    private final MemoryElement registers;
+    private final MemoryElement memory;
 
     public AMachine() {
-        this.registers = new GenericRegisters();
-        this.memory = new GenericMemory();
+        this.registers = new GenericMemoryElement();
+        this.memory = new GenericMemoryElement();
     }
 
     @Override
-    public Memory getMemory() {
+    public MemoryElement getMemory() {
         return memory;
     }
 
     @Override
-    public Registers getRegisters() {
+    public MemoryElement getRegisters() {
         return registers;
     }
 

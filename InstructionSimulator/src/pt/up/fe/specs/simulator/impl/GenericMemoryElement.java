@@ -16,32 +16,32 @@ package pt.up.fe.specs.simulator.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import pt.up.fe.specs.simulator.Registers;
+import pt.up.fe.specs.simulator.MemoryElement;
+import pt.up.fe.specs.util.SpecsLogs;
 
-public class GenericRegisters implements Registers {
+public class GenericMemoryElement implements MemoryElement {
 
-    private final Map<String, Number> registers;
+    private final Map<Number, Number> memory;
 
-    public GenericRegisters() {
-        this.registers = new HashMap<>();
+    public GenericMemoryElement() {
+        this.memory = new HashMap<>();
     }
 
     @Override
-    public Number read(String register) {
-        var value = registers.get(register);
+    public Number read(Number address) {
+        var value = memory.get(address);
 
-        // If null, assume value is zero an initialize
         if (value == null) {
+            SpecsLogs.debug(() -> "Accessing uninitialized memory at address " + Long.toHexString(address.longValue()));
             value = 0;
-            registers.put(register, value);
         }
 
         return value;
     }
 
     @Override
-    public Number write(String register, Number value) {
-        return registers.put(register, value);
+    public Number write(Number address, Number value) {
+        return memory.put(address, value);
     }
 
 }
