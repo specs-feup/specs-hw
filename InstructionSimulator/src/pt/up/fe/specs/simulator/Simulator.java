@@ -22,28 +22,14 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 public class Simulator {
 
-    // private final Machine machine;
     private final Map<Number, SimInstruction> instructions;
 
-    // public Simulator(Machine machine) {
     public Simulator(Collection<SimInstruction> instructions) {
-        // this.machine = machine;
         this.instructions = new HashMap<>();
         for (var inst : instructions) {
             this.instructions.put(inst.getAddress(), inst);
         }
     }
-
-    // public void setInstructions(Collection<SimInstruction> instructions) {
-    // if (this.instructions.isEmpty()) {
-    // this.instructions.clear();
-    // }
-    //
-    // for (var inst : instructions) {
-    // this.instructions.put(inst.getAddress(), inst);
-    // }
-    //
-    // }
 
     public void execute(Number startAddress) {
         // Get instruction

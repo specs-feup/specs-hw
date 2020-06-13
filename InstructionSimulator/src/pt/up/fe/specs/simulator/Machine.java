@@ -19,7 +19,18 @@ public interface Machine {
 
     MemoryElement getRegisters();
 
+    /**
+     * @deprecated
+     * @return
+     */
+    @Deprecated
     Number getPCRegister();
+
+    boolean hasStopped();
+
+    SimInstruction nextInstruction();
+
+    void setStartAddress(Number startAddress);
 
     // int getPCIncrement();
 }
