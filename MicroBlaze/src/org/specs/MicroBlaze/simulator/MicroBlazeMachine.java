@@ -24,9 +24,9 @@ public class MicroBlazeMachine extends AMachine {
         return MbRegister.RPC.ordinal();
     }
 
-    @Override
-    public int getPCIncrement() {
-        return 4;
-    }
+    // @Override
+    // public int getPCIncrement() {
+    // return 4;
+    // }
 
 }
