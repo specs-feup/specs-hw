@@ -13,30 +13,39 @@
 
 package org.specs.MicroBlaze.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.specs.MicroBlaze.simulator.MbInstsConverter;
-import org.specs.MicroBlaze.simulator.MicroBlazeMachine;
+import org.specs.MicroBlaze.simulator.MicroBlazeMachine32;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.simulator.SimInstruction;
 import pt.up.fe.specs.simulator.SimulatorV2;
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.SpecsSystem;
 
 public class MicroBlazeSimulatorTest {
 
+    @BeforeClass
+    public static void init() {
+        SpecsSystem.programStandardInit();
+    }
+
     @Test
-    public void test() {
+    public void testTiny() {
 
         // Get instructions
         File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/tiny.txt");
         fd.deleteOnExit();
 
         // Instructions converter
-        var machine = new MicroBlazeMachine();
+        var machine = new MicroBlazeMachine32();
         MbInstsConverter converter = new MbInstsConverter(machine);
 
         List<SimInstruction> simInsts = new ArrayList<>();
@@ -59,6 +68,9 @@ public class MicroBlazeSimulatorTest {
         // var simulator = new Simulator(simInsts);
         var simulator = new SimulatorV2(machine);
         simulator.execute(0);
+
+        assertEquals("", simulator.getMachine().getMemory().toString());
+        assertEquals("rpc: 128", simulator.getMachine().getRegisters().toString());
     }
 
 }
