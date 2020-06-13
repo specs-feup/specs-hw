@@ -21,7 +21,7 @@ import pt.up.fe.specs.util.SpecsStrings;
  * @author jbispo
  *
  */
-public interface Addr {
+public interface Addr extends Comparable<Addr> {
 
     Number toNumber();
 
@@ -32,4 +32,5 @@ public interface Addr {
     default String getHexString() {
         return SpecsStrings.toHexString(toNumber().longValue(), getBitwidth() / 4);
     }
+
 }
