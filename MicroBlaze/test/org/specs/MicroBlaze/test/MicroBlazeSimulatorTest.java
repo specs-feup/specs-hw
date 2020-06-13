@@ -23,7 +23,7 @@ import org.specs.MicroBlaze.simulator.MicroBlazeMachine;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.simulator.SimInstruction;
-import pt.up.fe.specs.simulator.Simulator;
+import pt.up.fe.specs.simulator.SimulatorV2;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeSimulatorTest {
@@ -56,7 +56,8 @@ public class MicroBlazeSimulatorTest {
             }
         }
 
-        var simulator = new Simulator(simInsts);
+        // var simulator = new Simulator(simInsts);
+        var simulator = new SimulatorV2(machine);
         simulator.execute(0);
     }
 
