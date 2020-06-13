@@ -26,9 +26,19 @@ public abstract class MbSimInstruction extends ASimInstruction {
         return (MicroBlazeMachine) super.getMachine();
     }
 
-    // @Override
-    // protected void updatePC() {
-    // // // TODO Auto-generated method stub
-    // // super.updatePC(machine);
+    // protected Number writeReg(Number reg, int value) {
+    // getMachine().getRegisters().write(reg, value);
     // }
+
+    protected Number getPCReg() {
+        return getMachine().getPCRegister();
+    }
+
+    @Override
+    protected void updatePC() {
+        getMachine().advancePC();
+        // var nextPC = nextPC();
+        // getMachine().getRegisters().write(getPCReg(), nextPC);
+    }
+
 }
