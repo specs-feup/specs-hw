@@ -15,7 +15,7 @@ package org.specs.MicroBlaze.simulator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import org.specs.MicroBlaze.simulator.insts.Imm;
 
@@ -26,7 +26,13 @@ import pt.up.fe.specs.util.SpecsCheck;
 
 public class MbInstsConverter {
 
-    private static final Map<String, Function<Instruction, SimInstruction>> CONVERTERS;
+    private final MicroBlazeMachine machine;
+
+    public MbInstsConverter(MicroBlazeMachine machine) {
+        this.machine = machine;
+    }
+
+    private static final Map<String, BiFunction<MbInstsConverter, Instruction, SimInstruction>> CONVERTERS;
     static {
         CONVERTERS = new HashMap<>();
 
@@ -37,15 +43,15 @@ public class MbInstsConverter {
         var converter = CONVERTERS.get(instruction.getName());
         SpecsCheck.checkNotNull(converter, () -> "No converter for instruction " + instruction.getName());
 
-        return converter.apply(instruction);
+        return converter.apply(this, instruction);
     }
 
-    public static SimInstruction imm(Instruction imm) {
+    public static SimInstruction imm(MbInstsConverter converter, Instruction imm) {
         var immString = imm.getFieldData().get(AsmFieldData.FIELDS).get("imm");
 
         // Convert imm value to int (is it always positive?)
         var immValue = Integer.parseInt(immString);
 
-        return new Imm(imm.getAddress(), immValue);
+        return new Imm(converter.machine, imm.getAddress(), immValue);
     }
 }
