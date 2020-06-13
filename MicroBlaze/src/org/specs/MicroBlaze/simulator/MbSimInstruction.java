@@ -14,17 +14,21 @@
 package org.specs.MicroBlaze.simulator;
 
 import pt.up.fe.specs.simulator.ASimInstruction;
-import pt.up.fe.specs.simulator.Machine;
 
 public abstract class MbSimInstruction extends ASimInstruction {
 
-    public MbSimInstruction(Number address) {
-        super(address);
+    public MbSimInstruction(MicroBlazeMachine machine, Number address) {
+        super(machine, address);
     }
 
     @Override
-    protected void updatePC(Machine machine) {
-        // TODO Auto-generated method stub
-        super.updatePC(machine);
+    public MicroBlazeMachine getMachine() {
+        return (MicroBlazeMachine) super.getMachine();
     }
+
+    // @Override
+    // protected void updatePC() {
+    // // // TODO Auto-generated method stub
+    // // super.updatePC(machine);
+    // }
 }

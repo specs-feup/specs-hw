@@ -13,21 +13,21 @@
 
 package org.specs.MicroBlaze.simulator.insts;
 
-import pt.up.fe.specs.simulator.ASimInstruction;
-import pt.up.fe.specs.simulator.Machine;
+import org.specs.MicroBlaze.simulator.MbSimInstruction;
+import org.specs.MicroBlaze.simulator.MicroBlazeMachine;
 
-public class Imm extends ASimInstruction {
+public class Imm extends MbSimInstruction {
 
     private final int immValue;
 
-    public Imm(Number address, int immValue) {
-        super(address);
+    public Imm(MicroBlazeMachine machine, Number address, int immValue) {
+        super(machine, address);
 
         this.immValue = immValue;
     }
 
     @Override
-    protected void executeProper(Machine machine) {
+    protected void executeProper() {
         // Set register value
 
     }

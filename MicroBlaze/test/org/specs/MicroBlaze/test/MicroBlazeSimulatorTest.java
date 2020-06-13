@@ -30,14 +30,14 @@ public class MicroBlazeSimulatorTest {
 
     @Test
     public void test() {
-        var machine = new MicroBlazeMachine();
-        var simulator = new Simulator(machine);
 
         // Get instructions
         File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/tiny.txt");
         fd.deleteOnExit();
 
-        MbInstsConverter converter = new MbInstsConverter();
+        // Instructions converter
+        var machine = new MicroBlazeMachine();
+        MbInstsConverter converter = new MbInstsConverter(machine);
 
         List<SimInstruction> simInsts = new ArrayList<>();
 
@@ -56,7 +56,7 @@ public class MicroBlazeSimulatorTest {
             }
         }
 
-        simulator.setInstructions(simInsts);
+        var simulator = new Simulator(simInsts);
         simulator.execute(0);
     }
 
