@@ -18,13 +18,13 @@ import java.util.Map;
 
 import org.specs.MicroBlaze.legacy.MbRegister;
 
+import pt.up.fe.specs.simulator.Addr;
 import pt.up.fe.specs.simulator.SimInstruction;
 import pt.up.fe.specs.simulator.impl.AMachine;
 import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsLogs;
-import pt.up.fe.specs.util.SpecsStrings;
 
-public abstract class MicroBlazeMachine<Addr extends Number> extends AMachine {
+public abstract class MicroBlazeMachine extends AMachine {
 
     private final Map<Addr, MbSimInstruction> instructions;
 
@@ -57,12 +57,10 @@ public abstract class MicroBlazeMachine<Addr extends Number> extends AMachine {
         this.immValue = null;
     }
 
-    protected abstract Addr toAddr(Number number);
-
-    protected abstract int getAddrBitwidth();
+    // protected abstract int getAddrBitwidth();
 
     public void addInstruction(MbSimInstruction instruction) {
-        var previousValue = instructions.put(toAddr(instruction.getAddress()), instruction);
+        var previousValue = instructions.put(instruction.getAddress(), instruction);
 
         if (previousValue != null) {
             SpecsLogs.info("Overwriting instruction at address '" + instruction.getAddress() + "'\nPrevious value: '"
@@ -107,18 +105,18 @@ public abstract class MicroBlazeMachine<Addr extends Number> extends AMachine {
         this.nextAddr = toAddr(startAddress);
     }
 
-    private SimInstruction getInstruction(Number address) {
-        var inst = instructions.get(toAddr(address));
+    private SimInstruction getInstruction(Addr address) {
+        var inst = instructions.get(address);
         // System.out.println("INSTRUC: " + instructions);
         SpecsCheck.checkNotNull(inst,
-                () -> "No instruction found at address " + address + " (" +
-                        SpecsStrings.toHexString(address.longValue(), getAddrBitwidth() / 4) + ")");
+                () -> "No instruction found at address " + address.toNumber() + " (" +
+                        address + ")");
 
         return inst;
     }
 
-    public Number getPCRegister() {
-        return MbRegister.RPC.ordinal();
+    public Addr getPCRegister() {
+        return toAddr(MbRegister.RPC.ordinal());
     }
 
     /**
@@ -184,11 +182,12 @@ public abstract class MicroBlazeMachine<Addr extends Number> extends AMachine {
         */
     }
 
-    private Number nextPC() {
+    private Addr nextPC() {
         // If in delay slot, just execute next instruction
         if (inDelaySlotQueue()) {
             // Current address + 4
-            return currentAddr.intValue() + 4;
+            // return currentAddr.intValue() + 4;
+            return currentAddr.add(4);
         }
 
         // // Delay slot
@@ -205,17 +204,18 @@ public abstract class MicroBlazeMachine<Addr extends Number> extends AMachine {
         }
 
         // Current address + 4
-        return currentAddr.intValue() + 4;
+        // return currentAddr.intValue() + 4;
+        return currentAddr.add(4);
         // var currentPC = getRegisters().read(getPCRegister());
         // var nextPC = currentPC.intValue() + 4;
         //
         // return nextPC;
     }
 
-    public Number updatePC() {
-        nextAddr = toAddr(nextPC());
+    public Addr updatePC() {
+        nextAddr = nextPC();
         // var nextPC = nextPC();
-        getRegisters().write(getPCRegister(), nextAddr);
+        getRegisters().write(getPCRegister(), nextAddr.toNumber());
         return nextAddr;
     }
 
@@ -265,10 +265,10 @@ public abstract class MicroBlazeMachine<Addr extends Number> extends AMachine {
         this.currentDelaySlot = 1;
     }
 
-    public void setJump(int jumpAddr) {
+    public void setJump(Addr jumpAddr) {
         SpecsCheck.checkArgument(jump == null, () -> "Expected jump to be null, is " + jump);
 
-        this.jump = toAddr(jumpAddr);
+        this.jump = jumpAddr;
 
     }
 

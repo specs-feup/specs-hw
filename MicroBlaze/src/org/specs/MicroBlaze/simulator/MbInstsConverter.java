@@ -34,6 +34,7 @@ public class MbInstsConverter {
     }
 
     private static final Map<String, BiFunction<MbInstsConverter, Instruction, MbSimInstruction>> CONVERTERS;
+
     static {
         CONVERTERS = new HashMap<>();
 
@@ -73,7 +74,9 @@ public class MbInstsConverter {
     // return Bri.brai(converter.machine, inst.getAddress(), immValue);
     // }
 
-    public static MbSimInstruction bri(MbInstsConverter converter, Instruction inst, boolean isAbsolute) {
+    public static MbSimInstruction bri(MbInstsConverter converter, Instruction inst,
+            boolean isAbsolute) {
+
         var immString = inst.getFieldData().get(AsmFieldData.FIELDS).get("imm");
 
         // System.out.println("BRI FIELDS: " + inst.getFieldData());

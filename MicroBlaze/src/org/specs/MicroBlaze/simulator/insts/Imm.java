@@ -21,7 +21,7 @@ public class Imm extends MbSimInstruction {
     private final int immValue;
 
     public Imm(MicroBlazeMachine machine, Number address, int immValue) {
-        super(machine, address);
+        super(machine, machine.toAddr(address));
 
         this.immValue = immValue;
     }

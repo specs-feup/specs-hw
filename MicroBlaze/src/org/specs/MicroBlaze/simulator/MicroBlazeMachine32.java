@@ -13,16 +13,23 @@
 
 package org.specs.MicroBlaze.simulator;
 
-public class MicroBlazeMachine32 extends MicroBlazeMachine<Integer> {
+import pt.up.fe.specs.simulator.Addr;
+import pt.up.fe.specs.simulator.impl.Addr32;
+
+public class MicroBlazeMachine32 extends MicroBlazeMachine {
 
     @Override
-    protected Integer toAddr(Number number) {
-        return number.intValue();
+    public Addr toAddr(Number number) {
+        if (number == null) {
+            return null;
+        }
+
+        return new Addr32(number.intValue());
     }
 
-    @Override
-    protected int getAddrBitwidth() {
-        return 32;
-    }
+    // @Override
+    // protected int getAddrBitwidth() {
+    // return 32;
+    // }
 
 }
