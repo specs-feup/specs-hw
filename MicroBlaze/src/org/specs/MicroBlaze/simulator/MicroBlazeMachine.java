@@ -55,6 +55,17 @@ public abstract class MicroBlazeMachine extends AMachine {
         this.jump = null;
 
         this.immValue = null;
+
+        // Build and set register map
+        Map<Addr, String> registerMap = new HashMap<>();
+
+        for (var mbReg : MbRegister.values()) {
+            // registerMap.put(toAddr(mbReg.ordinal()), mbReg.getName());
+            // registerMap.put(toAddr(mbReg.ordinal()), mbReg.getAsmRepresentation());
+            registerMap.put(toAddr(mbReg.ordinal()), mbReg.getName());
+        }
+
+        getRegisters().setAddrNames(registerMap);
     }
 
     // protected abstract int getAddrBitwidth();
