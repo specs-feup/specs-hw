@@ -27,12 +27,6 @@ import pt.up.fe.specs.util.SpecsCheck;
 
 public class MbInstsConverter {
 
-    private final MicroBlazeMachine machine;
-
-    public MbInstsConverter(MicroBlazeMachine machine) {
-        this.machine = machine;
-    }
-
     private static final Map<String, BiFunction<MbInstsConverter, Instruction, MbSimInstruction>> CONVERTERS;
 
     static {
@@ -41,6 +35,12 @@ public class MbInstsConverter {
         CONVERTERS.put("brai", (conv, inst) -> MbInstsConverter.bri(conv, inst, true));
         CONVERTERS.put("bri", (conv, inst) -> MbInstsConverter.bri(conv, inst, false));
         CONVERTERS.put("imm", MbInstsConverter::imm);
+    }
+
+    private final MicroBlazeMachine machine;
+
+    public MbInstsConverter(MicroBlazeMachine machine) {
+        this.machine = machine;
     }
 
     public SimInstruction convert(Instruction instruction) {

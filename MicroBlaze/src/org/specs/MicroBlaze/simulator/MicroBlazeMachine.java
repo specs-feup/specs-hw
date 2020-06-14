@@ -132,34 +132,6 @@ public abstract class MicroBlazeMachine extends AMachine {
 
     /**
      * 
-     * 
-     * @return the next PC address if we are at the last instruction of a delay slot, empty otherwise.
-     */
-    /*
-    private Optional<Number> processDelaySlot() {
-        // Not in a delay slot
-        if (currentDelaySlot < 0) {
-            return Optional.empty();
-        }
-    
-        // In a delay slot, but not the last instruction
-        if (currentDelaySlot > 0) {
-            currentDelaySlot--;
-            return Optional.empty();
-        }
-    
-        // In a delay slot
-        SpecsCheck.checkArgument(jump == null, () -> "Currently in a delay slot, 'jump' should be null but is " + jump);
-    
-        var jumpAddr = delaySlotJump;
-        delaySlotJump = null;
-    
-        return Optional.of(jumpAddr);
-    }
-    */
-
-    /**
-     * 
      * @return true if currently in a delay queue
      */
     private boolean inDelaySlotQueue() {
@@ -170,42 +142,14 @@ public abstract class MicroBlazeMachine extends AMachine {
         }
 
         return inDelayQueue;
-
-        /*
-        // Not in a delay slot
-        if (currentDelaySlot < 0) {
-            return Optional.empty();
-        }
-        
-        // In a delay slot, but not the last instruction
-        if (currentDelaySlot > 0) {
-            currentDelaySlot--;
-            return Optional.empty();
-        }
-        
-        // In a delay slot
-        SpecsCheck.checkArgument(jump == null, () -> "Currently in a delay slot, 'jump' should be null but is " + jump);
-        
-        var jumpAddr = delaySlotJump;
-        delaySlotJump = null;
-        
-        return Optional.of(jumpAddr);
-        */
     }
 
     private Addr nextPC() {
         // If in delay slot, just execute next instruction
         if (inDelaySlotQueue()) {
             // Current address + 4
-            // return currentAddr.intValue() + 4;
             return currentAddr.add(4);
         }
-
-        // // Delay slot
-        // var delaySlotJump = inDelaySlotQueue();
-        // if (delaySlotJump.isPresent()) {
-        // return delaySlotJump.get();
-        // }
 
         // If there is a jump scheduled, return it
         if (jump != null) {
@@ -215,12 +159,7 @@ public abstract class MicroBlazeMachine extends AMachine {
         }
 
         // Current address + 4
-        // return currentAddr.intValue() + 4;
         return currentAddr.add(4);
-        // var currentPC = getRegisters().read(getPCRegister());
-        // var nextPC = currentPC.intValue() + 4;
-        //
-        // return nextPC;
     }
 
     public Addr updatePC() {
