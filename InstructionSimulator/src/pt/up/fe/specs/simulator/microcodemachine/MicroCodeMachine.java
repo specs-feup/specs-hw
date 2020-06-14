@@ -99,14 +99,23 @@ public class MicroCodeMachine extends AMachine {
     }
 
     public void run(Number startAddress) {
-
+        // int counter = 0;
+        // int max = 10_000_000;
         // Set address
         setStartAddress(startAddress);
 
         while (!hasStopped()) {
+            // while (true) {
             var instruction = nextInstruction();
-            System.out.println("EXEC: " + instruction.getAddress());
+            // System.out.println("EXEC: " + instruction.getAddress());
             instruction.execute();
+
+            // if (counter > max) {
+            // System.out.println("BREAKING!");
+            // break;
+            // }
+            //
+            // counter++;
         }
 
     }

@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.simulator.microcodemachine;
 
+import pt.up.fe.specs.util.SpecsBits;
+
 public interface Alu {
 
     /**
@@ -24,14 +26,9 @@ public interface Alu {
      */
     Number or(Number operand1, Number operand2);
 
-    /**
-     * 
-     * @param value
-     * @param signalBit
-     *            0-based, LSB order index of the bit to check.
-     * @return
-     */
-    boolean isBitSet(Number value, int signalBit);
+    String toBinaryString(Number value);
+
+    Number parseBinaryString(String binaryValue);
 
     /**
      * 
@@ -40,5 +37,46 @@ public interface Alu {
      *            0-based, LSB order index of the signal bit.
      * @return
      */
-    Number signExtend(Number value, int signalBit);
+    default Number signExtend(Number value, int signalBit) {
+        var binaryValue = toBinaryString(value);
+
+        // If signal bit not represented in the binary value, not extension is needed
+        if (signalBit >= binaryValue.length()) {
+            return value;
+        }
+
+        var extendedValue = SpecsBits.signExtend(binaryValue, signalBit);
+        return parseBinaryString(extendedValue);
+    }
+
+    /**
+     * 
+     * @param value
+     * @param signalBit
+     *            0-based, LSB order index of the bit to check.
+     * @return
+     */
+    default boolean isBitSet(Number value, int bit) {
+        var binaryString = toBinaryString(value);
+
+        // If bit value is the same as the size or larger than the size of the binary string, assume bit is not set
+        if (bit >= binaryString.length()) {
+            return false;
+        }
+
+        var bitIndex = SpecsBits.fromLsbToStringIndex(bit, binaryString.length());
+
+        var bitChar = binaryString.charAt(bitIndex);
+
+        if (bitChar == '0') {
+            return false;
+        }
+
+        if (bitChar == '1') {
+            return true;
+        }
+
+        throw new RuntimeException("Character not expected, only 0 or 1: " + bitChar);
+    }
+
 }
