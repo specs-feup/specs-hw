@@ -14,43 +14,59 @@
 package pt.up.fe.specs.simulator.microcodemachine.impl;
 
 import pt.up.fe.specs.simulator.microcodemachine.Alu;
-import pt.up.fe.specs.util.SpecsBits;
 
 public class Alu32 implements Alu {
+
+    @Override
+    public String toBinaryString(Number value) {
+        return Integer.toBinaryString(value.intValue());
+    }
+
+    @Override
+    public Number parseBinaryString(String binaryValue) {
+        return Integer.parseInt(binaryValue, 2);
+    }
 
     @Override
     public Number or(Number operand1, Number operand2) {
         return operand1.intValue() | operand2.intValue();
     }
 
-    @Override
-    public boolean isBitSet(Number value, int bit) {
-        var binaryString = Integer.toBinaryString(value.intValue());
-
-        // If bit value is the same as the size or larger than the size of the binary string, assume bit is not set
-        if (bit >= binaryString.length()) {
-            return false;
-        }
-
-        var bitIndex = SpecsBits.fromLsbToStringIndex(bit, binaryString.length());
-
-        var bitChar = binaryString.charAt(bitIndex);
-
-        if (bitChar == '0') {
-            return false;
-        }
-
-        if (bitChar == '1') {
-            return true;
-        }
-
-        throw new RuntimeException("Character not expected, only 0 or 1: " + bitChar);
-    }
-
-    @Override
-    public Number signExtend(Number value, int signalBit) {
-        var extendedValue = SpecsBits.signExtend(Integer.toBinaryString(value.intValue()), signalBit);
-        return Integer.parseInt(extendedValue, 2);
-    }
+    // @Override
+    // public boolean isBitSet(Number value, int bit) {
+    // var binaryString = Integer.toBinaryString(value.intValue());
+    //
+    // // If bit value is the same as the size or larger than the size of the binary string, assume bit is not set
+    // if (bit >= binaryString.length()) {
+    // return false;
+    // }
+    //
+    // var bitIndex = SpecsBits.fromLsbToStringIndex(bit, binaryString.length());
+    //
+    // var bitChar = binaryString.charAt(bitIndex);
+    //
+    // if (bitChar == '0') {
+    // return false;
+    // }
+    //
+    // if (bitChar == '1') {
+    // return true;
+    // }
+    //
+    // throw new RuntimeException("Character not expected, only 0 or 1: " + bitChar);
+    // }
+    //
+    // @Override
+    // public Number signExtend(Number value, int signalBit) {
+    // var binaryValue = Integer.toBinaryString(value.intValue());
+    //
+    // // If signal bit not represented in the binary value, not extension is needed
+    // if (signalBit >= binaryValue.length()) {
+    // return value;
+    // }
+    //
+    // var extendedValue = SpecsBits.signExtend(binaryValue, signalBit);
+    // return Integer.parseInt(extendedValue, 2);
+    // }
 
 }
