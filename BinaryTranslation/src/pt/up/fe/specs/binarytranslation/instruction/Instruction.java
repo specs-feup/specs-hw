@@ -166,7 +166,15 @@ public interface Instruction {
     /*
      * Prints addr:instruction to system output
      */
-    public void printInstruction();
+    default public void printInstruction() {
+        System.out.println(getString());
+    }
+
+    /**
+     * 
+     * @return string representation of the instruction
+     */
+    public String getString();
 
     /*
      * Prints other instruction properties to system output
