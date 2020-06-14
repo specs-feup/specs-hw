@@ -11,38 +11,34 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.simulator;
+package pt.up.fe.specs.simulator.microcodemachine;
 
-import pt.up.fe.specs.util.SpecsStrings;
-
-/**
- * Represents an address of a machine (e.g., 32-bit or 64-bit number)
- * 
- * @author jbispo
- *
- */
-public interface Addr extends Comparable<Addr> {
-
-    Number toNumber();
-
-    int getBitwidth();
-
-    Addr add(Number value);
-
-    default String getHexString() {
-        return SpecsStrings.toHexString(toNumber().longValue(), getBitwidth() / 4);
-    }
+public interface Alu {
 
     /**
-     * Increments the address by a single step.
+     * ORs two numbers.
      * 
-     * <p>
-     * The default implementation assumes addresses that are byte-addressed.
-     * 
+     * @param operand1
+     * @param operand2
      * @return
      */
-    default Addr inc() {
-        return add(getBitwidth() / 8);
-    }
+    Number or(Number operand1, Number operand2);
 
+    /**
+     * 
+     * @param value
+     * @param signalBit
+     *            0-based, LSB order index of the bit to check.
+     * @return
+     */
+    boolean isBitSet(Number value, int signalBit);
+
+    /**
+     * 
+     * @param value
+     * @param signalBit
+     *            0-based, LSB order index of the signal bit.
+     * @return
+     */
+    Number signExtend(Number value, int signalBit);
 }
