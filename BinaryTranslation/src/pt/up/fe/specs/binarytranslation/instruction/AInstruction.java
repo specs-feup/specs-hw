@@ -14,11 +14,10 @@
 package pt.up.fe.specs.binarytranslation.instruction;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.expression.ExpressionSolver;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
-import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
@@ -55,105 +54,130 @@ public abstract class AInstruction implements Instruction, Serializable {
     }
 
     ///////////////////////////////////////////////////////////////////////////
+    @Override
     public InstructionData getData() {
         return idata;
     }
 
+    @Override
     public InstructionProperties getProperties() {
         return props;
     }
 
+    @Override
     public final String getName() {
         return idata.getPlainName();
     }
 
+    @Override
     public final Number getAddress() {
         return address;
     }
 
+    @Override
     public final String getInstruction() {
         return instruction;
     }
 
+    @Override
     public final int getLatency() {
         return idata.getLatency();
     }
 
+    @Override
     public final int getDelay() {
         return idata.getDelay();
     }
 
+    @Override
     public String toString() {
         return SpecsStrings.toHexString(address.longValue(), 8) + ": " + instruction;
     }
 
     // Check for instruction type /////////////////////////////////////////////
+    @Override
     public final boolean isAdd() {
         return idata.getGenericTypes().contains(InstructionType.G_ADD);
     }
 
+    @Override
     public final boolean isSub() {
         return idata.getGenericTypes().contains(InstructionType.G_SUB);
     }
 
+    @Override
     public final boolean isMul() {
         return idata.getGenericTypes().contains(InstructionType.G_MUL);
     }
 
+    @Override
     public final boolean isLogical() {
         return idata.getGenericTypes().contains(InstructionType.G_LOGICAL);
     }
 
+    @Override
     public final boolean isUnary() {
         return idata.getGenericTypes().contains(InstructionType.G_UNARY);
     }
 
+    @Override
     public final boolean isJump() {
         return (idata.getGenericTypes().contains(InstructionType.G_JUMP)
                 || this.isConditionalJump() || this.isUnconditionalJump()
                 || this.isAbsoluteJump() || this.isRelativeJump() || this.isImmediateJump());
     }
 
+    @Override
     public final boolean isConditionalJump() {
         return idata.getGenericTypes().contains(InstructionType.G_CJUMP);
     }
 
+    @Override
     public final boolean isUnconditionalJump() {
         return idata.getGenericTypes().contains(InstructionType.G_UJUMP);
     }
 
+    @Override
     public final boolean isRelativeJump() {
         return idata.getGenericTypes().contains(InstructionType.G_RJUMP);
     }
 
+    @Override
     public final boolean isAbsoluteJump() {
         return idata.getGenericTypes().contains(InstructionType.G_AJUMP);
     }
 
+    @Override
     public final boolean isImmediateJump() {
         return idata.getGenericTypes().contains(InstructionType.G_IJUMP);
     }
 
+    @Override
     public final boolean isImmediateValue() {
         return idata.getGenericTypes().contains(InstructionType.G_IMMV);
     }
 
+    @Override
     public final boolean isStore() {
         return idata.getGenericTypes().contains(InstructionType.G_STORE);
     }
 
+    @Override
     public final boolean isLoad() {
         return idata.getGenericTypes().contains(InstructionType.G_LOAD);
     }
 
+    @Override
     public final boolean isMemory() {
         return idata.getGenericTypes().contains(InstructionType.G_MEMORY) || this.isLoad() || this.isStore();
     }
 
+    @Override
     public final boolean isFloat() {
         return idata.getGenericTypes().contains(InstructionType.G_FLOAT);
     }
 
+    @Override
     public final boolean isUnknown() {
         return idata.getGenericTypes().contains(InstructionType.G_UNKN);
     }
@@ -189,6 +213,7 @@ public abstract class AInstruction implements Instruction, Serializable {
     /*
      * Gets asm string representation of instruction, including operands
      */
+    @Override
     public String getRepresentation() {
         String str = this.getName() + "\t";
         Iterator<Operand> it = this.getData().getOperands().iterator();
@@ -204,18 +229,19 @@ public abstract class AInstruction implements Instruction, Serializable {
     }
 
     /*
-     * Prints addr:instruction to system output
+     * Creates addr:instruction String.
      */
     @Override
-    public void printInstruction() {
+    public String getString() {
         String prt = "0x" + Long.toHexString(this.getAddress().longValue()) + ":";
         prt += this.getInstruction() + "\t " + getRepresentation() + "\t "; // + this.express();
-        System.out.print(prt + "\n");
+        return prt;
     }
 
     /* 
      * TODO: very clunky here
      */
+    @Override
     public void makeSymbolic(Number address, Map<String, String> regremap) throws NullPointerException {
 
         // symbolify address
