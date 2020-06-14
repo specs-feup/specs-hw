@@ -17,16 +17,22 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.specs.MicroBlaze.microcode.MbMicroCodeUtils;
 import org.specs.MicroBlaze.simulator.MbInstsConverter;
 import org.specs.MicroBlaze.simulator.MicroBlazeMachine32;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.simulator.Addr;
 import pt.up.fe.specs.simulator.SimInstruction;
 import pt.up.fe.specs.simulator.SimulatorV2;
+import pt.up.fe.specs.simulator.microcodemachine.MicroCodeMachine;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsSystem;
 
@@ -38,7 +44,7 @@ public class MicroBlazeSimulatorTest {
     }
 
     @Test
-    public void testTiny() {
+    public void testTinyMicroblazeSimulator() {
 
         // Get instructions
         File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/tiny.txt");
@@ -71,6 +77,38 @@ public class MicroBlazeSimulatorTest {
 
         assertEquals("", simulator.getMachine().getMemory().toString());
         assertEquals("rpc: 128", simulator.getMachine().getRegisters().toString());
+    }
+
+    @Test
+    public void testTinyMbMicroCodeSimulator() {
+
+        // Create machine
+        MicroCodeMachine microBlaze32 = MbMicroCodeUtils.newMicroBlaze32();
+
+        // Get instructions
+        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/tiny.txt");
+        fd.deleteOnExit();
+
+        Map<Addr, Instruction> program = new HashMap<>();
+
+        try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
+            while (el.hasNext()) {
+                var inst = el.nextInstruction();
+
+                // Last instruction can be null
+                if (inst == null) {
+                    continue;
+                }
+
+                Addr address = microBlaze32.toAddr(inst.getAddress());
+                program.put(address, inst);
+
+            }
+        }
+
+        // Load program and run
+        microBlaze32.loadProgram(program);
+        microBlaze32.run();
     }
 
 }
