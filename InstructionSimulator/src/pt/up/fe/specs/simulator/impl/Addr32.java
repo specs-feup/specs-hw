@@ -68,4 +68,9 @@ public class Addr32 implements Addr {
         return addr.compareTo(o.toNumber().intValue());
     }
 
+    @Override
+    public String toString() {
+        return getHexString();
+    }
+
 }
