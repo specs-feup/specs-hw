@@ -44,7 +44,7 @@ public class MbMicroCodeUtils {
      * @return
      */
     public static Number signExtendedImm(Number immValue, MicroCodeMachine machine, int signalBit) {
-        // If there is a IMM value set, or it with given imm
+        // If there is a IMM value set, 'OR' it with given imm
         if (machine.getTemp().has(MbId.IMM)) {
             var upperImm = machine.getTemp().readAndClear(MbId.IMM);
             return machine.getAlu().or(upperImm, immValue);
