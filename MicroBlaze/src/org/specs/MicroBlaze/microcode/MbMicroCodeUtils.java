@@ -26,9 +26,14 @@ public class MbMicroCodeUtils {
      * @return new MicroCodeMachine for 32-bit MicroBlaze
      */
     public static MicroCodeMachine newMicroBlaze32() {
+        return newMicroBlaze32(false);
+    }
+
+    public static MicroCodeMachine newMicroBlaze32(boolean expandedDecoder) {
+        var decoder = expandedDecoder ? new ExpandedMbMicroCodeDecoder() : new MbMicroCodeDecoder();
+
         return new MicroCodeMachine(number -> new Addr32(number.intValue()), MbRegister.RPC.ordinal(), new Alu32(),
-                // new MbMicroCodeDecoder());
-                new ExpandedMbMicroCodeDecoder());
+                decoder);
     }
 
     public static Number signExtendedImm32(Number immValue, MicroCodeMachine machine) {
