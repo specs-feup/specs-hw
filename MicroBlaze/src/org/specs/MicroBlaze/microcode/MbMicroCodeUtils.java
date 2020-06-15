@@ -27,7 +27,8 @@ public class MbMicroCodeUtils {
      */
     public static MicroCodeMachine newMicroBlaze32() {
         return new MicroCodeMachine(number -> new Addr32(number.intValue()), MbRegister.RPC.ordinal(), new Alu32(),
-                new MbMicroCodeDecoder());
+                // new MbMicroCodeDecoder());
+                new ExpandedMbMicroCodeDecoder());
     }
 
     public static Number signExtendedImm32(Number immValue, MicroCodeMachine machine) {
