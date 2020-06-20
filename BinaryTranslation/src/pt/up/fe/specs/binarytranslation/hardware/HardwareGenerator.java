@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.hardware;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.graphs.*;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public interface HardwareGenerator {
 
@@ -24,6 +25,13 @@ public interface HardwareGenerator {
      * Create a type of hardware instance from a bundle of graphs 
      */
     default public HardwareInstance generateHarware(GraphBundle gbundle) {
+        return null;
+    }
+
+    /*
+     * 
+     */
+    default public HardwareInstance generateHarware(Instruction inst) {
         return null;
     }
 }

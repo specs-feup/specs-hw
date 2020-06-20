@@ -51,7 +51,12 @@ public interface Instruction {
     /*
      * Gets the plain (isa mnemonic) name of the instruction
      */
-    String getName();
+    public String getName();
+
+    /*
+     * 
+     */
+    public InstructionPseudocode getPseudocode();
 
     // Check for instruction type /////////////////////////////////////////////
     /*

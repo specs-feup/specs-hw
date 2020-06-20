@@ -14,12 +14,10 @@
 package pt.up.fe.specs.binarytranslation.hardware.component;
 
 import java.io.OutputStream;
-import java.time.LocalDateTime;
 
-import pt.up.fe.specs.binarytranslation.*;
+import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
-import pt.up.fe.specs.util.providers.ResourceProvider;
-import pt.up.fe.specs.util.utilities.Replacer;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
  * 
@@ -54,6 +52,15 @@ public class ModuleHeader implements HardwareComponent {
     /*    public HardwareModuleHeader(GraphBundle bundle) {
     
     }*/
+
+    /*
+     * (non-Javadoc)
+     * @see pt.up.fe.specs.binarytranslation.hardware.component.HardwareComponent#getAsString()
+     */
+    public ModuleHeader(Instruction inst) {
+        this.headertext = BinaryTranslationUtils.getSPeCSCopyright();
+        // TODO: add more info
+    }
 
     public String getAsString() {
         return headertext;

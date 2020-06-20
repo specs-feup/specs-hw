@@ -17,23 +17,28 @@
  */
 
 
-grammar Instruction;
+grammar PseudoInstruction;
 
 @header {
-    package pt.up.fe.specs.binarytranslation.lex;
+    package pt.up.fe.specs.binarytranslation.lex.generated;
 }
+ 
+ // todo, define a top level rule which is a list of pseudoinstructions
  
 /*
  * Parsing
- */
-pseudoinstruction : statement*;
+ */ 
+pseudoInstruction : statement*;
 
-statement : expression EQ expression STATEMENTEND;
+statement : expression rlop expression STATEMENTEND;
 
 expression
    :  expression operator expression
    |  LPAREN expression RPAREN 
-   | symbol ;
+   | asmfield 
+   | number;
+
+rlop: EQ;
 
 /*
  * Lexing
@@ -62,7 +67,7 @@ RASHIFT	: '>>>';
 operator : PLUS | MINUS | TIMES | DIV | GT | LT | EQUALS | RSHIFT | LSHIFT | RASHIFT ;
 
 /* Any possible field in the ASM field list of any instruction */
-ASMFIELD	: [A-Za-z0-9]+ ;
+ASMFIELD	: [A-Za-z]+;
 STACKPTR : 'sp';
 
 /* Literal Numbers */
@@ -71,7 +76,8 @@ UNSIGNED_INTEGER: ('0' .. '9')+;
 FNUMBER		: ('0'..'9')+('.' ('0'..'9')+)?;
 
 /* Any symbol that can be defined (anything but an operator) */
-symbol: ASMFIELD | NUMBER | UNSIGNED_INTEGER | FNUMBER | STACKPTR;     
+asmfield: ASMFIELD | STACKPTR;
+number: NUMBER | UNSIGNED_INTEGER | FNUMBER;     
     
 /* We're going to ignore all white space characters */
 WS  : [ \t\r\n]+ -> skip ;

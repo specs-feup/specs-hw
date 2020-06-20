@@ -16,18 +16,14 @@ package org.specs.MicroBlaze.instruction;
 import static org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType.*;
 import static pt.up.fe.specs.binarytranslation.instruction.InstructionType.*;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
-import org.specs.MicroBlaze.parsing.MicroBlazeIsaParser;
+import org.specs.MicroBlaze.parsing.*;
 
-import pt.up.fe.specs.binarytranslation.instruction.InstructionExpression;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
-import pt.up.fe.specs.binarytranslation.parsing.IsaParser;
+import com.google.common.base.Enums;
+
+import pt.up.fe.specs.binarytranslation.instruction.*;
+import pt.up.fe.specs.binarytranslation.parsing.*;
 
 public enum MicroBlazeInstructionProperties implements InstructionProperties {
 
@@ -229,7 +225,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
      * Instruction property fields
      */
     private String instructionName;
-    private String enumName;
+    private final String enumName;
     private final int opcode; // 32 bit instruction code without operands
     private final int reducedopcode; // only the bits that matter, built after parsing the fields
     private final int latency;
