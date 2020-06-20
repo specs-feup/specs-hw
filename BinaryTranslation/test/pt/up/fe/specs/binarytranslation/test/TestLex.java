@@ -11,10 +11,12 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.lex;
+package pt.up.fe.specs.binarytranslation.test;
 
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import pt.up.fe.specs.binarytranslation.lex.generated.*;
+import pt.up.fe.specs.binarytranslation.lex.listeners.AsmFieldListener;
 
 public class TestLex {
 
@@ -23,25 +25,30 @@ public class TestLex {
     public static void main(String[] args) throws Exception {
 
         // create a CharStream that reads from standard input
-        ANTLRInputStream input = new ANTLRInputStream("RB = RA + RC; RB = RB << 4;");
+        var input = new ANTLRInputStream("RB = RA + RC; RB = RB << 4;");
 
         // create a lexer that feeds off of input CharStream
-        InstructionLexer lexer = new InstructionLexer(input);
+        var lexer = new PseudoInstructionLexer(input);
 
         // create a buffer of tokens pulled from the lexer
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        var tokens = new CommonTokenStream(lexer);
 
         // create a parser that feeds off the tokens buffer
-        InstructionParser parser = new InstructionParser(tokens);
+        var parser = new PseudoInstructionParser(tokens);
 
         // begin parsing at rule start
-        var tree = parser.pseudoinstruction();
+        var tree = parser.pseudoInstruction();
 
         // show AST in console
-        System.out.println(tree.toStringTree(parser));
+        // System.out.println(tree.toStringTree(parser));
 
-        // walk tree
-        // ParseTreeWalker walker = new ParseTreeWalker();
-        // walker.walk(new HelloWalker(), tree);
+        // walk
+        /*var walker = new ParseTreeWalker();
+        var listener = new TestListener();
+        walker.walk(listener, tree);*/
+
+        // visit
+        var visitor = new AsmFieldListener();
+        System.out.println(visitor.visit(tree));
     }
 }

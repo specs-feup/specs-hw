@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import org.specs.MicroBlaze.legacy.ArgumentsProperties.ArgumentProperty;
 
+import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.legacy.TraceInstruction32;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -237,5 +238,11 @@ public class MbInstruction implements TraceInstruction32 {
     public boolean isImmediateValue() {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    @Override
+    public InstructionPseudocode getPseudocode() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

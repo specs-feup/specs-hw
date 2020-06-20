@@ -75,6 +75,21 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
 
         // body
         // TODO: THIS IS THE HARDEST PART!!
+        for (var node : graph.getNodes()) {
+            // transform(n, predicate?)
+        }
+
+        // NOTE: the binarysegmentgraph is already a form of SSA, since i rename
+        // the edges (graphinput or graphoutput class objects) based on their producers
+
+        // TODO:
+        // if I do a getEdges on a graph, then create all verilog identifiers, with name based on the edge name, and
+        // type based on livein/liveout or internal, then i have the set of verilog variables (?)
+        // conclusion: this is one valid approach, approach 2
+        // the first one is to do the transformation of the BInarySegmentGraph into an AST, and walk it...
+
+        // new begin-end combinatorial block
+        // components.add(new StatementBlock(statements));
 
         // end module
         components.add(new PlainCode("endmodule; //" + segtype + "_" + id + "\n"));

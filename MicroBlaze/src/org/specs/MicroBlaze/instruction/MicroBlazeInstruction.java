@@ -20,10 +20,17 @@ import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
 import org.specs.MicroBlaze.parsing.MicroBlazeIsaParser;
 
+import com.google.common.base.Enums;
+
 import pt.up.fe.specs.binarytranslation.instruction.*;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class MicroBlazeInstruction extends AInstruction {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 252242517130965389L;
 
     // raw field data
     private final MicroBlazeAsmFieldData fieldData;
@@ -43,8 +50,8 @@ public class MicroBlazeInstruction extends AInstruction {
     /*
      * Use these to post an imm notification and resolve it later
      */
-    private static Boolean postedImm = false;
-    private static int immValue = 0;
+    // private static Boolean postedImm = false;
+    // private static int immValue = 0;
 
     /*
      * Static "constructor"
@@ -54,6 +61,7 @@ public class MicroBlazeInstruction extends AInstruction {
         var props = instSet.process(fieldData);
         var idata = new MicroBlazeInstructionData(props, fieldData);
         var inst = new MicroBlazeInstruction(address, instruction, idata, fieldData, props);
+
         /*
         // store imm value if instruction is imm
         if (inst.isImmediateValue() && MicroBlazeInstruction.postedImm == false) {
@@ -78,7 +86,6 @@ public class MicroBlazeInstruction extends AInstruction {
 
     /*
      * 
-     */
     private void extendImm() {
         // get imm value operand
         for (Operand op : this.getData().getOperands())
@@ -88,15 +95,12 @@ public class MicroBlazeInstruction extends AInstruction {
                 Number num = fullimm;
                 op.overrideValue(num);
             }
-
+    
         return;
     }
-
-    /*
-     * 
-     */
+    
     private void completeImm(int immValue) {
-
+    
         // get imm value operand
         for (Operand op : this.getData().getOperands())
             if (op.isImmediate()) {
@@ -105,9 +109,10 @@ public class MicroBlazeInstruction extends AInstruction {
                 Number fullimm = upper16 | lower16;
                 op.overrideValue(fullimm);
             }
-
+    
         return;
     }
+    */
 
     /*
      * Create the instruction
@@ -152,5 +157,16 @@ public class MicroBlazeInstruction extends AInstruction {
     @Override
     public MicroBlazeAsmFieldData getFieldData() {
         return this.fieldData;
+    }
+
+    @Override
+    public InstructionPseudocode getPseudocode() {
+        var pseudocode = Enums.getIfPresent(MicroBlazePseudocode.class, this.props.getEnumName());
+        if (pseudocode.isPresent())
+            return pseudocode.get();
+        else
+            return null;
+
+        // TODO: fix
     }
 }

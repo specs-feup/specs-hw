@@ -44,7 +44,7 @@ public abstract class AInstruction implements Instruction, Serializable {
     protected static InstructionSet instSet;
 
     // the enum which represents the ISA properties of this instruction
-    protected InstructionProperties props;
+    protected final InstructionProperties props;
 
     public AInstruction(Number address, String instruction,
             InstructionData idata, InstructionProperties props) {
