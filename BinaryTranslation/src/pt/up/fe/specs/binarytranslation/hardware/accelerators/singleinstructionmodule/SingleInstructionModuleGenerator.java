@@ -46,6 +46,38 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         return in.replace("<", "").replace(">", "");
     }
 
+    /*
+     * EXPERIMENTAL: Recursively process an expression context
+     */
+    private static String processExpression(Instruction inst, ExpressionContext ctx) {
+
+        String ret = "";
+        for (var child : ctx.children) {
+
+            // is terminal (Operator)
+            if (child instanceof OperatorContext) {
+                ret += " " + child.getText();
+            }
+
+            // is terminal (Operand)
+            else if (child instanceof OperandContext) {
+                var op = getOperandByAsmField(inst.getData().getOperands(), child.getText());
+                ret += " " + op.getRepresentation();
+            }
+
+            // recurse!
+            else if (child.getChildCount() > 1) {
+                ret += "(" + processExpression(inst, (ExpressionContext) child) + ")";
+            }
+
+            // recurse!
+            else {
+                ret += processExpression(inst, (ExpressionContext) child);
+            }
+        }
+        return ret;
+    }
+
     /**
      * 
      * @param inst
@@ -85,8 +117,6 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         components.add(new PlainCode("always_comb begin"));
         for (var s : tree.statement()) {
 
-            //
-
             // target operand and relation operator (only assignment (=) for now)
             var asmfield = s.operand();
             var rlop = s.rlop();
@@ -99,30 +129,46 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
             var expr = s.expression();
             String exprString = "assign " + targetname + " = ";
 
-            for (var child : expr.children) {
-
-                if (child instanceof ExpressionContext) {
-
-                    var grandchild = child.getChild(0);
-                    var aux = getOperandByAsmField(instOperands, grandchild.getText());
-
-                    if (grandchild instanceof OperandContext) {
-                        exprString += cleaner(aux.getRepresentation());
-                    }
-
-                    else if (child instanceof NumberContext) {
-                        exprString += aux.getRepresentation().replace("0x",
-                                (aux.getProperties().getWidth() - 1) + "\'");
-                    }
-                }
-
-                else if (child instanceof OperatorContext) {
-                    exprString += " " + child.getText() + " ";
-                }
-            }
+            // compose expression
+            exprString += processExpression(inst, expr);
 
             // the expression!
             components.add(new PlainCode(exprString + ";"));
+
+            // find operator
+            /* String statmentOperator = null;
+            for (var child : expr.children) {
+                if (child instanceof OperatorContext) {
+                    statmentOperator = child.getText();
+                    break;
+                }
+            }*/
+            // TODO: replace this with other action, especially if operator is divisor
+
+            // find operands
+            /*int i = 0;
+            OperandContext[] opCtx = { null, null };
+            for (var child : expr.children) {
+            
+                // Expression could be a OperandContext, which is
+                // either a NumberContext or AsmFieldContext
+                if (child instanceof ExpressionContext) {
+                    opCtx[i] = (OperandContext) child.getChild(0);
+                }
+            }*/
+
+            /*
+            var grandchild = child.getChild(0);
+            var aux = getOperandByAsmField(instOperands, grandchild.getText());
+            
+            if (grandchild instanceof OperandContext) {
+                exprString += cleaner(aux.getRepresentation());
+            }
+            
+            else if (child instanceof NumberContext) {
+                exprString += aux.getRepresentation().replace("0x",
+                        (aux.getProperties().getWidth() - 1) + "\'");
+            }*/
 
             // TODO: new AssignmentStatement(target, source) - variable types??
 
