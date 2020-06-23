@@ -16,9 +16,10 @@ package pt.up.fe.specs.binarytranslation.lex;
 import java.util.Stack;
 
 import org.antlr.v4.runtime.RuleContext;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.antlr.v4.runtime.tree.*;
 
-import pt.up.fe.specs.binarytranslation.lex.listeners.AsmFieldListener;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ExpressionContext;
+import pt.up.fe.specs.binarytranslation.lex.listeners.*;
 
 public class PseudoInstructionGetters {
 
@@ -30,6 +31,26 @@ public class PseudoInstructionGetters {
         var asmListener = new AsmFieldListener();
         walker.walk(asmListener, ctx);
         return asmListener.getAsmFields();
+    }
+
+    /*
+     * returns a stack of all terminal Nodes in the parse tree
+     */
+    public static Stack<TerminalNode> getAllNodes(RuleContext ctx) {
+        var walker = new ParseTreeWalker();
+        var allTokenListener = new AllNodesListener();
+        walker.walk(allTokenListener, ctx);
+        return allTokenListener.getAllNodes();
+    }
+
+    /*
+     * 
+     */
+    public static Stack<TerminalNode> getExpressionTokens(ExpressionContext ctx) {
+        var walker = new ParseTreeWalker();
+        var exprListener = new ExpressionListener();
+        walker.walk(exprListener, ctx);
+        return exprListener.getExpressionTokens();
     }
 
     /*

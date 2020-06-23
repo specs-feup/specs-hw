@@ -20,6 +20,7 @@ import pt.up.fe.specs.binarytranslation.hardware.component.*;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.lex.PseudoInstructionGetters;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.*;
 
 public class SingleInstructionModuleGenerator implements HardwareGenerator {
 
@@ -30,7 +31,7 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
     /*
      * 
      */
-    private Operand getOperandByAsmField(List<Operand> ops, String asmFieldName) {
+    private static Operand getOperandByAsmField(List<Operand> ops, String asmFieldName) {
         for (var op : ops) {
             if (op.getAsmField().toString().equals(asmFieldName))
                 return op;
@@ -38,6 +39,11 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         return null;
 
         // TODO fix null return
+    }
+
+    // TODO: replace this
+    private static String cleaner(String in) {
+        return in.replace("<", "").replace(">", "");
     }
 
     /**
@@ -52,37 +58,71 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         List<HardwareComponent> components = new ArrayList<HardwareComponent>();
         components.add(new ModuleHeader(inst));
 
+        // module declaration
+        components.add(new PlainCode("module " + inst.getName() + ";"));
+
+        // build all ports, based on operands
+        var instOperands = inst.getData().getOperands();
+        for (var op : instOperands) {
+            if (!op.isImmediate())
+                components.add(ModulePort.newPort(op)); // TODO: how to create output register types??
+        }
+
         // get tree and visit it using this derived visitor class
         var tree = inst.getPseudocode().getTree();
 
         // get tokens that are ASM FIELDS, as Strings
+        // I need this to know which asmfields are which operands
         var fields = PseudoInstructionGetters.getAsmFields(tree);
-        var operands = inst.getData().getOperands();
 
-        // build all ports, based on operands, which we look up using field names
-        for (var f : fields) {
-            var op = getOperandByAsmField(operands, f);
+        // build mapping between asmFieldNames and Verilog signal names here??
+        // TODO
 
-        }
+        // TODO make a visitor like getResultRegister, getOperation, getLOperand, etc??
+        // do this per statement rule?
 
-        /*        // get tokens that are ASM FIELDS
-        for (var s : statements) {
-            
-            var expr = s.expression()
-            
-            var tTokens = s.getTokens(PseudoInstructionLexer.ASMFIELD);
-            for (var t : tTokens) {
-                System.out.println(t.getText());
+        // for every statement in the instruction
+        components.add(new PlainCode("always_comb begin"));
+        for (var s : tree.statement()) {
+
+            // target operand and relation operator (only assignment (=) for now)
+            var asmfield = s.operand();
+            var rlop = s.rlop();
+            // TODO: should be "="; check!
+
+            var instOperand = getOperandByAsmField(instOperands, asmfield.getText());
+            var targetname = cleaner(instOperand.getRepresentation());
+
+            // expression (could be a conjunction of expressions, see grammar rules PseudoInstruction.g4)
+            var expr = s.expression();
+            String exprString = "assign " + targetname + " = ";
+            for (int i = 0; i < expr.getChildCount(); i++) {
+
+                var child = expr.getChild(i);
+                if (child instanceof OperandContext) {
+                    var aux = getOperandByAsmField(instOperands, child.getText());
+                    exprString += cleaner(aux.getRepresentation());
+                }
+                /*
+                else if (child instanceof NumberContext) {
+                    exprString += child.getText()
+                }*/
+
+                else if (child instanceof OperatorContext) {
+                    exprString += " " + child.getText() + " ";
+                }
             }
+
+            // the expression!
+            components.add(new PlainCode(exprString));
+
+            // TODO: new AssignmentStatement(target, source) - variable types??
+
+            // var nodes = PseudoInstructionGetters.getAllNodes(s);
         }
-        */
-        /*
-        // list operands
-        for (var t : tTokens) {
-            System.out.println(t.getText());
-        }
-        */
-        // var components = this.visit(tree);
+        components.add(new PlainCode("end"));
+        components.add(new PlainCode("endmodule"));
+
         return new SingleInstructionModule(components);
     }
 }

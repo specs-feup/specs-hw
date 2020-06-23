@@ -30,15 +30,18 @@ grammar PseudoInstruction;
  */ 
 pseudoInstruction : statement*;
 
-statement : expression rlop expression STATEMENTEND;
+statement : operand rlop expression STATEMENTEND;
 
 expression
    :  expression operator expression
    |  LPAREN expression RPAREN 
-   | asmfield 
-   | number;
+   | operand;
 
 rlop: EQ;
+
+operand:
+	asmfield 
+   | number;
 
 /*
  * Lexing

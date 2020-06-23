@@ -16,19 +16,25 @@ package pt.up.fe.specs.binarytranslation.hardware.component;
 import java.io.OutputStream;
 
 import pt.up.fe.specs.binarytranslation.graphs.edge.*;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class ModulePort implements HardwareComponent {
 
     private final int portWidth;
     private final String portname;
-    private final GraphEdge parentEdge;
     private final ModulePortDirection direction;
 
     private ModulePort(GraphEdge edge, ModulePortDirection direction) {
-        this.parentEdge = edge;
         this.portWidth = edge.getWidth();
         this.direction = direction;
         this.portname = edge.getRepresentation().replace("<", "").replace(">", "");
+        // TODO: VERY CLUMSY!!
+    }
+
+    private ModulePort(Operand op, ModulePortDirection direction) {
+        this.portWidth = op.getProperties().getWidth();
+        this.direction = direction;
+        this.portname = op.getRepresentation().replace("<", "").replace(">", "");
         // TODO: VERY CLUMSY!!
     }
 
@@ -47,6 +53,15 @@ public class ModulePort implements HardwareComponent {
         // TODO: THIS IS STILL UGLY!!
 
         return new ModulePort(edge, dir);
+    }
+
+    /*
+     * Used to create a port directly from an operand
+     */
+    public static ModulePort newPort(Operand op) {
+        var dir = (op.isRead()) ? ModulePortDirection.input : ModulePortDirection.output;
+        // TODO: THIS IS STILL UGLY!!
+        return new ModulePort(op, dir);
     }
 
     @Override
