@@ -30,6 +30,7 @@ public class ExpressionListener extends PseudoInstructionBaseListener {
 
     @Override
     public void enterOperand(OperandContext ctx) {
+        ctx.getChild(0)
         this.expressionTokens.push(ctx.getText());
     }
 

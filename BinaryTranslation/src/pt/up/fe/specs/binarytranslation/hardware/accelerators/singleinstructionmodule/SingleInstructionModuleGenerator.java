@@ -73,7 +73,7 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
 
         // get tokens that are ASM FIELDS, as Strings
         // I need this to know which asmfields are which operands
-        var fields = PseudoInstructionGetters.getAsmFields(tree);
+        // var fields = PseudoInstructionGetters.getAsmFields(tree);
 
         // build mapping between asmFieldNames and Verilog signal names here??
         // TODO
@@ -84,6 +84,8 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         // for every statement in the instruction
         components.add(new PlainCode("always_comb begin"));
         for (var s : tree.statement()) {
+
+            //
 
             // target operand and relation operator (only assignment (=) for now)
             var asmfield = s.operand();
@@ -96,17 +98,23 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
             // expression (could be a conjunction of expressions, see grammar rules PseudoInstruction.g4)
             var expr = s.expression();
             String exprString = "assign " + targetname + " = ";
-            for (int i = 0; i < expr.getChildCount(); i++) {
 
-                var child = expr.getChild(i);
-                if (child instanceof OperandContext) {
-                    var aux = getOperandByAsmField(instOperands, child.getText());
-                    exprString += cleaner(aux.getRepresentation());
+            for (var child : expr.children) {
+
+                if (child instanceof ExpressionContext) {
+
+                    var grandchild = child.getChild(0);
+                    var aux = getOperandByAsmField(instOperands, grandchild.getText());
+
+                    if (grandchild instanceof OperandContext) {
+                        exprString += cleaner(aux.getRepresentation());
+                    }
+
+                    else if (child instanceof NumberContext) {
+                        exprString += aux.getRepresentation().replace("0x",
+                                (aux.getProperties().getWidth() - 1) + "\'");
+                    }
                 }
-                /*
-                else if (child instanceof NumberContext) {
-                    exprString += child.getText()
-                }*/
 
                 else if (child instanceof OperatorContext) {
                     exprString += " " + child.getText() + " ";
@@ -114,7 +122,7 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
             }
 
             // the expression!
-            components.add(new PlainCode(exprString));
+            components.add(new PlainCode(exprString + ";"));
 
             // TODO: new AssignmentStatement(target, source) - variable types??
 
