@@ -15,31 +15,37 @@ package pt.up.fe.specs.binarytranslation.lex.listeners;
 
 import java.util.Stack;
 
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseListener;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmfieldContext;
-import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 
-public class AsmFieldListener extends PseudoInstructionBaseListener {
+public class AllNodesListener extends PseudoInstructionBaseListener {
 
     /*
-     * Stack of string names of asmFields in the RuleContext to visit
+     * All terminal nodes in the Rule
      */
-    private Stack<String> asmFields;
+    private Stack<TerminalNode> allNodes;
 
-    public AsmFieldListener() {
-        this.asmFields = new Stack<String>();
+    public AllNodesListener() {
+        this.allNodes = new Stack<TerminalNode>();
     }
 
     /*
-     * Walk the tree and gather all AsmFields
-     * @see pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseListener#enterAsmfield(pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmfieldContext)
-     */
     @Override
-    public void enterAsmfield(AsmfieldContext ctx) {
-        this.asmFields.push(ctx.getText());
+    public void enterEveryRule(ParserRuleContext ctx) {
+        System.out.println(ctx.getClass().getTypeName());
+    }
+    */
+    @Override
+    public void visitTerminal(TerminalNode node) {
+        this.allNodes.push(node);
     }
 
-    public Stack<String> getAsmFields() {
-        return asmFields;
+    /*
+     * Get terminal nodes of this tree
+     */
+    public Stack<TerminalNode> getAllNodes() {
+        return allNodes;
     }
 }
