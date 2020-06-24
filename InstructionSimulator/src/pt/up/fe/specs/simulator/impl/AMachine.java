@@ -14,12 +14,11 @@
 package pt.up.fe.specs.simulator.impl;
 
 import pt.up.fe.specs.simulator.Machine;
-import pt.up.fe.specs.simulator.MemoryElement;
 
 public abstract class AMachine implements Machine {
 
-    private final MemoryElement registers;
-    private final MemoryElement memory;
+    private final GenericMemoryElement registers;
+    private final GenericMemoryElement memory;
 
     public AMachine() {
         this.registers = new GenericMemoryElement("Registers");
@@ -27,12 +26,12 @@ public abstract class AMachine implements Machine {
     }
 
     @Override
-    public MemoryElement getMemory() {
+    public GenericMemoryElement getMemory() {
         return memory;
     }
 
     @Override
-    public MemoryElement getRegisters() {
+    public GenericMemoryElement getRegisters() {
         return registers;
     }
 

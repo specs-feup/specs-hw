@@ -19,7 +19,12 @@ public interface Machine {
 
     MemoryElement getRegisters();
 
-    Number getPCRegister();
+    boolean hasStopped();
 
-    int getPCIncrement();
+    SimInstruction nextInstruction();
+
+    void setStartAddress(Number startAddress);
+
+    Addr toAddr(Number addr);
+    // int getPCIncrement();
 }

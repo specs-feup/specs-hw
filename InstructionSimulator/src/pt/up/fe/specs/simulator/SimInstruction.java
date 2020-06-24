@@ -15,7 +15,9 @@ package pt.up.fe.specs.simulator;
 
 public interface SimInstruction {
 
-    void execute(Machine machine);
+    void execute();
 
-    Number getAddress();
+    Addr getAddress();
+
+    Machine getMachine();
 }

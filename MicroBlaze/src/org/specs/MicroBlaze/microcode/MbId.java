@@ -11,25 +11,9 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.simulator.insts;
+package org.specs.MicroBlaze.microcode;
 
-import org.specs.MicroBlaze.simulator.MbSimInstruction;
-import org.specs.MicroBlaze.simulator.MicroBlazeMachine;
+public enum MbId {
 
-public class Imm extends MbSimInstruction {
-
-    private final int immValue;
-
-    public Imm(MicroBlazeMachine machine, Number address, int immValue) {
-        super(machine, machine.toAddr(address));
-
-        this.immValue = immValue;
-    }
-
-    @Override
-    protected void executeProper() {
-        // Set imm value
-        getMachine().setImmValue(immValue);
-    }
-
+    IMM;
 }

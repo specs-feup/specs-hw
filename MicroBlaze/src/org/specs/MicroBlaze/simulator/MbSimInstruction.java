@@ -14,11 +14,39 @@
 package org.specs.MicroBlaze.simulator;
 
 import pt.up.fe.specs.simulator.ASimInstruction;
+import pt.up.fe.specs.simulator.Addr;
 
 public abstract class MbSimInstruction extends ASimInstruction {
 
-    public MbSimInstruction(Number address) {
-        super(address);
+    public MbSimInstruction(MicroBlazeMachine machine, Addr address) {
+        super(machine, address);
     }
+
+    @Override
+    public MicroBlazeMachine getMachine() {
+        return (MicroBlazeMachine) super.getMachine();
+    }
+
+    // protected Number writeReg(Number reg, int value) {
+    // getMachine().getRegisters().write(reg, value);
+    // }
+
+    @Override
+    public void execute() {
+        // Execute instruction
+        executeProper();
+
+        // Calculate next addr
+        getMachine().updatePC();
+    }
+
+    protected abstract void executeProper();
+
+    // @Override
+    // protected void updatePC() {
+    // getMachine().advancePC();
+    // // var nextPC = nextPC();
+    // // getMachine().getRegisters().write(getPCReg(), nextPC);
+    // }
 
 }
