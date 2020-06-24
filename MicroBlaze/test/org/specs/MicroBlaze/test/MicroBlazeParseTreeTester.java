@@ -25,6 +25,7 @@ public class MicroBlazeParseTreeTester {
         // 248: 20c065e8 addi r6, r0, 26088 // 65e8 <_SDA_BASE_>
         var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
         var singleUnitBuilder = new SingleInstructionModuleGenerator();
-        singleUnitBuilder.generateHarware(addi);
+        var unit = singleUnitBuilder.generateHarware(addi);
+        unit.emit(System.out);
     }
 }
