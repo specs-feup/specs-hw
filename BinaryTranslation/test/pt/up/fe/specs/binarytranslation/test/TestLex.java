@@ -48,7 +48,7 @@ public class TestLex {
         walker.walk(listener, tree);*/
 
         // visit
-        var visitor = new AsmFieldListener();
-        System.out.println(visitor.visit(tree));
+        // var visitor = new AsmFieldListener();
+        // System.out.println(visitor.visit(tree));
     }
 }
