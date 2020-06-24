@@ -9,8 +9,10 @@ import org.specs.Arm.parsing.ArmIsaParser;
 import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
  * Implementation of AInstruction, specialized for ARMv8 project and ISA Relies on {@link ArmAsmFieldData} and
@@ -58,6 +60,7 @@ public class ArmInstruction extends AInstruction {
     /*
      * Copy "constructor"
      */
+    @Override
     public ArmInstruction copy() {
 
         String copyaddr = new String(Integer.toHexString(this.getAddress().intValue()));
@@ -95,7 +98,13 @@ public class ArmInstruction extends AInstruction {
     }
     // TODO promote this into AInstruction??
 
+    @Override
     public ArmAsmFieldData getFieldData() {
         return this.fieldData;
+    }
+
+    @Override
+    public InstructionPseudocode getPseudocode() {
+        throw new NotImplementedException(this);
     }
 }

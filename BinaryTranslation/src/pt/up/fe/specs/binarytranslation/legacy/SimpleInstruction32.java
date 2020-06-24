@@ -18,6 +18,7 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
@@ -48,20 +49,17 @@ public interface SimpleInstruction32 extends Instruction {
 
     @Override
     default String getInstruction() {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default int getLatency() {
-        // TODO Auto-generated method stub
-        return 0;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotImplementedException(this);
     }
 
     @Override
@@ -72,14 +70,12 @@ public interface SimpleInstruction32 extends Instruction {
 
     @Override
     default boolean isBackwardsJump() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isConditionalJump() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
@@ -90,98 +86,82 @@ public interface SimpleInstruction32 extends Instruction {
 
     @Override
     default boolean isLoad() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isLogical() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isStore() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isSub() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isUnary() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isUnconditionalJump() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isAbsoluteJump() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isRelativeJump() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isFloat() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isImmediateJump() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isImmediateValue() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isJump() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isMemory() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isMul() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default boolean isUnknown() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default int getDelay() {
-        // TODO Auto-generated method stub
-        return 0;
+        throw new NotImplementedException(this);
     }
 
     @Override
@@ -191,31 +171,31 @@ public interface SimpleInstruction32 extends Instruction {
 
     @Override
     default AsmFieldData getFieldData() {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default InstructionProperties getProperties() {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default String getRepresentation() {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default Instruction copy() {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotImplementedException(this);
     }
 
     @Override
     default void makeSymbolic(Number address, Map<String, String> regremap) {
-        // TODO Auto-generated method stub
+        throw new NotImplementedException(this);
+    }
 
+    @Override
+    default InstructionPseudocode getPseudocode() {
+        throw new NotImplementedException(this);
     }
 }
