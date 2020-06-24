@@ -19,29 +19,29 @@ public interface MemoryElement {
 
     String getName();
 
-    Number read(Number address);
+    Number read(Addr address);
 
-    Number write(Number address, Number value);
+    Number write(Addr address, Number value);
 
-    default Number readSafe(Number address) {
+    default Number readSafe(Addr address) {
 
         var value = read(address);
 
         if (value == null) {
             SpecsLogs.debug(() -> "Accessing uninitialized memory '" + getName() + "' at address "
-                    + Long.toHexString(address.longValue()));
+                    + address);
             value = 0;
         }
 
         return value;
     }
 
-    default Number read(Enum<?> register) {
-        return read(register.ordinal());
-    }
+    // default Number read(Enum<?> register) {
+    // return read(register.ordinal());
+    // }
 
-    default Number write(Enum<?> register, Number value) {
-        return write(register.ordinal(), value);
-    }
+    // default Number write(Enum<?> register, Number value) {
+    // return write(register.ordinal(), value);
+    // }
 
 }

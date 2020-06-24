@@ -15,8 +15,9 @@ package org.specs.MicroBlaze.simulator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
+import org.specs.MicroBlaze.simulator.insts.Bri;
 import org.specs.MicroBlaze.simulator.insts.Imm;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -26,26 +27,67 @@ import pt.up.fe.specs.util.SpecsCheck;
 
 public class MbInstsConverter {
 
-    private static final Map<String, Function<Instruction, SimInstruction>> CONVERTERS;
+    private static final Map<String, BiFunction<MbInstsConverter, Instruction, MbSimInstruction>> CONVERTERS;
+
     static {
         CONVERTERS = new HashMap<>();
 
+        CONVERTERS.put("brai", (conv, inst) -> MbInstsConverter.bri(conv, inst, true));
+        CONVERTERS.put("bri", (conv, inst) -> MbInstsConverter.bri(conv, inst, false));
         CONVERTERS.put("imm", MbInstsConverter::imm);
     }
 
+    private final MicroBlazeMachine machine;
+
+    public MbInstsConverter(MicroBlazeMachine machine) {
+        this.machine = machine;
+    }
+
     public SimInstruction convert(Instruction instruction) {
+
         var converter = CONVERTERS.get(instruction.getName());
         SpecsCheck.checkNotNull(converter, () -> "No converter for instruction " + instruction.getName());
 
-        return converter.apply(instruction);
+        var simInst = converter.apply(this, instruction);
+
+        // Add instruction to the machine
+        machine.addInstruction(simInst);
+
+        return simInst;
     }
 
-    public static SimInstruction imm(Instruction imm) {
-        var immString = imm.getFieldData().get(AsmFieldData.FIELDS).get("imm");
+    public static MbSimInstruction imm(MbInstsConverter converter, Instruction inst) {
+        var immString = inst.getFieldData().get(AsmFieldData.FIELDS).get("imm");
+        // System.out.println("IMM FIELDS: " + inst.getFieldData());
+        // Convert imm value to int (is it always positive?)
+        var immValue = Integer.parseInt(immString, 2);
+
+        return new Imm(converter.machine, inst.getAddress(), immValue);
+    }
+
+    // public static MbSimInstruction brai(MbInstsConverter converter, Instruction inst) {
+    // var immString = inst.getFieldData().get(AsmFieldData.FIELDS).get("imm");
+    //
+    // // Convert imm value to int (is it always positive?)
+    // var immValue = Integer.parseInt(immString);
+    //
+    // return Bri.brai(converter.machine, inst.getAddress(), immValue);
+    // }
+
+    public static MbSimInstruction bri(MbInstsConverter converter, Instruction inst,
+            boolean isAbsolute) {
+
+        var immString = inst.getFieldData().get(AsmFieldData.FIELDS).get("imm");
+
+        // System.out.println("BRI FIELDS: " + inst.getFieldData());
 
         // Convert imm value to int (is it always positive?)
-        var immValue = Integer.parseInt(immString);
+        var immValue = Integer.parseInt(immString, 2);
 
-        return new Imm(imm.getAddress(), immValue);
+        if (isAbsolute) {
+            return Bri.brai(converter.machine, inst.getAddress(), immValue);
+        }
+
+        return Bri.bri(converter.machine, inst.getAddress(), immValue);
     }
 }

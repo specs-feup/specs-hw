@@ -11,25 +11,33 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.simulator.insts;
+package pt.up.fe.specs.simulator;
 
-import org.specs.MicroBlaze.simulator.MbSimInstruction;
-import org.specs.MicroBlaze.simulator.MicroBlazeMachine;
+import pt.up.fe.specs.util.SpecsLogs;
 
-public class Imm extends MbSimInstruction {
+public class SimulatorV2 {
 
-    private final int immValue;
+    private final Machine machine;
 
-    public Imm(MicroBlazeMachine machine, Number address, int immValue) {
-        super(machine, machine.toAddr(address));
-
-        this.immValue = immValue;
+    public SimulatorV2(Machine machine) {
+        this.machine = machine;
     }
 
-    @Override
-    protected void executeProper() {
-        // Set imm value
-        getMachine().setImmValue(immValue);
+    public Machine getMachine() {
+        return machine;
+    }
+
+    public void execute(Number startAddress) {
+        // Set address
+        machine.setStartAddress(startAddress);
+
+        while (!machine.hasStopped()) {
+            var instruction = machine.nextInstruction();
+            instruction.execute();
+        }
+
+        SpecsLogs.info("Simulation ended");
+
     }
 
 }

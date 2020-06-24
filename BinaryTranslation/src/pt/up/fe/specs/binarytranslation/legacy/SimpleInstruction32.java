@@ -185,9 +185,8 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default void printInstruction() {
-        // TODO Auto-generated method stub
-
+    default String getString() {
+        return toString();
     }
 
     @Override

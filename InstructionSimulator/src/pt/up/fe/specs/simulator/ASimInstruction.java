@@ -15,38 +15,46 @@ package pt.up.fe.specs.simulator;
 
 public abstract class ASimInstruction implements SimInstruction {
 
-    private final Number address;
+    private final Machine machine;
+    private final Addr address;
 
-    public ASimInstruction(Number address) {
+    public ASimInstruction(Machine machine, Addr address) {
+        this.machine = machine;
         this.address = address;
     }
 
     @Override
-    public Number getAddress() {
-        return address;
+    public Machine getMachine() {
+        return machine;
     }
 
     @Override
-    public void execute(Machine machine) {
-        // Execute proper
-        executeProper(machine);
-
-        // Increment PC
-        incrementPC(machine);
-
+    public Addr getAddress() {
+        return address;
     }
 
-    protected abstract void executeProper(Machine machine);
-
-    /**
-     * By default increments PC by 4.
-     * 
-     * @param machine
-     */
-    protected void incrementPC(Machine machine) {
-        var pcReg = machine.getPCRegister();
-        var inc = machine.getPCIncrement();
-        var newPC = machine.getRegisters().read(pcReg).longValue() + inc;
-        machine.getRegisters().write(pcReg, newPC);
-    }
+    // @Override
+    // public void execute() {
+    // // Execute proper
+    // executeProper();
+    //
+    // // Increment PC
+    // updatePC();
+    //
+    // }
+    //
+    // protected abstract void executeProper();
+    //
+    // /**
+    // * By default increments PC by 4.
+    // *
+    // * @param machine
+    // */
+    // protected void updatePC() {
+    // var pcReg = getMachine().getPCRegister();
+    // // var inc = machine.getPCIncrement();
+    // // var newPC = machine.getRegisters().read(pcReg).longValue() + inc;
+    // var newPC = getMachine().getRegisters().read(pcReg).longValue() + 4;
+    // getMachine().getRegisters().write(pcReg, newPC);
+    // }
 }
