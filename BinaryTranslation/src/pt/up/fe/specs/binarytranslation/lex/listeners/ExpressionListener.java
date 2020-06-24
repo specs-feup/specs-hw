@@ -27,19 +27,19 @@ public class ExpressionListener extends PseudoInstructionBaseListener {
     public ExpressionListener() {
         this.expressionTokens = new Stack<TerminalNode>();
     }
-
+    /*
     @Override
     public void enterOperand(OperandContext ctx) {
         ctx.getChild(0)
         this.expressionTokens.push(ctx.getText());
     }
-
+    
     @Override
     public void enterOperator(OperatorContext ctx) {
         this.expressionTokens.push(ctx.getText());
     }
-
+    
     public Stack<TerminalNode> getExpressionTokens() {
         return expressionTokens;
-    }
+    }*/
 }

@@ -45,13 +45,13 @@ public class PseudoInstructionGetters {
 
     /*
      * 
-     */
+     
     public static Stack<TerminalNode> getExpressionTokens(ExpressionContext ctx) {
         var walker = new ParseTreeWalker();
         var exprListener = new ExpressionListener();
         walker.walk(exprListener, ctx);
         return exprListener.getExpressionTokens();
-    }
+    }*/
 
     /*
      * 
