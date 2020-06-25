@@ -16,8 +16,7 @@ package pt.up.fe.specs.binarytranslation.lex.listeners;
 import java.util.Stack;
 
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseListener;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmfieldContext;
-import pt.up.fe.specs.binarytranslation.parsing.AsmField;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmFieldContext;
 
 public class AsmFieldListener extends PseudoInstructionBaseListener {
 
@@ -35,7 +34,7 @@ public class AsmFieldListener extends PseudoInstructionBaseListener {
      * @see pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseListener#enterAsmfield(pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmfieldContext)
      */
     @Override
-    public void enterAsmfield(AsmfieldContext ctx) {
+    public void enterAsmField(AsmFieldContext ctx) {
         this.asmFields.push(ctx.getText());
     }
 

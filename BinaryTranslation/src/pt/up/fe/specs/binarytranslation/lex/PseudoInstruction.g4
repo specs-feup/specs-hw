@@ -33,16 +33,17 @@ pseudoInstruction : statement*;
 statement : operand rlop expression STATEMENTEND;
 
 expression
-   :  expression operator expression
-   |  LPAREN expression RPAREN 
-   | operand;
+   :  left=expression operator right=expression # binaryOperation
+   |  LPAREN expression RPAREN					# parenExpression
+   | operand									# variable ;
 
-rlop: EQ;
+rlop: EQ; 
 
+/* Any symbol that can be defined (anything but an operator) */ 
 operand:
-	asmfield 
-   | number;
-
+	(ASMFIELD | STACKPTR) 	# AsmField
+   | (NUMBER | UNSIGNED_INTEGER | FNUMBER)		# Literal;
+ 
 /*
  * Lexing
  */
@@ -70,17 +71,13 @@ RASHIFT	: '>>>';
 operator : PLUS | MINUS | TIMES | DIV | GT | LT | EQUALS | RSHIFT | LSHIFT | RASHIFT ;
 
 /* Any possible field in the ASM field list of any instruction */
-ASMFIELD	: [A-Za-z]+;
+ASMFIELD : [A-Za-z]+;
 STACKPTR : 'sp';
 
 /* Literal Numbers */
 NUMBER: ('0' .. '9') + ('.' ('0' .. '9') +)?;
 UNSIGNED_INTEGER: ('0' .. '9')+;
 FNUMBER		: ('0'..'9')+('.' ('0'..'9')+)?;
-
-/* Any symbol that can be defined (anything but an operator) */
-asmfield: ASMFIELD | STACKPTR;
-number: NUMBER | UNSIGNED_INTEGER | FNUMBER;     
     
 /* We're going to ignore all white space characters */
 WS  : [ \t\r\n]+ -> skip ;

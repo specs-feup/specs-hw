@@ -5,7 +5,9 @@ import java.util.*;
 import pt.up.fe.specs.binarytranslation.graphs.*;
 import pt.up.fe.specs.binarytranslation.graphs.edge.*;
 import pt.up.fe.specs.binarytranslation.hardware.*;
+import pt.up.fe.specs.binarytranslation.hardware.accelerators.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.component.*;
+import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 
 /**
  * Generates a single dedicated verilog module for a single binary segment
