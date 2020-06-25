@@ -108,9 +108,9 @@ public class HardwareGenerationUtils {
 
         // children of the StatementContext expression
         // each expression could be a conjunction of expressions, see grammar rules PseudoInstruction.g4
-        for (var expr : topExpr.expression()) {
+        /*for (var expr : topExpr.expression()) {
             exprMap.put(expr, "expr" + ctr++);
-        }
+        }*/
 
         var code = new ArrayList<String>();
 
@@ -122,7 +122,7 @@ public class HardwareGenerationUtils {
         // top level statement should be the last !
 
         // the expression!
-        return new PlainCode("assign " + targetname + " = " + processExpression(inst, expr) + ";");
+        return null; // new PlainCode("assign " + targetname + " = " + processExpression(inst, expr) + ";");
     }
 
 }
