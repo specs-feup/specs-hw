@@ -3,7 +3,7 @@ package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.accelerators.AHardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.component.HardwareComponent;
 
 public class CustomInstructionUnit extends AHardwareInstance {

@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstruction
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.accelerators.AHardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.component.HardwareComponent;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 

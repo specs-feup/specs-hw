@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.hardware;
+package pt.up.fe.specs.binarytranslation.hardware.accelerators;
 
 import java.io.OutputStream;
 

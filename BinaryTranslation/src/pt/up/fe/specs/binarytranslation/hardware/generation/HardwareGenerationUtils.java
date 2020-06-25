@@ -13,12 +13,17 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.generation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.component.PlainCode;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.*;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ExpressionContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.OperandContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.OperatorContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.StatementContext;
 
 public class HardwareGenerationUtils {
 
@@ -72,19 +77,52 @@ public class HardwareGenerationUtils {
         return ret;
     }
 
+    /*
+     * 
+     */
+    // private
+
+    // IDEA: walk the statemtn tree, and on all exitExpression calls, push the expression onto a stack
+    // the process the stack, which would be (?) from the bottom of the tree upwards
+    // would it??
+
+    /*
+     * 
+     */
+    public static PlainCode generateAssignStatement(Instruction inst, ExpressionContext ctx) {
+
+        return null;
+    }
+
+    /*
+     * Generate one or more Verilog assign statements from a StatementContext
+     */
     public static PlainCode generateAssignStatement(Instruction inst, StatementContext ctx) {
 
+        int ctr = 0;
+        var exprMap = new HashMap<ExpressionContext, String>();
+
+        // expression of StatementContext (statement: operator rlop expression STATEMENTEND)
+        var topExpr = ctx.expression();
+        exprMap.put(topExpr, "expr" + ctr);
+
+        // children of the StatementContext expression
+        // each expression could be a conjunction of expressions, see grammar rules PseudoInstruction.g4
+        for (var expr : topExpr.expression()) {
+            exprMap.put(expr, "expr" + ctr++);
+        }
+
+        var code = new ArrayList<String>();
+
         var asmfield = ctx.operand();
-        // var rlop = ctx.rlop();
-        // TODO: should be "="; check!
 
         var instOperand = getOperandByAsmField(inst.getData().getOperands(), asmfield.getText());
         var targetname = cleaner(instOperand.getRepresentation());
 
-        // expression (could be a conjunction of expressions, see grammar rules PseudoInstruction.g4)
-        var expr = ctx.expression();
+        // top level statement should be the last !
 
         // the expression!
         return new PlainCode("assign " + targetname + " = " + processExpression(inst, expr) + ";");
     }
+
 }

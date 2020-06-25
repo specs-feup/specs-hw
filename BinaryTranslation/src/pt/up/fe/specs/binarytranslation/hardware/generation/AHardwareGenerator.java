@@ -11,11 +11,12 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware;
+package pt.up.fe.specs.binarytranslation.hardware.generation;
 
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.graphs.*;
+import pt.up.fe.specs.binarytranslation.hardware.accelerators.HardwareInstance;
 
 public abstract class AHardwareGenerator implements HardwareGenerator {
 

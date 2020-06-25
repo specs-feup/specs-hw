@@ -13,11 +13,16 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.hardware.*;
-import pt.up.fe.specs.binarytranslation.hardware.component.*;
+import pt.up.fe.specs.binarytranslation.hardware.accelerators.HardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.component.HardwareComponent;
+import pt.up.fe.specs.binarytranslation.hardware.component.ModuleHeader;
+import pt.up.fe.specs.binarytranslation.hardware.component.ModulePort;
+import pt.up.fe.specs.binarytranslation.hardware.component.PlainCode;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareGenerationUtils;
+import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class SingleInstructionModuleGenerator implements HardwareGenerator {
@@ -39,7 +44,8 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         components.add(new ModuleHeader(inst));
 
         // module declaration
-        components.add(new PlainCode("module " + inst.getName() + ";"));
+        components.add(new PlainCode("module " + inst.getClass().getTypeName().toString() + "_" + inst.getName()
+                + inst.getInstruction() + ";"));
 
         // build all ports, based on operands
         var instOperands = inst.getData().getOperands();
