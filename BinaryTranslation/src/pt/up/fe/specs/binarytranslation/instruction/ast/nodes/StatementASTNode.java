@@ -8,7 +8,7 @@ public class StatementASTNode extends AInstructionASTNode {
     public StatementASTNode(InstructionASTNode target, InstructionASTNode expr) {
         super();
         this.target = (OperandASTNode) target;
-        this.expr = (ExpressionASTNode) expr;
+        this.expr = (ExpressionASTNode) expr; // TODO: works?
         this.type = InstructionASTNodeType.StatementNode;
     }
 
