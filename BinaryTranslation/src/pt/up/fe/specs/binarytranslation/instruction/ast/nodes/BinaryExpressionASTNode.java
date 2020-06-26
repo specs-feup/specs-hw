@@ -19,10 +19,13 @@ public class BinaryExpressionASTNode extends AInstructionASTNode implements Expr
     private InstructionASTNode operator;
 
     public BinaryExpressionASTNode(InstructionASTNode left, InstructionASTNode operator, InstructionASTNode right) {
+        super();
         this.left = left;
         this.right = right;
         this.operator = operator;
         this.type = InstructionASTNodeType.BinaryExpressionNode;
+        this.children.add(this.left);
+        this.children.add(this.right);
     }
 
     @Override
