@@ -1,6 +1,6 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 
-public abstract class OperatorASTNode extends AInstructionASTNode {
+public class OperatorASTNode extends AInstructionASTNode {
 
     private String operator;
 

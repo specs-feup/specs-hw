@@ -1,8 +1,3 @@
-/*
- * The purpose of this grammar is to be able to express the operation of
- * an instruction using the ASM fields as operators
- */
-
 /**
  * Copyright 2020 SPeCS.
  * 
@@ -16,6 +11,10 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
+/*
+ * The purpose of this grammar is to be able to express the operation of
+ * an instruction using the ASM fields as operators
+ */
 
 grammar PseudoInstruction;
 

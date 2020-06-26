@@ -2,26 +2,19 @@ package pt.up.fe.specs.binarytranslation.instruction.ast;
 
 import java.util.ArrayList;
 
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.OperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.PseudoInstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.StatementASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.*;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmFieldContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.OperatorContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.StatementContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.*;
 
 /**
- * Builds an AST using only generic string nodes (for testing of Parse Tree conversion)
+ * Builds an AST
  * 
  * @author nuno
  *
  */
-public class GenericASTGenerator extends PseudoInstructionBaseVisitor<InstructionASTNode> {
+public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<InstructionASTNode> {
 
-    public GenericASTGenerator() {
+    public InstructionASTGenerator() {
         // TODO Auto-generated constructor stub
     }
 
@@ -51,12 +44,17 @@ public class GenericASTGenerator extends PseudoInstructionBaseVisitor<Instructio
 
     @Override
     public InstructionASTNode visitOperator(OperatorContext ctx) {
-        return new OperandASTNode(ctx.getText());
+        return new OperatorASTNode(ctx.getText());
     }
 
-    /*
     @Override
     public InstructionASTNode visitBinaryOperation(BinaryOperationContext ctx) {
-        return new
-    }*/
+        return new BinaryExpressionASTNode(this.visit(ctx.left),
+                this.visit(ctx.operator()), this.visit(ctx.right));
+    }
+
+    @Override
+    public InstructionASTNode visitParenExpression(ParenExpressionContext ctx) {
+        return new UnaryExpressionASTNode(this.visit(ctx.expression()));
+    }
 }
