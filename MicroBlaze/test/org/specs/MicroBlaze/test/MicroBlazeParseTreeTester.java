@@ -13,11 +13,12 @@
 
 package org.specs.MicroBlaze.test;
 
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.antlr.v4.runtime.tree.*;
 import org.junit.Test;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule.SingleInstructionModuleGenerator;
+import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionASTGenerator;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
 
 public class MicroBlazeParseTreeTester {
@@ -38,5 +39,14 @@ public class MicroBlazeParseTreeTester {
         var dumper = new TreeDumper();
         var walker = new ParseTreeWalker();
         walker.walk(dumper, addi.getPseudocode().getTree());
+    }
+
+    @Test
+    public void testAST() {
+        // 248: 20c065e8 addi r6, r0, 26088 // 65e8 <_SDA_BASE_>
+        var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
+        var astGenerator = new InstructionASTGenerator();
+        var ast = astGenerator.visit(addi.getPseudocode().getTree());
+        System.out.println(ast.getAsString());
     }
 }
