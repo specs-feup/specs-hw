@@ -15,8 +15,9 @@ package pt.up.fe.specs.binarytranslation.hardware.generation;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.graphs.*;
-import pt.up.fe.specs.binarytranslation.hardware.accelerators.HardwareInstance;
+import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
+import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareInstance;
 
 public abstract class AHardwareGenerator implements HardwareGenerator {
 

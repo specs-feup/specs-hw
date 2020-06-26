@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.component;
+package pt.up.fe.specs.binarytranslation.hardware.tree;
 
 import java.io.OutputStream;
 
@@ -24,7 +24,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  * @author Nuno
  *
  */
-public class ModuleHeader implements HardwareComponent {
+public class ModuleHeader {
 
     /*
      * Complete header text for this hardware module

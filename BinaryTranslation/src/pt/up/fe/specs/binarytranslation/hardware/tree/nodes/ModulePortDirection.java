@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.component;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes;
 
 public enum ModulePortDirection {
     input,
