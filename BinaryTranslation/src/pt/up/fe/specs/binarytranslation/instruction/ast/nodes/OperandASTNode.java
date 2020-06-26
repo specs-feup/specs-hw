@@ -5,6 +5,7 @@ public class OperandASTNode extends AInstructionASTNode {
     private String operandName;
 
     public OperandASTNode(String operandName) {
+        super();
         this.operandName = operandName;
         this.type = InstructionASTNodeType.OperandNode;
     }

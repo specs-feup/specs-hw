@@ -5,6 +5,7 @@ public class OperatorASTNode extends AInstructionASTNode {
     private String operator;
 
     public OperatorASTNode(String operator) {
+        super();
         this.operator = operator;
         this.type = InstructionASTNodeType.OperatorNode;
     }

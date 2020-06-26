@@ -1,22 +1,29 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class AInstructionASTNode implements InstructionASTNode {
 
-    protected Boolean isRoot;
     protected InstructionASTNodeType type;
+    protected InstructionASTNode parent;
+    protected List<InstructionASTNode> children;
 
-    /*
-     * Root node??
-     */
     public AInstructionASTNode() {
-
+        this.children = new ArrayList<InstructionASTNode>();
     }
 
     public InstructionASTNodeType getType() {
         return type;
     }
 
-    public Boolean getIsRoot() {
-        return isRoot;
+    @Override
+    public List<InstructionASTNode> getChildren() {
+        return this.children;
+    }
+
+    @Override
+    public InstructionASTNode getParent() {
+        return parent;
     }
 }

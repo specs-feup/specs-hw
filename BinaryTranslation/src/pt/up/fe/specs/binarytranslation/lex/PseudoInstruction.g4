@@ -46,7 +46,7 @@ operand:
 /*
  * Lexing
  */
-
+ 
 /* Generic Tokens */
 LPAREN	: '(';
 RPAREN	: ')';

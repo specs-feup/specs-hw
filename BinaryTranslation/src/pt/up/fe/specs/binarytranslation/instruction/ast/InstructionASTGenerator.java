@@ -2,9 +2,21 @@ package pt.up.fe.specs.binarytranslation.instruction.ast;
 
 import java.util.ArrayList;
 
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.*;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.BinaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.OperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.OperatorASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.PseudoInstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.StatementASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.UnaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.*;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmFieldContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.BinaryOperationContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.OperatorContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ParenExpressionContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.StatementContext;
 
 /**
  * Builds an AST

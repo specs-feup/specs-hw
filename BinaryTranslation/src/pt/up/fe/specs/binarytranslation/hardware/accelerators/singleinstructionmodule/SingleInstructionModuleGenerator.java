@@ -24,6 +24,7 @@ import pt.up.fe.specs.binarytranslation.hardware.component.PlainCode;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareGenerationUtils;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 
 public class SingleInstructionModuleGenerator implements HardwareGenerator {
 
@@ -54,8 +55,12 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
                 components.add(ModulePort.newPort(op)); // TODO: how to create output register types??
         }
 
-        // get tree and visit it using this derived visitor class
-        var tree = inst.getPseudocode().getTree();
+        // get AST of instruction
+        var ast = new InstructionAST(inst);
+
+        // TODO: a visitor which replaces asm fields with operand names
+
+        // then a visitor which adds subscripts to the fields?
 
         // get tokens that are ASM FIELDS, as Strings
         // I need this to know which asmfields are which operands

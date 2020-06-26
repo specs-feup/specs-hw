@@ -10,6 +10,8 @@ public class StatementASTNode extends AInstructionASTNode {
         this.target = (OperandASTNode) target;
         this.expr = (ExpressionASTNode) expr; // TODO: works?
         this.type = InstructionASTNodeType.StatementNode;
+        this.children.add(this.target);
+        this.children.add(this.expr);
     }
 
     @Override

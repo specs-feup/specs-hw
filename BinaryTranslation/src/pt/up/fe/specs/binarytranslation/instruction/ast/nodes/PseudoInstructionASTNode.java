@@ -7,7 +7,10 @@ public class PseudoInstructionASTNode extends AInstructionASTNode {
     private List<InstructionASTNode> statements;
 
     public PseudoInstructionASTNode(List<InstructionASTNode> statements) {
+        super();
         this.statements = statements;
+        this.type = InstructionASTNodeType.PseudoInstructionNode;
+        this.children.addAll(this.statements);
     }
 
     @Override
