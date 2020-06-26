@@ -11,57 +11,62 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.component;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
 import java.io.OutputStream;
 
-import pt.up.fe.specs.binarytranslation.graphs.edge.*;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdge;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdgeType;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
-public class ModulePort implements HardwareComponent {
+public class PortDeclaration extends AHardwareNode implements HardwareDeclaration {
 
     private final int portWidth;
     private final String portname;
     private final ModulePortDirection direction;
 
-    private ModulePort(GraphEdge edge, ModulePortDirection direction) {
+    private PortDeclaration(GraphEdge edge, ModulePortDirection direction) {
         this.portWidth = edge.getWidth();
         this.direction = direction;
         this.portname = edge.getRepresentation().replace("<", "").replace(">", "");
         // TODO: VERY CLUMSY!!
     }
 
-    private ModulePort(Operand op, ModulePortDirection direction) {
+    private PortDeclaration(Operand op, ModulePortDirection direction) {
         this.portWidth = op.getProperties().getWidth();
         this.direction = direction;
         this.portname = op.getRepresentation().replace("<", "").replace(">", "");
         // TODO: VERY CLUMSY!!
     }
 
-    public static ModulePort newInputPort(GraphInput edge) {
-        return new ModulePort(edge, ModulePortDirection.input);
+    public static PortDeclaration newInputPort(GraphInput edge) {
+        return new PortDeclaration(edge, ModulePortDirection.input);
     }
 
-    public static ModulePort newOutputPort(GraphOutput edge) {
-        return new ModulePort(edge, ModulePortDirection.output);
+    public static PortDeclaration newOutputPort(GraphOutput edge) {
+        return new PortDeclaration(edge, ModulePortDirection.output);
     }
 
-    public static ModulePort newPort(GraphEdge edge) {
+    public static PortDeclaration newPort(GraphEdge edge) {
         var dir = (edge.getType() == GraphEdgeType.livein)
                 ? ModulePortDirection.input
                 : ModulePortDirection.output;
         // TODO: THIS IS STILL UGLY!!
 
-        return new ModulePort(edge, dir);
+        return new PortDeclaration(edge, dir);
     }
 
     /*
      * Used to create a port directly from an operand
      */
-    public static ModulePort newPort(Operand op) {
+    public static PortDeclaration newPort(Operand op) {
         var dir = (op.isRead()) ? ModulePortDirection.input : ModulePortDirection.output;
         // TODO: THIS IS STILL UGLY!!
-        return new ModulePort(op, dir);
+        return new PortDeclaration(op, dir);
     }
 
     @Override

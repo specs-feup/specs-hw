@@ -1,13 +1,14 @@
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.graphs.*;
-import pt.up.fe.specs.binarytranslation.graphs.edge.*;
-import pt.up.fe.specs.binarytranslation.hardware.*;
-import pt.up.fe.specs.binarytranslation.hardware.accelerators.HardwareInstance;
-import pt.up.fe.specs.binarytranslation.hardware.component.*;
+import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
 
 /**
  * Generates a single dedicated verilog module for a single binary segment
@@ -38,16 +39,16 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
          * Input and output ports
          * Inputs may include IMM edges, if IMM has different contexts
          */
-        List<ModulePort> ports = new ArrayList<ModulePort>();
+        List<PortDeclaration> ports = new ArrayList<PortDeclaration>();
 
         // top level graph liveins
         for (GraphInput n : graph.getLiveins()) {
-            ports.add(ModulePort.newInputPort(n));
+            ports.add(PortDeclaration.newInputPort(n));
         }
 
         // top level graph liveouts
         for (GraphOutput n : graph.getLiveouts()) {
-            ports.add(ModulePort.newOutputPort(n));
+            ports.add(PortDeclaration.newOutputPort(n));
         }
 
         /*
@@ -62,41 +63,41 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
         */
 
         /////////////////////////////////////////////////////
-
+        /*
         // The list of components
         var components = new ArrayList<HardwareComponent>();
         components.add(new ModuleHeader(graph));
-
+        
         // module declaration
         var segtype = graph.getSegment().getSegmentType().toString().toLowerCase();
         var id = graph.getSegment().getUniqueId();
         components.add(new PlainCode("module " + segtype + "_" + id + ";"));
-
+        
         // ports
         components.addAll(ports);
-
+        
         // body
         // TODO: THIS IS THE HARDEST PART!!
         for (var node : graph.getNodes()) {
             // transform(n, predicate?)
         }
-
+        
         // NOTE: the binarysegmentgraph is already a form of SSA, since i rename
         // the edges (graphinput or graphoutput class objects) based on their producers
-
+        
         // TODO:
         // if I do a getEdges on a graph, then create all verilog identifiers, with name based on the edge name, and
         // type based on livein/liveout or internal, then i have the set of verilog variables (?)
         // conclusion: this is one valid approach, approach 2
         // the first one is to do the transformation of the BInarySegmentGraph into an AST, and walk it...
-
+        
         // new begin-end combinatorial block
         // components.add(new StatementBlock(statements));
-
+        
         // end module
         components.add(new PlainCode("endmodule; //" + segtype + "_" + id + "\n"));
-
-        return new CustomInstructionUnit(graph, components);
+        */
+        return new CustomInstructionUnit(graph);
     }
 
     /*

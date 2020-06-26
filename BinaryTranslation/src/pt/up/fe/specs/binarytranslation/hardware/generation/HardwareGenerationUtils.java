@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.hardware.component.PlainCode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.PlainCode;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ExpressionContext;

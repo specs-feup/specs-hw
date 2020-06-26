@@ -13,11 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule;
 
-import java.util.List;
-
-import pt.up.fe.specs.binarytranslation.hardware.accelerators.AHardwareInstance;
-import pt.up.fe.specs.binarytranslation.hardware.component.HardwareComponent;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.hardware.tree.AHardwareInstance;
 
 public class SingleInstructionModule extends AHardwareInstance {
 
@@ -26,7 +22,7 @@ public class SingleInstructionModule extends AHardwareInstance {
      */
     // private Instruction inst;
 
-    protected SingleInstructionModule(List<HardwareComponent> components) {
-        super(components);
+    protected SingleInstructionModule() {
+        super();
     }
 }

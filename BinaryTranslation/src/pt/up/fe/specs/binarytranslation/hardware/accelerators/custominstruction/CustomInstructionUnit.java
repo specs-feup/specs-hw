@@ -1,10 +1,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
-import java.util.List;
-
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.hardware.accelerators.AHardwareInstance;
-import pt.up.fe.specs.binarytranslation.hardware.component.HardwareComponent;
+import pt.up.fe.specs.binarytranslation.hardware.tree.AHardwareInstance;
 
 public class CustomInstructionUnit extends AHardwareInstance {
 
@@ -40,8 +37,8 @@ public class CustomInstructionUnit extends AHardwareInstance {
      * @param code
      * @return
      */
-    protected CustomInstructionUnit(BinarySegmentGraph graph, List<HardwareComponent> components) {
-        super(components);
+    protected CustomInstructionUnit(BinarySegmentGraph graph) {
+        super();
         this.graph = graph;
     }
 

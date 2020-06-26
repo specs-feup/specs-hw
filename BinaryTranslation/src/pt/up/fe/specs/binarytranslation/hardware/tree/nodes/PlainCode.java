@@ -11,25 +11,38 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.component;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes;
 
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.List;
 
-public class StatementBlock implements HardwareComponent {
+public class PlainCode extends AHardwareNode {
 
-    public StatementBlock() {
-        // TODO Auto-generated constructor stub
+    /*
+     * Just string of code (useful for stuff i havent moved into its own class yet)
+     */
+    List<String> code;
+
+    public PlainCode(List<String> code) {
+        this.code = code;
+    }
+
+    public PlainCode(String code) {
+        this.code = Arrays.asList(code);
+    }
+
+    public PlainCode(String... code) {
+        this.code = Arrays.asList(code);
     }
 
     @Override
     public String getAsString() {
-        // TODO Auto-generated method stub
-        return null;
+        return String.join("\n", this.code);
     }
 
     @Override
     public void emit(OutputStream os) {
         // TODO Auto-generated method stub
-
     }
 }
