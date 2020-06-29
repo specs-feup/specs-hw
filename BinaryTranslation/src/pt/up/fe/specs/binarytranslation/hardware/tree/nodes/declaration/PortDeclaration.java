@@ -74,10 +74,4 @@ public class PortDeclaration extends AHardwareNode implements HardwareDeclaratio
         return this.direction.toString() + " "
                 + "[" + (this.portWidth - 1) + " : 0] " + this.portname + ";";
     }
-
-    @Override
-    public void emit(OutputStream os) {
-        // TODO Auto-generated method stub
-
-    }
 }
