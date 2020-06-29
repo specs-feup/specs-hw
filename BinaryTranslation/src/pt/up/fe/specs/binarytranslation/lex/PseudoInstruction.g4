@@ -32,8 +32,9 @@ pseudoInstruction : statement*;
 statement : operand rlop expression STATEMENTEND;
 
 expression
-   :  left=expression operator right=expression # binaryOperation
-   |  LPAREN expression RPAREN					# parenExpression
+   : left=expression operator right=expression 	# binaryOperation
+   | operator right=expression 					# unaryOperation
+   | LPAREN expression RPAREN					# parenExpression
    | operand									# variable ;
 
 rlop: EQ; 

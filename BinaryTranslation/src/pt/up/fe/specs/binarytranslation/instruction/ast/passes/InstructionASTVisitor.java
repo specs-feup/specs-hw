@@ -11,17 +11,31 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.UnaryExpressionAST
 
 public abstract class InstructionASTVisitor<T> {
 
-    protected abstract T visit(PseudoInstructionASTNode node);
+    protected abstract T visitChildren(InstructionASTNode node);
 
-    protected abstract T visit(StatementASTNode node);
+    protected T visit(PseudoInstructionASTNode node) {
+        return this.visitChildren(node);
+    };
 
-    protected abstract T visit(BinaryExpressionASTNode node);
+    protected T visit(StatementASTNode node) {
+        return this.visitChildren(node);
+    };
 
-    protected abstract T visit(UnaryExpressionASTNode node);
+    protected T visit(BinaryExpressionASTNode node) {
+        return this.visitChildren(node);
+    };
 
-    protected abstract T visit(OperandASTNode node);
+    protected T visit(UnaryExpressionASTNode node) {
+        return this.visitChildren(node);
+    };
 
-    protected abstract T visit(OperatorASTNode node);
+    protected T visit(OperandASTNode node) {
+        return this.visitChildren(node);
+    };
+
+    protected T visit(OperatorASTNode node) {
+        return this.visitChildren(node);
+    };
 
     protected T visit(ExpressionASTNode node) {
 

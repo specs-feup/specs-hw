@@ -13,16 +13,17 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 
-public class UnaryExpressionASTNode extends AInstructionASTNode implements ExpressionASTNode {
+public class UnaryExpressionASTNode extends AExpressionASTNode implements ExpressionASTNode {
 
-    private InstructionASTNode terminalNode;
-
-    public UnaryExpressionASTNode(InstructionASTNode terminalNode) {
-        this.terminalNode = terminalNode;
+    public UnaryExpressionASTNode(InstructionASTNode operator, InstructionASTNode right) {
+        super(operator, right);
+        this.type = InstructionASTNodeType.UnaryExpressionNode;
+        this.children.add(this.operator);
+        this.children.add(this.right);
     }
 
     @Override
     public String getAsString() {
-        return "( " + this.terminalNode.getAsString() + " )";
+        return "( " + this.right.getAsString() + " )";
     }
 }

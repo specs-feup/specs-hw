@@ -13,18 +13,16 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree;
 
-import java.io.OutputStream;
-
 import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
 
 /**
  * 
  * @author Nuno
  *
  */
-public class ModuleHeader {
+public class ModuleHeader extends AHardwareNode {
 
     /*
      * Complete header text for this hardware module
@@ -57,16 +55,13 @@ public class ModuleHeader {
      * (non-Javadoc)
      * @see pt.up.fe.specs.binarytranslation.hardware.component.HardwareComponent#getAsString()
      */
-    public ModuleHeader(Instruction inst) {
-        this.headertext = BinaryTranslationUtils.getSPeCSCopyright();
+    public ModuleHeader() {
+        this.headertext = BinaryTranslationUtils.getSPeCSCopyright() + "\n";
         // TODO: add more info
     }
 
+    @Override
     public String getAsString() {
         return headertext;
-    }
-
-    public void emit(OutputStream os) {
-        // TODO
     }
 }

@@ -13,9 +13,19 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule;
 
+import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareGenerationUtils;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.tree.ModuleHeader;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareRootNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.AssignStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.VariableReference;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.PseudoInstructionASTNode;
 
 public class SingleInstructionModuleGenerator implements HardwareGenerator {
 
@@ -30,52 +40,108 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
      */
     @Override
     public HardwareInstance generateHarware(Instruction inst) {
-        /*
-        // The list of components
-        List<HardwareComponent> components = new ArrayList<HardwareComponent>();
-        components.add(new ModuleHeader(inst));
-        
-        // module declaration
-        components.add(new PlainCode("module " + inst.getClass().getTypeName().toString() + "_" + inst.getName()
-                + inst.getInstruction() + ";"));
-        
+
+        // Information we can only grasp from the instruction encoding //////////////////////////
+        var root = new HardwareRootNode();
+        var header = new ModuleHeader();
+        root.addChild(header);
+
+        var module = new ModuleDeclaration(inst.getName());
+        root.addChild(module);
+
         // build all ports, based on operands
         var instOperands = inst.getData().getOperands();
         for (var op : instOperands) {
-            if (!op.isImmediate())
-                components.add(PortDeclaration.newPort(op)); // TODO: how to create output register types??
+
+            var name = op.getRepresentation();
+            var width = op.getProperties().getWidth();
+
+            if (op.isImmediate())
+                continue;
+
+            else if (op.isRead())
+                module.addChild(new PortDeclaration(name, width, ModulePortDirection.input));
+
+            else if (op.isWrite())
+                module.addChild(new PortDeclaration(name, width, ModulePortDirection.output));
         }
-        
+
+        // Information we can only grasp from the pseudocode (i.e. instruction implementation) //
+
         // get AST of instruction
         var ast = new InstructionAST(inst);
-        
-        // TODO: a visitor which replaces asm fields with operand names
-        
-        // then a visitor which adds subscripts to the fields?
-        
-        // get tokens that are ASM FIELDS, as Strings
-        // I need this to know which asmfields are which operands
-        // var fields = PseudoInstructionGetters.getAsmFields(tree);
-        
-        // build mapping between asmFieldNames and Verilog signal names here??
-        // TODO
-        
-        // TODO make a visitor like getResultRegister, getOperation, getLOperand, etc??
-        // do this per statement rule?
-        
-        // start block
-        components.add(new PlainCode("always_comb begin"));
-        
-        // for every statement in the instruction
-        for (var s : tree.statement()) {
-            // the expression!
-            components.add(HardwareGenerationUtils.generateAssignStatement(inst, s));
+
+        // convert ASM names to concrete register names and immediate values
+        HardwareGenerationUtils.convertOperandsToConcrete(ast);
+
+        var rootNode = (PseudoInstructionASTNode) ast.getRootnode();
+        for (var statement : rootNode.getStatements()) {
+
+            // from AST
+            var target = statement.getTarget();
+            var expr = statement.getExpr();
+
+            // to hardware language tree
+            var varref = new VariableReference(target.getOperandName());
+            var hwexpression = HardwareGenerationUtils.convertASTStatement(expr);
+
+            // TODO: this conversion could/should result in a generic HardwareNode
+            // e.g. the division operator in an expression should be implemented as a module
+            // or an expression can contain other expressions as operands
+
+            module.addChild(new AssignStatement(varref, hwexpression));
         }
-        components.add(new PlainCode("end"));
-        components.add(new PlainCode("endmodule"));
-        */
-        return new SingleInstructionModule();
+
+        return new SingleInstructionModule(root);
     }
+
+    // TODO: instantiate a walker, and give it the instance of the HardwareInstance, and the InstructionAST, after
+    // the prologue of the HardwareInstace tree has been built?
+
+    /*
+    // The list of components
+    List<HardwareComponent> components = new ArrayList<HardwareComponent>();
+    components.add(new ModuleHeader(inst));
+    
+    // module declaration
+    components.add(new PlainCode("module " + inst.getClass().getTypeName().toString() + "_" + inst.getName()
+            + inst.getInstruction() + ";"));
+    
+    // build all ports, based on operands
+    var instOperands = inst.getData().getOperands();
+    for (var op : instOperands) {
+        if (!op.isImmediate())
+            components.add(PortDeclaration.newPort(op)); // TODO: how to create output register types??
+    }
+    
+    // get AST of instruction
+    var ast = new InstructionAST(inst);
+    
+    // TODO: a visitor which replaces asm fields with operand names
+    
+    // then a visitor which adds subscripts to the fields?
+    
+    // get tokens that are ASM FIELDS, as Strings
+    // I need this to know which asmfields are which operands
+    // var fields = PseudoInstructionGetters.getAsmFields(tree);
+    
+    // build mapping between asmFieldNames and Verilog signal names here??
+    // TODO
+    
+    // TODO make a visitor like getResultRegister, getOperation, getLOperand, etc??
+    // do this per statement rule?
+    
+    // start block
+    components.add(new PlainCode("always_comb begin"));
+    
+    // for every statement in the instruction
+    for (var s : tree.statement()) {
+        // the expression!
+        components.add(HardwareGenerationUtils.generateAssignStatement(inst, s));
+    }
+    components.add(new PlainCode("end"));
+    components.add(new PlainCode("endmodule"));
+    */
 
     // find operator
     /* String statmentOperator = null;

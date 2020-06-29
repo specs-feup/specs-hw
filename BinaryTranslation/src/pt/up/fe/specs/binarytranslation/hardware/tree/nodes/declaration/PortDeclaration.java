@@ -13,21 +13,27 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
-import java.io.OutputStream;
-
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdge;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdgeType;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
-public class PortDeclaration extends AHardwareNode implements HardwareDeclaration {
+public class PortDeclaration extends AHardwareNode implements VariableDeclaration {
 
     private final int portWidth;
     private final String portname;
     private final ModulePortDirection direction;
+
+    /*
+     * Plain constructor
+     */
+    public PortDeclaration(String portName, int portWidth, ModulePortDirection direction) {
+        this.portname = portName;
+        this.portWidth = portWidth;
+        this.direction = direction;
+    }
 
     private PortDeclaration(GraphEdge edge, ModulePortDirection direction) {
         this.portWidth = edge.getWidth();
@@ -67,6 +73,11 @@ public class PortDeclaration extends AHardwareNode implements HardwareDeclaratio
         var dir = (op.isRead()) ? ModulePortDirection.input : ModulePortDirection.output;
         // TODO: THIS IS STILL UGLY!!
         return new PortDeclaration(op, dir);
+    }
+
+    @Override
+    public String getVariableName() {
+        return this.portname;
     }
 
     @Override

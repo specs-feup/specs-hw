@@ -32,9 +32,9 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
 
     @Override
     public InstructionASTNode visitPseudoInstruction(PseudoInstructionContext ctx) {
-        var statements = new ArrayList<InstructionASTNode>();
+        var statements = new ArrayList<StatementASTNode>();
         for (var s : ctx.statement()) {
-            statements.add(this.visit(s));
+            statements.add((StatementASTNode) this.visit(s));
         }
         return new PseudoInstructionASTNode(statements);
     }
