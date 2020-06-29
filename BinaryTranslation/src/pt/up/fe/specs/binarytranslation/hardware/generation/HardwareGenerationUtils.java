@@ -17,11 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareRootNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.AdditionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.AssignStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.VariableReference;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.BinaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.ExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.OperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.OperatorASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.StatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.UnaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
@@ -61,7 +66,7 @@ public class HardwareGenerationUtils {
         // Any other variables are intermediate results of expressions
         for (var op : astoplist) {
             var instOperand = HardwareGenerationUtils.getOperandByAsmField(instoplist, op.getOperandName());
-            op.setOperandName(instOperand.getRepresentation());
+            op.setResultName(instOperand.getRepresentation());
         }
     }
 
@@ -83,18 +88,33 @@ public class HardwareGenerationUtils {
      */
     public static HardwareNode convertASTStatement(StatementASTNode statement) {
 
-        HardwareNode subroot = null;
-
-        var expr = statement.getExpr();
+        // new node
+        var subroot = convertASTExpression(statement.getExpr());
 
         // finish statement after expressions resolved
-        var target = statement.getTarget();
+        var target = statement.getTarget().getResultName(); // TODO: messy!
+
+        subroot.addChild(new AssignStatement(, s));
 
         return subroot;
     }
 
     /*
-     * Dispatcher
+     * Dispatcher (Top level)
+     */
+    public static HardwareNode convertASTExpression(InstructionASTNode expr) {
+
+        if (expr instanceof ExpressionASTNode) {
+            return convertASTExpression((ExpressionASTNode) expr);
+        }
+
+        else { // if (expr instanceof OperandASTNode) {
+            return ((OperandASTNode) expr).getResultName();
+        }
+    }
+
+    /*
+     * Dispatcher (ExpressionASTNode level down)
      */
     public static HardwareNode convertASTExpression(ExpressionASTNode expr) {
 
@@ -108,17 +128,19 @@ public class HardwareGenerationUtils {
         return null;
     }
 
+    /*
+     * 
+     */
     public static HardwareNode convertASTExpression(BinaryExpressionASTNode expr) {
-       
-        //
-        var lop = expr.getLeft();
-        var rop = expr.getRight();
-        
-        if(lop instanceof )
-        
-        if (!(lop instanceof OperandASTNode))
-            subroot.addChild(convertASTExpression(lop));
 
+        var lnode = convertASTExpression(expr.getLeft());
+        var rnode = convertASTExpression(expr.getRight());
+        
+        //var lref = lnode.getResultName();
+        //var rref = lnode.getResultName();
+        
+        convertASTExpression(lref, expr.getOperator(), )
+        
         // var rop = ((BinaryExpressionASTNode) expr).getRight()
 
     }
@@ -128,6 +150,19 @@ public class HardwareGenerationUtils {
      */
     public static HardwareNode convertASTExpression(UnaryExpressionASTNode expr) {
 
+    }
+
+    /*
+     * Convert a base expression, where left and right are references to Expression results or Operands
+     */
+    public static HardwareNode convertASTExpression(VariableReference left, OperatorASTNode operator,
+            VariableReference right) {
+
+        if (operator.getAsString().contentEquals("+"))
+            return new AdditionExpression(left, right);
+
+        else
+            return null;
     }
 
     /*

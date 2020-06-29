@@ -17,7 +17,7 @@ public class BinaryExpressionASTNode extends AExpressionASTNode implements Expre
 
     private InstructionASTNode left;
 
-    public BinaryExpressionASTNode(InstructionASTNode left, InstructionASTNode operator, InstructionASTNode right) {
+    public BinaryExpressionASTNode(InstructionASTNode left, OperatorASTNode operator, InstructionASTNode right) {
         super(operator, right);
         this.left = left;
         this.type = InstructionASTNodeType.BinaryExpressionNode;
@@ -26,6 +26,7 @@ public class BinaryExpressionASTNode extends AExpressionASTNode implements Expre
         this.children.add(this.right);
     }
 
+    @Override
     public InstructionASTNode getLeft() {
         return left;
     }
