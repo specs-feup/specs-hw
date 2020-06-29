@@ -14,11 +14,12 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
 public class AssignStatement extends AHardwareNode implements HardwareStatement {
 
     private final VariableReference target;
-    private final HardwareStatement expression;
+    private final HardwareExpression expression;
 
     // are these the correct fields??..
     // No, should be VariableReference!
@@ -27,8 +28,15 @@ public class AssignStatement extends AHardwareNode implements HardwareStatement 
 
     // TODO: classes like AdditionStatement, etc?
 
-    public AssignStatement(VariableReference target, HardwareStatement expression) {
+    public AssignStatement(VariableReference target, HardwareExpression expression) {
         this.target = target;
         this.expression = expression;
+        target.setParent(this);
+        expression.setParent(this);
+    }
+
+    @Override
+    public String getAsString() {
+        return "assign " + target.getAsString() + " = " + expression.getAsString() + ";\n";
     }
 }

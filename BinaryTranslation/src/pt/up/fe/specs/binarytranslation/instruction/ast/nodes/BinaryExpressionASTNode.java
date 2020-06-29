@@ -13,19 +13,21 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 
-public class BinaryExpressionASTNode extends AInstructionASTNode implements ExpressionASTNode {
+public class BinaryExpressionASTNode extends AExpressionASTNode implements ExpressionASTNode {
 
-    private InstructionASTNode left, right;
-    private InstructionASTNode operator;
+    private InstructionASTNode left;
 
     public BinaryExpressionASTNode(InstructionASTNode left, InstructionASTNode operator, InstructionASTNode right) {
-        super();
+        super(operator, right);
         this.left = left;
-        this.right = right;
-        this.operator = operator;
         this.type = InstructionASTNodeType.BinaryExpressionNode;
         this.children.add(this.left);
+        this.children.add(this.operator);
         this.children.add(this.right);
+    }
+
+    public InstructionASTNode getLeft() {
+        return left;
     }
 
     @Override

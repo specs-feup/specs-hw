@@ -18,6 +18,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
 public class VariableReference extends AHardwareNode implements HardwareStatement {
 
     private final String varName;
+    // TODO: private final VariableDeclaration declaration;
 
     public VariableReference(String varName) {
         super();

@@ -18,4 +18,12 @@ public class StatementASTNode extends AInstructionASTNode {
     public String getAsString() {
         return target.getAsString() + " = " + expr.getAsString() + ";";
     }
+
+    public OperandASTNode getTarget() {
+        return target;
+    }
+
+    public ExpressionASTNode getExpr() {
+        return expr;
+    }
 }

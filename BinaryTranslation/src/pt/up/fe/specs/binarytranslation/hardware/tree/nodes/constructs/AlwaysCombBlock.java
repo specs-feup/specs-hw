@@ -19,13 +19,14 @@ public class AlwaysCombBlock extends AHardwareNode implements HardwareConstruct 
         var builder = new StringBuilder();
 
         if (!this.blockName.isBlank())
-            builder.append("always_comb : " + this.blockName + "\n");
+            builder.append("\nalways_comb : " + this.blockName + "\n");
         else
-            builder.append("always_comb\n");
+            builder.append("\nalways_comb\n");
 
         for (var child : this.getChildren()) {
-            builder.append(child.getAsString());
+            builder.append("\t" + child.getAsString());
         }
+
         builder.append("end //" + this.blockName + "\n");
         return builder.toString();
     }

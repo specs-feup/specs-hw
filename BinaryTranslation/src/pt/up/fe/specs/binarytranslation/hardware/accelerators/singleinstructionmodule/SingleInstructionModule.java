@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
 public class SingleInstructionModule extends AHardwareInstance {
 
@@ -22,7 +23,7 @@ public class SingleInstructionModule extends AHardwareInstance {
      */
     // private Instruction inst;
 
-    protected SingleInstructionModule() {
-        super();
+    protected SingleInstructionModule(HardwareNode root) {
+        super(root);
     }
 }

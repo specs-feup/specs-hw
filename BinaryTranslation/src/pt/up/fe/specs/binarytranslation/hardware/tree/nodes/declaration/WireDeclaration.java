@@ -14,6 +14,11 @@ public class WireDeclaration extends AHardwareNode implements VariableDeclaratio
     }
 
     @Override
+    public String getVariableName() {
+        return this.wireName;
+    }
+
+    @Override
     public String getAsString() {
         return "wire [ (" + this.numBits + " - 1) : 0] " + this.wireName + ";\n";
     }

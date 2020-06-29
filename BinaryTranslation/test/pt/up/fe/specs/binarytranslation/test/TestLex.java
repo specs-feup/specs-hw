@@ -13,16 +13,19 @@
 
 package pt.up.fe.specs.binarytranslation.test;
 
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.lex.generated.*;
-import pt.up.fe.specs.binarytranslation.lex.listeners.AsmFieldListener;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 
 public class TestLex {
 
     // SEE FULL EXAMPLE AT: https://gist.github.com/mattmcd/5425206
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void testParseAndTreePrint() {
 
         // create a CharStream that reads from standard input
         var input = new ANTLRInputStream("RB = RA + RC; RB = RB << 4;");
@@ -40,7 +43,7 @@ public class TestLex {
         var tree = parser.pseudoInstruction();
 
         // show AST in console
-        // System.out.println(tree.toStringTree(parser));
+        System.out.println(tree.toStringTree(parser));
 
         // walk
         /*var walker = new ParseTreeWalker();

@@ -40,7 +40,17 @@ public interface HardwareNode {
     /*
      * 
      */
+    public HardwareNode getChild(int idx);
+
+    /*
+     * 
+     */
     public HardwareNode getParent();
+
+    /*
+     * 
+     */
+    public void setParent(HardwareNode parent);
 
     /*
      * 

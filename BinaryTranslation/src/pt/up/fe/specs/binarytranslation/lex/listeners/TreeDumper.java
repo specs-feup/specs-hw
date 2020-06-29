@@ -7,7 +7,7 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.Ps
 
 public class TreeDumper extends PseudoInstructionBaseListener {
 
-    private static int nestLevel = 0;
+    private int nestLevel = 0;
 
     public TreeDumper() {
         // TODO Auto-generated constructor stub

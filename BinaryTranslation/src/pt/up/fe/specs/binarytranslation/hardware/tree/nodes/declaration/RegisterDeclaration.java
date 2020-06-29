@@ -14,6 +14,11 @@ public class RegisterDeclaration extends AHardwareNode implements VariableDeclar
     }
 
     @Override
+    public String getVariableName() {
+        return this.regName;
+    }
+
+    @Override
     public String getAsString() {
         return "reg [ (" + this.numBits + " - 1) : 0] " + this.regName + ";\n";
     }

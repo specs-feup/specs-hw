@@ -4,9 +4,9 @@ import java.util.List;
 
 public class PseudoInstructionASTNode extends AInstructionASTNode {
 
-    private List<InstructionASTNode> statements;
+    private List<StatementASTNode> statements;
 
-    public PseudoInstructionASTNode(List<InstructionASTNode> statements) {
+    public PseudoInstructionASTNode(List<StatementASTNode> statements) {
         super();
         this.statements = statements;
         this.type = InstructionASTNodeType.PseudoInstructionNode;
@@ -21,5 +21,9 @@ public class PseudoInstructionASTNode extends AInstructionASTNode {
         }
         ret += "\n";
         return ret;
+    }
+
+    public List<StatementASTNode> getStatements() {
+        return statements;
     }
 }
