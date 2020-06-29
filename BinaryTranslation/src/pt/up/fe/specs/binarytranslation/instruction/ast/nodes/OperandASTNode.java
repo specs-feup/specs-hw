@@ -1,7 +1,5 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.VariableReference;
-
 public class OperandASTNode extends AInstructionASTNode implements ExpressionASTNode {
 
     private String operandName;
@@ -24,14 +22,7 @@ public class OperandASTNode extends AInstructionASTNode implements ExpressionAST
     /*
      * Used to replace the ASM field name with a specific register/value string
      */
-    @Override
-    public void setResultName(String resultName) {
-        this.operandName = resultName;
+    public void setOperandName(String operandName) {
+        this.operandName = operandName;
     }
-
-    @Override
-    public VariableReference getResultName() {
-        return new VariableReference(this.operandName);
-    }
-
 }

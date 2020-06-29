@@ -1,7 +1,6 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.VariableReference;
 
 public abstract class ABinaryHardwareExpression extends AHardwareNode implements HardwareExpression {
 
@@ -9,9 +8,9 @@ public abstract class ABinaryHardwareExpression extends AHardwareNode implements
      * 
      */
     protected String expressionOperator;
-    protected final VariableReference varA, varB;
+    protected final HardwareExpression varA, varB;
 
-    public ABinaryHardwareExpression(VariableReference varA, VariableReference varB) {
+    public ABinaryHardwareExpression(HardwareExpression varA, HardwareExpression varB) {
         super();
         this.varA = varA;
         this.varB = varB;

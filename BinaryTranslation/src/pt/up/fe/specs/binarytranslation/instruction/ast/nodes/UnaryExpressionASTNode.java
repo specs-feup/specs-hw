@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 
 public class UnaryExpressionASTNode extends AExpressionASTNode implements ExpressionASTNode {
 
-    public UnaryExpressionASTNode(OperatorASTNode operator, InstructionASTNode right) {
+    public UnaryExpressionASTNode(OperatorASTNode operator, ExpressionASTNode right) {
         super(operator, right);
         this.type = InstructionASTNodeType.UnaryExpressionNode;
         this.children.add(this.operator);

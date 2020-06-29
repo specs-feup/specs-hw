@@ -1,14 +1,11 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.VariableReference;
-
 public abstract class AExpressionASTNode extends AInstructionASTNode implements ExpressionASTNode {
 
-    protected VariableReference resultName;
-    protected InstructionASTNode right;
+    protected ExpressionASTNode right;
     protected OperatorASTNode operator;
 
-    public AExpressionASTNode(OperatorASTNode operator, InstructionASTNode right) {
+    public AExpressionASTNode(OperatorASTNode operator, ExpressionASTNode right) {
         super();
         this.right = right;
         this.operator = operator;
@@ -20,22 +17,12 @@ public abstract class AExpressionASTNode extends AInstructionASTNode implements 
     }
 
     @Override
-    public InstructionASTNode getRight() {
+    public ExpressionASTNode getRight() {
         return right;
     }
 
     @Override
-    public InstructionASTNode getLeft() {
+    public ExpressionASTNode getLeft() {
         return null;
-    }
-
-    @Override
-    public void setResultName(String resultName) {
-        this.resultName = new VariableReference(resultName);
-    }
-
-    @Override
-    public VariableReference getResultName() {
-        return resultName;
     }
 }

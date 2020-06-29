@@ -15,9 +15,9 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 
 public class BinaryExpressionASTNode extends AExpressionASTNode implements ExpressionASTNode {
 
-    private InstructionASTNode left;
+    private ExpressionASTNode left;
 
-    public BinaryExpressionASTNode(InstructionASTNode left, OperatorASTNode operator, InstructionASTNode right) {
+    public BinaryExpressionASTNode(ExpressionASTNode left, OperatorASTNode operator, ExpressionASTNode right) {
         super(operator, right);
         this.left = left;
         this.type = InstructionASTNodeType.BinaryExpressionNode;
@@ -27,7 +27,7 @@ public class BinaryExpressionASTNode extends AExpressionASTNode implements Expre
     }
 
     @Override
-    public InstructionASTNode getLeft() {
+    public ExpressionASTNode getLeft() {
         return left;
     }
 

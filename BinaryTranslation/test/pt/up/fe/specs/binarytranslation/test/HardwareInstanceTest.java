@@ -9,8 +9,9 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDe
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.AdditionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.RangeSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.NonBlockingStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.VariableReference;
 
 public class HardwareInstanceTest {
 
@@ -28,8 +29,8 @@ public class HardwareInstanceTest {
         module.addChild(a);
         module.addChild(b);
         module.addChild(c);
-        var expr = new AdditionExpression(new VariableReference(b.getVariableName()),
-                new VariableReference(c.getVariableName()));
+        var refA = new RangeSelection(new VariableReference(b.getVariableName()), 15);
+        var expr = new AdditionExpression(refA, new VariableReference(c.getVariableName()));
 
         var body = new AlwaysCombBlock("additionblock");
         module.addChild(body);
@@ -40,5 +41,4 @@ public class HardwareInstanceTest {
          */
         root.emit(System.out);
     }
-
 }
