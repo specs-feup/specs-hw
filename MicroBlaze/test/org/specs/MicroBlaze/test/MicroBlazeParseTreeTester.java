@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule.SingleInstructionModuleGenerator;
-import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionASTGenerator;
+import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
 
 public class MicroBlazeParseTreeTester {
@@ -29,7 +29,7 @@ public class MicroBlazeParseTreeTester {
         var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
         var singleUnitBuilder = new SingleInstructionModuleGenerator();
         var unit = singleUnitBuilder.generateHarware(addi);
-        // unit.emit(System.out);
+        unit.emit(System.out);
     }
 
     @Test
@@ -45,8 +45,7 @@ public class MicroBlazeParseTreeTester {
     public void testAST() {
         // 248: 20c065e8 addi r6, r0, 26088 // 65e8 <_SDA_BASE_>
         var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
-        var astGenerator = new InstructionASTGenerator();
-        var ast = astGenerator.visit(addi.getPseudocode().getTree());
-        System.out.println(ast.getAsString());
+        var ast = new InstructionAST(addi);
+        System.out.println(ast.getRootnode().getAsString());
     }
 }
