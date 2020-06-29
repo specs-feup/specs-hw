@@ -13,10 +13,12 @@
 
 package org.specs.MicroBlaze.instruction;
 
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
-import pt.up.fe.specs.binarytranslation.lex.generated.*;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
 
 public enum MicroBlazePseudocode implements InstructionPseudocode {
