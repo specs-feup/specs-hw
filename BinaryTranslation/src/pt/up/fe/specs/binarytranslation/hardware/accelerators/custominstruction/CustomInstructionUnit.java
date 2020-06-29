@@ -38,7 +38,7 @@ public class CustomInstructionUnit extends AHardwareInstance {
      * @return
      */
     protected CustomInstructionUnit(BinarySegmentGraph graph) {
-        super();
+        super(null); // quick fix
         this.graph = graph;
     }
 

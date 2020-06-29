@@ -11,11 +11,11 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
 
-public class VariableReference extends AHardwareNode implements HardwareStatement {
+public class VariableReference extends AHardwareNode implements HardwareExpression {
 
     private final String varName;
     // TODO: private final VariableDeclaration declaration;

@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.instruction.ast;
 import java.util.ArrayList;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.BinaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.ExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.OperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.OperatorASTNode;
@@ -32,7 +33,7 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
     }
 
     @Override
-    public InstructionASTNode visitPseudoInstruction(PseudoInstructionContext ctx) {
+    public PseudoInstructionASTNode visitPseudoInstruction(PseudoInstructionContext ctx) {
         var statements = new ArrayList<StatementASTNode>();
         for (var s : ctx.statement()) {
             statements.add((StatementASTNode) this.visit(s));
@@ -41,34 +42,35 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
     }
 
     @Override
-    public InstructionASTNode visitStatement(StatementContext ctx) {
+    public StatementASTNode visitStatement(StatementContext ctx) {
         return new StatementASTNode(this.visit(ctx.operand()), this.visit(ctx.expression()));
     }
 
     @Override
-    public InstructionASTNode visitAsmField(AsmFieldContext ctx) {
+    public OperandASTNode visitAsmField(AsmFieldContext ctx) {
         return new OperandASTNode(ctx.getText());
     }
 
     @Override
-    public InstructionASTNode visitLiteral(LiteralContext ctx) {
+    public OperandASTNode visitLiteral(LiteralContext ctx) {
         return new OperandASTNode(ctx.getText());
     }
 
     @Override
-    public InstructionASTNode visitOperator(OperatorContext ctx) {
+    public OperatorASTNode visitOperator(OperatorContext ctx) {
         return new OperatorASTNode(ctx.getText());
     }
 
     @Override
     public InstructionASTNode visitBinaryOperation(BinaryOperationContext ctx) {
-        return new BinaryExpressionASTNode(this.visit(ctx.left),
-                this.visit(ctx.operator()), this.visit(ctx.right));
+        return new BinaryExpressionASTNode((ExpressionASTNode) this.visit(ctx.left),
+                (OperatorASTNode) this.visit(ctx.operator()), (ExpressionASTNode) this.visit(ctx.right));
     }
 
     @Override
     public InstructionASTNode visitUnaryOperation(UnaryOperationContext ctx) {
-        return new UnaryExpressionASTNode(this.visit(ctx.operator()), this.visit(ctx.right));
+        return new UnaryExpressionASTNode((OperatorASTNode) this.visit(ctx.operator()),
+                (ExpressionASTNode) this.visit(ctx.right));
     }
 
     @Override
