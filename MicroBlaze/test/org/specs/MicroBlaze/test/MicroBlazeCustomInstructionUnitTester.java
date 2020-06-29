@@ -18,7 +18,8 @@ import java.io.File;
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.*;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.CustomInstructionUnitGenerator;
 import pt.up.fe.specs.util.SpecsIo;
@@ -66,6 +67,6 @@ public class MicroBlazeCustomInstructionUnitTester {
 
         // emit code for first graph with non-zero number of liveouts and liveins
         graph.generateOutput();
-        ciUnit.emit(System.out);
+        // ciUnit.emit(System.out);
     }
 }

@@ -13,7 +13,7 @@
 
 package org.specs.MicroBlaze.test;
 
-import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
@@ -29,7 +29,7 @@ public class MicroBlazeParseTreeTester {
         var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
         var singleUnitBuilder = new SingleInstructionModuleGenerator();
         var unit = singleUnitBuilder.generateHarware(addi);
-        unit.emit(System.out);
+        // unit.emit(System.out);
     }
 
     @Test
