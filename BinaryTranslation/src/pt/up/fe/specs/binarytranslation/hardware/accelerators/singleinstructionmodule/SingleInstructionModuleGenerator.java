@@ -21,8 +21,6 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareRootNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.AssignStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.VariableReference;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.PseudoInstructionASTNode;
@@ -74,22 +72,22 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         // convert ASM names to concrete register names and immediate values
         HardwareGenerationUtils.convertOperandsToConcrete(ast);
 
-        var rootNode = (PseudoInstructionASTNode) ast.getRootnode();
-        for (var statement : rootNode.getStatements()) {
+        // convert all statements to Verilog code components
+        for (var statement : ((PseudoInstructionASTNode) ast.getRootnode()).getStatements()) {
 
             // from AST
-            var target = statement.getTarget();
-            var expr = statement.getExpr();
+            // var target = statement.getTarget();
+            // var expr = statement.getExpr();
 
             // to hardware language tree
-            var varref = new VariableReference(target.getOperandName());
-            var hwexpression = HardwareGenerationUtils.convertASTStatement(expr);
+            // var varref = new VariableReference(target.getOperandName());
+            // var hwexpression = HardwareGenerationUtils.convertASTStatement(expr);
 
             // TODO: this conversion could/should result in a generic HardwareNode
             // e.g. the division operator in an expression should be implemented as a module
             // or an expression can contain other expressions as operands
 
-            module.addChild(new AssignStatement(varref, hwexpression));
+            module.addChild(HardwareGenerationUtils.convertASTStatement(statement));
         }
 
         return new SingleInstructionModule(root);

@@ -17,6 +17,7 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.Op
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ParenExpressionContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.StatementContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.UnaryOperationContext;
 
 /**
  * Builds an AST
@@ -66,7 +67,17 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
     }
 
     @Override
+    public InstructionASTNode visitUnaryOperation(UnaryOperationContext ctx) {
+        return new UnaryExpressionASTNode(this.visit(ctx.operator()), this.visit(ctx.right));
+    }
+
+    @Override
     public InstructionASTNode visitParenExpression(ParenExpressionContext ctx) {
-        return new UnaryExpressionASTNode(this.visit(ctx.expression()));
+        var expr = ctx.expression();
+        if (expr instanceof BinaryOperationContext)
+            return this.visit(expr);
+
+        else // if(expr instanceof UnaryOperationContext)
+            return this.visit(expr);
     }
 }
