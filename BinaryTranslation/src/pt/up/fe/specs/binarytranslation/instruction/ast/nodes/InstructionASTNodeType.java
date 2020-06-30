@@ -7,6 +7,8 @@ public enum InstructionASTNodeType {
     BinaryExpressionNode,
     UnaryExpressionNode,
     OperandNode,
+    AsmFieldNode,
+    LiteralNode,
     OperatorNode,
     NumberNode,
     Generic
