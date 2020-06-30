@@ -112,12 +112,11 @@ public class AOperandProperties implements OperandProperties, Serializable {
         if (this.genericType.contains(SYMBOLIC))
             return this.prefix;
 
-        if (this.getMainType() == OperandType.REGISTER) {
+        if (this.getMainType() == OperandType.REGISTER)
             return this.prefix + "<";
 
-        } else {
+        else
             return this.asmfield.toString() + "<";
-        }
     }
 
     public String getSymbolicSuffix() {
