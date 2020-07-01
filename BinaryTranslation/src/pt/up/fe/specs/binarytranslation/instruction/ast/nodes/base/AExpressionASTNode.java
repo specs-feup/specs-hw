@@ -15,12 +15,12 @@ public abstract class AExpressionASTNode extends AInstructionASTNode implements 
 
     @Override
     public OperatorASTNode getOperator() {
-        return operator;
+        return (OperatorASTNode) this.children.get(0);
     }
 
     @Override
     public ExpressionASTNode getRight() {
-        return right;
+        return (ExpressionASTNode) this.children.get(1);
     }
 
     @Override
