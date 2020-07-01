@@ -1,8 +1,8 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 
-import java.util.List;
+import pt.up.fe.specs.binarytranslation.utils.TreeNode;
 
-public interface InstructionASTNode {
+public interface InstructionASTNode extends TreeNode {
 
     /*
      * 
@@ -17,15 +17,6 @@ public interface InstructionASTNode {
     /*
      * 
      */
-    public List<InstructionASTNode> getChildren();
-
-    /*
-     * 
-     */
-    public void replaceChild(InstructionASTNode oldChild, InstructionASTNode newChild);
-
-    /*
-     * 
-     */
+    @Override
     public InstructionASTNode getParent();
 }

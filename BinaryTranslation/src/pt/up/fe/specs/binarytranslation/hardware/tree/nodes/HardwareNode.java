@@ -1,9 +1,10 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes;
 
 import java.io.OutputStream;
-import java.util.List;
 
-public interface HardwareNode {
+import pt.up.fe.specs.binarytranslation.utils.TreeNode;
+
+public interface HardwareNode extends TreeNode<HardwareNode> {
 
     // possible methods:
     // printToFile
@@ -11,46 +12,6 @@ public interface HardwareNode {
     // simulate, or something like generating a Junit with stimuli
     // estimatePerformance
     // generateVivadoScripts --> produces TCL scripts to generate the hardware netlist?
-
-    /*
-     * 
-     */
-    public void addChild(HardwareNode child);
-
-    /*
-     * 
-     */
-    public void addChildLeftOf(HardwareNode child, HardwareNode sibling);
-
-    /*
-     * 
-     */
-    public void addChildRightOf(HardwareNode child, HardwareNode sibling);
-
-    /*
-     * 
-     */
-    public void addChildAt(HardwareNode child, int idx);
-
-    /*
-     * 
-     */
-    public List<HardwareNode> getChildren();
-
-    /*
-     * 
-     */
-    public HardwareNode getChild(int idx);
-
-    /*
-     * 
-     */
-    public HardwareNode getParent();
-
-    /*
-     * 
-     */
-    public void setParent(HardwareNode parent);
 
     /*
      * 
