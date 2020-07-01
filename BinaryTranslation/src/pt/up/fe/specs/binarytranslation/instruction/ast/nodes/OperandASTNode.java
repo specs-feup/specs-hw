@@ -2,51 +2,31 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 
 public class OperandASTNode extends AInstructionASTNode implements ExpressionASTNode {
 
-    private Number operandValue;
-    private String operandName;
-
-    public OperandASTNode(String operandName) {
-        super();
-        this.operandName = operandName;
-        this.operandValue = null;
-        this.type = InstructionASTNodeType.AsmFieldNode;
-    }
-
     /*
-     * TODO: this is NEVER CALLED during AST construction...
+     * Name of the ASM field of this operand. This could be anything in the available fields
+     * of the instruction encoding, including the immediate value fields such as "IMM"
      */
-    public OperandASTNode(Number immediateValue) {
+    private String operandValue;
+
+    public OperandASTNode(String operandValue) {
         super();
-        this.operandValue = immediateValue;
-        this.operandName = immediateValue.toString();
-        this.type = InstructionASTNodeType.LiteralNode;
+        this.operandValue = operandValue;
+        this.type = InstructionASTNodeType.OperandNode;
     }
 
     /*
-     * Used to replace the ASM field name with a specific register
+     * Used to replace the ASM field name with a specific register or immediate value (as string)
      */
     public void setOperandName(String operandName) {
-        this.operandName = operandName;
-    }
-
-    /*
-     * Used to replace the ASM field name with a specific value string
-     */
-    public void setOperandName(Number immediateValue) {
-        this.operandValue = immediateValue;
-        this.operandName = immediateValue.toString();
+        this.operandValue = operandName;
     }
 
     @Override
     public String getAsString() {
-        return this.operandName;
+        return this.operandValue;
     }
 
-    public String getOperandName() {
-        return operandName;
-    }
-
-    public Number getOperandValue() {
+    public String getOperandValue() {
         return operandValue;
     }
 }
