@@ -9,7 +9,7 @@ public class ParenthesesStatment extends AHardwareNode implements HardwareExpres
     public ParenthesesStatment(HardwareExpression inner) {
         super();
         this.inner = inner;
-        this.children.add(inner);
+        this.addChild(inner);
     }
 
     @Override

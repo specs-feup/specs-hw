@@ -4,82 +4,25 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
 
-public abstract class AHardwareNode implements HardwareNode {
+import pt.up.fe.specs.binarytranslation.utils.ATreeNode;
 
-    /*
-     * The originating AST node which this hardware node implements
-     */
-    // private InstructionASTNode instructionASTNode;
-
-    /*
-     * The node's relations
-     */
-    protected HardwareNode parent;
-    protected List<HardwareNode> children;
+public abstract class AHardwareNode extends ATreeNode<AHardwareNode> implements HardwareNode {
 
     public AHardwareNode() {
-        this.children = new ArrayList<HardwareNode>();
+
     }
 
     @Override
-    public void addChild(HardwareNode child) {
-        this.children.add(child);
-        child.setParent(this);
-    }
-
-    @Override
-    public void addChildLeftOf(HardwareNode child, HardwareNode sibling) {
-        var idx = this.children.indexOf(sibling);
-        this.children.add(idx, child);
-        child.setParent(this);
-    }
-
-    @Override
-    public void addChildRightOf(HardwareNode child, HardwareNode sibling) {
-        var idx = this.children.indexOf(sibling);
-        this.children.add(idx - 1, child);
-        child.setParent(this);
-    }
-
-    @Override
-    public void addChildAt(HardwareNode child, int idx) {
-        this.children.add(idx, child);
-        child.setParent(this);
-    }
-
-    /*
-     * 
-     */
-    // public HardwareComponentType getType();
-
-    @Override
-    public List<HardwareNode> getChildren() {
-        return this.children;
-    }
-
-    @Override
-    public HardwareNode getChild(int idx) {
-        return this.children.get(idx);
-    }
-
-    @Override
-    public HardwareNode getParent() {
-        return this.parent;
-    }
-
-    @Override
-    public void setParent(HardwareNode parent) {
-        this.parent = parent;
+    public AHardwareNode getThis() {
+        return this;
     }
 
     @Override
     public String getAsString() {
 
         var builder = new StringBuilder();
-        for (HardwareNode comp : this.children) {
+        for (HardwareNode comp : this.getChildren()) {
             builder.append(comp.getAsString() + "\n");
         }
         return builder.toString();

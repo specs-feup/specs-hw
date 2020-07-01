@@ -30,6 +30,10 @@ public class AssignStatement extends AHardwareNode implements HardwareStatement 
     // TODO: classes like AdditionStatement, etc?
 
     public AssignStatement(VariableReference target, HardwareExpression expression) {
+        super();
+        this.addChild(target);
+        this.addChild(expression);
+
         this.target = target;
         this.expression = expression;
         target.setParent(this);

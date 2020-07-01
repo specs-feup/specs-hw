@@ -24,7 +24,7 @@ public class ModuleDeclaration extends AHardwareNode implements HardwareDeclarat
         /*
          * The children should be port declarations, followed by body (?)
          */
-        for (HardwareNode comp : this.children) {
+        for (HardwareNode comp : this.getChildren()) {
             builder.append(comp.getAsString() + "\n");
         }
 
