@@ -46,36 +46,57 @@ public class HardwareGenerationUtils {
 
     /*
      * Replaces ASM field names in the AST to concrete register names or operand values
-     */
+     
     public static void convertOperandsToConcrete(InstructionAST ast) {
         var instoplist = ast.getInst().getData().getOperands();
         var astoplist = HardwareGenerationUtils.getOperands(ast.getRootnode());
-
+    
         // Anything thats an OperandASTNode necessarily
         // comes from an ASM field of the pseudocode.
         // Any other variables are intermediate results of expressions
         for (var astOP : astoplist) {
-            var instOp = HardwareGenerationUtils.getOperandByAsmField(instoplist, astOP.getOperandName());
-
+            var instOp = HardwareGenerationUtils.getOperandByAsmField(instoplist, astOP.getOperandValue());
+            
+            // convert OperandASTNode to 
+            //var newAstNode =             
+            // TODO: this conversion needs to replace some of the OperandAST nodes with
+            // different types of nodes depending on the operand values and types..
+    
+            String newValue = null;
+            
+            // for any register the substitution is simple: 
+            // replace the ASMfield with a register name, symbolic or otherwise
+            if(instOp.isRegister()) {
+            
+                
+            }
+            
+            // non symbolic immediate (i.e., actual number value)
+            else if(instOp.isImmediate() && !instOp.isSymbolic()) {
+                var value = instOp.getValue(); // get decimal value
+                var width = instOp.getProperties().getWidth(); // bit width
+                
+            }
+            
             if (instOp.isImmediate())
                 astOP.setOperandName(instOp.getValue()); // value returned here should be decimal
             else
                 astOP.setOperandName(instOp.getRepresentation());
         }
-    }
+    }*/
 
     /*
      * 
-     */
+     
     private static Operand getOperandByAsmField(List<Operand> ops, String asmFieldName) {
         for (var op : ops) {
             if (op.getAsmField().toString().equals(asmFieldName))
                 return op;
         }
         return null;
-
+    
         // TODO fix null return
-    }
+    }*/
 
     /*
      * Returns a sub-tree of HardwareNode implementing a particular StatementASTNode
@@ -112,11 +133,11 @@ public class HardwareGenerationUtils {
 
         // return a node
         else {// if (expr instanceof OperandASTNode) {
-            if (expr.getType() == InstructionASTNodeType.AsmFieldNode)
-                return new VariableReference(((OperandASTNode) expr).getOperandName());
+            
+                return new VariableReference(((OperandASTNode) expr).getOperandValue());
 
-            else // InstructionASTNodeType.LiteralNode
-                return new ImmediateReference(((OperandASTNode) expr).getOperandValue(), 32);
+           // else // InstructionASTNodeType.LiteralNode
+               // return new ImmediateReference(((OperandASTNode) expr).getOperandValue(), 32);
             // TODO: return a HardwareReference (VariableReference or RangeSelection)
         }
     }

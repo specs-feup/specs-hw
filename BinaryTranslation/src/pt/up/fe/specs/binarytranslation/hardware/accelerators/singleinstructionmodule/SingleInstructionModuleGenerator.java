@@ -70,7 +70,15 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         var ast = new InstructionAST(inst);
 
         // convert ASM names to concrete register names and immediate values
-        HardwareGenerationUtils.convertOperandsToConcrete(ast);
+        // HardwareGenerationUtils.convertOperandsToConcrete(ast);
+
+        // TODO: create transformation passes over the AST to replace the OperandASTNodes into
+        // more concrete data?
+        // specifically, I need to attach field information to the field names
+        // e.g., a register "RA" in the pseudocode is a 32bit register, which
+        // in a specific execution is called "r3"
+        // This information is held in the "MicroBlazeOperand" class (and siblings)
+        // via the AInstructionProperties family of classes
 
         // convert all statements to Verilog code components
         for (var statement : ((PseudoInstructionASTNode) ast.getRootnode()).getStatements()) {
