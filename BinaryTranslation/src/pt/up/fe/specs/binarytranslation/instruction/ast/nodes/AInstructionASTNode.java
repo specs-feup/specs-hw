@@ -13,6 +13,7 @@ public abstract class AInstructionASTNode implements InstructionASTNode {
         this.children = new ArrayList<InstructionASTNode>();
     }
 
+    @Override
     public InstructionASTNodeType getType() {
         return type;
     }
@@ -20,6 +21,16 @@ public abstract class AInstructionASTNode implements InstructionASTNode {
     @Override
     public List<InstructionASTNode> getChildren() {
         return this.children;
+    }
+
+    @Override
+    public void replaceChild(InstructionASTNode oldChild, InstructionASTNode newChild) {
+        for (var c : this.getChildren()) {
+            if (c == oldChild) {
+                c = newChild;
+                return;
+            }
+        }
     }
 
     @Override

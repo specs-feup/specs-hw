@@ -35,7 +35,7 @@ expression
    : left=expression operator right=expression 	# binaryOperation
    | operator right=expression 					# unaryOperation
    | LPAREN expression RPAREN					# parenExpression
-   | operand									# variable ;
+   | operand									# variable;
 
 rlop: EQ; 
 
@@ -47,7 +47,7 @@ operand:
 /*
  * Lexing
  */
- 
+
 /* Generic Tokens */
 LPAREN	: '(';
 RPAREN	: ')';

@@ -13,17 +13,23 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.AHardwareInstance;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import java.io.OutputStream;
 
-public class SingleInstructionModule extends AHardwareInstance {
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 
-    /*
-     * Instruction this this module implements
-     */
-    // private Instruction inst;
+public class SingleInstructionModule extends AHardwareInstance implements HardwareInstance {
 
-    protected SingleInstructionModule(HardwareNode root) {
-        super(root);
+    private String moduleName;
+
+    public SingleInstructionModule(String instanceName, VerilogModuleTree tree) {
+        super(instanceName, tree);
+        this.moduleName = instancename;
+    }
+
+    @Override
+    public void emit(OutputStream os) {
+        this.tree.emit(os);
     }
 }

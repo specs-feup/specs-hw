@@ -17,16 +17,16 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
 
 public class VariableReference extends AHardwareNode implements HardwareExpression {
 
-    private final String varName;
-    // TODO: private final VariableDeclaration declaration;
+    // private final VariableDeclaration declaration;
+    private final String name;
 
-    public VariableReference(String varName) {
+    public VariableReference(String declaration) {
         super();
-        this.varName = varName;
+        this.name = declaration;
     }
 
     @Override
     public String getAsString() {
-        return this.varName;
+        return this.name;
     }
 }

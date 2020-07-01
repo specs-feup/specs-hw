@@ -1,6 +1,9 @@
-package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
+package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
 
 import java.util.List;
+
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.AInstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
 public class PseudoInstructionASTNode extends AInstructionASTNode {
 

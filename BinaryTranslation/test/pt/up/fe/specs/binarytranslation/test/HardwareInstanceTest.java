@@ -2,8 +2,6 @@ package pt.up.fe.specs.binarytranslation.test;
 
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.ModuleHeader;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareRootNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
@@ -11,6 +9,8 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDecl
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.RangeSelection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareRootNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.NonBlockingStatement;
 
 public class HardwareInstanceTest {
@@ -18,7 +18,7 @@ public class HardwareInstanceTest {
     @Test
     public void testHardwareInstance() {
         var root = new HardwareRootNode();
-        var header = new ModuleHeader();
+        var header = new FileHeader();
         root.addChild(header);
 
         var module = new ModuleDeclaration("testModule");

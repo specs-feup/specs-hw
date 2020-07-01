@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.hardware.tree;
+package pt.up.fe.specs.binarytranslation.hardware;
 
 import java.io.OutputStream;
 
