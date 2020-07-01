@@ -8,6 +8,11 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.*;
 
 public class MicroBlazeOperand extends AOperand {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1023924152110388490L;
+
     private MicroBlazeOperand(OperandProperties props, int value) {
         super(props, value);
     }
