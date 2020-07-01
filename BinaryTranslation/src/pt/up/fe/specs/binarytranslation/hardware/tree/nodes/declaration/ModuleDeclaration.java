@@ -1,9 +1,9 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
-public class ModuleDeclaration extends AHardwareNode implements HardwareDeclaration {
+public class ModuleDeclaration extends HardwareDeclaration {
 
     /*
      * 

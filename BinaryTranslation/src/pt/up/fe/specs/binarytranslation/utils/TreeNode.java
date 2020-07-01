@@ -2,23 +2,63 @@ package pt.up.fe.specs.binarytranslation.utils;
 
 import java.util.List;
 
-public interface TreeNode<T extends TreeNode<T>> {
+/**
+ * 
+ * @author Nuno
+ *
+ * @param <K>
+ */
+public interface TreeNode<K extends TreeNode<K>> {
 
-    public void addChild(T child);
+    /*
+     * 
+     */
+    public K getThis();
 
-    public void addChildLeftOf(T child, T sibling);
+    /*
+     * 
+     */
+    public K getParent();
 
-    public void addChildRightOf(T child, T sibling);
+    /*
+     * 
+     */
+    public List<K> getChildren();
 
-    public void addChildAt(T child, int idx);
+    /*
+     * 
+     */
+    public void setParent(K parent);
 
-    public List<T> getChildren();
+    default public void addChild(K child) {
+        this.getChildren().add(child);
+        child.setParent(getThis());
+    }
 
-    public T getChild(int idx);
+    default public void addChildLeftOf(K child, K sibling) {
+        var idx = this.getChildren().indexOf(sibling);
+        this.getChildren().add(idx, child);
+        child.setParent(getThis());
+    }
 
-    public T getParent();
+    default public void addChildRightOf(K child, K sibling) {
+        var idx = this.getChildren().indexOf(sibling);
+        this.getChildren().add(idx - 1, child);
+        child.setParent(getThis());
+    }
 
-    public void replaceChild(T oldChild, T newChild);
+    default public void addChildAt(K child, int idx) {
+        this.getChildren().add(idx, child);
+        child.setParent(getThis());
+    }
 
-    public void setParent(T parent);
+    default public K getChild(int idx) {
+        return this.getChildren().get(idx);
+    }
+
+    default public void replaceChild(K oldChild, K newChild) {
+        int idx = this.getChildren().indexOf(oldChild);
+        this.getChildren().set(idx, newChild);
+        return;
+    }
 }

@@ -1,25 +1,22 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
 
-import java.util.List;
+import java.util.*;
 
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.AInstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.*;
 
-public class PseudoInstructionASTNode extends AInstructionASTNode {
-
-    private List<StatementASTNode> statements;
+public class PseudoInstructionASTNode extends InstructionASTNode {
 
     public PseudoInstructionASTNode(List<StatementASTNode> statements) {
         super();
-        this.statements = statements;
         this.type = InstructionASTNodeType.PseudoInstructionNode;
-        this.children.addAll(this.statements);
+        for (var s : statements)
+            this.addChild(s);
     }
 
     @Override
     public String getAsString() {
         String ret = "";
-        for (var s : this.statements) {
+        for (var s : this.getStatements()) {
             ret += s.getAsString() + "\n";
         }
         ret += "\n";
@@ -27,6 +24,10 @@ public class PseudoInstructionASTNode extends AInstructionASTNode {
     }
 
     public List<StatementASTNode> getStatements() {
-        return statements;
+        var list = new ArrayList<StatementASTNode>();
+        for (var c : this.getChildren())
+            list.add((StatementASTNode) c);
+
+        return list;
     }
 }

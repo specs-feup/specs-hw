@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
-public interface VariableDeclaration extends HardwareDeclaration {
+public abstract class VariableDeclaration extends HardwareDeclaration {
 
-    public String getVariableName();
+    public abstract String getVariableName();
 }

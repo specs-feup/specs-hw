@@ -1,22 +1,23 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 
-import pt.up.fe.specs.binarytranslation.utils.TreeNode;
+import pt.up.fe.specs.binarytranslation.utils.ATreeNode;
 
-public interface InstructionASTNode extends TreeNode {
+public abstract class InstructionASTNode extends ATreeNode<InstructionASTNode> {
 
-    /*
-     * 
-     */
-    public String getAsString();
+    protected InstructionASTNodeType type;
 
-    /*
-     * 
-     */
-    public InstructionASTNodeType getType();
+    public InstructionASTNode() {
+        super();
+    }
 
-    /*
-     * 
-     */
+    public InstructionASTNodeType getType() {
+        return type;
+    }
+
+    public abstract String getAsString();
+
     @Override
-    public InstructionASTNode getParent();
+    public InstructionASTNode getThis() {
+        return this;
+    }
 }

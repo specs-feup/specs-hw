@@ -1,8 +1,8 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
-public class HardwareCommentNode extends AHardwareNode {
+public class HardwareCommentNode extends HardwareNode {
 
     /*
      * Copyright comment info

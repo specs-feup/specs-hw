@@ -13,11 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.*;
 
-public class AssignStatement extends AHardwareNode implements HardwareStatement {
+public class AssignStatement extends HardwareStatement {
 
     private final VariableReference target;
     private final HardwareExpression expression;

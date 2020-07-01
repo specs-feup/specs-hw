@@ -13,9 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
-
-public class ImmediateReference extends AHardwareNode implements HardwareExpression {
+public class ImmediateReference extends HardwareExpression {
 
     private int width;
     private final Number value;

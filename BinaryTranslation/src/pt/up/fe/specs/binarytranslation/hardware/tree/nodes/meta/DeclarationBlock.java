@@ -1,6 +1,6 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
 /**
@@ -9,7 +9,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
  * @author nuno
  *
  */
-public class DeclarationBlock extends AHardwareNode implements HardwareNode {
+public class DeclarationBlock extends HardwareNode {
 
     public DeclarationBlock() {
         super();

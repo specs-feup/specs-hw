@@ -5,7 +5,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.ExpressionAST
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
-public abstract class InstructionOperandASTNode extends OperandASTNode implements ExpressionASTNode {
+public abstract class InstructionOperandASTNode extends OperandASTNode {
 
     /**
      * The {@link Operand} reference from the {@link Instruction} class instance to which the AST of this node is

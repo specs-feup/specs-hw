@@ -1,8 +1,6 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
-
-public class ParenthesesStatment extends AHardwareNode implements HardwareExpression {
+public class ParenthesesStatment extends HardwareExpression {
 
     private HardwareExpression inner;
 

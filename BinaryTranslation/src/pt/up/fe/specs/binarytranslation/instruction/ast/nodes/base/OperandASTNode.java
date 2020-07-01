@@ -1,9 +1,8 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
 
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.AInstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
-public class OperandASTNode extends AInstructionASTNode implements ExpressionASTNode {
+public class OperandASTNode extends ExpressionASTNode {
 
     /*
      * Name of the ASM field of this operand. This could be anything in the available fields
