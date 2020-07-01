@@ -4,7 +4,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.ExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
-public class LiteralOperandASTNode extends InstructionOperandASTNode implements ExpressionASTNode {
+public class LiteralOperandASTNode extends InstructionOperandASTNode {
 
     /*
      * This class represents ONLY operands which are literal values (i.e., numbers)

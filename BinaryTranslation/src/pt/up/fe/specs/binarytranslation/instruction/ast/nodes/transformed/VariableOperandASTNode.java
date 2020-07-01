@@ -4,7 +4,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.ExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
-public class VariableOperandASTNode extends InstructionOperandASTNode implements ExpressionASTNode {
+public class VariableOperandASTNode extends InstructionOperandASTNode {
 
     /*
      * Nodes of this type represent operands which could be: 

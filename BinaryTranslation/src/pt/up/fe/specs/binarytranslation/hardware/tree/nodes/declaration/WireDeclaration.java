@@ -1,8 +1,6 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
-
-public class WireDeclaration extends AHardwareNode implements VariableDeclaration {
+public class WireDeclaration extends VariableDeclaration {
 
     private final String wireName;
     private final int numBits;

@@ -15,17 +15,24 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
-public class UnaryExpressionASTNode extends AExpressionASTNode implements ExpressionASTNode {
+public class UnaryExpressionASTNode extends ExpressionASTNode {
 
     public UnaryExpressionASTNode(OperatorASTNode operator, ExpressionASTNode right) {
-        super(operator, right);
         this.type = InstructionASTNodeType.UnaryExpressionNode;
-        this.children.add(this.operator);
-        this.children.add(this.right);
+        this.addChild(operator);
+        this.addChild(right);
+    }
+
+    public OperatorASTNode getOperator() {
+        return (OperatorASTNode) this.getChild(0);
+    }
+
+    public ExpressionASTNode getRight() {
+        return (ExpressionASTNode) this.getChild(1);
     }
 
     @Override
     public String getAsString() {
-        return "( " + this.right.getAsString() + " )";
+        return this.getOperator() + this.getRight().getAsString();
     }
 }

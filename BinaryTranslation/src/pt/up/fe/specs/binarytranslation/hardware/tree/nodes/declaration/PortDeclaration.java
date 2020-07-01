@@ -17,10 +17,10 @@ import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdge;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdgeType;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
-public class PortDeclaration extends AHardwareNode implements VariableDeclaration {
+public class PortDeclaration extends VariableDeclaration {
 
     private final int portWidth;
     private final String portname;

@@ -1,29 +1,45 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
-import pt.up.fe.specs.binarytranslation.utils.TreeNode;
+import pt.up.fe.specs.binarytranslation.utils.ATreeNode;
 
-public interface HardwareNode extends TreeNode<HardwareNode> {
+public abstract class HardwareNode extends ATreeNode<HardwareNode> {
 
-    // possible methods:
-    // printToFile
-    // generateArtifacts (e.g., CLA communication routines, injector, other stuff)
-    // simulate, or something like generating a Junit with stimuli
-    // estimatePerformance
-    // generateVivadoScripts --> produces TCL scripts to generate the hardware netlist?
+    public HardwareNode() {
+
+    }
+
+    @Override
+    public HardwareNode getThis() {
+        return this;
+    }
+
+    public String getAsString() {
+
+        var builder = new StringBuilder();
+        for (HardwareNode comp : this.getChildren()) {
+            builder.append(comp.getAsString() + "\n");
+        }
+        return builder.toString();
+    }
 
     /*
      * 
      */
-    public void emit(OutputStream os);
+    public void emit(OutputStream os) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+            bw.write(this.getAsString());
+            bw.flush();
+            bw.close();
 
-    /*
-     * 
-     */
-    public String getAsString();
-
-    // possible method: HardwareReport estimateResources(HardwareTarget target)
-    // where HardwareTarget has a type, like FPGA etc
-    // the underlying implementations call the synthesis tools etc
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }

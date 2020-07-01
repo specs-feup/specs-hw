@@ -13,9 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.AHardwareNode;
-
-public class VariableReference extends AHardwareNode implements HardwareExpression {
+public class VariableReference extends HardwareExpression {
 
     // private final VariableDeclaration declaration;
     private final String name;

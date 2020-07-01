@@ -1,32 +1,27 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
 
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.AInstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
-public class StatementASTNode extends AInstructionASTNode {
-
-    private OperandASTNode target;
-    private ExpressionASTNode expr;
+public class StatementASTNode extends InstructionASTNode {
 
     public StatementASTNode(OperandASTNode target, ExpressionASTNode expr) {
         super();
-        this.target = target;
-        this.expr = expr; // TODO: works?
         this.type = InstructionASTNodeType.StatementNode;
-        this.children.add(this.target);
-        this.children.add(this.expr);
+        this.addChild(target);
+        this.addChild(expr);
     }
 
     @Override
     public String getAsString() {
-        return target.getAsString() + " = " + expr.getAsString() + ";";
+        return this.getTarget().getAsString() + " = " + this.getExpr().getAsString() + ";";
     }
 
     public OperandASTNode getTarget() {
-        return target;
+        return (OperandASTNode) this.getChild(0);
     }
 
     public ExpressionASTNode getExpr() {
-        return expr;
+        return (ExpressionASTNode) this.getChild(1);
     }
 }

@@ -1,9 +1,9 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
 
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.AInstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
-public class OperatorASTNode extends AInstructionASTNode {
+public class OperatorASTNode extends InstructionASTNode {
 
     private String operator;
 
