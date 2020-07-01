@@ -11,7 +11,9 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
+package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
+
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
 public class UnaryExpressionASTNode extends AExpressionASTNode implements ExpressionASTNode {
 

@@ -1,14 +1,17 @@
-package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
+package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
+
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.AInstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
 public class StatementASTNode extends AInstructionASTNode {
 
     private OperandASTNode target;
     private ExpressionASTNode expr;
 
-    public StatementASTNode(InstructionASTNode target, InstructionASTNode expr) {
+    public StatementASTNode(OperandASTNode target, ExpressionASTNode expr) {
         super();
-        this.target = (OperandASTNode) target;
-        this.expr = (ExpressionASTNode) expr; // TODO: works?
+        this.target = target;
+        this.expr = expr; // TODO: works?
         this.type = InstructionASTNodeType.StatementNode;
         this.children.add(this.target);
         this.children.add(this.expr);

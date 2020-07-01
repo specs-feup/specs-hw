@@ -1,4 +1,6 @@
-package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
+package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
+
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 
 public interface ExpressionASTNode extends InstructionASTNode {
 

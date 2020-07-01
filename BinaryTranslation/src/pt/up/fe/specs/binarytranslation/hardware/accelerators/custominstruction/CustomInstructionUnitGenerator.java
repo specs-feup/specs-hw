@@ -6,8 +6,8 @@ import java.util.List;
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
 
 /**

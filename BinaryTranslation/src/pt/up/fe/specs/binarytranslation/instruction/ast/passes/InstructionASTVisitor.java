@@ -1,17 +1,29 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.passes;
 
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.BinaryExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.ExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.OperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.OperatorASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.PseudoInstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.StatementASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.UnaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.BinaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.ExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperatorASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.StatementASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.UnaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.InstructionOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.LiteralOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
 
 public abstract class InstructionASTVisitor<T> {
 
-    protected abstract T visitChildren(InstructionASTNode node);
+    /*
+     * Default always returns result of last child visited
+     */
+    protected T visitChildren(InstructionASTNode node) {
+        T ret = null;
+        for (var c : node.getChildren()) {
+            ret = this.visit(c);
+        }
+        return ret;
+    }
 
     protected T visit(PseudoInstructionASTNode node) {
         return this.visitChildren(node);
@@ -32,6 +44,28 @@ public abstract class InstructionASTVisitor<T> {
     protected T visit(OperandASTNode node) {
         return this.visitChildren(node);
     };
+
+    protected T visit(InstructionOperandASTNode node) {
+
+        if (node instanceof VariableOperandASTNode) {
+            return this.visit(node);
+        }
+
+        else if (node instanceof LiteralOperandASTNode) {
+            return this.visit(node);
+        }
+
+        else
+            return null;
+    }
+
+    protected T visit(VariableOperandASTNode node) {
+        return this.visitChildren(node);
+    }
+
+    protected T visit(LiteralOperandASTNode node) {
+        return this.visitChildren(node);
+    }
 
     protected T visit(OperatorASTNode node) {
         return this.visitChildren(node);

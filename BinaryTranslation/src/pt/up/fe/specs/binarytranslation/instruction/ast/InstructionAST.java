@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.passes.InstructionASTListener;
 
 public class InstructionAST {
 
@@ -33,5 +34,9 @@ public class InstructionAST {
 
     public ParseTree getParseTree() {
         return parseTree;
+    }
+
+    public void accept(InstructionASTListener listener) {
+        listener.visit(this);
     }
 }

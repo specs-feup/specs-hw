@@ -22,5 +22,10 @@ public interface InstructionASTNode {
     /*
      * 
      */
+    public void replaceChild(InstructionASTNode oldChild, InstructionASTNode newChild);
+
+    /*
+     * 
+     */
     public InstructionASTNode getParent();
 }

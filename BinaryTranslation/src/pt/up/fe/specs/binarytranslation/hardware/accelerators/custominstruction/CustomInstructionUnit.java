@@ -1,7 +1,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.hardware.tree.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
 
 public class CustomInstructionUnit extends AHardwareInstance {
 
