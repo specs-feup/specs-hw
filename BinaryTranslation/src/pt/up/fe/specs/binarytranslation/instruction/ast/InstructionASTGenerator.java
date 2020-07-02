@@ -3,8 +3,10 @@ package pt.up.fe.specs.binarytranslation.instruction.ast;
 import java.util.ArrayList;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.BareOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.BinaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.ExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.LiteralOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperatorASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
@@ -54,13 +56,13 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
     }
 
     @Override
-    public OperandASTNode visitAsmField(AsmFieldContext ctx) {
-        return new OperandASTNode(ctx.getText());
+    public BareOperandASTNode visitAsmField(AsmFieldContext ctx) {
+        return new BareOperandASTNode(ctx.getText());
     }
 
     @Override
-    public OperandASTNode visitLiteral(LiteralContext ctx) {
-        return new OperandASTNode(ctx.getText());
+    public LiteralOperandASTNode visitLiteral(LiteralContext ctx) {
+        return new LiteralOperandASTNode(Integer.valueOf(ctx.getText()));
     }
 
     @Override

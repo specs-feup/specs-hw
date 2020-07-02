@@ -30,6 +30,11 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         // TODO: add generation parameters
     }
 
+    // TODO: if the pseudoinstruction has multiple statements, then a single verilog "assign" will not work, sicne it
+    // violates verilog rules
+    // I have to choose what to generate based on general characteristics of the AST..
+    // for example, if the same ASM field is assigned a value more than once (does this even happen??)
+
     /**
      * 
      * @param inst
