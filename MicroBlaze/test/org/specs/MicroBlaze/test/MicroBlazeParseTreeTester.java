@@ -38,7 +38,7 @@ public class MicroBlazeParseTreeTester {
         var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
         var dumper = new TreeDumper();
         var walker = new ParseTreeWalker();
-        walker.walk(dumper, addi.getPseudocode().getTree());
+        walker.walk(dumper, addi.getPseudocode().getParseTree());
     }
 
     @Test
