@@ -15,10 +15,12 @@ package pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstruction
 
 import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.AssignmentStatmentGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.HardwareStatementGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareCommentNode;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
@@ -71,29 +73,46 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         // get AST of instruction
         var ast = new InstructionAST(inst);
 
+        // TODO: a first pass which replaces AST nodes with info frmo the instruction, specifically,
+        // replaces OperandASTNode with LIveinNode,Liveout,internal internal extends to -> variablenode and
+        // immediatenode
+
         // Apply first pass (attaches executed instruction information to the AST of the instruction)
         ast.accept(new ApplyInstructionPass());
 
         // convert all statements to Verilog code components
-        var generator = new AssignmentStatmentGenerator();
-        for (var statement : ((PseudoInstructionASTNode) ast.getRootnode()).getStatements()) {
+        var generator = new HardwareStatementGenerator();
+        var statements = ((PseudoInstructionASTNode) ast.getRootnode()).getStatements();
 
-            module.addChild(generator.visit(statement));
+        // add comment
+        module.addChild(new HardwareCommentNode("implementation for instruction: " + inst.getRepresentation()));
 
-            // from AST
-            // var target = statement.getTarget();
-            // var expr = statement.getExpr();
-
-            // to hardware language tree
-            // var varref = new VariableReference(target.getOperandName());
-            // var hwexpression = HardwareGenerationUtils.convertASTStatement(expr);
-
-            // TODO: this conversion could/should result in a generic HardwareNode
-            // e.g. the division operator in an expression should be implemented as a module
-            // or an expression can contain other expressions as operands
-
-            // root.addChild(HardwareGenerationUtils.convertASTStatement(statement));
+        // needs an always_comb block
+        if (statements.size() > 1) {
+            var block = new AlwaysCombBlock();
+            module.addChild(block);
+            for (var statement : statements) {
+                block.addChild(generator.generateBlocking(statement));
+            }
         }
+
+        // else use a single assign statement
+        else
+            module.addChild(generator.generateAssign(statements.get(0)));
+
+        // from AST
+        // var target = statement.getTarget();
+        // var expr = statement.getExpr();
+
+        // to hardware language tree
+        // var varref = new VariableReference(target.getOperandName());
+        // var hwexpression = HardwareGenerationUtils.convertASTStatement(expr);
+
+        // TODO: this conversion could/should result in a generic HardwareNode
+        // e.g. the division operator in an expression should be implemented as a module
+        // or an expression can contain other expressions as operands
+
+        // root.addChild(HardwareGenerationUtils.convertASTStatement(statement));
 
         return new SingleInstructionModule(inst.getName(), moduletree);
     }

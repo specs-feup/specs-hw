@@ -12,13 +12,14 @@ public enum InstructionASTNodeType {
 
     // using only info from pseudocode
     BareOperandNode,
+    LiteralOperandNode,
 
     // types of operands with information
     // completed from executed instruction
     LiveInNode,
     LiveOutNode,
     VariableNode,
-    LiteralNode,
+    ImmediateNode,
 
     OperatorNode,
     NumberNode,

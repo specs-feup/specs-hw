@@ -22,7 +22,7 @@ public class AlwaysCombBlock extends HardwareConstruct {
             builder.append("\nalways_comb\n");
 
         for (var child : this.getChildren()) {
-            builder.append("\t" + child.getAsString());
+            builder.append("\t" + child.getAsString() + "\n");
         }
 
         builder.append("end //" + this.blockName + "\n");
