@@ -42,17 +42,20 @@ public abstract class InstructionASTVisitor<T> {
     };
 
     protected T visit(OperandASTNode node) {
-        return this.visitChildren(node);
+        if (node instanceof InstructionOperandASTNode)
+            return this.visit((InstructionOperandASTNode) node);
+        else
+            return this.visitChildren(node);
     };
 
     protected T visit(InstructionOperandASTNode node) {
 
         if (node instanceof VariableOperandASTNode) {
-            return this.visit(node);
+            return this.visit((VariableOperandASTNode) node);
         }
 
         else if (node instanceof LiteralOperandASTNode) {
-            return this.visit(node);
+            return this.visit((LiteralOperandASTNode) node);
         }
 
         else
@@ -73,13 +76,14 @@ public abstract class InstructionASTVisitor<T> {
 
     protected T visit(ExpressionASTNode node) {
 
-        if (node instanceof BinaryExpressionASTNode) {
+        if (node instanceof BinaryExpressionASTNode)
             return this.visit((BinaryExpressionASTNode) node);
-        }
 
-        else if (node instanceof UnaryExpressionASTNode) {
+        else if (node instanceof UnaryExpressionASTNode)
             return this.visit((UnaryExpressionASTNode) node);
-        }
+
+        else if (node instanceof OperandASTNode)
+            return this.visit((OperandASTNode) node);
 
         else
             return null;

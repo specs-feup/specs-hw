@@ -40,7 +40,7 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
 
         // The VerilogModuleTree
         var moduletree = new VerilogModuleTree(inst.getName());
-        var root = moduletree.getRoot();
+        var module = moduletree.getModule();
 
         // Information we can only grasp from the instruction encoding //////////////////////////
 
@@ -55,10 +55,10 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
                 continue;
 
             else if (op.isRead())
-                root.addChild(new PortDeclaration(name, width, ModulePortDirection.input));
+                moduletree.addDeclaration(new PortDeclaration(name, width, ModulePortDirection.input));
 
             else if (op.isWrite())
-                root.addChild(new PortDeclaration(name, width, ModulePortDirection.output));
+                moduletree.addDeclaration(new PortDeclaration(name, width, ModulePortDirection.output));
         }
 
         // Information we can only grasp from the pseudocode (i.e. instruction implementation) //
@@ -73,7 +73,7 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         var generator = new AssignmentStatmentGenerator();
         for (var statement : ((PseudoInstructionASTNode) ast.getRootnode()).getStatements()) {
 
-            root.addChild(generator.visit(statement));
+            module.addChild(generator.visit(statement));
 
             // from AST
             // var target = statement.getTarget();

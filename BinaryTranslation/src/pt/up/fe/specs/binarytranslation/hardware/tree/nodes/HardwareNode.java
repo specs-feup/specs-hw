@@ -10,7 +10,6 @@ import pt.up.fe.specs.binarytranslation.utils.ATreeNode;
 public abstract class HardwareNode extends ATreeNode<HardwareNode> {
 
     public HardwareNode() {
-
     }
 
     @Override

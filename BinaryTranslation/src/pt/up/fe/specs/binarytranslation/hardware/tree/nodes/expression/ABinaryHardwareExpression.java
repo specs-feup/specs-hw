@@ -6,16 +6,23 @@ public abstract class ABinaryHardwareExpression extends HardwareExpression {
      * 
      */
     protected String expressionOperator;
-    protected final HardwareExpression varA, varB;
 
     public ABinaryHardwareExpression(HardwareExpression varA, HardwareExpression varB) {
         super();
-        this.varA = varA;
-        this.varB = varB;
+        this.addChild(varA);
+        this.addChild(varB);
+    }
+
+    private HardwareExpression getLeft() {
+        return (HardwareExpression) this.getChild(0);
+    }
+
+    private HardwareExpression getRight() {
+        return (HardwareExpression) this.getChild(1);
     }
 
     @Override
     public String getAsString() {
-        return this.varA.getAsString() + " " + this.expressionOperator + " " + this.varB.getAsString();
+        return this.getLeft().getAsString() + " " + this.expressionOperator + " " + this.getRight().getAsString();
     }
 }

@@ -30,7 +30,7 @@ public class ImmediateReference extends HardwareExpression {
 
     @Override
     public String getAsString() {
-        return Integer.toString(this.width - 1) + "'d" + this.value;
+        return Integer.toString(this.width) + "'d" + this.value;
     }
 
 }

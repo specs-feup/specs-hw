@@ -1,5 +1,7 @@
 package pt.up.fe.specs.binarytranslation.hardware;
 
+import java.io.OutputStream;
+
 import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareTree;
 
 public abstract class AHardwareInstance implements HardwareInstance {
@@ -14,5 +16,10 @@ public abstract class AHardwareInstance implements HardwareInstance {
     public AHardwareInstance(String instancename, HardwareTree tree) {
         this.instancename = instancename;
         this.tree = tree;
+    }
+
+    @Override
+    public void emit(OutputStream os) {
+        this.tree.emit(os);
     }
 }
