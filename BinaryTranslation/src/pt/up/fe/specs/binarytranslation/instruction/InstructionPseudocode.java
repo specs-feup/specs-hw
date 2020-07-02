@@ -20,10 +20,10 @@ public interface InstructionPseudocode {
     /*
      * 
      */
-    public String getPseudocode();
+    public String getCode();
 
     /*
      * Return a parse tree with this instruction's implementation (?) 
      */
-    public PseudoInstructionContext getTree();
+    public PseudoInstructionContext getParseTree();
 }

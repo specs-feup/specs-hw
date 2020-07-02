@@ -1,5 +1,7 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
 
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
+
 public class LiteralOperandASTNode extends OperandASTNode {
 
     private Number value;
@@ -7,6 +9,7 @@ public class LiteralOperandASTNode extends OperandASTNode {
     public LiteralOperandASTNode(Number value) {
         super();
         this.value = value;
+        this.type = InstructionASTNodeType.LiteralOperandNode;
     }
 
     @Override

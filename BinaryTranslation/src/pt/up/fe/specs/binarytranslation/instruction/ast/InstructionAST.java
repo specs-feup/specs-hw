@@ -14,7 +14,7 @@ public class InstructionAST {
 
     public InstructionAST(Instruction inst) {
         this.inst = inst;
-        this.parseTree = inst.getPseudocode().getTree();
+        this.parseTree = inst.getPseudocode().getParseTree();
         this.rootnode = (new InstructionASTGenerator()).visit(parseTree);
     }
 

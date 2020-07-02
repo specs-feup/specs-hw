@@ -15,6 +15,6 @@ public class HardwareCommentNode extends HardwareNode {
 
     @Override
     public String getAsString() {
-        return commentText;
+        return "//" + commentText;
     }
 }

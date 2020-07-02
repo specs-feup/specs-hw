@@ -12,7 +12,7 @@ public class ImmediateOperandASTNode extends ConcreteOperandASTNode {
      */
     public ImmediateOperandASTNode(Operand op) {
         super(op);
-        this.type = InstructionASTNodeType.LiteralNode;
+        this.type = InstructionASTNodeType.ImmediateNode;
     }
 
     public Number getValue() {
