@@ -39,14 +39,14 @@ public enum MicroBlazePseudocode implements InstructionPseudocode {
     }
 
     @Override
-    public String getPseudocode() {
+    public String getCode() {
         return pseudocode;
     }
 
     @Override
-    public PseudoInstructionContext getTree() {
+    public PseudoInstructionContext getParseTree() {
         var parser = new PseudoInstructionParser(
-                new CommonTokenStream(new PseudoInstructionLexer(new ANTLRInputStream(this.getPseudocode()))));
+                new CommonTokenStream(new PseudoInstructionLexer(new ANTLRInputStream(this.getCode()))));
         return parser.pseudoInstruction();
     }
 }
