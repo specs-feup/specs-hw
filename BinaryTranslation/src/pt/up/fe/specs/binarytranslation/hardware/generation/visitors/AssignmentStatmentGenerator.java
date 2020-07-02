@@ -7,9 +7,10 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.Immediate
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.AssignStatement;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.BinaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.LiteralOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.StatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.UnaryExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.LiteralOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ImmediateOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.InstructionASTVisitor;
 
@@ -95,8 +96,13 @@ public class AssignmentStatmentGenerator extends InstructionASTVisitor<HardwareN
     }
 
     @Override
-    protected HardwareNode visit(LiteralOperandASTNode node) {
-        //
+    protected HardwareNode visit(ImmediateOperandASTNode node) {
         return new ImmediateReference(node.getValue(), node.getWidth());
+    }
+
+    @Override
+    protected HardwareNode visit(LiteralOperandASTNode node) {
+        return new ImmediateReference(node.getValue(), 32);
+        // TODO: support in g4 grammar for specifying bitwidth
     }
 }

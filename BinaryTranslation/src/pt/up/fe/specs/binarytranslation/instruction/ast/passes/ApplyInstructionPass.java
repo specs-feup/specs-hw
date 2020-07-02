@@ -3,9 +3,9 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.passes;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.InstructionOperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.LiteralOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.BareOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ConcreteOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ImmediateOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
@@ -33,13 +33,13 @@ public class ApplyInstructionPass extends InstructionASTListener {
     }
 
     @Override
-    protected void visit(OperandASTNode node) {
+    protected void visit(BareOperandASTNode node) {
 
         var parent = node.getParent();
         var instOp = getOperandByAsmField(ast.getInst().getData().getOperands(), node.getOperandValue());
 
         // make new node type
-        InstructionOperandASTNode newNode = null;
+        ConcreteOperandASTNode newNode = null;
 
         // TODO liveins and liveouts??
 
@@ -50,7 +50,7 @@ public class ApplyInstructionPass extends InstructionASTListener {
 
         // non symbolic immediate (i.e., actual number value)
         else if (instOp.isImmediate() && !instOp.isSymbolic()) {
-            newNode = new LiteralOperandASTNode(instOp);
+            newNode = new ImmediateOperandASTNode(instOp);
         }
 
         parent.replaceChild(node, newNode);

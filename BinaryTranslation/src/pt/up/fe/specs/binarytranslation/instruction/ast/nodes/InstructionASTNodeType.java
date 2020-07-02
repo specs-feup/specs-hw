@@ -7,7 +7,14 @@ public enum InstructionASTNodeType {
     BinaryExpressionNode,
     UnaryExpressionNode,
 
+    // abstract
     OperandNode,
+
+    // using only info from pseudocode
+    BareOperandNode,
+
+    // types of operands with information
+    // completed from executed instruction
     LiveInNode,
     LiveOutNode,
     VariableNode,
