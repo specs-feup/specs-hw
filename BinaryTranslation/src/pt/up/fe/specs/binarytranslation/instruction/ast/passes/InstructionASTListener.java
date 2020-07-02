@@ -45,6 +45,9 @@ public abstract class InstructionASTListener {
     };
 
     protected void visit(OperandASTNode node) {
+        if (node instanceof InstructionOperandASTNode) {
+            this.visit(node);
+        }
     };
 
     protected void visit(InstructionOperandASTNode node) {
@@ -71,13 +74,14 @@ public abstract class InstructionASTListener {
 
     protected void visit(ExpressionASTNode node) {
 
-        if (node instanceof BinaryExpressionASTNode) {
+        if (node instanceof BinaryExpressionASTNode)
             this.visit((BinaryExpressionASTNode) node);
-        }
 
-        else if (node instanceof UnaryExpressionASTNode) {
+        else if (node instanceof UnaryExpressionASTNode)
             this.visit((UnaryExpressionASTNode) node);
-        }
+
+        else if (node instanceof OperandASTNode)
+            this.visit((OperandASTNode) node);
 
         return;
     }

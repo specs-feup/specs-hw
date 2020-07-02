@@ -1,5 +1,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
+import java.io.OutputStream;
+
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
 
@@ -38,7 +40,7 @@ public class CustomInstructionUnit extends AHardwareInstance {
      * @return
      */
     protected CustomInstructionUnit(BinarySegmentGraph graph) {
-        super(null); // quick fix
+        super(null, null); // quick fix
         this.graph = graph;
     }
 
@@ -47,5 +49,4 @@ public class CustomInstructionUnit extends AHardwareInstance {
     // addFunctionalUnit
     // etc
     // then call a factory method or something
-
 }

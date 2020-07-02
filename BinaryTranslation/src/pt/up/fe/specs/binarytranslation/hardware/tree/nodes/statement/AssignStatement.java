@@ -17,29 +17,12 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.*;
 
 public class AssignStatement extends HardwareStatement {
 
-    private final VariableReference target;
-    private final HardwareExpression expression;
-
-    // are these the correct fields??..
-    // No, should be VariableReference!
-    // and the HardwareStatement is an expression, which could be complex, or a VariableReference itself
-    // therefore VariableReference extends/implements HardwareStatement
-
-    // TODO: classes like AdditionStatement, etc?
-
     public AssignStatement(VariableReference target, HardwareExpression expression) {
-        super();
-        this.addChild(target);
-        this.addChild(expression);
-
-        this.target = target;
-        this.expression = expression;
-        target.setParent(this);
-        expression.setParent(this);
+        super(target, expression);
     }
 
     @Override
     public String getAsString() {
-        return "assign " + target.getAsString() + " = " + expression.getAsString() + ";\n";
+        return "assign " + this.getTarget().getAsString() + " = " + this.getExpression().getAsString() + ";";
     }
 }

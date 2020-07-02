@@ -23,7 +23,7 @@ public abstract class InstructionOperandASTNode extends OperandASTNode {
 
     @Override
     public String getAsString() {
-        return op.getStringValue();
+        return op.getRepresentation();
     }
 
     public int getWidth() {
