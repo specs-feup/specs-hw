@@ -32,6 +32,13 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
     // good use of blocking and non blocking statements
     // in a combinatorial Verilog block, by relying on node levels
 
+    // TODO: need to combine several AST, potentially after generation of each, since
+    // the instruction information needs to be applied...
+    // After applying each instruction, I just need to attach the ASTs to eachother, last to first (last operation is
+    // topmost on the tree)
+    // by finding the ExpressionASTNode whose target matches the operands in the upper subtrees
+    // then it should be possible to walk an entire combined AST to generate verilog!
+
     @Override
     public HardwareInstance generateHardware(BinarySegmentGraph graph) {
 
