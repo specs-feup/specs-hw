@@ -1,0 +1,8 @@
+// TODO List
+
+// 1. define grammar file
+	// 1.1. define some type of construct to allow for DPR calls? (!)
+	// 1.2. allow specification of reading parameters from file
+
+// 2. reutilize HardwareNode classes from BinaryTranslation
+// 3. research source-to-source generation of verilog
