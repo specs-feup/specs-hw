@@ -11,6 +11,9 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
+// Based on the Java grammar at : 
+// https://github.com/antlr/grammars-v4/blob/master/java/java9/Java9.g4
+
 grammar crisp;
 
 @header {
@@ -80,8 +83,8 @@ WHITE_SPACE : [ \t\r\n]+ -> channel(HIDDEN) ;
 /* PARSER */
 
 /* Expressions */
+variableType : LOGIC | INTEGER | LONG ;
 
-/* Modifier Prefixes */
 
 
 /* Declarations */
@@ -90,14 +93,13 @@ WHITE_SPACE : [ \t\r\n]+ -> channel(HIDDEN) ;
 identifier : Identifier ;
 
 // e.g. varA = <expr>
-// e.g. var A = 
 variableInitializer : expression ;
 
-// e.g. aarA = a
+// e.g. varA = a
 variableDeclarator : identifier ('=' variableInitializer)? ;
 
 // e.g. varA = a, varB = b, varC, etc
-identifierDeclarationList :	identifier (COMMA identifier)* ;
+variableDeclaratorList : variableDeclarator (COMMA variableDeclarator)* ;
 
 // declare a class name
 classType : identifier ;
@@ -113,6 +115,7 @@ interfaceTypeList :	interfaceType (',' interfaceType)* ;
 // e.g. "implements classA, classB"
 superinterfaces : IMPLEMENTS interfaceTypeList ;
 
+/* Modifier Prefixes */
 classModifier : PUBLIC | PRIVATE;
 constructorModifier : PUBLIC |PROTECTED | PRIVATE ;
 fieldModifier : PUBLIC |PROTECTED | PRIVATE ;
@@ -121,7 +124,7 @@ methodModifier : PUBLIC |PROTECTED | PRIVATE ;
 // e.g. "private ClassA(...)"
 constructorDeclaration : constructorModifier* constructorDeclarator constructorBody ;
 
-fieldDeclaration : fieldModifier 
+fieldDeclaration : fieldModifier* variableType variableDeclaratorList SEMICOLON ;
 
 classMemberDeclaration
 	:	fieldDeclaration
