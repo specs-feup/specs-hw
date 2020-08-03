@@ -12,12 +12,11 @@ import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.util.*;
+import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.SpecsStrings;
 
 public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
-    private static final String GDB_EXE = "mb-gdb";
-    private static final String QEMU_EXE = "/media/nuno/HDD/work/projects/myqemus/qemu-system-microblazeel";
     private static final Pattern REGEX = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
 
     // two auxiliary vars to help with mb-gdb bug
@@ -29,7 +28,9 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         // super(MicroBlazeTraceStream.newSimulatorBuilder(elfname));
 
         super(elfname, MicroBlazeResource.QEMU_MICROBLAZE_GDB_TEMPLATE,
-                GDB_EXE, MicroBlazeResource.QEMU_MICROBLAZE_BAREMETAL_DTB, QEMU_EXE);
+                MicroBlazeResource.MICROBLAZE_GDB,
+                MicroBlazeResource.QEMU_MICROBLAZE_BAREMETAL_DTB,
+                MicroBlazeResource.QEMU_MICROBLAZE_EXE);
 
         this.appInfo = new ApplicationInformation(
                 MicroBlazeResource.MICROBLAZE_CPU_NAME.getResource(), elfname.getName(),
