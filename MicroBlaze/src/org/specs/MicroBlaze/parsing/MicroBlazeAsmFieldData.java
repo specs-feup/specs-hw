@@ -14,6 +14,11 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 
 public class MicroBlazeAsmFieldData extends AsmFieldData {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6881817344658745810L;
+
     /*
      * Create raw
      */
