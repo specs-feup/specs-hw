@@ -11,12 +11,15 @@ public enum RiscvAsmFieldType implements AsmFieldType {
 
     // For the base ISA, i.e., "32-bit RISC-V instruction formats"
     // https://github.com/riscv/riscv-opcodes/blob/master/opcodes-rv32i
-    REG2REG,
-    IMMEDIATE,
-    STORE,
-    UPPERIMM,
+    R,
+    I,
+    S,
+    U,
     // RISU
 
-    BRANCH,
-    JUMP
+    LOAD, // I-type variant
+    JALR, // I-type variant
+    SB,
+    UJ
+    // variants
 }

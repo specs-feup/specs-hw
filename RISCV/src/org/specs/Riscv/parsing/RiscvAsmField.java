@@ -13,26 +13,24 @@ public enum RiscvAsmField implements AsmField {
     FUNCT3,
     RD,
     OPCODE,
-    IMM12HIGH("imm"),
-    IMM20HIGH("imm"),
-    IMM7HIGH("imm"),
+    IMM20BITS,
+    IMM12BITS,
+    IMM10BITS,
+    IMM8MID,
+    IMM7BITS,
+    IMM6BITS,
+    IMM5BITS,
+    IMM4BITS,
     BIT12,
-    IMM6HIGH("imm"),
-    IMM4LOW("imm"),
     BIT11,
-    BIT20,
-    IMM11HIGH("imm"),
-    IMM8MID;
+    BIT20;
+
     // TODO: check IMM field names (can only one suffice??)
 
     private String fieldName;
 
     private RiscvAsmField() {
         this.fieldName = name().toLowerCase();
-    }
-
-    private RiscvAsmField(String name) {
-        this.fieldName = name;
     }
 
     @Override
