@@ -10,5 +10,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/BinaryTranslation"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jOptions"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SpecsUtils"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
