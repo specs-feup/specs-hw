@@ -15,7 +15,7 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
      * 
      */
     protected ATraceInstructionStream(File elfname, ResourceProvider gdbtmpl,
-            String gdbexe, ResourceProvider dtbfile, String qemuexe) {
+            ResourceProvider gdbexe, ResourceProvider dtbfile, ResourceProvider qemuexe) {
 
         super(ATraceInstructionStream.getProperProcess(elfname,
                 gdbtmpl, gdbexe, dtbfile, qemuexe));
@@ -25,7 +25,7 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
      * Determine process to use based on file extension and OS
      */
     private static ProcessBuilder getProperProcess(File elfname,
-            ResourceProvider gdbtmpl, String gdbexe, ResourceProvider dtbfile, String qemuexe) {
+            ResourceProvider gdbtmpl, ResourceProvider gdbexe, ResourceProvider dtbfile, ResourceProvider qemuexe) {
 
         var name = elfname.getName();
         var extension = name.subSequence(name.length() - 3, name.length());
@@ -43,12 +43,13 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
     }
 
     public static ProcessBuilder newSimulatorBuilder(File elfname,
-            ResourceProvider gdbtmpl, String gdbexe, ResourceProvider dtbfile, String qemuexe) {
+            ResourceProvider gdbtmpl, ResourceProvider gdbexe,
+            ResourceProvider dtbfile, ResourceProvider qemuexe) {
 
         String elfpath = elfname.getAbsolutePath();
         var gdbScript = new Replacer(gdbtmpl);
         gdbScript.replace("<ELFNAME>", elfpath);
-        gdbScript.replace("<QEMUBIN>", qemuexe);
+        gdbScript.replace("<QEMUBIN>", qemuexe.getResource());
 
         // DTB only required by microblaze, for now
         if (dtbfile != null) {
@@ -59,7 +60,7 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
         }
 
         SpecsIo.write(new File("tmpscript.gdb"), gdbScript.toString());
-        return new ProcessBuilder(Arrays.asList(gdbexe, "-x", "tmpscript.gdb"));
+        return new ProcessBuilder(Arrays.asList(gdbexe.getResource(), "-x", "tmpscript.gdb"));
     }
 
     @Override
