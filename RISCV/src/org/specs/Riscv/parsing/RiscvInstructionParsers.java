@@ -26,9 +26,20 @@ public interface RiscvInstructionParsers {
     // see "https://www2.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-54.pdf"
     // page 49 for encodings for field "opcode"
     List<AsmParser> PARSERS = Arrays.asList(
-            newInstance(REG2REG, "funct7_rs2_rs1_funct3_rd_0110000"), // OP encoding for opcode
-            newInstance(IMMEDIATE, "imm12high_rs1_funct3_rd_0010000")// , // OP-IMM encoding for opcode
+            newInstance(R, "funct7(7)_rs2(5)_rs1(5)_funct3(3)_rd(5)_0110000(7)"), // OP encoding for opcode
+            newInstance(I, "imm12bits(12)_rs1(5)_funct3(3)_rd(5)_0010000(7)"), // OP-IMM encoding for opcode
+            newInstance(S, "imm7bits(7)_rs2(5)_rs1(5)_funct3(3)_imm5bits(5)_0100100(7)"), // STORE encoding for opcode
+            newInstance(U, "imm20bits(20)_rd(5)_0_opcode_101"), // U-type, used for AUIPC (opcode=0) and LUI (opcode=1)
+            newInstance(LOAD, "imm12bits(1)_rs1(5)_funct3(3)_rd(5)_0000000"), // LOAD encoding for opcode (other fields
+                                                                              // equal to
+            // I-Type)
 
-    // newInstance(UPPERIMM, "imm20high_rd_0010000"), // OP-IMM encoding for opcode
+            newInstance(JALR, "imm12bits(12)_rs1(5)_funct3(3)_rd(5)_1100100"), // JALR encoding for opcode (other fields
+                                                                               // equal to
+            // I-Type)
+
+            newInstance(SB, "bit12_imm6bits(6)_rs2(5)_rs1(5)_funct3(3)_imm4bits(4)_bit11_1100000"), // BRANCH encoding
+                                                                                                    // for opcode
+            newInstance(UJ, "bit20_imm10bits(10)_bit11_imm8bits(8)_rd(5)_1101100") // unconditional jumps (JAL encoding)
     );
 }
