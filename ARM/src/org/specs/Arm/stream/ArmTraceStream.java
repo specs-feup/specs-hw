@@ -12,15 +12,15 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class ArmTraceStream extends ATraceInstructionStream {
 
-    private static final String GDB_EXE = "aarch64-none-elf-gdb";
-    private static final String QEMU_EXE = "qemu-system-aarch64";
     // NOTE: should use the qemu that comes pacakged with Vivado
 
     private static final Pattern REGEX = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
 
     public ArmTraceStream(File elfname) {
-        super(elfname, ArmResource.QEMU_AARCH64_GDB_TEMPLATE, GDB_EXE,
-                ArmResource.QEMU_AARCH64_BAREMETAL_DTB, QEMU_EXE);
+        super(elfname, ArmResource.QEMU_AARCH64_GDB_TEMPLATE,
+                ArmResource.AARCH64_GDB,
+                ArmResource.QEMU_AARCH64_BAREMETAL_DTB,
+                ArmResource.QEMU_AARCH64_EXE);
 
         this.appInfo = new ApplicationInformation(
                 ArmResource.ARMv8_CPU_NAME.getResource(), elfname.getName(),
