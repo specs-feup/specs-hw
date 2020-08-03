@@ -12,11 +12,10 @@ import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
 
 public class MicroBlazeElfStream extends AStaticInstructionStream {
 
-    private static final String OBJDUMP_EXE = "mb-objdump";
     private static final Pattern REGEX = Pattern.compile("([0-9a-f]+):\\s([0-9a-f]+)");
 
     public MicroBlazeElfStream(File elfname) {
-        super(elfname, OBJDUMP_EXE);
+        super(elfname, MicroBlazeResource.MICROBLAZE_OBJDUMP.getResource());
         this.appInfo = new ApplicationInformation(
                 MicroBlazeResource.MICROBLAZE_CPU_NAME.getResource(), elfname.getName(),
                 BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
