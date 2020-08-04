@@ -9,6 +9,7 @@ import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
+import pt.up.fe.specs.util.utilities.LineStream;
 
 public class RiscvElfStream extends AStaticInstructionStream {
 
@@ -23,14 +24,17 @@ public class RiscvElfStream extends AStaticInstructionStream {
     }
 
     @Override
-    public Instruction nextInstruction() {
-        // TODO Auto-generated method stub
-        return null;
+    public Pattern getRegex() {
+        return RiscvElfStream.REGEX;
+    }
+
+    @Override
+    public Instruction getNextInstruction(LineStream insts, Pattern regex) {
+        return RiscvInstructionStreamMethods.nextInstruction(insts, regex);
     }
 
     @Override
     public int getInstructionWidth() {
-        return 4; // return in bytes
-        // TODO replace this with something smarter
+        return RiscvInstructionStreamMethods.getInstructionWidth();
     }
 }
