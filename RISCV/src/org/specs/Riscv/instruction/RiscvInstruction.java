@@ -24,6 +24,7 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 
 public class RiscvInstruction extends AInstruction {
 
@@ -80,14 +81,24 @@ public class RiscvInstruction extends AInstruction {
     }
 
     @Override
-    public InstructionPseudocode getPseudocode() {
-        // TODO Auto-generated method stub
-        return null;
+    public RiscvInstructionData getData() {
+        // idata is guaranteed to be an (RiscvInstructionData)
+        return (RiscvInstructionData) super.getData();
     }
 
     @Override
     public Number getBranchTarget() {
-        // TODO Auto-generated method stub
+        if (this.isJump()) {
+            long branchTarget = (this.getData().getBranchTarget()).longValue();
+
+            if (this.getData().getGenericTypes().contains(InstructionType.G_RJUMP)) {
+                var v = this.getAddress().longValue();
+                return branchTarget = v + branchTarget;
+            }
+
+            else if (this.getData().getGenericTypes().contains(InstructionType.G_AJUMP))
+                return branchTarget;
+        }
         return null;
     }
 
@@ -97,8 +108,8 @@ public class RiscvInstruction extends AInstruction {
     }
 
     @Override
-    public RiscvInstructionData getData() {
-        // idata is guaranteed to be an (RiscvInstructionData)
-        return (RiscvInstructionData) super.getData();
+    public InstructionPseudocode getPseudocode() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -18,19 +18,27 @@ public class RiscvInstructionData extends InstructionData {
     private static final long serialVersionUID = -2263355591235910478L;
 
     /*
+     * Fields only relevant for RISC-V instructions
+     */
+    private final Number branchTarget;
+
+    /*
      * Only public constructor
      */
     public RiscvInstructionData(InstructionProperties props, RiscvAsmFieldData fieldData) {
         super(props);
         this.operands = fieldData.getOperands();
+        this.branchTarget = fieldData.getBranchTarget();
     }
 
     /*
      * Helper constructor for copy, calls super copy
      */
     private RiscvInstructionData(String plainname,
-            int latency, int delay, List<InstructionType> genericType, List<Operand> ops) {
+            int latency, int delay, List<InstructionType> genericType,
+            List<Operand> ops, Number branchTarget) {
         super(plainname, latency, delay, genericType, ops);
+        this.branchTarget = branchTarget;
     }
 
     /*
@@ -44,6 +52,14 @@ public class RiscvInstructionData extends InstructionData {
         for (Operand op : this.operands)
             copyops.add(op.copy());
 
-        return new RiscvInstructionData(copyname, this.latency, this.delay, copytype, copyops);
+        return new RiscvInstructionData(copyname, this.latency,
+                this.delay, copytype, copyops, this.branchTarget);
+    }
+
+    /*
+    * Get target of branch if instruction is branch
+    */
+    public Number getBranchTarget() {
+        return branchTarget;
     }
 }
