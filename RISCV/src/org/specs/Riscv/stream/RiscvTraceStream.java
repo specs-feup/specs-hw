@@ -34,7 +34,6 @@ public class RiscvTraceStream extends ATraceInstructionStream {
 
     @Override
     public int getInstructionWidth() {
-        return 4; // return in bytes
-        // TODO replace this with something smarter
+        return RiscvInstructionStreamMethods.getInstructionWidth();
     }
 }

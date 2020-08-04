@@ -20,6 +20,8 @@ public enum RiscvAsmFieldType implements AsmFieldType {
     LOAD, // I-type variant
     JALR, // I-type variant
     SB,
-    UJ
+    UJ,
     // variants
+
+    UNDEFINED
 }

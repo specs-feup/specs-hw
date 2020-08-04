@@ -5,6 +5,7 @@ import java.io.File;
 import org.junit.Test;
 import org.specs.Riscv.stream.RiscvElfStream;
 
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class RiscvElfStreamTester {
@@ -15,11 +16,11 @@ public class RiscvElfStreamTester {
         fd.deleteOnExit();
 
         try (RiscvElfStream el = new RiscvElfStream(fd)) {
-            el.rawDump();
-            /*Instruction inst = null;
+            // el.rawDump();
+            Instruction inst = null;
             while ((inst = el.nextInstruction()) != null) {
                 inst.printInstruction();
-            }*/
+            }
         }
     }
 }
