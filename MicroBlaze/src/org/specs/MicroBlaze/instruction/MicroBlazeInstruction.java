@@ -22,8 +22,11 @@ import org.specs.MicroBlaze.parsing.MicroBlazeIsaParser;
 
 import com.google.common.base.Enums;
 
-import pt.up.fe.specs.binarytranslation.instruction.*;
-import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
 
 public class MicroBlazeInstruction extends AInstruction {
 
@@ -126,6 +129,7 @@ public class MicroBlazeInstruction extends AInstruction {
     /*
      * Copy "constructor"
      */
+    @Override
     public MicroBlazeInstruction copy() {
 
         String copyaddr = new String(Integer.toHexString(this.getAddress().intValue()));
@@ -137,7 +141,7 @@ public class MicroBlazeInstruction extends AInstruction {
 
     @Override
     public MicroBlazeInstructionData getData() {
-        // idata is guaranteed to be an (ArmInstructionData)
+        // idata is guaranteed to be an (MicroBlazeInstructionData)
         return (MicroBlazeInstructionData) super.getData();
     }
 
@@ -146,7 +150,7 @@ public class MicroBlazeInstruction extends AInstruction {
         if (this.isJump()) {
             int fullopcode = new BigInteger(this.getInstruction(), 16).intValue();
             short jmpval = (short) (fullopcode & 0x0000FFFF);
-            return (this.getAddress().longValue() + (long) jmpval);
+            return (this.getAddress().longValue() + jmpval);
             // TODO replace mask with mask built based on elf instruction width
             // or info about instruction set
         }
