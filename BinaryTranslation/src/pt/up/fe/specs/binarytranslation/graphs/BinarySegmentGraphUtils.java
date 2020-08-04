@@ -13,13 +13,23 @@
 
 package pt.up.fe.specs.binarytranslation.graphs;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
 
-import pt.up.fe.specs.binarytranslation.*;
+import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
+import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
-import pt.up.fe.specs.binarytranslation.graphs.edge.*;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
 
@@ -288,6 +298,9 @@ public class BinarySegmentGraphUtils {
         // date of generation
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
         htmlplage.replace("<GENERATIONDATE>", formatter.format(new Date(System.currentTimeMillis())));
+
+        // copyright year
+        htmlplage.replace("<THEYEAR>", LocalDateTime.now().getYear());
 
         // write to file
         try {
