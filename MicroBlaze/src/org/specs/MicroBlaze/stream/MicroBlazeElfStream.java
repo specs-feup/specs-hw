@@ -9,6 +9,7 @@ import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
+import pt.up.fe.specs.util.utilities.LineStream;
 
 public class MicroBlazeElfStream extends AStaticInstructionStream {
 
@@ -23,20 +24,13 @@ public class MicroBlazeElfStream extends AStaticInstructionStream {
     }
 
     @Override
-    public Instruction nextInstruction() {
+    public Pattern getRegex() {
+        return MicroBlazeElfStream.REGEX;
+    }
 
-        var newinst = MicroBlazeInstructionStreamMethods.nextInstruction(this.insts, REGEX);
-        if (newinst == null) {
-            return null;
-        }
-        this.numcycles += newinst.getLatency();
-        this.numinsts++;
-
-        if (this.numinsts % 1000 == 0) {
-            System.out.println(this.numinsts + " instructions processed...");
-        }
-
-        return newinst;
+    @Override
+    public Instruction getNextInstruction(LineStream insts, Pattern regex) {
+        return MicroBlazeInstructionStreamMethods.nextInstruction(insts, regex);
     }
 
     @Override
