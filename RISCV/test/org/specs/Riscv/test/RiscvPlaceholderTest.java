@@ -1,6 +1,6 @@
 package org.specs.Riscv.test;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 class RiscvPlaceholderTest {
 
