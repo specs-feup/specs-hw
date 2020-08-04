@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
+
 public class ArmAsmBranchTargetGetter {
 
     /*
@@ -37,23 +39,9 @@ public class ArmAsmBranchTargetGetter {
         return func.apply(fielddata);
     }
 
-    /*
-     * 
-     */
-    private static int signExtend32(int value, int currlen) {
-        return (value << (32 - currlen)) >> (32 - currlen);
-    }
-
-    /*
-     * 
-     */
-    private static long signExtend64(int value, int currlen) {
-        return (value << (64 - currlen)) >> (64 - currlen);
-    }
-
     private static Number conditionalbranch(ArmAsmFieldData fielddata) {
         var map = fielddata.getMap();
-        return signExtend32(map.get(IMM) << 2, 21);
+        return BinaryTranslationUtils.signExtend32(map.get(IMM) << 2, 21);
     }
 
     private static Number unconditionalbranchreg(ArmAsmFieldData fielddata) {
@@ -63,17 +51,17 @@ public class ArmAsmBranchTargetGetter {
 
     private static Number unconditionalbranchimm(ArmAsmFieldData fielddata) {
         var map = fielddata.getMap();
-        return signExtend64(map.get(IMM) << 2, 28);
+        return BinaryTranslationUtils.signExtend64(map.get(IMM) << 2, 28);
     }
 
     private static Number compareandbranchimm(ArmAsmFieldData fielddata) {
         var map = fielddata.getMap();
-        return signExtend64(map.get(IMM) << 2, 21);
+        return BinaryTranslationUtils.signExtend64(map.get(IMM) << 2, 21);
     }
 
     private static Number testandbranch(ArmAsmFieldData fielddata) {
         var map = fielddata.getMap();
-        return signExtend64(map.get(IMM) << 2, 16);
+        return BinaryTranslationUtils.signExtend64(map.get(IMM) << 2, 16);
     }
 
     private static Number undefined(ArmAsmFieldData fielddata) {

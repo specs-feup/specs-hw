@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.specs.Arm.parsing.ArmAsmFieldData;
 
-import pt.up.fe.specs.binarytranslation.instruction.*;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 /**
@@ -17,6 +19,10 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
  */
 public class ArmInstructionData extends InstructionData {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3409212201765893916L;
     /*
      * Fields only relevant for ARM instructions
      */

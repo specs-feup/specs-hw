@@ -14,6 +14,11 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 
 public class ArmAsmFieldData extends AsmFieldData {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 62818512602539823L;
+
     /*
      * remmaping of <string, string> to <asmfield, string>
      */
