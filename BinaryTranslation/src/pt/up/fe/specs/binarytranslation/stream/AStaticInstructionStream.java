@@ -2,6 +2,10 @@ package pt.up.fe.specs.binarytranslation.stream;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.regex.Pattern;
+
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.util.utilities.LineStream;
 
 public abstract class AStaticInstructionStream extends AInstructionStream {
 
@@ -34,5 +38,32 @@ public abstract class AStaticInstructionStream extends AInstructionStream {
     @Override
     public InstructionStreamType getType() {
         return InstructionStreamType.STATIC_ELF;
+    }
+
+    /*
+     * Must be implemented by children
+     */
+    public abstract Instruction getNextInstruction(LineStream insts, Pattern regex);
+
+    /*
+     * Must be implemented by children
+     */
+    public abstract Pattern getRegex();
+
+    @Override
+    public Instruction nextInstruction() {
+
+        var newinst = getNextInstruction(this.insts, getRegex());
+        if (newinst == null) {
+            return null;
+        }
+        this.numcycles += newinst.getLatency();
+        this.numinsts++;
+
+        if (this.numinsts % 1000 == 0) {
+            System.out.println(this.numinsts + " instructions processed...");
+        }
+
+        return newinst;
     }
 }
