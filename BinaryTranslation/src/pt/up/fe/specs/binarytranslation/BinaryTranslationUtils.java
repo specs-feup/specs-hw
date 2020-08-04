@@ -122,4 +122,18 @@ public class BinaryTranslationUtils {
         crreplacer.replace("<THEYEAR>", LocalDateTime.now().getYear());
         return crreplacer.toString();
     }
+
+    /*
+     * 
+     */
+    public static int signExtend32(int value, int currlen) {
+        return (value << (32 - currlen)) >> (32 - currlen);
+    }
+
+    /*
+     * 
+     */
+    public static long signExtend64(int value, int currlen) {
+        return (value << (64 - currlen)) >> (64 - currlen);
+    }
 }
