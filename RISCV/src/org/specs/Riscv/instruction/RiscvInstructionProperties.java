@@ -1,7 +1,7 @@
 package org.specs.Riscv.instruction;
 
-import static org.specs.Riscv.parsing.RiscvAsmFieldType.UNDEFINED;
-import static pt.up.fe.specs.binarytranslation.instruction.InstructionType.G_UNKN;
+import static org.specs.Riscv.parsing.RiscvAsmFieldType.*;
+import static pt.up.fe.specs.binarytranslation.instruction.InstructionType.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +15,59 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 import pt.up.fe.specs.binarytranslation.parsing.IsaParser;
 
 public enum RiscvInstructionProperties implements InstructionProperties {
+
+    // R-type: | funct7 | rs2 | rs1 | funct3 | rd | 0110011 |
+    add(0x0000_0033, R, G_ADD),
+    sub(0x4000_0033, R, G_SUB),
+    sll(0x0000_0833, R, G_LOGICAL),
+    slt(0x0000_1033, R, G_LOGICAL),
+    sltu(0x0000_1833, R, G_LOGICAL),
+    xor(0x0000_2033, R, G_LOGICAL),
+    srl(0x0000_2833, R, G_LOGICAL),
+    sra(0x4000_2833, R, G_LOGICAL),
+    or(0x0000_3033, R, G_LOGICAL),
+    and(0x0000_3833, R, G_LOGICAL),
+
+    // I-type: | imm12bits | rs1 | funct3 | rd | 0010011 |
+    addi(0x0000_0013, I, G_ADD),
+    slti(0x0000_2013, I, G_LOGICAL),
+    sltiu(0x0000_3013, I, G_LOGICAL),
+    xori(0x0000_4013, I, G_LOGICAL),
+    ori(0x0000_6013, I, G_LOGICAL),
+    andi(0x0000_7013, I, G_LOGICAL),
+    slli(0x0000_0813, I, G_LOGICAL),
+    srli(0x0000_2813, I, G_LOGICAL),
+    srai(0x4000_2813, I, G_LOGICAL),
+
+    // S-type: | imm7bits | rs2 | rs1 | funct3 | imm5bits | 0100111 |
+    sb(0x0000_0023, S, G_STORE),
+    sh(0x0000_1023, S, G_STORE),
+    sw(0x0000_2023, S, G_STORE),
+
+    // U-type: | imm20bits | rd | 0x10111 |
+    lui(0x0000_0037, U, G_STORE),
+    auipc(0x0000_0017, U, G_STORE),
+
+    // LOAD: | imm12bits | rs1 | funct3 | rd | 0000011 |
+    lb(0x0000_0003, LOAD, G_LOAD),
+    lh(0x0000_1003, LOAD, G_LOAD),
+    lw(0x0000_2003, LOAD, G_LOAD),
+    lbu(0x0000_4003, R, G_LOAD),
+    lhu(0x0000_5003, R, G_LOAD),
+
+    // JALR: | imm12bits | rs1 | funct3 | rd | 1100111 |
+    jalr(0x0000_0067, JALR, G_UJUMP, G_AJUMP),
+
+    // SB-type: | bit12 | imm6bits | rs2 | rs1 | funct3 | imm4bits | bit11 | 1100011 |
+    beq(0x0000_00c7, SB, G_CJUMP),
+    bne(0x0000_10c7, SB, G_CJUMP),
+    blt(0x0000_40c7, SB, G_CJUMP),
+    bge(0x0000_50c7, SB, G_CJUMP),
+    bltu(0x0000_60c7, SB, G_CJUMP),
+    bgeu(0x0000_70c7, SB, G_CJUMP),
+
+    // UJ-type: | bit20 | imm10bits | bit11 | imm8bits | rd | 1101111 |
+    jal(0x0000_006f, UJ, G_UJUMP, G_AJUMP),
 
     unknown(0xFFFF_FFFF, 1, 1, UNDEFINED, G_UNKN);
 
@@ -53,6 +106,14 @@ public enum RiscvInstructionProperties implements InstructionProperties {
             int delay, RiscvAsmFieldType mbtype, InstructionType... tp) {
         this(opcode, latency, delay, mbtype, Arrays.asList(tp));
         this.instructionName = name();
+    }
+
+    /*
+     * Helper constructor with default latency and delay slot
+     */
+    private RiscvInstructionProperties(int opcode,
+            RiscvAsmFieldType mbtype, InstructionType... tp) {
+        this(opcode, 1, 0, mbtype, Arrays.asList(tp));
     }
 
     /*
