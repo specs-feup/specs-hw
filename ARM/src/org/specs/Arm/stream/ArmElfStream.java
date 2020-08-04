@@ -9,14 +9,14 @@ import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
+import pt.up.fe.specs.util.utilities.LineStream;
 
 public class ArmElfStream extends AStaticInstructionStream {
 
-    private static final String OBJDUMP_EXE = "aarch64-none-elf-objdump";
     private static final Pattern REGEX = Pattern.compile("([0-9a-f]+):\\s([0-9a-f]+)");
 
     public ArmElfStream(File elfname) {
-        super(elfname, OBJDUMP_EXE);
+        super(elfname, ArmResource.AARCH64_OBJDUMP.getResource());
         this.appInfo = new ApplicationInformation(
                 ArmResource.ARMv8_CPU_NAME.getResource(), elfname.getName(),
                 BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
@@ -24,20 +24,13 @@ public class ArmElfStream extends AStaticInstructionStream {
     }
 
     @Override
-    public Instruction nextInstruction() {
+    public Pattern getRegex() {
+        return ArmElfStream.REGEX;
+    }
 
-        var newinst = ArmInstructionStreamMethods.nextInstruction(this.insts, REGEX);
-        if (newinst == null) {
-            return null;
-        }
-        this.numcycles += newinst.getLatency();
-        this.numinsts++;
-
-        if (this.numinsts % 1000 == 0) {
-            System.out.println(this.numinsts + " instructions processed...");
-        }
-
-        return newinst;
+    @Override
+    public Instruction getNextInstruction(LineStream insts, Pattern regex) {
+        return ArmInstructionStreamMethods.nextInstruction(insts, regex);
     }
 
     @Override

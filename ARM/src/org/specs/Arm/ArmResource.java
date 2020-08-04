@@ -13,7 +13,8 @@ public enum ArmResource implements ResourceProvider {
 
     AARCH64_GCC("aarch64-none-elf-gcc"),
     AARCH64_GDB("aarch64-none-elf-gdb"),
-    AARCH64_READELF("aarch64-none-elf-readelf");
+    AARCH64_READELF("aarch64-none-elf-readelf"),
+    AARCH64_OBJDUMP("aarch64-none-elf-objdump");
 
     private final String resource;
 
