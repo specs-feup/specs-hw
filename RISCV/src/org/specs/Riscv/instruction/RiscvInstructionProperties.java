@@ -52,19 +52,19 @@ public enum RiscvInstructionProperties implements InstructionProperties {
     lb(0x0000_0003, LOAD, G_LOAD),
     lh(0x0000_1003, LOAD, G_LOAD),
     lw(0x0000_2003, LOAD, G_LOAD),
-    lbu(0x0000_4003, R, G_LOAD),
-    lhu(0x0000_5003, R, G_LOAD),
+    lbu(0x0000_4003, LOAD, G_LOAD),
+    lhu(0x0000_5003, LOAD, G_LOAD),
 
     // JALR: | imm12bits | rs1 | funct3 | rd | 1100111 |
     jalr(0x0000_0067, JALR, G_UJUMP, G_AJUMP),
 
     // SB-type: | bit12 | imm6bits | rs2 | rs1 | funct3 | imm4bits | bit11 | 1100011 |
-    beq(0x0000_00c7, SB, G_CJUMP),
-    bne(0x0000_10c7, SB, G_CJUMP),
-    blt(0x0000_40c7, SB, G_CJUMP),
-    bge(0x0000_50c7, SB, G_CJUMP),
-    bltu(0x0000_60c7, SB, G_CJUMP),
-    bgeu(0x0000_70c7, SB, G_CJUMP),
+    beq(0x0000_00c7, SB, G_CJUMP, G_RJUMP),
+    bne(0x0000_10c7, SB, G_CJUMP, G_RJUMP),
+    blt(0x0000_40c7, SB, G_CJUMP, G_RJUMP),
+    bge(0x0000_50c7, SB, G_CJUMP, G_RJUMP),
+    bltu(0x0000_60c7, SB, G_CJUMP, G_RJUMP),
+    bgeu(0x0000_70c7, SB, G_CJUMP, G_RJUMP),
 
     // UJ-type: | bit20 | imm10bits | bit11 | imm8bits | rd | 1101111 |
     jal(0x0000_006f, UJ, G_UJUMP, G_AJUMP),

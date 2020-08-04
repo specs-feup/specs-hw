@@ -37,8 +37,8 @@ public interface RiscvInstructionParsers {
             newInstance(U, "immtwenty(20)_rd(5)_0_opcode(1)_10111"), // U-type, used for AUIPC (opcode=0) and LUI
             // (opcode=1)
 
-            newInstance(LOAD, "immtwelve(1)_rs1(5)_funct3(3)_rd(5)_0000011"), // LOAD encoding for opcode (other
-                                                                              // fields
+            newInstance(LOAD, "immtwelve(12)_rs1(5)_funct3(3)_rd(5)_0000011"), // LOAD encoding for opcode (other
+                                                                               // fields
             // equal to I-Type)
 
             newInstance(JALR, "immtwelve(12)_rs1(5)_funct3(3)_rd(5)_1100111"), // JALR encoding for opcode (other
