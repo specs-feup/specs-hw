@@ -12,13 +12,15 @@ public class ArmFrequentSequenceDetectorTester {
 
     @Test
     public void testStatic() {
-        SegmentDetectTestUtils.detect("org/specs/Arm/asm/cholesky.elf",
+        var bundle = SegmentDetectTestUtils.detect("org/specs/Arm/asm/cholesky.elf",
                 ArmElfStream.class, FrequentStaticSequenceDetector.class);
+        SegmentDetectTestUtils.printBundle(bundle);
     }
 
     @Test
     public void testTrace() {
-        SegmentDetectTestUtils.detect("org/specs/Arm/asm/cholesky.elf",
+        var bundle = SegmentDetectTestUtils.detect("org/specs/Arm/asm/cholesky.elf",
                 ArmTraceStream.class, FrequentTraceSequenceDetector.class);
+        SegmentDetectTestUtils.printBundle(bundle);
     }
 }
