@@ -55,6 +55,11 @@ public interface InstructionStream extends AutoCloseable {
     int getInstructionWidth();
 
     /**
+     * Outputs the unprocessed incoming stream
+     */
+    public void rawDump();
+
+    /**
      * 
      * @return True if stream has another line
      */

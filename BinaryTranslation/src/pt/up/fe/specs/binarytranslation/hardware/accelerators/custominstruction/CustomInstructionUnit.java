@@ -1,9 +1,8 @@
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
-import java.io.OutputStream;
-
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 
 public class CustomInstructionUnit extends AHardwareInstance {
 
@@ -39,8 +38,8 @@ public class CustomInstructionUnit extends AHardwareInstance {
      * @param code
      * @return
      */
-    protected CustomInstructionUnit(BinarySegmentGraph graph) {
-        super(null, null); // quick fix
+    protected CustomInstructionUnit(BinarySegmentGraph graph, String instanceName, VerilogModuleTree tree) {
+        super(instanceName, tree);
         this.graph = graph;
     }
 

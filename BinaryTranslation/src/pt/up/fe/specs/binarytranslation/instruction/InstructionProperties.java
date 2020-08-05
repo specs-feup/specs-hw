@@ -15,6 +15,7 @@ package pt.up.fe.specs.binarytranslation.instruction;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 
 /**
@@ -71,6 +72,11 @@ public interface InstructionProperties {
      * Returns name of enum (should be unique)
      */
     public String getEnumName();
+
+    /*
+     * Used in JUnit tests!
+     */
+    public AsmFieldData getFieldData();
 
     /*
      * Returns an object which represents expression

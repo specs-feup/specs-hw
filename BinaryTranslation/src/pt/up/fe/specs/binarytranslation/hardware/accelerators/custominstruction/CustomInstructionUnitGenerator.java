@@ -1,13 +1,12 @@
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
 
 /**
@@ -42,20 +41,25 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
     @Override
     public HardwareInstance generateHardware(BinarySegmentGraph graph) {
 
+        // The VerilogModuleTree
+        var moduletree = new VerilogModuleTree(Integer.toString(graph.hashCode())); // TODO: something better here!
+        var module = moduletree.getModule();
+
         /*
          * Input and output ports
          * Inputs may include IMM edges, if IMM has different contexts
          */
-        List<PortDeclaration> ports = new ArrayList<PortDeclaration>();
 
         // top level graph liveins
         for (GraphInput n : graph.getLiveins()) {
-            ports.add(PortDeclaration.newInputPort(n));
+            moduletree.addDeclaration(
+                    new PortDeclaration(n.getRepresentation(), n.getWidth(), ModulePortDirection.input));
         }
 
         // top level graph liveouts
         for (GraphOutput n : graph.getLiveouts()) {
-            ports.add(PortDeclaration.newOutputPort(n));
+            moduletree.addDeclaration(
+                    new PortDeclaration(n.getRepresentation(), n.getWidth(), ModulePortDirection.output));
         }
 
         /*
@@ -104,7 +108,8 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
         // end module
         components.add(new PlainCode("endmodule; //" + segtype + "_" + id + "\n"));
         */
-        return new CustomInstructionUnit(graph);
+
+        return new CustomInstructionUnit(graph, Integer.toString(graph.hashCode()), moduletree);
     }
 
     /*
