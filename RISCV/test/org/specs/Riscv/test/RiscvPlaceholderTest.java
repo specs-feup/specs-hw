@@ -2,7 +2,7 @@ package org.specs.Riscv.test;
 
 import org.junit.Test;
 
-class RiscvPlaceholderTest {
+public class RiscvPlaceholderTest {
 
     @Test
     void test() {
