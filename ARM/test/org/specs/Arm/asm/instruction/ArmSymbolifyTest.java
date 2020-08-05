@@ -1,4 +1,4 @@
-package org.specs.Arm.asm;
+package org.specs.Arm.asm.instruction;
 
 import java.util.ArrayList;
 import java.util.HashMap;

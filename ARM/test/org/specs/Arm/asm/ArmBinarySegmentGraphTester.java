@@ -1,13 +1,21 @@
 package org.specs.Arm.asm;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 import org.junit.Test;
-import org.specs.Arm.stream.*;
+import org.specs.Arm.stream.ArmElfStream;
+import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.*;
-import pt.up.fe.specs.binarytranslation.graphs.*;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentBundle;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class ArmBinarySegmentGraphTester {
@@ -42,8 +50,8 @@ public class ArmBinarySegmentGraphTester {
     private void getSegments(SegmentDetector bbd) {
         var bundle = bbd.detectSegments();
         var graphbundle = GraphBundle.newInstance(bundle);
-        // graphbundle.generateOutput();
-        System.out.println(graphbundle.getAverageIPC());
+        graphbundle.generateOutput(data -> data.getSegment().getContexts().size() > 10);
+        // System.out.println(graphbundle.getAverageIPC());
     }
 
     ///////////////////////////////////////////////////////////////////////////
