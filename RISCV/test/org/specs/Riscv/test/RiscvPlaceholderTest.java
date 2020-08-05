@@ -5,7 +5,7 @@ import org.junit.Test;
 public class RiscvPlaceholderTest {
 
     @Test
-    void test() {
+    public void test() {
         // fail("Not yet implemented");
     }
 
