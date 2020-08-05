@@ -5,13 +5,14 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class SegmentDetectTestUtils {
 
-    public static void detect(String filename, Class<?> streamClass, Class<?> detectorClass) {
+    public static SegmentBundle detect(String filename, Class<?> streamClass, Class<?> detectorClass) {
 
         File fd = SpecsIo.resourceCopy(filename);
         fd.deleteOnExit();
@@ -25,21 +26,26 @@ public class SegmentDetectTestUtils {
             throw new RuntimeException(e.getCause());
         }
 
+        SegmentBundle bundle = null;
         try (InstructionStream el = (InstructionStream) consStream.newInstance(fd)) {
 
             var bbd = (SegmentDetector) consDetector.newInstance(el);
-            var bundle = bbd.detectSegments();
-            List<BinarySegment> bblist = bundle.getSegments();
-
-            for (BinarySegment bs : bblist) {
-                bs.printSegment();
-                System.out.print("\n");
-            }
+            bundle = bbd.detectSegments();
 
         } catch (Exception e) {
             throw new RuntimeException(e.getCause());
         }
 
-        return;
+        return bundle;
+    }
+
+    public static void printBundle(SegmentBundle bundle) {
+
+        List<BinarySegment> bblist = bundle.getSegments();
+
+        for (BinarySegment bs : bblist) {
+            bs.printSegment();
+            System.out.print("\n");
+        }
     }
 }

@@ -1,8 +1,6 @@
-package pt.up.fe.specs.binarytranslation.test;
+package pt.up.fe.specs.binarytranslation.expression;
 
 import org.junit.Test;
-
-import pt.up.fe.specs.binarytranslation.expression.ExpressionOperator;
 
 public class ExpressionOperatorTest {
 

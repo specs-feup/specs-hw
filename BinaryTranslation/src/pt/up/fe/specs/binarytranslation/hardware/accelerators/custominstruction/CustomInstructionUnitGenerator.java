@@ -1,13 +1,17 @@
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graphs.GraphNode;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.HardwareStatementGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
 
 /**
  * Generates a single dedicated verilog module for a single binary segment
@@ -52,14 +56,35 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
 
         // top level graph liveins
         for (GraphInput n : graph.getLiveins()) {
-            moduletree.addDeclaration(
-                    new PortDeclaration(n.getRepresentation(), n.getWidth(), ModulePortDirection.input));
+            moduletree.addDeclaration(PortDeclaration.newInputPort(n));
         }
 
         // top level graph liveouts
         for (GraphOutput n : graph.getLiveouts()) {
-            moduletree.addDeclaration(
-                    new PortDeclaration(n.getRepresentation(), n.getWidth(), ModulePortDirection.output));
+            moduletree.addDeclaration(PortDeclaration.newOutputPort(n));
+        }
+
+        /*
+         * For every node in the tree, generate an assign statement (?)         
+         */
+        for (int i = 0; i < graph.getCpl(); i++) {
+
+            int level = i;
+            for (GraphNode n : graph.getNodes(data -> data.getLevel() == level)) {
+
+                // get AST of instruction
+                var ast = new InstructionAST(n.getInst());
+
+                // Apply first pass (attaches executed instruction information to the AST of the instruction)
+                ast.accept(new ApplyInstructionPass());
+
+                // convert all statements to Verilog code components
+                var generator = new HardwareStatementGenerator();
+                var statements = ((PseudoInstructionASTNode) ast.getRootnode()).getStatements();
+
+                // add assign statement
+                module.addChild(generator.generateAssign(statements.get(0)));
+            }
         }
 
         /*
