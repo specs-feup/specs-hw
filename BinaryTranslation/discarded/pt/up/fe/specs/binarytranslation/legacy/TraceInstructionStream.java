@@ -103,4 +103,9 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
     default ApplicationInformation getApplicationInformation() {
         throw new NotImplementedException(this);
     }
+
+    @Override
+    default void rawDump() {
+        throw new NotImplementedException(this);
+    }
 }
