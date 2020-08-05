@@ -25,13 +25,15 @@ public class MicroBlazeFrequentSequenceDetectorTester {
 
     @Test
     public void testStatic() {
-        SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.elf",
+        var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.elf",
                 MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class);
+        SegmentDetectTestUtils.printBundle(bundle);
     }
 
     @Test
     public void testTrace() {
-        SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.elf",
+        var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.elf",
                 MicroBlazeTraceStream.class, FrequentTraceSequenceDetector.class);
+        SegmentDetectTestUtils.printBundle(bundle);
     }
 }
