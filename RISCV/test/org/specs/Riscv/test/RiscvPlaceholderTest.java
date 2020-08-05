@@ -1,11 +1,11 @@
 package org.specs.Riscv.test;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-class RiscvPlaceholderTest {
+public class RiscvPlaceholderTest {
 
     @Test
-    void test() {
+    public void test() {
         // fail("Not yet implemented");
     }
 
