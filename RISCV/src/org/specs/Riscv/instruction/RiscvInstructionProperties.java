@@ -11,6 +11,7 @@ import org.specs.Riscv.parsing.RiscvIsaParser;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 import pt.up.fe.specs.binarytranslation.parsing.IsaParser;
 
@@ -82,6 +83,7 @@ public enum RiscvInstructionProperties implements InstructionProperties {
     private final int delay;
     private final RiscvAsmFieldType codetype;
     private final List<InstructionType> genericType;
+    private final AsmFieldData fieldData; // decoded fields of this instruction
     private final IsaParser parser = new RiscvIsaParser();
 
     /*
@@ -96,6 +98,9 @@ public enum RiscvInstructionProperties implements InstructionProperties {
         this.delay = delay;
         this.codetype = mbtype;
         this.genericType = tp;
+
+        // use the parser to initialize private fields of instruction set itself
+        this.fieldData = parser.parse(Integer.toHexString(opcode));
         this.reducedopcode = parser.parse(Integer.toHexString(opcode)).getReducedOpcode();
     }
 
@@ -180,4 +185,11 @@ public enum RiscvInstructionProperties implements InstructionProperties {
         return this.codetype;
     }
 
+    /*
+     * Only used for Junit tests!
+     */
+    @Override
+    public AsmFieldData getFieldData() {
+        return this.fieldData;
+    }
 }
