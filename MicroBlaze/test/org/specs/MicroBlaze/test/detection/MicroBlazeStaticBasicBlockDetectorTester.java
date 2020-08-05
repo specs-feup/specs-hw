@@ -12,13 +12,15 @@ public class MicroBlazeStaticBasicBlockDetectorTester {
 
     @Test
     public void testStatic() {
-        SegmentDetectTestUtils.detect("/org/specs/MicroBlaze/asm/matmul.elf",
+        var bundle = SegmentDetectTestUtils.detect("/org/specs/MicroBlaze/asm/matmul.elf",
                 MicroBlazeElfStream.class, StaticBasicBlockDetector.class);
+        SegmentDetectTestUtils.printBundle(bundle);
     }
 
     @Test
     public void testTrace() {
-        SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.elf",
+        var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.elf",
                 MicroBlazeTraceStream.class, TraceBasicBlockDetector.class);
+        SegmentDetectTestUtils.printBundle(bundle);
     }
 }

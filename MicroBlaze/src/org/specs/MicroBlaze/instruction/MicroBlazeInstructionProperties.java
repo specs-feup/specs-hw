@@ -16,14 +16,17 @@ package org.specs.MicroBlaze.instruction;
 import static org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType.*;
 import static pt.up.fe.specs.binarytranslation.instruction.InstructionType.*;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
-import org.specs.MicroBlaze.parsing.*;
+import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
+import org.specs.MicroBlaze.parsing.MicroBlazeIsaParser;
 
-import com.google.common.base.Enums;
-
-import pt.up.fe.specs.binarytranslation.instruction.*;
-import pt.up.fe.specs.binarytranslation.parsing.*;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.parsing.IsaParser;
 
 public enum MicroBlazeInstructionProperties implements InstructionProperties {
 
@@ -232,6 +235,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     private final int delay;
     private final MicroBlazeAsmFieldType codetype;
     private final List<InstructionType> genericType;
+    private final AsmFieldData fieldData; // decoded fields of this instruction
     private final IsaParser parser = new MicroBlazeIsaParser();
 
     /*
@@ -246,6 +250,9 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
         this.delay = delay;
         this.codetype = mbtype;
         this.genericType = tp;
+
+        // use the parser to initialize private fields of instruction set itself
+        this.fieldData = parser.parse(Integer.toHexString(opcode));
         this.reducedopcode = parser.parse(Integer.toHexString(opcode)).getReducedOpcode();
     }
 
@@ -287,6 +294,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     /*
      * helper method too look up the list
      */
+    @Override
     public int getLatency() {
         return this.latency;
     }
@@ -294,6 +302,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     /*
      * helper method too look up the list
      */
+    @Override
     public int getDelay() {
         return this.delay;
     }
@@ -301,6 +310,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     /*
      * helper method too get full opcode
      */
+    @Override
     public int getOpCode() {
         return this.opcode;
     }
@@ -308,6 +318,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     /*
      * helper method too get only the bits that matter
      */
+    @Override
     public int getReducedOpCode() {
         return this.reducedopcode;
     }
@@ -315,6 +326,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     /*
      * helper method too look up type in the list
      */
+    @Override
     public List<InstructionType> getGenericType() {
         return this.genericType;
     }
@@ -322,6 +334,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     /*
      * helper method too look up name the list
      */
+    @Override
     public String getName() {
         return this.instructionName;
     }
@@ -329,6 +342,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     /*
      * Returns name of enum (should be unique)
      */
+    @Override
     public String getEnumName() {
         return enumName;
     }
@@ -336,6 +350,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     /*
      * get code type of a particular instruction
      */
+    @Override
     public AsmFieldType getCodeType() {
         return this.codetype;
     }
@@ -356,7 +371,8 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     /*
      * Only used for Junit tests!
      */
+    @Override
     public AsmFieldData getFieldData() {
-        return parser.parse(Integer.toHexString(opcode));
+        return this.fieldData;
     }
 }
