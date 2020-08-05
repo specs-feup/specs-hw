@@ -13,10 +13,18 @@
 
 package pt.up.fe.specs.binarytranslation.graphs;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.graphs.edge.*;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdgeType;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -172,10 +180,23 @@ public class BinarySegmentGraph {
     }
 
     /*
-     * 
+     * Get all nodes
      */
     public List<GraphNode> getNodes() {
         return nodes;
+    }
+
+    /*
+     * Get only nodes that obey a predicate
+     */
+    public List<GraphNode> getNodes(Predicate<GraphNode> predicate) {
+
+        var list = new ArrayList<GraphNode>();
+        for (var seg : this.nodes) {
+            if (predicate.test(seg))
+                list.add(seg);
+        }
+        return list;
     }
 
     /*

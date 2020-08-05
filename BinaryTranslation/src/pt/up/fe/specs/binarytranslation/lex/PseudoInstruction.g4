@@ -64,11 +64,12 @@ GT		: '>';
 LT		: '<';
 EQ		: '=';
 EQUALS	: '==';
+LNOT	: '~';
 RSHIFT	: '>>';
 LSHIFT	: '<<';
 RASHIFT	: '>>>';
 
-operator : PLUS | MINUS | TIMES | DIV | GT | LT | EQUALS | RSHIFT | LSHIFT | RASHIFT ;
+operator : PLUS | MINUS | TIMES | DIV | GT | LT | EQUALS | RSHIFT | LSHIFT | RASHIFT | LNOT;
 
 /* Any possible field in the ASM field list of any instruction */
 ASMFIELD : [A-Za-z]+;
