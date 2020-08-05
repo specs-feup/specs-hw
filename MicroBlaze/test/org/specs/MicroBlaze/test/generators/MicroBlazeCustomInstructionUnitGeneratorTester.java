@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.test;
+package org.specs.MicroBlaze.test.generators;
 
 import java.io.File;
 
@@ -24,7 +24,7 @@ import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.CustomInstructionUnitGenerator;
 import pt.up.fe.specs.util.SpecsIo;
 
-public class MicroBlazeCustomInstructionUnitTester {
+public class MicroBlazeCustomInstructionUnitGeneratorTester {
 
     private File openFile() {
 

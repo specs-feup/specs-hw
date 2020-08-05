@@ -1,4 +1,4 @@
-package org.specs.MicroBlaze.test;
+package org.specs.MicroBlaze.test.instruction;
 
 import static org.junit.Assert.assertEquals;
 

@@ -17,20 +17,10 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
-import pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule.SingleInstructionModuleGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
 
 public class MicroBlazeParseTreeTester {
-
-    @Test
-    public void testAddiParseTree() {
-        // 248: 20c065e8 addi r6, r0, 26088 // 65e8 <_SDA_BASE_>
-        var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
-        var singleUnitBuilder = new SingleInstructionModuleGenerator();
-        var unit = singleUnitBuilder.generateHarware(addi);
-        unit.emit(System.out);
-    }
 
     @Test
     public void dumpTree() {
