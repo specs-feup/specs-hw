@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.instruction.ast;
 import java.util.ArrayList;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.AssignmentStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.BareOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.BinaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.ExpressionASTNode;
@@ -10,16 +11,15 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.LiteralOperan
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperatorASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.StatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.UnaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmFieldContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AssignmentStatementContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.BinaryOperationContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.OperatorContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ParenExpressionContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.StatementContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.UnaryOperationContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.VariableContext;
 
@@ -37,16 +37,16 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
 
     @Override
     public PseudoInstructionASTNode visitPseudoInstruction(PseudoInstructionContext ctx) {
-        var statements = new ArrayList<StatementASTNode>();
+        var statements = new ArrayList<AssignmentStatementASTNode>();
         for (var s : ctx.statement()) {
-            statements.add((StatementASTNode) this.visit(s));
+            statements.add((AssignmentStatementASTNode) this.visit(s));
         }
         return new PseudoInstructionASTNode(statements);
     }
 
     @Override
-    public StatementASTNode visitStatement(StatementContext ctx) {
-        return new StatementASTNode((OperandASTNode) this.visit(ctx.operand()),
+    public InstructionASTNode visitAssignmentStatement(AssignmentStatementContext ctx) {
+        return new AssignmentStatementASTNode((OperandASTNode) this.visit(ctx.operand()),
                 (ExpressionASTNode) this.visit(ctx.expression()));
     }
 

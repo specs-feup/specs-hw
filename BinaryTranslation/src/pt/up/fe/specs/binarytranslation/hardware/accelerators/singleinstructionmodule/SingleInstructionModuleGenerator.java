@@ -30,6 +30,10 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
 
     public SingleInstructionModuleGenerator() {
         // TODO: add generation parameters
+        // e.g.,
+        // 1. number of register stages
+        // 2. insert handshaking logic
+        // 3. insert halt signal
     }
 
     // TODO: if the pseudoinstruction has multiple statements, then a single verilog "assign" will not work, sicne it

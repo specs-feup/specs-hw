@@ -8,7 +8,11 @@ import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.HardwareStatementGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareCommentNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
@@ -24,9 +28,25 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
     // todo pass parameter to constructor of generator?
     // e.g. float enable, max latency, max units, etc?
 
+    private Boolean isClocked;
+    private int numStages = 1;
+    private HardwareStatementGenerator hwStatementGenerator;
+
     public CustomInstructionUnitGenerator() {
+        this.hwStatementGenerator = new HardwareStatementGenerator();
+
         // TODO pass options to constructor
         // like generation hints
+
+        // e.g.,
+        // 1. number of register stages
+        // 2. insert handshaking logic
+        // 3. insert halt signal
+    }
+
+    public CustomInstructionUnitGenerator(Boolean isClocked) {
+        this();
+        this.isClocked = isClocked;
     }
 
     // TODO: exception here if graph type is different than a frequent sequence! (static or dynamic)
@@ -54,6 +74,12 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
          * Inputs may include IMM edges, if IMM has different contexts
          */
 
+        // clk and rst ports if module is registered
+        if (this.isClocked) {
+            moduletree.addDeclaration(new PortDeclaration("clk", 1, ModulePortDirection.input));
+            moduletree.addDeclaration(new PortDeclaration("rst", 1, ModulePortDirection.input));
+        }
+
         // top level graph liveins
         for (GraphInput n : graph.getLiveins()) {
             moduletree.addDeclaration(PortDeclaration.newInputPort(n));
@@ -70,6 +96,22 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
         for (int i = 0; i < graph.getCpl(); i++) {
 
             int level = i;
+            HardwareNode parentBlock = null;
+            var nodes = graph.getNodes(data -> data.getLevel() == level);
+
+            // add comment
+            module.addChild(new HardwareCommentNode("level " + i + " of graph (" + nodes.size() + " nodes)"));
+
+            // Use always comb block if multiple nodes on this level, otherwise a single statement
+            if (nodes.size() > 1) {
+                parentBlock = new AlwaysCombBlock();
+                module.addChild(parentBlock);
+
+            } else {
+                parentBlock = module;
+            }
+
+            // transform all nodes
             for (GraphNode n : graph.getNodes(data -> data.getLevel() == level)) {
 
                 // get AST of instruction
@@ -78,12 +120,17 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
                 // Apply first pass (attaches executed instruction information to the AST of the instruction)
                 ast.accept(new ApplyInstructionPass());
 
+                // TODO: single static assignment pass!!
+
                 // convert all statements to Verilog code components
-                var generator = new HardwareStatementGenerator();
                 var statements = ((PseudoInstructionASTNode) ast.getRootnode()).getStatements();
 
-                // add assign statement
-                module.addChild(generator.generateAssign(statements.get(0)));
+                // add comment
+                parentBlock.addChild(new HardwareCommentNode("implementation for node " + n.getRepresentation()
+                        + ", instruction is : " + n.getInst().getRepresentation()));
+
+                // add assign statement (assume single statement instructions for now)
+                parentBlock.addChild(hwStatementGenerator.generateBlocking(statements.get(0)));
             }
         }
 
