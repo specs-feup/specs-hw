@@ -2,15 +2,15 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.passes;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.BareOperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.BinaryExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.ExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.LiteralOperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperatorASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.StatementASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.UnaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.BinaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.BareOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.LiteralOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ConcreteOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ImmediateOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
@@ -44,8 +44,8 @@ public abstract class InstructionASTVisitor<T> {
             return this.visit((PseudoInstructionASTNode) node);
         }
 
-        else if (node instanceof StatementASTNode) {
-            return this.visit((StatementASTNode) node);
+        else if (node instanceof AssignmentExpressionASTNode) {
+            return this.visit((AssignmentExpressionASTNode) node);
         }
 
         else if (node instanceof OperandASTNode) {
@@ -66,7 +66,7 @@ public abstract class InstructionASTVisitor<T> {
         return this.visitChildren(node);
     };
 
-    protected T visit(StatementASTNode node) {
+    protected T visit(AssignmentExpressionASTNode node) {
         return this.visitChildren(node);
     };
 

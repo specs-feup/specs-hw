@@ -3,9 +3,19 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.nodes;
 public enum InstructionASTNodeType {
 
     PseudoInstructionNode,
-    StatementNode,
+
+    // statements
+    PlainStatementNode,
+    IfStatementNode,
+    IfElseStatementNode,
+
+    // expressions
+    AssignmentExpressionNode,
     BinaryExpressionNode,
     UnaryExpressionNode,
+    ScalarSubscriptASTNode,
+    RangeSubscriptASTNode,
+    FunctionExpressionASTNode,
 
     // abstract
     OperandNode,
