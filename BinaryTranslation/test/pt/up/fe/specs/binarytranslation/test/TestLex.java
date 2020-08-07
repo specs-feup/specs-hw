@@ -30,7 +30,8 @@ public class TestLex {
     public void testParseAndTreePrint() {
 
         // create a CharStream that reads from standard input
-        var input = new ANTLRInputStream("RB = RA + sext(IMM[14:10]);");
+        // var input = new ANTLRInputStream("RB = RA + sext(IMM[14:10]);");
+        var input = new ANTLRInputStream("if(RB) RA = 2;");
 
         // create a lexer that feeds off of input CharStream
         var lexer = new PseudoInstructionLexer(input);
