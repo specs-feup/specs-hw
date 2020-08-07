@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
 
 public class HardwareGenerationUtils {
 

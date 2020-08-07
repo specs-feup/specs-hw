@@ -15,10 +15,12 @@ package pt.up.fe.specs.binarytranslation.test;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
+import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
 
 public class TestLex {
 
@@ -28,7 +30,8 @@ public class TestLex {
     public void testParseAndTreePrint() {
 
         // create a CharStream that reads from standard input
-        var input = new ANTLRInputStream("RB = RA + RC; RB = RB << 4;");
+        // var input = new ANTLRInputStream("RB = RA + sext(IMM[14:10]);");
+        var input = new ANTLRInputStream("if(RB) RA = 2;");
 
         // create a lexer that feeds off of input CharStream
         var lexer = new PseudoInstructionLexer(input);
@@ -46,12 +49,8 @@ public class TestLex {
         System.out.println(tree.toStringTree(parser));
 
         // walk
-        /*var walker = new ParseTreeWalker();
-        var listener = new TestListener();
-        walker.walk(listener, tree);*/
-
-        // visit
-        // var visitor = new AsmFieldListener();
-        // System.out.println(visitor.visit(tree));
+        var dumper = new TreeDumper();
+        var walker = new ParseTreeWalker();
+        walker.walk(dumper, tree);
     }
 }

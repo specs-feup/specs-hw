@@ -8,10 +8,10 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableR
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.AssignStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.BlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.NonBlockingStatement;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.BinaryExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.LiteralOperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.StatementASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.UnaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.BinaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.LiteralOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ImmediateOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.InstructionASTVisitor;
@@ -32,17 +32,17 @@ public class HardwareStatementGenerator extends InstructionASTVisitor<HardwareNo
         // TODO Auto-generated constructor stub
     }
 
-    public AssignStatement generateAssign(StatementASTNode node) {
+    public AssignStatement generateAssign(AssignmentExpressionASTNode node) {
         return new AssignStatement(new VariableReference(node.getTarget().getAsString()),
                 (HardwareExpression) visit(node.getExpr()));
     }
 
-    public BlockingStatement generateBlocking(StatementASTNode node) {
+    public BlockingStatement generateBlocking(AssignmentExpressionASTNode node) {
         return new BlockingStatement(new VariableReference(node.getTarget().getAsString()),
                 (HardwareExpression) visit(node.getExpr()));
     }
 
-    public NonBlockingStatement generateNonBlocking(StatementASTNode node) {
+    public NonBlockingStatement generateNonBlocking(AssignmentExpressionASTNode node) {
         return new NonBlockingStatement(new VariableReference(node.getTarget().getAsString()),
                 (HardwareExpression) visit(node.getExpr()));
     }
