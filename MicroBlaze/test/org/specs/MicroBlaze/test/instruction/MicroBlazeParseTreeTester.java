@@ -11,13 +11,14 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.specs.MicroBlaze.test;
+package org.specs.MicroBlaze.test.instruction;
 
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
+import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
 
 public class MicroBlazeParseTreeTester {
@@ -36,6 +37,18 @@ public class MicroBlazeParseTreeTester {
         // 248: 20c065e8 addi r6, r0, 26088 // 65e8 <_SDA_BASE_>
         var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
         var ast = new InstructionAST(addi);
+        ast.accept(new ApplyInstructionPass());
         System.out.println(ast.getRootnode().getAsString());
+    }
+
+    @Test
+    public void testASTs() {
+        var addcodes = MicroBlazeInstructionEncoding.getCodes(code -> code.getName().contains("add"));
+        var dumper = new TreeDumper();
+        var walker = new ParseTreeWalker();
+        for (var addcode : addcodes) {
+            var addinst = MicroBlazeInstruction.newInstance("0", addcode.getCode());
+            walker.walk(dumper, addinst.getPseudocode().getParseTree());
+        }
     }
 }

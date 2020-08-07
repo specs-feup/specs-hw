@@ -34,10 +34,16 @@ public class MicroBlazeCustomInstructionUnitGeneratorTester {
         var graphs = GraphBundle.newInstance(bundle);
 
         // generate custom instruction unit for one of the graphs
-        var customInstGen = new CustomInstructionUnitGenerator();
+        var customInstGen = new CustomInstructionUnitGenerator(true);
 
         // get ONE graph
-        var graph = graphs.getGraphs(data -> data.getLiveins().size() > 0 && data.getLiveouts().size() > 0).get(0);
+        var graph = graphs
+                .getGraphs(data -> data.getCpl() > 2 && data.getMaxwidth() > 1 && data.getLiveins().size() > 0
+                        && data.getLiveouts().size() > 0)
+                // && data.getNumLoads() == 0 && data.getNumStores() == 0)
+                .get(0);
+
+        // System.out.println(graph.getSegment().getRepresentation());
 
         // generate the verilog
         var unit = customInstGen.generateHardware(graph);
