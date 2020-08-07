@@ -110,6 +110,7 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
                 var expr = ((PlainStatementASTNode) statement).getExpr();
                 if (expr.getType() == InstructionASTNodeType.AssignmentExpressionNode)
                     block.addChild(generator.generateBlocking((AssignmentExpressionASTNode) expr));
+                break;
             }
 
             // emmit en error into the verilog saying we couldnt transform a statement!

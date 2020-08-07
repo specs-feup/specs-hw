@@ -130,7 +130,7 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
                         + ", instruction is : " + n.getInst().getRepresentation()));
 
                 // add assign statement (assume single statement instructions for now)
-                parentBlock.addChild(hwStatementGenerator.generateBlocking(statements.get(0)));
+                // parentBlock.addChild(hwStatementGenerator.generateBlocking(statements.get(0)));
             }
         }
 
