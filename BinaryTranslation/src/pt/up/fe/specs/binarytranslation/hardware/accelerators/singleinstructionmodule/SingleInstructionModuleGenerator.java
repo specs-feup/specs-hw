@@ -21,15 +21,23 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCom
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareCommentNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareErrorMessage;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.PlainStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
 
 public class SingleInstructionModuleGenerator implements HardwareGenerator {
 
     public SingleInstructionModuleGenerator() {
         // TODO: add generation parameters
+        // e.g.,
+        // 1. number of register stages
+        // 2. insert handshaking logic
+        // 3. insert halt signal
     }
 
     // TODO: if the pseudoinstruction has multiple statements, then a single verilog "assign" will not work, sicne it
@@ -87,18 +95,37 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         // add comment
         module.addChild(new HardwareCommentNode("implementation for instruction: " + inst.getRepresentation()));
 
-        // needs an always_comb block
-        if (statements.size() > 1) {
-            var block = new AlwaysCombBlock();
-            module.addChild(block);
-            for (var statement : statements) {
-                block.addChild(generator.generateBlocking(statement));
+        // TODO: create a walker for this!
+
+        // needs an always_comb block if more than one statement
+        // if (statements.size() > 1) {
+        var block = new AlwaysCombBlock();
+        module.addChild(block);
+        for (var statement : statements) {
+
+            switch (statement.getType()) {
+
+            // transform a plain statement (contains a single expression)
+            case PlainStatementNode: {
+                var expr = ((PlainStatementASTNode) statement).getExpr();
+                if (expr.getType() == InstructionASTNodeType.AssignmentExpressionNode)
+                    block.addChild(generator.generateBlocking((AssignmentExpressionASTNode) expr));
+                break;
             }
+
+            // emmit en error into the verilog saying we couldnt transform a statement!
+            default:
+                module.addChild(
+                        new HardwareErrorMessage("Couldn't convert this statement: " + statement.getAsString()));
+                break;
+            }
+
         }
+        // }
 
         // else use a single assign statement
-        else
-            module.addChild(generator.generateAssign(statements.get(0)));
+        // else
+        // module.addChild(generator.generateAssign(statements.get(0)));
 
         // from AST
         // var target = statement.getTarget();

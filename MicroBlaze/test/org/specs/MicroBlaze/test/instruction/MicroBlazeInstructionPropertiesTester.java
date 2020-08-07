@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstructionProperties;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
-import pt.up.fe.specs.binarytranslation.test.instruction.InstructionPropertiesTestUtils;
+import pt.up.fe.specs.binarytranslation.test.instruction.InstructionTestUtils;
 
 public class MicroBlazeInstructionPropertiesTester {
 
@@ -18,7 +18,7 @@ public class MicroBlazeInstructionPropertiesTester {
     @Test
     public void validitytest() {
         List<InstructionProperties> list = Arrays.asList(MicroBlazeInstructionProperties.values());
-        InstructionPropertiesTestUtils.validityTest(list);
+        InstructionTestUtils.validityTest(list);
     }
 
     /*
@@ -27,6 +27,6 @@ public class MicroBlazeInstructionPropertiesTester {
     @Test
     public void uniquenesstest() {
         List<InstructionProperties> list = Arrays.asList(MicroBlazeInstructionProperties.values());
-        InstructionPropertiesTestUtils.uniquenessTest(list);
+        InstructionTestUtils.uniquenessTest(list);
     }
 }

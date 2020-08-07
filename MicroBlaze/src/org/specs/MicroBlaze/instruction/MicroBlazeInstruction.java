@@ -169,7 +169,7 @@ public class MicroBlazeInstruction extends AInstruction {
         if (pseudocode.isPresent())
             return pseudocode.get();
         else
-            return null;
+            return MicroBlazePseudocode.getDefault();
 
         // TODO: fix
     }

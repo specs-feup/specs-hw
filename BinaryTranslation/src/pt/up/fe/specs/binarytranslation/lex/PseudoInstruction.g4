@@ -22,29 +22,62 @@ grammar PseudoInstruction;
     package pt.up.fe.specs.binarytranslation.lex.generated;
 }
  
- // todo, define a top level rule which is a list of pseudoinstructions
- 
-/*
+/************************************************************
  * Parsing
  */ 
-pseudoInstruction : statement*;
+pseudoInstruction : statement+;
 
-statement : operand rlop expression STATEMENTEND;
+/* Question mark stands for: zero or one
+ * Plus stands for: one or more
+ * Star stands for: zero or more 
+ */
 
-expression
-   : left=expression operator right=expression 	# binaryOperation
-   | operator right=expression 					# unaryOperation
-   | LPAREN expression RPAREN					# parenExpression
-   | operand									# variable;
+statement 
+	: expression STATEMENTEND 																										# plainStmt
+	| 'if' LPAREN condition=expression RPAREN LBRACE? (ifsats+=statement)+ RBRACE? 													# ifStatement
+	| 'if' LPAREN condition=expression RPAREN LBRACE? (ifsats+=statement)+ RBRACE? ('else' LBRACE? (elsestats+=statement)+ RBRACE?)	# ifElseStatement;
+	
 
+expression 
+	: operand 																# variableExpr 
+	| LPAREN expression RPAREN 												# parenExpr
+	| functionName LPAREN arguments? RPAREN									# functionExpr
+	| operand LBRACK idx=unsignednumber RBRACK 								# scalarsubscriptExpr
+	| operand LBRACK loidx=unsignednumber SEMI hiidx=unsignednumber RBRACK 	# rangesubscriptExpr
+	| operator right=expression 											# unaryExpr
+	| left=expression operator right=expression 							# binaryExpr
+	| operand rlop expression 			 									# assignmentExpr;
+ 
 rlop: EQ; 
 
-/* Any symbol that can be defined (anything but an operator) */ 
+/* Built ins */
+MSB : 'msb';
+LSB : 'lsb';
+MSW : 'msw';
+LSW : 'lsw';
+SETCARRY: 'setCarry';
+GETCARRY: 'getCarry';
+SEXTEND: 'sext';
+UCAST: 'unsigned';
+SCAST: 'signed';
+
+functionName : MSB | LSB | MSW | LSW | SETCARRY | GETCARRY | SEXTEND | UCAST | SCAST;
+
+arguments: expression ( ',' expression )*;
+
+/* Operators and opeands  */
+operator : PLUS | MINUS | TIMES | DIV | GT | LT | EQUALS | RSHIFT | LSHIFT | RASHIFT | LNOT | LOR | LAND | LXOR;
+
+/* Any symbol that can be defined (anything but an operator) */
+unsignednumber: (INT | DOUBLE);
+signednumber: MINUS (INT | DOUBLE);
+number: unsignednumber | signednumber;
+ 
 operand:
 	(ASMFIELD | STACKPTR) 	# AsmField
-   | (NUMBER | UNSIGNED_INTEGER | FNUMBER)		# Literal;
- 
-/*
+   | (number)		# Literal;
+
+/************************************************************
  * Lexing
  */
 
@@ -53,6 +86,9 @@ LPAREN	: '(';
 RPAREN	: ')';
 LBRACK	: '[' ;
 RBRACK	: ']' ;
+LBRACE	: '{' ;
+RBRACE	: '}' ;
+SEMI	: ':' ;
 STATEMENTEND : ';' ;
 
 /* Operators */
@@ -65,20 +101,20 @@ LT		: '<';
 EQ		: '=';
 EQUALS	: '==';
 LNOT	: '~';
+LOR		: '|';
+LAND	: '&';
+LXOR	: '^';
 RSHIFT	: '>>';
 LSHIFT	: '<<';
 RASHIFT	: '>>>';
-
-operator : PLUS | MINUS | TIMES | DIV | GT | LT | EQUALS | RSHIFT | LSHIFT | RASHIFT | LNOT;
 
 /* Any possible field in the ASM field list of any instruction */
 ASMFIELD : [A-Za-z]+;
 STACKPTR : 'sp';
 
 /* Literal Numbers */
-NUMBER: ('0' .. '9') + ('.' ('0' .. '9') +)?;
-UNSIGNED_INTEGER: ('0' .. '9')+;
-FNUMBER		: ('0'..'9')+('.' ('0'..'9')+)?;
+INT    : [0-9]+;
+DOUBLE : [0-9]+'.'[0-9]+;
     
 /* We're going to ignore all white space characters */
 WS  : [ \t\r\n]+ -> skip ;

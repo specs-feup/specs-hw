@@ -3,7 +3,7 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.passes;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.BareOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.BareOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ConcreteOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ImmediateOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
@@ -37,6 +37,8 @@ public class ApplyInstructionPass extends InstructionASTListener {
 
         var parent = node.getParent();
         var instOp = getOperandByAsmField(ast.getInst().getData().getOperands(), node.getOperandValue());
+        // TODO: this will fail here for RISC-V, since the IMM operand is built by multiple operands...
+        // unless I express the construction of the IMM field as a sub-operation node?
 
         // make new node type
         ConcreteOperandASTNode newNode = null;

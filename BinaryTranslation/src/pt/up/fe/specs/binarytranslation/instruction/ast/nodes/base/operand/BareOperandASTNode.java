@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
+package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
