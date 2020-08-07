@@ -11,13 +11,15 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
+package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperatorASTNode;
 
 public class UnaryExpressionASTNode extends ExpressionASTNode {
 
     public UnaryExpressionASTNode(OperatorASTNode operator, ExpressionASTNode right) {
+        super();
         this.type = InstructionASTNodeType.UnaryExpressionNode;
         this.addChild(operator);
         this.addChild(right);

@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.specs.Arm.instruction.ArmInstructionProperties;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
-import pt.up.fe.specs.binarytranslation.test.instruction.InstructionPropertiesTestUtils;
+import pt.up.fe.specs.binarytranslation.test.instruction.InstructionTestUtils;
 
 public class ArmInstructionPropertiesValidityTest {
 
@@ -18,7 +18,7 @@ public class ArmInstructionPropertiesValidityTest {
     @Test
     public void validitytest() {
         List<InstructionProperties> list = Arrays.asList(ArmInstructionProperties.values());
-        InstructionPropertiesTestUtils.validityTest(list);
+        InstructionTestUtils.validityTest(list);
     }
 
     /*
@@ -29,7 +29,7 @@ public class ArmInstructionPropertiesValidityTest {
     // @Test
     public void uniquenesstest() {
         List<InstructionProperties> list = Arrays.asList(ArmInstructionProperties.values());
-        InstructionPropertiesTestUtils.uniquenessTest(list);
+        InstructionTestUtils.uniquenessTest(list);
     }
 
     /*

@@ -1,8 +1,11 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.*;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.StatementASTNode;
 
 public class PseudoInstructionASTNode extends InstructionASTNode {
 
