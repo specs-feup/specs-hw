@@ -9,7 +9,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.LiteralOperan
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperatorASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.StatementASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.AssignmentStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.UnaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ConcreteOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ImmediateOperandASTNode;
@@ -35,8 +35,8 @@ public abstract class InstructionASTListener {
             this.visit((PseudoInstructionASTNode) node);
         }
 
-        else if (node instanceof StatementASTNode) {
-            this.visit((StatementASTNode) node);
+        else if (node instanceof AssignmentStatementASTNode) {
+            this.visit((AssignmentStatementASTNode) node);
         }
 
         else if (node instanceof ExpressionASTNode) {
@@ -60,7 +60,7 @@ public abstract class InstructionASTListener {
         this.visitChildren(node);
     };
 
-    protected void visit(StatementASTNode node) {
+    protected void visit(AssignmentStatementASTNode node) {
         visit(node.getTarget());
         visit(node.getExpr());
     };

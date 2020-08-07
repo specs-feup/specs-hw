@@ -6,7 +6,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.*;
 
 public class PseudoInstructionASTNode extends InstructionASTNode {
 
-    public PseudoInstructionASTNode(List<StatementASTNode> statements) {
+    public PseudoInstructionASTNode(List<AssignmentStatementASTNode> statements) {
         super();
         this.type = InstructionASTNodeType.PseudoInstructionNode;
         for (var s : statements)
@@ -23,10 +23,10 @@ public class PseudoInstructionASTNode extends InstructionASTNode {
         return ret;
     }
 
-    public List<StatementASTNode> getStatements() {
-        var list = new ArrayList<StatementASTNode>();
+    public List<AssignmentStatementASTNode> getStatements() {
+        var list = new ArrayList<AssignmentStatementASTNode>();
         for (var c : this.getChildren())
-            list.add((StatementASTNode) c);
+            list.add((AssignmentStatementASTNode) c);
 
         return list;
     }

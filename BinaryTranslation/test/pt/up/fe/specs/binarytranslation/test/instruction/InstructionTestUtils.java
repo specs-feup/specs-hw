@@ -2,11 +2,13 @@ package pt.up.fe.specs.binarytranslation.test.instruction;
 
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 
-public class InstructionPropertiesTestUtils {
+public class InstructionTestUtils {
 
     /*
      * Test checks if the manually initialized data in the MicroBlazeInstructionProperties enum
@@ -34,6 +36,30 @@ public class InstructionPropertiesTestUtils {
             }
             System.out.print("props: " + first.getName() + " matches = " + matchcount + "\n");
             assertEquals(matchcount, 1);
+        }
+    }
+
+    /*
+     * Tests if decoding of instructions happens correctly 
+     * (i.e. expected decode matches inst name given its encoding)
+     */
+    public static void instructionInstantiate(List<InstructionEncoding> encodeList, Class<?> instClass) {
+
+        Method newInstMethod;
+        try {
+            newInstMethod = instClass.getMethod("newInstance", String.class, String.class);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getCause());
+        }
+
+        for (var inst : encodeList) {
+            try {
+                Instruction testinst = (Instruction) newInstMethod.invoke(null, "0", inst.getCode());
+                assertEquals(inst.getName(), testinst.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e.getCause());
+            }
         }
     }
 }
