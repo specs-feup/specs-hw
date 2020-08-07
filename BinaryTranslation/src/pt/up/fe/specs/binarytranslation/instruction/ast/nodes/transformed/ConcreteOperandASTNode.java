@@ -1,7 +1,7 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public abstract class ConcreteOperandASTNode extends OperandASTNode {

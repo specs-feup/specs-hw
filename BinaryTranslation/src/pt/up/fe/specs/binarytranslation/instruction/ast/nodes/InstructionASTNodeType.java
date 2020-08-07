@@ -5,13 +5,17 @@ public enum InstructionASTNodeType {
     PseudoInstructionNode,
 
     // statements
-    StatementNode,
-    AssignmentStatementNode,
-    UnaryStatement,
+    PlainStatementNode,
+    IfStatementNode,
+    IfElseStatementNode,
 
     // expressions
+    AssignmentExpressionNode,
     BinaryExpressionNode,
     UnaryExpressionNode,
+    ScalarSubscriptASTNode,
+    RangeSubscriptASTNode,
+    FunctionExpressionASTNode,
 
     // abstract
     OperandNode,

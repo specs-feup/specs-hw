@@ -25,24 +25,28 @@ grammar PseudoInstruction;
 /************************************************************
  * Parsing
  */ 
-pseudoInstruction : statement*;
+pseudoInstruction : statement+;
+
+/* Question mark stands for: zero or one
+ * Plus stands for: one or more
+ * Star stands for: zero or more 
+ */
 
 statement 
-	: function STATEMENTEND 					# unaryStatement 
-	| operand rlop expression STATEMENTEND 		# assignmentStatement;
+	: expression STATEMENTEND 																										# plainStmt
+	| 'if' LPAREN condition=expression RPAREN LBRACE? (ifsats+=statement)+ RBRACE? 													# ifStatement
+	| 'if' LPAREN condition=expression RPAREN LBRACE? (ifsats+=statement)+ RBRACE? ('else' LBRACE? (elsestats+=statement)+ RBRACE?)	# ifElseStatement;
+	
 
-expression
-   : left=expression operator right=expression 	# binaryOperation
-   | operator right=expression 					# unaryOperation
-   | LPAREN expression RPAREN					# parenExpression
-   | operand									# variable
-   | function									# functionExpression
-   | operand subscriptvalue						# scalarsubscript
-   | operand rangesubscriptvalue				# rangesubscript;   
- 
-subscriptvalue: LBRACK unsignednumber RBRACK;
-
-rangesubscriptvalue: LBRACK unsignednumber SEMI unsignednumber RBRACK; 
+expression 
+	: operand 																# variableExpr 
+	| LPAREN expression RPAREN 												# parenExpr
+	| functionName LPAREN arguments? RPAREN									# functionExpr
+	| operand LBRACK idx=unsignednumber RBRACK 								# scalarsubscriptExpr
+	| operand LBRACK loidx=unsignednumber SEMI hiidx=unsignednumber RBRACK 	# rangesubscriptExpr
+	| operator right=expression 											# unaryExpr
+	| left=expression operator right=expression 							# binaryExpr
+	| operand rlop expression 			 									# assignmentExpr;
  
 rlop: EQ; 
 
@@ -57,11 +61,9 @@ SEXTEND: 'sext';
 UCAST: 'unsigned';
 SCAST: 'signed';
 
-builtin : MSB | LSB | MSW | LSW | SETCARRY | GETCARRY | SEXTEND | UCAST | SCAST;
+functionName : MSB | LSB | MSW | LSW | SETCARRY | GETCARRY | SEXTEND | UCAST | SCAST;
 
 arguments: expression ( ',' expression )*;
-
-function: builtin LPAREN arguments? RPAREN ;
 
 /* Operators and opeands  */
 operator : PLUS | MINUS | TIMES | DIV | GT | LT | EQUALS | RSHIFT | LSHIFT | RASHIFT | LNOT | LOR | LAND | LXOR;
@@ -84,6 +86,8 @@ LPAREN	: '(';
 RPAREN	: ')';
 LBRACK	: '[' ;
 RBRACK	: ']' ;
+LBRACE	: '{' ;
+RBRACE	: '}' ;
 SEMI	: ':' ;
 STATEMENTEND : ';' ;
 
