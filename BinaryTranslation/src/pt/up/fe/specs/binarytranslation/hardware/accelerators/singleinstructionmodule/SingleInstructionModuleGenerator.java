@@ -97,6 +97,13 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
 
         // TODO: create a walker for this!
 
+        // TODO: should have a walker that gets a statement level node
+        // then instantiates can calls another walker for the expression level, etc
+        // this allows for the entry and exit moments of each node walk to keep track
+        // of the type of HardwareNode im workign with
+        // otherwise, doing everything in flat code based on if-elses and switches
+        // gets very confusing!
+
         // needs an always_comb block if more than one statement
         // if (statements.size() > 1) {
         var block = new AlwaysCombBlock();

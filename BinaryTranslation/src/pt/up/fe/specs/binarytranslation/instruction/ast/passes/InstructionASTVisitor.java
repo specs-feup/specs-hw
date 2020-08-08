@@ -17,6 +17,8 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.Variab
 
 public abstract class InstructionASTVisitor<T> {
 
+    // TODO add missing node types
+
     public T visit(InstructionAST ast) {
         return this.visit(ast.getRootnode());
     };
