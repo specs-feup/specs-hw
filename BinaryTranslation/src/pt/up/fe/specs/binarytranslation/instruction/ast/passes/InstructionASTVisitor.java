@@ -7,21 +7,22 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstruc
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.BinaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.FunctionExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.RangeSubscriptExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ScalarSubscriptExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.BareOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.LiteralOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfElseStatementASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfStatementASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.PlainStatementASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.StatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ConcreteOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ImmediateOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
 
 public abstract class InstructionASTVisitor<T> {
-
-    // TODO add missing node types
-
-    public T visit(InstructionAST ast) {
-        return this.visit(ast.getRootnode());
-    };
 
     /*
      * Default always returns result of last child visited
@@ -34,20 +35,24 @@ public abstract class InstructionASTVisitor<T> {
         return ret;
     }
 
-    /////////////////////////////////////////////////////////////////////////
+    public T visit(InstructionAST ast) {
+        return this.visitChildren(ast.getRootnode());
+    };
+
+    // Abstracts //////////////////////////////////////////////////////////////
 
     protected T visit(InstructionASTNode node) {
 
-        if (node instanceof ExpressionASTNode) {
-            return this.visit((ExpressionASTNode) node);
-        }
-
-        else if (node instanceof PseudoInstructionASTNode) {
+        if (node instanceof PseudoInstructionASTNode) {
             return this.visit((PseudoInstructionASTNode) node);
         }
 
-        else if (node instanceof AssignmentExpressionASTNode) {
-            return this.visit((AssignmentExpressionASTNode) node);
+        else if (node instanceof StatementASTNode) {
+            return this.visit((StatementASTNode) node);
+        }
+
+        else if (node instanceof ExpressionASTNode) {
+            return this.visit((ExpressionASTNode) node);
         }
 
         else if (node instanceof OperandASTNode) {
@@ -68,7 +73,32 @@ public abstract class InstructionASTVisitor<T> {
         return this.visitChildren(node);
     };
 
-    protected T visit(AssignmentExpressionASTNode node) {
+    /////////////////////////////////////////////////////////////////////////
+
+    protected T visit(StatementASTNode node) {
+
+        if (node instanceof PlainStatementASTNode)
+            return this.visit((PlainStatementASTNode) node);
+
+        else if (node instanceof IfStatementASTNode)
+            return this.visit((IfStatementASTNode) node);
+
+        else if (node instanceof IfElseStatementASTNode)
+            return this.visit((IfElseStatementASTNode) node);
+
+        else
+            return null;
+    }
+
+    protected T visit(PlainStatementASTNode node) {
+        return this.visitChildren(node);
+    };
+
+    protected T visit(IfStatementASTNode node) {
+        return this.visitChildren(node);
+    };
+
+    protected T visit(IfElseStatementASTNode node) {
         return this.visitChildren(node);
     };
 
@@ -76,24 +106,51 @@ public abstract class InstructionASTVisitor<T> {
 
     protected T visit(ExpressionASTNode node) {
 
-        if (node instanceof BinaryExpressionASTNode)
+        if (node instanceof AssignmentExpressionASTNode)
+            return this.visit((AssignmentExpressionASTNode) node);
+
+        else if (node instanceof BinaryExpressionASTNode)
             return this.visit((BinaryExpressionASTNode) node);
 
         else if (node instanceof UnaryExpressionASTNode)
             return this.visit((UnaryExpressionASTNode) node);
 
+        else if (node instanceof ScalarSubscriptExpressionASTNode)
+            return this.visit((ScalarSubscriptExpressionASTNode) node);
+
+        else if (node instanceof RangeSubscriptExpressionASTNode)
+            return this.visit(node);
+
+        else if (node instanceof FunctionExpressionASTNode)
+            return this.visit(node);
+
         else if (node instanceof OperandASTNode)
             return this.visit((OperandASTNode) node);
 
-        else
-            return null;
+        return null;
     }
+
+    protected T visit(AssignmentExpressionASTNode node) {
+        return this.visitChildren(node);
+    };
 
     protected T visit(BinaryExpressionASTNode node) {
         return this.visitChildren(node);
     };
 
     protected T visit(UnaryExpressionASTNode node) {
+        return this.visitChildren(node);
+    };
+
+    protected T visit(ScalarSubscriptExpressionASTNode node) {
+        return this.visitChildren(node);
+    };
+
+    protected T visit(RangeSubscriptExpressionASTNode node) {
+        return this.visitChildren(node);
+    };
+
+    protected T visit(FunctionExpressionASTNode node) {
         return this.visitChildren(node);
     };
 
