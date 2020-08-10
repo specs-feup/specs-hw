@@ -1,6 +1,6 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
-public class AlwaysCombBlock extends HardwareConstruct {
+public class AlwaysCombBlock extends HardwareStatement {
 
     private String blockName;
 
