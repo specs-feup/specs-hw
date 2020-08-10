@@ -40,6 +40,6 @@ public class RiscvOperand extends AOperand {
     @Override
     public RiscvOperand copy() {
         var props = this.getProperties().copy();
-        return new RiscvOperand(props, this.getValue().intValue());
+        return new RiscvOperand(props, this.getNumberValue().intValue());
     }
 }
