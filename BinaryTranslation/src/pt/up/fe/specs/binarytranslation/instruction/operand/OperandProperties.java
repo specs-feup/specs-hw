@@ -59,11 +59,6 @@ public interface OperandProperties {
     public void setSymbolic();
 
     /*
-     * 
-     */
-    public void unsetSymbolic();
-
-    /*
      * Copy method
      */
     public OperandProperties copy();

@@ -16,6 +16,6 @@ public class ImmediateOperandASTNode extends ConcreteOperandASTNode {
     }
 
     public Number getValue() {
-        return this.op.getValue();
+        return this.op.getNumberValue();
     }
 }

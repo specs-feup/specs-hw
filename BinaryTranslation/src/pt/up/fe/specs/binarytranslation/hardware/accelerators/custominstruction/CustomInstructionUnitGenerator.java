@@ -18,6 +18,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
+import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplySSAPass;
 
 /**
  * Generates a single dedicated verilog module for a single binary segment
@@ -96,6 +97,8 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
         /*
          * Convert the nodes, from top level downwards   
          */
+        var ssaApplier = new ApplySSAPass();
+        ;
         for (int i = 0; i < graph.getCpl(); i++) {
 
             int level = i;
@@ -125,7 +128,10 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
                 // Apply first pass (attaches executed instruction information to the AST of the instruction)
                 ast.accept(new ApplyInstructionPass());
 
-                // TODO: single static assignment pass!!
+                // Single static assignment pass!!
+                ast.accept(ssaApplier);
+                // TODO every time this runs, new wires may be declared
+                // go through the map, and add the declarations at the top
 
                 // add comment
                 parentBlock.addChild(new HardwareCommentNode("implementation for node " + n.getRepresentation()

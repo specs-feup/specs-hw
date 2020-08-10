@@ -1,10 +1,14 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class VariableOperandASTNode extends ConcreteOperandASTNode {
+
+    /*
+     * Quick hack to simplify SSA...
+     */
+    private String TransformedOperandName;
 
     /*
      * Nodes of this type represent operands which could be: 
@@ -13,5 +17,16 @@ public class VariableOperandASTNode extends ConcreteOperandASTNode {
     public VariableOperandASTNode(Operand op) {
         super(op);
         this.type = InstructionASTNodeType.VariableNode;
+        this.TransformedOperandName = op.getRepresentation().replace("<", "").replace(">", "");
+        // clean symbolic prefix/suffix if any
+    }
+
+    @Override
+    public String getAsString() {
+        return this.TransformedOperandName;
+    }
+
+    public void setValue(String svalue) {
+        this.TransformedOperandName = svalue;
     }
 }

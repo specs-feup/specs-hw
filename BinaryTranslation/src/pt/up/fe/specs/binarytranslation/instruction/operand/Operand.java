@@ -24,11 +24,20 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 public interface Operand {
 
     /*
+     * (Messy) setters
+     */
+    public void setNumberValue(Number value);
+
+    public void setStringValue(String svalue);
+
+    public void setStringValue(Number value);
+
+    /*
      * Get value as Number (good for non symbilic cases)
      * If operand isnt symbolic, getStringValue returns the
      * integer value as a String
      */
-    public Number getValue();
+    public Number getNumberValue();
 
     /*
      * As string (good for symbolic values)
@@ -107,18 +116,10 @@ public interface Operand {
      */
     public void setSymbolic(String value);
 
-    public void unsetSymbolic();
-
     /*
      * Copy this object
      */
     public Operand copy();
-
-    /*
-     * Override operand value (currently only works for overriding non symbolic operands...)
-     */
-    public void overrideValue(Number value);
-
     /*
      * Compare method
      */
