@@ -107,6 +107,8 @@ public interface Operand {
      */
     public void setSymbolic(String value);
 
+    public void unsetSymbolic();
+
     /*
      * Copy this object
      */

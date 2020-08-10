@@ -66,6 +66,16 @@ public abstract class AOperand implements Operand, Serializable {
         }
     }
 
+    public void setValue(String svalue) {
+        this.svalue = svalue;
+        try {
+            this.value = Integer.valueOf(svalue);
+
+        } catch (NumberFormatException e) {
+            this.value = -1;
+        }
+    }
+
     /*
      * necessary because some registers cannot be represented with numbers
      * (e.g., "SF" for ARM)
@@ -76,51 +86,63 @@ public abstract class AOperand implements Operand, Serializable {
         this.value = -1L;
     }
 
+    @Override
     public Number getValue() {
         return this.value;
     }
 
+    @Override
     public String getStringValue() {
         return this.svalue;
     }
 
     ///////////////////////////////////////////////////////////// Properties //
+    @Override
     public Boolean isRegister() {
         return (this.props.getTypes().contains(REGISTER));
     }
 
+    @Override
     public Boolean isImmediate() {
         return (this.props.getTypes().contains(IMMEDIATE));
     }
 
+    @Override
     public Boolean isSymbolic() {
         return (this.props.getTypes().contains(SYMBOLIC));
     }
 
+    @Override
     public Boolean isRead() {
         return (this.props.getTypes().contains(READ));
     }
 
+    @Override
     public Boolean isWrite() {
         return (this.props.getTypes().contains(WRITE));
     }
 
+    @Override
     public Boolean isFloat() {
         return (this.props.getTypes().contains(FLOAT));
     }
 
+    @Override
     public Boolean isSubOperation() {
         return (this.props.getTypes().contains(SUBOPERATION));
     }
 
+    @Override
     public Boolean isSpecial() {
         return (this.props.getTypes().contains(SPECIAL));
     }
 
+    @Override
     public AsmField getAsmField() {
         return this.props.getAsmField();
     }
 
+    @Override
     public OperandProperties getProperties() {
         return this.props;
     }
@@ -128,6 +150,7 @@ public abstract class AOperand implements Operand, Serializable {
     /*
      * Get current representation of operand
      */
+    @Override
     public String getRepresentation() {
         return (props.getPrefix() + this.getStringValue() + props.getSuffix());
     }
@@ -135,6 +158,7 @@ public abstract class AOperand implements Operand, Serializable {
     /*
      * Get what the operand WOULD look like if symbolified 
      */
+    @Override
     public String getPossibleSymbolicRepresentation(String val) {
         return (props.getSymbolicPrefix() + val + props.getSymbolicSuffix());
     }
@@ -144,21 +168,22 @@ public abstract class AOperand implements Operand, Serializable {
     ////////////////////////////////////////////////////////////////// Utils //
 
     /*
-     * Symbolify instruction (currently only useful for static frequent sequences
+     * Symbolify instruction
      */
+    @Override
     public void setSymbolic(String value) {
         this.props.setSymbolic();
         this.svalue = value;
         this.value = -1;
-        return;
     }
 
     /*
-     * Override operand value (currently only works for overriding non symbolic operands...)
+     * Basically removes prefixes and suffixes from the representation
+     * but leaves the string value, and the number value at -1
      */
-    public void overrideValue(Number value) {
-        this.value = value;
-        this.setStringValue(value);
+    @Override
+    public void unsetSymbolic() {
+        this.props.unsetSymbolic();
     }
 
     /*

@@ -36,14 +36,14 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     default public void addChildLeftOf(K child, K sibling) {
-        var idx = this.getChildren().indexOf(sibling);
-        this.getChildren().add(idx, child);
+        var idx = this.getChildren().indexOf(child);
+        this.getChildren().add(idx, sibling);
         child.setParent(getThis());
     }
 
     default public void addChildRightOf(K child, K sibling) {
-        var idx = this.getChildren().indexOf(sibling);
-        this.getChildren().add(idx - 1, child);
+        var idx = this.getChildren().indexOf(child);
+        this.getChildren().add(idx + 1, sibling);
         child.setParent(getThis());
     }
 

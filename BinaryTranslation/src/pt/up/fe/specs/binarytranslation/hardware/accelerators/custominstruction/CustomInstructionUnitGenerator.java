@@ -6,14 +6,16 @@ import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.HardwareAssignmentGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionASTConverter;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareCommentNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareErrorMessage;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
 
@@ -30,11 +32,8 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
 
     private Boolean isClocked;
     private int numStages = 1;
-    private HardwareAssignmentGenerator hwStatementGenerator;
 
     public CustomInstructionUnitGenerator() {
-        this.hwStatementGenerator = new HardwareAssignmentGenerator();
-
         // TODO pass options to constructor
         // like generation hints
 
@@ -66,8 +65,12 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
     public HardwareInstance generateHardware(BinarySegmentGraph graph) {
 
         // The VerilogModuleTree
-        var moduletree = new VerilogModuleTree(Integer.toString(graph.hashCode())); // TODO: something better here!
+        var name = graph.getSegment().getSegmentType().toString().toLowerCase() + "_" + graph.hashCode();
+        var moduletree = new VerilogModuleTree(name);
         var module = moduletree.getModule();
+
+        // print segment text before module declaration
+        module.getParent().addChildLeftOf(module, new HardwareCommentNode(graph.getSegment().getRepresentation()));
 
         /*
          * Input and output ports
@@ -91,7 +94,7 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
         }
 
         /*
-         * For every node in the tree, generate an assign statement (?)         
+         * Convert the nodes, from top level downwards   
          */
         for (int i = 0; i < graph.getCpl(); i++) {
 
@@ -111,6 +114,8 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
                 parentBlock = module;
             }
 
+            // TODO: when to use Always_ff block??
+
             // transform all nodes
             for (GraphNode n : graph.getNodes(data -> data.getLevel() == level)) {
 
@@ -122,15 +127,22 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
 
                 // TODO: single static assignment pass!!
 
-                // convert all statements to Verilog code components
-                var statements = ((PseudoInstructionASTNode) ast.getRootnode()).getStatements();
-
                 // add comment
                 parentBlock.addChild(new HardwareCommentNode("implementation for node " + n.getRepresentation()
                         + ", instruction is : " + n.getInst().getRepresentation()));
 
-                // add assign statement (assume single statement instructions for now)
-                // parentBlock.addChild(hwStatementGenerator.generateBlocking(statements.get(0)));
+                // new converter
+                var converter = new InstructionASTConverter();
+
+                // convert all statements to Verilog code components
+                if (ast.getRootnode().getType() == InstructionASTNodeType.PseudoInstructionNode)
+                    parentBlock.addChild(
+                            converter.convertInstruction(parentBlock, (PseudoInstructionASTNode) ast.getRootnode()));
+
+                else
+                    parentBlock.addChild(
+                            new HardwareErrorMessage(
+                                    "Couldn't convert this instruction: " + n.getInst().getRepresentation()));
             }
         }
 

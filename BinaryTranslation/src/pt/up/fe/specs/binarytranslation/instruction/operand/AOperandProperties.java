@@ -3,7 +3,9 @@ package pt.up.fe.specs.binarytranslation.instruction.operand;
 import static pt.up.fe.specs.binarytranslation.instruction.operand.OperandType.*;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 
@@ -69,6 +71,7 @@ public class AOperandProperties implements OperandProperties, Serializable {
     /*
      * Copy constructor
      */
+    @Override
     public AOperandProperties copy() {
         var prefix = new String(this.getPrefix());
         var suffix = new String(this.getSuffix());
@@ -82,30 +85,37 @@ public class AOperandProperties implements OperandProperties, Serializable {
     /*
      * Getters
      */
+    @Override
     public String getPrefix() {
         return this.prefix;
     }
 
+    @Override
     public String getSuffix() {
         return this.suffix;
     }
 
+    @Override
     public int getWidth() {
         return this.width;
     }
 
+    @Override
     public List<OperandType> getTypes() {
         return this.genericType;
     }
 
+    @Override
     public OperandType getMainType() {
         return this.genericType.get(0);
     }
 
+    @Override
     public AsmField getAsmField() {
         return this.asmfield;
     }
 
+    @Override
     public String getSymbolicPrefix() {
 
         // if already symbolic, return currently set prefix
@@ -119,6 +129,7 @@ public class AOperandProperties implements OperandProperties, Serializable {
             return this.asmfield.toString() + "<";
     }
 
+    @Override
     public String getSymbolicSuffix() {
         return ">";
     }
@@ -126,10 +137,18 @@ public class AOperandProperties implements OperandProperties, Serializable {
     /*
      * Setters
      */
+    @Override
     public void setSymbolic() {
         this.prefix = this.getSymbolicPrefix();
         this.suffix = this.getSymbolicSuffix();
         this.genericType.add(OperandType.SYMBOLIC);
         return;
+    }
+
+    @Override
+    public void unsetSymbolic() {
+        this.prefix = "";
+        this.suffix = "";
+        this.genericType.remove(OperandType.SYMBOLIC);
     }
 }

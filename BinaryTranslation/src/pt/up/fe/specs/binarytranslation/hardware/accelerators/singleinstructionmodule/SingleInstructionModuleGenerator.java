@@ -51,7 +51,7 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
     public HardwareInstance generateHarware(Instruction inst) {
 
         // The VerilogModuleTree
-        var moduletree = new VerilogModuleTree(inst.getName());
+        var moduletree = new VerilogModuleTree(inst.getName() + "_" + inst.getInstruction());
         var module = moduletree.getModule();
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -102,61 +102,4 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
 
         return new SingleInstructionModule(inst.getName(), moduletree);
     }
-
-    // TODO: create a walker for this!
-
-    // TODO: should have a walker that gets a statement level node
-    // then instantiates can calls another walker for the expression level, etc
-    // this allows for the entry and exit moments of each node walk to keep track
-    // of the type of HardwareNode im workign with
-    // otherwise, doing everything in flat code based on if-elses and switches
-    // gets very confusing!
-
-    // needs an always_comb block if more than one statement
-    // if (statements.size() > 1) {
-
-    /*
-     * var block = new AlwaysCombBlock();
-    module.addChild(block);
-    for (var statement : statements) {
-    
-        switch (statement.getType()) {
-    
-        // transform a plain statement (contains a single expression)
-        case PlainStatementNode: {
-            var expr = ((PlainStatementASTNode) statement).getExpr();
-            var generator = new HardwareAssignmentGenerator();
-            if (expr.getType() == InstructionASTNodeType.AssignmentExpressionNode)
-                block.addChild(generator.generateBlocking((AssignmentExpressionASTNode) expr));
-            break;
-        }
-    
-        // emmit en error into the verilog saying we couldnt transform a statement!
-        default:
-            module.addChild(
-                    new HardwareErrorMessage("Couldn't convert this statement: " + statement.getAsString()));
-            break;
-        }
-    
-    }*/
-
-    // }
-
-    // else use a single assign statement
-    // else
-    // module.addChild(generator.generateAssign(statements.get(0)));
-
-    // from AST
-    // var target = statement.getTarget();
-    // var expr = statement.getExpr();
-
-    // to hardware language tree
-    // var varref = new VariableReference(target.getOperandName());
-    // var hwexpression = HardwareGenerationUtils.convertASTStatement(expr);
-
-    // TODO: this conversion could/should result in a generic HardwareNode
-    // e.g. the division operator in an expression should be implemented as a module
-    // or an expression can contain other expressions as operands
-
-    // root.addChild(HardwareGenerationUtils.convertASTStatement(statement));
 }

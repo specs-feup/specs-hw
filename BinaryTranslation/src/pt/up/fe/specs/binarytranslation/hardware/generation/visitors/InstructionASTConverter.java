@@ -27,7 +27,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfS
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.InstructionASTVisitor;
 
 /**
- * Receives a PseudoInstructionASTNode (top-level node) and converts it to an appropriate Verilog block
+ * Receives a {@PseudoInstructionASTNode} (top-level node) and converts it to an appropriate Verilog block
  * 
  * @author nuno
  *
@@ -129,7 +129,7 @@ public class InstructionASTConverter extends InstructionASTVisitor<HardwareNode>
                 return generator.generateAssign(node);
 
             else if (this.context == HardwareNodeType.AlwaysComb || this.context == HardwareNodeType.AlwaysFF)
-                return generator.generateBlocking(node);
+                return generator.generateNonBlocking(node);
 
             else
                 throw new UnimplementedExpressionException(node.getAsString());

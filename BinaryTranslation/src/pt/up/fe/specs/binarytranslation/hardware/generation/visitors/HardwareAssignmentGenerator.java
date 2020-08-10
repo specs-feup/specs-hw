@@ -20,6 +20,12 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.Immedi
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.InstructionASTVisitor;
 
+/**
+ * Converts a single {@AssignmentExpressionASTNode} into a single corresponding hardware expression
+ * 
+ * @author nuno
+ * 
+ */
 public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareNode> {
 
     /*
@@ -131,7 +137,7 @@ public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareN
         // VariableReference varref = hwtree.findDeclaration(variablename);
         // if(varref = )
 
-        // otherwise create
+        // TODO: otherwise create
 
         return new VariableReference(variablename);
     }
