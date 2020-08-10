@@ -142,6 +142,6 @@ public class ArmOperand extends AOperand {
         if (this.isSubOperation() || this.isSpecial())
             return new ArmOperand(props, this.getStringValue());
         else
-            return new ArmOperand(props, this.getValue());
+            return new ArmOperand(props, this.getNumberValue());
     }
 }
