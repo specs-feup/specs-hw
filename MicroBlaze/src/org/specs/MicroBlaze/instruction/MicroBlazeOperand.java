@@ -38,6 +38,6 @@ public class MicroBlazeOperand extends AOperand {
     @Override
     public MicroBlazeOperand copy() {
         var props = this.getProperties().copy();
-        return new MicroBlazeOperand(props, this.getValue().intValue());
+        return new MicroBlazeOperand(props, this.getNumberValue().intValue());
     }
 }

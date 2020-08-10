@@ -19,6 +19,7 @@ import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
+import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplySSAPass;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
 
 public class MicroBlazeParseTreeTester {
@@ -38,6 +39,16 @@ public class MicroBlazeParseTreeTester {
         var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
         var ast = new InstructionAST(addi);
         ast.accept(new ApplyInstructionPass());
+        System.out.println(ast.getRootnode().getAsString());
+    }
+
+    @Test
+    public void testASTSSA() {
+        // 248: 20c065e8 addi r6, r0, 26088 // 65e8 <_SDA_BASE_>
+        var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
+        var ast = new InstructionAST(addi);
+        ast.accept(new ApplyInstructionPass());
+        ast.accept(new ApplySSAPass());
         System.out.println(ast.getRootnode().getAsString());
     }
 
