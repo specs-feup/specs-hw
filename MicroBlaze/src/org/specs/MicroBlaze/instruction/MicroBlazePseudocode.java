@@ -101,7 +101,7 @@ public enum MicroBlazePseudocode implements InstructionPseudocode {
     swi(0xF800_0000, 2, 0, TYPE_B, G_STORE),
     */
 
-    defaultCode("RD = RD;"); // i.e. nop
+    defaultCode("RD = RA;"); // i.e. nop
 
     /*
     mulhu(0x4000_0003, 3, 0, TYPE_A, G_MUL),
