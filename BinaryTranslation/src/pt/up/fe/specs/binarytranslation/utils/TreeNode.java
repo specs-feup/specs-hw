@@ -59,6 +59,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     default public void replaceChild(K oldChild, K newChild) {
         int idx = this.getChildren().indexOf(oldChild);
         this.getChildren().set(idx, newChild);
+        newChild.setParent(getThis());
         return;
     }
 }

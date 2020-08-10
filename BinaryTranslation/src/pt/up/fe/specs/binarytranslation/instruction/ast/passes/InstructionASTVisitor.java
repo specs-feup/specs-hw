@@ -27,7 +27,7 @@ public abstract class InstructionASTVisitor<T> {
     /*
      * Default always returns result of last child visited
      */
-    protected T visitChildren(InstructionASTNode node) {
+    protected T visitChildren(InstructionASTNode node) throws Exception {
         T ret = null;
         for (var c : node.getChildren()) {
             ret = this.visit(c);
@@ -35,13 +35,13 @@ public abstract class InstructionASTVisitor<T> {
         return ret;
     }
 
-    public T visit(InstructionAST ast) {
+    public T visit(InstructionAST ast) throws Exception {
         return this.visitChildren(ast.getRootnode());
     };
 
     // Abstracts //////////////////////////////////////////////////////////////
 
-    protected T visit(InstructionASTNode node) {
+    protected T visit(InstructionASTNode node) throws Exception {
 
         if (node instanceof PseudoInstructionASTNode) {
             return this.visit((PseudoInstructionASTNode) node);
@@ -69,13 +69,13 @@ public abstract class InstructionASTVisitor<T> {
 
     /////////////////////////////////////////////////////////////////////////
 
-    protected T visit(PseudoInstructionASTNode node) {
+    protected T visit(PseudoInstructionASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    protected T visit(StatementASTNode node) {
+    protected T visit(StatementASTNode node) throws Exception {
 
         if (node instanceof PlainStatementASTNode)
             return this.visit((PlainStatementASTNode) node);
@@ -90,21 +90,21 @@ public abstract class InstructionASTVisitor<T> {
             return null;
     }
 
-    protected T visit(PlainStatementASTNode node) {
+    protected T visit(PlainStatementASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 
-    protected T visit(IfStatementASTNode node) {
+    protected T visit(IfStatementASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 
-    protected T visit(IfElseStatementASTNode node) {
+    protected T visit(IfElseStatementASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    protected T visit(ExpressionASTNode node) {
+    protected T visit(ExpressionASTNode node) throws Exception {
 
         if (node instanceof AssignmentExpressionASTNode)
             return this.visit((AssignmentExpressionASTNode) node);
@@ -130,33 +130,33 @@ public abstract class InstructionASTVisitor<T> {
         return null;
     }
 
-    protected T visit(AssignmentExpressionASTNode node) {
+    protected T visit(AssignmentExpressionASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 
-    protected T visit(BinaryExpressionASTNode node) {
+    protected T visit(BinaryExpressionASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 
-    protected T visit(UnaryExpressionASTNode node) {
+    protected T visit(UnaryExpressionASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 
-    protected T visit(ScalarSubscriptExpressionASTNode node) {
+    protected T visit(ScalarSubscriptExpressionASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 
-    protected T visit(RangeSubscriptExpressionASTNode node) {
+    protected T visit(RangeSubscriptExpressionASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 
-    protected T visit(FunctionExpressionASTNode node) {
+    protected T visit(FunctionExpressionASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    protected T visit(OperandASTNode node) {
+    protected T visit(OperandASTNode node) throws Exception {
 
         if (node instanceof ConcreteOperandASTNode)
             return this.visit((ConcreteOperandASTNode) node);
@@ -171,7 +171,7 @@ public abstract class InstructionASTVisitor<T> {
             return this.visitChildren(node);
     };
 
-    protected T visit(ConcreteOperandASTNode node) {
+    protected T visit(ConcreteOperandASTNode node) throws Exception {
 
         if (node instanceof VariableOperandASTNode) {
             return this.visit((VariableOperandASTNode) node);
@@ -185,25 +185,25 @@ public abstract class InstructionASTVisitor<T> {
             return null;
     }
 
-    protected T visit(BareOperandASTNode node) {
+    protected T visit(BareOperandASTNode node) throws Exception {
         return this.visitChildren(node);
     }
 
-    protected T visit(LiteralOperandASTNode node) {
+    protected T visit(LiteralOperandASTNode node) throws Exception {
         return this.visitChildren(node);
     }
 
-    protected T visit(VariableOperandASTNode node) {
+    protected T visit(VariableOperandASTNode node) throws Exception {
         return this.visitChildren(node);
     }
 
-    protected T visit(ImmediateOperandASTNode node) {
+    protected T visit(ImmediateOperandASTNode node) throws Exception {
         return this.visitChildren(node);
     }
 
     /////////////////////////////////////////////////////////////////////////
 
-    protected T visit(OperatorASTNode node) {
+    protected T visit(OperatorASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 }

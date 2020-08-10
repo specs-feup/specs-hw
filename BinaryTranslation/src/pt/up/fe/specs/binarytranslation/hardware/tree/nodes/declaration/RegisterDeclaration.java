@@ -1,5 +1,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+
 public class RegisterDeclaration extends VariableDeclaration {
 
     private final String regName;
@@ -9,6 +11,7 @@ public class RegisterDeclaration extends VariableDeclaration {
         super();
         this.regName = regName;
         this.numBits = numBits;
+        this.type = HardwareNodeType.RegisterDeclaration;
     }
 
     @Override

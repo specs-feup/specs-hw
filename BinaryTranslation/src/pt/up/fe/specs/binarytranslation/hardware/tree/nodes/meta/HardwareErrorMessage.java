@@ -1,6 +1,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class HardwareErrorMessage extends HardwareNode {
 
@@ -8,10 +9,11 @@ public class HardwareErrorMessage extends HardwareNode {
 
     public HardwareErrorMessage(String commentText) {
         this.errorText = commentText;
+        this.type = HardwareNodeType.ErrorMsg;
     }
 
     @Override
     public String getAsString() {
-        return "$error(" + errorText + ");";
+        return "$error(\"" + errorText + "\");";
     }
 }

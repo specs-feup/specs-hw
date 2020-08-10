@@ -1,5 +1,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+
 public class ParameterDeclaration extends VariableDeclaration {
 
     private final String parameterName;
@@ -11,6 +13,7 @@ public class ParameterDeclaration extends VariableDeclaration {
         this.parameterName = parameterName;
         this.numBits = numBits;
         this.initializer = initializer;
+        this.type = HardwareNodeType.ParameterDeclaration;
     }
 
     @Override

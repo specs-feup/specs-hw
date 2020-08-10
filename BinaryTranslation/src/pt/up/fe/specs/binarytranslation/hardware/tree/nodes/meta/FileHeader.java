@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 /**
  * 
@@ -25,5 +26,6 @@ public class FileHeader extends HardwareCommentNode {
     // TODO add more stuff to header
     public FileHeader() {
         super(BinaryTranslationUtils.getSPeCSCopyright() + "\n");
+        this.type = HardwareNodeType.Comment;
     }
 }
