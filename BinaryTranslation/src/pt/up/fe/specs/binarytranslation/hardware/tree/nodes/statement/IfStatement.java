@@ -3,12 +3,15 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
 public class IfStatement extends HardwareStatement {
 
     public IfStatement(HardwareExpression expr) {
+        super();
         this.addChild(expr);
+        this.type = HardwareNodeType.IfStatement;
     }
 
     public void addStatement(HardwareStatement stat) {

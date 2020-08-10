@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+
 public class ImmediateReference extends HardwareExpression {
 
     private int width;
@@ -26,6 +28,7 @@ public class ImmediateReference extends HardwareExpression {
         super();
         this.value = value;
         this.width = width;
+        this.type = HardwareNodeType.ImmediateReference;
     }
 
     @Override

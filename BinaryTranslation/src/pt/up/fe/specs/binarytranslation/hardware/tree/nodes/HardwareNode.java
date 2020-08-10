@@ -9,7 +9,14 @@ import pt.up.fe.specs.binarytranslation.utils.ATreeNode;
 
 public abstract class HardwareNode extends ATreeNode<HardwareNode> {
 
+    protected HardwareNodeType type;
+
     public HardwareNode() {
+        super();
+    }
+
+    public HardwareNodeType getType() {
+        return this.type;
     }
 
     @Override

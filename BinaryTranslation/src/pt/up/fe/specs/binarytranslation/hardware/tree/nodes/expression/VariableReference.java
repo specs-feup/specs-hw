@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+
 public class VariableReference extends HardwareExpression {
 
     // private final VariableDeclaration declaration;
@@ -21,6 +23,7 @@ public class VariableReference extends HardwareExpression {
     public VariableReference(String declaration) {
         super();
         this.name = declaration;
+        this.type = HardwareNodeType.VariableReference;
     }
 
     @Override

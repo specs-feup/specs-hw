@@ -1,9 +1,13 @@
 package pt.up.fe.specs.binarytranslation.hardware.generation.visitors;
 
+import pt.up.fe.specs.binarytranslation.hardware.generation.exception.HardwareGenerationException;
+import pt.up.fe.specs.binarytranslation.hardware.generation.exception.UnimplementedExpressionException;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ImmediateReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.MultiplicationExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.SubtractionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
@@ -16,7 +20,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.Immedi
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.InstructionASTVisitor;
 
-public class HardwareStatementGenerator extends InstructionASTVisitor<HardwareNode> {
+public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareNode> {
 
     /*
      * Trees under lookup/transformation
@@ -28,51 +32,80 @@ public class HardwareStatementGenerator extends InstructionASTVisitor<HardwareNo
     // variable is needed at any point during HWtree genration
     // private InstructionAST ast;
 
-    public HardwareStatementGenerator() {
+    public HardwareAssignmentGenerator() {
         // TODO Auto-generated constructor stub
     }
 
-    public ContinuousStatement generateAssign(AssignmentExpressionASTNode node) {
+    private HardwareExpression convertExpression(AssignmentExpressionASTNode astexpr)
+            throws HardwareGenerationException {
+        HardwareNode expr = null;
+        try {
+            expr = visit(astexpr.getExpr());
+
+        } catch (HardwareGenerationException e) {
+            throw e;
+
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+        }
+
+        return (HardwareExpression) expr;
+    }
+
+    public ContinuousStatement generateAssign(AssignmentExpressionASTNode node)
+            throws HardwareGenerationException {
+
         return new ContinuousStatement(new VariableReference(node.getTarget().getAsString()),
-                (HardwareExpression) visit(node.getExpr()));
+                convertExpression(node));
     }
 
-    public ProceduralBlockingStatement generateBlocking(AssignmentExpressionASTNode node) {
+    public ProceduralBlockingStatement generateBlocking(AssignmentExpressionASTNode node)
+            throws HardwareGenerationException {
         return new ProceduralBlockingStatement(new VariableReference(node.getTarget().getAsString()),
-                (HardwareExpression) visit(node.getExpr()));
+                convertExpression(node));
     }
 
-    public ProceduralNonBlockingStatement generateNonBlocking(AssignmentExpressionASTNode node) {
+    public ProceduralNonBlockingStatement generateNonBlocking(AssignmentExpressionASTNode node)
+            throws HardwareGenerationException {
         return new ProceduralNonBlockingStatement(new VariableReference(node.getTarget().getAsString()),
-                (HardwareExpression) visit(node.getExpr()));
+                convertExpression(node));
     }
 
     @Override
-    protected HardwareNode visit(BinaryExpressionASTNode node) {
+    protected HardwareNode visit(BinaryExpressionASTNode node) throws Exception {
 
         // left and right node (could be subtrees)
         var lnode = visit(node.getLeft());
         var rnode = visit(node.getRight());
 
-        HardwareExpression finalexpr = null;
+        HardwareNode finalexpr = null;
         String op = node.getOperator().getAsString();
         switch (op) {
         case "+":
             finalexpr = new AdditionExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
             break;
-        default:
+        case "-":
+            finalexpr = new SubtractionExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
             break;
+        case "*":
+            finalexpr = new MultiplicationExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
+            break;
+        default:
+            // finalexpr = new UnimplementedExpression((HardwareExpression) lnode, (HardwareExpression) rnode, op);
+            throw new UnimplementedExpressionException(node.getAsString());
         }
 
         return finalexpr;
     }
 
     @Override
-    protected HardwareNode visit(UnaryExpressionASTNode node) {
+    protected HardwareNode visit(UnaryExpressionASTNode node) throws Exception {
 
+        throw new UnimplementedExpressionException(node.getAsString());
+        /*    
         // right node, could be subtree
         var rnode = visit(node.getRight());
-
+        
         HardwareExpression finalexpr = null;
         String op = node.getOperator().getAsString();
         switch (op) {
@@ -80,12 +113,13 @@ public class HardwareStatementGenerator extends InstructionASTVisitor<HardwareNo
         // finalexpr = new AdditionExpression(lnode, rnode);
         // break;
         default:
-            break;
+            // finalexpr = new UnimplementedExpression((HardwareExpression) rnode, op);
+            throw new UnimplementedExpressionException("test");
         }
-
+        
         // TODO: finish this!!
-
-        return finalexpr;
+        
+        return finalexpr;*/
     }
 
     @Override

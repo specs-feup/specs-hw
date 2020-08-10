@@ -17,6 +17,7 @@ import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdge;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdgeType;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class PortDeclaration extends VariableDeclaration {
@@ -29,23 +30,29 @@ public class PortDeclaration extends VariableDeclaration {
      * Plain constructor
      */
     public PortDeclaration(String portName, int portWidth, ModulePortDirection direction) {
+        super();
         this.portname = portName;
         this.portWidth = portWidth;
         this.direction = direction;
+        this.type = HardwareNodeType.PortDeclaration;
     }
 
     private PortDeclaration(GraphEdge edge, ModulePortDirection direction) {
+        super();
         this.portWidth = edge.getWidth();
         this.direction = direction;
         this.portname = edge.getRepresentation().replace("<", "").replace(">", "");
         // TODO: VERY CLUMSY!!
+        this.type = HardwareNodeType.PortDeclaration;
     }
 
     private PortDeclaration(Operand op, ModulePortDirection direction) {
+        super();
         this.portWidth = op.getProperties().getWidth();
         this.direction = direction;
         this.portname = op.getRepresentation().replace("<", "").replace(">", "");
         // TODO: VERY CLUMSY!!
+        this.type = HardwareNodeType.PortDeclaration;
     }
 
     public static PortDeclaration newInputPort(GraphInput edge) {

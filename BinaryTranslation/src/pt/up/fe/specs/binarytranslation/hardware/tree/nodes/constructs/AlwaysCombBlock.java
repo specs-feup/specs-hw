@@ -1,15 +1,19 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
-public class AlwaysCombBlock extends HardwareStatement {
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+
+public class AlwaysCombBlock extends HardwareNode {
 
     private String blockName;
 
     public AlwaysCombBlock() {
-        this.blockName = "";
+        this("");
     }
 
     public AlwaysCombBlock(String blockname) {
         this.blockName = blockname;
+        this.type = HardwareNodeType.AlwaysComb;
     }
 
     @Override

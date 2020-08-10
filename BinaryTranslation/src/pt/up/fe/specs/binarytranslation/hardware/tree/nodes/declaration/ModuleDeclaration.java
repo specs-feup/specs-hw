@@ -1,7 +1,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class ModuleDeclaration extends HardwareDeclaration {
 
@@ -14,6 +14,7 @@ public class ModuleDeclaration extends HardwareDeclaration {
 
     public ModuleDeclaration(String moduleName) {
         this.moduleName = moduleName;
+        this.type = HardwareNodeType.ModuleDeclaration;
     }
 
     @Override

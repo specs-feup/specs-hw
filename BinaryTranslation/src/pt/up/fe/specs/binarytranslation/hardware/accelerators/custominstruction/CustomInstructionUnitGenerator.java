@@ -6,7 +6,7 @@ import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.HardwareStatementGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.HardwareAssignmentGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
@@ -30,10 +30,10 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
 
     private Boolean isClocked;
     private int numStages = 1;
-    private HardwareStatementGenerator hwStatementGenerator;
+    private HardwareAssignmentGenerator hwStatementGenerator;
 
     public CustomInstructionUnitGenerator() {
-        this.hwStatementGenerator = new HardwareStatementGenerator();
+        this.hwStatementGenerator = new HardwareAssignmentGenerator();
 
         // TODO pass options to constructor
         // like generation hints

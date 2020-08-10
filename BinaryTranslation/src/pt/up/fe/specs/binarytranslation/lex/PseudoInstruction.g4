@@ -35,8 +35,7 @@ pseudoInstruction : statement+;
 statement 
 	: expression STATEMENTEND 																										# plainStmt
 	| 'if' LPAREN condition=expression RPAREN LBRACE? (ifsats+=statement)+ RBRACE? 													# ifStatement
-	| 'if' LPAREN condition=expression RPAREN LBRACE? (ifsats+=statement)+ RBRACE? ('else' LBRACE? (elsestats+=statement)+ RBRACE?)	# ifElseStatement;
-	
+	| 'if' LPAREN condition=expression RPAREN LBRACE? (ifsats+=statement)+ RBRACE? ('else' LBRACE? (elsestats+=statement)+ RBRACE?)	# ifElseStatement;	
 
 expression 
 	: operand 																# variableExpr 
@@ -65,7 +64,7 @@ functionName : MSB | LSB | MSW | LSW | SETCARRY | GETCARRY | SEXTEND | UCAST | S
 
 arguments: expression ( ',' expression )*;
 
-/* Operators and opeands  */
+/* Operators and operands  */
 operator : PLUS | MINUS | TIMES | DIV | GT | LT | EQUALS | RSHIFT | LSHIFT | RASHIFT | LNOT | LOR | LAND | LXOR;
 
 /* Any symbol that can be defined (anything but an operator) */
