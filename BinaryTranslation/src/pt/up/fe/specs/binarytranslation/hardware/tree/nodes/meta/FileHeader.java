@@ -22,20 +22,7 @@ import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
  */
 public class FileHeader extends HardwareCommentNode {
 
-    // public FileHeader(BinarySegmentGraph graph) {
-
     // TODO add more stuff to header
-
-    // this.headertext = BinaryTranslationUtils.getSPeCSCopyright()
-    // +"\n\n/* \n * This module represents the following graph:\n"+" * Application:
-    // "+graph.getSegment().getAppinfo().getAppName()+"\n"+" * Graph Type: "+graph.getType().toString()+"\n"+" * Number
-    // of contexts: "+graph.getSegment().getContexts().size()+"\n"+" * Number of nodes: "+graph.getNodes().size()+"\n"+"
-    // * Achieved IPC: "+graph.getEstimatedIPC()+"\n"+" */\n";
-
-    // TODO: do something better...
-    // like a getHeader module for the graph, or something..
-    // }
-
     public FileHeader() {
         super(BinaryTranslationUtils.getSPeCSCopyright() + "\n");
     }

@@ -13,11 +13,12 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.*;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
 
-public class AssignStatement extends HardwareStatement {
+public class ContinuousStatement extends SingleStatement {
 
-    public AssignStatement(VariableReference target, HardwareExpression expression) {
+    public ContinuousStatement(VariableReference target, HardwareExpression expression) {
         super(target, expression);
     }
 
