@@ -11,12 +11,12 @@ public class HardwareCommentNode extends HardwareNode {
     final private String commentText;
 
     public HardwareCommentNode(String commentText) {
-        this.commentText = commentText;
+        this.commentText = commentText.replace("\n", "\n// ");
         this.type = HardwareNodeType.Comment;
     }
 
     @Override
     public String getAsString() {
-        return "//" + commentText;
+        return "// " + commentText;
     }
 }

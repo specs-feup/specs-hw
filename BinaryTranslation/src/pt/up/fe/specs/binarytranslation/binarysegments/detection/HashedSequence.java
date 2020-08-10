@@ -86,6 +86,10 @@ public class HashedSequence {
 
             try {
                 i.makeSymbolic(addr, this.regremap);
+                // TODO: use a future SymbolicInstruction class, where
+                // the "String instruction" field can be taken from
+                // the InstructionEncoding enum?
+
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }

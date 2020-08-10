@@ -240,6 +240,7 @@ public abstract class AInstruction implements Instruction, Serializable {
 
     /* 
      * TODO: very clunky here
+     * TODO: replace with SymbolicInstruction class!
      */
     @Override
     public void makeSymbolic(Number address, Map<String, String> regremap) throws NullPointerException {

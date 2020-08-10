@@ -12,6 +12,9 @@ public class InstructionAST {
     private ParseTree parseTree;
     private Instruction inst;
 
+    // TODO: list of applied passes in order
+    // private List<InstructionASTPassType> passesApplied;
+
     public InstructionAST(Instruction inst) {
         this.inst = inst;
         this.parseTree = inst.getPseudocode().getParseTree();
