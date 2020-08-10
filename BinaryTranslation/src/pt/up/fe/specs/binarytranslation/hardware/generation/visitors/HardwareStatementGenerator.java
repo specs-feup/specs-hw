@@ -5,9 +5,9 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.AdditionE
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ImmediateReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.AssignStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.BlockingStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.NonBlockingStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.BinaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
@@ -32,18 +32,18 @@ public class HardwareStatementGenerator extends InstructionASTVisitor<HardwareNo
         // TODO Auto-generated constructor stub
     }
 
-    public AssignStatement generateAssign(AssignmentExpressionASTNode node) {
-        return new AssignStatement(new VariableReference(node.getTarget().getAsString()),
+    public ContinuousStatement generateAssign(AssignmentExpressionASTNode node) {
+        return new ContinuousStatement(new VariableReference(node.getTarget().getAsString()),
                 (HardwareExpression) visit(node.getExpr()));
     }
 
-    public BlockingStatement generateBlocking(AssignmentExpressionASTNode node) {
-        return new BlockingStatement(new VariableReference(node.getTarget().getAsString()),
+    public ProceduralBlockingStatement generateBlocking(AssignmentExpressionASTNode node) {
+        return new ProceduralBlockingStatement(new VariableReference(node.getTarget().getAsString()),
                 (HardwareExpression) visit(node.getExpr()));
     }
 
-    public NonBlockingStatement generateNonBlocking(AssignmentExpressionASTNode node) {
-        return new NonBlockingStatement(new VariableReference(node.getTarget().getAsString()),
+    public ProceduralNonBlockingStatement generateNonBlocking(AssignmentExpressionASTNode node) {
+        return new ProceduralNonBlockingStatement(new VariableReference(node.getTarget().getAsString()),
                 (HardwareExpression) visit(node.getExpr()));
     }
 
@@ -83,6 +83,8 @@ public class HardwareStatementGenerator extends InstructionASTVisitor<HardwareNo
             break;
         }
 
+        // TODO: finish this!!
+
         return finalexpr;
     }
 
@@ -108,6 +110,8 @@ public class HardwareStatementGenerator extends InstructionASTVisitor<HardwareNo
     @Override
     protected HardwareNode visit(LiteralOperandASTNode node) {
         return new ImmediateReference(node.getValue(), 32);
-        // TODO: support in g4 grammar for specifying bitwidth
+        // TODO: support in g4 grammar for specifying bitwidth (?)
+        // not sure if good idea, since i already have bitwidth info in the encoding parsing and instruction/operand
+        // classes...
     }
 }

@@ -11,7 +11,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.RangeSele
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareRootNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.NonBlockingStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
 public class HardwareInstanceTest {
 
@@ -34,7 +34,7 @@ public class HardwareInstanceTest {
 
         var body = new AlwaysCombBlock("additionblock");
         module.addChild(body);
-        body.addChild(new NonBlockingStatement(new VariableReference(a.getVariableName()), expr));
+        body.addChild(new ProceduralNonBlockingStatement(new VariableReference(a.getVariableName()), expr));
 
         /*
          * Print to console!
