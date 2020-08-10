@@ -144,11 +144,4 @@ public class AOperandProperties implements OperandProperties, Serializable {
         this.genericType.add(OperandType.SYMBOLIC);
         return;
     }
-
-    @Override
-    public void unsetSymbolic() {
-        this.prefix = "";
-        this.suffix = "";
-        this.genericType.remove(OperandType.SYMBOLIC);
-    }
 }

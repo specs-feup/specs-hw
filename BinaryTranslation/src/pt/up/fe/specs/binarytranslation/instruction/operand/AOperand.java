@@ -49,11 +49,25 @@ public abstract class AOperand implements Operand, Serializable {
         this.setStringValue(value);
     }
 
+    @Override
+    public void setNumberValue(Number value) {
+        this.value = value;
+    }
+
+    @Override
+    public void setStringValue(String svalue) {
+        this.svalue = svalue;
+
+        // assume integer radix...
+        this.value = Integer.valueOf(svalue);
+    }
+
+    @Override
     public void setStringValue(Number value) {
 
         // registers are decimals
         if (this.isRegister()) {
-            this.svalue = Integer.toString(this.value.intValue());
+            this.svalue = Integer.toString(value.intValue());
         }
 
         // immediates are hexes (automatically chooses byte width from bit width)
@@ -66,16 +80,6 @@ public abstract class AOperand implements Operand, Serializable {
         }
     }
 
-    public void setValue(String svalue) {
-        this.svalue = svalue;
-        try {
-            this.value = Integer.valueOf(svalue);
-
-        } catch (NumberFormatException e) {
-            this.value = -1;
-        }
-    }
-
     /*
      * necessary because some registers cannot be represented with numbers
      * (e.g., "SF" for ARM)
@@ -83,11 +87,11 @@ public abstract class AOperand implements Operand, Serializable {
     public AOperand(OperandProperties props, String value) {
         this.props = props;
         this.svalue = value;
-        this.value = -1L;
+        // this.value = -1L;
     }
 
     @Override
-    public Number getValue() {
+    public Number getNumberValue() {
         return this.value;
     }
 
@@ -163,27 +167,16 @@ public abstract class AOperand implements Operand, Serializable {
         return (props.getSymbolicPrefix() + val + props.getSymbolicSuffix());
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-
     ////////////////////////////////////////////////////////////////// Utils //
 
     /*
      * Symbolify instruction
      */
     @Override
-    public void setSymbolic(String value) {
+    public void setSymbolic(String svalue) {
         this.props.setSymbolic();
-        this.svalue = value;
-        this.value = -1;
-    }
-
-    /*
-     * Basically removes prefixes and suffixes from the representation
-     * but leaves the string value, and the number value at -1
-     */
-    @Override
-    public void unsetSymbolic() {
-        this.props.unsetSymbolic();
+        this.svalue = svalue;
+        // this.value = -1;
     }
 
     /*

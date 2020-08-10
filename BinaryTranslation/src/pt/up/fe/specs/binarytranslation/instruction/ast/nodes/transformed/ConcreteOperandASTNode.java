@@ -7,8 +7,7 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 public abstract class ConcreteOperandASTNode extends OperandASTNode {
 
     /**
-     * The {@link Operand} reference from the {@link Instruction} class instance to which the AST of this node is
-     * connected to.
+     * The {@Operand} reference from the {@Instruction} class instance to which the AST of this node is connected to.
      * 
      * This node type is meant to replace an BareOperandASTNode (which has bare information)
      */
@@ -18,20 +17,18 @@ public abstract class ConcreteOperandASTNode extends OperandASTNode {
     public ConcreteOperandASTNode(Operand op) {
         super();
         this.op = op;
-        this.op.unsetSymbolic();
     }
 
     @Override
     public String getAsString() {
-        return op.getStringValue();
+        return op.getRepresentation();
     }
 
     public int getWidth() {
         return this.op.getProperties().getWidth();
     }
 
-    // TODO: only testing this for SSA pass
-    public void setValue(String value) {
-        this.op.set
+    public Operand getInstructionOperand() {
+        return op;
     }
 }

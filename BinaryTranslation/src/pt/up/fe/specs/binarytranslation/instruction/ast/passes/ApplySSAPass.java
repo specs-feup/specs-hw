@@ -5,7 +5,6 @@ import java.util.HashMap;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.BareOperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ConcreteOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
 
 public class ApplySSAPass extends InstructionASTListener {
@@ -27,23 +26,11 @@ public class ApplySSAPass extends InstructionASTListener {
         this.visit(ast.getRootnode());
     }
 
-    private int incrementMapValue(String name) {
-
-        int currCount = 0;
-        if (this.nameCountMap.containsKey(name)) {
-            currCount = this.nameCountMap.get(name) + 1;
-        }
-        this.nameCountMap.put(name, currCount);
-        return currCount;
-    }
-
-    private int getMapValue(String name) {
-
-        if (!this.nameCountMap.containsKey(name)) {
-            this.nameCountMap.put(name, 0);
-        }
-
-        return this.nameCountMap.get(name);
+    /*
+     * Returns later-most naming count
+     */
+    public HashMap<String, Integer> getNameCountMap() {
+        return nameCountMap;
     }
 
     /*
@@ -52,41 +39,48 @@ public class ApplySSAPass extends InstructionASTListener {
     @Override
     protected void visit(AssignmentExpressionASTNode node) { // throws UndefinedOperandException {
 
-        // go to expression first
+        // go to expression first (RHS)
         this.visit(node.getExpr());
 
-        // then change target name
-        // TODO: exception if operand is not concrete here!
-        var target = (ConcreteOperandASTNode) node.getTarget();
-        // if( target.getType() != InstructionASTNodeType ...)
-        // throw new UndefinedOperandException()
-
-        // if map contains target, get the name
-        var currCount = this.incrementMapValue(target.getAsString());
-        target.setValue(target.getAsString() + "_" + currCount);
-        // changes the symbolic value of this node
-        // WARNING, THIS CHANGE GOES ALL THE WAY UP TO THE OPERAND OBJECT IN THE INSTRUCTION OBJECT!
+        // then change target name (LHS)
+        this.visit(node.getTarget());
     }
 
     @Override
-    protected void visit(BareOperandASTNode node) {
+    protected void visit(BareOperandASTNode node) { // throws UndefinedOperandException {
         // throw new UndefinedOperandException(node.get...);
     }
 
     @Override
     protected void visit(VariableOperandASTNode node) {
 
-        // if map contains target, get the name
-        var currCount = this.getMapValue(node.getAsString());
+        // if map contains variable, then handle the mapping accordingly
+        var rnw = node.getInstructionOperand().isRead();
+        var name = node.getAsString();
+        var currCount = 0;
+
+        // no contain and is read
+        if (!this.nameCountMap.containsKey(name) && rnw) {
+            return; // do nothing
+        }
+
+        // no contain and is write
+        else if (!this.nameCountMap.containsKey(name) && !rnw) {
+            this.nameCountMap.put(name, 0);
+        }
+
+        // contain and is read
+        else if (this.nameCountMap.containsKey(name) && rnw) {
+            currCount = this.nameCountMap.get(name);
+        }
+
+        // contain and is write
+        else {
+            currCount += 1;
+            this.nameCountMap.put(name, currCount);
+        }
+
+        // new variable name
         node.setValue(node.getAsString() + "_" + currCount);
-        // changes the symbolic value of this node
-        // WARNING, THIS CHANGE GOES ALL THE WAY UP TO THE OPERAND OBJECT IN THE INSTRUCTION OBJECT!
     }
-
-    /*
-    @Override
-    protected void visit(ConcreteOperandASTNode node) {
-        
-    }*/
-
 }

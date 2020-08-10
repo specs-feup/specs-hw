@@ -4,6 +4,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.BareOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNodeSide;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ConcreteOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ImmediateOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
@@ -36,35 +37,49 @@ public class ApplyInstructionPass extends InstructionASTListener {
     protected void visit(BareOperandASTNode node) {
 
         var parent = node.getParent();
-        var instOp = getOperandByAsmField(ast.getInst().getData().getOperands(), node.getOperandValue());
-        // TODO: this will fail here for RISC-V, since the IMM operand is built by multiple operands...
-        // unless I express the construction of the IMM field as a sub-operation node?
+        Operand instOp = null;
+        try {
+            instOp = getOperandByAsmField(ast.getInst().getData().getOperands(), node);
 
-        // make new node type
-        ConcreteOperandASTNode newNode = null;
+            // TODO: this will fail here for RISC-V, since the IMM operand is built by multiple operands...
+            // unless I express the construction of the IMM field as a sub-operation node?
 
-        // TODO liveins and liveouts??
+            // make new node type
+            ConcreteOperandASTNode newNode = null;
 
-        // register nodes and symbolic immediates
-        if (instOp.isRegister() || (instOp.isImmediate() && instOp.isSymbolic())) {
-            newNode = new VariableOperandASTNode(instOp);
+            // TODO liveins and liveouts??
+
+            // register nodes and symbolic immediates
+            if (instOp.isRegister() || (instOp.isImmediate() && instOp.isSymbolic())) {
+                newNode = new VariableOperandASTNode(instOp);
+            }
+
+            // non symbolic immediate (i.e., actual number value)
+            else if (instOp.isImmediate() && !instOp.isSymbolic()) {
+                newNode = new ImmediateOperandASTNode(instOp);
+            }
+
+            parent.replaceChild(node, newNode);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        // non symbolic immediate (i.e., actual number value)
-        else if (instOp.isImmediate() && !instOp.isSymbolic()) {
-            newNode = new ImmediateOperandASTNode(instOp);
-        }
-
-        parent.replaceChild(node, newNode);
         return;
     }
 
-    private static Operand getOperandByAsmField(List<Operand> ops, String asmFieldName) {
+    private static Operand getOperandByAsmField(List<Operand> ops, BareOperandASTNode node) throws Exception {
+        var asmFieldName = node.getOperandValue();
+        boolean rnw = (node.getSide() == OperandASTNodeSide.LeftHandSide) ? false : true;
         for (var op : ops) {
-            if (op.getAsmField().toString().equals(asmFieldName))
+            if (op.getAsmField().toString().equals(asmFieldName) && op.isRead() == rnw)
                 return op;
+
+            // TODO: will break with RISC-V since IMMs are built out of several asm fields...
         }
-        return null;
+
+        throw new Exception();
+        // return null;
 
         // TODO fix null return
     }

@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNodeSide;
 
 public class AssignmentExpressionASTNode extends ExpressionASTNode {
 
@@ -10,6 +11,7 @@ public class AssignmentExpressionASTNode extends ExpressionASTNode {
         this.type = InstructionASTNodeType.AssignmentExpressionNode;
         this.addChild(target);
         this.addChild(expr);
+        target.setSide(OperandASTNodeSide.LeftHandSide);
     }
 
     @Override
