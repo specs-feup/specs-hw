@@ -2,7 +2,7 @@ package pt.up.fe.specs.binarytranslation.test.detection;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
-import java.util.List;
+import java.util.function.Predicate;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentBundle;
@@ -41,9 +41,15 @@ public class SegmentDetectTestUtils {
 
     public static void printBundle(SegmentBundle bundle) {
 
-        List<BinarySegment> bblist = bundle.getSegments();
+        for (BinarySegment bs : bundle.getSegments()) {
+            bs.printSegment();
+            System.out.print("\n");
+        }
+    }
 
-        for (BinarySegment bs : bblist) {
+    public static void printBundle(SegmentBundle bundle, Predicate<BinarySegment> predicate) {
+
+        for (BinarySegment bs : bundle.getSegments(predicate)) {
             bs.printSegment();
             System.out.print("\n");
         }

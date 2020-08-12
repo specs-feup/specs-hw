@@ -17,8 +17,10 @@ public class VariableOperandASTNode extends ConcreteOperandASTNode {
     public VariableOperandASTNode(Operand op) {
         super(op);
         this.type = InstructionASTNodeType.VariableNode;
-        this.TransformedOperandName = op.getRepresentation().replace("<", "").replace(">", "");
+        this.TransformedOperandName = op.getRepresentation().replace("<", "").replace(">", "").replace("[", "")
+                .replace("]", "");
         // clean symbolic prefix/suffix if any
+        // TODO: this needs some serious work....
     }
 
     @Override
