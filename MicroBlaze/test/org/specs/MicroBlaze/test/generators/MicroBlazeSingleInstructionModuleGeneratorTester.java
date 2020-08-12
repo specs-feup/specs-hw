@@ -8,7 +8,7 @@ import pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionm
 public class MicroBlazeSingleInstructionModuleGeneratorTester {
 
     @Test
-    public void testAddiParseTree() {
+    public void testAddiUnit() {
         // 248: 20c065e8 addi r6, r0, 26088 // 65e8 <_SDA_BASE_>
         var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
         var singleUnitBuilder = new SingleInstructionModuleGenerator();
