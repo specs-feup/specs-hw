@@ -6,13 +6,14 @@ import org.specs.Arm.parsing.ArmAsmFieldData;
 import org.specs.Arm.parsing.ArmAsmFieldType;
 import org.specs.Arm.parsing.ArmIsaParser;
 
+import com.google.common.base.Enums;
+
 import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
-import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
  * Implementation of AInstruction, specialized for ARMv8 project and ISA Relies on {@link ArmAsmFieldData} and
@@ -22,6 +23,11 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
  * 
  */
 public class ArmInstruction extends AInstruction {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4224013622403783519L;
 
     // raw field data
     private final ArmAsmFieldData fieldData;
@@ -105,6 +111,10 @@ public class ArmInstruction extends AInstruction {
 
     @Override
     public InstructionPseudocode getPseudocode() {
-        throw new NotImplementedException(this);
+        var pseudocode = Enums.getIfPresent(ArmPseudocode.class, this.props.getEnumName());
+        if (pseudocode.isPresent())
+            return pseudocode.get();
+        else
+            return ArmPseudocode.getDefault();
     }
 }
