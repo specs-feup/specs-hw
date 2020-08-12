@@ -67,6 +67,8 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
             if (op.isImmediate())
                 continue;
 
+            // TODO: solve inputs/outputs with same name!
+
             else if (op.isRead())
                 moduletree.addDeclaration(new PortDeclaration(name, width, ModulePortDirection.input));
 
