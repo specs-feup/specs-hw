@@ -14,13 +14,13 @@ public class ArmStaticBasicBlockDetectorTester {
     public void testStatic() {
         var bundle = SegmentDetectTestUtils.detect("org/specs/Arm/asm/cholesky.elf",
                 ArmElfStream.class, StaticBasicBlockDetector.class);
-        SegmentDetectTestUtils.printBundle(bundle);
+        SegmentDetectTestUtils.printBundle(bundle, segment -> segment.getSegmentLength() == 6);
     }
 
     @Test
     public void testTrace() {
         var bundle = SegmentDetectTestUtils.detect("org/specs/Arm/asm/cholesky.elf",
                 ArmTraceStream.class, TraceBasicBlockDetector.class);
-        SegmentDetectTestUtils.printBundle(bundle);
+        SegmentDetectTestUtils.printBundle(bundle, segment -> segment.getSegmentLength() < 6);
     }
 }

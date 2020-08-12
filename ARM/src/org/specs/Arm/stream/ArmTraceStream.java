@@ -19,7 +19,7 @@ public class ArmTraceStream extends ATraceInstructionStream {
     public ArmTraceStream(File elfname) {
         super(elfname, ArmResource.QEMU_AARCH64_GDB_TEMPLATE,
                 ArmResource.AARCH64_GDB,
-                ArmResource.QEMU_AARCH64_BAREMETAL_DTB,
+                null, // ArmResource.QEMU_AARCH64_BAREMETAL_DTB,
                 ArmResource.QEMU_AARCH64_EXE);
 
         this.appInfo = new ApplicationInformation(
