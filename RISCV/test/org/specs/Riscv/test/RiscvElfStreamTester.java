@@ -1,26 +1,19 @@
 package org.specs.Riscv.test;
 
-import java.io.File;
-
 import org.junit.Test;
 import org.specs.Riscv.stream.RiscvElfStream;
 
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTestUtils;
 
 public class RiscvElfStreamTester {
 
     @Test
-    public void test() {
-        File fd = SpecsIo.resourceCopy("org/specs/Riscv/asm/test64.elf");
-        fd.deleteOnExit();
+    public void testStatic() {
+        InstructionStreamTestUtils.printStream("org/specs/Riscv/asm/test64.elf", RiscvElfStream.class);
+    }
 
-        try (RiscvElfStream el = new RiscvElfStream(fd)) {
-            // el.rawDump();
-            Instruction inst = null;
-            while ((inst = el.nextInstruction()) != null) {
-                inst.printInstruction();
-            }
-        }
+    @Test
+    public void testStaticRaw() {
+        InstructionStreamTestUtils.rawDump("org/specs/Riscv/asm/test64.elf", RiscvElfStream.class);
     }
 }
