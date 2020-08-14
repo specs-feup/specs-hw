@@ -627,8 +627,9 @@ public class ArmAsmOperandGetter {
         var immval = fielddata.getMap().get(IMM).intValue();
 
         // if IMM is 0, then there is no extend operation or shift
-        if (immval == 0)
-            return operands;
+        // if (immval == 0)
+        // return operands;
+        // TODO:reintroduce this IF!!!
 
         var field = (type != ArmAsmFieldType.ADD_SUB_EXT_REG) ? SHIFT : OPTION;
         var code = fielddata.getMap().get(field).intValue();
