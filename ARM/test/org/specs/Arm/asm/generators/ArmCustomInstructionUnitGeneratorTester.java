@@ -21,7 +21,7 @@ public class ArmCustomInstructionUnitGeneratorTester {
         var graphs = GraphBundle.newInstance(bundle);
 
         // generate custom instruction unit for one of the graphs
-        var customInstGen = new CustomInstructionUnitGenerator(true);
+        var customInstGen = new CustomInstructionUnitGenerator();
 
         // get ONE graph
         var subset = graphs.getGraphs(data -> data.getSegment().getSegmentLength() == 4);
@@ -30,7 +30,11 @@ public class ArmCustomInstructionUnitGeneratorTester {
             System.out.println(g.getSegment().getRepresentation());
         }*/
 
-        var graph = subset.get(3);
+        var graph = subset.get(4);
+
+        for (var i : graph.getSegment().getInstructions()) {
+            System.out.println(i.getRepresentation());
+        }
 
         /*var subset = graphs.getGraphs(data -> data.getCpl() > 2
                 && data.getMaxwidth() > 1

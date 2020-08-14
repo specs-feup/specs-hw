@@ -6,8 +6,6 @@ import org.specs.Arm.parsing.ArmAsmFieldData;
 import org.specs.Arm.parsing.ArmAsmFieldType;
 import org.specs.Arm.parsing.ArmIsaParser;
 
-import com.google.common.base.Enums;
-
 import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
@@ -111,10 +109,17 @@ public class ArmInstruction extends AInstruction {
 
     @Override
     public InstructionPseudocode getPseudocode() {
-        var pseudocode = Enums.getIfPresent(ArmPseudocode.class, this.props.getEnumName());
+
+        var values = ArmPseudocode.values();
+        for (var e : values) {
+            if (e.getName().equals(this.getData().getPlainName()))
+                return e;
+        }
+
+        /*var pseudocode = Enums.getIfPresent(ArmPseudocode.class, this.getData().getPlainName());
         if (pseudocode.isPresent())
             return pseudocode.get();
-        else
-            return ArmPseudocode.getDefault();
+        else*/
+        return ArmPseudocode.getDefault();
     }
 }

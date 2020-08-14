@@ -12,18 +12,31 @@ public enum ArmPseudocode implements InstructionPseudocode {
 
     add("RD = RN + IMM;"),
 
+    ubfm("RD = RN << (IMMS + 1);"),
+
+    ands_shift_reg("ands", "RD = RN & (RM << IMM); $nzvc = (RD == 0);"),
+
+    // beq("b.eq", "if($PSTATE[0] == 1) $PC = $PC + sext(IMM);"),
+    // beq("b.eq", "if($PSTATE == 1) $PC = $PC + IMM;"),
+    beq("b.eq", "$PC = $PC + (IMM * ($nzvc == 1));"),
+
     defaultCode("RD = RA;"); // i.e. nop
 
-    private final String name;
+    private final String instName;
     private final String pseudocode;
 
     private ArmPseudocode(String pseudocode) {
         this.pseudocode = pseudocode;
-        this.name = name();
+        this.instName = name();
+    }
+
+    private ArmPseudocode(String name, String pseudocode) {
+        this.instName = name;
+        this.pseudocode = pseudocode;
     }
 
     public String getName() {
-        return name;
+        return instName;
     }
 
     @Override
