@@ -22,6 +22,7 @@ public enum InstructionASTNodeType {
 
     // using only info from pseudocode
     BareOperandNode,
+    MetaFieldNode,
     LiteralOperandNode,
 
     // types of operands with information

@@ -13,6 +13,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ScalarSu
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.BareOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.LiteralOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.MetaOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfElseStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfStatementASTNode;
@@ -167,6 +168,9 @@ public abstract class InstructionASTVisitor<T> {
         else if (node instanceof LiteralOperandASTNode)
             return this.visit((LiteralOperandASTNode) node);
 
+        else if (node instanceof MetaOperandASTNode)
+            return this.visit((MetaOperandASTNode) node);
+
         else
             return this.visitChildren(node);
     };
@@ -190,6 +194,10 @@ public abstract class InstructionASTVisitor<T> {
     }
 
     protected T visit(LiteralOperandASTNode node) throws Exception {
+        return this.visitChildren(node);
+    }
+
+    protected T visit(MetaOperandASTNode node) throws Exception {
         return this.visitChildren(node);
     }
 

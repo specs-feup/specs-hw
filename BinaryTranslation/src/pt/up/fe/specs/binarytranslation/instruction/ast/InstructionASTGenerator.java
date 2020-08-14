@@ -13,6 +13,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ScalarSu
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.BareOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.LiteralOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.MetaOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfElseStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfStatementASTNode;
@@ -22,9 +23,11 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisit
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmFieldContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AssignmentExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.BinaryExprContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.FunctionExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfElseStatementContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfStatementContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.MetaFieldContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.OperatorContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ParenExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PlainStmtContext;
@@ -124,6 +127,12 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
     }
 
     @Override
+    public InstructionASTNode visitFunctionExpr(FunctionExprContext ctx) {
+        // TODO Auto-generated method stub
+        return super.visitFunctionExpr(ctx);
+    }
+
+    @Override
     public InstructionASTNode visitScalarsubscriptExpr(ScalarsubscriptExprContext ctx) {
         var idx = Integer.valueOf(ctx.idx.getText());
         return new ScalarSubscriptExpressionASTNode((OperandASTNode) this.visit(ctx.operand()), idx);
@@ -151,5 +160,10 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
     @Override
     public LiteralOperandASTNode visitLiteral(LiteralContext ctx) {
         return new LiteralOperandASTNode(Integer.valueOf(ctx.getText()));
+    }
+
+    @Override
+    public MetaOperandASTNode visitMetaField(MetaFieldContext ctx) {
+        return new MetaOperandASTNode(ctx.metafield().processorRegister.getText());
     }
 }

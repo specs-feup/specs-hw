@@ -7,6 +7,7 @@ import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionASTConverter;
+import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.MetaFieldFetcher;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
@@ -42,6 +43,8 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
         // 1. number of register stages
         // 2. insert handshaking logic
         // 3. insert halt signal
+        super();
+        this.isClocked = false;
     }
 
     public CustomInstructionUnitGenerator(Boolean isClocked) {
@@ -124,6 +127,11 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
 
                 // get AST of instruction
                 var ast = new InstructionAST(n.getInst());
+
+                // quick hack
+                var mf = new MetaFieldFetcher();
+                var metas = mf.fetchMetaFields((PseudoInstructionASTNode) ast.getRootnode());
+                moduletree.getDeclarations().addChild(metas);
 
                 // Apply first pass (attaches executed instruction information to the AST of the instruction)
                 ast.accept(new ApplyInstructionPass());

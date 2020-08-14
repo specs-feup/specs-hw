@@ -71,9 +71,11 @@ operator : PLUS | MINUS | TIMES | DIV | GT | LT | EQUALS | RSHIFT | LSHIFT | RAS
 unsignednumber: (INT | DOUBLE);
 signednumber: MINUS (INT | DOUBLE);
 number: unsignednumber | signednumber;
+metafield: METASYMBOL processorRegister=ASMFIELD;
  
 operand:
 	(ASMFIELD | STACKPTR) 	# AsmField
+   | (metafield)	# metaField
    | (number)		# Literal;
 
 /************************************************************
@@ -108,6 +110,7 @@ LSHIFT	: '<<';
 RASHIFT	: '>>>';
 
 /* Any possible field in the ASM field list of any instruction */
+METASYMBOL : '$';
 ASMFIELD : [A-Za-z]+;
 STACKPTR : 'sp';
 

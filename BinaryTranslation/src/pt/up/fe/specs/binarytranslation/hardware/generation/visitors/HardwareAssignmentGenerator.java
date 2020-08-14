@@ -4,9 +4,13 @@ import pt.up.fe.specs.binarytranslation.hardware.generation.exception.HardwareGe
 import pt.up.fe.specs.binarytranslation.hardware.generation.exception.UnimplementedExpressionException;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.AdditionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.BitWiseAndExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ComparsionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ImmediateReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.LeftShiftExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.MultiplicationExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ParenthesisExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.SubtractionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
@@ -16,6 +20,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.Assignme
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.BinaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.LiteralOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.MetaOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ImmediateOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.InstructionASTVisitor;
@@ -84,7 +89,7 @@ public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareN
         var lnode = visit(node.getLeft());
         var rnode = visit(node.getRight());
 
-        HardwareNode finalexpr = null;
+        HardwareExpression finalexpr = null;
         String op = node.getOperator().getAsString();
         switch (op) {
         case "+":
@@ -96,12 +101,21 @@ public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareN
         case "*":
             finalexpr = new MultiplicationExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
             break;
+        case "<<":
+            finalexpr = new LeftShiftExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
+            break;
+        case "&":
+            finalexpr = new BitWiseAndExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
+            break;
+        case "==":
+            finalexpr = new ComparsionExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
+            break;
         default:
             // finalexpr = new UnimplementedExpression((HardwareExpression) lnode, (HardwareExpression) rnode, op);
             throw new UnimplementedExpressionException(node.getAsString());
         }
 
-        return finalexpr;
+        return new ParenthesisExpression(finalexpr);
     }
 
     @Override
@@ -140,6 +154,11 @@ public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareN
         // TODO: otherwise create
 
         return new VariableReference(variablename);
+    }
+
+    @Override
+    protected HardwareNode visit(MetaOperandASTNode node) throws Exception {
+        return new VariableReference(node.getAsString());
     }
 
     @Override
