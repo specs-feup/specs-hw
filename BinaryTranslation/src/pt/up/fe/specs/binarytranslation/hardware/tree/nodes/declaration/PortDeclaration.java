@@ -41,7 +41,7 @@ public class PortDeclaration extends VariableDeclaration {
         super();
         this.portWidth = edge.getWidth();
         this.direction = direction;
-        this.portname = edge.getRepresentation().replace("<", "").replace(">", "");
+        this.portname = edge.getRepresentation().replace("<", "").replace(">", "").replace("[", "").replace("]", "");
         // TODO: VERY CLUMSY!!
         this.type = HardwareNodeType.PortDeclaration;
     }
@@ -50,7 +50,7 @@ public class PortDeclaration extends VariableDeclaration {
         super();
         this.portWidth = op.getProperties().getWidth();
         this.direction = direction;
-        this.portname = op.getRepresentation().replace("<", "").replace(">", "");
+        this.portname = op.getRepresentation().replace("<", "").replace(">", "").replace("[", "").replace("]", "");
         // TODO: VERY CLUMSY!!
         this.type = HardwareNodeType.PortDeclaration;
     }

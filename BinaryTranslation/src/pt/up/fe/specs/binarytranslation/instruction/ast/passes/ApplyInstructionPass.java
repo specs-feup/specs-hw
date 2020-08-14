@@ -72,12 +72,13 @@ public class ApplyInstructionPass extends InstructionASTListener {
         var asmFieldName = node.getOperandValue();
         boolean rnw = (node.getSide() == OperandASTNodeSide.LeftHandSide) ? false : true;
         for (var op : ops) {
-            if (op.getAsmField().toString().equals(asmFieldName) && op.isRead() == rnw)
+            if (op.getAsmField().toString().equals(asmFieldName))// && op.isRead() == rnw)
                 return op;
 
             // TODO: will break with RISC-V since IMMs are built out of several asm fields...
         }
 
+        System.out.println("failed looking for asm field: " + asmFieldName);
         throw new Exception();
         // return null;
 

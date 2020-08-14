@@ -61,7 +61,7 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
         var instOperands = inst.getData().getOperands();
         for (var op : instOperands) {
 
-            var name = op.getRepresentation();
+            var name = op.getRepresentation().replace("[", "").replace("]", "");
             var width = op.getProperties().getWidth();
 
             if (op.isImmediate())
