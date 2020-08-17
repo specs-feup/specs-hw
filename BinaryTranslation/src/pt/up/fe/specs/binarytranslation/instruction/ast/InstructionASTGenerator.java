@@ -164,6 +164,6 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
 
     @Override
     public MetaOperandASTNode visitMetaField(MetaFieldContext ctx) {
-        return new MetaOperandASTNode(ctx.metafield().processorRegister.getText());
+        return new MetaOperandASTNode(ctx.meta_field().processorRegister.getText());
     }
 }
