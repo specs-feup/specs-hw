@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.graphs;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,6 +29,7 @@ import java.util.Date;
 import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
 import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
+import pt.up.fe.specs.binarytranslation.graphs.edge.BinarySegmentGraphGson;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -48,23 +50,36 @@ public class BinarySegmentGraphUtils {
     // quick hack fix
     static String outputfolder;
 
-    public static void generateOutput(BinarySegmentGraph graph, String parentfolder) {
-
+    private static void setPrefix(String parentfolder) {
         // output folder
         outputfolder = null;
         if (parentfolder != null)
             outputfolder = parentfolder;
         else
             outputfolder = "./output/";
+    }
+
+    public static void generateOutput(BinarySegmentGraph graph, String parentfolder) {
+
+        setPrefix(parentfolder);
 
         var f = new File(getOutputFolder(graph));
         f.mkdirs();
 
-        // generate dotty and render dotty
-        generateDotty(graph, getDotPathname(graph));
+        // generate dotty (.dot)
+        BinarySegmentGraphUtils.generateOutput(graph,
+                getDotPathname(graph), BinarySegmentGraphUtils::printDotty);
+
+        // render dotty (.png)
+        BinarySegmentGraphUtils.renderDotty(graph);
 
         // generate HTML summary
-        generateHTML(graph, getHTMLPathname(graph));
+        BinarySegmentGraphUtils.generateOutput(graph,
+                getHTMLPathname(graph), BinarySegmentGraphUtils::printHTML);
+
+        // generate JSON too
+        BinarySegmentGraphUtils.generateOutput(graph,
+                getJSONPathname(graph), BinarySegmentGraphUtils::printJSON);
     }
 
     /*
@@ -83,6 +98,14 @@ public class BinarySegmentGraphUtils {
     private static String getHTMLPathname(BinarySegmentGraph graph) {
         return getOutputFolder(graph) + "/graph_"
                 + Integer.toString(graph.getSegment().hashCode()) + ".html";
+    }
+
+    /*
+     * Return full path for JSON file
+     */
+    private static String getJSONPathname(BinarySegmentGraph graph) {
+        return getOutputFolder(graph) + "/graph_"
+                + Integer.toString(graph.getSegment().hashCode()) + ".json";
     }
 
     /*
@@ -114,24 +137,6 @@ public class BinarySegmentGraphUtils {
     }
 
     /*
-     * Print dotty to specified output file (with full path)
-     */
-    private static void generateDotty(BinarySegmentGraph graph, String filename) {
-        BinarySegmentGraphUtils.generateOutput(graph,
-                filename, BinarySegmentGraphUtils::printDotty);
-
-        BinarySegmentGraphUtils.renderDotty(graph);
-    }
-
-    /*
-     * Print dotty to specified output file (with full path)
-     */
-    private static void generateHTML(BinarySegmentGraph graph, String filename) {
-        BinarySegmentGraphUtils.generateOutput(graph,
-                filename, BinarySegmentGraphUtils::printHTML);
-    }
-
-    /*
      * Print dotty to given outputstream (e.g., system.out, or file) 
      */
     public static void generateDotty(BinarySegmentGraph graph, OutputStream os) {
@@ -156,6 +161,23 @@ public class BinarySegmentGraphUtils {
         try {
             fos.close();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     * Write to a given output stream (file or stdio)
+     */
+    private static void printJSON(BinarySegmentGraph graph, OutputStream os) {
+        BufferedOutputStream bw = new BufferedOutputStream(os);
+        try {
+            var output = new BinarySegmentGraphGson(graph);
+            bw.write(output.getJsonBytes());
+            bw.flush();
+            bw.close();
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
