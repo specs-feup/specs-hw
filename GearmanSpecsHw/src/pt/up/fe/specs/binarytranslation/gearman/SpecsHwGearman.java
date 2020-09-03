@@ -20,6 +20,7 @@ import org.gearman.GearmanFunction;
 import org.gearman.GearmanServer;
 import org.gearman.GearmanWorker;
 
+import pt.up.fe.specs.binarytranslation.gearman.workers.btf.BtfWorker;
 import pt.up.fe.specs.binarytranslation.gearman.workers.example.ExampleWorker;
 import pt.up.fe.specs.gearman.GearmanUtils;
 import pt.up.fe.specs.gearman.specsworker.GenericSpecsWorker;
@@ -76,6 +77,7 @@ public class SpecsHwGearman {
             worker.addServer(server);
 
             worker.addFunction("Example", new ExampleWorker());
+            worker.addFunction("BTF", new BtfWorker());            
 
             var localFunctionWorker = newLocalFunctionWorker();
             worker.addFunction(localFunctionWorker.getWorkerName(), localFunctionWorker);
