@@ -17,7 +17,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.function.Predicate;
 
-import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentBundle;
 import pt.up.fe.specs.util.SpecsIo;
@@ -40,10 +40,10 @@ public class GraphBundle implements Serializable {
     // with predication
 
     private final Date date;
-    private final ApplicationInformation appinfo;
+    private final Application appinfo;
     private final List<BinarySegmentGraph> graphs;
 
-    private GraphBundle(ArrayList<BinarySegmentGraph> graphs, ApplicationInformation appinfo) {
+    private GraphBundle(ArrayList<BinarySegmentGraph> graphs, Application appinfo) {
         this.graphs = graphs;
         this.appinfo = appinfo;
         this.date = new Date(System.currentTimeMillis());
@@ -109,7 +109,7 @@ public class GraphBundle implements Serializable {
         return date;
     }
 
-    public ApplicationInformation getAppinfo() {
+    public Application getAppinfo() {
         return appinfo;
     }
 

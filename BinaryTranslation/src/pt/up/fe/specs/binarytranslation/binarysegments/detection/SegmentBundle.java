@@ -1,14 +1,22 @@
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.function.Predicate;
 
-import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.binarytranslation.stream.InstructionStream.InstructionStreamType;
+import pt.up.fe.specs.binarytranslation.stream.InstructionStreamType;
 
 /**
  * Segment detectors should return a single object of this type. A bundle contains the list of segments, and data about
@@ -25,7 +33,7 @@ public class SegmentBundle implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final Date date;
-    private final ApplicationInformation appinfo;
+    private final Application appinfo;
     private final List<BinarySegment> segments;
 
     // stats from the stream
@@ -86,7 +94,7 @@ public class SegmentBundle implements Serializable {
         return list;
     }
 
-    public ApplicationInformation getApplicationInformation() {
+    public Application getApplicationInformation() {
         return this.appinfo;
     }
 

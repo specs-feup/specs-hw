@@ -16,7 +16,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -38,7 +38,7 @@ public class FrequentStaticSequence extends AFrequentSequence {
      * Constructor builds the sequence on the spot with an existing list
      */
     public FrequentStaticSequence(List<Instruction> ilist,
-            List<SegmentContext> contexts, ApplicationInformation appinfo) {
+            List<SegmentContext> contexts, Application appinfo) {
         super(ilist, contexts, appinfo);
         this.segtype = BinarySegmentType.STATIC_FREQUENT_SEQUENCE;
         this.startAddresses = new ArrayList<Integer>();

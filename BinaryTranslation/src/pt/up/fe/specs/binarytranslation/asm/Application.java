@@ -13,12 +13,12 @@
 
 package pt.up.fe.specs.binarytranslation.asm;
 
-public class ApplicationInformation {
+public class Application {
     private final String appName;
     private final String compilationInfo;
     private final String cpuArchitectureName;
 
-    public ApplicationInformation(String cpuArchitectureName, String appName, String compilationInfo) {
+    public Application(String cpuArchitectureName, String appName, String compilationInfo) {
         this.appName = appName;
         this.compilationInfo = compilationInfo;
         this.cpuArchitectureName = cpuArchitectureName;
