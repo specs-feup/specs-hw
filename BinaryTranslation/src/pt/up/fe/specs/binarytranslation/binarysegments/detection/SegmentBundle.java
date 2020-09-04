@@ -1,18 +1,14 @@
 package pt.up.fe.specs.binarytranslation.binarysegments.detection;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.google.gson.annotations.Expose;
+
+import pt.up.fe.specs.binarytranslation.BinaryTranslationOutput;
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
@@ -25,21 +21,25 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStreamType;
  * @author nuno
  *
  */
-public class SegmentBundle implements Serializable {
+public class SegmentBundle implements BinaryTranslationOutput {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-
+    @Expose
     private final Date date;
+
+    @Expose
     private final Application appinfo;
-    private final List<BinarySegment> segments;
 
     // stats from the stream
+    @Expose
     private long totalCycles;
+
+    @Expose
     private long numInsts;
+
+    @Expose
     private InstructionStreamType itype;
+
+    private final List<BinarySegment> segments;
 
     public SegmentBundle(List<BinarySegment> segments, InstructionStream istream) {
 
@@ -102,6 +102,25 @@ public class SegmentBundle implements Serializable {
         return date;
     }
 
+    @Override
+    public void generateOutput(String parentfolder) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void toJSON(File outputfolder) {
+
+        // first do self
+        BinaryTranslationOutput.super.toJSON(outputfolder);
+
+        // then list of segments
+        var segfolder = new File(outputfolder, "segments");
+        for (var s : this.getSegments()) {
+            s.toJSON(new File(segfolder, s.getOutputFolderName()));
+        }
+    }
+
     // TODO methods that can compute the coverage and/or acceleration only for a filtered set of this bundle
     // look up what kind of java trickery can be used to do this
 
@@ -119,44 +138,4 @@ public class SegmentBundle implements Serializable {
         }
         return (float) detectedportion / this.totalCycles;
     }*/
-
-    /*
-     * Serialize this segment to file (useful for processing only past this point)
-     */
-    public void serializeToFile(String filename) throws IOException {
-        FileOutputStream fos = new FileOutputStream(filename);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(this);
-        oos.flush();
-        oos.close();
-    }
-
-    public void serializeToFile() throws IOException {
-
-        // output folder
-        var f = new File("./output/bundles/");
-        f.mkdirs();
-
-        String date = new SimpleDateFormat("yyyyMMdd").format(this.date);
-        this.serializeToFile("./output/bundles/" + this.appinfo.getAppName() + "_"
-                + this.appinfo.getCpuArchitectureName() + "_" + date + ".bundle");
-    }
-
-    /*
-     * Serialize this segment from file (useful for processing only past this point)
-     */
-    public static SegmentBundle serializeFromFile(String filename) throws IOException {
-
-        FileInputStream fis = new FileInputStream(filename);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        SegmentBundle bundle = null;
-        try {
-            bundle = (SegmentBundle) ois.readObject();
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        ois.close();
-        return bundle;
-    }
 }
