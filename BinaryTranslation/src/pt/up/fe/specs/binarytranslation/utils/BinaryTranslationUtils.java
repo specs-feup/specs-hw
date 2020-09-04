@@ -1,7 +1,10 @@
-package pt.up.fe.specs.binarytranslation;
+package pt.up.fe.specs.binarytranslation.utils;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
@@ -9,12 +12,34 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
 
 public class BinaryTranslationUtils {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
+
+    /*
+     * Dump plain bytes into a given filename
+     */
+    public static void bytesToFile(String filename, byte[] data) {
+
+        try {
+            FileOutputStream fos = new FileOutputStream(filename);
+            BufferedOutputStream bw = new BufferedOutputStream(fos);
+            bw.write(data);
+            bw.flush();
+            bw.close();
+            fos.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /*
      * 

@@ -2,7 +2,7 @@ package pt.up.fe.specs.binarytranslationlauncher;
 
 import java.io.*;
 
-import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.guihelper.*;
 import pt.up.fe.specs.guihelper.Base.SetupDefinition;
 import pt.up.fe.specs.guihelper.gui.SimpleGui;
