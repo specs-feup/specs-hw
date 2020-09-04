@@ -13,9 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
-import java.io.Serializable;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.BinaryTranslationOutput;
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
@@ -24,7 +24,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  * @author Nuno
  *
  */
-public interface BinarySegment {
+public interface BinarySegment extends BinaryTranslationOutput {
 
     /*
      * 

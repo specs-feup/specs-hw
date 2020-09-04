@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
@@ -12,7 +13,12 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+
 import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
+import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
 
@@ -23,7 +29,7 @@ public class BinaryTranslationUtils {
     /*
      * Dump plain bytes into a given filename
      */
-    public static void bytesToFile(String filename, byte[] data) {
+    public static void bytesToFile(File filename, byte[] data) {
 
         try {
             FileOutputStream fos = new FileOutputStream(filename);
@@ -39,6 +45,36 @@ public class BinaryTranslationUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /*
+     * Generate JSON from any object
+     */
+    public static void toJSON(String filename, Object obj) {
+        var f = SpecsIo.mkdir(filename);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        var bytes = gson.toJson(obj).getBytes();
+        BinaryTranslationUtils.bytesToFile(f, bytes);
+    }
+
+    /*
+     * Generate given object from JSON bytes
+     */
+    public static Object fromJSON(String filename, Class<?> className) {
+
+        Object obj = null;
+        try {
+            obj = new Gson().fromJson(new FileReader(filename), className);
+
+        } catch (JsonParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return obj;
     }
 
     /*

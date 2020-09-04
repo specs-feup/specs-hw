@@ -13,8 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.binarysegments;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -24,12 +23,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  * @author Nuno
  *
  */
-public abstract class ABinarySegment implements BinarySegment, Serializable {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2260035887787499004L;
+public abstract class ABinarySegment implements BinarySegment {
 
     protected Application appinfo;
     protected BinarySegmentType segtype;
@@ -48,22 +42,27 @@ public abstract class ABinarySegment implements BinarySegment, Serializable {
     /*
      * Basics
      */
+    @Override
     public List<Instruction> getInstructions() {
         return this.instlist;
     }
 
+    @Override
     public int getSegmentLength() {
         return instlist.size();
     }
 
+    @Override
     public BinarySegmentType getSegmentType() {
         return this.segtype;
     }
 
+    @Override
     public List<SegmentContext> getContexts() {
         return contexts;
     }
 
+    @Override
     public Application getAppinfo() {
         return appinfo;
     }
@@ -71,6 +70,7 @@ public abstract class ABinarySegment implements BinarySegment, Serializable {
     /*
      * Execution
      */
+    @Override
     public int getLatency() {
         int totlat = 0;
         for (int i = 0; i < instlist.size(); i++)
@@ -84,20 +84,24 @@ public abstract class ABinarySegment implements BinarySegment, Serializable {
     /*
      * Coverage functions
      */
+    @Override
     public void setDynamicCoverage(float dcoverage) {
         this.dynamicCoverage = dcoverage;
         // TODO throw something if already set
     }
 
+    @Override
     public void setStaticCoverage(float scoverage) {
         this.staticCoverage = scoverage;
         // TODO throw something if already set
     }
 
+    @Override
     public float getStaticCoverage() {
         return staticCoverage;
     }
 
+    @Override
     public float getDynamicCoverage() {
         return dynamicCoverage;
     }
@@ -105,6 +109,7 @@ public abstract class ABinarySegment implements BinarySegment, Serializable {
     /*
      * Printing Functions
      */
+    @Override
     public String getRepresentation() {
         String ret = "";
         for (Instruction inst : this.instlist) {
@@ -113,6 +118,7 @@ public abstract class ABinarySegment implements BinarySegment, Serializable {
         return ret;
     }
 
+    @Override
     public void printSegment() {
         System.out.print(this.getRepresentation());
         return;

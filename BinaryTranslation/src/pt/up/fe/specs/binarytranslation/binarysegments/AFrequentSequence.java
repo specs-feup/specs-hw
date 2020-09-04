@@ -7,11 +7,6 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public abstract class AFrequentSequence extends ABinarySegment {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 3528223632861256L;
-
     /*
      * Constructor builds the sequence on the spot with an existing list
      */
@@ -46,6 +41,7 @@ public abstract class AFrequentSequence extends ABinarySegment {
     /*
      * 
      */
+    @Override
     public String getRepresentation() {
 
         // addresses

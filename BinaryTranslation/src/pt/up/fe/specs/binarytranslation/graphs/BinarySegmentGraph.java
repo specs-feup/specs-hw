@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.graphs;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -21,6 +22,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import com.google.gson.annotations.Expose;
+
+import pt.up.fe.specs.binarytranslation.BinaryTranslationOutput;
 import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdgeType;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
@@ -34,17 +38,33 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  * @author nuno
  *
  */
-public class BinarySegmentGraph {
+public class BinarySegmentGraph implements BinaryTranslationOutput {
 
+    @Expose
     private BinarySegmentGraphType type;
+
+    @Expose
     private int numnodes;
+
+    @Expose
     private int cpl;
+
+    @Expose
     private int maxwidth;
+
+    @Expose
     private int numstores, numloads;
+
+    @Expose
     private int initiationInterval = 1; // 1 for non cyclical segments
+
+    @Expose
     private float estimatedIPC = -1;
-    BinarySegment seg;
+
+    @Expose
     List<GraphNode> nodes;
+
+    BinarySegment seg;
 
     // references to the node inputs/outputs which
     // are top/bottom level on this graph
@@ -331,6 +351,7 @@ public class BinarySegmentGraph {
      * Generate a folder and output all relevant info for this graph into it
      * but use current working dir as parent directory
      */
+    @Override
     public void generateOutput() {
         generateOutput(null);
     }
@@ -338,7 +359,21 @@ public class BinarySegmentGraph {
     /*
      * Generate a folder and output all relevant info for this graph into it
      */
+    @Override
     public void generateOutput(String parentfolder) {
         BinarySegmentGraphOutputUtils.generateOutput(this, parentfolder);
+    }
+
+    /*
+     * 
+     */
+    @Override
+    public void toJSON(File outputfolder) {
+
+        // first do self
+        BinaryTranslationOutput.super.toJSON(outputfolder);
+
+        // then the segment
+        this.getSegment().toJSON(new File(outputfolder, this.getSegment().getOutputFolderName()));
     }
 }

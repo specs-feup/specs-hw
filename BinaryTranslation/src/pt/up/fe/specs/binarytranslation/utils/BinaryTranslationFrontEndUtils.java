@@ -4,7 +4,8 @@ import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 
 /**
- * Helper class for the front-end of the web based demonstrator. Receives
+ * Helper class for the front-end of the web based demonstrator. Receives elf filename, a type of stream class, and type
+ * of detector class. Returns a @{GraphBundle}.
  * 
  * @author nuno
  *
