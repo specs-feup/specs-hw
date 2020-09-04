@@ -8,10 +8,10 @@ import java.util.regex.Pattern;
 import org.specs.MicroBlaze.MicroBlazeResource;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
-import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
-import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
 
@@ -32,7 +32,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
                 MicroBlazeResource.QEMU_MICROBLAZE_BAREMETAL_DTB,
                 MicroBlazeResource.QEMU_MICROBLAZE_EXE);
 
-        this.appInfo = new ApplicationInformation(
+        this.appInfo = new Application(
                 MicroBlazeResource.MICROBLAZE_CPU_NAME.getResource(), elfname.getName(),
                 BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
                         MicroBlazeResource.MICROBLAZE_READELF.getResource()));
