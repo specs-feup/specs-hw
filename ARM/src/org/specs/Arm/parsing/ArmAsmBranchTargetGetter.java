@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class ArmAsmBranchTargetGetter {
 

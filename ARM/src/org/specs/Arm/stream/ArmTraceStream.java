@@ -5,10 +5,10 @@ import java.util.regex.Pattern;
 
 import org.specs.Arm.ArmResource;
 
-import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
-import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class ArmTraceStream extends ATraceInstructionStream {
 
@@ -22,7 +22,7 @@ public class ArmTraceStream extends ATraceInstructionStream {
                 ArmResource.QEMU_AARCH64_BAREMETAL_DTB,
                 ArmResource.QEMU_AARCH64_EXE);
 
-        this.appInfo = new ApplicationInformation(
+        this.appInfo = new Application(
                 ArmResource.ARMv8_CPU_NAME.getResource(), elfname.getName(),
                 BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
                         ArmResource.AARCH64_READELF.getResource()));
