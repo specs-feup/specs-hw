@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.stream;
 
-import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -24,11 +24,6 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  *
  */
 public interface InstructionStream extends AutoCloseable {
-
-    enum InstructionStreamType {
-        TRACE,
-        STATIC_ELF;
-    }
 
     /**
      * 
@@ -46,7 +41,7 @@ public interface InstructionStream extends AutoCloseable {
      * 
      * @return The final {@ApplicationInformation} object containing appname, compile info, and cpu architecture
      */
-    public ApplicationInformation getApplicationInformation();
+    public Application getApplicationInformation();
 
     /**
      * 

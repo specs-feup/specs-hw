@@ -3,7 +3,7 @@ package pt.up.fe.specs.binarytranslation.stream;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
 
-import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 import pt.up.fe.specs.util.utilities.LineStream;
 
@@ -13,7 +13,7 @@ public abstract class AInstructionStream implements InstructionStream {
     protected long numcycles;
     private final Process proc;
     protected final LineStream insts;
-    protected ApplicationInformation appInfo;
+    protected Application appInfo;
 
     public AInstructionStream(ProcessBuilder builder) {
         this.proc = AInstructionStream.newStreamGenerator(builder);
@@ -82,7 +82,7 @@ public abstract class AInstructionStream implements InstructionStream {
     }
 
     @Override
-    public ApplicationInformation getApplicationInformation() {
+    public Application getApplicationInformation() {
         return appInfo;
     }
 

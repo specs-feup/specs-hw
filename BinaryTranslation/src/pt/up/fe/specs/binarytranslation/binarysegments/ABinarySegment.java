@@ -16,7 +16,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 import java.io.Serializable;
 import java.util.*;
 
-import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -31,7 +31,7 @@ public abstract class ABinarySegment implements BinarySegment, Serializable {
      */
     private static final long serialVersionUID = 2260035887787499004L;
 
-    protected ApplicationInformation appinfo;
+    protected Application appinfo;
     protected BinarySegmentType segtype;
     protected List<Instruction> instlist;
     protected List<SegmentContext> contexts;
@@ -39,7 +39,7 @@ public abstract class ABinarySegment implements BinarySegment, Serializable {
     protected float dynamicCoverage;
 
     protected ABinarySegment(List<Instruction> ilist,
-            List<SegmentContext> contexts, ApplicationInformation appinfo) {
+            List<SegmentContext> contexts, Application appinfo) {
         this.instlist = ilist;
         this.appinfo = appinfo;
         this.contexts = contexts;
@@ -64,7 +64,7 @@ public abstract class ABinarySegment implements BinarySegment, Serializable {
         return contexts;
     }
 
-    public ApplicationInformation getAppinfo() {
+    public Application getAppinfo() {
         return appinfo;
     }
 

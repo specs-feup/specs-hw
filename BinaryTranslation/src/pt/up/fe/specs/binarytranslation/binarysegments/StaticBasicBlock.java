@@ -16,7 +16,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 import java.util.Arrays;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -35,13 +35,13 @@ public class StaticBasicBlock extends ABasicBlock {
      * 
      */
     public StaticBasicBlock(List<Instruction> ilist,
-            List<SegmentContext> contexts, ApplicationInformation appinfo) {
+            List<SegmentContext> contexts, Application appinfo) {
         super(ilist, contexts, appinfo);
         this.segtype = BinarySegmentType.STATIC_BASIC_BLOCK;
     }
 
     public StaticBasicBlock(List<Instruction> ilist,
-            SegmentContext context, ApplicationInformation appinfo) {
+            SegmentContext context, Application appinfo) {
         super(ilist, Arrays.asList(context), appinfo);
         this.segtype = BinarySegmentType.STATIC_BASIC_BLOCK;
     }

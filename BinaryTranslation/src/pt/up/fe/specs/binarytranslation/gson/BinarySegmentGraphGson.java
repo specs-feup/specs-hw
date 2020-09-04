@@ -1,4 +1,6 @@
-package pt.up.fe.specs.binarytranslation.graphs.edge;
+package pt.up.fe.specs.binarytranslation.gson;
+
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,6 +14,7 @@ import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
  * @author nuno
  *
  */
+@SuppressWarnings("unused")
 public class BinarySegmentGraphGson {
 
     private final String graphtype;
@@ -21,6 +24,7 @@ public class BinarySegmentGraphGson {
     private final int numstores, numloads;
     private final int initiationInterval;
     private final float estimatedIPC;
+    List<GraphNodeGson> nodes;
 
     public BinarySegmentGraphGson(BinarySegmentGraph graph) {
         this.graphtype = graph.getType().toString();

@@ -16,7 +16,7 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 import java.io.Serializable;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
@@ -44,7 +44,7 @@ public interface BinarySegment {
     /*
      * 
      */
-    public ApplicationInformation getAppinfo();
+    public Application getAppinfo();
 
     /*
      * 

@@ -26,10 +26,12 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
 import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
-import pt.up.fe.specs.binarytranslation.graphs.edge.BinarySegmentGraphGson;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -169,10 +171,13 @@ public class BinarySegmentGraphUtils {
      * Write to a given output stream (file or stdio)
      */
     private static void printJSON(BinarySegmentGraph graph, OutputStream os) {
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        var bytes = gson.toJson(graph).getBytes();
+
         BufferedOutputStream bw = new BufferedOutputStream(os);
         try {
-            var output = new BinarySegmentGraphGson(graph);
-            bw.write(output.getJsonBytes());
+            bw.write(bytes);
             bw.flush();
             bw.close();
 
