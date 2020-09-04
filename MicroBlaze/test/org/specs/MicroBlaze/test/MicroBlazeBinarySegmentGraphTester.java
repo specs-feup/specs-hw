@@ -3,11 +3,16 @@ package org.specs.MicroBlaze.test;
 import java.io.File;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.stream.*;
+import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.*;
-import pt.up.fe.specs.binarytranslation.graphs.*;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeBinarySegmentGraphTester {
@@ -31,7 +36,8 @@ public class MicroBlazeBinarySegmentGraphTester {
         var bundle = bbd.detectSegments();
         var gbundle = GraphBundle.newInstance(bundle);
 
-        var list = gbundle.getGraphs(data -> data.getCpl() >= 3);
+        var list = gbundle
+                .getGraphs(data -> data.getCpl() == 3);
         for (BinarySegmentGraph graph : list) {
             graph.generateOutput();
         }
