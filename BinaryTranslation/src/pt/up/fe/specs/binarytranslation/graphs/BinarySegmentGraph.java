@@ -324,7 +324,7 @@ public class BinarySegmentGraph {
      * Tester function to print this graph as a dotty, into the console
      */
     public void printDotty() {
-        BinarySegmentGraphUtils.generateDotty(this, System.out);
+        BinarySegmentGraphOutputUtils.generateDotty(this, System.out);
     }
 
     /*
@@ -339,6 +339,6 @@ public class BinarySegmentGraph {
      * Generate a folder and output all relevant info for this graph into it
      */
     public void generateOutput(String parentfolder) {
-        BinarySegmentGraphUtils.generateOutput(this, parentfolder);
+        BinarySegmentGraphOutputUtils.generateOutput(this, parentfolder);
     }
 }

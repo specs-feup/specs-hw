@@ -13,8 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
-import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 /**
  * 

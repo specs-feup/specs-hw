@@ -30,14 +30,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
-import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
 import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
 
-public class BinarySegmentGraphUtils {
+public class BinarySegmentGraphOutputUtils {
 
     /*
      * functional interface for any function which generates file
@@ -69,19 +69,19 @@ public class BinarySegmentGraphUtils {
         f.mkdirs();
 
         // generate dotty (.dot)
-        BinarySegmentGraphUtils.generateOutput(graph,
-                getDotPathname(graph), BinarySegmentGraphUtils::printDotty);
+        BinarySegmentGraphOutputUtils.generateOutput(graph,
+                getDotPathname(graph), BinarySegmentGraphOutputUtils::printDotty);
 
         // render dotty (.png)
-        BinarySegmentGraphUtils.renderDotty(graph);
+        BinarySegmentGraphOutputUtils.renderDotty(graph);
 
         // generate HTML summary
-        BinarySegmentGraphUtils.generateOutput(graph,
-                getHTMLPathname(graph), BinarySegmentGraphUtils::printHTML);
+        BinarySegmentGraphOutputUtils.generateOutput(graph,
+                getHTMLPathname(graph), BinarySegmentGraphOutputUtils::printHTML);
 
         // generate JSON too
-        BinarySegmentGraphUtils.generateOutput(graph,
-                getJSONPathname(graph), BinarySegmentGraphUtils::printJSON);
+        BinarySegmentGraphOutputUtils.generateOutput(graph,
+                getJSONPathname(graph), BinarySegmentGraphOutputUtils::printJSON);
     }
 
     /*
