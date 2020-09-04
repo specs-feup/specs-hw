@@ -1,7 +1,6 @@
 package org.specs.Arm.asm;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.Test;
 import org.specs.Arm.stream.ArmElfStream;
@@ -52,33 +51,6 @@ public class ArmBinarySegmentGraphTester {
         var graphbundle = GraphBundle.newInstance(bundle);
         graphbundle.generateOutput(data -> data.getSegment().getContexts().size() > 10);
         // System.out.println(graphbundle.getAverageIPC());
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    private SegmentBundle testDeserializeBundle(String filename) {
-
-        SegmentBundle bund = null;
-        try {
-            bund = SegmentBundle.serializeFromFile(filename);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return bund;
-    }
-
-    @Test
-    public void testGraphFromBundle() {
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/bundles/cholesky.txt_aarch64_20200508.bundle");
-        fd.deleteOnExit();
-
-        var bund = testDeserializeBundle(fd.getAbsolutePath());
-        var segs = bund.getSegments(data -> data.getSegmentLength() > 30);
-        for (var seg : segs) {
-            convertSegmentToGraph(seg).generateOutput();
-        }
     }
 
     ///////////////////////////////////////////////////////////////////////////

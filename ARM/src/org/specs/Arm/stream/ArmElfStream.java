@@ -5,10 +5,10 @@ import java.util.regex.Pattern;
 
 import org.specs.Arm.ArmResource;
 
-import pt.up.fe.specs.binarytranslation.BinaryTranslationUtils;
-import pt.up.fe.specs.binarytranslation.asm.ApplicationInformation;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 public class ArmElfStream extends AStaticInstructionStream {
@@ -17,7 +17,7 @@ public class ArmElfStream extends AStaticInstructionStream {
 
     public ArmElfStream(File elfname) {
         super(elfname, ArmResource.AARCH64_OBJDUMP.getResource());
-        this.appInfo = new ApplicationInformation(
+        this.appInfo = new Application(
                 ArmResource.ARMv8_CPU_NAME.getResource(), elfname.getName(),
                 BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
                         ArmResource.AARCH64_READELF.getResource()));
