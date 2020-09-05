@@ -21,7 +21,6 @@ import org.gearman.GearmanServer;
 import org.gearman.GearmanWorker;
 
 import pt.up.fe.specs.binarytranslation.gearman.workers.btf.BtfWorker;
-import pt.up.fe.specs.binarytranslation.gearman.workers.example.ExampleWorker;
 import pt.up.fe.specs.gearman.GearmanUtils;
 import pt.up.fe.specs.gearman.specsworker.GenericSpecsWorker;
 import pt.up.fe.specs.gearman.utils.GearmanSecurityManager;
@@ -66,7 +65,7 @@ public class SpecsHwGearman {
         // Create a new gearman system using 8 threads
         final Gearman gearman = Gearman.createGearman();
 
-        // Create a GearmanServer on port 4733, to avoid conflits with already running gearman jobs on the same machine
+        // Create a GearmanServer on port 4733, to avoid conflicts with already running gearman jobs on the same machine
         GearmanServer server = GearmanUtils.newServer(gearman, 4733, args);
 
         // Create workers that will serve client requests
@@ -75,9 +74,11 @@ public class SpecsHwGearman {
             // Create a GearmanWorker object
             final GearmanWorker worker = gearman.createGearmanWorker();
             worker.addServer(server);
-
-            worker.addFunction("Example", new ExampleWorker());
-            worker.addFunction("BTF", new BtfWorker());            
+            
+            // Add function for regular first time request
+            worker.addFunction("BTF", new BtfWorker());
+            // TODO Add function for segment specific information
+            //worker.addFunction("BTFSegment", new BtfSegmentWorker());            
 
             var localFunctionWorker = newLocalFunctionWorker();
             worker.addFunction(localFunctionWorker.getWorkerName(), localFunctionWorker);
