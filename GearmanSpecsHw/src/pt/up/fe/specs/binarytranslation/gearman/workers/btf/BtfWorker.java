@@ -32,19 +32,20 @@ public class BtfWorker extends SpecsHwWorker {
     @Override
     public byte[] workInternal(String function, byte[] data, GearmanFunctionCallback callback) throws Exception {
         String dataString = new String(data);
-        System.out.println("RECEIVED DATA:\n" + dataString);
+        System.out.println("RECEIVED DATA:\n" + dataString + "\n");
         
         Gson gson = new GsonBuilder().create();
-
-        var input = gson.fromJson(dataString, Map.class);
-        System.out.println("INPUT OBJECT:\n" + input);
-        System.out.println("OLA: " + input.get("ola").getClass());
         
- 
+        // get request data JSON in Map form
+        var input = gson.fromJson(dataString, Map.class);
+        System.out.println("INPUT OBJECT:\n" + input + "\n");
+        System.out.println("analysis_mode: " + input.get("analysis_mode"));
+        
+        // create output JSON
         var outputMap = new HashMap<>();
         outputMap.put("aString", "HEY");
-        outputMap.put("anInt", 2);        
-//        return gson.toJson(new BtfOutput("gello", true, 10)).getBytes();        
+        outputMap.put("anInt", 2);  
+        outputMap.put("aBoolean", true);
         return gson.toJson(outputMap).getBytes();        
     }
 
