@@ -103,7 +103,7 @@ public class SegmentBundle implements BinaryTranslationOutput {
     }
 
     @Override
-    public void generateOutput(String parentfolder) {
+    public void generateOutput(File parentfolder) {
         // TODO Auto-generated method stub
 
     }

@@ -5,5 +5,5 @@ public interface InstructionStreamProfiler {
     /*
      * Run the profiling over the stream
      */
-    public void profile();
+    public InstructionProfileResult profile();
 }

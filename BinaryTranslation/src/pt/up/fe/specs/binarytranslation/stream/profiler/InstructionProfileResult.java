@@ -1,5 +1,7 @@
 package pt.up.fe.specs.binarytranslation.stream.profiler;
 
-public interface InstructionProfileResult {
+import pt.up.fe.specs.binarytranslation.BinaryTranslationOutput;
+
+public interface InstructionProfileResult extends BinaryTranslationOutput {
 
 }

@@ -35,21 +35,25 @@ public interface BinaryTranslationOutput {
 
     public default void toJSON(File f) {
         SpecsIo.mkdir(f);
-        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-        var bytes = gson.toJson(this).getBytes();
+        var bytes = this.getJSONBytes();
         BinaryTranslationUtils.bytesToFile(new File(f, getJSONName()), bytes);
+    }
+
+    public default byte[] getJSONBytes() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+        return gson.toJson(this).getBytes();
     }
 
     /*
      * 
      */
     public default void generateOutput() {
-        generateOutput(null);
+        generateOutput(this.getOutputFolder());
     }
 
     /*
      * Generate a folder and output
      */
-    public default void generateOutput(String parentfolder) {
+    public default void generateOutput(File parentfolder) {
     }
 }
