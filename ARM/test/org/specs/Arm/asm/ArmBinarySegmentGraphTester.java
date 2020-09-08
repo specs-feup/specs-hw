@@ -49,7 +49,7 @@ public class ArmBinarySegmentGraphTester {
     private void getSegments(SegmentDetector bbd) {
         var bundle = bbd.detectSegments();
         var graphbundle = GraphBundle.newInstance(bundle);
-        graphbundle.generateOutput(data -> data.getSegment().getContexts().size() > 10);
+        // graphbundle.generateOutput(data -> data.getSegment().getContexts().size() > 10);
         // System.out.println(graphbundle.getAverageIPC());
     }
 
