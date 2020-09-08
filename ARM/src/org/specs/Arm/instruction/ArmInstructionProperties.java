@@ -9,7 +9,6 @@ import java.util.List;
 import org.specs.Arm.parsing.ArmAsmFieldType;
 import org.specs.Arm.parsing.ArmIsaParser;
 
-import pt.up.fe.specs.binarytranslation.instruction.InstructionExpression;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
@@ -344,75 +343,75 @@ public enum ArmInstructionProperties implements InstructionProperties {
     ///////////////////////////////////////////////////////////////////////////
 
     // FP_DPR_ONESOURCE (C4-352) //////////////////////////////////////////////
-    fmov_register("fmov", 0x1E20_4000, FP_DPR_ONESOURCE),
-    fabs_scalar("fabs", 0x1E20_C000, FP_DPR_ONESOURCE),
-    fneg_scalar("fneg", 0x1E21_4000, FP_DPR_ONESOURCE),
-    fsqrt_scalar("fsqrt", 0x1E21_C000, FP_DPR_ONESOURCE),
+    fmov_register("fmov", 0x1E20_4000, FP_DPR_ONESOURCE, G_FLOAT),
+    fabs_scalar("fabs", 0x1E20_C000, FP_DPR_ONESOURCE, G_FLOAT),
+    fneg_scalar("fneg", 0x1E21_4000, FP_DPR_ONESOURCE, G_FLOAT),
+    fsqrt_scalar("fsqrt", 0x1E21_C000, FP_DPR_ONESOURCE, G_FLOAT),
     // field ptype distinguishes from single precision, double precision, and half
 
-    fctv_dp("fctv", 0x1E22_C000, FP_DPR_ONESOURCE),
+    fctv_dp("fctv", 0x1E22_C000, FP_DPR_ONESOURCE, G_FLOAT),
     // 000101 FCVT - Single-precision to double-precision variant on page C7-1512
 
-    fctv_sp("fctv", 0x1E23_4000, FP_DPR_ONESOURCE),
+    fctv_sp("fctv", 0x1E23_4000, FP_DPR_ONESOURCE, G_FLOAT),
     // 000100 FCVT - Double-precision to single-precision variant on page C7-1512
 
-    fctv_hp("fctv", 0x1E23_C000, FP_DPR_ONESOURCE),
+    fctv_hp("fctv", 0x1E23_C000, FP_DPR_ONESOURCE, G_FLOAT),
     // 000111 FCVT - Single-precision to half-precision variant on page C7-1512
     // 000111 FCVT - Double-precision to half-precision variant on page C7-1512
     // field ptype distinguishes from single precision, double precision, and half
 
-    frintn_scalar("frintn", 0x1E24_4000, FP_DPR_ONESOURCE),
-    frintp_scalar("frintp", 0x1E24_C000, FP_DPR_ONESOURCE),
-    frintm_scalar("frintm", 0x1E24_C000, FP_DPR_ONESOURCE),
-    frintz_scalar("frintz", 0x1E25_C000, FP_DPR_ONESOURCE),
-    frinta_scalar("frinta", 0x1E26_4000, FP_DPR_ONESOURCE),
-    frintx_scalar("frintx", 0x1E27_4000, FP_DPR_ONESOURCE),
-    frinti_scalar("frinti", 0x1E27_C000, FP_DPR_ONESOURCE),
+    frintn_scalar("frintn", 0x1E24_4000, FP_DPR_ONESOURCE, G_FLOAT),
+    frintp_scalar("frintp", 0x1E24_C000, FP_DPR_ONESOURCE, G_FLOAT),
+    frintm_scalar("frintm", 0x1E24_C000, FP_DPR_ONESOURCE, G_FLOAT),
+    frintz_scalar("frintz", 0x1E25_C000, FP_DPR_ONESOURCE, G_FLOAT),
+    frinta_scalar("frinta", 0x1E26_4000, FP_DPR_ONESOURCE, G_FLOAT),
+    frintx_scalar("frintx", 0x1E27_4000, FP_DPR_ONESOURCE, G_FLOAT),
+    frinti_scalar("frinti", 0x1E27_C000, FP_DPR_ONESOURCE, G_FLOAT),
     // field ptype distinguishes from single precision, double precision, and half
 
-    frint32z_scalar("frint32z", 0x1E28_4000, FP_DPR_ONESOURCE),
-    frint32x_scalar("frint32x", 0x1E28_C000, FP_DPR_ONESOURCE),
-    frint64z_scalar("frint64z", 0x1E29_4000, FP_DPR_ONESOURCE),
-    frint64x_scalar("frint64x", 0x1E29_C000, FP_DPR_ONESOURCE),
+    frint32z_scalar("frint32z", 0x1E28_4000, FP_DPR_ONESOURCE, G_FLOAT),
+    frint32x_scalar("frint32x", 0x1E28_C000, FP_DPR_ONESOURCE, G_FLOAT),
+    frint64z_scalar("frint64z", 0x1E29_4000, FP_DPR_ONESOURCE, G_FLOAT),
+    frint64x_scalar("frint64x", 0x1E29_C000, FP_DPR_ONESOURCE, G_FLOAT),
     // field ptype distinguishes from single precision, double precision, and half
 
     // FP_COMPARE (C4-355) ////////////////////////////////////////////////////
-    fcmp_a("fcmp", 0x1E20_2000, FP_COMPARE),
-    fcmp_b("fcmp", 0x1E20_2008, FP_COMPARE),
-    fcmpe_a("fcmpe", 0x1E20_2010, FP_COMPARE),
-    fcmpe_b("fcmpe", 0x1E20_2018, FP_COMPARE),
+    fcmp_a("fcmp", 0x1E20_2000, FP_COMPARE, G_FLOAT),
+    fcmp_b("fcmp", 0x1E20_2008, FP_COMPARE, G_FLOAT),
+    fcmpe_a("fcmpe", 0x1E20_2010, FP_COMPARE, G_FLOAT),
+    fcmpe_b("fcmpe", 0x1E20_2018, FP_COMPARE, G_FLOAT),
     // fields ftype and opc (bits 4 and 3 of opcodeb) will determine variants
 
     // FP_IMMEDIATE (C4-356) //////////////////////////////////////////////////
-    fmov_imm("fmov", 0x1E20_1000, FP_IMMEDIATE),
+    fmov_imm("fmov", 0x1E20_1000, FP_IMMEDIATE, G_FLOAT),
     // field ftype will distinguish precision
 
     // FP_COND_COMPARE (C4-356) ///////////////////////////////////////////////
-    fccmp(0x1E20_0400, FP_COND_COMPARE),
-    fccmpe(0x1E20_0410, FP_COND_COMPARE),
+    fccmp(0x1E20_0400, FP_COND_COMPARE, G_FLOAT),
+    fccmpe(0x1E20_0410, FP_COND_COMPARE, G_FLOAT),
     // field ftype will distinguish precision
 
     // FP_DPR_TWOSOURCE (C4-357) ///////////////////////////////////////////////
-    fmul_scalar("fmul", 0x1E20_0800, FP_DPR_TWOSOURCE),
-    fdiv_scalar("fdiv", 0x1E20_1800, FP_DPR_TWOSOURCE),
-    fadd_scalar("fadd", 0x1E20_2800, FP_DPR_TWOSOURCE),
-    fsub_scalar("fsub", 0x1E20_3800, FP_DPR_TWOSOURCE),
-    fmax_scalar("fmax", 0x1E20_4800, FP_DPR_TWOSOURCE),
-    fmin_scalar("fmin", 0x1E20_5800, FP_DPR_TWOSOURCE),
-    fmaxnm_scalar("fmaxnm", 0x1E20_6800, FP_DPR_TWOSOURCE),
-    fminnm_scalar("fminnm", 0x1E20_7800, FP_DPR_TWOSOURCE),
-    fnmul_scalar("fnmul", 0x1E20_8800, FP_DPR_TWOSOURCE),
+    fmul_scalar("fmul", 0x1E20_0800, FP_DPR_TWOSOURCE, G_FLOAT),
+    fdiv_scalar("fdiv", 0x1E20_1800, FP_DPR_TWOSOURCE, G_FLOAT),
+    fadd_scalar("fadd", 0x1E20_2800, FP_DPR_TWOSOURCE, G_FLOAT),
+    fsub_scalar("fsub", 0x1E20_3800, FP_DPR_TWOSOURCE, G_FLOAT),
+    fmax_scalar("fmax", 0x1E20_4800, FP_DPR_TWOSOURCE, G_FLOAT),
+    fmin_scalar("fmin", 0x1E20_5800, FP_DPR_TWOSOURCE, G_FLOAT),
+    fmaxnm_scalar("fmaxnm", 0x1E20_6800, FP_DPR_TWOSOURCE, G_FLOAT),
+    fminnm_scalar("fminnm", 0x1E20_7800, FP_DPR_TWOSOURCE, G_FLOAT),
+    fnmul_scalar("fnmul", 0x1E20_8800, FP_DPR_TWOSOURCE, G_FLOAT),
     // field ftype will distinguish precision
 
     // FP_COND_SELECT (C4-358) ////////////////////////////////////////////////
-    fcsel(0x1E20_0C00, FP_COND_SELECT),
+    fcsel(0x1E20_0C00, FP_COND_SELECT, G_FLOAT),
     // field ftype will distinguish precision
 
     // FP_DPR_THREESOURCE (C4-359) ////////////////////////////////////////////
-    fmadd(0x1F00_0000, FP_DPR_THREESOURCE),
-    fmsub(0x1F00_8000, FP_DPR_THREESOURCE),
-    fnmadd(0x1F20_0000, FP_DPR_THREESOURCE),
-    fnmsub(0x1F20_8000, FP_DPR_THREESOURCE),
+    fmadd(0x1F00_0000, FP_DPR_THREESOURCE, G_FLOAT),
+    fmsub(0x1F00_8000, FP_DPR_THREESOURCE, G_FLOAT),
+    fnmadd(0x1F20_0000, FP_DPR_THREESOURCE, G_FLOAT),
+    fnmsub(0x1F20_8000, FP_DPR_THREESOURCE, G_FLOAT),
     // field ftype will distinguish precision
 
     unknown(0x000000000, UNDEFINED, G_UNKN);
@@ -490,6 +489,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     /*
      * helper method too look up the list
      */
+    @Override
     public int getLatency() {
         return this.latency;
     }
@@ -497,6 +497,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     /*
      * helper method too look up the list
      */
+    @Override
     public int getDelay() {
         return this.delay;
     }
@@ -504,6 +505,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     /*
      * helper method too get full opcode
      */
+    @Override
     public int getOpCode() {
         return this.opcode;
     }
@@ -511,6 +513,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     /*
      * helper method too get only the bits that matter
      */
+    @Override
     public int getReducedOpCode() {
         return this.reducedopcode;
     }
@@ -518,6 +521,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     /*
      * helper method too look up type in the list
      */
+    @Override
     public List<InstructionType> getGenericType() {
         return this.genericType;
     }
@@ -525,6 +529,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     /*
      * Private helper method too look up name the list
      */
+    @Override
     public String getName() {
         return this.instructionName;
     }
@@ -532,6 +537,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     /*
      * Returns name of enum (should be unique)
      */
+    @Override
     public String getEnumName() {
         return enumName;
     }
@@ -539,6 +545,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     /*
      * get code type of a particular instruction
      */
+    @Override
     public AsmFieldType getCodeType() {
         return this.codetype;
     }
@@ -546,6 +553,7 @@ public enum ArmInstructionProperties implements InstructionProperties {
     /*
      * Only used for Junit tests!
      */
+    @Override
     public AsmFieldData getFieldData() {
         return fieldData;
     }
