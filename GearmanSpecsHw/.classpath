@@ -9,5 +9,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/SpecsUtils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GearmanPlus"/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=GearmanSpecsHw&amp;ivyXmlPath=ivy.xml&amp;confs=*"/>
+	<classpathentry kind="src" path="/MicroBlaze"/>
+	<classpathentry kind="src" path="/BinaryTranslation"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -21,32 +21,42 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.gearman.GearmanFunctionCallback;
+import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import pt.up.fe.specs.binarytranslation.gearman.SpecsHwWorker;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationFrontEndUtils;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.*;
 
 public class BtfWorker extends SpecsHwWorker {
 
     @Override
     public byte[] workInternal(String function, byte[] data, GearmanFunctionCallback callback) throws Exception {
         String dataString = new String(data);
-        System.out.println("RECEIVED DATA:\n" + dataString + "\n");
         
         Gson gson = new GsonBuilder().create();
         
         // get request data JSON in Map form
         var input = gson.fromJson(dataString, Map.class);
         System.out.println("INPUT OBJECT:\n" + input + "\n");
-        System.out.println("analysis_mode: " + input.get("analysis_mode"));
+        var program = "org/specs/MicroBlaze/asm/" + input.get("program_name") + ".txt";
         
+        var bundle  = BinaryTranslationFrontEndUtils.doBackend(program,  MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class);
+        // save graph bundle
+        bundle.toJSON();
+        // return JSON
+        Gson gsonTest = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+        return gsonTest.toJson(bundle).getBytes();
         // create output JSON
+        /*
         var outputMap = new HashMap<>();
         outputMap.put("aString", "HEY");
         outputMap.put("anInt", 2);  
         outputMap.put("aBoolean", true);
-        return gson.toJson(outputMap).getBytes();        
+        return gson.toJson(outputMap).getBytes();
+        */
     }
 
     @Override
