@@ -351,18 +351,18 @@ public class BinarySegmentGraph implements BinaryTranslationOutput {
      * Generate a folder and output all relevant info for this graph into it
      * but use current working dir as parent directory
      */
-    @Override
+    /*@Override
     public void generateOutput() {
         generateOutput(null);
-    }
+    }*/
 
     /*
      * Generate a folder and output all relevant info for this graph into it
      */
-    @Override
-    public void generateOutput(String parentfolder) {
+    /*@Override
+    public void generateOutput(File parentfolder) {
         BinarySegmentGraphOutputUtils.generateOutput(this, parentfolder);
-    }
+    }*/
 
     /*
      * 
