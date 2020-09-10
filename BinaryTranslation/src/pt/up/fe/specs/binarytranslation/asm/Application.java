@@ -13,9 +13,17 @@
 
 package pt.up.fe.specs.binarytranslation.asm;
 
+import com.google.gson.annotations.Expose;
+
 public class Application {
+
+    @Expose
     private final String appName;
+
+    @Expose
     private final String compilationInfo;
+
+    @Expose
     private final String cpuArchitectureName;
 
     public Application(String cpuArchitectureName, String appName, String compilationInfo) {
