@@ -15,6 +15,9 @@ package pt.up.fe.specs.binarytranslation.binarysegments;
 
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
@@ -122,5 +125,11 @@ public abstract class ABinarySegment implements BinarySegment {
     public void printSegment() {
         System.out.print(this.getRepresentation());
         return;
+    }
+
+    @Override
+    public byte[] getJSONBytes() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(this).getBytes();
     }
 }
