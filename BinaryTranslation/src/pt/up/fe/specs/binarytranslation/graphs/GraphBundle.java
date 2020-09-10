@@ -95,6 +95,8 @@ public class GraphBundle implements BinaryTranslationOutput {
 
     public void generateOutput(File parentfolder, Predicate<BinarySegmentGraph> predicate) {
 
+        this.toJSON(parentfolder);
+
         var bsgfolder = new File(parentfolder, "bsg");
         bsgfolder.mkdir();
         for (BinarySegmentGraph g : this.graphs)
