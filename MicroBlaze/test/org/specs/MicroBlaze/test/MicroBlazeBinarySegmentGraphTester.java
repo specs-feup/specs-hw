@@ -35,7 +35,7 @@ public class MicroBlazeBinarySegmentGraphTester {
         var bundle = bbd.detectSegments();
         var gbundle = GraphBundle.newInstance(bundle);
 
-        gbundle.generateOutput(data -> data.getCpl() <= 3);
+        gbundle.generateOutput(data -> data.getCpl() == 3);
 
         /*
         var list = gbundle
