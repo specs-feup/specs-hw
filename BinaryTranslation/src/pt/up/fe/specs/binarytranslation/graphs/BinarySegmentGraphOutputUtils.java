@@ -73,7 +73,7 @@ public class BinarySegmentGraphOutputUtils {
      */
     public static void generateOutput(File parentfolder, BinarySegmentGraph graph) {
 
-        var basename = "graph_" + Integer.toString(graph.getSegment().hashCode());
+        var basename = graph.getOutputFolderName();
 
         // generate dotty (.dot)
         BinarySegmentGraphOutputUtils.generateOutput(
@@ -230,7 +230,7 @@ public class BinarySegmentGraphOutputUtils {
                 contextString.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
 
         // Graph
-        var bitmapfilename = "graph_" + Integer.toString(graph.getSegment().hashCode()) + ".png";
+        var bitmapfilename = graph.getOutputFolderName() + ".png";
         htmlplage.replace("<IMAGEFILE>", bitmapfilename);
 
         // git commit
