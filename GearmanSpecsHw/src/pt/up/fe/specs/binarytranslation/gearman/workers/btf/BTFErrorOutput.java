@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 
 public class BTFErrorOutput implements ABTFOutput {
     
+    @SuppressWarnings("unused")
     private final String errorMessage;
     
     public BTFErrorOutput(String errorMessage) {
