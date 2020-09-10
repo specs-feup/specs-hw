@@ -17,7 +17,6 @@
 
 package pt.up.fe.specs.binarytranslation.gearman.workers.btf;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.gearman.GearmanFunctionCallback;
@@ -46,23 +45,15 @@ public class BtfWorker extends SpecsHwWorker {
         var bundle  = BinaryTranslationFrontEndUtils.doBackend(program,  MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class);
         // save graph bundle
         bundle.toJSON();
-        // return JSON
-        Gson gsonTest = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-        return gsonTest.toJson(bundle).getBytes();
-        // create output JSON
-        /*
-        var outputMap = new HashMap<>();
-        outputMap.put("aString", "HEY");
-        outputMap.put("anInt", 2);  
-        outputMap.put("aBoolean", true);
-        return gson.toJson(outputMap).getBytes();
-        */
+        // send output
+        var output = new BTFOutput(bundle.getGraphs());
+        return output.getJSONBytes();
     }
 
     @Override
     protected byte[] getErrorOutput(String message) {
         var gson = new GsonBuilder().create();
-        return gson.toJson(new BtfOutput("error: " + message, false, 10)).getBytes();   
+        return gson.toJson(new BTFErrorOutput(message)).getBytes();   
     }
 
 }

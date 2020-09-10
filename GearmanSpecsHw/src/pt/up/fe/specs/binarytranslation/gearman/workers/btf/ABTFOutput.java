@@ -17,17 +17,7 @@
 
 package pt.up.fe.specs.binarytranslation.gearman.workers.btf;
 
-public class BtfOutput {
+public interface ABTFOutput {
 
-    private final String aString;
-    private final boolean aBoolean;
-    private final int anInt;
- 
-    public BtfOutput(String aString, boolean aBoolean, int anInt) {
-        this.aString = aString;
-        this.aBoolean = aBoolean;
-        this.anInt = anInt;
-    }
-    
-    
+    public byte[] getJSONBytes();
 }
