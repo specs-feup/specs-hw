@@ -171,7 +171,7 @@ public class BinaryTranslationUtils {
         if (mat.find())
             return mat.group(0);
         else
-            return "Could not retrieve build informatiomn!";
+            return "Could not retrieve build information!";
     }
 
     /*
