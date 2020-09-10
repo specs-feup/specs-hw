@@ -81,12 +81,12 @@ public class GraphBundle implements BinaryTranslationOutput {
      */
     @Override
     public void generateOutput() {
-        generateOutput(this.getOutputFolder(), null);
+        generateOutput(this.getOutputFolder(), data -> true);
     }
 
     @Override
     public void generateOutput(File parentfolder) {
-        generateOutput(parentfolder, null);
+        generateOutput(parentfolder, data -> true);
     }
 
     public void generateOutput(Predicate<BinarySegmentGraph> predicate) {
@@ -97,15 +97,9 @@ public class GraphBundle implements BinaryTranslationOutput {
 
         var bsgfolder = new File(parentfolder, "bsg");
         bsgfolder.mkdir();
-        if (predicate == null)
-            for (BinarySegmentGraph seg : this.graphs) {
-                seg.generateOutput(new File(bsgfolder, seg.getOutputFolderName()));
-            }
-        else
-            for (BinarySegmentGraph seg : this.graphs) {
-                if (predicate.test(seg))
-                    seg.generateOutput(new File(bsgfolder, seg.getOutputFolderName()));
-            }
+        for (BinarySegmentGraph g : this.graphs)
+            if (predicate.test(g))
+                g.generateOutput(new File(bsgfolder, g.getOutputFolderName()));
     }
 
     @Override

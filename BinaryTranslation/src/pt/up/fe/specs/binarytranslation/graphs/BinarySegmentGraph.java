@@ -354,6 +354,7 @@ public class BinarySegmentGraph implements BinaryTranslationOutput {
     public void generateOutput(File parentfolder) {
         parentfolder.mkdir();
         BinarySegmentGraphOutputUtils.generateOutput(parentfolder, this);
+        this.toJSON(parentfolder);
     }
 
     /*
