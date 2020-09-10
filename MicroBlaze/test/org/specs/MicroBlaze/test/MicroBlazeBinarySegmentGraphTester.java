@@ -11,7 +11,6 @@ import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSe
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
 import pt.up.fe.specs.util.SpecsIo;
 
@@ -36,11 +35,14 @@ public class MicroBlazeBinarySegmentGraphTester {
         var bundle = bbd.detectSegments();
         var gbundle = GraphBundle.newInstance(bundle);
 
+        gbundle.generateOutput(data -> data.getCpl() <= 3);
+
+        /*
         var list = gbundle
                 .getGraphs(data -> data.getCpl() == 3);
         for (BinarySegmentGraph graph : list) {
             graph.generateOutput();
-        }
+        }*/
     }
 
     @Test
