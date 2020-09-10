@@ -17,34 +17,24 @@
 
 package pt.up.fe.specs.binarytranslation.gearman.workers.btf;
 
-import java.util.Map;
-
 import org.gearman.GearmanFunctionCallback;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import pt.up.fe.specs.binarytranslation.gearman.SpecsHwWorker;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationFrontEndUtils;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.*;
 
-public class BtfWorker extends SpecsHwWorker {
+public class BTFWorker extends SpecsHwWorker {
 
     @Override
     public byte[] workInternal(String function, byte[] data, GearmanFunctionCallback callback) throws Exception {
-        String dataString = new String(data);
+        var input = new BTFInput(data);
         
-        Gson gson = new GsonBuilder().create();
+        System.out.println(input.getDetectors());
         
-        // get request data JSON in Map form
-        var input = gson.fromJson(dataString, Map.class);
-        System.out.println("INPUT OBJECT:\n" + input + "\n");
-        var program = "org/specs/MicroBlaze/asm/" + input.get("program_name") + ".txt";
-        
-        var bundle  = BinaryTranslationFrontEndUtils.doBackend(program,  MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class);
-        // save graph bundle
-        bundle.toJSON();
+        var bundle  = BinaryTranslationFrontEndUtils.doBackend(input.getProgram(),  MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class);
+        // TODO save graph bundle
+        //bundle.toJSON();
         // send output
         var output = new BTFOutput(bundle.getGraphs());
         return output.getJSONBytes();
@@ -52,8 +42,7 @@ public class BtfWorker extends SpecsHwWorker {
 
     @Override
     protected byte[] getErrorOutput(String message) {
-        var gson = new GsonBuilder().create();
-        return gson.toJson(new BTFErrorOutput(message)).getBytes();   
+        return (new BTFErrorOutput(message)).getJSONBytes();   
     }
 
 }

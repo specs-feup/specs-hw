@@ -20,7 +20,7 @@ import org.gearman.GearmanFunction;
 import org.gearman.GearmanServer;
 import org.gearman.GearmanWorker;
 
-import pt.up.fe.specs.binarytranslation.gearman.workers.btf.BtfWorker;
+import pt.up.fe.specs.binarytranslation.gearman.workers.btf.BTFWorker;
 import pt.up.fe.specs.gearman.GearmanUtils;
 import pt.up.fe.specs.gearman.specsworker.GenericSpecsWorker;
 import pt.up.fe.specs.gearman.utils.GearmanSecurityManager;
@@ -76,7 +76,7 @@ public class SpecsHwGearman {
             worker.addServer(server);
             
             // Add function for regular first time request
-            worker.addFunction("BTF", new BtfWorker());
+            worker.addFunction("BTF", new BTFWorker());
             // TODO Add function for segment specific information
             //worker.addFunction("BTFSegment", new BtfSegmentWorker());            
 
