@@ -22,7 +22,7 @@ public interface BinaryTranslationOutput {
     }
 
     public default File getOutputFolder() {
-        return SpecsIo.mkdir("./" + this.getOutputFolderName());
+        return SpecsIo.mkdir("./output/" + this.getOutputFolderName());
     }
 
     public default String getJSONName() {
