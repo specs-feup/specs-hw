@@ -29,14 +29,18 @@ public class BTFWorker extends SpecsHwWorker {
     @Override
     public byte[] workInternal(String function, byte[] data, GearmanFunctionCallback callback) throws Exception {
         var input = new BTFInput(data);
-        
-        System.out.println(input.getDetectors());
-        
-        var bundle  = BinaryTranslationFrontEndUtils.doBackend(input.getProgram(),  MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class);
+        var output = new BTFOutput();
+
+        // perform analysis with all detectors
+        for(var detector : input.getDetectors()) {
+            var bundle  = BinaryTranslationFrontEndUtils.doBackend(input.getProgram(),  MicroBlazeElfStream.class, detector);
+            output.addGraphs(bundle.getGraphs());
+        }
+        // sort graphs based on address
+        output.sortAddresses();
         // TODO save graph bundle
         //bundle.toJSON();
         // send output
-        var output = new BTFOutput(bundle.getGraphs());
         return output.getJSONBytes();
     }
 

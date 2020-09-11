@@ -20,13 +20,24 @@ package pt.up.fe.specs.binarytranslation.gearman.workers.btf;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * 
+ * Class that stores information about an erroneous response to a request from
+ * the Binary Translation Tool Web Application.
+ *  
+ * @author marantesss
+ *
+ */
 public class BTFErrorOutput implements ABTFOutput {
     
-    @SuppressWarnings("unused")
     private final String errorMessage;
     
     public BTFErrorOutput(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+    
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
     @Override
@@ -34,5 +45,4 @@ public class BTFErrorOutput implements ABTFOutput {
         Gson gson = new GsonBuilder().create();
         return gson.toJson(this).getBytes();
     }
-
 }
