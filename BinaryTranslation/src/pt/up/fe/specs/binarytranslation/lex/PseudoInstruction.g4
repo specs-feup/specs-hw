@@ -50,22 +50,26 @@ expression
 rlop: EQ; 
 
 /* Built ins */
+BYTE : 'byte';
+CLZ : 'clz';
 MSB : 'msb';
 LSB : 'lsb';
 MSW : 'msw';
 LSW : 'lsw';
+SQRT: 'sqrt';
 SETCARRY: 'setCarry';
 GETCARRY: 'getCarry';
 SEXTEND: 'sext';
 UCAST: 'unsigned';
 SCAST: 'signed';
+FLOAT: 'float';
 
-functionName : MSB | LSB | MSW | LSW | SETCARRY | GETCARRY | SEXTEND | UCAST | SCAST;
+functionName : BYTE | CLZ | MSB | LSB | MSW | LSW | SETCARRY | GETCARRY | SEXTEND | UCAST | SCAST | FLOAT | SQRT;
 
 arguments: expression ( ',' expression )*;
 
 /* Operators and operands  */
-operator : PLUS | MINUS | TIMES | DIV | GT | LT | EQUALS | RSHIFT | LSHIFT | RASHIFT | LNOT | LOR | LAND | LXOR;
+operator : PLUS | MINUS | TIMES | DIV | GT | GET | LT | LET | EQUALS | NEQUALS | RSHIFT | LSHIFT | RASHIFT | LNOT | LOR | LAND | LXOR;
 
 /* Any symbol that can be defined (anything but an operator) */
 unsignednumber: (INT | DOUBLE);
@@ -98,9 +102,12 @@ MINUS	: '-';
 TIMES	: '*';
 DIV		: '/';
 GT		: '>';
+GET		: '>=';
 LT		: '<';
+LET		: '<=';
 EQ		: '=';
 EQUALS	: '==';
+NEQUALS	: '!=';
 LNOT	: '~';
 LOR		: '|';
 LAND	: '&';

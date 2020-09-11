@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.instruction;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -26,12 +25,7 @@ import pt.up.fe.specs.util.SpecsStrings;
  * @author NunoPaulino
  * 
  */
-public abstract class AInstruction implements Instruction, Serializable {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1450984418310887398L;
+public abstract class AInstruction implements Instruction {
 
     private Number address;
     private String instruction;

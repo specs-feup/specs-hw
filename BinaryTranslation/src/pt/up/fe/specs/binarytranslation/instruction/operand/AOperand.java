@@ -15,8 +15,6 @@ package pt.up.fe.specs.binarytranslation.instruction.operand;
 
 import static pt.up.fe.specs.binarytranslation.instruction.operand.OperandType.*;
 
-import java.io.Serializable;
-
 import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 
 /**
@@ -26,12 +24,7 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmField;
  * @author NunoPaulino
  *
  */
-public abstract class AOperand implements Operand, Serializable {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 7403586195612171177L;
+public abstract class AOperand implements Operand {
 
     /*
      * members

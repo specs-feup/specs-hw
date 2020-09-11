@@ -26,11 +26,6 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  */
 public class StaticBasicBlock extends ABasicBlock {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -8885262487137930693L;
-
     /*
      * 
      */
