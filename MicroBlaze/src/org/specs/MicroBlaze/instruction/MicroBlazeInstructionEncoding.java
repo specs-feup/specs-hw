@@ -1,4 +1,4 @@
-package org.specs.MicroBlaze.test.instruction;
+package org.specs.MicroBlaze.instruction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,8 +95,8 @@ public enum MicroBlazeInstructionEncoding implements InstructionEncoding {
     get(Integer.toHexString(0b011011_00000_00000_0_0000_0000000_0000)),
 
     // DSTREAM
-    putd(Integer.toHexString(0b010011_00000_00000_1_0000_0000000_0000)),
-    getd(Integer.toHexString(0b010011_00000_00000_0_0000_0000000_0000)),
+    putd(Integer.toHexString(0b010011_00000_00000_00000_10000000000)),
+    getd(Integer.toHexString(0b010011_00000_00000_00000_00000000000)),
 
     // IMM ////////////////////////////////////////////////////////////////////
     imm(Integer.toHexString(0b101100_00000_00000_0000000000000000)),
@@ -125,13 +125,13 @@ public enum MicroBlazeInstructionEncoding implements InstructionEncoding {
     frsub(Integer.toHexString(0b010110_00000_00000_00000_00010000000)),
     fmul(Integer.toHexString(0b010110_00000_00000_00000_00100000000)),
     fdiv(Integer.toHexString(0b010110_00000_00000_00000_00110000000)),
-    fcmp_un(Integer.toHexString(0b010110_00000_00000_00000_0100_000_0000)),
-    fcmp_lt(Integer.toHexString(0b010110_00000_00000_00000_0100_001_0000)),
-    fcmp_eq(Integer.toHexString(0b010110_00000_00000_00000_0100_010_0000)),
-    fcmp_le(Integer.toHexString(0b010110_00000_00000_00000_0100_011_0000)),
-    fcmp_gt(Integer.toHexString(0b010110_00000_00000_00000_0100_100_0000)),
-    fcmp_ne(Integer.toHexString(0b010110_00000_00000_00000_0100_101_0000)),
-    fcmp_ge(Integer.toHexString(0b010110_00000_00000_00000_0100_110_0000)),
+    fcmp_un("fcmp.un", Integer.toHexString(0b010110_00000_00000_00000_0100_000_0000)),
+    fcmp_lt("fcmp.lt", Integer.toHexString(0b010110_00000_00000_00000_0100_001_0000)),
+    fcmp_eq("fcmp.eq", Integer.toHexString(0b010110_00000_00000_00000_0100_010_0000)),
+    fcmp_le("fcmp.le", Integer.toHexString(0b010110_00000_00000_00000_0100_011_0000)),
+    fcmp_gt("fcmp.gt", Integer.toHexString(0b010110_00000_00000_00000_0100_100_0000)),
+    fcmp_ne("fcmp.ne", Integer.toHexString(0b010110_00000_00000_00000_0100_101_0000)),
+    fcmp_ge("fcmp.ge", Integer.toHexString(0b010110_00000_00000_00000_0100_110_0000)),
     flt(Integer.toHexString(0b010110_00000_00000_00000_01010000000)),
     fint(Integer.toHexString(0b010110_00000_00000_00000_01100000000)),
     fsqrt(Integer.toHexString(0b010110_00000_00000_00000_01110000000)),
@@ -199,7 +199,7 @@ public enum MicroBlazeInstructionEncoding implements InstructionEncoding {
     shi(Integer.toHexString(0b111101_00000_00000_0000000000000000)),
     swi(Integer.toHexString(0b111110_00000_00000_0000000000000000)),
 
-    unknown(Integer.toHexString(0b111111_11111_11111_1111111111111111));
+    unknown(Integer.toHexString(0xFFFF_FFFF));
 
     private String instname;
     private String code;

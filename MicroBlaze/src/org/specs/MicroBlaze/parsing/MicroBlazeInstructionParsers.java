@@ -53,5 +53,5 @@ public interface MicroBlazeInstructionParsers {
             newInstance(IMM, "101100_00000_00000_imm(16)"),
             newInstance(TYPE_A, "opcodea(2)_0_opcodeb(3)_registerd(5)_registera(5)_registerb(5)_opcodec(11)"),
             newInstance(TYPE_B, "opcodea(2)_1_opcodeb(3)_registerd(5)_registera(5)_imm(16)"),
-            newInstance(UNDEFINED, "x(32)"));
+            newInstance(UNDEFINED, "x(32)")); // note: invented code
 }
