@@ -77,10 +77,4 @@ public interface InstructionProperties {
      * Used in JUnit tests!
      */
     public AsmFieldData getFieldData();
-
-    /*
-     * Returns an object which represents expression
-     * which implements the instruction (e.g., add r0, r1, r2 --> "r0 = r1 + r2")
-     */
-    // public InstructionExpression getExpression();
 }

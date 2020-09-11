@@ -16,6 +16,11 @@ public class InstructionTestUtils {
      */
     public static void validityTest(List<InstructionProperties> propList) {
         for (InstructionProperties props : propList) {
+
+            // quick hack...
+            if (props.getCodeType().toString().equals("UNDEFINED"))
+                continue;
+
             var v1 = props.getCodeType().toString();
             var v2 = props.getFieldData().getType().toString();
             System.out.print(props.getEnumName() + ":\t\t" + v1 + "\tvs.\t" + v2 + "\n");
@@ -30,11 +35,15 @@ public class InstructionTestUtils {
         int matchcount = 0;
         for (InstructionProperties first : propList) {
             matchcount = 0;
+            System.out.println("----------------------------");
             for (InstructionProperties second : propList) {
-                if (first.getOpCode() == second.getOpCode())
+                if (first.getOpCode() == second.getOpCode()) {
                     matchcount++;
+                    System.out.println(first.getName() + " matches " + second.getName());
+                }
             }
-            System.out.print("props: " + first.getName() + " matches = " + matchcount + "\n");
+            System.out.println("props: " + first.getName() + " matches = " + matchcount);
+            System.out.println("----------------------------");
             assertEquals(matchcount, 1);
         }
     }

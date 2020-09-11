@@ -2,19 +2,13 @@ package pt.up.fe.specs.binarytranslation.instruction.operand;
 
 import static pt.up.fe.specs.binarytranslation.instruction.operand.OperandType.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 
-public class AOperandProperties implements OperandProperties, Serializable {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1040776769985420074L;
+public class AOperandProperties implements OperandProperties {
 
     private String prefix;
     private String suffix;

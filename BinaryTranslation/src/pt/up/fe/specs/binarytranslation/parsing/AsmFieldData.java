@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.parsing;
 
-import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,12 +28,7 @@ import pt.up.fe.specs.util.SpecsCheck;
  * @author NunoPaulino
  *
  */
-public class AsmFieldData extends ADataClass<AsmFieldData> implements Serializable {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 7457507990835654072L;
+public class AsmFieldData extends ADataClass<AsmFieldData> {
 
     /*
      * Addr of this instruction

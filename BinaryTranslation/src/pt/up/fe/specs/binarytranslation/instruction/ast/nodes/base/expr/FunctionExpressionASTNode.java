@@ -1,6 +1,6 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr;
 
-import java.util.Arrays;
+import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
@@ -8,11 +8,11 @@ public class FunctionExpressionASTNode extends ExpressionASTNode {
 
     private String builtin;
 
-    public FunctionExpressionASTNode(String builtin, ExpressionASTNode... args) {
+    public FunctionExpressionASTNode(String builtin, List<ExpressionASTNode> args) {
         super();
         this.type = InstructionASTNodeType.FunctionExpressionASTNode;
         this.builtin = builtin;
-        for (var arg : Arrays.asList(args))
+        for (var arg : args)
             this.addChild(arg);
     }
 

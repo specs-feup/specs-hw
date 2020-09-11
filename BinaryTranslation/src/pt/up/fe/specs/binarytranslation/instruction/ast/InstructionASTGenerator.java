@@ -8,6 +8,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstruc
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.BinaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.FunctionExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.RangeSubscriptExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ScalarSubscriptExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
@@ -128,8 +129,14 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
 
     @Override
     public InstructionASTNode visitFunctionExpr(FunctionExprContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitFunctionExpr(ctx);
+
+        var arglist = new ArrayList<ExpressionASTNode>();
+        var args = ctx.arguments().expression();
+        for (var expr : args) {
+            arglist.add((ExpressionASTNode) this.visit(expr));
+        }
+
+        return new FunctionExpressionASTNode(ctx.functionName().getText(), arglist);
     }
 
     @Override
