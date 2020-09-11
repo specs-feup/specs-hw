@@ -44,6 +44,11 @@ public enum MicroBlazeInstructionEncoding implements InstructionEncoding {
     brid(Integer.toHexString(0b101110_00000_100_00_00000_00000000000)),
     braid(Integer.toHexString(0b101110_00000_110_00_00000_00000000000)),
 
+    // UILBRANCH //////////////////////////////////////////////////////////////
+    brlid(Integer.toHexString(0b101110_00000_101_00_00000_00000000000)),
+    bralid(Integer.toHexString(0b101110_00000_111_00_00000_00000000000)),
+    brki(Integer.toHexString(0b101110_00000_011_00_00000_00000000000)),
+
     // CBRANCH ////////////////////////////////////////////////////////////////
     beq(Integer.toHexString(0b100111_0_0000_00000_00000_00000000000)),
     beqd(Integer.toHexString(0b100111_1_0000_00000_00000_00000000000)),
@@ -99,7 +104,7 @@ public enum MicroBlazeInstructionEncoding implements InstructionEncoding {
     // TYPE_A /////////////////////////////////////////////////////////////////
     add(Integer.toHexString(0b000000_00000_00000_00000_00000000000)),
     addc(Integer.toHexString(0b000010_00000_00000_00000_00000000000)),
-    ddk(Integer.toHexString(0b000100_00000_00000_00000_00000000000)),
+    addk(Integer.toHexString(0b000100_00000_00000_00000_00000000000)),
     addkc(Integer.toHexString(0b000110_00000_00000_00000_00000000000)),
     rsub(Integer.toHexString(0b000001_00000_00000_00000_00000000000)),
     rsubc(Integer.toHexString(0b000011_00000_00000_00000_00000000000)),
@@ -192,7 +197,9 @@ public enum MicroBlazeInstructionEncoding implements InstructionEncoding {
     lwi(Integer.toHexString(0b111010_00000_00000_0000000000000000)),
     sbi(Integer.toHexString(0b111100_00000_00000_0000000000000000)),
     shi(Integer.toHexString(0b111101_00000_00000_0000000000000000)),
-    swi(Integer.toHexString(0b111110_00000_00000_0000000000000000));
+    swi(Integer.toHexString(0b111110_00000_00000_0000000000000000)),
+
+    unknown(Integer.toHexString(0b111111_11111_11111_1111111111111111));
 
     private String instname;
     private String code;

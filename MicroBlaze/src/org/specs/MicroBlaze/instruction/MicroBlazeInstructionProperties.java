@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
 import org.specs.MicroBlaze.parsing.MicroBlazeIsaParser;
+import org.specs.MicroBlaze.test.instruction.MicroBlazeInstructionEncoding;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
@@ -67,8 +68,6 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     brlid(0xB814_0000, 1, 1, UILBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
     bralid(0xB81C_0000, 1, 1, UILBRANCH, G_UJUMP, G_AJUMP, G_IJUMP),
     brki(0xB80C_0000, UILBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
-
-    // brk and brald are same instruction??
 
     // CBRANCH
     beq(0x9C00_0000, CBRANCH, G_CJUMP, G_RJUMP),
@@ -229,7 +228,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
      */
     private String instructionName;
     private final String enumName;
-    private final int opcode; // 32 bit instruction code without operands
+    private final MicroBlazeInstructionEncoding opcode; // 32 bit instruction code without operands
     private final int reducedopcode; // only the bits that matter, built after parsing the fields
     private final int latency;
     private final int delay;
@@ -245,15 +244,15 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
             int delay, MicroBlazeAsmFieldType mbtype, List<InstructionType> tp) {
         this.instructionName = name();
         this.enumName = name();
-        this.opcode = opcode;
+        this.opcode = MicroBlazeInstructionEncoding.valueOf(name());
         this.latency = latency;
         this.delay = delay;
         this.codetype = mbtype;
         this.genericType = tp;
 
         // use the parser to initialize private fields of instruction set itself
-        this.fieldData = parser.parse(Integer.toHexString(opcode));
-        this.reducedopcode = parser.parse(Integer.toHexString(opcode)).getReducedOpcode();
+        this.fieldData = parser.parse(Integer.toHexString(this.getOpCode()));
+        this.reducedopcode = fieldData.getReducedOpcode();
     }
 
     /*
@@ -312,7 +311,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
      */
     @Override
     public int getOpCode() {
-        return this.opcode;
+        return (int) Long.parseLong(this.opcode.getCode(), 16);
     }
 
     /*
@@ -354,19 +353,6 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     public AsmFieldType getCodeType() {
         return this.codetype;
     }
-
-    /*
-     * 
-     *
-    public InstructionExpression getExpression() {
-        // get expression assuming that expression enum name is equal to
-        // enum name of properties enum
-        try {
-            return MicroBlazeInstructionExpression.valueOf(this.enumName);
-        } catch (Exception ex) {
-            return null;
-        }
-    }*/
 
     /*
      * Only used for Junit tests!
