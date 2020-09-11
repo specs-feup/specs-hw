@@ -18,28 +18,51 @@
 package pt.up.fe.specs.binarytranslation.gearman.workers.btf;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
 
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
 
+/**
+ * 
+ * Class that stores information about a request from the Binary Translation Tool
+ * Web Application.
+ * 
+ * @author marantesss
+ *
+ */
 public class BTFInput {
     
+    /**
+     * Path to chosen program
+     */
     private final String program;
     
+    /**
+     * Analysis mode
+     * 
+     * Can be either 'static' or 'dynamic'
+     */
     private final String analysis;
     
+    /**
+     * List of chosen detectors
+     * 
+     * @see SegmentDetector
+     */
     private final List<Class<?>> detectors;
     
+    /**
+     * Constructor
+     * @param data Incoming byte JSON String from BTF Web App
+     */
     public BTFInput(byte[] data) {
         // get request data JSON in Map form
         String dataString = new String(data);
@@ -78,14 +101,26 @@ public class BTFInput {
         }
     }
 
+    /**
+     * Getter method for program
+     * @return program
+     */
     public String getProgram() {
         return program;
     }
 
+    /**
+     * Getter method for analysis
+     * @return analysis
+     */
     public String getAnalysis() {
         return analysis;
     }
 
+    /**
+     * Getter method for detectors
+     * @return detectors
+     */
     public List<Class<?>> getDetectors() {
         return detectors;
     }

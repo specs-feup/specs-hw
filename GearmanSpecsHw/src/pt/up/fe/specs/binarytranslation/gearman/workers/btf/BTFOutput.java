@@ -17,6 +17,7 @@
 
 package pt.up.fe.specs.binarytranslation.gearman.workers.btf;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,12 +28,52 @@ import com.google.gson.JsonObject;
 
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 
+/**
+ * 
+ * Class that stores information about a successful response to a request from
+ * the Binary Translation Tool Web Application.
+ *  
+ * @author marantesss
+ *
+ */
 public class BTFOutput implements ABTFOutput {
 
+    /**
+     * List of Binary Segment Graphs
+     */
     private final List<BinarySegmentGraph> graphs;
      
+    /**
+     * Default Constructor
+     */
+    public BTFOutput() {
+        this.graphs = new ArrayList<>();
+    }
+    
+    /**
+     * Constructor given an already set list of graphs
+     * 
+     * @param graphs List of Binary Segment Graphs
+     */
     public BTFOutput(List<BinarySegmentGraph> graphs) {
         this.graphs = graphs;
+    }
+    
+    /**
+     * Adds Binary Segment Graphs provided in a list to the graph list
+     * 
+     * @param graphs New Binary Segment Graphs to add to the graph list
+     */
+    public void addGraphs(List<BinarySegmentGraph> graphs) {
+        this.graphs.addAll(graphs);
+    }
+    
+    /**
+     * Sort Binary Segment Graphs based on smallest address
+     */
+    public void sortAddresses() {
+        this.graphs.sort((g1, g2) ->
+            g1.getInitiationInterval() - g2.getInitiationInterval());
     }
     
     @Override
