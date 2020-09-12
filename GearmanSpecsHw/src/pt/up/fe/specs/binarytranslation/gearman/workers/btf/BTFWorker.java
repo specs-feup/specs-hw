@@ -22,7 +22,6 @@ import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.gearman.SpecsHwWorker;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationFrontEndUtils;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.*;
 
 public class BTFWorker extends SpecsHwWorker {
 
