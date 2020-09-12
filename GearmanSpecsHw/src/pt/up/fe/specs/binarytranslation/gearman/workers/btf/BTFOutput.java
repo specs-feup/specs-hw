@@ -73,17 +73,43 @@ public class BTFOutput implements ABTFOutput {
      */
     public void sortAddresses() {
         this.graphs.sort((g1, g2) ->
-            g1.getInitiationInterval() - g2.getInitiationInterval());
+            g1.getSegment().getContexts().get(0).getStartaddresses() - g2.getSegment().getContexts().get(0).getStartaddresses());
     }
+    
+    
+    /**
+     * TODO Figure out if this is useful or not
+     * @param s
+     * @return
+     */
+    static String splitCamelCase(String s) {
+        return s.replaceAll(
+           String.format("%s|%s|%s",
+              "(?<=[A-Z])(?=[A-Z][a-z])",
+              "(?<=[^A-Z])(?=[A-Z])",
+              "(?<=[A-Za-z])(?=[^A-Za-z])"
+           ),
+           " "
+        );
+     }
     
     @Override
     public byte[] getJSONBytes() {
         Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         JsonArray output = new JsonArray();
         // remove "nodes" JsonElement from Segment Graphs
-        for (BinarySegmentGraph g : this.graphs) {
+        for (var g : this.graphs) {
             JsonObject t = (JsonObject) gson.toJsonTree(g);
             t.remove("nodes");
+            // add segment type
+            t.addProperty("segmentType", splitCamelCase(g.getSegment().getClass().getSimpleName()));
+            // add number of instructions
+            var instructions = g.getSegment().getInstructions();
+            t.addProperty("instructions", instructions.size());
+            // add code
+            //t.addProperty("code", gson.toJson(instructions));
+            // add Unique ID
+            t.addProperty("id", g.hashCode());
             output.add(t);
         }
         // create return JSON MAP
