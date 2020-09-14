@@ -1,7 +1,11 @@
 package pt.up.fe.specs.binarytranslation.stream;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
+
+import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
@@ -9,11 +13,17 @@ import pt.up.fe.specs.util.utilities.LineStream;
 
 public abstract class AInstructionStream implements InstructionStream {
 
+    @Expose
     protected long numinsts;
+
+    @Expose
     protected long numcycles;
+
+    @Expose
+    protected Application appInfo;
+
     private final Process proc;
     protected final LineStream insts;
-    protected Application appInfo;
 
     public AInstructionStream(ProcessBuilder builder) {
         this.proc = AInstructionStream.newStreamGenerator(builder);
@@ -59,6 +69,7 @@ public abstract class AInstructionStream implements InstructionStream {
         return insts;
     }
 
+    @Override
     public void rawDump() {
         String line = null;
         while ((line = insts.nextLine()) != null) {
