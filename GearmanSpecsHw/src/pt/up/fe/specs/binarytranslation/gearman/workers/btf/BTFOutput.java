@@ -42,11 +42,17 @@ public class BTFOutput implements ABTFOutput {
      * List of Binary Segment Graphs
      */
     private final List<BinarySegmentGraph> graphs;
+    
+    /**
+     * GSON
+     */
+    private final Gson gson;
      
     /**
      * Default Constructor
      */
     public BTFOutput() {
+        this.gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         this.graphs = new ArrayList<>();
     }
     
@@ -56,6 +62,7 @@ public class BTFOutput implements ABTFOutput {
      * @param graphs List of Binary Segment Graphs
      */
     public BTFOutput(List<BinarySegmentGraph> graphs) {
+        this.gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         this.graphs = graphs;
     }
     
@@ -82,7 +89,7 @@ public class BTFOutput implements ABTFOutput {
      * @param s
      * @return
      */
-    static String splitCamelCase(String s) {
+    private static String splitCamelCase(String s) {
         return s.replaceAll(
            String.format("%s|%s|%s",
               "(?<=[A-Z])(?=[A-Z][a-z])",
@@ -95,27 +102,55 @@ public class BTFOutput implements ABTFOutput {
     
     @Override
     public byte[] getJSONBytes() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+        var outputJson = new JsonObject();
+        
+        outputJson.add("stamps", this.getJSONStamps());
+        outputJson.add("segments", this.getJSONSegments());
+                
+        return gson.toJson(outputJson).getBytes();
+    }
+    
+    private JsonObject getJSONStamps() {
+        JsonObject output = new JsonObject();
+        
+        output.addProperty("total", 1861);
+        output.addProperty("optimized", 1861);
+        output.addProperty("sequences", this.graphs.size());
+        
+        return output;
+    }
+
+    private JsonArray getJSONSegments() {
         JsonArray output = new JsonArray();
-        // remove "nodes" JsonElement from Segment Graphs
+
         for (var g : this.graphs) {
-            JsonObject t = (JsonObject) gson.toJsonTree(g);
-            t.remove("nodes");
+            // remove "nodes" JsonElement from Segment Graphs
+            JsonObject seg = (JsonObject) gson.toJsonTree(g);
+            seg.remove("nodes");
             // add segment type
-            t.addProperty("segmentType", splitCamelCase(g.getSegment().getClass().getSimpleName()));
+            seg.addProperty("segmentType", splitCamelCase(g.getSegment().getClass().getSimpleName()));
             // add number of instructions
             var instructions = g.getSegment().getInstructions();
-            t.addProperty("instructions", instructions.size());
+            seg.addProperty("instructions", instructions.size());
             // add code
-            //t.addProperty("code", gson.toJson(instructions));
+            var instList = g.getSegment().getInstructions();
+            var code = "";
+            for (var inst : instList) {
+                code += inst.getRepresentation() + "\n";
+            }
+            seg.addProperty("code", code);
+            // Graph
+            var bitmapfilename = g.getOutputFolderName() + ".png";
+            seg.addProperty("graph", bitmapfilename);
+            // add start address
+            var startAddress = g.getSegment().getContexts().get(0).getStartaddresses();
+            seg.addProperty("startAddress", String.format("0x%s", startAddress));
             // add Unique ID
-            t.addProperty("id", g.hashCode());
-            output.add(t);
+            seg.addProperty("id", g.hashCode());
+            output.add(seg);
         }
-        // create return JSON MAP
-        var outputMap = new HashMap<>();
-        outputMap.put("segments", output);
-        return gson.toJson(outputMap).getBytes();
+        
+        return output;
     }
     
     
