@@ -26,39 +26,27 @@ public class SegmentBundle implements BinaryTranslationOutput {
     @Expose
     private final Date date;
 
-    @Expose
-    private final Application appinfo;
-
-    // stats from the stream
-    @Expose
-    private long totalCycles;
-
-    @Expose
-    private long numInsts;
-
-    @Expose
-    private InstructionStreamType itype;
+    @Expose // the originating instruction stream
+    private InstructionStream istream;
 
     private final List<BinarySegment> segments;
 
     public SegmentBundle(List<BinarySegment> segments, InstructionStream istream) {
 
-        this.appinfo = istream.getApplicationInformation();
+        this.istream = istream;
         this.segments = segments;
         this.date = new Date(System.currentTimeMillis());
-        this.totalCycles = istream.getCycles();
-        this.numInsts = istream.getNumInstructions();
-        this.itype = istream.getType();
 
         /*
          * For all segments, compute their coverage
          */
         for (BinarySegment seg : this.segments) {
 
-            seg.setStaticCoverage((float) (seg.getLatency() * seg.getContexts().size()) / this.totalCycles);
+            seg.setStaticCoverage((float) (seg.getLatency()
+                    * seg.getContexts().size()) / this.istream.getCycles());
 
-            if (this.itype == InstructionStreamType.TRACE)
-                seg.setDynamicCoverage((float) seg.getExecutionCycles() / this.totalCycles);
+            if (this.istream.getType() == InstructionStreamType.TRACE)
+                seg.setDynamicCoverage((float) seg.getExecutionCycles() / this.istream.getCycles());
         }
     }
 
@@ -67,9 +55,9 @@ public class SegmentBundle implements BinaryTranslationOutput {
      */
     public String getSummary() {
         return "Bundle Summary: \n" +
-                "Application: " + this.appinfo.getAppName() + "\n" +
-                "Architecture: " + this.appinfo.getCpuArchitectureName() + "\n" +
-                "Stream type: " + this.itype + "\n" +
+                "Application: " + this.getApplicationInformation().getAppName() + "\n" +
+                "Architecture: " + this.getApplicationInformation().getCpuArchitectureName() + "\n" +
+                "Stream type: " + this.istream.getType() + "\n" +
                 "Segment Type:" + this.segments.get(0).getSegmentType() + "\n" +
                 "Num segments: " + this.segments.size() + "\n";
     }
@@ -95,17 +83,15 @@ public class SegmentBundle implements BinaryTranslationOutput {
     }
 
     public Application getApplicationInformation() {
-        return this.appinfo;
+        return this.istream.getApplicationInformation();
     }
 
     public Date getDate() {
         return date;
     }
 
-    @Override
-    public void generateOutput(File parentfolder) {
-        // TODO Auto-generated method stub
-
+    public InstructionStream getIstream() {
+        return istream;
     }
 
     @Override
