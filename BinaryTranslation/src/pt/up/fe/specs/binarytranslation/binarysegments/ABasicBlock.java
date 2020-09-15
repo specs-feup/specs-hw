@@ -7,11 +7,6 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public abstract class ABasicBlock extends ABinarySegment {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2615607635750210706L;
-
     /*
      * Constructor builds the BB on the spot with an existing list
      */
@@ -27,6 +22,15 @@ public abstract class ABasicBlock extends ABinarySegment {
             hashstring += i.getRepresentation();
         }
         return hashstring.hashCode();
+    }
+
+    @Override
+    public int getOccurences() {
+        int occ = 0;
+        for (SegmentContext c : this.getContexts()) {
+            occ += c.getOcurrences();
+        }
+        return occ;
     }
 
     @Override

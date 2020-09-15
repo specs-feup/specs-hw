@@ -26,11 +26,6 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  */
 public class FrequentStaticSequence extends AFrequentSequence {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -9078068719313215363L;
-
     private List<Integer> startAddresses;
     // list of addresses in the ELF where this sequence happens
 
@@ -44,6 +39,11 @@ public class FrequentStaticSequence extends AFrequentSequence {
         this.startAddresses = new ArrayList<Integer>();
         for (SegmentContext context : contexts)
             this.startAddresses.add(context.getStartaddresses());
+    }
+
+    @Override
+    public int getOccurences() {
+        return this.startAddresses.size();
     }
 
     @Override

@@ -29,17 +29,17 @@ public interface BinarySegment extends BinaryTranslationOutput {
     /*
      * 
      */
-    BinarySegmentType getSegmentType();
+    public BinarySegmentType getSegmentType();
 
     /*
      * Total execution latency of segment 
      */
-    int getLatency();
+    public int getLatency();
 
     /*
      * Returns the total number of cycles considering the number of times the segment executes
      */
-    int getExecutionCycles();
+    public int getExecutionCycles();
 
     /*
      * 
@@ -49,12 +49,12 @@ public interface BinarySegment extends BinaryTranslationOutput {
     /*
      * 
      */
-    void setStaticCoverage(float scoverage);
+    public void setStaticCoverage(float scoverage);
 
     /*
      * 
      */
-    void setDynamicCoverage(float dcoverage);
+    public void setDynamicCoverage(float dcoverage);
 
     /*
      * 
@@ -69,7 +69,7 @@ public interface BinarySegment extends BinaryTranslationOutput {
     /*
      * Number of instructions in the segment
      */
-    int getSegmentLength();
+    public int getSegmentLength();
 
     /*
      * 
@@ -79,7 +79,7 @@ public interface BinarySegment extends BinaryTranslationOutput {
     /*
      * Get list of the instructions in the segment
      */
-    List<Instruction> getInstructions();
+    public List<Instruction> getInstructions();
 
     /*
      * returns a string containing what "printSegment" prints
@@ -89,10 +89,15 @@ public interface BinarySegment extends BinaryTranslationOutput {
     /*
      * Prints the segment to system out
      */
-    void printSegment();
+    public void printSegment();
 
     /*
      * get unique id
      */
-    int getUniqueId();
+    public int getUniqueId();
+
+    /*
+     * 
+     */
+    public int getOccurences();
 }
