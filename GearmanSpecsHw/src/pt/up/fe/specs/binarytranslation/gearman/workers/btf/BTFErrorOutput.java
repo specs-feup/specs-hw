@@ -28,7 +28,7 @@ import com.google.gson.GsonBuilder;
  * @author marantesss
  *
  */
-public class BTFErrorOutput implements ABTFOutput {
+public class BTFErrorOutput implements IBTFOutput {
     
     private final String errorMessage;
     

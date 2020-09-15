@@ -17,7 +17,7 @@
 
 package pt.up.fe.specs.binarytranslation.gearman.workers.btf;
 
-public interface ABTFOutput {
+public interface IBTFOutput {
 
     public byte[] getJSONBytes();
 }

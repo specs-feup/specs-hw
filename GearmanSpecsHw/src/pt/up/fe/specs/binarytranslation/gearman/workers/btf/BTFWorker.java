@@ -35,6 +35,7 @@ public class BTFWorker extends SpecsHwWorker {
             var bundle  = BinaryTranslationFrontEndUtils.doBackend(input.getProgram(),  MicroBlazeElfStream.class, detector);
             bundle.toJSON();
             output.addGraphs(bundle.getGraphs());
+            output.setTotalInstructions(bundle.getIstream().getNumInstructions());
         }
         // sort graphs based on address
         output.sortAddresses();
