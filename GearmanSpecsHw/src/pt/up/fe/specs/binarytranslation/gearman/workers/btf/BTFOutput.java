@@ -181,8 +181,8 @@ public class BTFOutput implements IBTFOutput {
             // add coverage
             seg.addProperty("staticCoverage", this.getRoudedNumber(g.getSegment().getStaticCoverage() * 100));
             seg.addProperty("dynamicCoverage", this.getRoudedNumber(g.getSegment().getDynamicCoverage() * 100));
-            // TODO add occurences
-            //seg.addProperty("occurences", g.getSegment());
+            // add occurences
+            seg.addProperty("occurrences", g.getSegment().getOccurences());
             // add Unique ID
             seg.addProperty("id", g.hashCode());
             output.add(seg);
