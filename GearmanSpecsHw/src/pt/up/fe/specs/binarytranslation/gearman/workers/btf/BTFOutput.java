@@ -96,7 +96,8 @@ public class BTFOutput implements IBTFOutput {
      * @return
      */
     private static String splitCamelCase(String s) {
-        return s.replaceAll(
+        return s.substring(1)
+                .replaceAll(
            String.format("%s|%s|%s",
               "(?<=[A-Z])(?=[A-Z][a-z])",
               "(?<=[^A-Z])(?=[A-Z])",
@@ -161,7 +162,7 @@ public class BTFOutput implements IBTFOutput {
             JsonObject seg = (JsonObject) gson.toJsonTree(g);
             seg.remove("nodes");
             // add segment type
-            seg.addProperty("segmentType", splitCamelCase(g.getSegment().getClass().getSimpleName()));
+            seg.addProperty("segmentType", splitCamelCase(g.getSegment().getClass().getSuperclass().getSimpleName()));
             // add number of instructions
             var instructions = g.getSegment().getInstructions();
             seg.addProperty("instructions", instructions.size());
@@ -181,7 +182,7 @@ public class BTFOutput implements IBTFOutput {
             // add coverage
             seg.addProperty("staticCoverage", this.getRoudedNumber(g.getSegment().getStaticCoverage() * 100));
             seg.addProperty("dynamicCoverage", this.getRoudedNumber(g.getSegment().getDynamicCoverage() * 100));
-            // add occurences
+            // add occurrences
             seg.addProperty("occurrences", g.getSegment().getOccurences());
             // add Unique ID
             seg.addProperty("id", g.hashCode());
