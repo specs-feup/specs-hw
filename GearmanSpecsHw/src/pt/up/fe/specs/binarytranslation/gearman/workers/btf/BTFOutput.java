@@ -17,8 +17,8 @@
 
 package pt.up.fe.specs.binarytranslation.gearman.workers.btf;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -27,6 +27,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
 
 /**
  * 
@@ -36,12 +37,17 @@ import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
  * @author marantesss
  *
  */
-public class BTFOutput implements ABTFOutput {
+public class BTFOutput implements IBTFOutput {
 
     /**
      * List of Binary Segment Graphs
      */
     private final List<BinarySegmentGraph> graphs;
+    
+    /**
+     * Total number of instructions
+     */
+    private long totalInstructions;
     
     /**
      * GSON
@@ -61,9 +67,9 @@ public class BTFOutput implements ABTFOutput {
      * 
      * @param graphs List of Binary Segment Graphs
      */
-    public BTFOutput(List<BinarySegmentGraph> graphs) {
+    public BTFOutput(GraphBundle bundle) {
         this.gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-        this.graphs = graphs;
+        this.graphs = bundle.getGraphs();
     }
     
     /**
@@ -110,16 +116,43 @@ public class BTFOutput implements ABTFOutput {
         return gson.toJson(outputJson).getBytes();
     }
     
+    /**
+     * 
+     * @return
+     */
     private JsonObject getJSONStamps() {
         JsonObject output = new JsonObject();
         
-        output.addProperty("total", 1861);
-        output.addProperty("optimized", 1861);
+        output.addProperty("total", this.totalInstructions);
+        output.addProperty("optimized", this.getOptimizedInstructions());
         output.addProperty("sequences", this.graphs.size());
         
         return output;
     }
+    
+    /**
+     * TODO Does not work
+     * @return
+     */
+    private long getOptimizedInstructions() {
+        List<Number> instructionsAddress = new ArrayList<>();
+        
+        for (var graph : this.graphs) {
+            var segment = graph.getSegment();
+            for (var instruction : segment.getInstructions()) {
+                var address = instruction.getAddress();
+                if (!instructionsAddress.contains(address))
+                    instructionsAddress.add(address);
+            }
+        }
+                
+        return instructionsAddress.size();
+    }
 
+    /**
+     * 
+     * @return
+     */
     private JsonArray getJSONSegments() {
         JsonArray output = new JsonArray();
 
@@ -145,12 +178,30 @@ public class BTFOutput implements ABTFOutput {
             // add start address
             var startAddress = g.getSegment().getContexts().get(0).getStartaddresses();
             seg.addProperty("startAddress", String.format("0x%s", startAddress));
+            // add coverage
+            seg.addProperty("staticCoverage", this.getRoudedNumber(g.getSegment().getStaticCoverage() * 100));
+            seg.addProperty("dynamicCoverage", this.getRoudedNumber(g.getSegment().getDynamicCoverage() * 100));
+            // TODO add occurences
+            //seg.addProperty("occurences", g.getSegment());
             // add Unique ID
             seg.addProperty("id", g.hashCode());
             output.add(seg);
         }
         
         return output;
+    }
+    
+    private float getRoudedNumber(float number) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        return Float.parseFloat(df.format(number));
+    }
+
+    public long getTotalInstructions() {
+        return totalInstructions;
+    }
+
+    public void setTotalInstructions(long totalInstructions) {
+        this.totalInstructions = totalInstructions;
     }
     
     
