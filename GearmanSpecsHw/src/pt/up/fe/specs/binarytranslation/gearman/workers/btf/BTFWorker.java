@@ -34,12 +34,13 @@ public class BTFWorker extends SpecsHwWorker {
         for(var detector : input.getDetectors()) {
             var bundle  = BinaryTranslationFrontEndUtils.doBackend(input.getProgram(),  MicroBlazeElfStream.class, detector);
             bundle.toJSON();
+            // save graph bundle
             output.addGraphs(bundle.getGraphs());
+            // set total instructions (this only needs to be done once though, figure out a better way to do this later)
             output.setTotalInstructions(bundle.getIstream().getNumInstructions());
         }
         // sort graphs based on address
         output.sortAddresses();
-        // TODO save graph bundle
         // send output
         return output.getJSONBytes();
     }
