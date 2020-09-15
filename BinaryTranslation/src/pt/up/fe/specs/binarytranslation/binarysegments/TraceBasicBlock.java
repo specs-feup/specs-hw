@@ -13,11 +13,6 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  */
 public class TraceBasicBlock extends ABasicBlock {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6379462738784714851L;
-
     /*
      * 
      */

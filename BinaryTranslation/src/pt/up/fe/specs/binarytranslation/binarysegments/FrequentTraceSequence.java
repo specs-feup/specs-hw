@@ -10,11 +10,6 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class FrequentTraceSequence extends AFrequentSequence {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -5673675221461684247L;
-
     /*
      * Addr, Frequency Count
      */
@@ -30,6 +25,15 @@ public class FrequentTraceSequence extends AFrequentSequence {
             totalCycles += (staticCycles * i);
         }
         return totalCycles;
+    }
+
+    @Override
+    public int getOccurences() {
+        int occ = 0;
+        for (Integer i : startAddresses.values()) {
+            occ += i;
+        }
+        return occ;
     }
 
     /*
