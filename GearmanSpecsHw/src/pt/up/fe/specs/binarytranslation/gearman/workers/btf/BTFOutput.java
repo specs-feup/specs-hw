@@ -132,16 +132,18 @@ public class BTFOutput implements IBTFOutput {
     }
     
     /**
-     * TODO Does not work
-     * @return
+     * TODO Not sure if this works
+     *
+     * @return Number of unique instructions in all detected binary segments
      */
     private long getOptimizedInstructions() {
         List<Number> instructionsAddress = new ArrayList<>();
         
         for (var graph : this.graphs) {
             var segment = graph.getSegment();
+            var startAddress = segment.getContexts().get(0).getStartaddresses();
             for (var instruction : segment.getInstructions()) {
-                var address = instruction.getAddress();
+                var address = instruction.getAddress().intValue() + startAddress;
                 if (!instructionsAddress.contains(address))
                     instructionsAddress.add(address);
             }
@@ -152,7 +154,7 @@ public class BTFOutput implements IBTFOutput {
 
     /**
      * 
-     * @return
+     * @return JsonArray with all segments
      */
     private JsonArray getJSONSegments() {
         JsonArray output = new JsonArray();
@@ -192,15 +194,28 @@ public class BTFOutput implements IBTFOutput {
         return output;
     }
     
+    /**
+     * 
+     * @param number
+     * @return numb with decimal places
+     */
     private float getRoudedNumber(float number) {
         DecimalFormat df = new DecimalFormat("#.##");
         return Float.parseFloat(df.format(number));
     }
 
+    /**
+     * Getter for totalInstructions
+     * @return totalInstructions
+     */
     public long getTotalInstructions() {
         return totalInstructions;
     }
 
+    /**
+     * Setter for totalInstructions
+     * @param totalInstructions
+     */
     public void setTotalInstructions(long totalInstructions) {
         this.totalInstructions = totalInstructions;
     }
