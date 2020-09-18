@@ -17,6 +17,10 @@
 
 package pt.up.fe.specs.binarytranslation.gearman.workers.btf;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +31,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraphOutputUtils;
 import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
+import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
+import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * 
@@ -45,9 +52,14 @@ public class BTFOutput implements IBTFOutput {
     private final List<BinarySegmentGraph> graphs;
     
     /**
-     * Total number of instructions
+     * Instruction Stream
      */
-    private long totalInstructions;
+    private InstructionStream instructionStream;
+    
+    /**
+     * Program Path
+     */
+    private String program;
     
     /**
      * GSON
@@ -70,6 +82,7 @@ public class BTFOutput implements IBTFOutput {
     public BTFOutput(GraphBundle bundle) {
         this.gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         this.graphs = bundle.getGraphs();
+        this.instructionStream = bundle.getIstream();
     }
     
     /**
@@ -107,12 +120,16 @@ public class BTFOutput implements IBTFOutput {
         );
      }
     
+    /**
+     * 
+     */
     @Override
     public byte[] getJSONBytes() {
         var outputJson = new JsonObject();
         
         outputJson.add("stamps", this.getJSONStamps());
         outputJson.add("segments", this.getJSONSegments());
+        outputJson.addProperty("code", this.getCode());
                 
         return gson.toJson(outputJson).getBytes();
     }
@@ -121,10 +138,26 @@ public class BTFOutput implements IBTFOutput {
      * 
      * @return
      */
+    private String getCode() {
+        String output = new String();
+        Path fileName = Path.of(this.program);
+        try {
+            output = Files.readString(fileName).substring(0, 3000);
+        } catch (IOException e) {
+            SpecsLogs.msgWarn("Error message:\n", e);
+        }
+         
+        return output;
+    }
+
+    /**
+     * 
+     * @return
+     */
     private JsonObject getJSONStamps() {
         JsonObject output = new JsonObject();
         
-        output.addProperty("total", this.totalInstructions);
+        output.addProperty("total", this.instructionStream.getNumInstructions());
         output.addProperty("optimized", this.getOptimizedInstructions());
         output.addProperty("sequences", this.graphs.size());
         
@@ -188,6 +221,8 @@ public class BTFOutput implements IBTFOutput {
             seg.addProperty("occurrences", g.getSegment().getOccurences());
             // add Unique ID
             seg.addProperty("id", g.hashCode());
+            // add dotty
+            //seg.addProperty("dotty", g.printDotty());
             output.add(seg);
         }
         
@@ -205,19 +240,27 @@ public class BTFOutput implements IBTFOutput {
     }
 
     /**
-     * Getter for totalInstructions
-     * @return totalInstructions
+     * Getter for instructionStream
+     * @return instructionStream
      */
-    public long getTotalInstructions() {
-        return totalInstructions;
+    public InstructionStream getInstructionStream() {
+        return this.instructionStream;
     }
 
     /**
-     * Setter for totalInstructions
-     * @param totalInstructions
+     * Setter for instructionStream
+     * @param instructionStream
      */
-    public void setTotalInstructions(long totalInstructions) {
-        this.totalInstructions = totalInstructions;
+    public void setInstructionStream(InstructionStream instructionStream) {
+        this.instructionStream = instructionStream;
+    }
+
+    public String getProgram() {
+        return program;
+    }
+
+    public void setProgram(String program) {
+        this.program = program;
     }
     
     
