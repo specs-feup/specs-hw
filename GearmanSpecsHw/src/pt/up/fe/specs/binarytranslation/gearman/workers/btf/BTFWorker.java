@@ -29,6 +29,7 @@ public class BTFWorker extends SpecsHwWorker {
     public byte[] workInternal(String function, byte[] data, GearmanFunctionCallback callback) throws Exception {
         var input = new BTFInput(data);
         var output = new BTFOutput();
+        output.setProgram(input.getProgram());
 
         // perform analysis with all detectors
         for(var detector : input.getDetectors()) {
@@ -36,8 +37,8 @@ public class BTFWorker extends SpecsHwWorker {
             bundle.toJSON();
             // save graph bundle
             output.addGraphs(bundle.getGraphs());
-            // set total instructions (this only needs to be done once though, figure out a better way to do this later)
-            output.setTotalInstructions(bundle.getIstream().getNumInstructions());
+            // set instruction stream (this only needs to be done once though, figure out a better way to do this later)
+            output.setInstructionStream(bundle.getIstream());
         }
         // sort graphs based on address
         output.sortAddresses();
