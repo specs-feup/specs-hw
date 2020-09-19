@@ -17,8 +17,10 @@
 
 package pt.up.fe.specs.binarytranslation.gearman.workers.btf;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
@@ -33,6 +35,9 @@ import com.google.gson.JsonObject;
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraphOutputUtils;
 import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
+import pt.up.fe.specs.binarytranslation.graphs.GraphNode;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
+import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.util.SpecsLogs;
 
@@ -222,11 +227,63 @@ public class BTFOutput implements IBTFOutput {
             // add Unique ID
             seg.addProperty("id", g.hashCode());
             // add dotty
-            //seg.addProperty("dotty", g.printDotty());
+            seg.addProperty("dotty", this.getDotty(g));
             output.add(seg);
         }
         
         return output;
+    }
+    
+    /*
+     * TODO DELETE THIS AND UPDATE THE METHOD ON BinarySegmentGraphOutputUtils
+     * 
+     * Write to a given output stream (file or stdio)
+     */
+    private String getDotty(BinarySegmentGraph graph) {
+        
+        StringBuilder sb = new StringBuilder();     
+        sb.append("digraph G {\n\n");
+
+        sb.append("graph [ dpi = 72, nodesep=\"0.1\" ];\n");
+        sb.append("bgcolor=\"#ffffff00\";\n\n");
+
+        // livein nodes
+        sb.append("{ rank = source;\n");
+        for (GraphInput in : graph.getLiveins()) {
+            var s = in.getRepresentation();
+            sb.append("\t\"in_" + s
+                    + "\"[shape = box, fillcolor=\"#8080ff\", style=filled, label=\"" + s
+                    + "\"];\n");
+        }
+        sb.append("}\n");
+
+        sb.append("{ rank = sink;\n");
+        // liveout nodes
+        for (GraphOutput out : graph.getLiveouts()) {
+            var s = out.getRepresentation();
+            sb.append("\t\"out_" + s
+                    + "\"[shape = box, fillcolor=\"#ff8080\", style=filled, label=\"" + s
+                    + "\"];\n");
+        }
+        sb.append("}\n");
+
+        sb.append("subgraph nodes {\n\tnode [style=filled, fillcolor=\"#ffffff\"];\n");
+        for (GraphNode n : graph.getNodes()) {
+            sb.append(n.rawDotty());
+        }
+        sb.append("}\n");
+
+        for (int rank = 0; rank < graph.getCpl(); rank++) {
+            sb.append("{ rank = same;\n");
+            for (GraphNode n : graph.getNodes()) {
+                if (n.getLevel() == rank)
+                    sb.append("\t\"" + n.getRepresentation() + "\"\n");
+            }
+            sb.append("}\n");
+        }
+        sb.append("}\n");
+        
+        return sb.toString();
     }
     
     /**
