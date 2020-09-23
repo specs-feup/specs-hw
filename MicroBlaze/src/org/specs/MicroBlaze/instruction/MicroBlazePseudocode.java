@@ -27,13 +27,19 @@ public enum MicroBlazePseudocode implements InstructionPseudocode {
     /*mts(""),
     mtse(""),
     mfs(""),
-    mfse(""),
-    msrclr(""),
-    msrset(""),
-    
+    mfse(""),*/
+    msrclr("RD = $msr; $msr = $msr & ~IMM;"),
+    msrset("RD = $msr; $msr = $msr | IMM;"),
+
+    // TODO: does each ISA have to define its own implementation for the builtins?
+    // e.g., getCarry in microblaze equals "return $msr[carryindex];"
+    // maybe this part should be an AST pass, prior to the generation of verilog, which
+    // replaces certain builtins with expressions?
+
+    // maybe each ISA can define its own built-ins?
+
     // MBAR
-    mbar(""),
-    */
+    // mbar(""),
 
     // UBRANCH
     br("$pc = $pc + RB;"),
@@ -108,6 +114,8 @@ public enum MicroBlazePseudocode implements InstructionPseudocode {
     // DSTREAM
     getd(0x4C00_0000, 1, 1, DSTREAM, G_OTHER),
     putd(0x4C00_0400, 2, 1, DSTREAM, G_OTHER),
+    
+        // TODO: put and get requests could be forwarded to the microblaze??
     
     // IMM
     imm(0xB000_0000, 1, 1, IMM, G_IMMV),

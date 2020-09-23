@@ -30,6 +30,8 @@ public class SegmentContext {
     // TODO, for trace segments, the context could include the values of the registers if possible
     // i think i can query this out of gdb...
 
+    // with a custom simulator, i can definitely query it!
+
     private Integer startaddr;
     private int ocurrences;
     private Map<String, String> context;

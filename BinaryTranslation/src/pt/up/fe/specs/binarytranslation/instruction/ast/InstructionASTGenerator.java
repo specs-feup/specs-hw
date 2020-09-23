@@ -130,13 +130,18 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
     @Override
     public InstructionASTNode visitFunctionExpr(FunctionExprContext ctx) {
 
-        var arglist = new ArrayList<ExpressionASTNode>();
-        var args = ctx.arguments().expression();
-        for (var expr : args) {
-            arglist.add((ExpressionASTNode) this.visit(expr));
-        }
+        var args = ctx.arguments();
+        if (args == null)
+            return new FunctionExpressionASTNode(ctx.functionName().getText());
 
-        return new FunctionExpressionASTNode(ctx.functionName().getText(), arglist);
+        else {
+            var arglist = new ArrayList<ExpressionASTNode>();
+            for (var expr : args.expression()) {
+                arglist.add((ExpressionASTNode) this.visit(expr));
+            }
+
+            return new FunctionExpressionASTNode(ctx.functionName().getText(), arglist);
+        }
     }
 
     @Override
