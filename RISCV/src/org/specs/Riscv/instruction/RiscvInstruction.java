@@ -28,11 +28,6 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 
 public class RiscvInstruction extends AInstruction {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 8685455085303886749L;
-
     // raw field data
     private final RiscvAsmFieldData fieldData;
 

@@ -1,13 +1,18 @@
 package pt.up.fe.specs.binarytranslationlauncher;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.guihelper.*;
+import pt.up.fe.specs.guihelper.App;
+import pt.up.fe.specs.guihelper.AppDefaultConfig;
+import pt.up.fe.specs.guihelper.AppSource;
+import pt.up.fe.specs.guihelper.GuiHelperUtils;
 import pt.up.fe.specs.guihelper.Base.SetupDefinition;
 import pt.up.fe.specs.guihelper.gui.SimpleGui;
-import pt.up.fe.specs.util.*;
-import pt.up.fe.specs.util.properties.SpecsProperty;
+import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsSystem;
 
 /**
  * Copyright 2020 SPeCS.
@@ -35,10 +40,9 @@ public class BinaryTranslationLauncher implements AppDefaultConfig, AppSource {
             SpecsIo.resourceCopy(resource, SpecsIo.getWorkingDir(), true, false);
         }
         */
-        SpecsProperty.ShowStackTrace.applyProperty("true");
 
         // Start log file
-        try (PrintStream stream = new PrintStream(new FileOutputStream(new File("mbextractor.log")))) {
+        try (PrintStream stream = new PrintStream(new FileOutputStream(new File("btf.log")))) {
             SpecsLogs.addLog(stream);
 
             if (GuiHelperUtils.trySingleConfigMode(args, new BinaryTranslationLauncher())) {
@@ -48,7 +52,7 @@ public class BinaryTranslationLauncher implements AppDefaultConfig, AppSource {
             App app = new BinaryTranslationLauncher();
             SimpleGui gui = new SimpleGui(app);
 
-            gui.setTitle("Binary Translation Framework" + BinaryTranslationUtils.getCommitDescription());
+            gui.setTitle("Binary Translation Framework " + BinaryTranslationUtils.getCommitDescription());
             gui.execute();
 
         } catch (Exception e) {

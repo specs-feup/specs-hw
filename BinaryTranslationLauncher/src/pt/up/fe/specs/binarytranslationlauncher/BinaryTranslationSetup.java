@@ -14,22 +14,26 @@
 package pt.up.fe.specs.binarytranslationlauncher;
 
 import pt.up.fe.specs.guihelper.FieldType;
-import pt.up.fe.specs.guihelper.Base.*;
-import pt.up.fe.specs.guihelper.BaseTypes.FieldValue;
-import pt.up.fe.specs.guihelper.SetupFieldOptions.*;
-import pt.up.fe.specs.guihelper.Setups.SimpleIo.SimpleIoSetup;
+import pt.up.fe.specs.guihelper.Base.SetupDefinition;
+import pt.up.fe.specs.guihelper.Base.SetupFieldEnum;
+import pt.up.fe.specs.guihelper.SetupFieldOptions.DefaultValue;
+import pt.up.fe.specs.guihelper.SetupFieldOptions.SingleSetup;
 
 public enum BinaryTranslationSetup implements SetupFieldEnum, SingleSetup, DefaultValue {
 
-    GeneralIo(FieldType.integratedSetup),
-    CleanOutputFolder(FieldType.bool);
+    // I/O
+    IOSetup(FieldType.integratedSetup),
 
-    private final String name;
+    // type
+    StreamOptions(FieldType.integratedSetup),
+
+    // detectors
+    DetectorOptions(FieldType.integratedSetup);
+
     private final FieldType fieldType;
 
     private BinaryTranslationSetup(FieldType fieldType) {
         this.fieldType = fieldType;
-        this.name = name();
     }
 
     @Override
@@ -39,20 +43,21 @@ public enum BinaryTranslationSetup implements SetupFieldEnum, SingleSetup, Defau
 
     @Override
     public String getSetupName() {
-        return "BinaryTranslationFrameworkSetup";
-    }
-
-    @Override
-    public FieldValue getDefaultValue() {
-        // TODO Auto-generated method stub
-        return null;
+        return "Binary Translation Framework Setup";
     }
 
     @Override
     public SetupDefinition getSetupOptions() {
-        if (this == GeneralIo) {
-            return SetupDefinition.create(SimpleIoSetup.class);
-        }
-        return null;
+        if (this == IOSetup)
+            return SetupDefinition.create(BinaryTranslationIOSetup.class);
+
+        else if (this == StreamOptions)
+            return SetupDefinition.create(BinaryTranslationStreamSetup.class);
+
+        else if (this == DetectorOptions)
+            return SetupDefinition.create(BinaryTranslationDetectionSetup.class);
+
+        else
+            return null;
     }
 }

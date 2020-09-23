@@ -66,7 +66,7 @@ FLOAT: 'float';
 
 functionName : BYTE | CLZ | MSB | LSB | MSW | LSW | SETCARRY | GETCARRY | SEXTEND | UCAST | SCAST | FLOAT | SQRT;
 
-arguments: expression ( ',' expression )*;
+arguments: expression (',' expression)*;
 
 /* Operators and operands  */
 operator : PLUS | MINUS | TIMES | DIV | GT | GET | LT | LET | EQUALS | NEQUALS | RSHIFT | LSHIFT | RASHIFT | LNOT | LOR | LAND | LXOR;
