@@ -1,0 +1,12 @@
+
+./cholesky.elf:     file format elf32-microblazeel
+
+
+Disassembly of section .vectors.reset:
+
+00000000 <_start>:
+   0:	b0000000 	imm	0
+   4:	b8080080 	brai 128	// 80 <_exit>
+
+00000080 <_exit>:
+      80:	b8000000 	bri	0	// 80 <_exit>
