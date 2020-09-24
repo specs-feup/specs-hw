@@ -17,21 +17,21 @@
 
 package pt.up.fe.specs.elfsimulator.test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.File;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 import org.specs.MicroBlaze.stream.*;
+import org.specs.Riscv.stream.RiscvElfStream;
 
-import java.io.File;
 import pt.up.fe.specs.util.SpecsIo;
-import pt.up.fe.specs.binarytranslation.*;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class TestSimulator {
 
-    private File openFile() {
+    private File openMBFile() {
 
         // static
         // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/matmul.txt");
@@ -39,27 +39,71 @@ public class TestSimulator {
         File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/cholesky.txt");
         // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/innerprod.txt");
 
-        // dynamic
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky_trace.txt");
-        System.out.print(fd.exists());
+        System.out.print(fd.exists() + "\n");
+        fd.deleteOnExit();
+        return fd;
+    }
+    private File openRISCVFile() {
+
+        // static
+
+        File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/riscv/test64.txt");
+
+        System.out.print(fd.exists() + "\n");
         fd.deleteOnExit();
         return fd;
     }
     
     @Test
     void loadMicroBlazeElfTest() {
-       MicroBlazeElfStream stream = new MicroBlazeElfStream(openFile());
+       MicroBlazeElfStream stream = new MicroBlazeElfStream(openMBFile());
        var newinst = stream.nextInstruction();
        while (newinst != null) {
-           System.out.print(newinst + "\n");
+
+           //Print Address
+           System.out.print(newinst.getAddress() + " >\t");
+           
+           //Print Plain Name
+           InstructionData instData = newinst.getData();
+           String plainName = instData.getPlainName();
+           System.out.print( plainName + " >\t");
+           
+           //Print Operands
+           List<Operand> operands = instData.getOperands();
+           operands.forEach((operand)-> System.out.print(operand.getRepresentation() + "|"));
+           
+           //Print Generic Types
+           List<InstructionType> genTypes = instData.getGenericTypes();
+           System.out.print( "\t" + genTypes + "\n");
+
            newinst = stream.nextInstruction();
        }
     }
     
     @Test
     void loadRiscvElfTest() {
-         
-        //fail("Not yet implemented");
+        RiscvElfStream stream = new RiscvElfStream(openRISCVFile());
+        var newinst = stream.nextInstruction();
+        while (newinst != null) {
+            
+            //Print Address
+            System.out.print(newinst.getAddress() + " >\t");
+            
+            //Print Plain Name
+            InstructionData instData = newinst.getData();
+            String plainName = instData.getPlainName();
+            System.out.print( plainName + " >\t");
+            
+            //Print Operands
+            List<Operand> operands = instData.getOperands();
+            operands.forEach((operand)-> System.out.print(operand.getRepresentation() + "|"));
+            
+            //Print Generic Types
+            List<InstructionType> genTypes = instData.getGenericTypes();
+            System.out.print( "\t" + genTypes + "\n");
+
+            newinst = stream.nextInstruction();
+        }
     }
 
 }
