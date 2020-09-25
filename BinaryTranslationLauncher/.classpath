@@ -6,9 +6,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/MicroBlaze"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/BinaryTranslation"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ARM"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GuiHelper"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ARM"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BinaryTranslation"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/MicroBlaze"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jOptions"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
