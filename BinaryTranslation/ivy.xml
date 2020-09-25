@@ -27,6 +27,6 @@
 	
 	<dependencies>
 		<dependency org="org.antlr" name="antlr4-runtime" rev="4.6"/>
-		<dependency org="com.google.code.gson" name="gson" rev="1.4"/>
+		<dependency org="com.google.code.gson" name="gson" rev="2.4"/>
 	</dependencies>
 </ivy-module>
