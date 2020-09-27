@@ -28,16 +28,17 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.elfsimulator.InstructionSetLibGenerator;
 
 public class TestSimulator {
 
     private File openMBFile() {
 
         // static
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/matmul.txt");
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/innerprod.txt");
+        // File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/matmul.txt");
+        // File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/innerprod.txt");
         File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/cholesky.txt");
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/innerprod.txt");
+        // File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/innerprod.txt");
 
         System.out.print(fd.exists() + "\n");
         fd.deleteOnExit();
@@ -75,7 +76,8 @@ public class TestSimulator {
            //Print Generic Types
            List<InstructionType> genTypes = instData.getGenericTypes();
            System.out.print( "\t" + genTypes + "\n");
-
+           System.out.print(newinst.getPseudocode().toString() +"\n"); 
+           
            newinst = stream.nextInstruction();
        }
     }
@@ -92,18 +94,27 @@ public class TestSimulator {
             //Print Plain Name
             InstructionData instData = newinst.getData();
             String plainName = instData.getPlainName();
-            System.out.print( plainName + " >\t");
+            //System.out.print( plainName + " >\t");
+            
+            System.out.print(newinst.getPseudocode().toString() +"\n"); 
             
             //Print Operands
             List<Operand> operands = instData.getOperands();
-            operands.forEach((operand)-> System.out.print(operand.getRepresentation() + "|"));
+            //operands.forEach((operand)-> System.out.print(operand.getRepresentation() + "|"));
             
             //Print Generic Types
             List<InstructionType> genTypes = instData.getGenericTypes();
-            System.out.print( "\t" + genTypes + "\n");
+            //System.out.print( "\t" + genTypes + "\n");
 
             newinst = stream.nextInstruction();
         }
+    }
+    
+    @Test
+    void InstructionSetLibGeneratorTest() {
+        MicroBlazeElfStream stream = new MicroBlazeElfStream(openMBFile());
+        //RiscvElfStream stream = new RiscvElfStream(openRISCVFile());
+        InstructionSetLibGenerator islg = new InstructionSetLibGenerator(stream);
     }
 
 }
