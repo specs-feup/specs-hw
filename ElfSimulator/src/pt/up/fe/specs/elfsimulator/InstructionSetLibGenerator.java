@@ -17,26 +17,52 @@
 
 package pt.up.fe.specs.elfsimulator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.ast.*;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
 
 public class InstructionSetLibGenerator {
     public InstructionSetLibGenerator(AStaticInstructionStream stream) {
+        
+            List<Operand> uniqueOperands = new ArrayList<Operand>();
             System.out.print(stream.getNumInstructions() + "\n" );
             int unknownCounter = 0;
-            while(stream.hasNext()) {
-                Instruction instruction = stream.nextInstruction();
+            Instruction instruction = stream.nextInstruction();
+            while(instruction != null) {
+                System.out.print(instruction.getRepresentation() +"\n");
                 //System.out.print(instruction.getName() + "\n");
                 if(instruction.isUnknown()) 
                     unknownCounter++;
                 else {
-                    System.out.print(instruction.getRepresentation() + "\n");
-                    System.out.print("\t" + instruction.getFieldData().getType() + "\n");
-                    System.out.print("\t" + instruction.getFieldData().getFields() + "\n\n");
+                    for(Operand operand : instruction.getData().getOperands())
+                        if(!uniqueOperands.contains(operand)) uniqueOperands.add(operand);
+                    //System.out.print(instruction.getRepresentation() + "\n");
+                    //System.out.print("\t" + instruction.getFieldData().getType() + "\n");
+                    //System.out.print("\t" + instruction.getFieldData().getFields() + "\n\n");
+                        InstructionAST ast = new InstructionAST(instruction);
+                        recursiveNodePrint(ast.getRootnode(), 0);           
                 }
+                instruction = stream.nextInstruction();
             }
+            System.out.print("UNIQUE OPERANDS: ");
+            for(Operand operand : uniqueOperands) System.out.print("\t" + operand.getRepresentation() + "\n");
             System.out.print("UNKNOWN INSTRUCTIONS = " + unknownCounter + "\n");
             System.out.print(stream.getNumInstructions() + "\n");
+    }
+   
+    
+    
+    
+    private void recursiveNodePrint(InstructionASTNode node, int indentation) {
+        for(int i=0; i<indentation; i++) System.out.print("\t");
+        System.out.print(node.getAsString() + "\n");
+        for(InstructionASTNode childNode : node.getChildren()) recursiveNodePrint(childNode, ++indentation);
+        
     }
     
    
