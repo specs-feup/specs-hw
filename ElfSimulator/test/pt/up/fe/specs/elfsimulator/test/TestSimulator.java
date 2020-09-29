@@ -28,6 +28,7 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.elfsimulator.ElfSimulator;
 import pt.up.fe.specs.elfsimulator.InstructionSetLibGenerator;
 
 public class TestSimulator {
@@ -37,7 +38,7 @@ public class TestSimulator {
         // static
         // File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/matmul.txt");
         // File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/innerprod.txt");
-        File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/cholesky.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/tiny.txt");
         // File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/innerprod.txt");
 
         System.out.print(fd.exists() + "\n");
@@ -54,7 +55,7 @@ public class TestSimulator {
         fd.deleteOnExit();
         return fd;
     }
-    
+    /*
     @Test
     void loadMicroBlazeElfTest() {
        MicroBlazeElfStream stream = new MicroBlazeElfStream(openMBFile());
@@ -111,10 +112,22 @@ public class TestSimulator {
     }
     
     @Test
-    void InstructionSetLibGeneratorTest() {
+    void InstructionSetLibGeneratorRiscTest() {
+        //MicroBlazeElfStream stream = new MicroBlazeElfStream(openMBFile());
+        RiscvElfStream stream = new RiscvElfStream(openRISCVFile());
+        InstructionSetLibGenerator islg = new InstructionSetLibGenerator(stream);
+    }
+    @Test
+    void InstructionSetLibGeneratorMBTest() {
         MicroBlazeElfStream stream = new MicroBlazeElfStream(openMBFile());
         //RiscvElfStream stream = new RiscvElfStream(openRISCVFile());
         InstructionSetLibGenerator islg = new InstructionSetLibGenerator(stream);
     }
-
+*/
+    @Test
+    void ElfSimulatorTest() {
+        MicroBlazeElfStream stream = new MicroBlazeElfStream(openMBFile());
+        //RiscvElfStream stream = new RiscvElfStream(openRISCVFile());
+        ElfSimulator sim = new ElfSimulator(stream);
+    }
 }
