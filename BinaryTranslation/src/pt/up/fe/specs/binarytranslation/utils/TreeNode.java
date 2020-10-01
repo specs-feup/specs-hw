@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.utils;
 
 import java.util.List;
 
+
 /**
  * 
  * @author Nuno
@@ -61,5 +62,19 @@ public interface TreeNode<K extends TreeNode<K>> {
         this.getChildren().set(idx, newChild);
         newChild.setParent(getThis());
         return;
+    }
+    
+    public static <K extends TreeNode<K>> String toString(K token, String prefix) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(prefix);
+        builder.append(token.getClass().getSimpleName());
+        builder.append("\n");
+        if (!token.getChildren().isEmpty()) {
+            for (K child : token.getChildren()) {
+                builder.append(toString(child, prefix + "  "));
+            }
+        }
+
+        return builder.toString();
     }
 }

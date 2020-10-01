@@ -19,6 +19,8 @@ package pt.up.fe.specs.elfsimulator;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
 public class InstructionSimulator {
     
@@ -31,13 +33,24 @@ public class InstructionSimulator {
         if(instruction.isUnknown()) System.err.print("Unknown Instruciton");
         else {
             InstructionAST ast = new InstructionAST(instruction);
-            resolveAST(ast, programState); 
+            resolveAST(ast.getRootnode()); 
         }
     }
 
-    private void resolveAST(InstructionAST ast, ProgramState programState2) {
+    private int resolveAST(InstructionASTNode node) {
         // TODO head recursive function solving non leaf nodes to leaf nodes.
-        
-        
+        switch (node.getType()) {
+        case PlainStatementNode:
+            for(InstructionASTNode childNode : node.getChildren()) resolveAST(childNode);
+            return 0;
+        case AssignmentExpressionNode:
+            InstructionASTNode operand = node.getChild(0);
+            this.programState.setRegister(operand.getAsString(), resolveAST(operand.getChild(0)));
+            return programState.getRegister(node.getAsString());
+        case OperandNode:
+            return programState.getRegister(node.getAsString());
+        default:
+            return -1;
+        }
     }
 }
