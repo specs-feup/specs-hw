@@ -21,10 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.ast.*;
+import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
+import pt.up.fe.specs.binarytranslation.utils.TreeNode;
 
 public class InstructionSetLibGenerator {
     public InstructionSetLibGenerator(AStaticInstructionStream stream) {
@@ -45,7 +46,9 @@ public class InstructionSetLibGenerator {
                     //System.out.print("\t" + instruction.getFieldData().getType() + "\n");
                     //System.out.print("\t" + instruction.getFieldData().getFields() + "\n\n");
                         InstructionAST ast = new InstructionAST(instruction);
-                        recursiveNodePrint(ast.getRootnode(), 0);           
+                        System.out.println(TreeNode.toString(ast.getRootnode(), "  "));
+                        
+                        //recursiveNodePrint(ast.getRootnode(), 0);       
                 }
                 instruction = stream.nextInstruction();
             }
@@ -60,9 +63,9 @@ public class InstructionSetLibGenerator {
     
     private void recursiveNodePrint(InstructionASTNode node, int indentation) {
         for(int i=0; i<indentation; i++) System.out.print("\t");
-        System.out.print(node.getAsString() + "\n");
+        System.out.print(node.getType().name() + "  ->  " + node.getAsString() + "\n");
         for(InstructionASTNode childNode : node.getChildren()) recursiveNodePrint(childNode, ++indentation);
-        
+            
     }
     
    
