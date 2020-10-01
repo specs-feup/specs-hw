@@ -37,8 +37,8 @@ public class TestSimulator {
 
         // static
         // File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/matmul.txt");
-        // File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/innerprod.txt");
-        File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/tiny.txt");
+         File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/innerprod.txt");
+        //File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/tiny.txt");
         // File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/innerprod.txt");
 
         System.out.print(fd.exists() + "\n");
@@ -128,6 +128,6 @@ public class TestSimulator {
     void ElfSimulatorTest() {
         MicroBlazeElfStream stream = new MicroBlazeElfStream(openMBFile());
         //RiscvElfStream stream = new RiscvElfStream(openRISCVFile());
-        ElfSimulator sim = new ElfSimulator(stream);
+        InstructionSetLibGenerator sim = new InstructionSetLibGenerator(stream);
     }
 }
