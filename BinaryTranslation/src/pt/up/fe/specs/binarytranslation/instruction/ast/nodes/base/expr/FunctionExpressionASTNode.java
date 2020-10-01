@@ -8,10 +8,14 @@ public class FunctionExpressionASTNode extends ExpressionASTNode {
 
     private String builtin;
 
-    public FunctionExpressionASTNode(String builtin, List<ExpressionASTNode> args) {
+    public FunctionExpressionASTNode(String builtin) {
         super();
         this.type = InstructionASTNodeType.FunctionExpressionASTNode;
         this.builtin = builtin;
+    }
+
+    public FunctionExpressionASTNode(String builtin, List<ExpressionASTNode> args) {
+        this(builtin);
         for (var arg : args)
             this.addChild(arg);
     }

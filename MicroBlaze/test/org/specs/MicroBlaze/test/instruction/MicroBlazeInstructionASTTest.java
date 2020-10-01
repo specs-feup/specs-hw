@@ -6,6 +6,7 @@ import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstructionProperties;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
 
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplySSAPass;
@@ -41,28 +42,43 @@ public class MicroBlazeInstructionASTTest {
         System.out.println(ast.getRootnode().getAsString());
     }
 
+    private void testInstructionASTGen(Instruction inst) {
+
+        System.out.println("----------------------------");
+        System.out.println("--- Tree for: " + inst.getRepresentation());
+        var dumper = new TreeDumper();
+        var walker = new ParseTreeWalker();
+        walker.walk(dumper, inst.getPseudocode().getParseTree());
+
+        var ast = new InstructionAST(inst);
+        System.out.println("--- Decode for: " + inst.getRepresentation());
+        System.out.println(ast.getRootnode().getAsString());
+    }
+
     private void testASTTYpe(MicroBlazeAsmFieldType type) {
         for (var props : MicroBlazeInstructionProperties.values()) {
             if (props.getCodeType() == type) {
                 var inst = MicroBlazeInstruction.newInstance("0", Integer.toHexString(props.getOpCode()));
-
-                System.out.println("----------------------------");
-                System.out.println("--- Tree for: " + inst.getRepresentation());
-                var dumper = new TreeDumper();
-                var walker = new ParseTreeWalker();
-                walker.walk(dumper, inst.getPseudocode().getParseTree());
-
-                var ast = new InstructionAST(inst);
-                System.out.println("--- Decode for: " + inst.getRepresentation());
-                System.out.println(ast.getRootnode().getAsString());
+                testInstructionASTGen(inst);
             }
         }
     }
 
     @Test
+    public void testAddc() {
+        var props = MicroBlazeInstructionProperties.addc;
+        var inst = MicroBlazeInstruction.newInstance("0", Integer.toHexString(props.getOpCode()));
+        testInstructionASTGen(inst);
+    }
+
+    /**
+     * Tests if the pseudo-instruction grammar and InstructionAST generator are working properly for all instructions in
+     * this ISA (by type)
+     */
+    @Test
     public void testAllMicroBlazeASTs() {
-        // this.testASTTYpe(MicroBlazeAsmFieldType.UBRANCH);
-        // this.testASTTYpe(MicroBlazeAsmFieldType.ULBRANCH);
-        this.testASTTYpe(MicroBlazeAsmFieldType.UIBRANCH);
+        for (var type : MicroBlazeAsmFieldType.values()) {
+            this.testASTTYpe(type);
+        }
     }
 }
