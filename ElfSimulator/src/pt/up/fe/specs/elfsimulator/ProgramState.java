@@ -42,5 +42,14 @@ public class ProgramState {
             System.out.print(name + " register initiated");
     }
     
+    public int getRegister(String name) {
+        if(!this.registers.containsKey(name)) {
+            System.err.print("Access to non initiated register: " + name);
+            return 0;
+        }
+        else return this.registers.get(name);
+  
+    }
+    
   
 }
