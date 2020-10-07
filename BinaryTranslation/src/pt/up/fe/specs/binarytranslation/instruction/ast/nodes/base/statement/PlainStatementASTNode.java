@@ -6,9 +6,12 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.Expressi
 
 public class PlainStatementASTNode extends StatementASTNode {
 
+    private PlainStatementASTNode() {
+        super(InstructionASTNodeType.PlainStatementNode);
+    }
+
     public PlainStatementASTNode(ExpressionASTNode expr) {
-        super();
-        this.type = InstructionASTNodeType.PlainStatementNode;
+        this();
         this.addChild(expr);
     }
 
@@ -23,6 +26,6 @@ public class PlainStatementASTNode extends StatementASTNode {
 
     @Override
     protected InstructionASTNode copyPrivate() {
-        return new PlainStatementASTNode(this.getExpr());
+        return new PlainStatementASTNode();
     }
 }

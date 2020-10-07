@@ -12,9 +12,8 @@ public class BareOperandASTNode extends OperandASTNode {
     private String operandValue;
 
     public BareOperandASTNode(String operandValue) {
-        super();
+        super(InstructionASTNodeType.OperandNode);
         this.operandValue = operandValue;
-        this.type = InstructionASTNodeType.OperandNode;
     }
 
     /*

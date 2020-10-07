@@ -8,9 +8,8 @@ public class LiteralOperandASTNode extends OperandASTNode {
     private Number value;
 
     public LiteralOperandASTNode(Number value) {
-        super();
+        super(InstructionASTNodeType.LiteralOperandNode);
         this.value = value;
-        this.type = InstructionASTNodeType.LiteralOperandNode;
     }
 
     @Override

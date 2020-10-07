@@ -19,9 +19,12 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperatorASTNo
 
 public class UnaryExpressionASTNode extends ExpressionASTNode {
 
+    private UnaryExpressionASTNode() {
+        super(InstructionASTNodeType.UnaryExpressionNode);
+    }
+
     public UnaryExpressionASTNode(OperatorASTNode operator, ExpressionASTNode right) {
-        super();
-        this.type = InstructionASTNodeType.UnaryExpressionNode;
+        this();
         this.addChild(operator);
         this.addChild(right);
     }
@@ -41,6 +44,6 @@ public class UnaryExpressionASTNode extends ExpressionASTNode {
 
     @Override
     protected InstructionASTNode copyPrivate() {
-        return new UnaryExpressionASTNode(this.getOperator(), this.getRight());
+        return new UnaryExpressionASTNode();
     }
 }

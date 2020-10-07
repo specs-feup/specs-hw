@@ -7,8 +7,8 @@ public abstract class OperandASTNode extends ExpressionASTNode {
 
     protected OperandASTNodeSide side;
 
-    public OperandASTNode() {
-        this.type = InstructionASTNodeType.OperandNode;
+    public OperandASTNode(InstructionASTNodeType type) {
+        super(type);
         this.side = OperandASTNodeSide.RightHandSide;
         // defaults to RHS, unless the operand comes from an AssignmentExpressionASTNode
     }

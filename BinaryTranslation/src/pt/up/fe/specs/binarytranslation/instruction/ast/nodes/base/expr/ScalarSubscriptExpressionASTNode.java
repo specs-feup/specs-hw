@@ -8,9 +8,14 @@ public class ScalarSubscriptExpressionASTNode extends SubscriptExpressionASTNode
 
     private int idx;
 
+    // TODO: make idx a type of node
+    private ScalarSubscriptExpressionASTNode(int idx) {
+        super(InstructionASTNodeType.ScalarSubscriptASTNode);
+        this.idx = idx;
+    }
+
     public ScalarSubscriptExpressionASTNode(OperandASTNode operand, int idx) {
-        super(operand);
-        this.type = InstructionASTNodeType.ScalarSubscriptASTNode;
+        super(InstructionASTNodeType.ScalarSubscriptASTNode, operand);
         this.idx = idx;
     }
 
@@ -30,6 +35,6 @@ public class ScalarSubscriptExpressionASTNode extends SubscriptExpressionASTNode
 
     @Override
     protected InstructionASTNode copyPrivate() {
-        return new ScalarSubscriptExpressionASTNode(this.getOperand(), this.getIdx());
+        return new ScalarSubscriptExpressionASTNode(this.getIdx());
     }
 }

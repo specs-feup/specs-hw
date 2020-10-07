@@ -12,8 +12,7 @@ public class ImmediateOperandASTNode extends ConcreteOperandASTNode {
      * This is different from literal number fields in the pseudocode, which DO NOT have an associated ASM field
      */
     public ImmediateOperandASTNode(Operand op) {
-        super(op);
-        this.type = InstructionASTNodeType.ImmediateNode;
+        super(InstructionASTNodeType.ImmediateNode, op);
     }
 
     public Number getValue() {
