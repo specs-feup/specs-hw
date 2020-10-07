@@ -13,9 +13,8 @@ public class MetaOperandASTNode extends OperandASTNode {
     private String operandValue;
 
     public MetaOperandASTNode(String operandValue) {
-        super();
+        super(InstructionASTNodeType.MetaFieldNode);
         this.operandValue = operandValue;
-        this.type = InstructionASTNodeType.MetaFieldNode;
     }
 
     @Override

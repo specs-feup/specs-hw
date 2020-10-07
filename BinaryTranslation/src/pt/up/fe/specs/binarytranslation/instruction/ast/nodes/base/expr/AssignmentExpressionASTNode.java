@@ -7,9 +7,12 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.Opera
 
 public class AssignmentExpressionASTNode extends ExpressionASTNode {
 
+    private AssignmentExpressionASTNode() {
+        super(InstructionASTNodeType.AssignmentExpressionNode);
+    }
+
     public AssignmentExpressionASTNode(OperandASTNode target, ExpressionASTNode expr) {
-        super();
-        this.type = InstructionASTNodeType.AssignmentExpressionNode;
+        this();
         this.addChild(target);
         this.addChild(expr);
         target.setSide(OperandASTNodeSide.LeftHandSide);
@@ -30,6 +33,6 @@ public class AssignmentExpressionASTNode extends ExpressionASTNode {
 
     @Override
     protected InstructionASTNode copyPrivate() {
-        return new AssignmentExpressionASTNode(this.getTarget(), this.getExpr());
+        return new AssignmentExpressionASTNode();
     }
 }

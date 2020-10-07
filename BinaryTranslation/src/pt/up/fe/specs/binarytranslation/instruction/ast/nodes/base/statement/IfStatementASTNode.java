@@ -5,44 +5,59 @@ import java.util.List;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.meta.StatementListASTNode;
 
 public class IfStatementASTNode extends StatementASTNode {
 
-    public IfStatementASTNode(ExpressionASTNode condition, List<StatementASTNode> statements) {
-        super();
-        this.type = InstructionASTNodeType.IfStatementNode;
+    /*
+     * Super call
+     */
+    protected IfStatementASTNode(InstructionASTNodeType type) {
+        super(type);
+    }
+
+    /*
+     * Normal public constructor
+     */
+    public IfStatementASTNode(ExpressionASTNode condition,
+            List<StatementASTNode> statements) {
+        this(InstructionASTNodeType.IfStatementNode, condition, statements);
+    }
+
+    /*
+     * Supports either IfStatementASTNode or IfElseStatementASTNode construction
+     */
+    protected IfStatementASTNode(InstructionASTNodeType type, ExpressionASTNode condition,
+            List<StatementASTNode> statements) {
+
+        // base constructor
+        this(type);
+
+        // condition
         this.addChild(condition);
-        for (var stat : statements)
-            this.addChild(stat);
+
+        // if clauses
+        this.addChild(new StatementListASTNode(statements));
     }
 
     @Override
     public String getAsString() {
-        String ret = "if (" + this.getChild(0).getAsString() + ") ";
-        if (this.getChildren().size() > 1)
-            ret += "{\n";
-
-        for (int i = 1; i < this.getChildren().size(); i++) {
-            var child = this.getChild(i);
-            ret += child.getAsString();
-        }
-
-        if (this.getChildren().size() > 1)
-            ret += "}\n";
-
-        return ret;
+        var builder = new StringBuilder();
+        builder.append("if (" + this.getChild(0).getAsString() + ") ");
+        builder.append(this.getStatements().getAsString());
+        return builder.toString();
     }
 
     public ExpressionASTNode getCondition() {
         return (ExpressionASTNode) this.getChild(0);
     }
 
-    public List<StatementASTNode> getStatements() {
-        return this.getChildrenOf(StatementASTNode.class);
+    public StatementListASTNode getStatements() {
+        return (StatementListASTNode) this.getChild(1);
     }
 
     @Override
     protected InstructionASTNode copyPrivate() {
-        return new IfStatementASTNode(this.getCondition(), this.getStatements());
+        return new IfStatementASTNode(InstructionASTNodeType.IfStatementNode);
     }
 }

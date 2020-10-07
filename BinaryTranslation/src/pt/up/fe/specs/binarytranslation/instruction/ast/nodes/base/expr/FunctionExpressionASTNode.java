@@ -10,8 +10,7 @@ public class FunctionExpressionASTNode extends ExpressionASTNode {
     private String builtin;
 
     public FunctionExpressionASTNode(String builtin) {
-        super();
-        this.type = InstructionASTNodeType.FunctionExpressionASTNode;
+        super(InstructionASTNodeType.FunctionExpressionASTNode);
         this.builtin = builtin;
     }
 

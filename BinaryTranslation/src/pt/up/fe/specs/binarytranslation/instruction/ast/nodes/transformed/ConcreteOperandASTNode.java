@@ -12,11 +12,11 @@ public abstract class ConcreteOperandASTNode extends OperandASTNode {
      * This node type is meant to replace an BareOperandASTNode (which has bare information)
      */
     protected Operand op;
-    protected InstructionASTNodeType type;
 
-    public ConcreteOperandASTNode(Operand op) {
-        super();
+    protected ConcreteOperandASTNode(InstructionASTNodeType type, Operand op) {
+        super(type);
         this.op = op;
+        // TODO: do we want this to be a copy??
     }
 
     @Override

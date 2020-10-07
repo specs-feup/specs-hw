@@ -16,8 +16,7 @@ public class VariableOperandASTNode extends ConcreteOperandASTNode {
      * "r6" or "imma", i.e., some fields are immediate value fields, but treated as inputs to module
      */
     public VariableOperandASTNode(Operand op) {
-        super(op);
-        this.type = InstructionASTNodeType.VariableNode;
+        super(InstructionASTNodeType.VariableNode, op);
         this.TransformedOperandName = op.getRepresentation().replace("<", "").replace(">", "").replace("[", "")
                 .replace("]", "");
         // clean symbolic prefix/suffix if any

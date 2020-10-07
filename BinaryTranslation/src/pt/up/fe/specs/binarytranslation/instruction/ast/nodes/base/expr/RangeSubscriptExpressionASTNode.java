@@ -8,9 +8,15 @@ public class RangeSubscriptExpressionASTNode extends SubscriptExpressionASTNode 
 
     private int loidx, hiidx;
 
+    // TODO: make idx a type of node
+    private RangeSubscriptExpressionASTNode(int loidx, int hiidx) {
+        super(InstructionASTNodeType.RangeSubscriptASTNode);
+        this.loidx = loidx;
+        this.hiidx = hiidx;
+    }
+
     public RangeSubscriptExpressionASTNode(OperandASTNode operand, int loidx, int hiidx) {
-        super(operand);
-        this.type = InstructionASTNodeType.RangeSubscriptASTNode;
+        super(InstructionASTNodeType.RangeSubscriptASTNode, operand);
         this.loidx = loidx;
         this.hiidx = hiidx;
     }
@@ -35,6 +41,6 @@ public class RangeSubscriptExpressionASTNode extends SubscriptExpressionASTNode 
 
     @Override
     protected InstructionASTNode copyPrivate() {
-        return new RangeSubscriptExpressionASTNode(this.getOperand(), this.getLoidx(), this.getHiidx());
+        return new RangeSubscriptExpressionASTNode(this.getLoidx(), this.getHiidx());
     }
 }
