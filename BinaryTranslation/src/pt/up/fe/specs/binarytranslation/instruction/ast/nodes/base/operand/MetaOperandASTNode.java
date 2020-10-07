@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand;
 
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
 public class MetaOperandASTNode extends OperandASTNode {
@@ -20,5 +21,10 @@ public class MetaOperandASTNode extends OperandASTNode {
     @Override
     public String getAsString() {
         return this.operandValue;
+    }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new MetaOperandASTNode(this.operandValue);
     }
 }

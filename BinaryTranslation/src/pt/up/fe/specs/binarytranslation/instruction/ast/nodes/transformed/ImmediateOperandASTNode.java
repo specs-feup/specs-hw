@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed;
 
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
@@ -17,5 +18,10 @@ public class ImmediateOperandASTNode extends ConcreteOperandASTNode {
 
     public Number getValue() {
         return this.op.getNumberValue();
+    }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new ImmediateOperandASTNode(this.op);
     }
 }

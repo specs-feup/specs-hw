@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
 public class FunctionExpressionASTNode extends ExpressionASTNode {
@@ -38,5 +39,10 @@ public class FunctionExpressionASTNode extends ExpressionASTNode {
 
     public ExpressionASTNode getArgument(int idx) {
         return (ExpressionASTNode) this.getChild(idx);
+    }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new FunctionExpressionASTNode(this.builtin);
     }
 }

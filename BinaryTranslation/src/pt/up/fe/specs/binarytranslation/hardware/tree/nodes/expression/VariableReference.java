@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class VariableReference extends HardwareExpression {
@@ -29,5 +30,10 @@ public class VariableReference extends HardwareExpression {
     @Override
     public String getAsString() {
         return this.name;
+    }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new VariableReference(this.name);
     }
 }

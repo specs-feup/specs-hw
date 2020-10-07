@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ExpressionASTNode;
 
@@ -34,5 +35,14 @@ public class IfStatementASTNode extends StatementASTNode {
 
     public ExpressionASTNode getCondition() {
         return (ExpressionASTNode) this.getChild(0);
+    }
+
+    public List<StatementASTNode> getStatements() {
+        return this.getChildrenOf(StatementASTNode.class);
+    }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new IfStatementASTNode(this.getCondition(), this.getStatements());
     }
 }

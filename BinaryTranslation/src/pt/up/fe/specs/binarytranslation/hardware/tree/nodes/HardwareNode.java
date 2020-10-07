@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import pt.up.fe.specs.binarytranslation.utils.ATreeNode;
+import pt.up.fe.specs.util.treenode.ATreeNode;
 
 public abstract class HardwareNode extends ATreeNode<HardwareNode> {
 
     protected HardwareNodeType type;
 
     public HardwareNode() {
-        super();
+        super(null);
     }
 
     public HardwareNodeType getType() {
