@@ -5,14 +5,19 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class MultiplicationExpression extends ABinaryHardwareExpression {
 
-    public MultiplicationExpression(HardwareExpression varA, HardwareExpression varB) {
-        super(varA, varB);
-        this.expressionOperator = "*";
-        this.type = HardwareNodeType.MultiplicationExpression;
+    private MultiplicationExpression() {
+        super("*", HardwareNodeType.MultiplicationExpression);
     }
 
+    public MultiplicationExpression(HardwareExpression varA, HardwareExpression varB) {
+        super("*", HardwareNodeType.MultiplicationExpression, varA, varB);
+    }
+
+    /*
+     * Shallow copy
+     */
     @Override
     protected HardwareNode copyPrivate() {
-        return new MultiplicationExpression(this.getLeft(), this.getRight());
+        return new MultiplicationExpression();
     }
 }
