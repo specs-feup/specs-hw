@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand;
 
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 
 public class BareOperandASTNode extends OperandASTNode {
@@ -30,5 +31,10 @@ public class BareOperandASTNode extends OperandASTNode {
 
     public String getOperandValue() {
         return operandValue;
+    }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new BareOperandASTNode(this.operandValue);
     }
 }

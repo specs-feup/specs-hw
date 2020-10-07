@@ -32,4 +32,9 @@ public class AlwaysCombBlock extends HardwareNode {
         builder.append("end //" + this.blockName + "\n");
         return builder.toString();
     }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new AlwaysCombBlock(this.blockName);
+    }
 }

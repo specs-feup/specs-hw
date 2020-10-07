@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class ImmediateReference extends HardwareExpression {
@@ -36,4 +37,8 @@ public class ImmediateReference extends HardwareExpression {
         return Integer.toString(this.width) + "'d" + this.value;
     }
 
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new ImmediateReference(this.value, this.width);
+    }
 }

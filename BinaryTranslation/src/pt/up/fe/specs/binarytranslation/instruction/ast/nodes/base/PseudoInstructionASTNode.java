@@ -33,4 +33,9 @@ public class PseudoInstructionASTNode extends InstructionASTNode {
 
         return list;
     }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new PseudoInstructionASTNode(this.getStatements());
+    }
 }

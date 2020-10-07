@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class RangeSelection extends HardwareExpression {
@@ -23,5 +24,10 @@ public class RangeSelection extends HardwareExpression {
     @Override
     public String getAsString() {
         return this.var.getAsString() + "[" + (this.upper - 1) + ":" + this.lower + "]";
+    }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new RangeSelection(this.var, this.lower, this.upper);
     }
 }

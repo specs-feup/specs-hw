@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed;
 
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
@@ -30,5 +31,10 @@ public class VariableOperandASTNode extends ConcreteOperandASTNode {
 
     public void setValue(String svalue) {
         this.TransformedOperandName = svalue;
+    }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new VariableOperandASTNode(this.op);
     }
 }

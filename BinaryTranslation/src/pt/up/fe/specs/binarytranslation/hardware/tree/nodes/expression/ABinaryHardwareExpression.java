@@ -13,11 +13,11 @@ public abstract class ABinaryHardwareExpression extends HardwareExpression {
         this.addChild(varB);
     }
 
-    private HardwareExpression getLeft() {
+    protected HardwareExpression getLeft() {
         return (HardwareExpression) this.getChild(0);
     }
 
-    private HardwareExpression getRight() {
+    protected HardwareExpression getRight() {
         return (HardwareExpression) this.getChild(1);
     }
 

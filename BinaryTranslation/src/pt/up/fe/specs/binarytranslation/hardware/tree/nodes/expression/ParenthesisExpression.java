@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class ParenthesisExpression extends HardwareExpression {
@@ -16,5 +17,14 @@ public class ParenthesisExpression extends HardwareExpression {
     @Override
     public String getAsString() {
         return "( " + this.inner.getAsString() + " )";
+    }
+
+    public HardwareExpression getInner() {
+        return inner;
+    }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new ParenthesisExpression(this.inner);
     }
 }

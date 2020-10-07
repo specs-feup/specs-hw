@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareErrorMessage;
 
@@ -19,8 +20,19 @@ public class UnimplementedExpression extends HardwareExpression {
         this.type = HardwareNodeType.UnimplementedExpression;
     }
 
+    private UnimplementedExpression(HardwareErrorMessage err) {
+        super();
+        this.addChild(err);
+        this.type = HardwareNodeType.UnimplementedExpression;
+    }
+
     @Override
     public String getAsString() {
         return this.getChild(0).getAsString();
+    }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new UnimplementedExpression((HardwareErrorMessage) this.getChild(0));
     }
 }

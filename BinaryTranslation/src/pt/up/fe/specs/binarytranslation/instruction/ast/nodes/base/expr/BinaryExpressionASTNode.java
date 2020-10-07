@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr;
 
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperatorASTNode;
 
@@ -41,5 +42,10 @@ public class BinaryExpressionASTNode extends ExpressionASTNode {
     @Override
     public String getAsString() {
         return this.getLeft().getAsString() + this.getOperator().getAsString() + this.getRight().getAsString();
+    }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new BinaryExpressionASTNode(this.getLeft(), this.getOperator(), this.getRight());
     }
 }
