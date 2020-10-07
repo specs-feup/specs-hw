@@ -5,14 +5,19 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class LeftShiftExpression extends ABinaryHardwareExpression {
 
-    public LeftShiftExpression(HardwareExpression varA, HardwareExpression varB) {
-        super(varA, varB);
-        this.expressionOperator = "<<";
-        this.type = HardwareNodeType.LeftShiftExpression;
+    private LeftShiftExpression() {
+        super("<<", HardwareNodeType.LeftShiftExpression);
     }
 
+    public LeftShiftExpression(HardwareExpression varA, HardwareExpression varB) {
+        super("<<", HardwareNodeType.LeftShiftExpression, varA, varB);
+    }
+
+    /*
+     * Shallow copy
+     */
     @Override
     protected HardwareNode copyPrivate() {
-        return new LeftShiftExpression(this.getLeft(), this.getRight());
+        return new LeftShiftExpression();
     }
 }
