@@ -81,7 +81,8 @@ public class InstructionASTConverter extends InstructionASTVisitor<HardwareNode>
         }
 
         // new context
-        newleaf.setParent(this.parent);
+        // Commented this statement to have compatibility with SpecsUtils pt.up.fe.specs.util.treenode.TreeNode
+        // newleaf.setParent(this.parent);
         this.context = newleaf.getType();
 
         // all statements
