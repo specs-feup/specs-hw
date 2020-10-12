@@ -10,18 +10,18 @@ public abstract class AHistogramProfile extends AInstructionStreamProfiler {
 
     private Function<Instruction, String> getKey;
 
-    public AHistogramProfile(InstructionStream istream, Function<Instruction, String> getKey) {
-        super(istream);
+    public AHistogramProfile(Function<Instruction, String> getKey) {
+        super();
         this.getKey = getKey;
     }
 
     @Override
-    public InstructionProfileResult profile() {
+    public InstructionProfileResult profile(InstructionStream istream) {
         ProfileHistogram histogram = new ProfileHistogram();
         var hist = histogram.getHistogram();
 
         Instruction inst = null;
-        while ((inst = this.istream.nextInstruction()) != null) {
+        while ((inst = istream.nextInstruction()) != null) {
 
             var key = this.getKey.apply(inst);
             if (hist.containsKey(key)) {

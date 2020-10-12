@@ -16,7 +16,7 @@ import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
  * @param <K>
  *            Type of producer object
  */
-public class ProducerThread<T, K extends AutoCloseable> implements Runnable, AutoCloseable {
+public class ProducerThread<T, K extends ObjectStream<T>> implements Runnable, AutoCloseable {
 
     /*
      * Source producer function
@@ -25,7 +25,7 @@ public class ProducerThread<T, K extends AutoCloseable> implements Runnable, Aut
     private final Function<K, T> produceFunction;
 
     /*
-     * Variable number of producers to pump data into
+     * Variable number of channels to feed consumers
      */
     private List<ChannelProducer<T>> producers;
 
@@ -67,7 +67,10 @@ public class ProducerThread<T, K extends AutoCloseable> implements Runnable, Aut
         T nextproduct = null;
         while ((nextproduct = this.produceFunction.apply(this.producer)) != null) {
             for (var producer : this.producers) {
-                producer.offer(nextproduct);
+
+                // ChannelProducer returns false immediately if fail to insert, so repeat
+                while (!producer.offer(nextproduct))
+                    ;
             }
         }
     }

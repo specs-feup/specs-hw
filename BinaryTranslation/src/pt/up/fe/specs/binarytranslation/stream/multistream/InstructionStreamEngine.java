@@ -40,13 +40,6 @@ public class InstructionStreamEngine {
 
     /*
      * 
-     
-    public void subscribe(Function<ChannelConsumer<Instruction>, ?> consumeFunction) {
-        this.consumers.add(new InstructionStreamConsumer(this.producer, consumeFunction));
-    }*/
-
-    /*
-     * 
      */
     public InstructionStreamConsumer<?> getConsumer(int index) {
         return consumers.get(index);

@@ -3,9 +3,7 @@ package pt.up.fe.specs.binarytranslation.stream.replicator;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.stream.multistream.InstructionStreamConsumer;
-
-public class ProducerEngine<T, K extends AutoCloseable> {
+public class ProducerEngine<T, K extends ObjectStream<T>> {
 
     /*
      * Original producer (should implement runnable)
@@ -15,7 +13,7 @@ public class ProducerEngine<T, K extends AutoCloseable> {
     /*
      * Subscribed consumers (should implement runnable)
      */
-    private final List<InstructionStreamConsumer<?>> consumers;
+    private final List<ConsumerThread<T, ?>> consumers;
 
     public ProducerEngine(ProducerThread<T, K> producer) {
 
@@ -27,29 +25,15 @@ public class ProducerEngine<T, K extends AutoCloseable> {
         /*
          * Consumer threads
          */
-        this.consumers = new ArrayList<InstructionStreamConsumer<?>>();
+        this.consumers = new ArrayList<ConsumerThread<T, ?>>();
     }
 
     /*
      * 
      */
-    public void subscribe(InstructionStreamConsumer<?> consumer) {
+    public void subscribe(ConsumerThread<T, ?> consumer) {
         this.consumers.add(consumer);
         consumer.provide(this.producer.newChannel());
-    }
-
-    /*
-     * 
-     
-    public void subscribe(Function<ChannelConsumer<Instruction>, ?> consumeFunction) {
-        this.consumers.add(new InstructionStreamConsumer(this.producer, consumeFunction));
-    }*/
-
-    /*
-     * Replicates (???) the source object? 
-     */
-    public K getConsumer(int index) {
-        return consumers.get(index);
     }
 
     /**
