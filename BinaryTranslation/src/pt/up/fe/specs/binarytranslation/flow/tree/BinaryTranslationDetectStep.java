@@ -2,8 +2,8 @@ package pt.up.fe.specs.binarytranslation.flow.tree;
 
 import java.lang.reflect.Constructor;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentBundle;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 public class BinaryTranslationDetectStep extends BinaryTranslationStep {
