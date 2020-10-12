@@ -23,8 +23,8 @@ import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationOutput;
 import pt.up.fe.specs.binarytranslation.asm.Application;
-import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentBundle;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 /**

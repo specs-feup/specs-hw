@@ -50,6 +50,10 @@ public abstract class AInstructionStream implements InstructionStream {
 
     private static LineStream newLineStream(Process proc) {
 
+        /*
+         * TODO: determine why ConcurrentChannel is required here
+         */
+
         // No error detected, obtain LineStream
         LineStream insts = null;
         try {
@@ -67,6 +71,9 @@ public abstract class AInstructionStream implements InstructionStream {
         }
 
         return insts;
+
+        /*InputStream inputStream = proc.getInputStream();
+        return LineStream.newInstance(inputStream, "proc_stdout");*/
     }
 
     @Override

@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationOutput;
-import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdgeType;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;

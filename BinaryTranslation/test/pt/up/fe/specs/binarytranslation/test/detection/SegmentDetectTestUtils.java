@@ -4,9 +4,9 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.function.Predicate;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentBundle;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.util.SpecsIo;
 

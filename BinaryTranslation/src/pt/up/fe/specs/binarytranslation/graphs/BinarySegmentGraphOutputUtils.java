@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
-import pt.up.fe.specs.binarytranslation.binarysegments.SegmentContext;
+import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
