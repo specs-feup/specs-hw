@@ -1,9 +1,5 @@
 package pt.up.fe.specs.binarytranslationlauncher;
 
-import java.io.File;
-
-import org.suikasoft.jOptions.Datakey.DataKey;
-import org.suikasoft.jOptions.Datakey.KeyFactory;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.AppKernel;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
@@ -11,8 +7,6 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinitionBuilder;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 
 public class BinaryTranslation implements AppKernel {
-
-    public static final DataKey<File> ELF_FILE = KeyFactory.file("ELFFile").setLabel("ELF file");
 
     @Override
     public int execute(DataStore options) {
@@ -22,6 +16,10 @@ public class BinaryTranslation implements AppKernel {
 
     public static StoreDefinition getDefinition() {
         var builder = new StoreDefinitionBuilder(BinaryTranslation.class);
+
+        // IO options
+        var opts0 = StoreDefinitions.fromInterface(BinaryTranslationIOData.class);
+        builder.addNamedDefinition("Input Options", opts0);
 
         // stream options
         var opts1 = StoreDefinitions.fromInterface(BinaryTranslationStreamData.class);

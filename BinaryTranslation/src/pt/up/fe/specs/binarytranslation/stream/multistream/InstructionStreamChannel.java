@@ -25,13 +25,20 @@ public class InstructionStreamChannel implements InstructionStream {
 
     @Override
     public Instruction nextInstruction() {
-        try {
-            return channel.take();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+
+        Instruction inst = null;
+        if (!this.hasNext())
+            return inst;
+
+        else {
+            try {
+                inst = channel.take();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
-        return null;
+        return inst;
     }
 
     @Override

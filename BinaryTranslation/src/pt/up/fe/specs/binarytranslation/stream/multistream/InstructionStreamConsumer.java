@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.stream.multistream;
 
 import java.util.function.Function;
 
+import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.util.SpecsCheck;
 
 /**
@@ -14,23 +15,23 @@ import pt.up.fe.specs.util.SpecsCheck;
 public class InstructionStreamConsumer<K> implements Runnable {
 
     private K consumeResult;
-    private InstructionStreamChannel istream;
+    private InstructionStream istream;
 
     // replaces:
     // private ChannelConsumer<Instruction> channel;
 
-    private final Function<InstructionStreamChannel, K> consumeFunction;
+    private final Function<InstructionStream, K> consumeFunction;
 
     /*public InstructionStreamConsumer(Consumer<ChannelConsumer<Instruction>> streamConsumer) {
         this.streamConsumer = streamConsumer;
     }*/
 
-    public InstructionStreamConsumer(Function<InstructionStreamChannel, K> consumeFunction) {
+    public InstructionStreamConsumer(Function<InstructionStream, K> consumeFunction) {
         // this.channel = producer.newChannel();
         this.consumeFunction = consumeFunction;
     }
 
-    public void provide(InstructionStreamChannel istream) {
+    public void provide(InstructionStream istream) {
         this.istream = istream;
     }
 

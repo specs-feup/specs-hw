@@ -1,10 +1,10 @@
 package pt.up.fe.specs.binarytranslation.stream.multistream;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelProducer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 
@@ -23,26 +23,33 @@ public class InstructionStreamProducer implements Runnable, AutoCloseable {
 
     public InstructionStreamProducer(InstructionStream istream) {
         this.istream = istream;
+        this.channels = new ArrayList<ConcurrentChannel<Instruction>>();
+        this.producers = new ArrayList<ChannelProducer<Instruction>>();
     }
 
-    // TODO: replace with InstructionStreamChannel ??
+    /*
+     * creates a new channel into which this runnable object will pump data, with depth 1
+     */
+    public InstructionStreamChannel newChannel() {
+        return this.newChannel(1);
+    }
 
     /*
      * creates a new channel into which this runnable object will pump data
      */
-    public ChannelConsumer<Instruction> newChannel() {
+    public InstructionStreamChannel newChannel(int depth) {
 
         /*
          * Need new channel
          */
-        var channel = new ConcurrentChannel<Instruction>(1);
+        var channel = new ConcurrentChannel<Instruction>(depth);
         this.channels.add(channel);
         this.producers.add(channel.createProducer());
 
         /*
          * Give channel consumer object to consumer?
          */
-        return channel.createConsumer();
+        return new InstructionStreamChannel(this.istream, channel.createConsumer());
     }
 
     /*
@@ -59,8 +66,16 @@ public class InstructionStreamProducer implements Runnable, AutoCloseable {
     public void run() {
         while (this.istream.hasNext() && this.channels.size() > 0) {
             var instruction = this.istream.nextInstruction();
+
+            // quick hack
+            if (instruction == null)
+                break;
+
             for (var producer : this.producers) {
-                producer.offer(instruction);
+
+                // ChannelProducer returns false immediately if fail to insert, so repeat
+                while (!producer.offer(instruction))
+                    ;
             }
         }
     }
