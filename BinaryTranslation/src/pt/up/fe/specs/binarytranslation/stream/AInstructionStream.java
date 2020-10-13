@@ -10,7 +10,6 @@ import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.NullInstruction;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 import pt.up.fe.specs.util.utilities.LineStream;
@@ -140,13 +139,9 @@ public abstract class AInstructionStream implements InstructionStream {
      */
     protected Instruction getnextInstruction() {
 
-        if (this.isClosed)
-            return null;
-
         // skip until regex match
         if (!this.advanceLineToValid(this.insts, getRegex())) {
-            this.close();
-            return NullInstruction.NullInstance;
+            return null;
         }
 
         var addressAndInst = SpecsStrings.getRegex(this.insts.nextLine(), getRegex());

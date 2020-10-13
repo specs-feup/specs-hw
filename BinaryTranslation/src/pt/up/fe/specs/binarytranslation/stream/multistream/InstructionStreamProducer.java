@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.NullInstruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelProducer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
@@ -60,18 +61,30 @@ public class InstructionStreamProducer implements Runnable, AutoCloseable {
     }
 
     /*
+     * ChannelProducer returns false immediately if fail to insert, so repeat
+     */
+    private void insertToken(ChannelProducer<Instruction> prod, Instruction inst) {
+        while (!prod.offer(inst))
+            ;
+    }
+
+    /*
      * Thread workload (putting objects into blocking channels)
      */
     @Override
     public void run() {
         while (this.istream.hasNext() && this.channels.size() > 0) {
+
+            // insert to all channels
             var inst = this.istream.nextInstruction();
             for (var producer : this.producers) {
-
-                // ChannelProducer returns false immediately if fail to insert, so repeat
-                while (!producer.offer(inst))
-                    ;
+                insertToken(producer, inst);
             }
+        }
+
+        // insert poison terminator to all channels
+        for (var producer : this.producers) {
+            insertToken(producer, NullInstruction.NullInstance);
         }
     }
 
