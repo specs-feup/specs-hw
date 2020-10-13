@@ -140,9 +140,14 @@ public abstract class AInstructionStream implements InstructionStream {
      */
     protected Instruction getnextInstruction() {
 
-        // skip until regex match
-        if (!this.advanceLineToValid(this.insts, getRegex()))
+        if (this.isClosed)
             return null;
+
+        // skip until regex match
+        if (!this.advanceLineToValid(this.insts, getRegex())) {
+            this.close();
+            return NullInstruction.NullInstance;
+        }
 
         var addressAndInst = SpecsStrings.getRegex(this.insts.nextLine(), getRegex());
         var addr = addressAndInst.get(0).trim();
@@ -154,8 +159,8 @@ public abstract class AInstructionStream implements InstructionStream {
     @Override
     public Instruction nextInstruction() {
 
-        if (nextInstruction == null) {
-            return NullInstruction.NullInstance;
+        if (this.nextInstruction == null) {
+            return null;
         }
 
         this.currentInstruction = this.nextInstruction;

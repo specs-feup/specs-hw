@@ -9,6 +9,8 @@ import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
 public class InstructionStreamChannel implements InstructionStream {
 
+    private boolean inited = false;
+    private boolean isClosed = false;
     private final InstructionStream istream;
     private final ChannelConsumer<Instruction> channel;
     private Instruction currentInstruction, nextInstruction;
@@ -17,19 +19,23 @@ public class InstructionStreamChannel implements InstructionStream {
         this.istream = istream;
         this.channel = channel;
         this.currentInstruction = null;
-        this.nextInstruction = this.getnextInstruction();
+        this.nextInstruction = null;
     }
 
-    @Override
     private Instruction getnextInstruction() {
+
+        if (this.isClosed())
+            return null;
 
         Instruction inst = null;
         try {
             inst = this.channel.take();
 
-            // convert poison token to null
-            if (inst.getInstruction() == null)
-                return null;
+            // convert poison to null
+            if (inst == NullInstruction.NullInstance) {
+                this.close();
+                inst = null;
+            }
 
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
@@ -37,27 +43,23 @@ public class InstructionStreamChannel implements InstructionStream {
         }
 
         return inst;
-
-        /*Instruction inst = null;
-        while (!this.istream.isClosed()) {
-            inst = channel.poll();
-            if (inst != null)
-                break;
-        }
-        return inst;*/
     }
 
     @Override
     public Instruction nextInstruction() {
 
-        if (nextInstruction == null) {
-            return NullInstruction.NullInstance;
+        // first call
+        if (this.inited == false) {
+            this.nextInstruction = this.getnextInstruction();
+            this.inited = true;
+        }
+
+        if (this.nextInstruction == null) {
+            return null;
         }
 
         this.currentInstruction = this.nextInstruction;
         this.nextInstruction = this.getnextInstruction();
-        this.numcycles += this.currentInstruction.getLatency();
-        this.numinsts++;
         return this.currentInstruction;
     }
 
@@ -77,6 +79,16 @@ public class InstructionStreamChannel implements InstructionStream {
     }
 
     @Override
+    public long getNumInstructions() {
+        return this.istream.getNumInstructions();
+    }
+
+    @Override
+    public long getCycles() {
+        return this.istream.getCycles();
+    }
+
+    @Override
     public void rawDump() {
         return;
     }
@@ -87,12 +99,12 @@ public class InstructionStreamChannel implements InstructionStream {
     }
 
     @Override
-    public void close() throws Exception {
-        return;
+    public void close() {
+        this.isClosed = true;
     }
 
     @Override
     public boolean isClosed() {
-        return this.hasNext();
+        return this.isClosed;
     }
 }
