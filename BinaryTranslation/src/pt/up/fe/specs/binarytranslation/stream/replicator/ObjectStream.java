@@ -1,5 +1,7 @@
 package pt.up.fe.specs.binarytranslation.stream.replicator;
 
+// TODO: promote to class <T>?
+
 public interface ObjectStream<T> extends AutoCloseable {
 
     /**

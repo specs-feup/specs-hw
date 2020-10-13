@@ -1,9 +1,10 @@
-package pt.up.fe.specs.binarytranslation.profiling.data;
+package pt.up.fe.specs.binarytranslation.profiling;
 
 import java.util.function.Function;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.profiling.AInstructionStreamProfiler;
+import pt.up.fe.specs.binarytranslation.profiling.data.InstructionProfileResult;
+import pt.up.fe.specs.binarytranslation.profiling.data.ProfileHistogram;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 public abstract class AHistogramProfile extends AInstructionStreamProfiler {

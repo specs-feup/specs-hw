@@ -16,7 +16,7 @@ import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
  * @param <K>
  *            Type of producer object
  */
-public class ProducerThread<T, K extends ObjectStream<T>> implements Runnable, AutoCloseable {
+public class ProducerThread<T, K> implements Runnable {
 
     /*
      * Source producer function
@@ -73,10 +73,5 @@ public class ProducerThread<T, K extends ObjectStream<T>> implements Runnable, A
                     ;
             }
         }
-    }
-
-    @Override
-    public void close() throws Exception {
-        this.producer.close();
     }
 }

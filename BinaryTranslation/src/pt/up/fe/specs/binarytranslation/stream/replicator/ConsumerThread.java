@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.stream.replicator;
 import java.util.function.Function;
 
 import pt.up.fe.specs.util.SpecsCheck;
+import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
 /**
  * 
@@ -16,14 +17,14 @@ import pt.up.fe.specs.util.SpecsCheck;
 public class ConsumerThread<T, K> implements Runnable {
 
     private K consumeResult;
-    private ObjectStream<T> ostream;
-    private final Function<ObjectStream<T>, K> consumeFunction;
+    private ChannelConsumer<T> ostream;
+    private final Function<ChannelConsumer<T>, K> consumeFunction;
 
-    public ConsumerThread(Function<ObjectStream<T>, K> consumeFunction) {
+    public ConsumerThread(Function<ChannelConsumer<T>, K> consumeFunction) {
         this.consumeFunction = consumeFunction;
     }
 
-    public void provide(ObjectStream<T> ostream) {
+    public void provide(ChannelConsumer<T> ostream) {
         this.ostream = ostream;
     }
 
