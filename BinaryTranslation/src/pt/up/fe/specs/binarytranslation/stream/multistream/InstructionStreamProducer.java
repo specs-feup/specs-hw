@@ -65,16 +65,11 @@ public class InstructionStreamProducer implements Runnable, AutoCloseable {
     @Override
     public void run() {
         while (this.istream.hasNext() && this.channels.size() > 0) {
-            var instruction = this.istream.nextInstruction();
-
-            // quick hack
-            if (instruction == null)
-                break;
-
+            var inst = this.istream.nextInstruction();
             for (var producer : this.producers) {
 
                 // ChannelProducer returns false immediately if fail to insert, so repeat
-                while (!producer.offer(instruction))
+                while (!producer.offer(inst))
                     ;
             }
         }

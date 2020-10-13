@@ -25,6 +25,13 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
  */
 public interface Instruction {
 
+    /**
+     * 
+     */
+    default boolean isNull() {
+        return this == NullInstruction.NullInstance;
+    }
+
     // Get Fundamental properties /////////////////////////////////////////////
     /*
      * Position of instruction in program memory
