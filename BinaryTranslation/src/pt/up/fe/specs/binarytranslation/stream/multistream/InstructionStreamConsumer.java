@@ -17,17 +17,9 @@ public class InstructionStreamConsumer<K> implements Runnable {
     private K consumeResult;
     private InstructionStream istream;
 
-    // replaces:
-    // private ChannelConsumer<Instruction> channel;
-
     private final Function<InstructionStream, K> consumeFunction;
 
-    /*public InstructionStreamConsumer(Consumer<ChannelConsumer<Instruction>> streamConsumer) {
-        this.streamConsumer = streamConsumer;
-    }*/
-
     public InstructionStreamConsumer(Function<InstructionStream, K> consumeFunction) {
-        // this.channel = producer.newChannel();
         this.consumeFunction = consumeFunction;
     }
 
@@ -47,12 +39,4 @@ public class InstructionStreamConsumer<K> implements Runnable {
     public K getConsumeResult() {
         return consumeResult;
     }
-
-    /*
-     * Fetches the consumer object;
-     * This method is used to fetch the detector/profiler/whatever once all input is consumed
-     */
-    /*public T getConsumer() {
-        return this.streamConsumer;
-    }*/
 }

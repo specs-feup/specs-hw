@@ -3,7 +3,7 @@ package pt.up.fe.specs.binarytranslation.stream.replicator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProducerEngine<T, K extends ObjectStream<T>> {
+public class ProducerEngine<T, K> {
 
     /*
      * Original producer (should implement runnable)

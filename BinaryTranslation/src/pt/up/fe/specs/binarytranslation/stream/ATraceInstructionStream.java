@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.stream;
 import java.io.File;
 import java.util.Arrays;
 
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
@@ -66,5 +67,16 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
     @Override
     public InstructionStreamType getType() {
         return InstructionStreamType.TRACE;
+    }
+
+    @Override
+    public Instruction nextInstruction() {
+
+        var newinst = super.nextInstruction();
+        if (this.numinsts % 1000 == 0) {
+            System.out.println(this.numinsts + " instructions simulated...");
+        }
+
+        return newinst;
     }
 }
