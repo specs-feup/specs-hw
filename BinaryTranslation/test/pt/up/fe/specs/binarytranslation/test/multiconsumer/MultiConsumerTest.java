@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.test.multiconsumer;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.junit.Test;
@@ -12,7 +13,7 @@ import pt.up.fe.specs.binarytranslation.stream.replicator.ProducerEngine;
 public class MultiConsumerTest {
 
     /*
-     * Test class
+     * Test producer
      */
     private class StringProducer implements ObjectProducer<String> {
 
@@ -71,19 +72,16 @@ public class MultiConsumerTest {
         var sb = new StringProducer(20);
         var streamengine = new ProducerEngine<String, StringProducer>(sb, op -> op.getString());
 
-        // consumers
-        var consumer1 = new StringConsumer();
-
-        // consumer thread hosters
-        var consumethread1 = new ConsumerThread<String, Integer>(os -> consumer1.consumeString(os));
-
-        // host threads
-        streamengine.subscribe(consumethread1);
+        // new consumer thread via lambda
+        var threadlist = new ArrayList<ConsumerThread<String, ?>>();
+        for (int i = 0; i < 4; i++)
+            threadlist.add(streamengine.subscribe(os -> (new StringConsumer()).consumeString(os)));
 
         // launch all threads (blocking)
         streamengine.launch();
 
-        var result1 = consumethread1.getConsumeResult();
-        System.out.print(result1);
+        for (int i = 0; i < 4; i++) {
+            System.out.println(threadlist.get(i).getConsumeResult());
+        }
     }
 }

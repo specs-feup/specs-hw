@@ -45,7 +45,16 @@ public class ProducerEngine<T, K extends ObjectProducer<T>> {
     /*
      * 
      */
-    public void subscribe(ConsumerThread<T, ?> consumer) {
+    public ConsumerThread<T, ?> subscribe(Function<ObjectStream<T>, ?> consumeFunction) {
+        var thread = new ConsumerThread<>(consumeFunction);
+        this.subscribe(thread);
+        return thread;
+    }
+
+    /*
+     * 
+     */
+    private void subscribe(ConsumerThread<T, ?> consumer) {
         this.consumers.add(consumer);
         consumer.provide(this.producer.newChannel());
     }
@@ -58,7 +67,7 @@ public class ProducerEngine<T, K extends ObjectProducer<T>> {
         /*
          * Thread list
          */
-        var threads = new ArrayList<Thread>();
+        var<Thread> threads = new ArrayList<Thread>();
 
         /*
          * One produce thread
