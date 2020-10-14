@@ -20,6 +20,12 @@ public abstract class InstructionASTNode extends ATreeNode<InstructionASTNode> {
     public InstructionASTNode getThis() {
         return this;
     }
+
+    @Override
+    public String toContentString() {
+        return this.getAsString();
+    }
+
     /*
     @Override
     protected InstructionASTNode copyPrivate() {

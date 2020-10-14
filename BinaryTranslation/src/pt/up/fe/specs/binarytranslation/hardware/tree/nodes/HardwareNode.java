@@ -33,6 +33,11 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
         return builder.toString();
     }
 
+    @Override
+    public String toContentString() {
+        return this.getAsString();
+    }
+
     /*
      * 
      */
