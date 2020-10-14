@@ -14,6 +14,7 @@ public class ObjectStream<T> implements AutoCloseable {
         this.channel = channel;
         this.currentT = null;
         this.nextT = null;
+        this.poison = poison;
     }
 
     private T getNext() {

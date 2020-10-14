@@ -16,14 +16,13 @@ import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
  * @param <K>
  *            Type of producer object
  */
-public class ProducerThread<T, K> implements Runnable {
+public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable {
 
     /*
      * Source producer function
      */
     private final K producer;
     private final Function<K, T> produceFunction;
-    private final T poisonToken;
 
     /*
      * Variable number of channels to feed consumers
@@ -34,14 +33,6 @@ public class ProducerThread<T, K> implements Runnable {
         this.producer = producer;
         this.produceFunction = produceFunction;
         this.producers = new ArrayList<ChannelProducer<T>>();
-        this.poisonToken = null;
-    }
-
-    public ProducerThread(K producer, Function<K, T> produceFunction, T poison) {
-        this.producer = producer;
-        this.produceFunction = produceFunction;
-        this.producers = new ArrayList<ChannelProducer<T>>();
-        this.poisonToken = poison;
     }
 
     /*
@@ -65,7 +56,7 @@ public class ProducerThread<T, K> implements Runnable {
         /*
          * Give channel consumer object to consumer?
          */
-        return new ObjectStream<T>(channel.createConsumer(), this.poisonToken);
+        return new ObjectStream<T>(channel.createConsumer(), this.producer.getPoison());
     }
 
     /*
@@ -82,6 +73,9 @@ public class ProducerThread<T, K> implements Runnable {
     @Override
     public void run() {
 
+        /*
+         * Warning: "null" cannot be inserted into a ChannelProducer / ConcurrentChannel
+         */
         T nextproduct = null;
         while ((nextproduct = this.produceFunction.apply(this.producer)) != null) {
             for (var producer : this.producers) {
@@ -91,7 +85,7 @@ public class ProducerThread<T, K> implements Runnable {
 
         // insert poison terminator to all channels
         for (var producer : this.producers) {
-            this.insertToken(producer, this.poisonToken);
+            this.insertToken(producer, this.producer.getPoison());
         }
     }
 }

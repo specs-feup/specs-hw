@@ -5,6 +5,7 @@ import java.util.Random;
 import org.junit.Test;
 
 import pt.up.fe.specs.binarytranslation.stream.replicator.ConsumerThread;
+import pt.up.fe.specs.binarytranslation.stream.replicator.ObjectProducer;
 import pt.up.fe.specs.binarytranslation.stream.replicator.ObjectStream;
 import pt.up.fe.specs.binarytranslation.stream.replicator.ProducerEngine;
 
@@ -13,12 +14,17 @@ public class MultiConsumerTest {
     /*
      * Test class
      */
-    private class StringProducer {
+    private class StringProducer implements ObjectProducer<String> {
 
         private int producecount;
 
         public StringProducer(int producecount) {
             this.producecount = producecount;
+        }
+
+        @Override
+        public String getPoison() {
+            return "kill";
         }
 
         public String getString() {
@@ -60,8 +66,6 @@ public class MultiConsumerTest {
 
     @Test
     public void test() {
-
-        // file
 
         // host for threads
         var sb = new StringProducer(20);

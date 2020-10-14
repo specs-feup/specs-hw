@@ -13,7 +13,7 @@ import java.util.function.Function;
  * @param <K>
  *            Type of producer object
  */
-public class ProducerEngine<T, K> {
+public class ProducerEngine<T, K extends ObjectProducer<T>> {
 
     /*
      * Original producer (should implement runnable)
