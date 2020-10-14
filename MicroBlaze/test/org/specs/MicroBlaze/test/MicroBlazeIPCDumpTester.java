@@ -7,9 +7,9 @@ import java.util.List;
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentBundle;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
+import pt.up.fe.specs.binarytranslation.detection.detectors.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
 import pt.up.fe.specs.util.SpecsIo;
 

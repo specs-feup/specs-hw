@@ -6,11 +6,11 @@ import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
 import pt.up.fe.specs.util.SpecsIo;
 

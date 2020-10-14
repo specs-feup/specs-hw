@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import org.specs.Riscv.RiscvResource;
+import org.specs.Riscv.instruction.RiscvInstruction;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -27,13 +28,18 @@ public class RiscvTraceStream extends ATraceInstructionStream {
     }
 
     @Override
-    public Instruction nextInstruction() {
-        // TODO Auto-generated method stub
-        return null;
+    public Pattern getRegex() {
+        return RiscvTraceStream.REGEX;
+    }
+
+    @Override
+    public Instruction newInstance(String address, String instruction) {
+        return RiscvInstruction.newInstance(address, instruction);
     }
 
     @Override
     public int getInstructionWidth() {
-        return RiscvInstructionStreamMethods.getInstructionWidth();
+        return 4; // return in bytes
+        // TODO replace this with something smarter
     }
 }

@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import org.specs.MicroBlaze.MicroBlazeResource;
+import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.utilities.LineStream;
 
 public class MicroBlazeElfStream extends AStaticInstructionStream {
 
@@ -29,12 +29,12 @@ public class MicroBlazeElfStream extends AStaticInstructionStream {
     }
 
     @Override
-    public Instruction getNextInstruction(LineStream insts, Pattern regex) {
-        return MicroBlazeInstructionStreamMethods.nextInstruction(insts, regex);
+    public Instruction newInstance(String address, String instruction) {
+        return MicroBlazeInstruction.newInstance(address, instruction);
     }
 
     @Override
     public int getInstructionWidth() {
-        return MicroBlazeInstructionStreamMethods.getInstructionWidth();
+        return 4; // return in bytes
     }
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import org.specs.Arm.ArmResource;
+import org.specs.Arm.instruction.ArmInstruction;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -29,24 +30,17 @@ public class ArmTraceStream extends ATraceInstructionStream {
     }
 
     @Override
-    public Instruction nextInstruction() {
+    public Pattern getRegex() {
+        return ArmTraceStream.REGEX;
+    }
 
-        var newinst = ArmInstructionStreamMethods.nextInstruction(this.insts, REGEX);
-        if (newinst == null) {
-            return null;
-        }
-        this.numcycles += newinst.getLatency();
-        this.numinsts++;
-
-        if (this.numinsts % 1000 == 0) {
-            System.out.println(this.numinsts + " instructions simulated...");
-        }
-
-        return newinst;
+    @Override
+    public Instruction newInstance(String address, String instruction) {
+        return ArmInstruction.newInstance(address, instruction);
     }
 
     @Override
     public int getInstructionWidth() {
-        return ArmInstructionStreamMethods.getInstructionWidth();
+        return 4; // return in bytes
     }
 }

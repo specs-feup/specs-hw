@@ -7,7 +7,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.specs.Arm.instruction.ArmInstruction;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.HashedSequence;
+import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 

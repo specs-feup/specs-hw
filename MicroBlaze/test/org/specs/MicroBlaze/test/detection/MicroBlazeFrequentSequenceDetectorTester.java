@@ -17,8 +17,8 @@ import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentTraceSequenceDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 
 public class MicroBlazeFrequentSequenceDetectorTester {

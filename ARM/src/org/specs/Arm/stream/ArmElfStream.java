@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import org.specs.Arm.ArmResource;
+import org.specs.Arm.instruction.ArmInstruction;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.utilities.LineStream;
 
 public class ArmElfStream extends AStaticInstructionStream {
 
@@ -29,12 +29,12 @@ public class ArmElfStream extends AStaticInstructionStream {
     }
 
     @Override
-    public Instruction getNextInstruction(LineStream insts, Pattern regex) {
-        return ArmInstructionStreamMethods.nextInstruction(insts, regex);
+    public Instruction newInstance(String address, String instruction) {
+        return ArmInstruction.newInstance(address, instruction);
     }
 
     @Override
     public int getInstructionWidth() {
-        return ArmInstructionStreamMethods.getInstructionWidth();
+        return 4; // return in bytes
     }
 }
