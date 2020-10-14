@@ -5,7 +5,7 @@ import java.io.File;
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
 import pt.up.fe.specs.util.SpecsIo;
 

@@ -5,7 +5,7 @@ import java.io.File;
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.stream.profiler.InstructionTypeHistogram;
+import pt.up.fe.specs.binarytranslation.profiling.InstructionTypeHistogram;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeHistogramTester {
@@ -14,8 +14,8 @@ public class MicroBlazeHistogramTester {
         File fd = SpecsIo.resourceCopy(elfname);
         fd.deleteOnExit();
         var istream = new MicroBlazeTraceStream(fd);
-        var profiler = new InstructionTypeHistogram(istream);
-        var result = profiler.profile();
+        var profiler = new InstructionTypeHistogram();
+        var result = profiler.profile(istream);
         result.toJSON();
     }
 

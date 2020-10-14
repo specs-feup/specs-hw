@@ -24,11 +24,11 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.TraceBasicBlockDetector;
 
 /**
  * 

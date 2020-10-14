@@ -12,8 +12,6 @@ import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.SpecsIo;
-import pt.up.fe.specs.util.SpecsStrings;
 
 public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
@@ -43,25 +41,12 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         // 1. open the ELF
         // 2. dump all the ELF into a local list
 
-        var auxfd = elfname;
-        var auxname = elfname.getPath();
-        var extension = auxname.subSequence(auxname.length() - 3, auxname.length());
-
-        // TODO remove this later
-        // quickfix for DATE2020 demo
-        if (extension.equals("txt")) {
-            // auxname = auxname.replaceFirst("_trace", "");
-            // auxfd = SpecsIo.resourceCopy(auxname);
-            auxfd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/dump.txt");
-            auxfd.deleteOnExit();
+        try (var elf = new MicroBlazeElfStream(elfname)) {
+            Instruction i = null;
+            while ((i = elf.nextInstruction()) != null) {
+                elfdump.put(i.getAddress().intValue(), i);
+            }
         }
-
-        var elf = new MicroBlazeElfStream(auxfd);
-        Instruction i = null;
-        while ((i = elf.nextInstruction()) != null) {
-            elfdump.put(i.getAddress().intValue(), i);
-        }
-        elf.close();
 
         /*
          * IMPORTANT: this bug occurs using the mb-gdb binary bundled with vivado 2018.3; 
@@ -73,22 +58,25 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
          */
     }
 
-    /*
-     * This function will be usable once mg-gdb is bug free...
-     * 
     @Override
-    public Instruction nextInstruction() {
-    
-        var newinst = MicroBlazeInstructionStreamMethods.nextInstruction(this.insts, REGEX);
-        if (newinst == null) {
-            return null;
-        }
-        this.numcycles += newinst.getLatency();
-        this.numinsts++;
-        return newinst;
+    public Pattern getRegex() {
+        return MicroBlazeTraceStream.REGEX;
     }
-    */
 
+    @Override
+    public Instruction newInstance(String address, String instruction) {
+        return MicroBlazeInstruction.newInstance(address, instruction);
+    }
+
+    @Override
+    public int getInstructionWidth() {
+        return 4; // return in bytes
+        // TODO replace this with something smarter
+    }
+
+    /*
+     * NOTE: this override will no longer be necessary once mg-gdb is bug free...
+     */
     @Override
     public Instruction nextInstruction() {
 
@@ -97,43 +85,21 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         if (haveStoredInst == true) {
             i = afterbug;
             haveStoredInst = false;
+
+        } else {
+            i = super.nextInstruction();
         }
 
-        else {
-            String line = null;
-            while (((line = insts.nextLine()) != null) && !SpecsStrings.matches(line, REGEX))
-                ;
-
-            if (line == null) {
-                return null;
+        if (i != null) {
+            // get another one if true
+            if (i.isImmediateValue() || (i.getDelay() > 0)) {
+                afterbug = elfdump.get(i.getAddress().intValue() + this.getInstructionWidth());
+                haveStoredInst = true;
             }
 
-            var addressAndInst = SpecsStrings.getRegex(line, REGEX);
-            var addr = addressAndInst.get(0).trim();
-            var inst = addressAndInst.get(1).trim();
-            i = MicroBlazeInstruction.newInstance(addr, inst);
+            this.numcycles += i.getLatency();
+            this.numinsts++;
         }
-
-        // get another one if true
-        if (i.isImmediateValue() || (i.getDelay() > 0)) {
-            afterbug = elfdump.get(i.getAddress().intValue() + this.getInstructionWidth());
-            haveStoredInst = true;
-        }
-
-        this.numcycles += i.getLatency();
-        this.numinsts++;
-
-        if (this.numinsts % 1000 == 0) {
-            System.out.println(this.numinsts + " instructions simulated...");
-        }
-
-        // i.printInstruction();
-
         return i;
-    }
-
-    @Override
-    public int getInstructionWidth() {
-        return MicroBlazeInstructionStreamMethods.getInstructionWidth();
     }
 }

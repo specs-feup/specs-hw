@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import org.specs.Riscv.RiscvResource;
+import org.specs.Riscv.instruction.RiscvInstruction;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.utilities.LineStream;
 
 public class RiscvElfStream extends AStaticInstructionStream {
 
@@ -29,12 +29,13 @@ public class RiscvElfStream extends AStaticInstructionStream {
     }
 
     @Override
-    public Instruction getNextInstruction(LineStream insts, Pattern regex) {
-        return RiscvInstructionStreamMethods.nextInstruction(insts, regex);
+    public Instruction newInstance(String address, String instruction) {
+        return RiscvInstruction.newInstance(address, instruction);
     }
 
     @Override
     public int getInstructionWidth() {
-        return RiscvInstructionStreamMethods.getInstructionWidth();
+        return 4; // return in bytes
+        // TODO replace this with something smarter
     }
 }
