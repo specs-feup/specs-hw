@@ -3,7 +3,6 @@ package pt.up.fe.specs.binarytranslation.stream.replicator;
 import java.util.List;
 import java.util.function.Function;
 
-import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelProducer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 
@@ -16,7 +15,7 @@ import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
  * @param <K>
  *            Type of producer object
  */
-public class ProducerThread<T, K> implements Runnable {
+public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable {
 
     /*
      * Source producer function
@@ -37,14 +36,14 @@ public class ProducerThread<T, K> implements Runnable {
     /*
      * creates a new channel into which this runnable object will pump data, with depth 1
      */
-    public ChannelConsumer<T> newChannel() {
+    public ObjectStream<T> newChannel() {
         return this.newChannel(1);
     }
 
     /*
      * creates a new channel into which this runnable object will pump data
      */
-    public ChannelConsumer<T> newChannel(int depth) {
+    public ObjectStream<T> newChannel(int depth) {
 
         /*
          * Need new channel
@@ -55,7 +54,15 @@ public class ProducerThread<T, K> implements Runnable {
         /*
          * Give channel consumer object to consumer?
          */
-        return channel.createConsumer();
+        return new ObjectStream<T>(channel.createConsumer(), this.producer.getPoison());
+    }
+
+    /*
+     * ChannelProducer returns false immediately if fail to insert, so repeat
+     */
+    private void insertToken(ChannelProducer<T> prod, T inst) {
+        while (!prod.offer(inst))
+            ;
     }
 
     /*
@@ -67,11 +74,13 @@ public class ProducerThread<T, K> implements Runnable {
         T nextproduct = null;
         while ((nextproduct = this.produceFunction.apply(this.producer)) != null) {
             for (var producer : this.producers) {
-
-                // ChannelProducer returns false immediately if fail to insert, so repeat
-                while (!producer.offer(nextproduct))
-                    ;
+                this.insertToken(producer, nextproduct);
             }
+        }
+
+        // insert poison terminator to all channels
+        for (var producer : this.producers) {
+            this.insertToken(producer, this.producer.getPoison());
         }
     }
 }
