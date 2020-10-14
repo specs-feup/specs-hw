@@ -2,8 +2,18 @@ package pt.up.fe.specs.binarytranslation.stream.replicator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
-public class ProducerEngine<T, K extends ObjectProducer<T>> {
+/**
+ * 
+ * @author nuno
+ *
+ * @param <T>
+ *            Type of produced object
+ * @param <K>
+ *            Type of producer object
+ */
+public class ProducerEngine<T, K> {
 
     /*
      * Original producer (should implement runnable)
@@ -15,7 +25,11 @@ public class ProducerEngine<T, K extends ObjectProducer<T>> {
      */
     private final List<ConsumerThread<T, ?>> consumers;
 
-    public ProducerEngine(ProducerThread<T, K> producer) {
+    public ProducerEngine(K producer, Function<K, T> produceFunction) {
+        this(new ProducerThread<T, K>(producer, produceFunction));
+    }
+
+    private ProducerEngine(ProducerThread<T, K> producer) {
 
         /*
          * Producer thread
@@ -27,8 +41,6 @@ public class ProducerEngine<T, K extends ObjectProducer<T>> {
          */
         this.consumers = new ArrayList<ConsumerThread<T, ?>>();
     }
-
-    // public
 
     /*
      * 

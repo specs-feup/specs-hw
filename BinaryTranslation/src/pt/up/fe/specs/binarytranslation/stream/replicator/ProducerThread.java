@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.stream.replicator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -15,13 +16,14 @@ import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
  * @param <K>
  *            Type of producer object
  */
-public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable {
+public class ProducerThread<T, K> implements Runnable {
 
     /*
      * Source producer function
      */
     private final K producer;
     private final Function<K, T> produceFunction;
+    private final T poisonToken;
 
     /*
      * Variable number of channels to feed consumers
@@ -31,6 +33,15 @@ public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable 
     public ProducerThread(K producer, Function<K, T> produceFunction) {
         this.producer = producer;
         this.produceFunction = produceFunction;
+        this.producers = new ArrayList<ChannelProducer<T>>();
+        this.poisonToken = null;
+    }
+
+    public ProducerThread(K producer, Function<K, T> produceFunction, T poison) {
+        this.producer = producer;
+        this.produceFunction = produceFunction;
+        this.producers = new ArrayList<ChannelProducer<T>>();
+        this.poisonToken = poison;
     }
 
     /*
@@ -54,7 +65,7 @@ public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable 
         /*
          * Give channel consumer object to consumer?
          */
-        return new ObjectStream<T>(channel.createConsumer(), this.producer.getPoison());
+        return new ObjectStream<T>(channel.createConsumer(), this.poisonToken);
     }
 
     /*
@@ -80,7 +91,7 @@ public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable 
 
         // insert poison terminator to all channels
         for (var producer : this.producers) {
-            this.insertToken(producer, this.producer.getPoison());
+            this.insertToken(producer, this.poisonToken);
         }
     }
 }
