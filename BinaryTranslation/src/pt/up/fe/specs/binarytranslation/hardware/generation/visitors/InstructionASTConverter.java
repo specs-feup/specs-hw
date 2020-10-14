@@ -81,7 +81,7 @@ public class InstructionASTConverter extends InstructionASTVisitor<HardwareNode>
         }
 
         // new context
-        newleaf.setParent(this.parent);
+        this.parent.addChild(newleaf);
         this.context = newleaf.getType();
 
         // all statements
