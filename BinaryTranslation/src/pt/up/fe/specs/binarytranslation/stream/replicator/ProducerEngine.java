@@ -3,7 +3,7 @@ package pt.up.fe.specs.binarytranslation.stream.replicator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProducerEngine<T, K> {
+public class ProducerEngine<T, K extends ObjectProducer<T>> {
 
     /*
      * Original producer (should implement runnable)
@@ -27,6 +27,8 @@ public class ProducerEngine<T, K> {
          */
         this.consumers = new ArrayList<ConsumerThread<T, ?>>();
     }
+
+    // public
 
     /*
      * 
