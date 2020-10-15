@@ -30,6 +30,6 @@ public class TraceBasicBlockDetector extends ABasicBlockDetector {
      */
     @Override
     protected BinarySegment makeBasicBlock(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
-        return new TraceBasicBlock(symbolicseq, contexts, this.istream.getApplicationInformation());
+        return new TraceBasicBlock(symbolicseq, contexts, this.istream.getApp());
     }
 }

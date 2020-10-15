@@ -38,6 +38,6 @@ public class FrequentStaticSequenceDetector extends AFrequentSequenceDetector {
     @Override
     protected BinarySegment makeFrequentSequence(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
         return new FrequentStaticSequence(symbolicseq,
-                contexts, this.istream.getApplicationInformation());
+                contexts, this.istream.getApp());
     }
 }

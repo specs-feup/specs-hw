@@ -83,7 +83,7 @@ public class SegmentBundle implements BinaryTranslationOutput {
     }
 
     public Application getApplicationInformation() {
-        return this.istream.getApplicationInformation();
+        return this.istream.getApp();
     }
 
     public Date getDate() {

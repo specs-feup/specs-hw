@@ -11,7 +11,6 @@ import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.NullInstruction;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -47,12 +46,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
     }
 
     @Override
-    public Instruction getPoison() {
-        return NullInstruction.NullInstance;
-    }
-
-    @Override
-    public Application getApplicationInformation() {
+    public Application getApp() {
         return app;
     }
 

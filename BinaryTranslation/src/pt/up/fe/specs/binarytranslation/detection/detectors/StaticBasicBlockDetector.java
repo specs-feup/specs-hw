@@ -43,7 +43,7 @@ public class StaticBasicBlockDetector extends ABasicBlockDetector {
      */
     @Override
     protected BinarySegment makeBasicBlock(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
-        return new StaticBasicBlock(symbolicseq, contexts, this.istream.getApplicationInformation());
+        return new StaticBasicBlock(symbolicseq, contexts, this.istream.getApp());
     }
     /*
     @Override

@@ -49,6 +49,7 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
         }
 
         if (this.nextT == null) {
+            this.close();
             return null;
         }
 

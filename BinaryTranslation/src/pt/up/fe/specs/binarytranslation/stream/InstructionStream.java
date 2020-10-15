@@ -27,6 +27,12 @@ public interface InstructionStream extends ObjectStream<Instruction> {
 
     /**
      * 
+     * @return the next instruction of the stream, or null if there are no more instructions in the stream
+     */
+    Instruction nextInstruction();
+
+    /**
+     * 
      * @return the type of instruction stream.
      */
     InstructionStreamType getType();
@@ -36,11 +42,6 @@ public interface InstructionStream extends ObjectStream<Instruction> {
      * @return
      */
     int getInstructionWidth();
-
-    /**
-     * Outputs the unprocessed incoming stream
-     */
-    public void rawDump();
 
     /**
      * 
