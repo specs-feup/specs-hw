@@ -1,14 +1,14 @@
 package pt.up.fe.specs.binarytranslation.stream;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.v2.ATraceInstructionProducer;
+import pt.up.fe.specs.binarytranslation.stream.v2.TraceInstructionProducer;
 
 public abstract class ATraceInstructionStream extends AInstructionStream {
 
     /*
      * 
      */
-    protected ATraceInstructionStream(ATraceInstructionProducer traceProducer) {
+    protected ATraceInstructionStream(TraceInstructionProducer traceProducer) {
         super(traceProducer);
     }
 

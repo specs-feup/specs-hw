@@ -2,26 +2,32 @@ package pt.up.fe.specs.binarytranslation.stream.v2;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.function.BiFunction;
 
-public abstract class AStaticInstructionProducer extends AInstructionProducer {
+import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.util.providers.ResourceProvider;
+
+public class StaticInstructionProducer extends AInstructionProducer {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 
     /*
      * Output from GNU based objdump
      */
-    protected AStaticInstructionProducer(File elfname, String objdumpexe) {
-        super(getProperProcess(elfname, objdumpexe));
+    public StaticInstructionProducer(Application app, ResourceProvider regex,
+            BiFunction<String, String, Instruction> produceMethod) {
+        super(app, getProperProcess(app.getElffile(), app.getObjdump()), regex, produceMethod);
     }
 
-    private static ProcessBuilder getProperProcess(File elfname, String objdumpexe) {
+    private static ProcessBuilder getProperProcess(File elfname, ResourceProvider objdumpexe) {
 
         var name = elfname.getName();
         var extension = name.subSequence(name.length() - 3, name.length());
 
         // Output from GNU based objdump
         if (extension.equals("elf"))
-            return new ProcessBuilder(Arrays.asList(objdumpexe, "-d", elfname.getAbsolutePath()));
+            return new ProcessBuilder(Arrays.asList(objdumpexe.getResource(), "-d", elfname.getAbsolutePath()));
 
         // Output from file (previous dump)
         else if (IS_WINDOWS)

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
 import com.google.gson.annotations.Expose;
@@ -13,19 +14,36 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.NullInstruction;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
+import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 public abstract class AInstructionProducer implements InstructionProducer {
 
+    /*
+     * Interesting as output, and should be queryable by over-arching BTF chain
+     */
     @Expose
-    protected Application appInfo;
+    private final Application app;
 
+    /*
+     * Internal status
+     */
     private final Process proc;
     private final LineStream insts;
 
-    public AInstructionProducer(ProcessBuilder builder) {
+    /*
+     * Init by chilren
+     */
+    private final Pattern regex;
+    private final BiFunction<String, String, Instruction> produceMethod;
+
+    public AInstructionProducer(Application app, ProcessBuilder builder, ResourceProvider regex,
+            BiFunction<String, String, Instruction> produceMethod) {
+        this.app = app;
         this.proc = AInstructionProducer.newProcess(builder);
         this.insts = AInstructionProducer.newLineStream(this.proc);
+        this.regex = Pattern.compile(regex.getResource());
+        this.produceMethod = produceMethod;
     }
 
     @Override
@@ -35,7 +53,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
 
     @Override
     public Application getApplicationInformation() {
-        return appInfo;
+        return app;
     }
 
     @Override
@@ -98,14 +116,18 @@ public abstract class AInstructionProducer implements InstructionProducer {
     }
 
     /*
-     * Must be implemented by children
+     * Initialized by non-abstract children methods
      */
-    protected abstract Pattern getRegex();
+    private Instruction newInstance(String address, String instruction) {
+        return this.produceMethod.apply(address, instruction);
+    }
 
     /*
-     * Must be implemented by children
+     * Initialized by non-abstract children methods
      */
-    protected abstract Instruction newInstance(String address, String instruction);
+    private Pattern getRegex() {
+        return this.regex;
+    }
 
     @Override
     public Instruction nextInstruction() {
