@@ -2,23 +2,25 @@ package pt.up.fe.specs.binarytranslation.stream.v2;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.function.BiFunction;
 
+import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
 
-public abstract class ATraceInstructionProducer extends AInstructionProducer {
+public class TraceInstructionProducer extends AInstructionProducer {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 
     /*
-     * 
+     * Output from QEMU Execution
      */
-    protected ATraceInstructionProducer(File elfname, ResourceProvider gdbtmpl,
-            ResourceProvider gdbexe, ResourceProvider dtbfile, ResourceProvider qemuexe) {
-
-        super(ATraceInstructionProducer.getProperProcess(elfname,
-                gdbtmpl, gdbexe, dtbfile, qemuexe));
+    protected TraceInstructionProducer(Application app, ResourceProvider regex,
+            BiFunction<String, String, Instruction> produceMethod) {
+        super(app, TraceInstructionProducer.getProperProcess(app.getElffile(),
+                app.getGdbtmpl(), app.getGdb(), app.getDtbfile(), app.getQemuexe()), regex, produceMethod);
     }
 
     /*
@@ -32,7 +34,7 @@ public abstract class ATraceInstructionProducer extends AInstructionProducer {
 
         // Output from GNU based objdump
         if (extension.equals("elf"))
-            return ATraceInstructionProducer.newSimulatorBuilder(elfname, gdbtmpl, gdbexe, dtbfile, qemuexe);
+            return TraceInstructionProducer.newSimulatorBuilder(elfname, gdbtmpl, gdbexe, dtbfile, qemuexe);
 
         // Output from file (previous dump)
         else if (IS_WINDOWS)

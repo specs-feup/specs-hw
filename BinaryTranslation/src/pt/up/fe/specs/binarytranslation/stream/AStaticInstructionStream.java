@@ -1,14 +1,14 @@
 package pt.up.fe.specs.binarytranslation.stream;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.v2.AStaticInstructionProducer;
+import pt.up.fe.specs.binarytranslation.stream.v2.StaticInstructionProducer;
 
 public abstract class AStaticInstructionStream extends AInstructionStream {
 
     /*
      * Output from GNU based objdump
      */
-    protected AStaticInstructionStream(AStaticInstructionProducer staticProducer) {
+    protected AStaticInstructionStream(StaticInstructionProducer staticProducer) {
         super(staticProducer);
     }
 
