@@ -1,6 +1,5 @@
 package pt.up.fe.specs.binarytranslation.stream.multistream;
 
-import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.NullInstruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
@@ -46,7 +45,7 @@ public class InstructionStreamChannel implements InstructionStream {
     }
 
     @Override
-    public Instruction nextInstruction() {
+    public Instruction next() {
 
         // first call
         if (this.inited == false) {
@@ -66,11 +65,6 @@ public class InstructionStreamChannel implements InstructionStream {
     @Override
     public InstructionStreamType getType() {
         return this.istream.getType();
-    }
-
-    @Override
-    public Application getApplicationInformation() {
-        return this.istream.getApplicationInformation();
     }
 
     @Override

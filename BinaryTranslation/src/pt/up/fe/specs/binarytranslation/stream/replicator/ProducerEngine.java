@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
+
 /**
  * 
  * @author nuno
@@ -29,16 +31,13 @@ public class ProducerEngine<T, K extends ObjectProducer<T>> {
         this(new ProducerThread<T, K>(producer, produceFunction));
     }
 
+    public ProducerEngine(K producer, Function<K, T> produceFunction,
+            Function<ChannelConsumer<T>, ObjectStream<T>> cons) {
+        this(new ProducerThread<T, K>(producer, produceFunction, cons));
+    }
+
     private ProducerEngine(ProducerThread<T, K> producer) {
-
-        /*
-         * Producer thread
-         */
         this.producer = producer;
-
-        /*
-         * Consumer threads
-         */
         this.consumers = new ArrayList<ConsumerThread<T, ?>>();
     }
 

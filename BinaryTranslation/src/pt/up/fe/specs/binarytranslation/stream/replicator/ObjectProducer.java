@@ -1,9 +1,11 @@
 package pt.up.fe.specs.binarytranslation.stream.replicator;
 
-public interface ObjectProducer<T> {
+public interface ObjectProducer<T> extends AutoCloseable {
 
     /*
      * 
      */
-    T getPoison();
+    default T getPoison() {
+        return null;
+    };
 }

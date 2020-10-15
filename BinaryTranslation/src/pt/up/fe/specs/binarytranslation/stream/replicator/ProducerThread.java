@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelProducer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 
@@ -22,30 +23,46 @@ public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable 
      * Source producer function
      */
     private final K producer;
+
+    /*
+     * 
+     */
     private final Function<K, T> produceFunction;
+
+    /*
+     * "Constructor" for stream objects to feed to consumers
+     */
+    private final Function<ChannelConsumer<T>, ObjectStream<T>> cons;
 
     /*
      * Variable number of channels to feed consumers
      */
     private List<ChannelProducer<T>> producers;
 
-    public ProducerThread(K producer, Function<K, T> produceFunction) {
+    protected ProducerThread(K producer, Function<K, T> produceFunction) {
+        this(producer, produceFunction,
+                cc -> new GenericObjectStream<T>(cc, producer.getPoison()));
+    }
+
+    protected ProducerThread(K producer, Function<K, T> produceFunction,
+            Function<ChannelConsumer<T>, ObjectStream<T>> cons) {
         this.producer = producer;
         this.produceFunction = produceFunction;
+        this.cons = cons;
         this.producers = new ArrayList<ChannelProducer<T>>();
     }
 
     /*
      * creates a new channel into which this runnable object will pump data, with depth 1
      */
-    public ObjectStream<T> newChannel() {
+    protected ObjectStream<T> newChannel() {
         return this.newChannel(1);
     }
 
     /*
      * creates a new channel into which this runnable object will pump data
      */
-    public ObjectStream<T> newChannel(int depth) {
+    protected ObjectStream<T> newChannel(int depth) {
 
         /*
          * Need new channel
@@ -56,7 +73,7 @@ public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable 
         /*
          * Give channel consumer object to consumer?
          */
-        return new ObjectStream<T>(channel.createConsumer(), this.producer.getPoison());
+        return this.cons.apply(channel.createConsumer());
     }
 
     /*

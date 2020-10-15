@@ -16,14 +16,14 @@ import pt.up.fe.specs.util.SpecsCheck;
 public class ConsumerThread<T, K> implements Runnable {
 
     private K consumeResult;
-    private ObjectStream<T> ostream;
+    private ObjectStream<T> ostream = null;
     private final Function<ObjectStream<T>, K> consumeFunction;
 
-    public ConsumerThread(Function<ObjectStream<T>, K> consumeFunction) {
+    protected ConsumerThread(Function<ObjectStream<T>, K> consumeFunction) {
         this.consumeFunction = consumeFunction;
     }
 
-    public void provide(ObjectStream<T> ostream) {
+    protected void provide(ObjectStream<T> ostream) {
         this.ostream = ostream;
     }
 

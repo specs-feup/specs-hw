@@ -2,10 +2,13 @@ package pt.up.fe.specs.binarytranslation.stream.multistream;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.NullInstruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.replicator.ObjectStream;
+import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelProducer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 
@@ -20,10 +23,25 @@ public class InstructionStreamProducer implements Runnable, AutoCloseable {
      * Variable number of channels to feed consumers
      */
     private List<ChannelProducer<Instruction>> producers;
+
+    /*
+     * "Constructor" for stream objects to feed to consumers
+     */
+    private final Function<ChannelConsumer<Instruction>, ObjectStream<Instruction>> cons;
+
+    /*
+     * Variable number of channels to feed consumers
+     */
     private List<ConcurrentChannel<Instruction>> channels;
 
     public InstructionStreamProducer(InstructionStream istream) {
+        this(istream, cc -> new InstructionStreamChannel(istream, cc));
+    }
+
+    public InstructionStreamProducer(InstructionStream istream,
+            Function<ChannelConsumer<Instruction>, ObjectStream<Instruction>> cons) {
         this.istream = istream;
+        this.cons = cons;
         this.channels = new ArrayList<ConcurrentChannel<Instruction>>();
         this.producers = new ArrayList<ChannelProducer<Instruction>>();
     }
@@ -31,14 +49,14 @@ public class InstructionStreamProducer implements Runnable, AutoCloseable {
     /*
      * creates a new channel into which this runnable object will pump data, with depth 1
      */
-    public InstructionStreamChannel newChannel() {
+    public ObjectStream<Instruction> newChannel() {
         return this.newChannel(1);
     }
 
     /*
      * creates a new channel into which this runnable object will pump data
      */
-    public InstructionStreamChannel newChannel(int depth) {
+    public ObjectStream<Instruction> newChannel(int depth) {
 
         /*
          * Need new channel
@@ -50,7 +68,8 @@ public class InstructionStreamProducer implements Runnable, AutoCloseable {
         /*
          * Give channel consumer object to consumer?
          */
-        return new InstructionStreamChannel(this.istream, channel.createConsumer());
+        return this.cons.apply(channel.createConsumer());
+        // return new InstructionStreamChannel(this.istream, channel.createConsumer());
     }
 
     /*
@@ -76,7 +95,7 @@ public class InstructionStreamProducer implements Runnable, AutoCloseable {
         while (this.istream.hasNext() && this.channels.size() > 0) {
 
             // insert to all channels
-            var inst = this.istream.nextInstruction();
+            var inst = this.istream.next();
             for (var producer : this.producers) {
                 insertToken(producer, inst);
             }

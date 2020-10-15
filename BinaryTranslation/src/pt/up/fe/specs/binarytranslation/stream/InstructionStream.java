@@ -13,8 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.stream;
 
-import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.stream.replicator.ObjectStream;
 
 /**
  * Stream of instructions. The source can be either finite (e.g., ELF file) or potentially infinite (e.g., trace). It
@@ -23,25 +23,13 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  * @author JoaoBispo
  *
  */
-public interface InstructionStream extends AutoCloseable {
-
-    /**
-     * 
-     * @return the next instruction of the stream, or null if there are no more instructions in the stream
-     */
-    Instruction nextInstruction();
+public interface InstructionStream extends ObjectStream<Instruction> {
 
     /**
      * 
      * @return the type of instruction stream.
      */
     InstructionStreamType getType();
-
-    /**
-     * 
-     * @return The final {@ApplicationInformation} object containing appname, compile info, and cpu architecture
-     */
-    public Application getApplicationInformation();
 
     /**
      * 
@@ -53,17 +41,6 @@ public interface InstructionStream extends AutoCloseable {
      * Outputs the unprocessed incoming stream
      */
     public void rawDump();
-
-    /**
-     * 
-     * @return True if stream has another Instruction
-     */
-    boolean hasNext();
-
-    /**
-     * 
-     */
-    boolean isClosed();
 
     /**
      * 
