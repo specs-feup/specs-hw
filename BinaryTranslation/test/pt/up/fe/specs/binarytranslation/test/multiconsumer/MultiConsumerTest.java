@@ -6,9 +6,10 @@ import java.util.Random;
 import org.junit.Test;
 
 import pt.up.fe.specs.binarytranslation.stream.replicator.ConsumerThread;
+import pt.up.fe.specs.binarytranslation.stream.replicator.GenericObjectStream;
 import pt.up.fe.specs.binarytranslation.stream.replicator.ObjectProducer;
-import pt.up.fe.specs.binarytranslation.stream.replicator.ObjectStream;
 import pt.up.fe.specs.binarytranslation.stream.replicator.ProducerEngine;
+import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
 public class MultiConsumerTest {
 
@@ -43,6 +44,21 @@ public class MultiConsumerTest {
                     .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                     .toString();
         }
+
+        @Override
+        public void close() throws Exception {
+            // TODO Auto-generated method stub
+        }
+    }
+
+    /*
+     * Test custom stream name
+     */
+    private class StringStream extends GenericObjectStream<String> {
+
+        public StringStream(StringProducer producer, ChannelConsumer<String> consumer) {
+            super(consumer, producer.getPoison());
+        }
     }
 
     /*
@@ -54,7 +70,7 @@ public class MultiConsumerTest {
             // TODO Auto-generated constructor stub
         }
 
-        public Integer consumeString(ObjectStream<String> istream) {
+        public Integer consumeString(StringStream istream) {
 
             Integer hashcode = 0;
             String str = null;
@@ -63,24 +79,27 @@ public class MultiConsumerTest {
             }
             return hashcode;
         }
+
     }
 
     @Test
     public void test() {
 
         // host for threads
-        var sb = new StringProducer(20);
-        var streamengine = new ProducerEngine<String, StringProducer>(sb, op -> op.getString());
+        var sb = new StringProducer(100000);
+        var streamengine = new ProducerEngine<String, StringProducer>(sb, op -> op.getString(),
+                cc -> new StringStream(sb, cc));
 
         // new consumer thread via lambda
         var threadlist = new ArrayList<ConsumerThread<String, ?>>();
-        for (int i = 0; i < 4; i++)
-            threadlist.add(streamengine.subscribe(os -> (new StringConsumer()).consumeString(os)));
+        for (int i = 0; i < 20; i++)
+            threadlist.add(streamengine.subscribe(os -> (new StringConsumer()).consumeString((StringStream) os)));
 
         // launch all threads (blocking)
         streamengine.launch();
 
-        for (int i = 0; i < 4; i++) {
+        // consume
+        for (int i = 0; i < 20; i++) {
             System.out.println(threadlist.get(i).getConsumeResult());
         }
     }
