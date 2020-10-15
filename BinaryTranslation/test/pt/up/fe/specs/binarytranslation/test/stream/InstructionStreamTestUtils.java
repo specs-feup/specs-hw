@@ -46,7 +46,7 @@ public class InstructionStreamTestUtils {
     }
 
     private static void rawDumpWorkload(InstructionStream el) {
-        el.rawDump();
+        // el.rawDump();
     }
 
     public static void rawDump(String filename, Class<?> streamClass) {

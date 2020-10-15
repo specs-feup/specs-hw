@@ -35,7 +35,7 @@ public class InstructionStreamEngine {
      */
     public void subscribe(InstructionStreamConsumer<?> consumer) {
         this.consumers.add(consumer);
-        consumer.provide(this.producer.newChannel());
+        consumer.provide((InstructionStream) this.producer.newChannel());
     }
 
     /*

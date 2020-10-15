@@ -27,5 +27,5 @@ public interface InstructionProducer extends ObjectProducer<Instruction> {
      * 
      * @return The final {@ApplicationInformation} object containing appname, compile info, and cpu architecture
      */
-    public Application getApplicationInformation();
+    public Application getApp();
 }
