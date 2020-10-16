@@ -3,19 +3,11 @@ package org.specs.MicroBlaze.stream;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
-import org.specs.MicroBlaze.MicroBlazeResource;
-import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
-
-import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class MicroBlazeTraceStream extends ATraceInstructionStream {
-
-    private static final Pattern REGEX = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
 
     // two auxiliary vars to help with mb-gdb bug
     private final Map<Integer, Instruction> elfdump = new HashMap<Integer, Instruction>();
@@ -23,17 +15,8 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
     private boolean haveStoredInst = false;
 
     public MicroBlazeTraceStream(File elfname) {
-        // super(MicroBlazeTraceStream.newSimulatorBuilder(elfname));
 
-        super(elfname, MicroBlazeResource.QEMU_MICROBLAZE_GDB_TEMPLATE,
-                MicroBlazeResource.MICROBLAZE_GDB,
-                MicroBlazeResource.QEMU_MICROBLAZE_BAREMETAL_DTB,
-                MicroBlazeResource.QEMU_MICROBLAZE_EXE);
-
-        this.appInfo = new Application(
-                MicroBlazeResource.MICROBLAZE_CPU_NAME.getResource(), elfname.getName(),
-                BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
-                        MicroBlazeResource.MICROBLAZE_READELF.getResource()));
+        super(new MicroBlazeTrace(elfname));
 
         // Workaround for mb-gdb bug of stepping over
         // two instructions at once when it hits an "imm"
@@ -56,16 +39,6 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
          *  an IMM always executes, and therefore we can go fetch it. For branches, there is 
          *  no way to know which instruction to fetch...
          */
-    }
-
-    @Override
-    public Pattern getRegex() {
-        return MicroBlazeTraceStream.REGEX;
-    }
-
-    @Override
-    public Instruction newInstance(String address, String instruction) {
-        return MicroBlazeInstruction.newInstance(address, instruction);
     }
 
     @Override

@@ -11,7 +11,8 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentTraceSequenc
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.StaticBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.TraceBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
+import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
+import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeBinarySegmentGraphTester {
@@ -31,8 +32,8 @@ public class MicroBlazeBinarySegmentGraphTester {
         return fd;
     }
 
-    private void getSegments(SegmentDetector bbd) {
-        var bundle = bbd.detectSegments();
+    private void getSegments(InstructionStream el, SegmentDetector bbd) {
+        var bundle = bbd.detectSegments(el);
         var gbundle = GraphBundle.newInstance(bundle);
 
         gbundle.generateOutput(data -> data.getCpl() == 3);
@@ -48,32 +49,32 @@ public class MicroBlazeBinarySegmentGraphTester {
     @Test
     public void testStaticFrequentSequence() {
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(openFile())) {
-            var bbd = new FrequentStaticSequenceDetector(el);
-            getSegments(bbd);
+            var bbd = new FrequentStaticSequenceDetector();
+            getSegments(el, bbd);
         }
     }
 
     @Test
     public void testStaticBasicBlock() {
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(openFile())) {
-            var bbd = new StaticBasicBlockDetector(el);
-            getSegments(bbd);
+            var bbd = new StaticBasicBlockDetector();
+            getSegments(el, bbd);
         }
     }
 
     @Test
     public void testTraceFrequenceSequence() {
         try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(openFile())) {
-            var bbd = new FrequentTraceSequenceDetector(el);
-            getSegments(bbd);
+            var bbd = new FrequentTraceSequenceDetector();
+            getSegments(el, bbd);
         }
     }
 
     @Test
     public void testTraceBasicBlock() {
         try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(openFile())) {
-            var bbd = new TraceBasicBlockDetector(el);
-            getSegments(bbd);
+            var bbd = new TraceBasicBlockDetector();
+            getSegments(el, bbd);
         }
     }
 }

@@ -10,7 +10,7 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeIPCDumpTester {
@@ -57,8 +57,8 @@ public class MicroBlazeIPCDumpTester {
             try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(fd)) {
 
                 // var bbd = new FrequentTraceSequenceDetector(el);
-                var bbd = new TraceBasicBlockDetector(el);
-                var bundle = bbd.detectSegments();
+                var bbd = new TraceBasicBlockDetector();
+                var bundle = bbd.detectSegments(el);
                 System.out.println(file);
                 dumpIPC(bundle);
             }
