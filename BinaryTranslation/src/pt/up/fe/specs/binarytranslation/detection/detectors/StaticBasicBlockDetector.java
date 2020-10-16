@@ -15,7 +15,6 @@ package pt.up.fe.specs.binarytranslation.detection.detectors;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.detection.segments.StaticBasicBlock;
@@ -42,9 +41,8 @@ public class StaticBasicBlockDetector extends ABasicBlockDetector {
      * 
      */
     @Override
-    protected BinarySegment makeSegment(List<Instruction> symbolicseq, List<SegmentContext> contexts,
-            Application app) {
-        return new StaticBasicBlock(symbolicseq, contexts, app);
+    protected BinarySegment makeSegment(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
+        return new StaticBasicBlock(symbolicseq, contexts, this.getCurrentStream().getApp());
     }
 
     /*
