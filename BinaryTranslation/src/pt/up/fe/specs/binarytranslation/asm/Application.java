@@ -50,6 +50,10 @@ public abstract class Application {
         this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elffile.getPath(), readelf.getResource());
     }
 
+    public String getAppName() {
+        return appName;
+    }
+
     public File getElffile() {
         return elffile;
     }

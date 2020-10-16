@@ -29,8 +29,8 @@ public class SegmentDetectTestUtils {
         SegmentBundle bundle = null;
         try (InstructionStream el = (InstructionStream) consStream.newInstance(fd)) {
 
-            var bbd = (SegmentDetector) consDetector.newInstance(el);
-            bundle = bbd.detectSegments();
+            var bbd = (SegmentDetector) consDetector.newInstance();
+            bundle = bbd.detectSegments(el);
 
         } catch (Exception e) {
             throw new RuntimeException(e.getCause());
