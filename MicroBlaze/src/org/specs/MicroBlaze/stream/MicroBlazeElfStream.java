@@ -1,36 +1,26 @@
 package org.specs.MicroBlaze.stream;
 
 import java.io.File;
-import java.util.regex.Pattern;
 
-import org.specs.MicroBlaze.MicroBlazeResource;
-import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
+import org.specs.MicroBlaze.MicroBlazeApplication;
 
-import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
 public class MicroBlazeElfStream extends AStaticInstructionStream {
 
-    private static final Pattern REGEX = Pattern.compile("([0-9a-f]+):\\s([0-9a-f]+)");
+    /*
+     * Auxiliary constructor so that streams can be built from the threading engine
+     * with the channels created by the parent InstructionProducer
+     */
+    public MicroBlazeElfStream(File elfname, ChannelConsumer<Instruction> channel) {
+        super(new ChanneledInstructionProducer(new MicroBlazeApplication(elfname), channel));
+    }
 
     public MicroBlazeElfStream(File elfname) {
-        super(elfname, MicroBlazeResource.MICROBLAZE_OBJDUMP.getResource());
-        this.appInfo = new Application(
-                MicroBlazeResource.MICROBLAZE_CPU_NAME.getResource(), elfname.getName(),
-                BinaryTranslationUtils.getCompilationInfo(elfname.getPath(),
-                        MicroBlazeResource.MICROBLAZE_READELF.getResource()));
-    }
-
-    @Override
-    public Pattern getRegex() {
-        return MicroBlazeElfStream.REGEX;
-    }
-
-    @Override
-    public Instruction newInstance(String address, String instruction) {
-        return MicroBlazeInstruction.newInstance(address, instruction);
+        super(new MicroBlazeDump(elfname));
     }
 
     @Override

@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
+import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeJSONTester {
@@ -16,8 +16,8 @@ public class MicroBlazeJSONTester {
         File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.txt");
         fd.deleteOnExit();
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
-            var bbd = new FrequentStaticSequenceDetector(el);
-            var bundle = bbd.detectSegments();
+            var bbd = new FrequentStaticSequenceDetector();
+            var bundle = bbd.detectSegments(el);
 
             // create JSON object
             bundle.toJSON();
@@ -35,8 +35,8 @@ public class MicroBlazeJSONTester {
         File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.txt");
         fd.deleteOnExit();
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
-            var bbd = new FrequentStaticSequenceDetector(el);
-            var bundle = bbd.detectSegments();
+            var bbd = new FrequentStaticSequenceDetector();
+            var bundle = bbd.detectSegments(el);
             var gbundle = GraphBundle.newInstance(bundle);
 
             // create JSON object
