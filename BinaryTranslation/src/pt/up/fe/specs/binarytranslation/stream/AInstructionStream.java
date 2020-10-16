@@ -2,9 +2,10 @@ package pt.up.fe.specs.binarytranslation.stream;
 
 import com.google.gson.annotations.Expose;
 
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.replicator.AObjectStream;
-import pt.up.fe.specs.binarytranslation.stream.v2.InstructionProducer;
+import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
+import pt.up.fe.specs.binarytranslation.utils.replicator.AObjectStream;
 
 public abstract class AInstructionStream extends AObjectStream<Instruction> implements InstructionStream {
 
@@ -47,6 +48,11 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
         this.numcycles += inst.getLatency();
         this.numinsts++;
         return inst;
+    }
+
+    @Override
+    public Application getApp() {
+        return this.producer.getApp();
     }
 
     @Override

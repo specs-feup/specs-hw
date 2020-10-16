@@ -5,10 +5,10 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.stream.replicator.ConsumerThread;
-import pt.up.fe.specs.binarytranslation.stream.replicator.GenericObjectStream;
-import pt.up.fe.specs.binarytranslation.stream.replicator.ObjectProducer;
-import pt.up.fe.specs.binarytranslation.stream.replicator.ProducerEngine;
+import pt.up.fe.specs.binarytranslation.utils.replicator.ConsumerThread;
+import pt.up.fe.specs.binarytranslation.utils.replicator.GenericObjectStream;
+import pt.up.fe.specs.binarytranslation.utils.replicator.ObjectProducer;
+import pt.up.fe.specs.binarytranslation.utils.replicator.ProducerEngine;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
 public class MultiConsumerTest {

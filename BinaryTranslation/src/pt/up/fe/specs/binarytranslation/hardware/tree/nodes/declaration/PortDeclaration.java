@@ -13,10 +13,10 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
-import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdge;
-import pt.up.fe.specs.binarytranslation.graphs.edge.GraphEdgeType;
-import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
-import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
+import pt.up.fe.specs.binarytranslation.graph.edge.GraphEdge;
+import pt.up.fe.specs.binarytranslation.graph.edge.GraphEdgeType;
+import pt.up.fe.specs.binarytranslation.graph.edge.GraphInput;
+import pt.up.fe.specs.binarytranslation.graph.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;

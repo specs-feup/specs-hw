@@ -2,7 +2,7 @@ package pt.up.fe.specs.binarytranslation.instruction.operand;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.parsing.AsmField;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
 
 /**
  * Each operand in an ISA is defined by properties. This class is to be implemented by an enum per ISA, which lists all

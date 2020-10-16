@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.instruction;
 
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 
 /**
  * Represents a generic assembly instruction.

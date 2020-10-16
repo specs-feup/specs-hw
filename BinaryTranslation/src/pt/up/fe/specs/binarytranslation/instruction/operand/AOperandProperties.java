@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.parsing.AsmField;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
 
 public class AOperandProperties implements OperandProperties {
 

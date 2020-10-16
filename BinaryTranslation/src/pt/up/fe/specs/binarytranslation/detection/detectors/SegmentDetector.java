@@ -13,19 +13,21 @@
 
 package pt.up.fe.specs.binarytranslation.detection.detectors;
 
+import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
+
 /**
  * Detects PipelinableLoops
  * 
  * @author JoaoBispo
  *
  */
-public interface SegmentDetector extends AutoCloseable {
+public interface SegmentDetector {
 
     /*
      * Returns (eventually) objects of type "Loop" or list of "Loop", or other segments,
      * Example loops may include: megablock, basicblock, or frequent instruction sequences     
      */
-    SegmentBundle detectSegments();
+    SegmentBundle detectSegments(InstructionStream istream);
 
     /*
      * Returns how much of the program the detected segments represent
@@ -33,4 +35,6 @@ public interface SegmentDetector extends AutoCloseable {
      * for trace segments, it represents execution coverage 
      */
     // public float getCoverage(int segmentSize);
+
+    // TODO: move get coverage to SegmentBundle? makes more sense...
 }

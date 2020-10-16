@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.instruction.operand;
 
 import static pt.up.fe.specs.binarytranslation.instruction.operand.OperandType.*;
 
-import pt.up.fe.specs.binarytranslation.parsing.AsmField;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
 
 /**
  * An instruction operand implementation that can be used by all ISAs, in theory This class can be promoted to an
