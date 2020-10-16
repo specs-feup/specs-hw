@@ -10,7 +10,7 @@ import org.specs.Arm.stream.ArmTraceStream;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class ArmIPCDumpTester {
@@ -57,8 +57,8 @@ public class ArmIPCDumpTester {
             try (ArmTraceStream el = new ArmTraceStream(fd)) {
 
                 // var bbd = new FrequentTraceSequenceDetector(el);
-                var bbd = new TraceBasicBlockDetector(el);
-                var bundle = bbd.detectSegments();
+                var bbd = new TraceBasicBlockDetector();
+                var bundle = bbd.detectSegments(el);
                 System.out.println(file);
                 dumpIPC(bundle);
             }

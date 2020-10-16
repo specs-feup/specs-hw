@@ -15,7 +15,7 @@ public class ArmSegmentBundleTester {
         File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.txt");
         fd.deleteOnExit();
         try (ArmElfStream el = new ArmElfStream(fd)) {
-            var bbd = new FrequentStaticSequenceDetector(el);
+            var bbd = new FrequentStaticSequenceDetector();
             // bundleToFile(bbd);
         }
     }
