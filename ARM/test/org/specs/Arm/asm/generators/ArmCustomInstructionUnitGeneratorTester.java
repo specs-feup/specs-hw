@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.specs.Arm.stream.ArmElfStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
+import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.CustomInstructionUnitGenerator;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 

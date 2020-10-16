@@ -16,7 +16,7 @@ package org.specs.Arm.parsing;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.up.fe.specs.binarytranslation.parsing.AsmField;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
 
 public enum ArmAsmField implements AsmField {
 
