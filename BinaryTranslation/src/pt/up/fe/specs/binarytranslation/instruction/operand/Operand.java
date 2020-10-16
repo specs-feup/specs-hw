@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.operand;
 
-import pt.up.fe.specs.binarytranslation.parsing.AsmField;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
 
 /**
  * A generic instruction operand, composed of type, and value

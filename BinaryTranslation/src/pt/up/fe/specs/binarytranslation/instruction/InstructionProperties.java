@@ -15,8 +15,8 @@ package pt.up.fe.specs.binarytranslation.instruction;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
 
 /**
  * Each instruction in an ISA is defined by properties. This class is to be implemented by an enum per ISA, which lists

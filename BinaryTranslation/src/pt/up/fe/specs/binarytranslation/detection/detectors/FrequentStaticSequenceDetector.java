@@ -19,7 +19,6 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.FrequentStaticSequence;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 /**
  * 
@@ -31,13 +30,13 @@ public class FrequentStaticSequenceDetector extends AFrequentSequenceDetector {
     /*
      * Public constructor
      */
-    public FrequentStaticSequenceDetector(InstructionStream istream) {
-        super(istream);
+    public FrequentStaticSequenceDetector() {
+        super();
     }
 
     @Override
-    protected BinarySegment makeFrequentSequence(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
+    protected BinarySegment makeSegment(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
         return new FrequentStaticSequence(symbolicseq,
-                contexts, this.istream.getApp());
+                contexts, this.getCurrentStream().getApp());
     }
 }

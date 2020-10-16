@@ -13,8 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.stream;
 
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.replicator.ObjectStream;
+import pt.up.fe.specs.binarytranslation.utils.replicator.ObjectStream;
 
 /**
  * Stream of instructions. The source can be either finite (e.g., ELF file) or potentially infinite (e.g., trace). It
@@ -42,6 +43,12 @@ public interface InstructionStream extends ObjectStream<Instruction> {
      * @return
      */
     int getInstructionWidth();
+
+    /**
+     * 
+     * @return The final {@ApplicationInformation} object containing appname, compile info, and cpu architecture
+     */
+    public Application getApp();
 
     /**
      * 

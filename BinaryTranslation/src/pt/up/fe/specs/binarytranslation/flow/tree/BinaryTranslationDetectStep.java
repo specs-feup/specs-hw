@@ -38,7 +38,7 @@ public class BinaryTranslationDetectStep extends BinaryTranslationStep {
         Constructor<?> consDetector;
         try {
             consDetector = detectorClass.getConstructor(InstructionStream.class);
-            this.detector = (SegmentDetector) consDetector.newInstance(istream);
+            this.detector = (SegmentDetector) consDetector.newInstance();
 
         } catch (Exception e) {
             throw new RuntimeException(e.getCause());
@@ -47,7 +47,7 @@ public class BinaryTranslationDetectStep extends BinaryTranslationStep {
         /*
          * Execute it
          */
-        this.bundle = detector.detectSegments();
+        this.bundle = detector.detectSegments(istream);
     }
 
     public SegmentBundle getBundle() {

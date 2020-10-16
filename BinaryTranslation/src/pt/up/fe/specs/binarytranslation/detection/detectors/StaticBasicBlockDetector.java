@@ -15,12 +15,12 @@ package pt.up.fe.specs.binarytranslation.detection.detectors;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.detection.segments.StaticBasicBlock;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
-import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 /**
  * Detects all basic blocks in an ELF dump (i.e., static code) ElF dump must be provided by any implementation of
@@ -34,17 +34,19 @@ public class StaticBasicBlockDetector extends ABasicBlockDetector {
     /*
      * 
      */
-    public StaticBasicBlockDetector(InstructionStream istream) {
-        super(istream);
+    public StaticBasicBlockDetector() {
+        super();
     }
 
     /*
      * 
      */
     @Override
-    protected BinarySegment makeBasicBlock(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
-        return new StaticBasicBlock(symbolicseq, contexts, this.istream.getApp());
+    protected BinarySegment makeSegment(List<Instruction> symbolicseq, List<SegmentContext> contexts,
+            Application app) {
+        return new StaticBasicBlock(symbolicseq, contexts, app);
     }
+
     /*
     @Override
     public float getCoverage(int segmentSize) {

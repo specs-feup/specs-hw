@@ -2,12 +2,9 @@ package pt.up.fe.specs.binarytranslation.detection.detectors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
@@ -17,60 +14,15 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
  * @author nuno
  *
  */
-public abstract class AFrequentSequenceDetector implements SegmentDetector {
-
-    /*
-     * The list this detector will construct
-     */
-    private List<BinarySegment> allsequences = null;
-
-    /*
-     * An open instruction stream, either from elf dump, or simulator
-     */
-    protected InstructionStream istream;
-
-    /*
-     * Stuff for statistics (TODO: add more) 
-     */
-    // protected long totalCycles;
-    // protected long numInsts;
-    // protected int totalMemoryInsts;
-    // protected int totalLoads;
-    // protected int totalStores;
-    // protected int totalBranchInsts;
-    // protected int totalTakenBranches;
-    // protected int totalNonTakenBranches;
-
-    /*
-     * min and max size of windows 
-     */
-    private final int minsize = 4;
-    private final int maxsize = 20;
-
-    /*
-     * This map holds all hashed sequences for all instruction windows we analyze
-     * Map: <hashcode_startaddr, hashedsequence>
-     */
-    protected Map<String, HashedSequence> hashed = new HashMap<String, HashedSequence>();
-
-    /*
-     * This map holds all hash codes and list of occurring addresses for each
-     * Map: <hashcode, list of addresses>
-     */
-    private Map<Integer, List<Integer>> addrs = new HashMap<Integer, List<Integer>>();
+public abstract class AFrequentSequenceDetector extends ASegmentDetector {
 
     /*
      * Since list needs revisiting, absorb all instructions in
      * the static dump into StaticBasicBlockDetector class instance
      */
-    protected AFrequentSequenceDetector(InstructionStream istream) {
-        this.istream = istream;
+    protected AFrequentSequenceDetector() {
+        super(DetectorConfiguration.defaultConfig());
     }
-
-    /*
-     * Must be implemented by children
-     */
-    protected abstract BinarySegment makeFrequentSequence(List<Instruction> symbolicseq, List<SegmentContext> contexts);
 
     /*
      * Check if candidate sequence is valid
@@ -93,11 +45,14 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
     }
 
     /*
-     * For the given window "w", builds all hash sequences from
-     * sizes minsize to maxsize
-     * Constructs a map with <instruction addr, sequence hash>
+     * For the given window "w", builds all hash sequences from sizes minsize to maxsize
      */
-    private void hashSequences(List<Instruction> w) {
+    private List<HashedSequence> hashSequences(List<Instruction> w) {
+
+        var newsequences = new ArrayList<HashedSequence>();
+
+        var maxsize = this.getConfig().getMaxsize();
+        var minsize = this.getConfig().getMinsize();
 
         // compute all hashes for this window, for all sequence sizes
         for (int i = minsize; i <= maxsize; i++) {
@@ -119,64 +74,70 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
 
             // create new candidate hash sequence
             var newseq = BinarySegmentDetectionUtils.hashSequence(candidate);
-
-            // add sequence to occurrence counters (counting varies between static to trace detection)
-            BinarySegmentDetectionUtils.addAddrToList(this.addrs, newseq);
-
-            // add sequence to map which is indexed by hashCode + startaddr
-            BinarySegmentDetectionUtils.addHashSequenceToList(this.hashed, newseq);
+            newsequences.add(newseq);
         }
 
-        return;
+        return newsequences;
     }
 
     /*
      * For all valid hashcodes, make the symbolic sequence and its in/out contexts
-     */
-    private void makeFrequentSequences() {
-
-        // for all sequences which occur more than once, symbolify and add to output
-        this.allsequences = new ArrayList<BinarySegment>();
-
+     
+    private List<BinarySegment> makeFrequentSequences(Map<String, HashedSequence> hashed,
+            Map<Integer, List<Integer>> addrs) {
+    
+        //The list this detector will construct         
+        List<BinarySegment> allsequences = new ArrayList<BinarySegment>();
+    
         // all start addrs grouped by hashcode
-        Iterator<Integer> it = this.addrs.keySet().iterator();
-
+        Iterator<Integer> it = addrs.keySet().iterator();
+    
         // for each hashcode
         while (it.hasNext()) {
-
+    
             // get hashcode
             var hashcode = it.next();
-
+    
             // get all start addrs of all sequences with this hashcode
-            var addrlist = this.addrs.get(hashcode);
-
+            var addrlist = addrs.get(hashcode);
+    
             // get a list of the sequences by their hashcode_startaddr key
             var seqlist = new ArrayList<HashedSequence>();
             for (Integer startaddr : addrlist) {
                 var keyval = hashcode.toString() + "_" + Integer.toString(startaddr);
-                seqlist.add(this.hashed.get(keyval));
+                seqlist.add(hashed.get(keyval));
             }
-
+    
             // use first sequence with this hash code to create symbolic sequence
             var symbolicseq = seqlist.get(0).makeSymbolic();
-
+    
             // Create all contexts
             var contexts = new ArrayList<SegmentContext>();
             for (HashedSequence seq : seqlist)
                 contexts.add(new SegmentContext(seq));
-
+    
             // make the frequent sequence
-            var newseq = makeFrequentSequence(symbolicseq, contexts);
-            this.allsequences.add(newseq);
+            var newseq = this.makeSegment(symbolicseq, contexts);
+            allsequences.add(newseq);
         }
-    }
+    
+        return allsequences;
+    }*/
 
     @Override
-    public SegmentBundle detectSegments() {
+    public SegmentBundle detectSegments(InstructionStream istream) {
 
-        // TODO return an exception or something else
-        if (this.allsequences != null)
-            return null;
+        /*
+         * This map holds all hashed sequences for all instruction windows we analyze
+         * Map: <hashcode_startaddr, hashedsequence>
+         */
+        Map<String, HashedSequence> hashed = new HashMap<String, HashedSequence>();
+
+        /*
+         * This map holds all hash codes and list of occurring addresses for each
+         * Map: <hashcode, list of addresses>
+         */
+        Map<Integer, List<Integer>> addrs = new HashMap<Integer, List<Integer>>();
 
         // IMPORTANT
         // TODO: imms can be treated very differently!
@@ -185,37 +146,49 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
         // 3. can demand that all are equal in all occurrences of sequence (all are non symbolic and hence all are
         // hardware specialized literals)
 
+        /*
+         * 
+         */
         List<Instruction> window = new ArrayList<Instruction>();
 
+        var maxsize = this.getConfig().getMaxsize();
+
         // make 1st window
-        for (int i = 0; i < this.maxsize; i++)
-            window.add(this.istream.nextInstruction());
+        for (int i = 0; i < maxsize; i++)
+            window.add(istream.nextInstruction());
 
         // process entire stream
         do {
             // sequences in this window, from sizes minsize to maxsize
-            hashSequences(window);
+            for (var seq : hashSequences(window)) {
+
+                // add sequence to occurrence counters (counting varies between static to trace detection)
+                BinarySegmentDetectionUtils.addAddrToList(addrs, seq);
+
+                // add sequence to map which is indexed by hashCode + startaddr
+                BinarySegmentDetectionUtils.addHashSequenceToList(hashed, seq);
+            }
 
             // shift window (i.e. new window)
             int i = 0;
             int atomicity = window.get(0).getDelay();
-            for (i = 0; i < this.maxsize - 1 - atomicity; i++)
+            for (i = 0; i < maxsize - 1 - atomicity; i++)
                 window.set(i, window.get(i + 1 + atomicity));
 
             // new instructions in window
-            for (; i < this.maxsize; i++)
-                window.set(i, this.istream.nextInstruction());
+            for (; i < maxsize; i++)
+                window.set(i, istream.nextInstruction());
 
         } while (istream.hasNext());
 
         // Remove all sequences which only happen once
-        BinarySegmentDetectionUtils.removeUnique(this.addrs, this.hashed);
+        BinarySegmentDetectionUtils.removeUnique(addrs, hashed);
 
         // Make all valid sequences
-        makeFrequentSequences();
+        var sequences = super.makeSegments(hashed, addrs);
 
         // finally, init some stats
-        SegmentBundle bundle = new SegmentBundle(this.allsequences, this.istream);
+        SegmentBundle bundle = new SegmentBundle(sequences, istream);
         return bundle;
     }
 
@@ -234,9 +207,4 @@ public abstract class AFrequentSequenceDetector implements SegmentDetector {
         return (float) detectedportion / this.totalCycles;
     }*/
     // NOTE: moved this method to {@ SegmentBundle}
-
-    @Override
-    public void close() throws Exception {
-        istream.close();
-    }
 }

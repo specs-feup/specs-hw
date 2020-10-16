@@ -1,7 +1,7 @@
 package pt.up.fe.specs.binarytranslation.stream;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.v2.InstructionProducer;
+import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
 
 public abstract class ATraceInstructionStream extends AInstructionStream {
 
