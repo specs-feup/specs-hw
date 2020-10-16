@@ -9,11 +9,11 @@ import java.util.List;
 import org.specs.Riscv.parsing.RiscvAsmFieldType;
 import org.specs.Riscv.parsing.RiscvIsaParser;
 
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.asm.parsing.IsaParser;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
-import pt.up.fe.specs.binarytranslation.parsing.IsaParser;
 
 public enum RiscvInstructionProperties implements InstructionProperties {
 
