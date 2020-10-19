@@ -16,17 +16,6 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public abstract class ABasicBlockDetector extends ASegmentDetector {
 
     /*
-     * Stuff for statistics (TODO: add more) TODO: move to abstract ABinarySegment 
-     */
-    // protected long totalCycles;
-    // protected long numInsts;
-
-    /*
-     * max size of window for capture of basicblock 
-     */
-    private final int maxsize = 40;
-
-    /*
      * Since list needs revisiting, absorb all instructions in
      * the static dump into StaticBasicBlockDetector class instance
      */
@@ -90,65 +79,10 @@ public abstract class ABasicBlockDetector extends ASegmentDetector {
 
         // discard candidate?
         if (!validSequence(candidate))
-            return null;
-
-        // valid basic block
-        return candidate;
-    }
-
-    /*
-     * For all valid hashcodes, make the symbolic basic block and its in/out contexts
-     
-    private List<BinarySegment> makeBasicBlocks(InstructionStream istream) {
-    
-        //The list this detector will construct         
-        List<BinarySegment> allsequences = new ArrayList<BinarySegment>();
-    
-        // all start addrs grouped by hashcode
-        Iterator<Integer> it = this.getAddrs().keySet().iterator();
-    
-        // for each hashcode
-        while (it.hasNext()) {
-    
-            // get hashcode
-            var hashcode = it.next();
-    
-            // get all start addrs of all sequences with this hashcode
-            var addrlist = this.getAddrs().get(hashcode);
-    
-            // get a list of the sequences by their hashcode_startaddr key
-            var seqlist = new ArrayList<HashedSequence>();
-            for (Integer startaddr : addrlist) {
-                var keyval = hashcode.toString() + "_" + Integer.toString(startaddr);
-                seqlist.add(this.getHashed().get(keyval));
-            }
-    
-            // use first sequence with this hash code to create symbolic sequence
-            var symbolicseq = seqlist.get(0).makeSymbolic();
-    
-            // Create all contexts
-            var contexts = new ArrayList<SegmentContext>();
-            for (HashedSequence seq : seqlist)
-                contexts.add(new SegmentContext(seq));
-    
-            // Create the block
-            var newbb = makeSegment(symbolicseq, contexts);
-            allsequences.add(newbb);
-        }
-    
-        return allsequences;
-    }*/
-
-    /*
-     * 
-     */
-    @Override
-    public SegmentBundle detectSegments(InstructionStream istream) {
-
-        /*
-         * This map holds all hashed sequences for all instruction windows we analyze
-         * Map: <hashcode_startaddr, hashedsequence>
-         */
+            return null; /*
+                         * This map holds all hashed sequences for all instruction windows we analyze
+                         * Map: <hashcode_startaddr, hashedsequence>
+                         */
         Map<String, HashedSequence> hashed = new HashMap<String, HashedSequence>();
 
         /*
@@ -156,6 +90,17 @@ public abstract class ABasicBlockDetector extends ASegmentDetector {
          * Map: <hashcode, list of addresses>
          */
         Map<Integer, List<Integer>> addrs = new HashMap<Integer, List<Integer>>();
+
+        // valid basic block
+        return candidate;
+    }
+
+    /*
+     * 
+     */
+    @Override
+    public void processStream(InstructionStream istream, Map<String, HashedSequence> hashed,
+            Map<Integer, List<Integer>> addrs) {
 
         List<Instruction> window = new ArrayList<Instruction>();
 
@@ -199,12 +144,5 @@ public abstract class ABasicBlockDetector extends ASegmentDetector {
                 window.remove(0);
             }
         }
-
-        // for all valid hashed sequences, make the StaticBasicBlock objects
-        var basicblocks = super.makeSegments(hashed, addrs);
-
-        // finally, init some stats
-        SegmentBundle bundle = new SegmentBundle(basicblocks, istream);
-        return bundle;
     }
 }

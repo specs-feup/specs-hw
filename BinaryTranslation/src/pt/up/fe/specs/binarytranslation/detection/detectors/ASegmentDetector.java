@@ -1,6 +1,7 @@
 package pt.up.fe.specs.binarytranslation.detection.detectors;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -95,58 +96,36 @@ public abstract class ASegmentDetector implements SegmentDetector {
     }
 
     /*
+     * Must be implemented by children
+     */
+    protected abstract void processStream(InstructionStream istream, Map<String, HashedSequence> hashed,
+            Map<Integer, List<Integer>> addrs);
+
     @Override
     public SegmentBundle detectSegments(InstructionStream istream) {
-    
-        /*
-         * This map holds all hashed sequences for all instruction windows we analyze
-         * Map: <hashcode_startaddr, hashedsequence>
-         
+
+        this.setCurrentStream(istream);
+
+        // This map holds all hashed sequences for all instruction windows we analyze
+        // Map: <hashcode_startaddr, hashedsequence>
         Map<String, HashedSequence> hashed = new HashMap<String, HashedSequence>();
-    
-        
-         * This map holds all hash codes and list of occurring addresses for each
-         * Map: <hashcode, list of addresses>
-         
+
+        // This map holds all hash codes and list of occurring addresses for each
+        // Map: <hashcode, list of addresses>
         Map<Integer, List<Integer>> addrs = new HashMap<Integer, List<Integer>>();
-    
-        List<Instruction> window = new ArrayList<Instruction>();
-    
+
         // process entire stream
-        int insertcount = 0;
-        Instruction is = null;
-        while ((is = istream.nextInstruction()) != null) {
-    
-            window.add(is);
-            insertcount++;
-    
-            // "is" is a possible backwards branch that could generate a basic block, so, try to hash it
-            if (is.isBackwardsJump() && is.isConditionalJump() && is.isRelativeJump()) {
-    
-                // absorb as many instructions as there are in the delay slot
-                var delay = is.getDelay();
-                while (delay-- > 0) {
-                    window.add(istream.nextInstruction());
-                    insertcount++;
-                }
-    
-                // try to hash the possible candidate terminated by backwards branch "is"
-                checkCandidate(window, is);
-            }
-    
-            // pop one
-            while (insertcount > 0 && window.size() > this.getConfig().getMaxsize()) {
-                insertcount--;
-                window.remove(0);
-            }
-    
-        }
-    
+        this.processStream(istream, hashed, addrs);
+
         // for all valid hashed sequences, make the StaticBasicBlock objects
         var segments = this.makeSegments(hashed, addrs);
-    
+
         // finally, init some stats
         SegmentBundle bundle = new SegmentBundle(segments, istream);
+
+        //
+        this.setCurrentStream(null);
+
         return bundle;
-    }*/
+    }
 }
