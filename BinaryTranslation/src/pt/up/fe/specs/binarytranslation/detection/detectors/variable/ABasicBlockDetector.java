@@ -1,10 +1,14 @@
-package pt.up.fe.specs.binarytranslation.detection.detectors;
+package pt.up.fe.specs.binarytranslation.detection.detectors.variable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.BinarySegmentDetectionUtils;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
+import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
@@ -16,11 +20,10 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public abstract class ABasicBlockDetector extends ASegmentDetector {
 
     /*
-     * Since list needs revisiting, absorb all instructions in
-     * the static dump into StaticBasicBlockDetector class instance
+     * Constructor
      */
     public ABasicBlockDetector() {
-        super(DetectorConfiguration.defaultConfig());
+        super(DetectorConfigurationBuilder.defaultConfig());
     }
 
     /*
@@ -79,17 +82,7 @@ public abstract class ABasicBlockDetector extends ASegmentDetector {
 
         // discard candidate?
         if (!validSequence(candidate))
-            return null; /*
-                         * This map holds all hashed sequences for all instruction windows we analyze
-                         * Map: <hashcode_startaddr, hashedsequence>
-                         */
-        Map<String, HashedSequence> hashed = new HashMap<String, HashedSequence>();
-
-        /*
-         * This map holds all hash codes and list of occurring addresses for each
-         * Map: <hashcode, list of addresses>
-         */
-        Map<Integer, List<Integer>> addrs = new HashMap<Integer, List<Integer>>();
+            return null;
 
         // valid basic block
         return candidate;

@@ -16,16 +16,6 @@ public abstract class AFrequentSequence extends ABinarySegment {
     }
 
     /*
-     * Must be overriden by children
-     */
-    abstract protected List<Integer> getAddresses();
-
-    /*
-     * Must be overriden by children
-     */
-    abstract protected String getAddressListRepresentation();
-
-    /*
      * 
      */
     @Override
@@ -36,23 +26,5 @@ public abstract class AFrequentSequence extends ABinarySegment {
         }
 
         return uniqueid.hashCode();
-    }
-
-    /*
-     * 
-     */
-    @Override
-    public String getRepresentation() {
-
-        // addresses
-        String ret = "Sequence occurs at = [ ";
-        ret += this.getAddressListRepresentation();
-
-        // instructions
-        for (Instruction inst : this.instlist) {
-            ret += inst.getRepresentation() + "\n";
-        }
-
-        return ret;
     }
 }

@@ -50,7 +50,7 @@ public class FrequentTraceSequence extends AFrequentSequence {
     }
 
     @Override
-    protected List<Integer> getAddresses() {
+    public List<Integer> getAddresses() {
         return new ArrayList<Integer>(this.startAddresses.keySet());
     }
 

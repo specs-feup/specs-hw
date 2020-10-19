@@ -31,8 +31,10 @@ public abstract class Application {
     @Expose
     private final ResourceProvider cpuArchitectureName;
 
-    private final File elffile;
+    @Expose
     private final ResourceProvider gdb, gdbTmpl, objDump, readElf, qemuExe, dtbFile;
+
+    private final transient File elffile;
 
     public Application(File elffile, ResourceProvider cpuArchitectureName, ResourceProvider gdb,
             ResourceProvider objdump, ResourceProvider readelf, ResourceProvider gdbtmpl, ResourceProvider qemuexe,

@@ -11,31 +11,31 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.detection.detectors;
+package pt.up.fe.specs.binarytranslation.detection.detectors.variable;
 
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.detection.segments.FrequentTraceSequence;
+import pt.up.fe.specs.binarytranslation.detection.segments.FrequentStaticSequence;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
  * 
- * @author nuno
+ * @author Nuno
  *
  */
-public class FrequentTraceSequenceDetector extends AFrequentSequenceDetector {
+public class FrequentStaticSequenceDetector extends AFrequentSequenceDetector {
 
     /*
      * Public constructor
      */
-    public FrequentTraceSequenceDetector() {
+    public FrequentStaticSequenceDetector() {
         super();
     }
 
     @Override
     protected BinarySegment makeSegment(List<Instruction> symbolicseq, List<SegmentContext> contexts) {
-        return new FrequentTraceSequence(symbolicseq, contexts, this.getCurrentStream().getApp());
+        return new FrequentStaticSequence(symbolicseq, contexts, this.getCurrentStream().getApp());
     }
 }

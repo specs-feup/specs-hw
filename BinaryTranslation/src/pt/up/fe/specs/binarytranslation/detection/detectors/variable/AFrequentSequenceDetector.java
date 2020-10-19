@@ -1,9 +1,14 @@
-package pt.up.fe.specs.binarytranslation.detection.detectors;
+package pt.up.fe.specs.binarytranslation.detection.detectors.variable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.BinarySegmentDetectionUtils;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
+import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
@@ -20,7 +25,7 @@ public abstract class AFrequentSequenceDetector extends ASegmentDetector {
      * the static dump into StaticBasicBlockDetector class instance
      */
     protected AFrequentSequenceDetector() {
-        super(DetectorConfiguration.defaultConfig());
+        super(DetectorConfigurationBuilder.defaultConfig());
     }
 
     /*

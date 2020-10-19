@@ -3,7 +3,7 @@ package pt.up.fe.specs.binarytranslation.producer;
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.NullInstruction;
-import pt.up.fe.specs.binarytranslation.utils.replicator.ObjectProducer;
+import pt.up.fe.specs.util.threadstream.ObjectProducer;
 
 public interface InstructionProducer extends ObjectProducer<Instruction> {
 

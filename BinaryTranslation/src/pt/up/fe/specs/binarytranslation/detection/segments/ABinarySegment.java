@@ -112,12 +112,21 @@ public abstract class ABinarySegment implements BinarySegment {
     /*
      * Printing Functions
      */
+
+    protected abstract String getAddressListRepresentation();
+
     @Override
     public String getRepresentation() {
-        String ret = "";
+
+        // addresses
+        String ret = "Sequence occurs at = [ ";
+        ret += this.getAddressListRepresentation();
+
+        // instructions
         for (Instruction inst : this.instlist) {
             ret += inst.getRepresentation() + "\n";
         }
+
         return ret;
     }
 

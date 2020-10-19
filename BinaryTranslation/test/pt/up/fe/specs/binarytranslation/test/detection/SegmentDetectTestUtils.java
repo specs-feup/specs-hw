@@ -47,6 +47,10 @@ public class SegmentDetectTestUtils {
         }
     }
 
+    public static void toJson(SegmentBundle bundle) {
+        bundle.toJSON();
+    }
+
     public static void printBundle(SegmentBundle bundle, Predicate<BinarySegment> predicate) {
 
         for (BinarySegment bs : bundle.getSegments(predicate)) {

@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.detection.detectors;
+package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
  * @author NunoPaulino
  *
  */
-public class TraceBasicBlockDetector extends ABasicBlockDetector {
+public class TraceBasicBlockDetector extends AFixedSizeBasicBlockDetector {
 
     /*
      * 
