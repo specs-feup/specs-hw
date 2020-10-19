@@ -15,7 +15,8 @@ public enum MicroBlazeResource implements ResourceProvider {
     MICROBLAZE_READELF("mb-readelf"),
     MICROBLAZE_OBJDUMP("mb-objdump"),
 
-    MICROBLAZE_INSTRUCTION_REGEX("([0-9a-f]+):\\s([0-9a-f]+)");
+    MICROBLAZE_INSTRUCTION_DUMP_REGEX("([0-9a-f]+):\\s([0-9a-f]+)"),
+    MICROBLAZE_INSTRUCTION_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
 
     private final String resource;
 
