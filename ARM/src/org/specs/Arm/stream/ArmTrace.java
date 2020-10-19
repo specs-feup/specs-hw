@@ -12,7 +12,7 @@ public class ArmTrace extends TraceInstructionProducer {
 
     public ArmTrace(File elfname) {
         super(new ArmApplication(elfname),
-                ArmResource.AARCH64_REGEX,
+                ArmResource.AARCH64_TRACE_REGEX,
                 ArmInstruction::newInstance);
     }
 }
