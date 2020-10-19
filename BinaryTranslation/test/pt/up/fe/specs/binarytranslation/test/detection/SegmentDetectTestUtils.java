@@ -20,7 +20,7 @@ public class SegmentDetectTestUtils {
         Constructor<?> consStream, consDetector;
         try {
             consStream = streamClass.getConstructor(File.class);
-            consDetector = detectorClass.getConstructor(InstructionStream.class);
+            consDetector = detectorClass.getConstructor();
 
         } catch (Exception e) {
             throw new RuntimeException(e.getCause());
@@ -45,6 +45,10 @@ public class SegmentDetectTestUtils {
             bs.printSegment();
             System.out.print("\n");
         }
+    }
+
+    public static void toJson(SegmentBundle bundle) {
+        bundle.toJSON();
     }
 
     public static void printBundle(SegmentBundle bundle, Predicate<BinarySegment> predicate) {

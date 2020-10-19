@@ -7,10 +7,10 @@ import java.util.function.Function;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.NullInstruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.binarytranslation.utils.replicator.ObjectStream;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelProducer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
+import pt.up.fe.specs.util.threadstream.ObjectStream;
 
 public class InstructionStreamProducer implements Runnable, AutoCloseable {
 

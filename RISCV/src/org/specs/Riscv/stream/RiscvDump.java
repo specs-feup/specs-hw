@@ -12,7 +12,7 @@ public class RiscvDump extends StaticInstructionProducer {
 
     public RiscvDump(File elfname) {
         super(new RiscvApplication(elfname),
-                RiscvResource.RISC_REGEX,
+                RiscvResource.RISC_DUMP_REGEX,
                 RiscvInstruction::newInstance);
     }
 }

@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
-import pt.up.fe.specs.binarytranslation.utils.replicator.AObjectStream;
+import pt.up.fe.specs.util.threadstream.AObjectStream;
 
 public abstract class AInstructionStream extends AObjectStream<Instruction> implements InstructionStream {
 
@@ -45,6 +45,9 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
     @Override
     public Instruction nextInstruction() {
         var inst = this.next();
+        if (inst == null)
+            return null;
+
         this.numcycles += inst.getLatency();
         this.numinsts++;
         return inst;

@@ -22,7 +22,7 @@ public class BinarySegmentDetectionUtils {
     /*
      * Remove all sequences which only happen once
      */
-    protected static void removeUnique(Map<Integer, List<Integer>> addrs, Map<String, HashedSequence> hashed) {
+    public static void removeUnique(Map<Integer, List<Integer>> addrs, Map<String, HashedSequence> hashed) {
 
         // iterate through hashcodes of sequences
         Iterator<Integer> it = addrs.keySet().iterator();
@@ -43,7 +43,7 @@ public class BinarySegmentDetectionUtils {
     /*
      * Adds address of detected sequence to auxiliary list "this.addrs"
      */
-    protected static void addAddrToList(Map<Integer, List<Integer>> addrs, HashedSequence newseq) {
+    public static void addAddrToList(Map<Integer, List<Integer>> addrs, HashedSequence newseq) {
 
         var hashCode = newseq.getHashcode();
         var startAddr = newseq.getStartAddress();
@@ -65,7 +65,7 @@ public class BinarySegmentDetectionUtils {
     /*
      * Adds detected sequence to list "this.hashed"
      */
-    protected static void addHashSequenceToList(Map<String, HashedSequence> hashed, HashedSequence newseq) {
+    public static void addHashSequenceToList(Map<String, HashedSequence> hashed, HashedSequence newseq) {
 
         var hashCode = newseq.getHashcode();
         var startAddr = newseq.getStartAddress();
@@ -94,7 +94,7 @@ public class BinarySegmentDetectionUtils {
     /*
      * 
      */
-    protected static HashedSequence hashSequence(List<Instruction> candidate) {
+    public static HashedSequence hashSequence(List<Instruction> candidate) {
 
         // make register replacement map (for hash building)
         Map<String, String> regremap = BinarySegmentDetectionUtils.makeRegReplaceMap(candidate);
