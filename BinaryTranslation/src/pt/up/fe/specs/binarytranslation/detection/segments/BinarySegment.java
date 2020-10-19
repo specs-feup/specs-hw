@@ -74,6 +74,14 @@ public interface BinarySegment extends BinaryTranslationOutput {
     /*
      * 
      */
+    /*
+     * Must be overriden by children
+     */
+    public List<Integer> getAddresses();
+
+    /*
+     * 
+     */
     public List<SegmentContext> getContexts();
 
     /*

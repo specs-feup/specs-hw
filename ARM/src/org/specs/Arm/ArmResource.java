@@ -27,7 +27,8 @@ public enum ArmResource implements ResourceProvider {
     AARCH64_READELF("aarch64-none-elf-readelf"),
     AARCH64_OBJDUMP("aarch64-none-elf-objdump"),
 
-    AARCH64_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
+    AARCH64_DUMP_REGEX("([0-9a-f]+):\\s([0-9a-f]+)"),
+    AARCH64_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
 
     private final String resource;
 

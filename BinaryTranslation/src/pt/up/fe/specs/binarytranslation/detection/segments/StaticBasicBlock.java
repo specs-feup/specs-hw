@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.detection.segments;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
@@ -26,6 +26,8 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  */
 public class StaticBasicBlock extends ABasicBlock {
 
+    private List<Integer> startAddresses;
+
     /*
      * 
      */
@@ -33,11 +35,24 @@ public class StaticBasicBlock extends ABasicBlock {
             List<SegmentContext> contexts, Application appinfo) {
         super(ilist, contexts, appinfo);
         this.segtype = BinarySegmentType.STATIC_BASIC_BLOCK;
+
+        this.startAddresses = new ArrayList<Integer>();
+        for (SegmentContext context : contexts)
+            this.startAddresses.add(context.getStartaddresses());
     }
 
-    public StaticBasicBlock(List<Instruction> ilist,
-            SegmentContext context, Application appinfo) {
-        super(ilist, Arrays.asList(context), appinfo);
-        this.segtype = BinarySegmentType.STATIC_BASIC_BLOCK;
+    @Override
+    public List<Integer> getAddresses() {
+        return this.startAddresses;
+    }
+
+    @Override
+    protected String getAddressListRepresentation() {
+        String ret = "";
+        for (Integer addr : this.startAddresses) {
+            ret += "0x" + Integer.toHexString(addr) + " ";
+        }
+        ret += "]\n" + "Total execution cycles: " + this.getExecutionCycles() + "\n";
+        return ret;
     }
 }

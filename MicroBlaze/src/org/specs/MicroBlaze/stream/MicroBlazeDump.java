@@ -12,7 +12,7 @@ public class MicroBlazeDump extends StaticInstructionProducer {
 
     public MicroBlazeDump(File elfname) {
         super(new MicroBlazeApplication(elfname),
-                MicroBlazeResource.MICROBLAZE_INSTRUCTION_REGEX,
+                MicroBlazeResource.MICROBLAZE_INSTRUCTION_DUMP_REGEX,
                 MicroBlazeInstruction::newInstance);
     }
 }

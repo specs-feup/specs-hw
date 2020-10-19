@@ -53,7 +53,7 @@ public class FrequentStaticSequence extends AFrequentSequence {
     }
 
     @Override
-    protected List<Integer> getAddresses() {
+    public List<Integer> getAddresses() {
         return this.startAddresses;
     }
 
