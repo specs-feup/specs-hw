@@ -12,7 +12,7 @@ public class MicroBlazeTrace extends TraceInstructionProducer {
 
     public MicroBlazeTrace(File elfname) {
         super(new MicroBlazeApplication(elfname),
-                MicroBlazeResource.MICROBLAZE_INSTRUCTION_REGEX,
+                MicroBlazeResource.MICROBLAZE_INSTRUCTION_TRACE_REGEX,
                 MicroBlazeInstruction::newInstance);
     }
 }
