@@ -12,7 +12,7 @@ public class RiscvTrace extends TraceInstructionProducer {
 
     public RiscvTrace(File elfname) {
         super(new RiscvApplication(elfname),
-                RiscvResource.RISC_REGEX,
+                RiscvResource.RISC_TRACE_REGEX,
                 RiscvInstruction::newInstance);
     }
 }

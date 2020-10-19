@@ -23,7 +23,8 @@ public enum RiscvResource implements ResourceProvider {
     RISCV_READELF("riscv32-unknown-elf-readelf"),
     RISCV_OBJDUMP("riscv32-unknown-elf-objdump"),
 
-    RISC_REGEX("([0-9a-f]+):\\s([0-9a-f]+)");
+    RISC_DUMP_REGEX("([0-9a-f]+):\\s([0-9a-f]+)"),
+    RISC_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
 
     private final String resource;
 
