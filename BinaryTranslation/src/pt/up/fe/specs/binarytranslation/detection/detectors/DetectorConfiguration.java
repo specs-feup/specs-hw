@@ -2,17 +2,17 @@ package pt.up.fe.specs.binarytranslation.detection.detectors;
 
 public class DetectorConfiguration {
 
+    // privar final List< ??? > prohibited types; ?
+
     /*
      * min and max size of windows 
      */
-    private final int minsize;
-    private final int maxsize;
+    private int minsize;
+    private int maxsize;
+    // private List<InstructionType>
 
-    // privar final List< ??? > prohibited types; ?
+    private DetectorConfiguration() {
 
-    public DetectorConfiguration(int minsize, int maxsize) {
-        this.minsize = minsize;
-        this.maxsize = maxsize;
     }
 
     public int getMaxsize() {
@@ -23,7 +23,40 @@ public class DetectorConfiguration {
         return minsize;
     }
 
-    public static DetectorConfiguration defaultConfig() {
-        return new DetectorConfiguration(4, 20);
+    /*
+     * Builder class
+     */
+    public static class DetectorConfigurationBuilder {
+
+        /*
+         * min and max size of windows 
+         */
+        private int minsize = 2;
+        private int maxsize = 3;
+
+        public DetectorConfigurationBuilder() {
+
+        }
+
+        public DetectorConfigurationBuilder withMinWindow(int minsize) {
+            this.minsize = minsize;
+            return this;
+        }
+
+        public DetectorConfigurationBuilder withMaxWindow(int maxsize) {
+            this.maxsize = maxsize;
+            return this;
+        }
+
+        public DetectorConfiguration build() {
+            DetectorConfiguration config = new DetectorConfiguration();
+            config.minsize = this.minsize;
+            config.maxsize = this.maxsize;
+            return config;
+        }
+
+        public static DetectorConfiguration defaultConfig() {
+            return new DetectorConfigurationBuilder().build();
+        }
     }
 }

@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.detection.detectors;
+package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
  * @author NunoPaulino
  *
  */
-public class StaticBasicBlockDetector extends ABasicBlockDetector {
+public class StaticBasicBlockDetector extends AFixedSizeBasicBlockDetector {
 
     /*
      * 
