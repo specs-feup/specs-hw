@@ -20,8 +20,8 @@ import java.util.function.BiFunction;
 import org.specs.MicroBlazeSimulator.simulator.insts.Bri;
 import org.specs.MicroBlazeSimulator.simulator.insts.Imm;
 
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
 import pt.up.fe.specs.simulator.SimInstruction;
 import pt.up.fe.specs.util.SpecsCheck;
 
