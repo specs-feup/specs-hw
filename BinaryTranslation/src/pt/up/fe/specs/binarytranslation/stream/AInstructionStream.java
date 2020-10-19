@@ -45,6 +45,9 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
     @Override
     public Instruction nextInstruction() {
         var inst = this.next();
+        if (inst == null)
+            return null;
+
         this.numcycles += inst.getLatency();
         this.numinsts++;
         return inst;

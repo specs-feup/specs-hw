@@ -20,7 +20,7 @@ public class SegmentDetectTestUtils {
         Constructor<?> consStream, consDetector;
         try {
             consStream = streamClass.getConstructor(File.class);
-            consDetector = detectorClass.getConstructor(InstructionStream.class);
+            consDetector = detectorClass.getConstructor();
 
         } catch (Exception e) {
             throw new RuntimeException(e.getCause());
