@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
 import pt.up.fe.specs.simulator.microcodemachine.MicroCodeDecoder;
 import pt.up.fe.specs.simulator.microcodemachine.MicroCodeInstruction;
 import pt.up.fe.specs.simulator.microcodemachine.MicroCodeMachine;
