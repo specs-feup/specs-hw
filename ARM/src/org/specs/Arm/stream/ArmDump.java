@@ -12,7 +12,7 @@ public class ArmDump extends StaticInstructionProducer {
 
     public ArmDump(File elfname) {
         super(new ArmApplication(elfname),
-                ArmResource.AARCH64_REGEX,
+                ArmResource.AARCH64_DUMP_REGEX,
                 ArmInstruction::newInstance);
     }
 }
