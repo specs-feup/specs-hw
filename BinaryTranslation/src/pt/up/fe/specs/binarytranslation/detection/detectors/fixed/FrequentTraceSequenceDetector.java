@@ -11,10 +11,12 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.detection.detectors.variable;
+package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.FrequentTraceSequence;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
@@ -25,13 +27,17 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  * @author nuno
  *
  */
-public class FrequentTraceSequenceDetector extends AFrequentSequenceDetector {
+public class FrequentTraceSequenceDetector extends AFixedSizeFrequentSequenceDetector {
 
     /*
      * Public constructor
      */
     public FrequentTraceSequenceDetector() {
-        super();
+        super(DetectorConfigurationBuilder.defaultConfig());
+    }
+
+    public FrequentTraceSequenceDetector(DetectorConfiguration config) {
+        super(config);
     }
 
     @Override

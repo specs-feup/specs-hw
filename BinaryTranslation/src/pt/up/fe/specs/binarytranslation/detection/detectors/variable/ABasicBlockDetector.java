@@ -8,7 +8,6 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.BinarySegmentDetectionUtils;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
-import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
@@ -22,8 +21,8 @@ public abstract class ABasicBlockDetector extends ASegmentDetector {
     /*
      * Constructor
      */
-    public ABasicBlockDetector() {
-        super(DetectorConfigurationBuilder.defaultConfig());
+    public ABasicBlockDetector(DetectorConfiguration config) {
+        super(config);
     }
 
     /*

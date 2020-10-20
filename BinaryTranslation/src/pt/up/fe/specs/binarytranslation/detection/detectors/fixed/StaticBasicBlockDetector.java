@@ -15,6 +15,8 @@ package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.detection.segments.StaticBasicBlock;
@@ -34,7 +36,11 @@ public class StaticBasicBlockDetector extends AFixedSizeBasicBlockDetector {
      * 
      */
     public StaticBasicBlockDetector() {
-        super();
+        super(DetectorConfigurationBuilder.defaultConfig());
+    }
+
+    public StaticBasicBlockDetector(DetectorConfiguration config) {
+        super(config);
     }
 
     /*
