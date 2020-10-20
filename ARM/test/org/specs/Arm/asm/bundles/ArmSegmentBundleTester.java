@@ -5,7 +5,7 @@ import java.io.File;
 import org.junit.Test;
 import org.specs.Arm.stream.ArmElfStream;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class ArmSegmentBundleTester {

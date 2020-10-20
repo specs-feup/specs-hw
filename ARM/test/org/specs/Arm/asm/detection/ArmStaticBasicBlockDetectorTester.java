@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 
 public class ArmStaticBasicBlockDetectorTester {

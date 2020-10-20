@@ -6,12 +6,12 @@ import org.junit.Test;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentTraceSequenceDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
