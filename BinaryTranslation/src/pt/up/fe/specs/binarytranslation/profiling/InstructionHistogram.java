@@ -1,6 +1,4 @@
-package pt.up.fe.specs.binarytranslation.profiling.data;
-
-import pt.up.fe.specs.binarytranslation.profiling.AHistogramProfile;
+package pt.up.fe.specs.binarytranslation.profiling;
 
 public class InstructionHistogram extends AHistogramProfile {
 

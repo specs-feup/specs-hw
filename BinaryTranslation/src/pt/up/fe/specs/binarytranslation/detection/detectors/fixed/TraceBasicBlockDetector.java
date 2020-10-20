@@ -2,6 +2,8 @@ package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.detection.segments.TraceBasicBlock;
@@ -21,7 +23,11 @@ public class TraceBasicBlockDetector extends AFixedSizeBasicBlockDetector {
      * 
      */
     public TraceBasicBlockDetector() {
-        super();
+        super(DetectorConfigurationBuilder.defaultConfig());
+    }
+
+    public TraceBasicBlockDetector(DetectorConfiguration config) {
+        super(config);
     }
 
     /*
