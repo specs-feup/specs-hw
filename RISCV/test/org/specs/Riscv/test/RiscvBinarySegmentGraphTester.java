@@ -5,9 +5,9 @@ import java.io.File;
 import org.junit.Test;
 import org.specs.Riscv.stream.RiscvElfStream;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
