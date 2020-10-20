@@ -32,12 +32,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraphOutputUtils;
-import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
-import pt.up.fe.specs.binarytranslation.graphs.GraphNode;
-import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
-import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
+import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraphOutputUtils;
+import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
+import pt.up.fe.specs.binarytranslation.graph.GraphNode;
+import pt.up.fe.specs.binarytranslation.graph.edge.GraphInput;
+import pt.up.fe.specs.binarytranslation.graph.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.util.SpecsLogs;
 
