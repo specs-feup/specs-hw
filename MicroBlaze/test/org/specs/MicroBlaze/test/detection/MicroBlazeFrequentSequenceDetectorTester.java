@@ -17,23 +17,30 @@ import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentTraceSequenceDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 
 public class MicroBlazeFrequentSequenceDetectorTester {
 
     @Test
     public void testStatic() {
+        var builder = new DetectorConfigurationBuilder();
+        builder.withMaxWindow(6);
+
         var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.elf",
-                MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class);
+                MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class, builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
 
     @Test
     public void testTrace() {
+        var builder = new DetectorConfigurationBuilder();
+        builder.withMaxWindow(10).withMinWindow(2);
+
         var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.elf",
-                MicroBlazeTraceStream.class, FrequentTraceSequenceDetector.class);
+                MicroBlazeTraceStream.class, FrequentTraceSequenceDetector.class, builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
 }
