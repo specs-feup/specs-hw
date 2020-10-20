@@ -5,7 +5,7 @@ import java.io.File;
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.util.SpecsIo;
 
@@ -21,7 +21,8 @@ public class MicroBlazeJSONTester {
 
             // create JSON object
             bundle.toJSON();
-            var pathname = bundle.getJSONName();
+
+            // var pathname = bundle.getJSONName();
 
             // read into new object
             // var fromjson = BinaryTranslationUtils.fromJSON(pathname, SegmentBundle.class);

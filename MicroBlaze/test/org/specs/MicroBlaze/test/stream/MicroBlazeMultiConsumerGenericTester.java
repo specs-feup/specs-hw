@@ -12,9 +12,9 @@ import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
 import pt.up.fe.specs.binarytranslation.profiling.InstructionTypeHistogram;
 import pt.up.fe.specs.binarytranslation.profiling.data.InstructionProfileResult;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.binarytranslation.utils.replicator.ConsumerThread;
-import pt.up.fe.specs.binarytranslation.utils.replicator.ProducerEngine;
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.threadstream.ConsumerThread;
+import pt.up.fe.specs.util.threadstream.ProducerEngine;
 
 public class MicroBlazeMultiConsumerGenericTester {
 

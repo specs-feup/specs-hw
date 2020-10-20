@@ -5,8 +5,8 @@ import java.io.File;
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
+import pt.up.fe.specs.binarytranslation.profiling.InstructionHistogram;
 import pt.up.fe.specs.binarytranslation.profiling.InstructionTypeHistogram;
-import pt.up.fe.specs.binarytranslation.profiling.data.InstructionHistogram;
 import pt.up.fe.specs.binarytranslation.profiling.data.InstructionProfileResult;
 import pt.up.fe.specs.binarytranslation.stream.multistream.InstructionStreamConsumer;
 import pt.up.fe.specs.binarytranslation.stream.multistream.InstructionStreamEngine;
