@@ -6,13 +6,13 @@ import org.specs.Arm.ArmApplication;
 import org.specs.Arm.ArmResource;
 import org.specs.Arm.instruction.ArmInstruction;
 
-import pt.up.fe.specs.binarytranslation.producer.StaticInstructionProducer;
+import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
 
-public class ArmDump extends StaticInstructionProducer {
+public class ArmTraceProvider extends TraceInstructionProducer {
 
-    public ArmDump(File elfname) {
+    public ArmTraceProvider(File elfname) {
         super(new ArmApplication(elfname),
-                ArmResource.AARCH64_DUMP_REGEX,
+                ArmResource.AARCH64_TRACE_REGEX,
                 ArmInstruction::newInstance);
     }
 }

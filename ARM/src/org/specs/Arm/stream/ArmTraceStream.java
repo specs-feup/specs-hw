@@ -20,12 +20,6 @@ public class ArmTraceStream extends ATraceInstructionStream {
     }
 
     public ArmTraceStream(File elfname) {
-        super(new ArmTrace(elfname));
-    }
-
-    @Override
-    public int getInstructionWidth() {
-        return 4; // return in bytes
-        // TODO replace this with something smarter
+        super(new ArmTraceProvider(elfname));
     }
 }

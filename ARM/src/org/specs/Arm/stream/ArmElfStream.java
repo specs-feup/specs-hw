@@ -20,12 +20,6 @@ public class ArmElfStream extends AStaticInstructionStream {
     }
 
     public ArmElfStream(File elfname) {
-        super(new ArmDump(elfname));
-    }
-
-    @Override
-    public int getInstructionWidth() {
-        return 4; // return in bytes
-        // TODO replace this with something smarter
+        super(new ArmStaticProvider(elfname));
     }
 }
