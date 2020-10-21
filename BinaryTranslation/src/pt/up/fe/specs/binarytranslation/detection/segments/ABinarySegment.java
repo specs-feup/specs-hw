@@ -51,6 +51,15 @@ public abstract class ABinarySegment implements BinarySegment {
     }
 
     @Override
+    public int getUniqueId() {
+        String hashstring = "";
+        for (Instruction i : this.instlist) {
+            hashstring += i.getRepresentation();
+        }
+        return hashstring.hashCode();
+    }
+
+    @Override
     public int getSegmentLength() {
         return instlist.size();
     }

@@ -16,15 +16,6 @@ public abstract class ABasicBlock extends ABinarySegment {
     }
 
     @Override
-    public int getUniqueId() {
-        String hashstring = "";
-        for (Instruction i : this.instlist) {
-            hashstring += i.getRepresentation();
-        }
-        return hashstring.hashCode();
-    }
-
-    @Override
     public int getOccurences() {
         int occ = 0;
         for (SegmentContext c : this.getContexts()) {
@@ -36,18 +27,12 @@ public abstract class ABasicBlock extends ABinarySegment {
     @Override
     public int getExecutionCycles() {
 
-        // instruction cycles of the segment
-        Integer cycles = 0;
-        for (Instruction i : this.instlist) {
-            cycles += i.getLatency();
-        }
-
         // multiply by number of contexts and their ocurrences
         Integer ocurrences = 0;
         for (SegmentContext c : this.getContexts()) {
             ocurrences += c.getOcurrences();
         }
 
-        return cycles * ocurrences;
+        return this.getLatency() * ocurrences;
     }
 }
