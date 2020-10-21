@@ -14,17 +14,4 @@ public abstract class AFrequentSequence extends ABinarySegment {
             List<SegmentContext> contexts, Application appinfo) {
         super(ilist, contexts, appinfo);
     }
-
-    /*
-     * 
-     */
-    @Override
-    public int getUniqueId() {
-        String uniqueid = "";
-        for (Integer i : this.getAddresses()) {
-            uniqueid += i.toString();
-        }
-
-        return uniqueid.hashCode();
-    }
 }
