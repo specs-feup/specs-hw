@@ -22,6 +22,11 @@ public class ChanneledInstructionProducer extends GenericObjectStream<Instructio
     }
 
     @Override
+    public Integer getInstructionWidth() {
+        return this.app.getInstructionWidth();
+    }
+
+    @Override
     public Instruction nextInstruction() {
         return this.next();
     }

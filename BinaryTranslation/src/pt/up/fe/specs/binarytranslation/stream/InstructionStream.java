@@ -42,7 +42,7 @@ public interface InstructionStream extends ObjectStream<Instruction> {
      * 
      * @return
      */
-    int getInstructionWidth();
+    Integer getInstructionWidth();
 
     /**
      * 

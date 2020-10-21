@@ -98,10 +98,8 @@ public abstract class Application {
      * WARNING, this only works for ISAs with constant width!
      * maybe implement inst width as an InstructionProperty?
      * 
-     *     @Override
+     */
     public int getInstructionWidth() {
         return 4; // return in bytes
     }
-     */
-
 }

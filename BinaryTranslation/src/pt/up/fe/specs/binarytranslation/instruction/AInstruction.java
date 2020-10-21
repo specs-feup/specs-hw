@@ -27,7 +27,7 @@ import pt.up.fe.specs.util.SpecsStrings;
  */
 public abstract class AInstruction implements Instruction {
 
-    private Number address;
+    private Integer address;
     private String instruction;
 
     // decoded field data (abstract class)
@@ -39,7 +39,7 @@ public abstract class AInstruction implements Instruction {
     // the enum which represents the ISA properties of this instruction
     protected final InstructionProperties props;
 
-    public AInstruction(Number address, String instruction,
+    public AInstruction(Integer address, String instruction,
             InstructionData idata, InstructionProperties props) {
         this.address = address;
         this.instruction = instruction.strip();
@@ -64,7 +64,7 @@ public abstract class AInstruction implements Instruction {
     }
 
     @Override
-    public final Number getAddress() {
+    public final Integer getAddress() {
         return address;
     }
 
@@ -237,7 +237,7 @@ public abstract class AInstruction implements Instruction {
      * TODO: replace with SymbolicInstruction class!
      */
     @Override
-    public void makeSymbolic(Number address, Map<String, String> regremap) throws NullPointerException {
+    public void makeSymbolic(Integer address, Map<String, String> regremap) throws NullPointerException {
 
         // symbolify address
         this.address = address;
