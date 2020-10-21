@@ -19,6 +19,12 @@ public interface InstructionProducer extends ObjectProducer<Instruction> {
     Instruction nextInstruction();
 
     /**
+     * 
+     * @return
+     */
+    Integer getInstructionWidth();
+
+    /**
      * Outputs the unprocessed incoming stream
      */
     public void rawDump();

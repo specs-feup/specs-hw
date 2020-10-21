@@ -73,7 +73,6 @@ public abstract class AFixedSizeBasicBlockDetector extends ASegmentDetector {
 
                 // add sequence to map which is indexed by hashCode + startaddr
                 BinarySegmentDetectionUtils.addHashSequenceToList(hashed, newseq);
-
             }
 
             // pop one

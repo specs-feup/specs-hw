@@ -51,6 +51,11 @@ public abstract class AInstructionProducer implements InstructionProducer {
     }
 
     @Override
+    public Integer getInstructionWidth() {
+        return this.app.getInstructionWidth();
+    }
+
+    @Override
     public void rawDump() {
         String line = null;
         while ((line = insts.nextLine()) != null) {

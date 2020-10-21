@@ -43,7 +43,7 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default Number getAddress() {
+    default Integer getAddress() {
         return getAddress32();
     }
 
@@ -190,7 +190,7 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default void makeSymbolic(Number address, Map<String, String> regremap) {
+    default void makeSymbolic(Integer address, Map<String, String> regremap) {
         throw new NotImplementedException(this);
     }
 

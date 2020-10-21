@@ -36,7 +36,7 @@ public interface Instruction {
     /*
      * Position of instruction in program memory
      */
-    default Number getAddress() {
+    default Integer getAddress() {
         return null;
     };
 
@@ -271,7 +271,7 @@ public interface Instruction {
         return null;
     }
 
-    /*
+    /*makeSymbolic
      * Returns an asm string representation of instruction (includes operands) 
      */
     default String getRepresentation() {
@@ -289,7 +289,7 @@ public interface Instruction {
      * Used to abstract an instruction away from an 
      * executed representation, to a symbolic representation
      */
-    default void makeSymbolic(Number address, Map<String, String> regremap) {
+    default void makeSymbolic(Integer address, Map<String, String> regremap) {
         return;
     }
 }

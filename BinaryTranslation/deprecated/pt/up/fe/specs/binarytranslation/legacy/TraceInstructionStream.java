@@ -68,7 +68,7 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
      * @return
      */
     @Override
-    default int getInstructionWidth() {
+    default Integer getInstructionWidth() {
         return 0;
     }
 

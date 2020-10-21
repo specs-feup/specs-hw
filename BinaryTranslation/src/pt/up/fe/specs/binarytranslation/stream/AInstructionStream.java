@@ -54,8 +54,13 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
     }
 
     @Override
-    public Application getApp() {
+    public final Application getApp() {
         return this.producer.getApp();
+    }
+
+    @Override
+    public final Integer getInstructionWidth() {
+        return this.getApp().getInstructionWidth();
     }
 
     @Override

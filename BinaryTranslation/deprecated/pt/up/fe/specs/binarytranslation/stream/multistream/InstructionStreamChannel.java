@@ -28,7 +28,7 @@ public class InstructionStreamChannel extends GenericObjectStream<Instruction> i
     }
 
     @Override
-    public int getInstructionWidth() {
+    public Integer getInstructionWidth() {
         return this.istream.getInstructionWidth();
     }
 
