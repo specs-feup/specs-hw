@@ -6,13 +6,13 @@ import org.specs.Riscv.RiscvApplication;
 import org.specs.Riscv.RiscvResource;
 import org.specs.Riscv.instruction.RiscvInstruction;
 
-import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
+import pt.up.fe.specs.binarytranslation.producer.StaticInstructionProducer;
 
-public class RiscvTrace extends TraceInstructionProducer {
+public class RiscvStaticProvider extends StaticInstructionProducer {
 
-    public RiscvTrace(File elfname) {
+    public RiscvStaticProvider(File elfname) {
         super(new RiscvApplication(elfname),
-                RiscvResource.RISC_TRACE_REGEX,
+                RiscvResource.RISC_DUMP_REGEX,
                 RiscvInstruction::newInstance);
     }
 }

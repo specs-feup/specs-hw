@@ -20,12 +20,6 @@ public class RiscvElfStream extends AStaticInstructionStream {
     }
 
     public RiscvElfStream(File elfname) {
-        super(new RiscvDump(elfname));
-    }
-
-    @Override
-    public int getInstructionWidth() {
-        return 4; // return in bytes
-        // TODO replace this with something smarter
+        super(new RiscvStaticProvider(elfname));
     }
 }
