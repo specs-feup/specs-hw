@@ -6,6 +6,13 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTestUtils;
 
+/**
+ * Trace printing test cases; txt files are used so that the backend tools can run on Jenkins without need for
+ * installing GNU utils for the MicroBlaze architecture
+ * 
+ * @author nuno
+ *
+ */
 public class MicroBlazeStreamTester {
 
     @Test
@@ -20,11 +27,12 @@ public class MicroBlazeStreamTester {
 
     @Test
     public void testTrace() {
-        InstructionStreamTestUtils.printStream("org/specs/MicroBlaze/asm/cholesky.elf", MicroBlazeTraceStream.class);
+        InstructionStreamTestUtils.printStream("org/specs/MicroBlaze/asm/cholesky_trace.txt",
+                MicroBlazeTraceStream.class);
     }
 
     @Test
     public void testTraceRaw() {
-        InstructionStreamTestUtils.rawDump("org/specs/MicroBlaze/asm/cholesky.elf", MicroBlazeTraceStream.class);
+        InstructionStreamTestUtils.rawDump("org/specs/MicroBlaze/asm/cholesky.txt", MicroBlazeTraceStream.class);
     }
 }

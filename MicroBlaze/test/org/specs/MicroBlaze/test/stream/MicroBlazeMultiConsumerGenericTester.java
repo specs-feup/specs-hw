@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.stream.MicroBlazeDump;
+import org.specs.MicroBlaze.stream.MicroBlazeStaticProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -25,7 +25,7 @@ public class MicroBlazeMultiConsumerGenericTester {
         fd.deleteOnExit();
 
         // producer
-        var iproducer = new MicroBlazeDump(fd);
+        var iproducer = new MicroBlazeStaticProvider(fd);
 
         /*
          * TODO: the return of processing an instruction stream fully (post close) should be all meta info

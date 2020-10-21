@@ -1,6 +1,8 @@
-package org.specs.MicroBlaze;
+package org.specs.MicroBlaze.asm;
 
 import java.io.File;
+
+import org.specs.MicroBlaze.MicroBlazeResource;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 

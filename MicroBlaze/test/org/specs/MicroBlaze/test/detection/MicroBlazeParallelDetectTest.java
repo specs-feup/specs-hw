@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
-import org.specs.MicroBlaze.stream.MicroBlazeTrace;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
@@ -15,7 +15,14 @@ import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.threadstream.ProducerEngine;
 
-public class MicroBlazeParallelDetect {
+/**
+ * Comparison runs between multiple detectors in sequence, versus threaded run; txt files are used so that the backend
+ * tools can run on Jenkins without need for installing GNU utils for the MicroBlaze architecture
+ * 
+ * @author nuno
+ *
+ */
+public class MicroBlazeParallelDetectTest {
 
     private void testParallelDetectors(String elfname) {
 
@@ -23,10 +30,10 @@ public class MicroBlazeParallelDetect {
         File fd = SpecsIo.resourceCopy(elfname);
         fd.deleteOnExit();
 
-        int minwindow = 2, maxwindow = 10;
+        int minwindow = 2, maxwindow = 20;
 
         // producer
-        var iproducer = new MicroBlazeTrace(fd);
+        var iproducer = new MicroBlazeTraceProvider(fd);
 
         // host for threads
         var streamengine = new ProducerEngine<>(iproducer, op -> op.nextInstruction(),
@@ -58,7 +65,7 @@ public class MicroBlazeParallelDetect {
         File fd = SpecsIo.resourceCopy(elfname);
         fd.deleteOnExit();
 
-        int minwindow = 2, maxwindow = 10;
+        int minwindow = 2, maxwindow = 20;
 
         // do all detectors sequentially
         for (int i = minwindow; i < maxwindow; i++) {
@@ -72,11 +79,11 @@ public class MicroBlazeParallelDetect {
 
     @Test
     public void testParallelDetectors() {
-        this.testParallelDetectors("org/specs/MicroBlaze/asm/matmul.elf");
+        this.testParallelDetectors("org/specs/MicroBlaze/asm/cholesky_trace.txt");
     }
 
     @Test
     public void testSequentialDetectors() {
-        this.testSequentialDetectors("org/specs/MicroBlaze/asm/matmul.elf");
+        this.testSequentialDetectors("org/specs/MicroBlaze/asm/cholesky_trace.txt");
     }
 }

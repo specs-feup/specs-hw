@@ -2,7 +2,7 @@ package org.specs.MicroBlaze.stream;
 
 import java.io.File;
 
-import org.specs.MicroBlaze.MicroBlazeApplication;
+import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;
@@ -20,11 +20,6 @@ public class MicroBlazeElfStream extends AStaticInstructionStream {
     }
 
     public MicroBlazeElfStream(File elfname) {
-        super(new MicroBlazeDump(elfname));
-    }
-
-    @Override
-    public int getInstructionWidth() {
-        return 4; // return in bytes
+        super(new MicroBlazeStaticProvider(elfname));
     }
 }
