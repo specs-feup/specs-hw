@@ -11,6 +11,7 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.MegaBlock;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
+import pt.up.fe.specs.binarytranslation.detection.trace.InstructionWindow;
 import pt.up.fe.specs.binarytranslation.detection.trace.TraceUnit;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
@@ -29,7 +30,12 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
     /*
      * Check if candidate sequence is valid
      */
-    private Boolean validSequence(List<TraceUnit> units) {
+    private Boolean validSequence(List<TraceUnit> units, InstructionWindow window) {
+
+        // all start and end instruction of trace unit must exist in the window
+        for (var unit : units)
+            if (!window.exists(unit.getStart()) || !window.exists(unit.getEnd()))
+                return false;
 
         // they all need to have different start addrs!
         for (int i = 0; i < units.size() - 1; i++) {
@@ -59,13 +65,13 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
     /*
      * Get the pair which represent the start and end of sequential block!
      */
-    private TraceUnit getBlock(InstructionStream istream) {
+    private TraceUnit getTraceUnit(InstructionStream istream, InstructionWindow window) {
 
         if (!istream.hasNext())
             return null;
 
         // find next jump
-        Instruction startInst = istream.nextInstruction();
+        Instruction startInst = window.add(istream.nextInstruction());
         Instruction previs = startInst, is = null;
         while ((is = istream.peekNext()) != null) {
             var addr1 = previs.getAddress().intValue();
@@ -76,11 +82,38 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
                 return new TraceUnit(startInst, previs);
 
             // advance
-            previs = istream.nextInstruction();
+            previs = window.add(istream.nextInstruction());
         }
 
         return null;
     }
+
+    /*
+     * Expands the TraceUnits into full instruction list
+     */
+    private List<Instruction> expandTraceUnits(List<TraceUnit> units, InstructionWindow window) {
+
+        var fullList = new ArrayList<Instruction>();
+        for (var unit : units)
+            fullList.addAll(window.getRange(unit.getStart(), unit.getEnd()));
+
+        return fullList;
+    }
+
+    /*
+     * Checks the last instruction in the window, to see if it completes
+     * a trace unit (?)
+     
+    private TraceUnit getTraceUnit(InstructionWindow window) {
+        
+        // last 2 insts in window
+        var is1 = window.getFromLast(1);
+        var is2 = window.getLast();
+    
+        // target of a taken branch
+        if ((is2.getAddress().intValue() - is1.getAddress().intValue()) != istream.getInstructionWidth())
+            return new TraceUnit(???, is1);        
+    }*/
 
     // TODO: "advanceWindow" should go forward by as much as teh first TraceUnit in the trace unit window?
 
@@ -90,10 +123,10 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
 
         // list to hold window of ALL incoming instructions;
         // list has size dictated by this.getConfig().getMaxsize()
-        var auxInstList = new ArrayList<Instruction>();
+        var instWindow = new InstructionWindow(this.getConfig().getMaxsize());
 
         // list of trace Units (e.g., start-end addr pair of basic block)
-        var window = new ArrayList<TraceUnit>();
+        var unitWindow = new ArrayList<TraceUnit>();
 
         // desired number of basic blocks in Megablock
         // save first instruction after a jump
@@ -101,25 +134,22 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
         int blockNr = this.getConfig().getMaxBlocks() + 1;
 
         // get first set of @TraceUnit
-        while (window.size() < blockNr && istream.hasNext())
-            window.add(this.getBlock(istream));
+        while (unitWindow.size() < blockNr && istream.hasNext())
+            unitWindow.add(this.getTraceUnit(istream, instWindow));
 
         // process entire stream
         while (true) {
 
-            // TODO: as I advance the window, if a new sequence of valid trace units is found
-            // but the earliest of them has slid out the window, we need to discards that
-            // sequence of TraceUnits
-
             // hash candidate
-            if (validSequence(window)) {
+            if (validSequence(unitWindow, instWindow)) {
+
+                // sort trace units by lowest starting addr? (obeys megablock definition?)
+                var sortUnits = unitWindow.subList(0, blockNr - 1);
+                // Collections.sort(sortUnits,
+                // (o1, o2) -> o1.getStart().getAddress().compareTo(o2.getStart().getAddress()));
 
                 // turn pairs in to flat list
-                var flatlist = new ArrayList<Instruction>();
-                for (var pair : window.subList(0, window.size() - 1)) {
-                    flatlist.add(pair.getStart());
-                    flatlist.add(pair.getEnd());
-                }
+                var flatlist = this.expandTraceUnits(sortUnits, instWindow);
 
                 // create new candidate hash sequence
                 var newseq = BinarySegmentDetectionUtils.hashSequence(flatlist);
@@ -132,12 +162,15 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
             }
 
             // find next block
-            var block = this.getBlock(istream);
+            var block = this.getTraceUnit(istream, instWindow);
             if (block == null)
                 break;
 
-            window.remove(0);
-            window.add(block);
+            unitWindow.remove(0);
+            unitWindow.add(block);
         }
+
+        // Remove all sequences which only happen once
+        // BinarySegmentDetectionUtils.removeUnique(addrs, hashed);
     }
 }
