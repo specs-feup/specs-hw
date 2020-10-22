@@ -48,6 +48,8 @@ public class DetectorConfiguration {
         private int maxBlocks = 2;
         private float superblockBranchThreshold;
 
+        // private int maxInstsInTraceUnit ?
+
         public DetectorConfigurationBuilder() {
 
         }
