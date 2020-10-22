@@ -3,5 +3,5 @@
 #ARM
 #BinaryTranslation
 #GearmanSpecsHw
-#MicroBlaze
+MicroBlaze
 ElfSimulator
