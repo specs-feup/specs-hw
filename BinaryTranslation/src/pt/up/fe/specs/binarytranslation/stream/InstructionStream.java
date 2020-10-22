@@ -52,6 +52,18 @@ public interface InstructionStream extends ObjectStream<Instruction> {
 
     /**
      * 
+     */
+    public default void enableDump() {
+    };
+
+    /**
+     * 
+     */
+    public default void enableDump(boolean val) {
+    };
+
+    /**
+     * 
      * @return Total number of returned instructions up to this moment
      */
     default long getNumInstructions() {
