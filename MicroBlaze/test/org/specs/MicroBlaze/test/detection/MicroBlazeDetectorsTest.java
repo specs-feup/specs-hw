@@ -78,7 +78,7 @@ public class MicroBlazeDetectorsTest {
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxBlocks(10).withMaxWindow(1000);
 
-        var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.elf",
+        var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.txt",
                 MicroBlazeTraceStream.class, FixedSizeMegablockDetectorV2.class, builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
