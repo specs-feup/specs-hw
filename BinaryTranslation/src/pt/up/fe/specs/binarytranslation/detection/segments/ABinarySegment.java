@@ -130,6 +130,7 @@ public abstract class ABinarySegment implements BinarySegment {
         // addresses
         String ret = "Sequence occurs at = [ ";
         ret += this.getAddressListRepresentation();
+        ret += "Iterations: " + this.getOccurences() + "\n";
 
         // instructions
         for (Instruction inst : this.instlist) {
