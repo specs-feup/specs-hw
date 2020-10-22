@@ -5,7 +5,7 @@ import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FixedSizeMegablockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FixedSizeMegablockDetectorV2;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentTraceSequenceDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
@@ -76,10 +76,10 @@ public class MicroBlazeDetectorsTest {
     @Test
     public void testMegablock() {
         var builder = new DetectorConfigurationBuilder();
-        builder.withMaxBlocks(3);
+        builder.withMaxBlocks(10).withMaxWindow(1000);
 
         var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.elf",
-                MicroBlazeTraceStream.class, FixedSizeMegablockDetector.class, builder.build());
+                MicroBlazeTraceStream.class, FixedSizeMegablockDetectorV2.class, builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
 }

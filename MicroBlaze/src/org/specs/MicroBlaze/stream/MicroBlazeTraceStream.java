@@ -75,7 +75,10 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         if (i != null) {
             // get another one if true
             if (i.isImmediateValue() || (i.getDelay() > 0)) {
-                afterbug = elfdump.getInstruction(i.getAddress() + this.getInstructionWidth());
+
+                // NOTE, doing simple elfdump.getInstruction returns a reference, and we want new objects
+                // after a call to nextInstruction() ALWAYS! Therefore, copy() must be appended
+                afterbug = elfdump.getInstruction(i.getAddress() + this.getInstructionWidth()).copy();
                 haveStoredInst = true;
             }
 
