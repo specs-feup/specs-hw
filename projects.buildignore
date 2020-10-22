@@ -1,6 +1,6 @@
 #Causing build to fail, maybe due to missing files
-RISCV
-ARM
-BinaryTranslation
-GearmanSpecsHw
-MicroBlaze
+#RISCV
+#ARM
+#BinaryTranslation
+#GearmanSpecsHw
+#MicroBlaze
