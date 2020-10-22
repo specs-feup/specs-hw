@@ -52,9 +52,16 @@ public class SegmentContext {
     }
 
     /*
+     * TODO: need a function to apply a context to a segment, and print it?
+     */
+    /*public String getRepresentation() {
+        
+    }*/
+
+    /*
      * Retrieves the register remmaping map
      */
-    public String getRepresentation() {
+    public String getContextMap() {
 
         String ret = "Start Addresses: 0x" + Integer.toHexString(this.startaddr) + "\n";
         ret += "Number of ocurrences: " + Integer.toString(this.ocurrences) + "\n";

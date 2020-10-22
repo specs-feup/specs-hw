@@ -15,6 +15,8 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
     @Expose
     protected long numcycles;
 
+    private boolean dumpStream = false;
+
     /*
      * This type of stream contains its own producer internally
      */
@@ -25,6 +27,16 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
         this.producer = producer;
         this.numinsts = 0;
         this.numcycles = 0;
+    }
+
+    @Override
+    public void enableDump() {
+        this.dumpStream = true;
+    }
+
+    @Override
+    public void enableDump(boolean val) {
+        this.dumpStream = val;
     }
 
     @Override
@@ -50,6 +62,10 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
 
         this.numcycles += inst.getLatency();
         this.numinsts++;
+
+        if (this.dumpStream)
+            System.out.println(inst.getRepresentation());
+
         return inst;
     }
 

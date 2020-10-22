@@ -31,9 +31,9 @@ public class InstructionWindow {
 
     public boolean exists(Integer addr) {
         for (var inst : this.ilist)
-            if (!(inst.getAddress().intValue() == addr.intValue()))
-                return false;
-        return true;
+            if (inst.getAddress().intValue() == addr.intValue())
+                return true;
+        return false;
     }
 
     public boolean exists(Instruction inst) {
@@ -50,6 +50,26 @@ public class InstructionWindow {
 
     public Instruction get(int index) {
         return this.ilist.get(index);
+    }
+
+    /*
+     * Get latest occuring instance of an instruction (by addr) in window
+     */
+    public Instruction getLatestByAddr(Integer addr) {
+        for (int i = this.ilist.size() - 1; i >= 0; i--)
+            if (this.ilist.get(i).getAddress().intValue() == addr.intValue())
+                return this.ilist.get(i);
+        return null;
+    }
+
+    /*
+     * Get latest occuring instance of an instruction (by addr) in window
+     */
+    public Instruction getEarliestByAddr(Integer addr) {
+        for (var inst : this.ilist)
+            if (inst.getAddress().intValue() == addr.intValue())
+                return inst;
+        return null;
     }
 
     public Instruction getFromLast(int index) {

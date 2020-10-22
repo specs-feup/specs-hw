@@ -224,7 +224,7 @@ public class BinarySegmentGraphOutputUtils {
         // Contexts
         var contextString = "";
         for (SegmentContext context : seg.getContexts()) {
-            contextString += context.getRepresentation() + "\n\n";
+            contextString += context.getContextMap() + "\n\n";
         }
         htmlplage.replace("<CONTEXTS>",
                 contextString.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
