@@ -1,11 +1,13 @@
 package org.specs.Arm.instruction;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.specs.Arm.parsing.ArmAsmField;
 
-import pt.up.fe.specs.binarytranslation.instruction.*;
-import pt.up.fe.specs.binarytranslation.instruction.operand.*;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.operand.OperandAccessType;
 
 /*
  * this class only exists to provide a shorthandle to the providers
@@ -89,10 +91,10 @@ public class ArmOperandBuilder {
     }
 
     public Operand newWritePSTATERegister() {
-        return ArmOperand.newPSTATERegister(OperandType.WRITE);
+        return ArmOperand.newPSTATERegister(OperandAccessType.WRITE);
     }
 
     public Operand newReadPSTATERegister() {
-        return ArmOperand.newPSTATERegister(OperandType.READ);
+        return ArmOperand.newPSTATERegister(OperandAccessType.READ);
     }
 }

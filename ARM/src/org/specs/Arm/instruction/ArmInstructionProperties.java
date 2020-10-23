@@ -23,6 +23,20 @@ public enum ArmInstructionProperties implements InstructionProperties {
     // Annotations of chaper and page numbers are relative to the ARMv8 reference manual:
     // https://static.docs.arm.com/ddi0487/ea/DDI0487E_a_armv8_arm.pdf
 
+    /*
+     * In AArch64 state:
+     * 1. A general-purpose register file contains 64-bit registers:
+     *      — Many instructions can access these registers as 64-bit registers or 
+     *      as 32-bit registers, using only the bottom 32 bits.
+     *      
+     * 2. A SIMD&FP register file contains 128-bit registers:
+     *      — The quadword integer data types only apply to the SIMD&FP register file.
+     *      — The floating-point data types only apply to the SIMD&FP register file.
+     *      — While the AArch64 vector registers support 128-bit vectors, 
+     *      the effective vector length can be 64-bits or 128-bits depending 
+     *      on the A64 instruction encoding used, see Instruction Mnemonics on page C1-173
+     */
+
     // DPI_PCREL (C4-253)
     adr(0x1000_0000, DPI_PCREL, G_OTHER),
     adrp(0x9000_0000, DPI_PCREL, G_OTHER),
