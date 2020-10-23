@@ -13,8 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.operand;
 
-import static pt.up.fe.specs.binarytranslation.instruction.operand.OperandType.*;
-
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
 
 /**
@@ -96,42 +94,42 @@ public abstract class AOperand implements Operand {
     ///////////////////////////////////////////////////////////// Properties //
     @Override
     public Boolean isRegister() {
-        return (this.props.getTypes().contains(REGISTER));
+        return (this.props.getType() == OperandType.REGISTER);
     }
 
     @Override
     public Boolean isImmediate() {
-        return (this.props.getTypes().contains(IMMEDIATE));
+        return (this.props.getType() == OperandType.IMMEDIATE);
     }
 
     @Override
     public Boolean isSymbolic() {
-        return (this.props.getTypes().contains(SYMBOLIC));
+        return (this.props.getType() == OperandType.SYMBOLIC);
     }
 
     @Override
     public Boolean isRead() {
-        return (this.props.getTypes().contains(READ));
+        return (this.props.getAccessType() == OperandAccessType.READ);
     }
 
     @Override
     public Boolean isWrite() {
-        return (this.props.getTypes().contains(WRITE));
+        return (this.props.getAccessType() == OperandAccessType.WRITE);
     }
 
     @Override
     public Boolean isFloat() {
-        return (this.props.getTypes().contains(FLOAT));
+        return (this.props.getDataType() == OperandDataType.SCALAR_FLOAT);
     }
 
     @Override
     public Boolean isSubOperation() {
-        return (this.props.getTypes().contains(SUBOPERATION));
+        return (this.props.getType() == OperandType.SUBOPERATION);
     }
 
     @Override
     public Boolean isSpecial() {
-        return (this.props.getTypes().contains(SPECIAL));
+        return (this.props.getType() == OperandType.SPECIAL);
     }
 
     @Override
@@ -154,23 +152,24 @@ public abstract class AOperand implements Operand {
 
     /*
      * Get what the operand WOULD look like if symbolified 
-     */
+     
     @Override
     public String getPossibleSymbolicRepresentation(String val) {
         return (props.getSymbolicPrefix() + val + props.getSymbolicSuffix());
     }
-
+    
     ////////////////////////////////////////////////////////////////// Utils //
-
+    
     /*
      * Symbolify instruction
-     */
+     
     @Override
     public void setSymbolic(String svalue) {
         this.props.setSymbolic();
         this.svalue = svalue;
         // this.value = -1;
     }
+    */
 
     /*
     public boolean equals(Operand op) {
