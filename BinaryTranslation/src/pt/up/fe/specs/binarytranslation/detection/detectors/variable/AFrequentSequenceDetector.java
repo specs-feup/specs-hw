@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.BinarySegmentDetectionUtils;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -76,7 +75,7 @@ public abstract class AFrequentSequenceDetector extends ASegmentDetector {
                 continue;
 
             // create new candidate hash sequence
-            var newseq = BinarySegmentDetectionUtils.hashSequence(candidate);
+            var newseq = super.hashSequence(candidate);
             newsequences.add(newseq);
         }
 
@@ -104,10 +103,10 @@ public abstract class AFrequentSequenceDetector extends ASegmentDetector {
             for (var seq : hashSequences(window)) {
 
                 // add sequence to occurrence counters (counting varies between static to trace detection)
-                BinarySegmentDetectionUtils.addAddrToList(addrs, seq);
+                super.addAddrToList(addrs, seq);
 
                 // add sequence to map which is indexed by hashCode + startaddr
-                BinarySegmentDetectionUtils.addHashSequenceToList(hashed, seq);
+                super.addHashSequenceToList(hashed, seq);
             }
 
             // shift window (i.e. new window)
@@ -123,7 +122,7 @@ public abstract class AFrequentSequenceDetector extends ASegmentDetector {
         } while (istream.hasNext());
 
         // Remove all sequences which only happen once
-        BinarySegmentDetectionUtils.removeUnique(addrs, hashed);
+        super.removeUnique(addrs, hashed);
     }
 
     /*

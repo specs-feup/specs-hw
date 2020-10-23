@@ -100,7 +100,7 @@ public interface Operand {
      * (in terms of representation) if its value was replaced by a symbolic symbol "val"
      * This method is required to compute the register remapping tables during segment detection
      */
-    public String getPossibleSymbolicRepresentation(String val);
+    // public String getPossibleSymbolicRepresentation(String val);
 
     /*
      * 
@@ -114,7 +114,7 @@ public interface Operand {
      * away from their execution context (useful for frequent sequences which occurs in multiple points
      * of the code, both static and trace based)
      */
-    public void setSymbolic(String value);
+    // public void setSymbolic(String value);
 
     /*
      * Copy this object
