@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.BinarySegmentDetectionUtils;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
@@ -152,13 +151,13 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
                 var flatlist = this.expandTraceUnits(sortUnits, instWindow);
 
                 // create new candidate hash sequence
-                var newseq = BinarySegmentDetectionUtils.hashSequence(flatlist);
+                var newseq = super.hashSequence(flatlist);
 
                 // add sequence to occurrence counters (counting varies between static to trace detection)
-                BinarySegmentDetectionUtils.addAddrToList(addrs, newseq);
+                super.addAddrToList(addrs, newseq);
 
                 // add sequence to map which is indexed by hashCode + startaddr
-                BinarySegmentDetectionUtils.addHashSequenceToList(hashed, newseq);
+                super.addHashSequenceToList(hashed, newseq);
             }
 
             // find next block

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.BinarySegmentDetectionUtils;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -119,14 +118,14 @@ public abstract class ABasicBlockDetector extends ASegmentDetector {
                 if ((candidate = checkCandidate(window, is)) != null) {
 
                     // create new candidate hash sequence
-                    var newseq = BinarySegmentDetectionUtils.hashSequence(candidate);
+                    var newseq = super.hashSequence(candidate);
 
                     // add sequence to occurrence counters
                     // (counting varies between static to trace detection)
-                    BinarySegmentDetectionUtils.addAddrToList(addrs, newseq);
+                    super.addAddrToList(addrs, newseq);
 
                     // add sequence to map which is indexed by hashCode + startaddr
-                    BinarySegmentDetectionUtils.addHashSequenceToList(hashed, newseq);
+                    super.addHashSequenceToList(hashed, newseq);
                 }
             }
 
