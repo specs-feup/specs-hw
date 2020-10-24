@@ -1,5 +1,5 @@
 #Causing build to fail, maybe due to missing files
-#RISCV
+RISCV
 #ARM
 #BinaryTranslation
 #GearmanSpecsHw
