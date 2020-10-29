@@ -15,8 +15,16 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.interpretivesimulator;
+package pt.up.fe.specs.elfsimulator;
 
-public class Memory {
+import java.util.HashMap;
+import java.util.Map;
+
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
+
+public interface InterpretiveSimulator {
+    
+    
 
 }

@@ -17,6 +17,22 @@
 
 package pt.up.fe.specs.interpretivesimulator;
 
-public interface InterpretiveSimulator {
- //TODO implement interface
+import java.util.HashMap;
+import java.util.Map;
+
+public class Ram {
+    Map<Integer,Integer> data = new HashMap<>();
+        
+    public Ram() {
+        super();
+    }
+    
+    public void set(int address, int value) {
+        data.put(address, value);
+    }
+    
+    public int get(int address) {
+        return data.get(address);
+    }
+    
 }

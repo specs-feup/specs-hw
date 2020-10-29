@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.interpretivesimulator;
+package pt.up.fe.specs.elfsimulator;
 
 public class MemoryUnit {
     private final String name;
