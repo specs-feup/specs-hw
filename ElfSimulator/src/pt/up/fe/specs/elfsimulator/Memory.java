@@ -15,15 +15,21 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.interpretivesimulator;
+package pt.up.fe.specs.elfsimulator;
 
-import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseListener;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ASTInterpreter extends PseudoInstructionBaseListener{
+public class Memory {
+    Map<String, Number> memMap = new HashMap<>();
     
-     public ASTInterpreter(InstructionAST ast, Memory memory) {
-        // TODO Auto-generated constructor stub
+    public Memory() {}
+    
+    public void store(String address, Number value) {
+        memMap.put(address, value);  
     }
-
+    
+    public Number load(String address) {
+        return memMap.get(address);   
+    }
 }
