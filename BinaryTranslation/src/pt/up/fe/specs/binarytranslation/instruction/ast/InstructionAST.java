@@ -42,4 +42,9 @@ public class InstructionAST {
     public void accept(InstructionASTListener listener) {
         listener.visit(this);
     }
+
+    @Override
+    public String toString() {
+        return this.getRootnode().toString();
+    }
 }

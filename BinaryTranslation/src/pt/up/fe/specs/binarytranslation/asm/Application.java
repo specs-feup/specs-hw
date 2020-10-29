@@ -13,9 +13,14 @@
 
 package pt.up.fe.specs.binarytranslation.asm;
 
+import java.io.File;
+
 import com.google.gson.annotations.Expose;
 
-public class Application {
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.util.providers.ResourceProvider;
+
+public abstract class Application {
 
     @Expose
     private final String appName;
@@ -24,23 +29,77 @@ public class Application {
     private final String compilationInfo;
 
     @Expose
-    private final String cpuArchitectureName;
+    private final ResourceProvider cpuArchitectureName;
 
-    public Application(String cpuArchitectureName, String appName, String compilationInfo) {
-        this.appName = appName;
-        this.compilationInfo = compilationInfo;
+    @Expose
+    private final ResourceProvider gdb, gdbTmpl, objDump, readElf, qemuExe, dtbFile;
+
+    private final transient File elffile;
+
+    public Application(File elffile, ResourceProvider cpuArchitectureName, ResourceProvider gdb,
+            ResourceProvider objdump, ResourceProvider readelf, ResourceProvider gdbtmpl, ResourceProvider qemuexe,
+            ResourceProvider dtbfile) {
+
+        this.elffile = elffile;
+        this.appName = elffile.getName();
         this.cpuArchitectureName = cpuArchitectureName;
+        this.gdb = gdb;
+        this.objDump = objdump;
+        this.readElf = readelf;
+        this.gdbTmpl = gdbtmpl;
+        this.qemuExe = qemuexe;
+        this.dtbFile = dtbfile;
+        this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elffile.getPath(), readelf.getResource());
     }
 
     public String getAppName() {
         return appName;
     }
 
+    public File getElffile() {
+        return elffile;
+    }
+
     public String getCompilationInfo() {
         return compilationInfo;
     }
 
-    public String getCpuArchitectureName() {
+    public ResourceProvider getCpuArchitectureName() {
         return cpuArchitectureName;
+    }
+
+    public ResourceProvider getGdb() {
+        return gdb;
+    }
+
+    public ResourceProvider getObjdump() {
+        return objDump;
+    }
+
+    public ResourceProvider getReadelf() {
+        return readElf;
+    }
+
+    public ResourceProvider getGdbtmpl() {
+        return gdbTmpl;
+    }
+
+    public ResourceProvider getQemuexe() {
+        return qemuExe;
+    }
+
+    public ResourceProvider getDtbfile() {
+        return dtbFile;
+    }
+
+    /*
+     * TODO: implement this based on reading the elf file once, the storing the inst width
+     * 
+     * WARNING, this only works for ISAs with constant width!
+     * maybe implement inst width as an InstructionProperty?
+     * 
+     */
+    public int getInstructionWidth() {
+        return 4; // return in bytes
     }
 }

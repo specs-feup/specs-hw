@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
-import pt.up.fe.specs.binarytranslation.parsing.AsmParser;
-import pt.up.fe.specs.binarytranslation.parsing.binaryasmparser.BinaryAsmInstructionParser;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmParser;
+import pt.up.fe.specs.binarytranslation.asm.parsing.binaryasmparser.BinaryAsmInstructionParser;
 
 public interface MicroBlazeInstructionParsers {
 

@@ -16,4 +16,9 @@ public class HardwareErrorMessage extends HardwareNode {
     public String getAsString() {
         return "$error(\"" + errorText + "\");";
     }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new HardwareErrorMessage(this.errorText);
+    }
 }

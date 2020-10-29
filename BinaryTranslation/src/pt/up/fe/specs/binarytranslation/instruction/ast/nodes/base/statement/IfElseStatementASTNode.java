@@ -2,38 +2,42 @@ package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ExpressionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.meta.StatementListASTNode;
 
 public class IfElseStatementASTNode extends IfStatementASTNode {
 
+    private IfElseStatementASTNode() {
+        super(InstructionASTNodeType.IfElseStatementNode);
+    }
+
     public IfElseStatementASTNode(ExpressionASTNode condition, List<StatementASTNode> statements,
             List<StatementASTNode> elsestatements) {
-        super(condition, statements);
-        this.type = InstructionASTNodeType.IfElseStatementNode;
-        for (var estat : elsestatements)
-            this.addChild(estat);
+
+        // super
+        super(InstructionASTNodeType.IfElseStatementNode, condition, statements);
+
+        // else statements
+        this.addChild(new StatementListASTNode(elsestatements));
     }
 
     @Override
     public String getAsString() {
-        String ret = "if (" + this.getChild(0).getAsString() + ") ";
-        if (this.getChildren().size() > 1)
-            ret += "{\n";
+        var builder = new StringBuilder();
+        builder.append("if (" + this.getChild(0).getAsString() + ") ");
+        builder.append(this.getStatements().getAsString());
+        builder.append(this.getElseStatements().getAsString());
+        return builder.toString();
+    }
 
-        for (int i = 1; i < this.getChildren().size(); i++) {
-            var child = this.getChild(i);
-            ret += child.getAsString();
-        }
-
-        if (this.getChildren().size() > 1)
-            ret += "}\n";
-
-        return ret;
+    public StatementListASTNode getElseStatements() {
+        return (StatementListASTNode) this.getChild(2);
     }
 
     @Override
-    public ExpressionASTNode getCondition() {
-        return (ExpressionASTNode) this.getChild(0);
+    protected InstructionASTNode copyPrivate() {
+        return new IfElseStatementASTNode();
     }
 }

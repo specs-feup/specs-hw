@@ -14,7 +14,6 @@
 package pt.up.fe.specs.binarytranslation.instruction;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -27,7 +26,7 @@ import pt.up.fe.specs.util.SpecsStrings;
  */
 public abstract class AInstruction implements Instruction {
 
-    private Number address;
+    private Integer address;
     private String instruction;
 
     // decoded field data (abstract class)
@@ -39,7 +38,7 @@ public abstract class AInstruction implements Instruction {
     // the enum which represents the ISA properties of this instruction
     protected final InstructionProperties props;
 
-    public AInstruction(Number address, String instruction,
+    public AInstruction(Integer address, String instruction,
             InstructionData idata, InstructionProperties props) {
         this.address = address;
         this.instruction = instruction.strip();
@@ -64,7 +63,7 @@ public abstract class AInstruction implements Instruction {
     }
 
     @Override
-    public final Number getAddress() {
+    public final Integer getAddress() {
         return address;
     }
 
@@ -235,40 +234,40 @@ public abstract class AInstruction implements Instruction {
     /* 
      * TODO: very clunky here
      * TODO: replace with SymbolicInstruction class!
-     */
+     
     @Override
-    public void makeSymbolic(Number address, Map<String, String> regremap) throws NullPointerException {
-
+    public void makeSymbolic(Integer address, Map<String, String> regremap) throws NullPointerException {
+    
         // symbolify address
         this.address = address;
-
+    
         // symbolify operands
         for (Operand op : this.getData().getOperands()) {
             if (!op.isSubOperation() && !op.isSpecial()) {
                 // TODO move this condition to the construction of the
                 // regremap map
-
+    
                 var tmp = op.getRepresentation();
-
+    
                 String r = null;
                 try {
                     r = regremap.get(tmp);
-
+    
                 } catch (NullPointerException e) {
                     throw e;
                 }
                 // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
-
+    
                 String r2 = null;
                 try {
                     r2 = r.substring(r.indexOf('<') + 1, r.indexOf('>')); // NOTE: and ugly hack, but works...
-
+    
                 } catch (NullPointerException e) {
                     throw e;
                 }
-
+    
                 op.setSymbolic(r2);
-
+    
                 // TODO: BIG ISSUE
                 // for ARM, i cannot symbolify the address, since one of the IMM operands is computed from it...
                 // this happens for ldr for instance, and others
@@ -276,23 +275,5 @@ public abstract class AInstruction implements Instruction {
             }
         }
     }
-
-    /*
-     * 
-     *
-    public String express() {
-    
-        if (this.getProperties().getExpression() == null) {
-            return "No expression set yet!";
-        }
-    
-        // helper map so i have refs from operands to asmfields
-        Map<AsmField, Operand> helper = new HashMap<AsmField, Operand>();
-        for (Operand op : this.getData().getOperands()) {
-            helper.put(op.getAsmField(), op);
-        }
-    
-        return ExpressionSolver.solve(
-                this.getProperties().getExpression(), helper);
-    }*/
+    */
 }

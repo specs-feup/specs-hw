@@ -1,23 +1,29 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+
 public abstract class ABinaryHardwareExpression extends HardwareExpression {
 
-    /*
-     * 
-     */
     protected String expressionOperator;
 
-    public ABinaryHardwareExpression(HardwareExpression varA, HardwareExpression varB) {
+    protected ABinaryHardwareExpression(String operator, HardwareNodeType type) {
         super();
+        this.expressionOperator = operator;
+        this.type = type;
+    }
+
+    protected ABinaryHardwareExpression(String operator,
+            HardwareNodeType type, HardwareExpression varA, HardwareExpression varB) {
+        this(operator, type);
         this.addChild(varA);
         this.addChild(varB);
     }
 
-    private HardwareExpression getLeft() {
+    protected HardwareExpression getLeft() {
         return (HardwareExpression) this.getChild(0);
     }
 
-    private HardwareExpression getRight() {
+    protected HardwareExpression getRight() {
         return (HardwareExpression) this.getChild(1);
     }
 

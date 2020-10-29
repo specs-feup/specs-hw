@@ -13,14 +13,18 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr;
 
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperatorASTNode;
 
 public class UnaryExpressionASTNode extends ExpressionASTNode {
 
+    private UnaryExpressionASTNode() {
+        super(InstructionASTNodeType.UnaryExpressionNode);
+    }
+
     public UnaryExpressionASTNode(OperatorASTNode operator, ExpressionASTNode right) {
-        super();
-        this.type = InstructionASTNodeType.UnaryExpressionNode;
+        this();
         this.addChild(operator);
         this.addChild(right);
     }
@@ -36,5 +40,10 @@ public class UnaryExpressionASTNode extends ExpressionASTNode {
     @Override
     public String getAsString() {
         return this.getOperator() + this.getRight().getAsString();
+    }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new UnaryExpressionASTNode();
     }
 }

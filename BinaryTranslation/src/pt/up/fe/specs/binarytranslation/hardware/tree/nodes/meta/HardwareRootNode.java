@@ -15,4 +15,9 @@ public class HardwareRootNode extends HardwareNode {
         super();
         this.type = HardwareNodeType.Root;
     }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new HardwareRootNode();
+    }
 }

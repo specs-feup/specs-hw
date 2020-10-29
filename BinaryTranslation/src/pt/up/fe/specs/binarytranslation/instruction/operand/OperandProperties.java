@@ -1,8 +1,6 @@
 package pt.up.fe.specs.binarytranslation.instruction.operand;
 
-import java.util.List;
-
-import pt.up.fe.specs.binarytranslation.parsing.AsmField;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
 
 /**
  * Each operand in an ISA is defined by properties. This class is to be implemented by an enum per ISA, which lists all
@@ -14,14 +12,24 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmField;
 public interface OperandProperties {
 
     /*
-     * returns generic operandtype
-     */
-    public List<OperandType> getTypes();
-
-    /*
      * Should return a main archetype (i.e. REGISTER or IMMEDIATE)
      */
-    public OperandType getMainType();
+    public OperandType getType();
+
+    /*
+     * 
+     */
+    public OperandAccessType getAccessType();
+
+    /*
+     * 
+     */
+    public OperandDataSize getDataSize();
+
+    /*
+     * 
+     */
+    public OperandDataType getDataType();
 
     /*
      * Gets the human readable prefix of the operand, e.g. "r", or "q"
@@ -35,13 +43,15 @@ public interface OperandProperties {
 
     /*
      * 
-     */
+     
     public String getSymbolicPrefix();
-
-    /*
-     * 
-     */
+    
+    
     public String getSymbolicSuffix();
+    
+         
+    public void setSymbolic();
+    */
 
     /*
      * Width of register or immediate operand
@@ -52,11 +62,6 @@ public interface OperandProperties {
      * 
      */
     public AsmField getAsmField();
-
-    /*
-     * 
-     */
-    public void setSymbolic();
 
     /*
      * Copy method

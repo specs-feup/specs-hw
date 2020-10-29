@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.instruction;
 
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 
 /**
  * Represents a generic assembly instruction.
@@ -25,139 +25,196 @@ import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
  */
 public interface Instruction {
 
+    /**
+     * 
+     */
+    default boolean isNull() {
+        return this == NullInstruction.NullInstance;
+    }
+
     // Get Fundamental properties /////////////////////////////////////////////
     /*
      * Position of instruction in program memory
      */
-    Number getAddress();
+    default Integer getAddress() {
+        return null;
+    };
 
     /*
      * Binary code of instruction as string
      */
-    String getInstruction();
+    default String getInstruction() {
+        return null;
+    }
 
     /*
      * Gets latency of binary instruction.
      * Retrieved from specific ISA implementation.
      */
-    public int getLatency();
+    default int getLatency() {
+        return 0;
+    };
 
     /*
      * Gets delay of binary instruction.
      * Retrieved from specific ISA implementation.
      */
-    public int getDelay();
+    default int getDelay() {
+        return 0;
+    };
 
     /*
      * Gets the plain (isa mnemonic) name of the instruction
      */
-    public String getName();
+    default String getName() {
+        return null;
+    };
 
     /*
      * 
      */
-    public InstructionPseudocode getPseudocode();
+    default InstructionPseudocode getPseudocode() {
+        return null;
+    }
 
     // Check for instruction type /////////////////////////////////////////////
     /*
      * Check if instruction is addition
      */
-    public boolean isAdd();
+    default boolean isAdd() {
+        return false;
+    }
 
     /*
      * Check if instruction is subtraction
      */
-    public boolean isSub();
+    default boolean isSub() {
+        return false;
+    }
 
     /*
      * Check if instruction is multiplication
      */
-    public boolean isMul();
+    default boolean isMul() {
+        return false;
+    }
 
     /*
      * Check if instruction is logical
      */
-    public boolean isLogical();
+    default boolean isLogical() {
+        return false;
+    }
 
     /*
      * Check if instruction is unary
      */
-    public boolean isUnary();
+    default boolean isUnary() {
+        return false;
+    }
 
     /*
      * Check if instruction is jump (of any kind)
      */
-    public boolean isJump();
+    default boolean isJump() {
+        return false;
+    }
 
     /*
      * Check if instruction is conditional jump
      */
-    public boolean isConditionalJump();
+    default boolean isConditionalJump() {
+        return false;
+    }
 
     /*
      * Check if instruction is unconditional jump
      */
-    public boolean isUnconditionalJump();
+    default boolean isUnconditionalJump() {
+        return false;
+    }
 
     /*
      * Check if instruction is relative jump
      */
-    public boolean isRelativeJump();
+    default boolean isRelativeJump() {
+        return false;
+    }
 
     /*
      * Check if instruction is absolute jump
      */
-    public boolean isAbsoluteJump();
+    default boolean isAbsoluteJump() {
+        return false;
+    }
 
     /*
      * Check if instruction uses immediate 
      * value for either relative or absolute jump
      */
-    public boolean isImmediateJump();
+    default boolean isImmediateJump() {
+        return false;
+    }
 
     /*
      * Check if instruction is "imm"
      * (Works for Microblaze so far)
      */
-    public boolean isImmediateValue();
+    default boolean isImmediateValue() {
+        return false;
+    }
 
     /*
      * Check if instruction is store
      */
-    public boolean isStore();
+    default boolean isStore() {
+        return false;
+    }
 
     /*
      * Check if instruction is load
      */
-    public boolean isLoad();
+    default boolean isLoad() {
+        return false;
+    }
 
     /*
      * Check if instruction is memory access
      */
-    public boolean isMemory();
+    default boolean isMemory() {
+        return false;
+    }
 
     /*
      * Check if instruction is floating point
      */
-    public boolean isFloat();
+    default boolean isFloat() {
+        return false;
+    }
 
     /*
      * Check if instruction is uknown to us (for now, this 
      * applies to very special instructions, like 
      * system, cache, or barrier instructions)
      */
-    public boolean isUnknown();
+    default boolean isUnknown() {
+        return false;
+    }
 
     /////////////////////////////////////////////// Additional non basic types:
     /*
      * Check if instruction is backwards branch.
      */
-    public boolean isBackwardsJump();
+    default boolean isBackwardsJump() {
+        return false;
+    }
 
     /*
      * Check if instruction is forwards branch.
      */
-    public boolean isForwardsJump();
+    default boolean isForwardsJump() {
+        return false;
+    }
 
     /*
      * Return target of branch, if this
@@ -165,13 +222,15 @@ public interface Instruction {
      * this instruction addr + the instruction 
      * set's instruction width 
      */
-    public Number getBranchTarget();
+    default Number getBranchTarget() {
+        return null;
+    }
 
     ///////////////////////////////////////////////////////////////////// Utils
     /*
      * Prints addr:instruction to system output
      */
-    default public void printInstruction() {
+    default void printInstruction() {
         System.out.println(getString());
     }
 
@@ -179,50 +238,58 @@ public interface Instruction {
      * 
      * @return string representation of the instruction
      */
-    public String getString();
+    default String getString() {
+        return null;
+    }
 
     /*
      * Prints other instruction properties to system output
      */
-    public default void printProperties() {
+    default void printProperties() {
         return;
-    };
+    }
 
     /*
      * Returns decoded instruction data
      */
-    public InstructionData getData();
+    default InstructionData getData() {
+        return null;
+    }
 
     /*
      * Returns enum Which contains instructions properties
      */
-    public InstructionProperties getProperties();
+    default InstructionProperties getProperties() {
+        return null;
+    }
 
     /*
      * Returns Raw instruction fields as produced 
      * by respective parser (AsmInstructionParser)
      */
-    public AsmFieldData getFieldData();
+    default AsmFieldData getFieldData() {
+        return null;
+    }
 
-    /*
+    /*makeSymbolic
      * Returns an asm string representation of instruction (includes operands) 
      */
-    public String getRepresentation();
+    default String getRepresentation() {
+        return null;
+    }
 
     /*
      * Return copy of this object
      */
-    public Instruction copy();
+    default Instruction copy() {
+        return null;
+    }
 
     /*
      * Used to abstract an instruction away from an 
      * executed representation, to a symbolic representation
      */
-    void makeSymbolic(Number address, Map<String, String> regremap);
-
-    /*
-     * Returns a readable string representing the readable operation
-     * which the instruction implements
-     */
-    // public String express();
+    default void makeSymbolic(Integer address, Map<String, String> regremap) {
+        return;
+    }
 }

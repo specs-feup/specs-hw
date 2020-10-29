@@ -13,7 +13,7 @@
 
 package org.specs.Arm.parsing;
 
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
 
 public enum ArmAsmFieldType implements AsmFieldType {
 

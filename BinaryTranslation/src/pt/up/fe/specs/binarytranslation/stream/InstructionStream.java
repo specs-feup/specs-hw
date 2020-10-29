@@ -15,6 +15,7 @@ package pt.up.fe.specs.binarytranslation.stream;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.util.threadstream.ObjectStream;
 
 /**
  * Stream of instructions. The source can be either finite (e.g., ELF file) or potentially infinite (e.g., trace). It
@@ -23,7 +24,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
  * @author JoaoBispo
  *
  */
-public interface InstructionStream extends AutoCloseable {
+public interface InstructionStream extends ObjectStream<Instruction> {
 
     /**
      * 
@@ -39,26 +40,27 @@ public interface InstructionStream extends AutoCloseable {
 
     /**
      * 
-     * @return The final {@ApplicationInformation} object containing appname, compile info, and cpu architecture
-     */
-    public Application getApplicationInformation();
-
-    /**
-     * 
      * @return
      */
-    int getInstructionWidth();
-
-    /**
-     * Outputs the unprocessed incoming stream
-     */
-    public void rawDump();
+    Integer getInstructionWidth();
 
     /**
      * 
-     * @return True if stream has another line
+     * @return The final {@ApplicationInformation} object containing appname, compile info, and cpu architecture
      */
-    boolean hasNext();
+    public Application getApp();
+
+    /**
+     * 
+     */
+    public default void enableDump() {
+    };
+
+    /**
+     * 
+     */
+    public default void enableDump(boolean val) {
+    };
 
     /**
      * 

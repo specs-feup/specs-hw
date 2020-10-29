@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed;
 
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
@@ -15,8 +16,7 @@ public class VariableOperandASTNode extends ConcreteOperandASTNode {
      * "r6" or "imma", i.e., some fields are immediate value fields, but treated as inputs to module
      */
     public VariableOperandASTNode(Operand op) {
-        super(op);
-        this.type = InstructionASTNodeType.VariableNode;
+        super(InstructionASTNodeType.VariableNode, op);
         this.TransformedOperandName = op.getRepresentation().replace("<", "").replace(">", "").replace("[", "")
                 .replace("]", "");
         // clean symbolic prefix/suffix if any
@@ -30,5 +30,10 @@ public class VariableOperandASTNode extends ConcreteOperandASTNode {
 
     public void setValue(String svalue) {
         this.TransformedOperandName = svalue;
+    }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new VariableOperandASTNode(this.op);
     }
 }
