@@ -15,4 +15,9 @@ public class DeclarationBlock extends HardwareNode {
         super();
         this.type = HardwareNodeType.DeclarationBlock;
     }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new DeclarationBlock();
+    }
 }

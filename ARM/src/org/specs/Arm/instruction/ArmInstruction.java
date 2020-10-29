@@ -57,7 +57,7 @@ public class ArmInstruction extends AInstruction {
      */
     private ArmInstruction(String address, String instruction, InstructionData idata,
             ArmAsmFieldData fieldData, InstructionProperties props) {
-        super(Long.parseLong(address, 16), instruction, idata, props);
+        super(Integer.parseInt(address, 16), instruction, idata, props);
         this.fieldData = fieldData;
     }
 

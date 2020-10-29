@@ -19,4 +19,9 @@ public class HardwareCommentNode extends HardwareNode {
     public String getAsString() {
         return "// " + commentText;
     }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new HardwareCommentNode(this.commentText);
+    }
 }

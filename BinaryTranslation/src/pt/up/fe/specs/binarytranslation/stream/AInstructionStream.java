@@ -1,17 +1,13 @@
 package pt.up.fe.specs.binarytranslation.stream;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.TimeUnit;
-
 import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
-import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
-import pt.up.fe.specs.util.utilities.LineStream;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
+import pt.up.fe.specs.util.threadstream.AObjectStream;
 
-public abstract class AInstructionStream implements InstructionStream {
+public abstract class AInstructionStream extends AObjectStream<Instruction> implements InstructionStream {
 
     @Expose
     protected long numinsts;
@@ -19,67 +15,28 @@ public abstract class AInstructionStream implements InstructionStream {
     @Expose
     protected long numcycles;
 
-    @Expose
-    protected Application appInfo;
+    private boolean dumpStream = false;
 
-    private final Process proc;
-    protected final LineStream insts;
+    /*
+     * This type of stream contains its own producer internally
+     */
+    private InstructionProducer producer;
 
-    public AInstructionStream(ProcessBuilder builder) {
-        this.proc = AInstructionStream.newStreamGenerator(builder);
-        this.insts = AInstructionStream.newLineStream(proc);
+    public AInstructionStream(InstructionProducer producer) {
+        super(producer.getPoison());
+        this.producer = producer;
         this.numinsts = 0;
         this.numcycles = 0;
     }
 
-    private static Process newStreamGenerator(ProcessBuilder builder) {
-
-        // start gdb
-        Process proc = null;
-        try {
-            builder.directory(new File("."));
-            builder.redirectErrorStream(true); // redirects stderr to stdout
-            proc = builder.start();
-
-        } catch (IOException e) {
-            throw new RuntimeException("Could not run process bin with name: " + proc);
-        }
-
-        return proc;
-    }
-
-    private static LineStream newLineStream(Process proc) {
-
-        // No error detected, obtain LineStream
-        LineStream insts = null;
-        try {
-            ConcurrentChannel<LineStream> lineStreamChannel = new ConcurrentChannel<>(1);
-            InputStream inputStream = proc.getInputStream();
-            lineStreamChannel.createProducer().offer(LineStream.newInstance(inputStream, "proc_stdout"));
-            insts = lineStreamChannel.createConsumer().poll(1, TimeUnit.SECONDS);
-
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        if (insts == null) {
-            throw new RuntimeException("Could not obtain output stream of stream generation process");
-        }
-
-        return insts;
+    @Override
+    public void enableDump() {
+        this.dumpStream = true;
     }
 
     @Override
-    public void rawDump() {
-        String line = null;
-        while ((line = insts.nextLine()) != null) {
-            System.out.print(line + "\n");
-        }
-    }
-
-    @Override
-    public boolean hasNext() {
-        return this.insts.hasNextLine();
+    public void enableDump(boolean val) {
+        this.dumpStream = val;
     }
 
     @Override
@@ -93,19 +50,43 @@ public abstract class AInstructionStream implements InstructionStream {
     }
 
     @Override
-    public Application getApplicationInformation() {
-        return appInfo;
+    protected Instruction consumeFromProvider() {
+        return this.producer.nextInstruction();
+    }
+
+    @Override
+    public Instruction nextInstruction() {
+        var inst = this.next();
+        if (inst == null)
+            return null;
+
+        this.numcycles += inst.getLatency();
+        this.numinsts++;
+
+        if (this.dumpStream)
+            System.out.println(inst.getRepresentation());
+
+        return inst;
+    }
+
+    @Override
+    public final Application getApp() {
+        return this.producer.getApp();
+    }
+
+    @Override
+    public final Integer getInstructionWidth() {
+        return this.getApp().getInstructionWidth();
     }
 
     @Override
     public void close() {
-
         try {
-            proc.waitFor();
-        } catch (InterruptedException e) {
+            this.producer.close();
+            super.close();
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        insts.close();
     }
 }

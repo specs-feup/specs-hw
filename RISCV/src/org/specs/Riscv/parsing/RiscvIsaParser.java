@@ -1,7 +1,7 @@
 package org.specs.Riscv.parsing;
 
-import pt.up.fe.specs.binarytranslation.parsing.AIsaParser;
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AIsaParser;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 
 public class RiscvIsaParser extends AIsaParser {
 

@@ -1,9 +1,9 @@
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
-import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.graphs.GraphNode;
-import pt.up.fe.specs.binarytranslation.graphs.edge.GraphInput;
-import pt.up.fe.specs.binarytranslation.graphs.edge.GraphOutput;
+import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graph.GraphNode;
+import pt.up.fe.specs.binarytranslation.graph.edge.GraphInput;
+import pt.up.fe.specs.binarytranslation.graph.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionASTConverter;

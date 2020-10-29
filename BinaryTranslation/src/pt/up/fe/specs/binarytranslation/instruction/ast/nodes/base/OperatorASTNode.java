@@ -17,4 +17,9 @@ public class OperatorASTNode extends InstructionASTNode {
     public String getAsString() {
         return this.operator;
     }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new OperatorASTNode(this.operator);
+    }
 }

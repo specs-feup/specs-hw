@@ -731,7 +731,7 @@ public class ArmAsmOperandGetter {
 
             // first, second, operands
             operands.add(h.newRegister(0b11, RN, fielddata.getBitWidth()));
-            operands.add(h.newImmediate(RM, 0, fielddata.getBitWidth()));
+            operands.add(h.newImmediate(RM, 0.0, fielddata.getBitWidth()));
         }
 
         return operands;

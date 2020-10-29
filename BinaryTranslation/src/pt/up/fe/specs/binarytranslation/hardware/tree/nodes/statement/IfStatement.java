@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
@@ -50,5 +51,10 @@ public class IfStatement extends HardwareStatement {
         builder.append("\n");
 
         return builder.toString();
+    }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new IfStatement(this.getCondition());
     }
 }

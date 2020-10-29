@@ -32,4 +32,9 @@ public class ModuleDeclaration extends HardwareDeclaration {
         builder.append("endmodule");
         return builder.toString();
     }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new ModuleDeclaration(this.moduleName);
+    }
 }

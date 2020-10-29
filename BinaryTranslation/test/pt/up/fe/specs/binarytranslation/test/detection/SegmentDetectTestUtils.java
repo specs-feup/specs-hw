@@ -4,15 +4,23 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.function.Predicate;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentBundle;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class SegmentDetectTestUtils {
 
     public static SegmentBundle detect(String filename, Class<?> streamClass, Class<?> detectorClass) {
+        return SegmentDetectTestUtils.detect(filename, streamClass, detectorClass,
+                DetectorConfigurationBuilder.defaultConfig());
+    }
+
+    public static SegmentBundle detect(String filename, Class<?> streamClass, Class<?> detectorClass,
+            DetectorConfiguration config) {
 
         File fd = SpecsIo.resourceCopy(filename);
         fd.deleteOnExit();
@@ -20,7 +28,7 @@ public class SegmentDetectTestUtils {
         Constructor<?> consStream, consDetector;
         try {
             consStream = streamClass.getConstructor(File.class);
-            consDetector = detectorClass.getConstructor(InstructionStream.class);
+            consDetector = detectorClass.getConstructor(DetectorConfiguration.class);
 
         } catch (Exception e) {
             throw new RuntimeException(e.getCause());
@@ -29,8 +37,8 @@ public class SegmentDetectTestUtils {
         SegmentBundle bundle = null;
         try (InstructionStream el = (InstructionStream) consStream.newInstance(fd)) {
 
-            var bbd = (SegmentDetector) consDetector.newInstance(el);
-            bundle = bbd.detectSegments();
+            var bbd = (SegmentDetector) consDetector.newInstance(config);
+            bundle = bbd.detectSegments(el);
 
         } catch (Exception e) {
             throw new RuntimeException(e.getCause());
@@ -45,6 +53,10 @@ public class SegmentDetectTestUtils {
             bs.printSegment();
             System.out.print("\n");
         }
+    }
+
+    public static void toJson(SegmentBundle bundle) {
+        bundle.toJSON();
     }
 
     public static void printBundle(SegmentBundle bundle, Predicate<BinarySegment> predicate) {

@@ -21,4 +21,9 @@ public class HardwareAnchorNode extends HardwareNode {
     public HardwareNodeType getType() {
         return this.getParent().getType();
     }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new HardwareAnchorNode();
+    }
 }

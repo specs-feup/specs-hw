@@ -13,7 +13,7 @@
 
 package org.specs.MicroBlaze.parsing;
 
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
 
 public enum MicroBlazeAsmFieldType implements AsmFieldType {
 

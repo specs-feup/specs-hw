@@ -1,6 +1,6 @@
 package pt.up.fe.specs.binarytranslation.utils;
 
-import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
+import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 
 /**

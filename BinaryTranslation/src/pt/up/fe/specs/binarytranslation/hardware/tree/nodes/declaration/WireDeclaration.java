@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class WireDeclaration extends VariableDeclaration {
@@ -22,5 +23,10 @@ public class WireDeclaration extends VariableDeclaration {
     @Override
     public String getAsString() {
         return "wire [ (" + this.numBits + " - 1) : 0] " + this.wireName + ";\n";
+    }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new WireDeclaration(this.wireName, this.numBits);
     }
 }

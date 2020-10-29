@@ -9,9 +9,12 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.Sta
 
 public class PseudoInstructionASTNode extends InstructionASTNode {
 
-    public PseudoInstructionASTNode(List<StatementASTNode> statements) {
-        super();
+    private PseudoInstructionASTNode() {
         this.type = InstructionASTNodeType.PseudoInstructionNode;
+    }
+
+    public PseudoInstructionASTNode(List<StatementASTNode> statements) {
+        this();
         for (var s : statements)
             this.addChild(s);
     }
@@ -32,5 +35,10 @@ public class PseudoInstructionASTNode extends InstructionASTNode {
             list.add((StatementASTNode) c);
 
         return list;
+    }
+
+    @Override
+    protected InstructionASTNode copyPrivate() {
+        return new PseudoInstructionASTNode();
     }
 }

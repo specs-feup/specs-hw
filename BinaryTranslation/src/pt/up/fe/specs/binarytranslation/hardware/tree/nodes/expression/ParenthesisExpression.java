@@ -1,20 +1,32 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class ParenthesisExpression extends HardwareExpression {
 
-    private HardwareExpression inner;
+    private ParenthesisExpression() {
+        super();
+        this.type = HardwareNodeType.ParenthesisExpression;
+    }
 
     public ParenthesisExpression(HardwareExpression inner) {
-        super();
-        this.inner = inner;
+        this();
         this.addChild(inner);
-        this.type = HardwareNodeType.ParenthesisExpression;
+
     }
 
     @Override
     public String getAsString() {
-        return "( " + this.inner.getAsString() + " )";
+        return "( " + this.getInner().getAsString() + " )";
+    }
+
+    public HardwareExpression getInner() {
+        return (HardwareExpression) this.getChild(0);
+    }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new ParenthesisExpression();
     }
 }

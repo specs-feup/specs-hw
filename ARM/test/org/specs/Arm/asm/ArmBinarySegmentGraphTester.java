@@ -6,15 +6,16 @@ import org.junit.Test;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentBundle;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.SegmentDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.TraceBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.graphs.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
+import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
+import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class ArmBinarySegmentGraphTester {
@@ -46,8 +47,8 @@ public class ArmBinarySegmentGraphTester {
         }
     }
 
-    private void getSegments(SegmentDetector bbd) {
-        var bundle = bbd.detectSegments();
+    private void getSegments(InstructionStream el, SegmentDetector bbd) {
+        var bundle = bbd.detectSegments(el);
         var graphbundle = GraphBundle.newInstance(bundle);
         graphbundle.generateOutput(data -> data.getSegment().getContexts().size() > 10);
         // System.out.println(graphbundle.getAverageIPC());
@@ -59,8 +60,8 @@ public class ArmBinarySegmentGraphTester {
     public void testStaticFrequentSequence() {
 
         try (ArmElfStream el = new ArmElfStream(openFile())) {
-            var bbd = new FrequentStaticSequenceDetector(el);
-            getSegments(bbd);
+            var bbd = new FrequentStaticSequenceDetector();
+            getSegments(el, bbd);
         }
     }
 
@@ -68,24 +69,24 @@ public class ArmBinarySegmentGraphTester {
     public void testStaticBasicBlock() {
 
         try (ArmElfStream el = new ArmElfStream(openFile())) {
-            var bbd = new StaticBasicBlockDetector(el);
-            getSegments(bbd);
+            var bbd = new StaticBasicBlockDetector();
+            getSegments(el, bbd);
         }
     }
 
     @Test
     public void testTraceFrequenceSequence() {
         try (ArmTraceStream el = new ArmTraceStream(openFile())) {
-            var bbd = new FrequentTraceSequenceDetector(el);
-            getSegments(bbd);
+            var bbd = new FrequentTraceSequenceDetector();
+            getSegments(el, bbd);
         }
     }
 
     @Test
     public void testTraceBasicBlock() {
         try (ArmTraceStream el = new ArmTraceStream(openFile())) {
-            var bbd = new TraceBasicBlockDetector(el);
-            getSegments(bbd);
+            var bbd = new TraceBasicBlockDetector();
+            getSegments(el, bbd);
         }
     }
 }

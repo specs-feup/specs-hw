@@ -1,11 +1,14 @@
 package org.specs.Arm.instruction;
 
-import static pt.up.fe.specs.binarytranslation.instruction.operand.OperandType.*;
-
 import org.specs.Arm.parsing.ArmAsmField;
 
-import pt.up.fe.specs.binarytranslation.instruction.*;
-import pt.up.fe.specs.binarytranslation.instruction.operand.*;
+import pt.up.fe.specs.binarytranslation.instruction.operand.AOperand;
+import pt.up.fe.specs.binarytranslation.instruction.operand.AOperandProperties;
+import pt.up.fe.specs.binarytranslation.instruction.operand.OperandAccessType;
+import pt.up.fe.specs.binarytranslation.instruction.operand.OperandDataSize;
+import pt.up.fe.specs.binarytranslation.instruction.operand.OperandDataType;
+import pt.up.fe.specs.binarytranslation.instruction.operand.OperandProperties;
+import pt.up.fe.specs.binarytranslation.instruction.operand.OperandType;
 
 public class ArmOperand extends AOperand {
 
@@ -25,14 +28,20 @@ public class ArmOperand extends AOperand {
         super(props, value);
     }
 
-    private static ArmOperand newInstance(OperandProperties props, Number value) {
-        if (value.intValue() != SPvalue) {
-            return new ArmOperand(props, value);
+    /*
+     * 
+     */
+    private static ArmOperand newInstance(
+            ArmAsmField field, String prefix, String suffix, Number value,
+            OperandType opType, OperandAccessType opRnw,
+            OperandDataType opDataType, OperandDataSize opDataSize) {
 
-        } else {
-            props.getTypes().add(SPECIAL);
+        var checkType = (value.intValue() == SPvalue) ? OperandType.SPECIAL : opType;
+        var props = new AOperandProperties(field, prefix, suffix, checkType, opRnw, opDataType, opDataSize);
+        if (checkType == OperandType.SPECIAL)
             return new ArmOperand(props, "sp");
-        }
+        else
+            return new ArmOperand(props, value);
     }
 
     private static String getPrefix(int width) {
@@ -68,8 +77,9 @@ public class ArmOperand extends AOperand {
      */
     public static ArmOperand newReadRegister(ArmAsmField field, Number value, int width) {
         String prefix = (value.intValue() == SPvalue) ? "" : getPrefix(width);
-        var props = new AOperandProperties(field, prefix, "", width, REGISTER, READ);
-        return newInstance(props, value);
+        return newInstance(field, prefix, "", value,
+                OperandType.REGISTER, OperandAccessType.READ,
+                OperandDataType.SCALAR_INTEGER, AOperandProperties.resolveWidth(width));
     }
 
     /*
@@ -77,8 +87,9 @@ public class ArmOperand extends AOperand {
      */
     public static ArmOperand newWriteRegister(ArmAsmField field, Number value, int width) {
         String prefix = (value.intValue() == SPvalue) ? "" : getPrefix(width);
-        var props = new AOperandProperties(field, prefix, "", width, REGISTER, WRITE);
-        return newInstance(props, value);
+        return newInstance(field, prefix, "", value,
+                OperandType.REGISTER, OperandAccessType.WRITE,
+                OperandDataType.SCALAR_INTEGER, AOperandProperties.resolveWidth(width));
     }
 
     /*
@@ -86,8 +97,9 @@ public class ArmOperand extends AOperand {
      */
     public static ArmOperand newSIMDReadRegister(ArmAsmField field, Number value, int width) {
         String prefix = getSIMDPrefix(width);
-        var props = new AOperandProperties(field, prefix, "", width, REGISTER, READ, SIMD);
-        return newInstance(props, value);
+        return newInstance(field, prefix, "", value,
+                OperandType.REGISTER, OperandAccessType.READ,
+                OperandDataType.SIMD_INTEGER, AOperandProperties.resolveWidth(width));
     }
 
     /*
@@ -95,8 +107,9 @@ public class ArmOperand extends AOperand {
      */
     public static ArmOperand newSIMDWriteRegister(ArmAsmField field, Number value, int width) {
         String prefix = getSIMDPrefix(width);
-        var props = new AOperandProperties(field, prefix, "", width, REGISTER, WRITE, SIMD);
-        return newInstance(props, value);
+        return newInstance(field, prefix, "", value,
+                OperandType.REGISTER, OperandAccessType.WRITE,
+                OperandDataType.SIMD_INTEGER, AOperandProperties.resolveWidth(width));
     }
 
     /*
@@ -104,23 +117,34 @@ public class ArmOperand extends AOperand {
      */
     public static ArmOperand newImmediate(ArmAsmField field, Number value, int width) {
         String prefix = (value instanceof Float) ? "" : "#0x";
-        var props = new AOperandProperties(field, prefix, "", width, IMMEDIATE, READ);
-        return newInstance(props, value);
+        var datatype = (value instanceof Float) ? OperandDataType.SCALAR_FLOAT : OperandDataType.SCALAR_INTEGER;
+        return newInstance(field, prefix, "", value,
+                OperandType.IMMEDIATE, OperandAccessType.READ,
+                datatype, AOperandProperties.resolveWidth(width));
     }
 
     /*
      * Immediate without prefix (used for labels?)
      */
     public static ArmOperand newImmediateLabel(ArmAsmField field, Number value, int width) {
-        var props = new AOperandProperties(field, "", "", width, IMMEDIATE, READ);
-        return newInstance(props, value);
+        return newInstance(field, "", "", value,
+                OperandType.IMMEDIATE, OperandAccessType.READ,
+                OperandDataType.SCALAR_INTEGER, AOperandProperties.resolveWidth(width));
     }
+
+    /*
+     * *************************** SPECIAL TYPES *************************** TODO: fix later??
+     */
 
     /*
      * Representational sub-operation operand for shifted (and extended?) register operations
      */
     public static ArmOperand newSubOperation(ArmAsmField field, String value, int width) {
-        var props = new AOperandProperties(field, "", "", width, SUBOPERATION);
+        var props = new AOperandProperties(field, "", "",
+                OperandType.SUBOPERATION, OperandAccessType.READ, // TODO: READ??
+                OperandDataType.SCALAR_INTEGER, AOperandProperties.resolveWidth(width)); // TODO:
+                                                                                         // OperandDataType.SCALAR_INTEGER
+                                                                                         // ??
         return new ArmOperand(props, value);
     }
 
@@ -128,8 +152,10 @@ public class ArmOperand extends AOperand {
      * Special PSTATE Register (can only be an output)
      * (see C6.1.4 to check which instructions write to the PSTATE register)
      */
-    public static ArmOperand newPSTATERegister(OperandType rw) {
-        var props = new AOperandProperties(ArmAsmField.IMPLICIT, "[", "]", 4, REGISTER, SPECIAL, rw);
+    public static ArmOperand newPSTATERegister(OperandAccessType rnw) {
+        var props = new AOperandProperties(ArmAsmField.IMPLICIT, "[", "]",
+                OperandType.SPECIAL, rnw,
+                OperandDataType.BITFIELD, OperandDataSize.NIBBLE);
         return new ArmOperand(props, "nzvc");
     }
 

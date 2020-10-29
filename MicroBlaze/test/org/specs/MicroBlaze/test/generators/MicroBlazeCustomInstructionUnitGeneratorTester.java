@@ -16,8 +16,8 @@ package org.specs.MicroBlaze.test.generators;
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.graphs.GraphBundle;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.CustomInstructionUnitGenerator;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 

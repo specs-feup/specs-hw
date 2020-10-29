@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentTraceSequenceDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 
 public class ArmFrequentSequenceDetectorTester {

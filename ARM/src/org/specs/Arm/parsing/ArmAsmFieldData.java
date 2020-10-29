@@ -8,9 +8,9 @@ import java.util.Map;
 
 import org.specs.Arm.instruction.ArmInstructionCondition;
 
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldData;
-import pt.up.fe.specs.binarytranslation.parsing.AsmFieldType;
 
 public class ArmAsmFieldData extends AsmFieldData {
 

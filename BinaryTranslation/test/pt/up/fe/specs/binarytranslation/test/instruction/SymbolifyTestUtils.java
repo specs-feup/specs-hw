@@ -1,30 +1,23 @@
 package pt.up.fe.specs.binarytranslation.test.instruction;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.BinarySegmentDetectionUtils;
-import pt.up.fe.specs.binarytranslation.binarysegments.detection.HashedSequence;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class SymbolifyTestUtils {
 
     public static void symbolifyTest(Instruction i) {
-
+        /*
         Method method = null;
         try {
             method = BinarySegmentDetectionUtils.class.getDeclaredMethod("hashSequence", List.class);
             method.setAccessible(true);
-
+        
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-
+        
         } catch (SecurityException e) {
             e.printStackTrace();
         }
-
+        
         // hash instruction
         var l = Arrays.asList(i);
         HashedSequence hs = null;
@@ -33,8 +26,8 @@ public class SymbolifyTestUtils {
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             e.printStackTrace();
         }
-
+        
         // TEST THIS:
-        hs.makeSymbolic();
+        hs.makeSymbolic();*/
     }
 }

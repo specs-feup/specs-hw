@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class ParameterDeclaration extends VariableDeclaration {
@@ -25,5 +26,10 @@ public class ParameterDeclaration extends VariableDeclaration {
     public String getAsString() {
         return "parameter [ (" + this.numBits + " - 1) : 0] "
                 + this.parameterName + "= {" + this.initializer + "};\n";
+    }
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new ParameterDeclaration(this.parameterName, this.numBits, this.initializer);
     }
 }

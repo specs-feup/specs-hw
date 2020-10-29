@@ -8,6 +8,7 @@ public enum InstructionASTNodeType {
     PlainStatementNode,
     IfStatementNode,
     IfElseStatementNode,
+    StatementListNode,
 
     // expressions
     AssignmentExpressionNode,
