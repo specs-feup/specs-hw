@@ -20,6 +20,7 @@ package pt.up.fe.specs.interpretivesimulator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
+import pt.up.fe.specs.util.SpecsLogs;
 
 public class ControlUnit {
     
@@ -34,42 +35,13 @@ public class ControlUnit {
         this.alu = alu;
     }
     
-    public Number process(Instruction instruction) {
-        
+    public void process(Instruction instruction) {
+        System.out.println("\n\n\n"+instruction.getAddress() + "  " + instruction.getName());
         InstructionAST ast = new InstructionAST(instruction);
-        resolveAST(ast.getRootnode());
-        
-        return -1;//no jump exit code
-        //TODO: deal with Jumps
+        try {
+            new ResolveAST(registers, ast.getRootnode());
+        } catch (Exception e) {
+            SpecsLogs.msgWarn("Error message:\n", e);
+        }
     }
-    
-    private int resolveAST(InstructionASTNode node) {
-        // TODO head recursive function solving non leaf nodes to leaf nodes.
-        switch (node.getType()) {
-        
-        case PlainStatementNode:
-            for(InstructionASTNode childNode : node.getChildren()) resolveAST(childNode);
-            return 0;
-            
-        case AssignmentExpressionNode:
-            String assigned = node.getChild(0).getAsString();
-            this.registers.setRegister(assigned, resolveAST(node.getChild(1)));
-            return 1;
-            
-        case OperatorNode:
-            alu.processInstruction(resolveAST(node.getChild(0)), resolveAST(node.getChild(1)), node.getAsString());
-            return alu.getOutput();
-            
-        case ImmediateNode:
-            return Integer.parseInt(node.getAsString());
-            
-        case VariableNode:
-            return registers.getRegister(node.getAsString());
-        
-        
-        default:
-            return -1;
-    }
-}
-    
 }

@@ -18,11 +18,10 @@
 package pt.up.fe.specs.interpretivesimulator;
 
 
-import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
-
+//TODO: extend for each architecture
 public class CentralProcessingUnit {
     
     ControlUnit cu;
@@ -33,15 +32,25 @@ public class CentralProcessingUnit {
     public CentralProcessingUnit(Ram ram) {
         this.ram = ram;
         this.alu = new ArithmeticLogicUnit();
-        this.registers = new Registers();
+        this.registers = new Registers(); //TODO: constrain and pass ins constructor  
         this.cu = new ControlUnit(this.ram, this.alu, this.registers);
     }
     
     public void runProgram(Program program) {
-        while(program.hasNext()) {
-            Number jump = this.cu.process(program.next());
-            if((int)jump != -1) program.jump(jump);
+        
+        registers.setProgramCounter(program.getStartingInstructionAddress());
+        Instruction instruction = null;
+        
+        while((instruction = program.getByAddress(registers.getProgramCounter())) != null) {
+            
+            //System.out.println(instruction);
+            this.cu.process(instruction);           
+            
+            registers.updateProgramCounter(program.getInstructionWidth());
+
+            System.out.println("PC = " + registers.getProgramCounter());
         }
+        
     }
     
 }

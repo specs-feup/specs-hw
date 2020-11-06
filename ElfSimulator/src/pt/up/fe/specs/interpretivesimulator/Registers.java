@@ -22,15 +22,38 @@ import java.util.Map;
 
 public class Registers {
     
-    private Map<String, Integer> registers = new HashMap<>();
+    private Map<String, Integer> registers;
+    private int programCounter;
+    private boolean jumped;
+    
+    
+    
+    public Registers() {
+        this.registers = new HashMap<>();
+        this.programCounter = 0;
+        this.jumped = false;
+    }
 
     public void setRegister(String name, int value) {
-        registers.put(name, value);
+        if(name == "$pc") programCounter = value;
+        else registers.put(name, value);
     }
     
     public int getRegister(String name) {
-        if(!registers.containsKey(name)) registers.put(name, 0);
+        if(!registers.containsKey(name)) registers.put(name, 0); 
         return registers.get(name);
     }
 
+    public int getProgramCounter() {
+        return programCounter;
+    }
+
+    public void setProgramCounter(int programCounter) {
+        this.programCounter = programCounter;
+    }
+
+    public void updateProgramCounter(int instructionWidth) {
+        if(jumped) jumped = false;
+        else programCounter += instructionWidth;
+    }
 }
