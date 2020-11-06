@@ -31,7 +31,7 @@ public class ArithmeticLogicUnit {
     }
     //TODO: Might change String operation to Enum OperatorType
     public void processInstruction(int operator_a, int operator_b, String operation) {
-        //TODO
+        System.out.println(operator_a + operation + operator_b);
         setOutput(0);
     }
 

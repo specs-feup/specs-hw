@@ -46,7 +46,7 @@ public class InstructionSetLibGenerator {
                     //System.out.print("\t" + instruction.getFieldData().getType() + "\n");
                     //System.out.print("\t" + instruction.getFieldData().getFields() + "\n\n");
                         InstructionAST ast = new InstructionAST(instruction);
-                        System.out.println(TreeNode.toString(ast.getRootnode(), "  "));
+                        //System.out.println(TreeNode.toString(ast.getRootnode(), "  "));
                         
                         //recursiveNodePrint(ast.getRootnode(), 0);       
                 }

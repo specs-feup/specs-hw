@@ -26,35 +26,39 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream;
 
 public class Program {
-    private final List<Instruction> instructions = new ArrayList<>();;
+    private final Map<Integer, Instruction> instructions = new HashMap<>();
     private final int startingInstructionAddress;
-    private final int instructionSize;
+    private final int instructionWidth;
     
-    private int currentIndex = 0;
     
     public Program(AStaticInstructionStream stream) {
+        
         Instruction firstInstruction = stream.nextInstruction();
-        Instruction secondInstruction = stream.nextInstruction();
+        
         this.startingInstructionAddress = (int) firstInstruction.getAddress();
-        this.instructionSize = this.startingInstructionAddress - (int) secondInstruction.getAddress();
-        this.instructions.add(firstInstruction);
-        this.instructions.add(secondInstruction);
-        while(stream.hasNext()) {
-            this.instructions.add(stream.nextInstruction());
+        this.instructions.put(this.startingInstructionAddress, firstInstruction);
+        
+        this.instructionWidth = stream.getInstructionWidth();
+
+        Instruction instruction = null;
+        while((instruction = stream.nextInstruction()) != null) {
+            this.instructions.put(instruction.getAddress(), instruction);
         }
     }
     
-    public Instruction next() {
-        return instructions.get(currentIndex++);
+    public Instruction getByAddress(int programCounter) {
+        return instructions.get(programCounter);
+    }
+
+    public int getInstructionWidth() {
+        return instructionWidth;
+    }
+
+    public int getStartingInstructionAddress() {
+        return startingInstructionAddress;
     }
     
-    public boolean hasNext()  {
-        return currentIndex < instructions.size();
-    }
     
-    public void jump(Number address) {
-        currentIndex = ((int) address - startingInstructionAddress) / instructionSize;
-    }
 }
 
 /*public class Program {
