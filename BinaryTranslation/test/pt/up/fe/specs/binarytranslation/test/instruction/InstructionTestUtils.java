@@ -59,7 +59,7 @@ public class InstructionTestUtils {
             newInstMethod = instClass.getMethod("newInstance", String.class, String.class);
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e);
         }
 
         for (var inst : encodeList) {
@@ -67,7 +67,7 @@ public class InstructionTestUtils {
                 Instruction testinst = (Instruction) newInstMethod.invoke(null, "0", inst.getCode());
                 assertEquals(inst.getName(), testinst.getName());
             } catch (Exception e) {
-                throw new RuntimeException(e.getCause());
+                throw new RuntimeException(e);
             }
         }
     }
