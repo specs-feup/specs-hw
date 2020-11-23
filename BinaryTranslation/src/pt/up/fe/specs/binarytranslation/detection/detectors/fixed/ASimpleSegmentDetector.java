@@ -24,6 +24,11 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
      */
     protected Boolean validSequence(InstructionWindow window) {
 
+        // FIXME: Sometimes window.getLast() is null
+        // if (window.getLast() == null) {
+        // return false;
+        // }
+
         // cant end on an incomplete "atomic" instruction
         if (window.getLast().getDelay() > 0)
             return false;
