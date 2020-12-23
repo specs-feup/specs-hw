@@ -41,12 +41,17 @@ public class ElfSimulator{
     }
     
     private int runProgram(Map<Number, Instruction> program) {
+        
         ProgramState programState = new ProgramState(); 
         int pc = 0;
-        while (pc > 0) {
+        while (step()) {
             InstructionSimulator instructionSim = new InstructionSimulator(
                     program.get(programState.getProgramCounter()), programState);
         }
         return 0;
+    }
+
+    private boolean step() {
+        return false;
     }
 }

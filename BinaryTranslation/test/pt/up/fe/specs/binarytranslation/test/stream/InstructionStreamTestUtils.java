@@ -23,14 +23,14 @@ public class InstructionStreamTestUtils {
             cons = streamClass.getConstructor(File.class);
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e);
         }
 
         try (InstructionStream el = (InstructionStream) cons.newInstance(fd)) {
             doWork.apply(el);
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e);
         }
     }
 

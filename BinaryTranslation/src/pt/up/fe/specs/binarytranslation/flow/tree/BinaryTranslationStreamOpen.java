@@ -27,14 +27,14 @@ public class BinaryTranslationStreamOpen extends BinaryTranslationStep {
             cons = streamClass.getConstructor(File.class);
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e);
         }
 
         // open the stream
         try {
             this.istream = (InstructionStream) cons.newInstance(fd);
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e);
         }
     }
 
