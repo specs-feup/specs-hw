@@ -41,7 +41,7 @@ public class MicroBlazeCustomInstructionUnitGeneratorTester {
                 .getGraphs(data -> data.getCpl() > 2 && data.getMaxwidth() > 1 && data.getLiveins().size() > 0
                         && data.getLiveouts().size() > 0)
                 // && data.getNumLoads() == 0 && data.getNumStores() == 0)
-                .get(1);
+                .get(0);
 
         // System.out.println(graph.getSegment().getRepresentation());
 
