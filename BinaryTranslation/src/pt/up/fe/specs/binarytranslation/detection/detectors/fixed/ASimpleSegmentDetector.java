@@ -74,8 +74,10 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
                 break;
 
             // shift window by 1
-            else
-                window.add(istream.nextInstruction());
+            else {
+                var inst = istream.nextInstruction();
+                window.add(inst);
+            }
         }
 
         // Remove all sequences which only happen once
