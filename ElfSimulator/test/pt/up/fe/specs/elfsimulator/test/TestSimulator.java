@@ -28,6 +28,9 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.compiledsimulator.ExecGenerator;
+import pt.up.fe.specs.compiledsimulator.InstructionSetSpecifications;
+import pt.up.fe.specs.compiledsimulator.LibGenerator;
 import pt.up.fe.specs.elfsimulator.ElfSimulator;
 import pt.up.fe.specs.elfsimulator.InstructionSetLibGenerator;
 
@@ -37,8 +40,8 @@ public class TestSimulator {
 
         // static
         // File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/matmul.txt");
-         File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/innerprod.txt");
-        //File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/tiny.txt");
+//         File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/innerprod.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/tiny.txt");
         // File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/innerprod.txt");
 
         System.out.print(fd.exists() + "\n");
@@ -127,7 +130,11 @@ public class TestSimulator {
     @Test
     void ElfSimulatorTest() {
         MicroBlazeElfStream stream = new MicroBlazeElfStream(openMBFile());
+        MicroBlazeElfStream stream2 = new MicroBlazeElfStream(openMBFile());
         //RiscvElfStream stream = new RiscvElfStream(openRISCVFile());
-        InstructionSetLibGenerator sim = new InstructionSetLibGenerator(stream);
+        LibGenerator sim = new LibGenerator(stream, new InstructionSetSpecifications());
+        sim.generateLib();
+        ExecGenerator exec = new ExecGenerator(stream2, new InstructionSetSpecifications());
+        exec.generateExec();
     }
 }

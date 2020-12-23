@@ -20,7 +20,7 @@ public class SimpleInstruction {
         try {
             this.c = i.getClass().getMethod("newInstance", String.class, String.class);
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e);
         }
     }
 
@@ -37,7 +37,7 @@ public class SimpleInstruction {
         try {
             i = (Instruction) this.c.invoke(null, this.address, this.instruction);
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e);
         }
         return i;
     }

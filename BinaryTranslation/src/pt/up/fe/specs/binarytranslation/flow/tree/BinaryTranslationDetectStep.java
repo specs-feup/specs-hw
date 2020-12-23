@@ -41,7 +41,7 @@ public class BinaryTranslationDetectStep extends BinaryTranslationStep {
             this.detector = (SegmentDetector) consDetector.newInstance();
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e);
         }
 
         /*

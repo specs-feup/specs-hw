@@ -31,7 +31,7 @@ public class SegmentDetectTestUtils {
             consDetector = detectorClass.getConstructor(DetectorConfiguration.class);
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e);
         }
 
         SegmentBundle bundle = null;
@@ -41,7 +41,7 @@ public class SegmentDetectTestUtils {
             bundle = bbd.detectSegments(el);
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e);
         }
 
         return bundle;
