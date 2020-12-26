@@ -27,7 +27,7 @@ public class MicroBlazeDetectorsTest {
     @Test
     public void testFrequentStaticSequenceDetector() {
         var builder = new DetectorConfigurationBuilder();
-        builder.withMaxWindow(6);
+        builder.withMaxWindow(3);
 
         var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/cholesky.txt",
                 MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class, builder.build());
