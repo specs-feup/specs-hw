@@ -66,7 +66,7 @@ public class MicroBlazeMultipleProfileTester {
 
     @Test
     public void testSequential() {
-        this.testSequential("org/specs/MicroBlaze/asm/cholesky.elf");
+        this.testSequential("org/specs/MicroBlaze/asm/cholesky_trace.txt");
     }
 
     @Test
