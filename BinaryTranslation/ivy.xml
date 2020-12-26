@@ -21,7 +21,7 @@
        xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
     <info
         organisation="specs.fe.up.pt"
-        module="MatlabToCLV2"
+        module="BinaryTranslation"
         status="release">
 	</info>
 	
