@@ -1,5 +1,7 @@
 package org.specs.MicroBlaze.test.profile;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeELF;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
@@ -16,7 +18,8 @@ public class MicroBlazeProfileTester {
         Class<?> streams[] = { /*MicroBlazeElfStream.class ,*/ MicroBlazeTraceStream.class };
         Class<?> profilers[] = { InstructionTypeHistogram.class, InstructionHistogram.class };
 
-        for (var file : MicroBlazeELF.values()) {
+        // for (var file : MicroBlazeELF.values()) {
+        for (var file : Arrays.asList(MicroBlazeELF.pic1d)) {
             for (var stream : streams) {
                 for (var profile : profilers) {
                     var result = InstructionStreamProfilingUtils.profile(
