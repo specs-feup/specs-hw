@@ -27,7 +27,7 @@ public class MicroBlazeStreamTester {
 
     @Test
     public void testTrace() {
-        InstructionStreamTestUtils.printStream("org/specs/MicroBlaze/asm/cholesky.elf",
+        InstructionStreamTestUtils.printStream("org/specs/MicroBlaze/asm/pic1d.elf",
                 MicroBlazeTraceStream.class);
     }
 
