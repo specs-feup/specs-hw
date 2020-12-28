@@ -10,12 +10,12 @@ public class ArmStreamTester {
 
     @Test
     public void testStatic() {
-        InstructionStreamTestUtils.printStream("org/specs/Arm/asm/cholesky.txt", ArmElfStream.class);
+        InstructionStreamTestUtils.printStream("org/specs/Arm/asm/cholesky.elf", ArmElfStream.class);
     }
 
     @Test
     public void testStaticRaw() {
-        InstructionStreamTestUtils.rawDump("org/specs/Arm/asm/cholesky.txt", ArmElfStream.class);
+        InstructionStreamTestUtils.rawDump("org/specs/Arm/asm/cholesky.elf", ArmElfStream.class);
     }
 
     @Test
