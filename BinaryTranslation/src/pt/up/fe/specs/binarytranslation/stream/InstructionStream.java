@@ -51,16 +51,9 @@ public interface InstructionStream extends ObjectStream<Instruction> {
     public Application getApp();
 
     /**
-     * 
+     * Outputs the unprocessed incoming stream
      */
-    public default void enableDump() {
-    };
-
-    /**
-     * 
-     */
-    public default void enableDump(boolean val) {
-    };
+    public void rawDump();
 
     /**
      * 

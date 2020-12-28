@@ -18,6 +18,12 @@ public class InstructionStreamChannel extends GenericObjectStream<Instruction> i
     }
 
     @Override
+    public void rawDump() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     public Instruction nextInstruction() {
         return this.next();
     }
