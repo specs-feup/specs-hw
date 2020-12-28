@@ -10,4 +10,14 @@ public interface InstructionStreamProfiler { // extends
      * Run the profiling over the stream
      */
     public InstructionProfileResult profile(InstructionStream istream);
+
+    /*
+     * 
+     */
+    public void setStartAddr(Number startAddr);
+
+    /*
+     * 
+     */
+    public void setStopAddr(Number stopAddr);
 }
