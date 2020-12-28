@@ -18,7 +18,8 @@ public abstract class AHistogramProfile extends AInstructionStreamProfiler {
 
     @Override
     public InstructionProfileResult profile(InstructionStream istream) {
-        ProfileHistogram histogram = new ProfileHistogram();
+        ProfileHistogram histogram = new ProfileHistogram(
+                istream.getApp().getAppName(), this.getClass().getSimpleName());
         var hist = histogram.getHistogram();
 
         boolean profileOn = (this.startAddr.intValue() == -1) ? true : false;
