@@ -108,8 +108,10 @@ public abstract class AInstructionProducer implements InstructionProducer {
     private boolean advanceLineToValid(LineStream insts, Pattern regex) {
         String line = null;
         while (((line = insts.peekNextLine()) != null) && !SpecsStrings.matches(line, regex)) {
+            System.out.println(line);
             insts.nextLine();
         }
+        System.out.println(line);
 
         return (line == null) ? false : true;
     }
