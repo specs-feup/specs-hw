@@ -21,16 +21,29 @@ public abstract class AHistogramProfile extends AInstructionStreamProfiler {
         ProfileHistogram histogram = new ProfileHistogram();
         var hist = histogram.getHistogram();
 
+        boolean profileOn = (this.startAddr.intValue() == -1) ? true : false;
+
         Instruction inst = null;
         while ((inst = istream.nextInstruction()) != null) {
 
-            var key = this.getKey.apply(inst);
-            if (hist.containsKey(key)) {
-                var count = hist.get(key);
-                hist.put(key, count + 1);
+            // NOTE: this allows for intermittent profiling of a given region
+            // start profiling (only profile if start address is hit or if startaddr == -1)
+            if (!profileOn && (inst.getAddress().equals(this.startAddr)))
+                profileOn = true;
 
-            } else {
-                hist.put(key, 1);
+            // end profiling
+            else if (profileOn && (inst.getAddress().equals(this.stopAddr)))
+                profileOn = false;
+
+            if (profileOn) {
+                var key = this.getKey.apply(inst);
+                if (hist.containsKey(key)) {
+                    var count = hist.get(key);
+                    hist.put(key, count + 1);
+
+                } else {
+                    hist.put(key, 1);
+                }
             }
         }
 
