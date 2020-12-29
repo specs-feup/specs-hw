@@ -2,11 +2,14 @@ package org.specs.MicroBlaze.stream;
 
 import java.io.File;
 
+import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
 public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
@@ -41,6 +44,15 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         // 1. open the ELF
         // 2. dump all the ELF into a local list
         return new MicroBlazeELFDump(auxname);
+    }
+
+    /*
+     * Auxiliary constructor so that streams can be built from the threading engine
+     * with the channels created by the parent InstructionProducer
+     */
+    public MicroBlazeTraceStream(File elfname, ChannelConsumer<Instruction> channel) {
+        super(new ChanneledInstructionProducer(new MicroBlazeApplication(elfname), channel));
+        this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfname);
     }
 
     public MicroBlazeTraceStream(File elfname) {

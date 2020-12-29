@@ -71,7 +71,7 @@ public class MicroBlazeMultipleProfileTester {
 
     @Test
     public void testParallel() {
-        this.testParallel("org/specs/MicroBlaze/asm/cholesky.elf");
+        this.testParallel("org/specs/MicroBlaze/asm/N10/cholesky.elf");
     }
 
 }
