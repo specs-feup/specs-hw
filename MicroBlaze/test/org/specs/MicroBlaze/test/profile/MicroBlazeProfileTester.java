@@ -1,12 +1,11 @@
 package org.specs.MicroBlaze.test.profile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -33,7 +32,7 @@ public class MicroBlazeProfileTester {
         profilerList.add(InstructionTypeHistogram.class);
         profilerList.add(InstructionHistogram.class);
 
-        for (var file : Arrays.asList(MicroBlazeLivermoreELFN10.innerprod)) {
+        for (var file : MicroBlazeLivermoreELFN100.values()) {
             for (var producer : producers) {
 
                 var result = InstructionStreamProfilingUtils.profile(
