@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.stream.MicroBlazeStaticProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
+import org.specs.MicroBlaze.stream.MicroBlazeStaticProvider;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
@@ -59,6 +59,6 @@ public class MicroBlazeMultiConsumerGenericTester {
 
     @Test
     public void testParallel() {
-        this.testParallel("org/specs/MicroBlaze/asm/cholesky.elf");
+        this.testParallel("org/specs/MicroBlaze/asm/N10/cholesky.elf");
     }
 }
