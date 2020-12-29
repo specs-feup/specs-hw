@@ -10,7 +10,7 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
  */
 public enum MicroBlazeLivermoreELFN10 implements ResourceProvider {
 
-    cholesky("org/specs/MicroBlaze/asm/N10/N10/cholesky.elf", 0x4b54, 0x4c44),
+    cholesky("org/specs/MicroBlaze/asm/N10/cholesky.elf", 0x4b54, 0x4c44),
     diffpredict("org/specs/MicroBlaze/asm/N10/diffpredict.elf", 0x2ec8, 0x3008),
     // glinearrec("org/specs/MicroBlaze/asm/N10/glinearrec.elf", 0x2dac, 0x5698), // linrecurrence? (there are 2 linear
     // recurrence kernels)
