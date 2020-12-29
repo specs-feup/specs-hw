@@ -20,4 +20,9 @@ public interface InstructionStreamProfiler { // extends
      * 
      */
     public void setStopAddr(Number stopAddr);
+
+    /*
+     * 
+     */
+    public Number getProfileTime();
 }

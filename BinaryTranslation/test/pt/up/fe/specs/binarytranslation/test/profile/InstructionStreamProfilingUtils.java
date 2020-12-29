@@ -94,6 +94,8 @@ public class InstructionStreamProfilingUtils {
 
                 // consumers
                 var profiler = InstructionStreamProfilingUtils.buildProfiler(profclass);
+                profiler.setStartAddr(startAddr);
+                profiler.setStopAddr(stopAddr);
 
                 // add to engine
                 // streamengine.subscribe(consumer);
