@@ -10,6 +10,9 @@ public class ProfileHistogram implements InstructionProfileResult {
     private String applicationName = "noName";
 
     @Expose
+    private Number profileTime = 0;
+
+    @Expose
     private String histogramTypeName = "noTypeName";
 
     @Expose
@@ -35,5 +38,9 @@ public class ProfileHistogram implements InstructionProfileResult {
 
     public HashMap<String, Integer> getHistogram() {
         return histogram;
+    }
+
+    public void setProfileTime(Number profileTime) {
+        this.profileTime = profileTime;
     }
 }

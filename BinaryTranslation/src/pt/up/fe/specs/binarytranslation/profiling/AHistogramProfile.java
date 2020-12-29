@@ -22,6 +22,7 @@ public abstract class AHistogramProfile extends AInstructionStreamProfiler {
                 istream.getApp().getAppName(), this.getClass().getSimpleName());
         var hist = histogram.getHistogram();
 
+        this.profileTime = System.nanoTime();
         boolean profileOn = (this.startAddr.intValue() == -1) ? true : false;
 
         Instruction inst = null;
@@ -47,7 +48,8 @@ public abstract class AHistogramProfile extends AInstructionStreamProfiler {
                 }
             }
         }
-
+        this.profileTime = System.nanoTime() - this.profileTime.longValue();
+        histogram.setProfileTime(profileTime); // ugly, but works for now
         return histogram;
     }
 }
