@@ -1,5 +1,6 @@
 package org.specs.MicroBlaze.test.profile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 import pt.up.fe.specs.binarytranslation.profiling.InstructionHistogram;
 import pt.up.fe.specs.binarytranslation.profiling.InstructionTypeHistogram;
 import pt.up.fe.specs.binarytranslation.test.profile.InstructionStreamProfilingUtils;
+import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeProfileTester {
 
@@ -33,6 +35,7 @@ public class MicroBlazeProfileTester {
         profilerList.add(InstructionHistogram.class);
 
         for (var file : MicroBlazeLivermoreELFN100.values()) {
+            // for (var file : Arrays.asList(MicroBlazeLivermoreELFN100.linrec100)) {
             for (var producer : producers) {
 
                 var result = InstructionStreamProfilingUtils.profile(
@@ -42,13 +45,29 @@ public class MicroBlazeProfileTester {
                 for (var r : result) {
                     r.toJSON();
                 }
-
             }
         }
     }
 
     /*
-    public static void main(String[] args) {
-        MicroBlazeProfileTester.MicroBlazeProfile();
-    }*/
+     * just to count total cycles (Cause i didnt before)
+     */
+    @Test
+    public void MicroBlazeSimulate() {
+
+        for (var file : MicroBlazeLivermoreELFN100.values()) {
+
+            File fd = SpecsIo.resourceCopy(file.getResource());
+            fd.deleteOnExit();
+            try (var istream = new MicroBlazeTraceStream(fd)) {
+
+                // sim
+                istream.silent(true);
+                while ((istream.nextInstruction()) != null)
+                    ;
+
+                System.out.println(file.getFilename() + ": " + istream.getNumInstructions());
+            }
+        }
+    }
 }

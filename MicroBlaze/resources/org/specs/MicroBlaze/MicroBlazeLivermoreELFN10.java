@@ -1,6 +1,6 @@
 package org.specs.MicroBlaze;
 
-import pt.up.fe.specs.util.providers.ResourceProvider;
+import org.specs.BinaryTranslation.ELFProvider;
 
 /**
  * Handy resource list of existing pre-compiled ELFs for MicroBlaze, for robust name and path getting (and other things)
@@ -8,7 +8,7 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
  * @author nuno
  *
  */
-public enum MicroBlazeLivermoreELFN10 implements ResourceProvider {
+public enum MicroBlazeLivermoreELFN10 implements ELFProvider {
 
     cholesky("org/specs/MicroBlaze/asm/N10/cholesky.elf", 0x4b54, 0x4c44),
     diffpredict("org/specs/MicroBlaze/asm/N10/diffpredict.elf", 0x2ec8, 0x3008),
@@ -19,7 +19,7 @@ public enum MicroBlazeLivermoreELFN10 implements ResourceProvider {
     hydro2dimpl("org/specs/MicroBlaze/asm/N10/hydro2dimpl.elf", 0x5288, 0x550c),
     innerprod("org/specs/MicroBlaze/asm/N10/innerprod.elf", 0x2e64, 0x2ec4),
     intpredict("org/specs/MicroBlaze/asm/N10/intpredict.elf", 0x3c0c, 0x3d8c),
-    linrec("org/specs/MicroBlaze/asm/N10/linrec.elf", 0x55b4, 0x5698),
+    linrec("org/specs/MicroBlaze/asm/N10/linrec.elf", 0x3568, 0x3610),
     matmul("org/specs/MicroBlaze/asm/N10/matmul.elf", 0x517c, 0x5284),
     pic1d("org/specs/MicroBlaze/asm/N10/pic1d.elf", 0x31e0, 0x3564),
     pic2d("org/specs/MicroBlaze/asm/N10/pic2d.elf", 0x300c, 0x31dc),
