@@ -1,6 +1,7 @@
 package org.specs.Arm.asm.stream;
 
 import org.junit.Test;
+import org.specs.Arm.ArmLivermoreELFN100;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
@@ -20,7 +21,8 @@ public class ArmStreamTester {
 
     @Test
     public void testTrace() {
-        InstructionStreamTestUtils.printStream("org/specs/Arm/asm/cholesky.elf", ArmTraceStream.class);
+        InstructionStreamTestUtils.printStream(
+                ArmLivermoreELFN100.innerprod.getResource(), ArmTraceStream.class);
     }
 
     @Test
