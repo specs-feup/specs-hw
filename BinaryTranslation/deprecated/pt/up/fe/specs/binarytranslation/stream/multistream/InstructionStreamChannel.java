@@ -52,4 +52,10 @@ public class InstructionStreamChannel extends GenericObjectStream<Instruction> i
     public Application getApp() {
         return this.istream.getApp();
     }
+
+    @Override
+    public void silent(boolean isSilent) {
+        // TODO Auto-generated method stub
+
+    }
 }

@@ -46,6 +46,12 @@ public interface InstructionStream extends ObjectStream<Instruction> {
 
     /**
      * 
+     * @param isSilen
+     */
+    public void silent(boolean isSilent);
+
+    /**
+     * 
      * @return The final {@ApplicationInformation} object containing appname, compile info, and cpu architecture
      */
     public Application getApp();

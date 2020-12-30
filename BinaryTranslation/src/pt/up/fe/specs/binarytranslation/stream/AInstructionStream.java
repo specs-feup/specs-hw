@@ -20,11 +20,25 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
      */
     private InstructionProducer producer;
 
+    /*
+     * 
+     */
+    private boolean silent = false;
+
     public AInstructionStream(InstructionProducer producer) {
         super(producer.getPoison());
         this.producer = producer;
         this.numinsts = 0;
         this.numcycles = 0;
+    }
+
+    @Override
+    public void silent(boolean isSilent) {
+        this.silent = isSilent;
+    }
+
+    protected boolean isSilent() {
+        return silent;
     }
 
     @Override
