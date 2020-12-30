@@ -81,13 +81,13 @@ public class InstructionStreamProfilingUtils {
             var streamengine = new ProducerEngine<Instruction, InstructionProducer>(iproducer,
                     op -> op.nextInstruction(), cc -> {
                         try {
-                            return (InstructionStream) streamcons.newInstance(fd, cc);
+                            var istream = (InstructionStream) streamcons.newInstance(fd, cc);
+                            istream.silent(true);
+                            return istream;
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
                     });
-
-            // cc -> new MicroBlazeElfStream(fd, cc));
 
             // profilers
             for (var profclass : profilerClass) {
@@ -104,6 +104,10 @@ public class InstructionStreamProfilingUtils {
 
             // launch all threads (blocking)
             streamengine.launch();
+
+            // quick hack line for measurements TODO: remove
+            var istream = (InstructionStream) streamengine.getConsumer(0).getOstream();
+            System.out.println(fd.getName() + ": " + istream.getNumInstructions());
 
             // get results
             for (int i = 0; i < profilerClass.size(); i++) {
