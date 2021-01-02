@@ -22,11 +22,6 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
  */
 public class ArmInstruction extends AInstruction {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4224013622403783519L;
-
     // raw field data
     private final ArmAsmFieldData fieldData;
 
@@ -57,7 +52,7 @@ public class ArmInstruction extends AInstruction {
      */
     private ArmInstruction(String address, String instruction, InstructionData idata,
             ArmAsmFieldData fieldData, InstructionProperties props) {
-        super(Integer.parseInt(address, 16), instruction, idata, props);
+        super(Long.parseLong(address, 16), instruction, idata, props);
         this.fieldData = fieldData;
     }
 
@@ -67,7 +62,7 @@ public class ArmInstruction extends AInstruction {
     @Override
     public ArmInstruction copy() {
 
-        String copyaddr = new String(Integer.toHexString(this.getAddress().intValue()));
+        String copyaddr = new String(Long.toHexString(this.getAddress().intValue()));
         String copyinst = new String(this.getInstruction());
         ArmInstructionData copyData = this.getData().copy();
         ArmAsmFieldData copyFieldData = this.getFieldData().copy();

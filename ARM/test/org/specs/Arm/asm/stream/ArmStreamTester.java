@@ -1,7 +1,7 @@
 package org.specs.Arm.asm.stream;
 
 import org.junit.Test;
-import org.specs.Arm.ArmLivermoreELFN100;
+import org.specs.Arm.ArmLivermoreELFN10;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
@@ -11,22 +11,25 @@ public class ArmStreamTester {
 
     @Test
     public void testStatic() {
-        InstructionStreamTestUtils.printStream("org/specs/Arm/asm/cholesky.elf", ArmElfStream.class);
+        InstructionStreamTestUtils.printStream(
+                ArmLivermoreELFN10.innerprod.getResource(), ArmElfStream.class);
     }
 
     @Test
     public void testStaticRaw() {
-        InstructionStreamTestUtils.rawDump("org/specs/Arm/asm/cholesky.elf", ArmElfStream.class);
+        InstructionStreamTestUtils.rawDump(
+                ArmLivermoreELFN10.innerprod.getResource(), ArmElfStream.class);
     }
 
     @Test
     public void testTrace() {
         InstructionStreamTestUtils.printStream(
-                ArmLivermoreELFN100.innerprod.getResource(), ArmTraceStream.class);
+                ArmLivermoreELFN10.innerprod.getResource(), ArmTraceStream.class);
     }
 
     @Test
     public void testTraceRaw() {
-        InstructionStreamTestUtils.rawDump("org/specs/Arm/asm/cholesky.elf", ArmTraceStream.class);
+        InstructionStreamTestUtils.rawDump(
+                ArmLivermoreELFN10.innerprod.getResource(), ArmTraceStream.class);
     }
 }

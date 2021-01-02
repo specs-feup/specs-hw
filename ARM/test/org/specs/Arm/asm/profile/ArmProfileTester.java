@@ -1,6 +1,7 @@
 package org.specs.Arm.asm.profile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,8 +33,8 @@ public class ArmProfileTester {
         profilerList.add(InstructionTypeHistogram.class);
         profilerList.add(InstructionHistogram.class);
 
-        for (var file : ArmLivermoreELFN100.values()) {
-            // for (var file : Arrays.asList(ArmLivermoreELFN100.innerprod)) {
+        // for (var file : ArmLivermoreELFN100.values()) {
+        for (var file : Arrays.asList(ArmLivermoreELFN100.tri_diag)) {
             for (var producer : producers) {
 
                 var result = InstructionStreamProfilingUtils.profile(
