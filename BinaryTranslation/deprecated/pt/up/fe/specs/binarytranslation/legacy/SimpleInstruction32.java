@@ -43,8 +43,8 @@ public interface SimpleInstruction32 extends Instruction {
     }
 
     @Override
-    default Integer getAddress() {
-        return getAddress32();
+    default Long getAddress() {
+        return Long.valueOf(getAddress32());
     }
 
     @Override

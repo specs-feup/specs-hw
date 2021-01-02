@@ -36,7 +36,7 @@ public interface Instruction {
     /*
      * Position of instruction in program memory
      */
-    default Integer getAddress() {
+    default Long getAddress() {
         return null;
     };
 

@@ -20,7 +20,7 @@ public abstract class ELFDump {
 
     // TODO: map should also hold section of instruction
     // since addresses repeat per individual section of linker script
-    private final Map<Integer, Instruction> elfdump = new HashMap<Integer, Instruction>();
+    private final Map<Long, Instruction> elfdump = new HashMap<Long, Instruction>();
 
     public ELFDump(StaticInstructionProducer producer) {
 
@@ -30,11 +30,11 @@ public abstract class ELFDump {
             Instruction i = null;
             while ((i = producer.nextInstruction()) != null) {
 
-                var addr = i.getAddress().intValue();
+                var addr = i.getAddress().longValue();
                 if (elfdump.containsKey(addr))
                     throw new Exception();
 
-                elfdump.put(i.getAddress().intValue(), i);
+                elfdump.put(i.getAddress().longValue(), i);
             }
 
             // TODO: do something better
@@ -43,16 +43,16 @@ public abstract class ELFDump {
         }
     }
 
-    public Instruction getInstruction(Integer addr) {
-        return elfdump.get(addr.intValue());
+    public Instruction getInstruction(Long addr) {
+        return elfdump.get(addr.longValue());
     }
 
     /*
      * Get a sequential range of instructions between two addresses
      */
-    public List<Instruction> getRange(Integer startaddr, Integer endaddr) {
+    public List<Instruction> getRange(Long startaddr, Long endaddr) {
         var list = new ArrayList<Instruction>();
-        for (Integer i = startaddr; i < endaddr; i += appdata.getInstructionWidth()) {
+        for (Long i = startaddr; i < endaddr; i += appdata.getInstructionWidth()) {
             list.add(this.elfdump.get(i));
         }
         return list;
