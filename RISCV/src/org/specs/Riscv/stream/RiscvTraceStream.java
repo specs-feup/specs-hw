@@ -20,6 +20,6 @@ public class RiscvTraceStream extends ATraceInstructionStream {
     }
 
     public RiscvTraceStream(File elfname) {
-        super(new RiscvStaticProvider(elfname));
+        super(new RiscvTraceProvider(elfname));
     }
 }
