@@ -14,6 +14,6 @@ public class RiscvApplication extends Application {
                 RiscvResource.RISCV_READELF,
                 RiscvResource.QEMU_RISCV_GDB_TEMPLATE,
                 RiscvResource.QEMU_RISCV_EXE,
-                RiscvResource.QEMU_RISCV_BAREMETAL_DTB);
+                null);
     }
 }
