@@ -185,7 +185,8 @@ public class MbInstruction implements TraceInstruction32 {
     }
 
     public static MbInstruction create(TraceInstruction32 traceInstruction) {
-        return create(traceInstruction.getAddress32(), traceInstruction.getInstruction(), traceInstruction.getCycles(),
+        return create(traceInstruction.getAddress32(),
+                traceInstruction.getInstruction(), traceInstruction.getCycles(),
                 traceInstruction.getEncoded().orElse(null));
     }
 

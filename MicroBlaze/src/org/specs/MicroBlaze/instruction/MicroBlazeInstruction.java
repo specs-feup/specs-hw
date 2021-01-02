@@ -30,11 +30,6 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
 
 public class MicroBlazeInstruction extends AInstruction {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 252242517130965389L;
-
     // raw field data
     private final MicroBlazeAsmFieldData fieldData;
 
@@ -122,7 +117,7 @@ public class MicroBlazeInstruction extends AInstruction {
      */
     private MicroBlazeInstruction(String address, String instruction, InstructionData idata,
             MicroBlazeAsmFieldData fieldData, InstructionProperties props) {
-        super(Integer.parseInt(address, 16), instruction, idata, props);
+        super(Long.parseLong(address, 16), instruction, idata, props);
         this.fieldData = fieldData;
     }
 
@@ -132,7 +127,7 @@ public class MicroBlazeInstruction extends AInstruction {
     @Override
     public MicroBlazeInstruction copy() {
 
-        String copyaddr = new String(Integer.toHexString(this.getAddress().intValue()));
+        String copyaddr = new String(Long.toHexString(this.getAddress().intValue()));
         String copyinst = new String(this.getInstruction());
         MicroBlazeInstructionData copyData = this.getData().copy();
         MicroBlazeAsmFieldData copyFieldData = this.getFieldData().copy();

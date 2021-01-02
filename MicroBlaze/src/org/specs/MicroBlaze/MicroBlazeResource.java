@@ -4,6 +4,13 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public enum MicroBlazeResource implements ResourceProvider {
 
+    // NOTE: if libcurl3 is missing in ubuntu 20.04, do this:
+    // 1. add "deb http://cz.archive.ubuntu.com/ubuntu bionic main universe" to /etc/apt/sources.list
+    // 2. sudo apt-get update
+    // 3. sudo apt-get install libcurl3
+    // 4. remove the entry from /etc/apt/sources.list
+    // 5. sudo apt-get update
+
     MICROBLAZE_CPU_NAME("microblaze32"),
 
     QEMU_MICROBLAZE_GDB_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl.gdb"),

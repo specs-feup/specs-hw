@@ -85,7 +85,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         }
 
         if (i != null) {
-            // get another one if true
+            // get another one if trueInteger
             if (i.isImmediateValue() || (i.getDelay() > 0)) {
 
                 // NOTE, doing simple elfdump.getInstruction returns a reference, and we want new objects
