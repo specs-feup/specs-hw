@@ -26,7 +26,7 @@ import pt.up.fe.specs.util.SpecsStrings;
  */
 public abstract class AInstruction implements Instruction {
 
-    private Integer address;
+    private Long address;
     private String instruction;
 
     // decoded field data (abstract class)
@@ -38,7 +38,7 @@ public abstract class AInstruction implements Instruction {
     // the enum which represents the ISA properties of this instruction
     protected final InstructionProperties props;
 
-    public AInstruction(Integer address, String instruction,
+    public AInstruction(Long address, String instruction,
             InstructionData idata, InstructionProperties props) {
         this.address = address;
         this.instruction = instruction.strip();
@@ -63,7 +63,7 @@ public abstract class AInstruction implements Instruction {
     }
 
     @Override
-    public final Integer getAddress() {
+    public final Long getAddress() {
         return address;
     }
 

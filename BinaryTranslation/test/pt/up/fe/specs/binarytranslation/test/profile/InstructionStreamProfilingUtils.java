@@ -82,7 +82,7 @@ public class InstructionStreamProfilingUtils {
                     op -> op.nextInstruction(), cc -> {
                         try {
                             var istream = (InstructionStream) streamcons.newInstance(fd, cc);
-                            istream.silent(true);
+                            // istream.silent(true);
                             return istream;
                         } catch (Exception e) {
                             throw new RuntimeException(e);

@@ -23,18 +23,18 @@ public abstract class AHistogramProfile extends AInstructionStreamProfiler {
         var hist = histogram.getHistogram();
 
         this.profileTime = System.nanoTime();
-        boolean profileOn = (this.startAddr.intValue() == -1) ? true : false;
+        boolean profileOn = (this.startAddr.longValue() == -1) ? true : false;
 
         Instruction inst = null;
         while ((inst = istream.nextInstruction()) != null) {
 
             // NOTE: this allows for intermittent profiling of a given region
             // start profiling (only profile if start address is hit or if startaddr == -1)
-            if (!profileOn && (inst.getAddress().equals(this.startAddr)))
+            if (!profileOn && (inst.getAddress().equals(this.startAddr.longValue())))
                 profileOn = true;
 
             // end profiling
-            else if (profileOn && (inst.getAddress().equals(this.stopAddr)))
+            else if (profileOn && (inst.getAddress().equals(this.stopAddr.longValue())))
                 profileOn = false;
 
             if (profileOn) {

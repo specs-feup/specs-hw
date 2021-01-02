@@ -29,9 +29,9 @@ public class InstructionWindow {
         return this.ilist.size() == this.windowSize;
     }
 
-    public boolean exists(Integer addr) {
+    public boolean exists(Long addr) {
         for (var inst : this.ilist)
-            if (inst.getAddress().intValue() == addr.intValue())
+            if (inst.getAddress().longValue() == addr.longValue())
                 return true;
         return false;
     }
@@ -55,9 +55,9 @@ public class InstructionWindow {
     /*
      * Get latest occuring instance of an instruction (by addr) in window
      */
-    public Instruction getLatestByAddr(Integer addr) {
+    public Instruction getLatestByAddr(Long addr) {
         for (int i = this.ilist.size() - 1; i >= 0; i--)
-            if (this.ilist.get(i).getAddress().intValue() == addr.intValue())
+            if (this.ilist.get(i).getAddress().longValue() == addr.longValue())
                 return this.ilist.get(i);
         return null;
     }
@@ -65,9 +65,9 @@ public class InstructionWindow {
     /*
      * Get latest occuring instance of an instruction (by addr) in window
      */
-    public Instruction getEarliestByAddr(Integer addr) {
+    public Instruction getEarliestByAddr(Long addr) {
         for (var inst : this.ilist)
-            if (inst.getAddress().intValue() == addr.intValue())
+            if (inst.getAddress().longValue() == addr.longValue())
                 return inst;
         return null;
     }
