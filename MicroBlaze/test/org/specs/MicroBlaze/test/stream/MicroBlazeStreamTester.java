@@ -1,6 +1,7 @@
 package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -17,22 +18,25 @@ public class MicroBlazeStreamTester {
 
     @Test
     public void testStatic() {
-        InstructionStreamTestUtils.printStream("org/specs/MicroBlaze/asm/cholesky.elf", MicroBlazeElfStream.class);
+        InstructionStreamTestUtils.printStream(
+                MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeElfStream.class);
     }
 
     @Test
     public void testStaticRaw() {
-        InstructionStreamTestUtils.rawDump("org/specs/MicroBlaze/asm/cholesky.txt", MicroBlazeElfStream.class);
+        InstructionStreamTestUtils.rawDump(
+                MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeElfStream.class);
     }
 
     @Test
     public void testTrace() {
-        InstructionStreamTestUtils.printStream("org/specs/MicroBlaze/asm/pic1d.elf",
-                MicroBlazeTraceStream.class);
+        InstructionStreamTestUtils.printStream(
+                MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeTraceStream.class);
     }
 
     @Test
     public void testTraceRaw() {
-        InstructionStreamTestUtils.rawDump("org/specs/MicroBlaze/asm/cholesky.txt", MicroBlazeTraceStream.class);
+        InstructionStreamTestUtils.rawDump(
+                MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeTraceStream.class);
     }
 }
