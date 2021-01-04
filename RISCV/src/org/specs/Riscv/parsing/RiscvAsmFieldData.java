@@ -14,11 +14,6 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class RiscvAsmFieldData extends AsmFieldData {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4739288388638623897L;
-
     /*
      * remmaping of <string, string> to <asmfield, string>
      */
@@ -88,14 +83,18 @@ public class RiscvAsmFieldData extends AsmFieldData {
         switch (type) {
 
         ///////////////////////////////////////////////////////////////////////
-        case R:
+        // R types
+        case OP:
+        case AMO:
+        case OPFP:
             operands.add(newWriteRegister(RD, operandmap.get(RD)));
             operands.add(newReadRegister(RS1, operandmap.get(RS1)));
             operands.add(newReadRegister(RS2, operandmap.get(RS2)));
             break;
 
         ///////////////////////////////////////////////////////////////////////
-        case I:
+        // I types
+        case OPIMM:
         case LOAD:
         case JALR:
             operands.add(newWriteRegister(RD, operandmap.get(RD)));
@@ -104,7 +103,10 @@ public class RiscvAsmFieldData extends AsmFieldData {
             break;
 
         ///////////////////////////////////////////////////////////////////////
-        case S:
+        // S types
+        case STOREFP:
+        case LOADFP:
+        case STORE:
             operands.add(newReadRegister(RS1, operandmap.get(RS1)));
             operands.add(newReadRegister(RS2, operandmap.get(RS2)));
 
@@ -116,13 +118,16 @@ public class RiscvAsmFieldData extends AsmFieldData {
             break;
 
         ///////////////////////////////////////////////////////////////////////
-        case U:
+        // U types
+        case LUI:
+        case AUIPC:
             operands.add(newWriteRegister(RD, operandmap.get(RD)));
             operands.add(newImmediate(IMMTWENTY, operandmap.get(IMMTWENTY)));
             break;
 
         ///////////////////////////////////////////////////////////////////////
-        case UJ:
+        // UJ types
+        case JAL:
             operands.add(newWriteRegister(RD, operandmap.get(RD)));
 
             // build full imm field from 4 fields
@@ -135,7 +140,8 @@ public class RiscvAsmFieldData extends AsmFieldData {
             break;
 
         ///////////////////////////////////////////////////////////////////////
-        case SB:
+        // SB-type
+        case BRANCH:
             operands.add(newReadRegister(RS1, operandmap.get(RS1)));
             operands.add(newReadRegister(RS2, operandmap.get(RS2)));
 

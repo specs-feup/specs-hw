@@ -1,6 +1,7 @@
 package org.specs.Riscv.parsing;
 
 import static org.specs.Riscv.parsing.RiscvAsmFieldType.*;
+import static org.specs.Riscv.parsing.RiscvBaseFormats.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,26 +29,34 @@ public interface RiscvInstructionParsers {
     List<AsmParser> PARSERS = Arrays.asList(
 
             // R types
-            newInstance(R_OP, RiscvBaseFormats.R.getFormat() + RiscvMainOpcode.OP.getFormat()),
-            newInstance(R_AMO, RiscvBaseFormats.R.getFormat() + RiscvMainOpcode.AMO.getFormat()),
-            newInstance(R_OPFP, RiscvBaseFormats.R.getFormat() + RiscvMainOpcode.OPFP.getFormat()),
+            newInstance(OP, R.getFormat() + OP.getFormat()),
+            newInstance(AMO, R.getFormat() + AMO.getFormat()),
+            newInstance(OPFP, R.getFormat() + OPFP.getFormat()),
 
             // R4 types
-            newInstance(R4_MADD, RiscvBaseFormats.R4.getFormat() + RiscvMainOpcode.MADD.getFormat()),
-            newInstance(R4_NMADD, RiscvBaseFormats.R4.getFormat() + RiscvMainOpcode.NMADD.getFormat()),
-            newInstance(R4_NMSUB, RiscvBaseFormats.R4.getFormat() + RiscvMainOpcode.NMSUB.getFormat()),
+            newInstance(MADD, R4.getFormat() + MADD.getFormat()),
+            newInstance(NMADD, R4.getFormat() + NMADD.getFormat()),
+            newInstance(NMSUB, R4.getFormat() + NMSUB.getFormat()),
 
             // I types
-            newInstance(I_OPIMM, RiscvBaseFormats.I.getFormat() + RiscvMainOpcode.OPIMM.getFormat()),
-            newInstance(I_LOAD, RiscvBaseFormats.I.getFormat() + RiscvMainOpcode.LOAD.getFormat()),
-            newInstance(I_JARL, RiscvBaseFormats.I.getFormat() + RiscvMainOpcode.JARL.getFormat()),
+            newInstance(OPIMM, I.getFormat() + OPIMM.getFormat()),
+            newInstance(LOAD, I.getFormat() + LOAD.getFormat()),
+            newInstance(JALR, I.getFormat() + JALR.getFormat()),
 
             // S types
-            newInstance(S_STOREFP, RiscvBaseFormats.S.getFormat() + RiscvMainOpcode.STOREFP.getFormat()),
-            newInstance(S_STOREFP, RiscvBaseFormats.S.getFormat() + RiscvMainOpcode.LOADFP.getFormat()),
-            newInstance(S_STOREFP, RiscvBaseFormats.S.getFormat() + RiscvMainOpcode.STORE.getFormat()),
+            newInstance(STOREFP, S.getFormat() + STOREFP.getFormat()),
+            newInstance(LOADFP, S.getFormat() + LOADFP.getFormat()),
+            newInstance(STORE, S.getFormat() + STORE.getFormat()),
 
-            // U type
+            // U types
+            newInstance(LUI, U.getFormat() + LUI.getFormat()),
+            newInstance(AUIPC, U.getFormat() + AUIPC.getFormat()),
+
+            // B types
+            newInstance(BRANCH, U.getFormat() + BRANCH.getFormat()),
+
+            // J types
+            newInstance(JAL, U.getFormat() + JAL.getFormat()),
 
             /*
             
