@@ -21,8 +21,8 @@ public class RiscvAsmBranchTargetGetter {
     static {
         Map<RiscvAsmFieldType, RiscvAsmBranchParse> amap = new HashMap<RiscvAsmFieldType, RiscvAsmBranchParse>();
         amap.put(RiscvAsmFieldType.JALR, RiscvAsmBranchTargetGetter::jalr);
-        amap.put(RiscvAsmFieldType.SB, RiscvAsmBranchTargetGetter::sb);
-        amap.put(RiscvAsmFieldType.UJ, RiscvAsmBranchTargetGetter::uj);
+        amap.put(RiscvAsmFieldType.BRANCH, RiscvAsmBranchTargetGetter::sb);
+        amap.put(RiscvAsmFieldType.JAL, RiscvAsmBranchTargetGetter::uj);
 
         TARGETGET = Collections.unmodifiableMap(amap);
     }

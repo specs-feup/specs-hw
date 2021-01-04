@@ -5,9 +5,9 @@ import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
 public class RiscvAsmFieldTypeV2 implements AsmFieldType {
 
     private RiscvBaseFormats base;
-    private RiscvMainOpcode maincode;
+    private RiscvAsmFieldType maincode;
 
-    public RiscvAsmFieldTypeV2(RiscvBaseFormats base, RiscvMainOpcode maincode) {
+    public RiscvAsmFieldTypeV2(RiscvBaseFormats base, RiscvAsmFieldType maincode) {
         this.base = base;
         this.maincode = maincode;
     }
@@ -16,7 +16,7 @@ public class RiscvAsmFieldTypeV2 implements AsmFieldType {
         return base;
     }
 
-    public RiscvMainOpcode getMaincode() {
+    public RiscvAsmFieldType getMaincode() {
         return maincode;
     }
 
