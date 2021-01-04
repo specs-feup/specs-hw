@@ -12,11 +12,6 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class RiscvInstructionData extends InstructionData {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -2263355591235910478L;
-
     /*
      * Fields only relevant for RISC-V instructions
      */
