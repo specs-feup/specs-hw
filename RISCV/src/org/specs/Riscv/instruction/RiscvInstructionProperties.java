@@ -17,7 +17,9 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 
 public enum RiscvInstructionProperties implements InstructionProperties {
 
+    ///////////////////////////////////////////////////////////////////////////
     // R-type: | funct7 | rs2 | rs1 | funct3 | rd | 0110011 |
+    // I Base set (main opcode field = OP)
     add(0x0000_0033, R, G_ADD),
     sub(0x4000_0033, R, G_SUB),
     sll(0x0000_0833, R, G_LOGICAL),
@@ -28,8 +30,58 @@ public enum RiscvInstructionProperties implements InstructionProperties {
     sra(0x4000_2833, R, G_LOGICAL),
     or(0x0000_3033, R, G_LOGICAL),
     and(0x0000_3833, R, G_LOGICAL),
+    // M Extension (main opcode field = OP)
+    mul(0x0200_0033, R, G_MUL),
+    mulh(0x0200_0833, R, G_MUL),
+    mulhsu(0x0200_1033, R, G_MUL),
+    mulhu(0x0200_1833, R, G_MUL),
+    div(0x0200_2033, R, G_DIV),
+    divu(0x0200_2833, R, G_DIV),
+    rem(0x0200_3033, R, G_OTHER),
+    remu(0x0200_3833, R, G_OTHER),
+    // A Extension (main opcode field = OP)
+    lr_w("lr.w", 0x1000_202F, R, G_LOAD),
+    sc_w("sc.w", 0x1800_202F, R, G_STORE),
+    amoswap_w("amoswap.w", 0x0800_202F, R, G_MEMORY),
+    amoadd_w("amoadd.w", 0x0000_202F, R, G_MEMORY),
+    amoxor_w("amoxor.w", 0x2000_202F, R, G_MEMORY),
+    amoand_w("amoand.w", 0x6000_202F, R, G_MEMORY),
+    amoor_w("amoor.w", 0x4000_202F, R, G_MEMORY),
+    amomin_w("amomin.w", 0x8000_202F, R, G_MEMORY),
+    amomax_w("amomax.w", 0xA000_202F, R, G_MEMORY),
+    amominu_w("amominu.w", 0xC000_202F, R, G_MEMORY),
+    amomaxu_w("amomaxu.w", 0xE000_202F, R, G_MEMORY),
+    // F Extension (main opcode field = _1010011)
+    fadd_s("fadd.s", 0x0, R, G_FLOAT, G_ADD), //
+    fsub_s("fsub.s", 0x0, R, G_FLOAT, G_SUB), //
+    fmul_s("fmul.s", 0x0, R, G_FLOAT, G_MUL),
+    fdiv_s("fdiv.s", 0x0, R, G_FLOAT, G_DIV),
+    fsqrt_s("fsqrt.s", 0x0, R, G_FLOAT, G_OTHER),
+    fsqnj_s("fsqnj.s", 0x0, R, G_FLOAT, G_OTHER),
+    fsqrtn_s("fsqrtn.s", 0x0, R, G_FLOAT, G_OTHER),
+    fsqnjx_s("fsqnjx.s", 0x0, R, G_FLOAT, G_OTHER),
+    fmin_s("fmin.s", 0x0, R, G_FLOAT, G_OTHER),
+    fmax_s("fmax.s", 0x0, R, G_FLOAT, G_OTHER),
+    fcvt_w_s("fcvt.w.s", 0x0, R, G_FLOAT, G_OTHER),
+    fcvt_wu_s("fcvt.wu.s", 0x0, R, G_FLOAT, G_OTHER),
+    fmv_x_w("fmv.x.w", 0x0, R, G_FLOAT, G_OTHER),
+    feq_s("feq.s", 0x0, R, G_FLOAT, G_OTHER),
+    flt_s("flt.s", 0x0, R, G_FLOAT, G_OTHER),
+    fle_s("fle.s", 0x0, R, G_FLOAT, G_OTHER),
+    fclass_s("fclass.s", 0x0, R, G_FLOAT, G_OTHER),
+    fcvt_s_w("fcvt.s.w", 0x0, R, G_FLOAT, G_OTHER),
+    fcvt_s_wu("fcvt.s.wu", 0x0, R, G_FLOAT, G_OTHER),
+    fmv_w_x("fmv.w.x", 0x0, R, G_FLOAT, G_OTHER),
+    // total fields:
+    // _0110011
+    // _0101111
+    // _1010011
+    // =>
+    // _xxxxx11 --> inconclusive...
 
+    ///////////////////////////////////////////////////////////////////////////
     // I-type: | imm12bits | rs1 | funct3 | rd | 0010011 |
+    // I Base set
     addi(0x0000_0013, I, G_ADD),
     slti(0x0000_2013, I, G_LOGICAL),
     sltiu(0x0000_3013, I, G_LOGICAL),
@@ -39,15 +91,24 @@ public enum RiscvInstructionProperties implements InstructionProperties {
     slli(0x0000_0813, I, G_LOGICAL),
     srli(0x0000_2813, I, G_LOGICAL),
     srai(0x4000_2813, I, G_LOGICAL),
+    // F Extension
+    flw(0x0000_0039, I, G_LOAD),
 
+    ///////////////////////////////////////////////////////////////////////////
     // S-type: | imm7bits | rs2 | rs1 | funct3 | imm5bits | 0100111 |
-    sb(0x0000_0023, S, G_STORE),
-    sh(0x0000_1023, S, G_STORE),
-    sw(0x0000_2023, S, G_STORE),
+    // I Base set
+    sb(0x0000_0023, S, G_STORE), // wrong?
+    sh(0x0000_1023, S, G_STORE), // wrong?
+    sw(0x0000_2023, S, G_STORE), // wrong?
+    // F Extension
+    fsw(0x0000_0007, S, G_STORE),
 
+    ///////////////////////////////////////////////////////////////////////////
     // U-type: | imm20bits | rd | 0x10111 |
     lui(0x0000_0037, U, G_STORE),
     auipc(0x0000_0017, U, G_STORE),
+    // UJ-type: | bit20 | imm10bits | bit11 | imm8bits | rd | 1101111 |
+    jal(0x0000_006f, UJ, G_UJUMP, G_AJUMP),
 
     // LOAD: | imm12bits | rs1 | funct3 | rd | 0000011 |
     lb(0x0000_0003, LOAD, G_LOAD),
@@ -66,9 +127,6 @@ public enum RiscvInstructionProperties implements InstructionProperties {
     bge(0x0000_50c7, SB, G_CJUMP, G_RJUMP),
     bltu(0x0000_60c7, SB, G_CJUMP, G_RJUMP),
     bgeu(0x0000_70c7, SB, G_CJUMP, G_RJUMP),
-
-    // UJ-type: | bit20 | imm10bits | bit11 | imm8bits | rd | 1101111 |
-    jal(0x0000_006f, UJ, G_UJUMP, G_AJUMP),
 
     unknown(0xFFFF_FFFF, 1, 1, UNDEFINED, G_UNKN);
 
@@ -114,11 +172,30 @@ public enum RiscvInstructionProperties implements InstructionProperties {
     }
 
     /*
-     * Helper constructor with default latency and delay slot
+     * Helper constructor with explicit name for instruction
+     */
+    private RiscvInstructionProperties(String explicitname, int opcode, int latency,
+            int delay, RiscvAsmFieldType mbtype, InstructionType... tp) {
+        this(opcode, latency, delay, mbtype, Arrays.asList(tp));
+        this.instructionName = explicitname;
+    }
+
+    /*
+     * Helper constructor with default latency and delay slot size
+     */
+    private RiscvInstructionProperties(String explicitname, int opcode,
+            RiscvAsmFieldType mbtype, InstructionType... tp) {
+        this(opcode, 1, 0, mbtype, Arrays.asList(tp));
+        this.instructionName = explicitname;
+    }
+
+    /*
+     * Helper constructor with default latency and delay slot size
      */
     private RiscvInstructionProperties(int opcode,
             RiscvAsmFieldType mbtype, InstructionType... tp) {
         this(opcode, 1, 0, mbtype, Arrays.asList(tp));
+        this.instructionName = name();
     }
 
     /*
