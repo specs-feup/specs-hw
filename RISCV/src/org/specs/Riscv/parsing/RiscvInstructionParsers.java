@@ -31,10 +31,13 @@ public interface RiscvInstructionParsers {
             // R types
             newInstance(OP, R.getFormat() + OP.getFormat()),
             newInstance(AMO, R.getFormat() + AMO.getFormat()),
-            newInstance(OPFP, R.getFormat() + OPFP.getFormat()),
+
+            newInstance(OPFPa, R.getFormat() + OPFPa.getFormat()),
+            newInstance(OPFPb, Rb.getFormat() + OPFPb.getFormat()),
 
             // R4 types
             newInstance(MADD, R4.getFormat() + MADD.getFormat()),
+            newInstance(MSUB, R4.getFormat() + MSUB.getFormat()),
             newInstance(NMADD, R4.getFormat() + NMADD.getFormat()),
             newInstance(NMSUB, R4.getFormat() + NMSUB.getFormat()),
 
@@ -53,10 +56,10 @@ public interface RiscvInstructionParsers {
             newInstance(AUIPC, U.getFormat() + AUIPC.getFormat()),
 
             // B types
-            newInstance(BRANCH, U.getFormat() + BRANCH.getFormat()),
+            newInstance(BRANCH, B.getFormat() + BRANCH.getFormat()),
 
             // J types
-            newInstance(JAL, U.getFormat() + JAL.getFormat()),
+            newInstance(JAL, UJ.getFormat() + JAL.getFormat()),
 
             /*
             
