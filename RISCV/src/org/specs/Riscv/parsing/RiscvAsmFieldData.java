@@ -86,7 +86,8 @@ public class RiscvAsmFieldData extends AsmFieldData {
         // R types
         case OP:
         case AMO:
-        case OPFP:
+        case OPFPa:
+        case OPFPb:
             operands.add(newWriteRegister(RD, operandmap.get(RD)));
             operands.add(newReadRegister(RS1, operandmap.get(RS1)));
             operands.add(newReadRegister(RS2, operandmap.get(RS2)));

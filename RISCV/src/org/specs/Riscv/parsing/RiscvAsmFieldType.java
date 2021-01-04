@@ -15,7 +15,9 @@ public enum RiscvAsmFieldType implements AsmFieldType {
     // R Types
     OP("0110011"), // I-extension and M-extension
     AMO("0101111"), // A-extension
-    OPFP("1010011"), // F-extension
+
+    OPFPa("1010011"), // F-extension
+    OPFPb("1010011"), // F-extension (same on purpose)
 
     // R4 Types
     MADD("1000011"), // F-extension

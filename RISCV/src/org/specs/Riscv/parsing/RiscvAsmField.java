@@ -7,14 +7,14 @@ import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
 
 public enum RiscvAsmField implements AsmField {
 
-    FUNCT7,
+    // FUNCT7,
+    RS3,
     RS2,
     RS1,
-    FUNCT3,
+    // FUNCT3,
     RD,
     OPCODEA,
     OPCODEB,
-    OPCODEC,
     IMM,
     IMMTWENTY,
     IMMTWELVE,
