@@ -3,7 +3,10 @@ package org.specs.Riscv.parsing;
 public enum RiscvBaseFormats {
 
     R("opcodeb(7)_rs2(5)_rs1(5)_opcodea(3)_rd(5)"),
-    Rb("opcodea(7)_rs2(5)_rs1(5)_rm(3)_rd(5)"), // useful for F-extension
+    // Rb("opcodea(7)_rs2(5)_rs1(5)_rm(3)_rd(5)"), // useful for F-extension
+    // these will match equally... wont work...
+
+    // TODO: predicates to solve the R exceptions
 
     R4("rs3(5)_opcodeb(2)_rs2(5)_rs1(5)_opcodea(3)_rd(5)"),
     I("immtwelve(12)_rs1(5)_opcodea(3)_rd(5)"),

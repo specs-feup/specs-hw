@@ -33,7 +33,7 @@ public interface RiscvInstructionParsers {
             newInstance(AMO, R.getFormat() + AMO.getFormat()),
 
             newInstance(OPFPa, R.getFormat() + OPFPa.getFormat()),
-            newInstance(OPFPb, Rb.getFormat() + OPFPb.getFormat()),
+            // newInstance(OPFPb, Rb.getFormat() + OPFPb.getFormat()),
 
             // R4 types
             newInstance(MADD, R4.getFormat() + MADD.getFormat()),
