@@ -43,10 +43,10 @@ public enum RiscvInstructionProperties implements InstructionProperties {
     srli(0x0000_5013, OPIMM, G_LOGICAL),
     srai(0x4000_5013, OPIMM, G_LOGICAL),
     lb(0x0000_0003, LOAD, G_LOAD),
-    lh(0x0000_2003, LOAD, G_LOAD),
-    lw(0x0000_4003, LOAD, G_LOAD),
-    lbu(0x0000_8003, LOAD, G_LOAD),
-    lhu(0x0000_A003, LOAD, G_LOAD),
+    lh(0x0000_1003, LOAD, G_LOAD),
+    lw(0x0000_2003, LOAD, G_LOAD),
+    lbu(0x0000_4003, LOAD, G_LOAD),
+    lhu(0x0000_5003, LOAD, G_LOAD),
     jalr(0x0000_0067, JALR, G_UJUMP, G_AJUMP),
 
     // S-type: | imm7bits | rs2 | rs1 | funct3 | imm5bits | opcode |
@@ -99,11 +99,12 @@ public enum RiscvInstructionProperties implements InstructionProperties {
     ///////////////////////////////////////////////////////////////////////////
     // F Extension ////////////////////////////////////////////////////////////
     // R-type: | funct7 | rs2 | rs1 | funct3 | rd | opcode |
-    fadd_s("fadd.s", 0x0000_0053, OPFPb, G_FLOAT, G_ADD), //
-    fsub_s("fsub.s", 0x0800_0053, OPFPb, G_FLOAT, G_SUB), //
-    fmul_s("fmul.s", 0x1000_0053, OPFPb, G_FLOAT, G_MUL),
-    fdiv_s("fdiv.s", 0x1800_0053, OPFPb, G_FLOAT, G_DIV),
-    fsqrt_s("fsqrt.s", 0x5800_0053, OPFPb, G_FLOAT, G_OTHER),
+    fadd_s("fadd.s", 0x0000_0053, OPFPa, G_FLOAT, G_ADD), //
+    fsub_s("fsub.s", 0x0800_0053, OPFPa, G_FLOAT, G_SUB), //
+    fmul_s("fmul.s", 0x1000_0053, OPFPa, G_FLOAT, G_MUL),
+    fdiv_s("fdiv.s", 0x1800_0053, OPFPa, G_FLOAT, G_DIV),
+
+    // fsqrt_s("fsqrt.s", 0x5800_0053, OPFPa, G_FLOAT, G_OTHER),
 
     fsqnj_s("fsqnj.s", 0x2000_0053, OPFPa, G_FLOAT, G_OTHER),
     fsqrtn_s("fsqrtn.s", 0x2000_1053, OPFPa, G_FLOAT, G_OTHER),
@@ -111,17 +112,21 @@ public enum RiscvInstructionProperties implements InstructionProperties {
     fmin_s("fmin.s", 0x2800_0053, OPFPa, G_FLOAT, G_OTHER),
     fmax_s("fmax.s", 0x2800_1053, OPFPa, G_FLOAT, G_OTHER),
 
+    /*
     fcvt_w_s("fcvt.w.s", 0xC000_0053, OPFPb, G_FLOAT, G_OTHER), // here rs2 is opcode...
     fcvt_wu_s("fcvt.wu.s", 0xC000_0053, OPFPb, G_FLOAT, G_OTHER), // here rs2 is opcode...
-
     fmv_x_w("fmv.x.w", 0xE000_0053, OPFPa, G_FLOAT, G_OTHER),
+    */
+
     feq_s("feq.s", 0xA000_0053, OPFPa, G_FLOAT, G_OTHER),
     flt_s("flt.s", 0xA000_1053, OPFPa, G_FLOAT, G_OTHER),
     fle_s("fle.s", 0xA000_2053, OPFPa, G_FLOAT, G_OTHER),
-    fclass_s("fclass.s", 0xE000_0053, OPFPa, G_FLOAT, G_OTHER),
 
+    /*
+    fclass_s("fclass.s", 0xE000_0053, OPFPa, G_FLOAT, G_OTHER),
     fcvt_s_w("fcvt.s.w", 0xD000_0053, OPFPb, G_FLOAT, G_OTHER),
     fcvt_s_wu("fcvt.s.wu", 0xD000_0053, OPFPb, G_FLOAT, G_OTHER), // here rs2 is opcode...
+    */
 
     fmv_w_x("fmv.w.x", 0xF000_0053, OPFPa, G_FLOAT, G_OTHER),
 
