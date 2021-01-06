@@ -33,7 +33,7 @@ public class RiscvProfileTester {
         profilerList.add(InstructionHistogram.class);
 
         for (var file : RiscvLivermoreELFN100iam.values()) {
-            // for (var file : Arrays.asList(RiscvLivermoreELFN100.innerprod100)) {
+            // for (var file : Arrays.asList(RiscvLivermoreELFN100iamf.innerprod100)) {
             for (var producer : producers) {
 
                 var result = InstructionStreamProfilingUtils.profile(

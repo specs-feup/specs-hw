@@ -35,6 +35,6 @@ public class RiscvElfStreamTester {
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
                 // "org/specs/Riscv/utils/test64.elf", RiscvTraceStream.class);
-                RiscvLivermoreELFN100iam.innerprod100.getResource(), RiscvTraceStream.class);
+                RiscvLivermoreELFN100iamf.innerprod100.getResource(), RiscvTraceStream.class);
     }
 }

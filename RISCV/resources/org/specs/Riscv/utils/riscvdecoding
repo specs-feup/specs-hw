@@ -1,0 +1,36 @@
+R
+0110011	-	OP (i xtension, m xtension)
+0101111	-	AMO (a xtension)
+1010011	-	OP-FP (f xtension)
+
+-----
+R4
+1000011	-	MADD (f xtension)
+1000111	-	MSUB (f xtension)
+1001111	-	NMADD (f xtension)
+1001011	-	NMSUB (f xtension)
+
+-----
+I
+0010011	-	OP-IMM (i xtension)
+0000011	-	LOAD (i xtension)
+1100111	-	JARL (i xtension)
+
+-----
+S
+0100111	-	STOREFP (f xtension)
+0000111	-	LOADFP (f xtension)
+0100011	-	STORE (i xtension)
+
+-----
+U 
+0110111	-	LUI (i xtension)
+0010111	-	AUIPC (i xtension)
+
+-----
+B
+1100011	-	BRANCH (i xtention)
+
+-----
+J
+1101111	-	JAL (i xtension)
