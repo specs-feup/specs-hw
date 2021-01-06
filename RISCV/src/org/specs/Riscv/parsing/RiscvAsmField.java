@@ -11,6 +11,7 @@ public enum RiscvAsmField implements AsmField {
     RS3,
     RS2,
     RS1,
+    RM,
     // FUNCT3,
     RD,
     OPCODEA,

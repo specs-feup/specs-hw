@@ -26,9 +26,9 @@ public enum RiscvInstructionProperties implements InstructionProperties {
     sll(0x0000_1033, OP, G_LOGICAL),
     slt(0x0000_2033, OP, G_LOGICAL),
     sltu(0x0000_3033, OP, G_LOGICAL),
-    xor(0x0000_2033, OP, G_LOGICAL),
-    srl(0x0000_2833, OP, G_LOGICAL),
-    sra(0x4000_2833, OP, G_LOGICAL),
+    xor(0x0000_4033, OP, G_LOGICAL),
+    srl(0x0000_5833, OP, G_LOGICAL),
+    sra(0x4000_5833, OP, G_LOGICAL),
     or(0x0000_6033, OP, G_LOGICAL),
     and(0x0000_7033, OP, G_LOGICAL),
 
@@ -99,12 +99,11 @@ public enum RiscvInstructionProperties implements InstructionProperties {
     ///////////////////////////////////////////////////////////////////////////
     // F Extension ////////////////////////////////////////////////////////////
     // R-type: | funct7 | rs2 | rs1 | funct3 | rd | opcode |
-    fadd_s("fadd.s", 0x0000_0053, OPFPa, G_FLOAT, G_ADD), //
-    fsub_s("fsub.s", 0x0800_0053, OPFPa, G_FLOAT, G_SUB), //
-    fmul_s("fmul.s", 0x1000_0053, OPFPa, G_FLOAT, G_MUL),
-    fdiv_s("fdiv.s", 0x1800_0053, OPFPa, G_FLOAT, G_DIV),
-
-    // fsqrt_s("fsqrt.s", 0x5800_0053, OPFPa, G_FLOAT, G_OTHER),
+    fadd_s("fadd.s", 0x0000_0053, OPFPb, G_FLOAT, G_ADD), //
+    fsub_s("fsub.s", 0x0800_0053, OPFPb, G_FLOAT, G_SUB), //
+    fmul_s("fmul.s", 0x1000_0053, OPFPb, G_FLOAT, G_MUL),
+    fdiv_s("fdiv.s", 0x1800_0053, OPFPb, G_FLOAT, G_DIV),
+    fsqrt_s("fsqrt.s", 0x5800_0053, OPFPb, G_FLOAT, G_OTHER),
 
     fsqnj_s("fsqnj.s", 0x2000_0053, OPFPa, G_FLOAT, G_OTHER),
     fsqrtn_s("fsqrtn.s", 0x2000_1053, OPFPa, G_FLOAT, G_OTHER),
@@ -114,7 +113,7 @@ public enum RiscvInstructionProperties implements InstructionProperties {
 
     /*
     fcvt_w_s("fcvt.w.s", 0xC000_0053, OPFPb, G_FLOAT, G_OTHER), // here rs2 is opcode...
-    fcvt_wu_s("fcvt.wu.s", 0xC000_0053, OPFPb, G_FLOAT, G_OTHER), // here rs2 is opcode...
+    fcvt_wu_s("fcvt.wu.s", 0xC000_0053, OPFPb, G_FLOAT, G_OTHER), // here rs2 is opcode...    
     fmv_x_w("fmv.x.w", 0xE000_0053, OPFPa, G_FLOAT, G_OTHER),
     */
 

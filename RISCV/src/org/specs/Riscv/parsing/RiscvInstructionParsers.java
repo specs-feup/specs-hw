@@ -32,8 +32,10 @@ public interface RiscvInstructionParsers {
             newInstance(OP, R.getFormat() + OP.getFormat()),
             newInstance(AMO, R.getFormat() + AMO.getFormat()),
 
+            newInstance(OPFPb, "opcodea(7)_rs2(5)_rs1(5)_rm(3)_rd(5)" + OPFPb.getFormat(),
+                    data -> data.get("opcodea").charAt(2) == '0'),
+
             newInstance(OPFPa, R.getFormat() + OPFPa.getFormat()),
-            // newInstance(OPFPb, Rb.getFormat() + OPFPb.getFormat()),
 
             // R4 types
             newInstance(MADD, R4.getFormat() + MADD.getFormat()),
