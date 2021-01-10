@@ -30,7 +30,7 @@ public class InstructionStreamTestUtils {
             doWork.apply(el);
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
