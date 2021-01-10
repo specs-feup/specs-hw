@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.specs.BinaryTranslation.ELFProvider;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -25,6 +27,13 @@ import pt.up.fe.specs.util.utilities.Replacer;
 public class BinaryTranslationUtils {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
+
+    // file
+    public static File getFile(ELFProvider elf) {
+        File fd = SpecsIo.resourceCopy(elf.asTxtDump());
+        fd.deleteOnExit();
+        return fd;
+    }
 
     /*
      * Dump plain bytes into a given filename

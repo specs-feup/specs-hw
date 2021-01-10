@@ -2,29 +2,30 @@ package pt.up.fe.specs.binarytranslation.detection.detectors;
 
 public class DetectorConfiguration {
 
-    // privar final List< ??? > prohibited types; ?
-
-    /*
-     * min and max size of windows 
-     */
-    @Deprecated
-    private int minsize;
-
-    private int maxsize; // segment size that will be looked for
-    private int maxBlocks; // max forward jumping or backward jumping links in superblocks and megablocks
-    private float superblockBranchThreshold;
-    // private List<InstructionType>
+    protected Number startAddr = 0x00000000L, stopAddr = 0xFFFFFFFFL;
+    protected int minsize;
+    protected int maxsize; // segment size that will be looked for
+    protected int maxBlocks; // max forward jumping or backward jumping links in superblocks and megablocks
+    protected float superblockBranchThreshold;
 
     private DetectorConfiguration() {
 
     }
 
-    public int getMaxsize() {
-        return maxsize;
+    public Number getStartAddr() {
+        return startAddr;
+    }
+
+    public Number getStopAddr() {
+        return stopAddr;
     }
 
     public int getMinsize() {
         return minsize;
+    }
+
+    public int getMaxsize() {
+        return maxsize;
     }
 
     public int getMaxBlocks() {
@@ -38,20 +39,20 @@ public class DetectorConfiguration {
     /*
      * Builder class
      */
-    public static class DetectorConfigurationBuilder {
-
-        /*
-         * min and max size of windows 
-         */
-        private int minsize = 2;
-        private int maxsize = 3;
-        private int maxBlocks = 2;
-        private float superblockBranchThreshold;
-
-        // private int maxInstsInTraceUnit ?
+    public static class DetectorConfigurationBuilder extends DetectorConfiguration {
 
         public DetectorConfigurationBuilder() {
 
+        }
+
+        public DetectorConfigurationBuilder withStartAddr(Number startAddr) {
+            this.startAddr = startAddr;
+            return this;
+        }
+
+        public DetectorConfigurationBuilder withStopAddr(Number stopAddr) {
+            this.stopAddr = stopAddr;
+            return this;
         }
 
         public DetectorConfigurationBuilder withMinWindow(int minsize) {
@@ -76,6 +77,8 @@ public class DetectorConfiguration {
 
         public DetectorConfiguration build() {
             DetectorConfiguration config = new DetectorConfiguration();
+            config.startAddr = this.startAddr;
+            config.stopAddr = this.stopAddr;
             config.minsize = this.minsize;
             config.maxsize = this.maxsize;
             config.maxBlocks = this.maxBlocks;

@@ -148,25 +148,4 @@ public class GraphBundle implements BinaryTranslationOutput {
 
         return new GraphBundle(bund, graphs);
     }
-
-    /*
-     * Static "constructor" creates a new GraphBundle from a single BinarySegment
-     
-    public static GraphBundle newInstance(BinarySegment seg) {
-        var graphs = new ArrayList<BinarySegmentGraph>();
-        graphs.add(BinarySegmentGraph.newInstance(seg));
-        return new GraphBundle(graphs, seg.getAppinfo());
-    }
-    
-    /*
-     * Static "constructor" creates a new GraphBundle from a list of SegmentBundle
-     
-    public static GraphBundle newInstance(List<BinarySegment> segs) {
-        var graphs = new ArrayList<BinarySegmentGraph>();
-        for (BinarySegment seg : segs) {
-            graphs.add(BinarySegmentGraph.newInstance(seg));
-        }
-    
-        return new GraphBundle(graphs, segs.get(0).getAppinfo());
-    }*/
 }

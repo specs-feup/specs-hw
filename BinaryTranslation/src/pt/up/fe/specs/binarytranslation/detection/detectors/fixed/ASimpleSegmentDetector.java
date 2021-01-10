@@ -29,6 +29,17 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
         // return false;
         // }
 
+        // start and end addrs
+        var sAddr = window.get(0).getAddress();
+        if (sAddr < this.getConfig().getStartAddr().longValue()
+                || sAddr > this.getConfig().getStopAddr().longValue())
+            return false;
+
+        var eAddr = window.getLast().getAddress();
+        if (eAddr < this.getConfig().getStartAddr().longValue()
+                || eAddr > this.getConfig().getStopAddr().longValue())
+            return false;
+
         // cant end on an incomplete "atomic" instruction
         if (window.getLast().getDelay() > 0)
             return false;
