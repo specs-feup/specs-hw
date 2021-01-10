@@ -1,5 +1,7 @@
 package pt.up.fe.specs.binarytranslation.utils;
 
+import org.specs.BinaryTranslation.ELFProvider;
+
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 
@@ -12,10 +14,10 @@ import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
  */
 public class BinaryTranslationFrontEndUtils {
 
-    public static GraphBundle doBackend(String filename, Class<?> streamClass, Class<?> detectorClass) {
+    public static GraphBundle doBackend(ELFProvider elf, Class<?> streamClass, Class<?> detectorClass) {
 
         // get segment bundle
-        var bundle = SegmentDetectTestUtils.detect(filename, streamClass, detectorClass);
+        var bundle = SegmentDetectTestUtils.detect(elf, streamClass, detectorClass);
 
         // transform into graph bundle
         var graphs = GraphBundle.newInstance(bundle);
