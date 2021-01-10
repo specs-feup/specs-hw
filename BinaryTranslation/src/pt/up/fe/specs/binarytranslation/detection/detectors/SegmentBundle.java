@@ -28,7 +28,6 @@ public class SegmentBundle implements BinaryTranslationOutput {
 
     @Expose // the originating instruction stream
     private InstructionStream istream;
-
     private final List<BinarySegment> segments;
 
     public SegmentBundle(List<BinarySegment> segments, InstructionStream istream) {
@@ -40,7 +39,7 @@ public class SegmentBundle implements BinaryTranslationOutput {
         /*
          * For all segments, compute their coverage
          */
-        for (BinarySegment seg : this.segments) {
+        for (var seg : this.segments) {
 
             seg.setStaticCoverage((float) (seg.getLatency()
                     * seg.getContexts().size()) / this.istream.getCycles());

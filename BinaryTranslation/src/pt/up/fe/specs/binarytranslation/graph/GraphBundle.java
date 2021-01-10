@@ -55,30 +55,6 @@ public class GraphBundle implements BinaryTranslationOutput {
         this.segments = segbundle.getSegments();
     }
 
-    /*
-     * Returns average ideal instructions per clock cycle
-     */
-    public float getAverageIPC() {
-        return getAverageIPC(null);
-    }
-
-    /*
-     * Returns average ideal instructions per clock cycle, with predication
-     */
-    public float getAverageIPC(Predicate<BinarySegmentGraph> predicate) {
-        float avg = 0;
-        if (predicate != null)
-            for (BinarySegmentGraph seg : this.graphs) {
-                if (predicate.test(seg))
-                    avg += seg.getEstimatedIPC();
-            }
-        else
-            for (BinarySegmentGraph seg : this.graphs) {
-                avg += seg.getEstimatedIPC();
-            }
-        return avg /= this.graphs.size();
-    }
-
     public Application getApplicationInformation() {
         return this.istream.getApp();
     }
