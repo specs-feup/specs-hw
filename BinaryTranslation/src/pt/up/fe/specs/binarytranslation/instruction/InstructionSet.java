@@ -66,7 +66,7 @@ public class InstructionSet {
 
             // For each instruction in the set, which fits that format, make the list
             for (InstructionProperties inst : instList) {
-                if (inst.getCodeType() == codetype) {
+                if (inst.getCodeType().equals(codetype)) {
                     nlist.add(inst);
                 }
             }

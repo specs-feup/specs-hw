@@ -31,6 +31,7 @@ public enum InstructionType {
     G_ADD,
     G_SUB,
     G_MUL,
+    G_DIV,
     G_LOGICAL,
     G_UNARY,
     G_JUMP, // is jump
