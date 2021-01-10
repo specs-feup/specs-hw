@@ -1,6 +1,7 @@
 package org.specs.Arm.asm.generators;
 
 import org.junit.Test;
+import org.specs.Arm.ArmLivermoreELFN10;
 import org.specs.Arm.stream.ArmElfStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
@@ -14,7 +15,7 @@ public class ArmCustomInstructionUnitGeneratorTester {
     public void testCustomUnitGenerate() {
 
         // get static frequent sequence bundle
-        var bundle = SegmentDetectTestUtils.detect("org/specs/Arm/asm/cholesky.elf",
+        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreELFN10.cholesky,
                 ArmElfStream.class, StaticBasicBlockDetector.class);
 
         // transform into graph bundle

@@ -1,6 +1,7 @@
 package org.specs.Arm.asm.detection;
 
 import org.junit.Test;
+import org.specs.Arm.ArmLivermoreELFN10;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
@@ -12,14 +13,14 @@ public class ArmFrequentSequenceDetectorTester {
 
     @Test
     public void testStatic() {
-        var bundle = SegmentDetectTestUtils.detect("org/specs/Arm/asm/cholesky.elf",
+        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreELFN10.cholesky,
                 ArmElfStream.class, FrequentStaticSequenceDetector.class);
         SegmentDetectTestUtils.printBundle(bundle);
     }
 
     @Test
     public void testTrace() {
-        var bundle = SegmentDetectTestUtils.detect("org/specs/Arm/asm/cholesky.elf",
+        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreELFN10.cholesky,
                 ArmTraceStream.class, FrequentTraceSequenceDetector.class);
         SegmentDetectTestUtils.printBundle(bundle);
     }
