@@ -14,6 +14,7 @@
 package org.specs.MicroBlaze.test.generators;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
@@ -27,7 +28,7 @@ public class MicroBlazeCustomInstructionUnitGeneratorTester {
     public void testCustomUnitGenerate() {
 
         // get static frequent sequence bundle
-        var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.elf",
+        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.matmul,
                 MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class);
 
         // transform into graph bundle

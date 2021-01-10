@@ -1,6 +1,7 @@
 package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -29,7 +30,7 @@ public class MicroBlazeDetectorsTest {
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(3);
 
-        var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/cholesky.txt",
+        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.cholesky,
                 MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class, builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
@@ -42,7 +43,8 @@ public class MicroBlazeDetectorsTest {
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(10);
 
-        var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/cholesky_trace.txt",
+        // TODO ensure trace is called here
+        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.cholesky,
                 MicroBlazeTraceStream.class, FrequentTraceSequenceDetector.class, builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
@@ -55,7 +57,7 @@ public class MicroBlazeDetectorsTest {
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(6);
 
-        var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/cholesky.txt",
+        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.cholesky,
                 MicroBlazeElfStream.class, StaticBasicBlockDetector.class, builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
@@ -65,7 +67,8 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testTraceBasicBlockDetector() {
-        var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/cholesky_trace.txt",
+        // TODO ensure trace is called here
+        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.cholesky,
                 MicroBlazeTraceStream.class, TraceBasicBlockDetector.class);
         SegmentDetectTestUtils.printBundle(bundle);
     }
@@ -78,7 +81,7 @@ public class MicroBlazeDetectorsTest {
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxBlocks(10).withMaxWindow(1000);
 
-        var bundle = SegmentDetectTestUtils.detect("org/specs/MicroBlaze/asm/matmul.txt",
+        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.matmul,
                 MicroBlazeTraceStream.class, FixedSizeMegablockDetectorV2.class, builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
