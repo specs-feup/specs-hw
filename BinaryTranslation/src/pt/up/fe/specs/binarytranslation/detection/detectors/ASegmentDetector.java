@@ -316,7 +316,7 @@ public abstract class ASegmentDetector implements SegmentDetector {
         var segments = this.makeSegments(hashed, addrs);
 
         // finally, init some stats
-        SegmentBundle bundle = new SegmentBundle(segments, istream);
+        SegmentBundle bundle = new SegmentBundle(segments, istream, this.config);
 
         //
         this.setCurrentStream(null);

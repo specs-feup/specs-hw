@@ -1,6 +1,7 @@
 package pt.up.fe.specs.binarytranslation.detection.segments;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ public class TraceBasicBlock extends ABasicBlock {
             List<SegmentContext> contexts, Application appinfo) {
         super(ilist, contexts, appinfo);
         this.segtype = BinarySegmentType.TRACE_BASIC_BLOCK;
+        this.startAddresses = new HashMap<Integer, Integer>();
         for (SegmentContext context : contexts) {
             this.startAddresses.put(context.getStartaddresses(), context.getOcurrences());
         }

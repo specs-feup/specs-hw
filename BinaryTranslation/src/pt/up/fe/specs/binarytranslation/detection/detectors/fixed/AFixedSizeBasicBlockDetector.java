@@ -29,7 +29,11 @@ public abstract class AFixedSizeBasicBlockDetector extends ASimpleSegmentDetecto
             return false;
 
         // must obey these conditions
-        var last = window.getLast();
+
+        // var last = window.getLast(); // TODO: doesn't work for microblaze due to delay slots...
+
+        var last = window.getFromLast(1);
+
         if (!(last.isBackwardsJump() && last.isConditionalJump() && last.isRelativeJump()))
             return false;
 
