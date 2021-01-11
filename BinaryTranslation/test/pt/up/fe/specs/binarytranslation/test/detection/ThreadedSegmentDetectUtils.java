@@ -53,7 +53,7 @@ public class ThreadedSegmentDetectUtils {
                     new DetectorConfigurationBuilder()
                             .withMaxWindow(i)
                             .withStartAddr(elf.getKernelStart())
-                            .withStartAddr(elf.getKernelStop())
+                            .withStopAddr(elf.getKernelStop())
                             .build());
 
             streamengine.subscribe(istream -> detector.detectSegments((InstructionStream) istream));
