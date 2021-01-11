@@ -10,6 +10,7 @@ import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationOutput;
 import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStreamType;
@@ -28,13 +29,22 @@ public class SegmentBundle implements BinaryTranslationOutput {
 
     @Expose // the originating instruction stream
     private InstructionStream istream;
+
     private final List<BinarySegment> segments;
 
+    private final DetectorConfiguration config;
+
     public SegmentBundle(List<BinarySegment> segments, InstructionStream istream) {
+        this(segments, istream, DetectorConfigurationBuilder.defaultConfig());
+    }
+
+    public SegmentBundle(List<BinarySegment> segments,
+            InstructionStream istream, DetectorConfiguration config) {
 
         this.istream = istream;
         this.segments = segments;
         this.date = new Date(System.currentTimeMillis());
+        this.config = config;
 
         /*
          * For all segments, compute their coverage
@@ -91,6 +101,10 @@ public class SegmentBundle implements BinaryTranslationOutput {
 
     public InstructionStream getIstream() {
         return istream;
+    }
+
+    public DetectorConfiguration getConfig() {
+        return config;
     }
 
     @Override

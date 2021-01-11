@@ -23,6 +23,7 @@ import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationOutput;
 import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
@@ -48,11 +49,20 @@ public class GraphBundle implements BinaryTranslationOutput {
     // originating segments (ordered according to graph list) // or at least should be....
     private final List<BinarySegment> segments;
 
+    private final DetectorConfiguration config;
+
     private GraphBundle(SegmentBundle segbundle, List<BinarySegmentGraph> graphs) {
+        this(segbundle, graphs, segbundle.getConfig());
+    }
+
+    private GraphBundle(SegmentBundle segbundle,
+            List<BinarySegmentGraph> graphs, DetectorConfiguration config) {
+
         this.date = segbundle.getDate();
         this.istream = segbundle.getIstream();
         this.graphs = graphs;
         this.segments = segbundle.getSegments();
+        this.config = config;
     }
 
     public Application getApplicationInformation() {
@@ -86,6 +96,15 @@ public class GraphBundle implements BinaryTranslationOutput {
                 list.add(seg);
         }
         return list;
+    }
+
+    @Override
+    public String getOutputFolderName() {
+        var name = BinaryTranslationOutput.super.getOutputFolderName();
+        name += "_" + this.getApplicationInformation().getAppName()
+                + "_" + this.segments.get(0).getSegmentType().toString()
+                + "_" + this.istream.getType().toString() + "_" + this.config.configString();
+        return name;
     }
 
     /*

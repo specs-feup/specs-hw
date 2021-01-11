@@ -36,6 +36,10 @@ public class DetectorConfiguration {
         return superblockBranchThreshold;
     }
 
+    public String configString() {
+        return "maxwindow" + this.maxsize;
+    }
+
     /*
      * Builder class
      */

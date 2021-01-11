@@ -15,6 +15,8 @@ package pt.up.fe.specs.binarytranslation.instruction;
 
 import java.util.Iterator;
 
+import com.google.gson.annotations.Expose;
+
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.util.SpecsStrings;
 
@@ -26,7 +28,10 @@ import pt.up.fe.specs.util.SpecsStrings;
  */
 public abstract class AInstruction implements Instruction {
 
+    @Expose
     private Long address;
+
+    @Expose
     private String instruction;
 
     // decoded field data (abstract class)
