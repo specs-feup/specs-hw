@@ -3,15 +3,16 @@ package org.specs.MicroBlaze.test.detection;
 import java.io.File;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
+import org.specs.BinaryTranslation.ELFProvider;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.threadstream.ProducerEngine;
 
@@ -24,26 +25,34 @@ import pt.up.fe.specs.util.threadstream.ProducerEngine;
  */
 public class MicroBlazeParallelDetectTest {
 
-    private void testParallelDetectors(String elfname) {
+    private void testParallelDetectors(ELFProvider elf) {
 
         // file
-        File fd = SpecsIo.resourceCopy(elfname);
+        File fd = SpecsIo.resourceCopy(elf.getResource());
         fd.deleteOnExit();
 
-        int minwindow = 2, maxwindow = 20;
+        int minwindow = 4, maxwindow = 20;
 
         // producer
         var iproducer = new MicroBlazeTraceProvider(fd);
+        // var iproducer = new MicroBlazeStaticProvider(fd);
 
         // host for threads
         var streamengine = new ProducerEngine<>(iproducer, op -> op.nextInstruction(),
-                cc -> new MicroBlazeElfStream(fd, cc));
+                // cc -> new MicroBlazeElfStream(fd, cc));
+                cc -> new MicroBlazeTraceStream(fd, cc));
 
         // for all window sizes
-        for (int i = minwindow; i < maxwindow; i++) {
+        for (int i = minwindow; i <= maxwindow; i++) {
 
-            var detector1 = new FrequentTraceSequenceDetector(
-                    new DetectorConfigurationBuilder().withMaxWindow(i).build());
+            // var detector1 = new FrequentTraceSequenceDetector(
+            // var detector1 = new FrequentStaticSequenceDetector(
+            var detector1 = new TraceBasicBlockDetector(
+                    new DetectorConfigurationBuilder()
+                            .withMaxWindow(i)
+                            .withStartAddr(elf.getKernelStart())
+                            .withStopAddr(elf.getKernelStop())
+                            .build());
             streamengine.subscribe(istream -> detector1.detectSegments((InstructionStream) istream));
         }
 
@@ -51,39 +60,22 @@ public class MicroBlazeParallelDetectTest {
         streamengine.launch();
 
         for (var consumer : streamengine.getConsumers()) {
-            var results1 = (SegmentBundle) consumer.getConsumeResult();
-            SegmentDetectTestUtils.printBundle(results1);
+            var result1 = (SegmentBundle) consumer.getConsumeResult();
+            // SegmentDetectTestUtils.printBundle(result1);
+            var gbundle = GraphBundle.newInstance(result1);
+            if (gbundle.getSegments().size() != 0)
+                gbundle.generateOutput();
         }
 
         // results1.toJSON();
         // results2.toJSON();
     }
 
-    private void testSequentialDetectors(String elfname) {
-
-        // file
-        File fd = SpecsIo.resourceCopy(elfname);
-        fd.deleteOnExit();
-
-        int minwindow = 2, maxwindow = 20;
-
-        // do all detectors sequentially
-        for (int i = minwindow; i < maxwindow; i++) {
-            var istream1 = new MicroBlazeTraceStream(fd);
-            var detector1 = new FrequentTraceSequenceDetector(
-                    new DetectorConfigurationBuilder().withMaxWindow(i).build());
-            var result1 = detector1.detectSegments(istream1);
-            SegmentDetectTestUtils.printBundle(result1);
-        }
-    }
-
     @Test
     public void testParallelDetectors() {
-        this.testParallelDetectors("org/specs/MicroBlaze/asm/cholesky_trace.txt");
-    }
-
-    @Test
-    public void testSequentialDetectors() {
-        this.testSequentialDetectors("org/specs/MicroBlaze/asm/cholesky_trace.txt");
+        for (var file : MicroBlazeLivermoreELFN100.values()) {
+            // for (var file : Arrays.asList(MicroBlazeLivermoreELFN100.innerprod100)) {
+            this.testParallelDetectors(file);
+        }
     }
 }
