@@ -12,6 +12,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.instruction.operand.OperandType;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.InstructionStreamType;
 
 public abstract class ASegmentDetector implements SegmentDetector {
 
@@ -51,18 +52,56 @@ public abstract class ASegmentDetector implements SegmentDetector {
      */
     protected void removeUnique(Map<Integer, List<Integer>> addrs, Map<String, HashedSequence> hashed) {
 
+        // addrs
+        // This map holds all hashed sequences for all instruction windows we analyze
+        // Map: <hashcode_startaddr, hashedsequence>
+
+        // hashed
+        // This map holds all hash codes and list of occurring addresses for each
+        // Map: <hashcode, list of addresses>
+
         // iterate through hashcodes of sequences
-        Iterator<Integer> it = addrs.keySet().iterator();
+        var it = addrs.keySet().iterator();
 
         while (it.hasNext()) {
             var hashcode = it.next();
             var addrlist = addrs.get(hashcode);
-            if (addrlist.size() <= 1) {
 
-                // remove hashed sequence from hashed sequences list by its starting addr
-                var keyval = hashcode.toString() + "_" + Integer.toString(addrlist.get(0));
-                hashed.remove(keyval);
-                it.remove();
+            // QUICK HACK!!! TODO: fix this mess
+
+            // if static
+            if (this.getCurrentStream().getType() == InstructionStreamType.STATIC_ELF) {
+                if (addrlist.size() <= 1) {
+
+                    // remove hashed sequence from hashed sequences list by its starting addr
+                    var keyval = hashcode.toString() + "_" + Integer.toString(addrlist.get(0));
+                    hashed.remove(keyval);
+                    it.remove();
+                }
+            }
+
+            // InstructionStreamType.TRACE
+            else {
+
+                var addrit = addrlist.iterator();
+                while (addrit.hasNext()) {
+                    var curraddr = addrit.next();
+
+                    // if trace sequence happens once, remove from hashed map
+                    var keyval = hashcode.toString() + "_" + Integer.toString(curraddr);
+                    var hashedseq = hashed.get(keyval);
+
+                    // and remove its addr from the list of sequences with the same hash
+                    // but different addresses
+                    if (hashedseq.getOcurrences() == 1) {
+                        hashed.remove(keyval);
+                        addrit.remove();
+                    }
+                }
+
+                // remove list of addresses from map of address lists if empty
+                if (addrlist.size() == 0)
+                    it.remove();
             }
         }
     }
@@ -277,7 +316,7 @@ public abstract class ASegmentDetector implements SegmentDetector {
         var segments = this.makeSegments(hashed, addrs);
 
         // finally, init some stats
-        SegmentBundle bundle = new SegmentBundle(segments, istream);
+        SegmentBundle bundle = new SegmentBundle(segments, istream, this.config);
 
         //
         this.setCurrentStream(null);

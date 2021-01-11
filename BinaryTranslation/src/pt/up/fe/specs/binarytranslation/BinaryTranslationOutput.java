@@ -1,6 +1,8 @@
 package pt.up.fe.specs.binarytranslation;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,7 +20,10 @@ import pt.up.fe.specs.util.SpecsIo;
 public interface BinaryTranslationOutput {
 
     public default String getOutputFolderName() {
-        return this.getClass().getSimpleName() + this.hashCode();
+        // return this.getClass().getSimpleName() + this.hashCode();
+        var dateFormat = new SimpleDateFormat("ddMMyyyy");
+        var date = Calendar.getInstance().getTime();
+        return this.getClass().getSimpleName() + "_" + this.hashCode() + "_" + dateFormat.format(date);
     }
 
     public default File getOutputFolder() {
