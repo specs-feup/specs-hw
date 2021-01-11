@@ -7,7 +7,6 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
 import pt.up.fe.specs.binarytranslation.detection.trace.InstructionWindow;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 public abstract class ASimpleSegmentDetector extends ASegmentDetector {
@@ -43,18 +42,6 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
         // cant end on an incomplete "atomic" instruction
         if (window.getLast().getDelay() > 0)
             return false;
-
-        // check if this subsequence is at all apt
-        for (Instruction inst : window.getWindow()) {
-
-            // TODO fail with stream instructions
-
-            // do not form sequences with unknown instructions
-            // do not form frequent sequences containing jumps
-            if (inst.isUnknown() || inst.isJump()) {
-                return false;
-            }
-        }
 
         return true;
     }
