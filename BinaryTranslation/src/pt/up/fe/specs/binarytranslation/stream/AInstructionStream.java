@@ -23,7 +23,7 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
     /*
      * 
      */
-    private boolean silent = false;
+    private boolean silent = true;
 
     public AInstructionStream(InstructionProducer producer) {
         super(producer.getPoison());
