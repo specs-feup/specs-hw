@@ -1,8 +1,13 @@
 package pt.up.fe.specs.binarytranslation.utils;
 
+import java.io.File;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.specs.BinaryTranslation.ELFProvider;
+
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 
@@ -80,5 +85,79 @@ public class BundleStatsUtils {
         }
 
         return min;
+    }
+
+    /*
+     * 
+     */
+    public static void bundleStatsDump(ELFProvider elf, List<SegmentBundle> segs) {
+
+        System.out.println("elf, window, nrgraphs, "
+                + "avgcontexts, maxcontexts, "
+                + "avgcpl, maxcpl, "
+                + "avgilp, maxilp, "
+                + "avgipc, maxipc, "
+                + "avglds, maxlds, "
+                + "avgsts, maxsts");
+
+        for (var seg : segs) {
+            var gbundle = GraphBundle.newInstance(seg);
+            if (gbundle.getSegments().size() == 0) {
+                System.out.println(seg.getApplicationInformation().getAppName()
+                        + ", " + 0 + ", " + 0);
+                continue;
+            }
+
+            var parentfolder = new File("./output/" + elf.getFilename()
+                    + "/" + gbundle.getSegments().get(0).getSegmentType().toString()
+                    + "/windowSize" + gbundle.getSegments().get(0).getSegmentLength());
+            gbundle.generateOutput(parentfolder);
+
+            // cpl
+            var maxcpl = BundleStatsUtils.getMaxOf(
+                    gbundle, func -> Integer.valueOf(func.getCpl()));
+            var avgcpl = BundleStatsUtils.getAverageOf(
+                    gbundle, func -> Integer.valueOf(func.getCpl()));
+
+            // ilp
+            var maxilp = BundleStatsUtils.getMaxOf(
+                    gbundle, func -> Integer.valueOf(func.getMaxwidth()));
+            var avgilp = BundleStatsUtils.getAverageOf(
+                    gbundle, func -> Integer.valueOf(func.getMaxwidth()));
+
+            // ipc
+            var maxipc = BundleStatsUtils.getMaxOf(
+                    gbundle, func -> Integer.valueOf(Integer.valueOf((int) (func.getEstimatedIPC() * 10.0))));
+            var avgipc = BundleStatsUtils.getAverageOf(
+                    gbundle, func -> Integer.valueOf(Integer.valueOf((int) (func.getEstimatedIPC() * 10.0))));
+
+            // contexts
+            var maxctx = BundleStatsUtils.getMaxOf(
+                    gbundle, func -> Integer.valueOf(func.getSegment().getContexts().size()));
+            var avgctx = BundleStatsUtils.getAverageOf(
+                    gbundle, func -> Integer.valueOf(func.getSegment().getContexts().size()));
+
+            // lds
+            var maxlds = BundleStatsUtils.getMaxOf(
+                    gbundle, func -> Integer.valueOf(func.getNumLoads()));
+            var avglds = BundleStatsUtils.getAverageOf(
+                    gbundle, func -> Integer.valueOf(func.getNumLoads()));
+
+            // sts
+            var maxsts = BundleStatsUtils.getMaxOf(
+                    gbundle, func -> Integer.valueOf(func.getNumStores()));
+            var avgsts = BundleStatsUtils.getAverageOf(
+                    gbundle, func -> Integer.valueOf(func.getNumStores()));
+
+            System.out.println(gbundle.getApplicationInformation().getAppName()
+                    + ", " + gbundle.getSegments().get(0).getSegmentLength()
+                    + ", " + gbundle.getSegments().size()
+                    + ", " + avgctx + ", " + maxctx
+                    + ", " + avgcpl + ", " + maxcpl
+                    + ", " + avgilp + ", " + maxilp
+                    + ", " + avgipc / 10.0f + ", " + maxipc / 10.0f
+                    + ", " + avglds + ", " + maxlds
+                    + ", " + avgsts + ", " + maxsts);
+        }
     }
 }

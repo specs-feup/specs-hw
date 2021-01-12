@@ -208,6 +208,13 @@ public class BinarySegmentGraphOutputUtils {
         htmlplage.replace("<INITIATIONINTERVAL>",
                 (graph.getType() == BinarySegmentGraphType.cyclical) ? graph.getInitiationInterval() : "N/A");
         htmlplage.replace("<IPC>", Float.toString(graph.getEstimatedIPC()));
+        htmlplage.replace("<NUMCONTEXTS>", Integer.toString(graph.getSegment().getContexts().size()));
+
+        var cnt = 0;
+        for (var ctx : graph.getSegment().getContexts()) {
+            cnt += ctx.getOcurrences();
+        }
+        htmlplage.replace("<OCURRENCES>", Integer.toString(cnt));
 
         // Program info
         htmlplage.replace("<APPNAME>", seg.getAppinfo().getAppName());
