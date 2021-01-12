@@ -119,4 +119,14 @@ public interface TraceInstructionStream extends Closeable, InstructionStream {
     default Instruction peekNext() {
         throw new NotImplementedException(this);
     }
+
+    @Override
+    default void rawDump() {
+        throw new NotImplementedException(this);
+    }
+
+    @Override
+    default void silent(boolean isSilent) {
+        throw new NotImplementedException(this);
+    }
 }
