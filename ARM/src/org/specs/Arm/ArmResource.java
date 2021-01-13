@@ -19,7 +19,7 @@ public enum ArmResource implements ResourceProvider {
 
     QEMU_AARCH64_GDB_TEMPLATE("org/specs/Arm/gdb/qemutmpl.gdb"),
     QEMU_AARCH64_BAREMETAL_DTB("org/specs/Arm/qemu/zcu102-arm.dtb"),
-    QEMU_AARCH64_EXE("/media/nuno/HDD/work/projects/xilinx-repos/qemu/aarch64-softmmu/qemu-system-aarch64"),
+    QEMU_AARCH64_EXE("qemu-system-aarch64"),
     // https://www.xilinx.com/video/soc/running-bare-metal-application-using-qemu-command-line.html
 
     AARCH64_GCC("aarch64-none-elf-gcc"),
