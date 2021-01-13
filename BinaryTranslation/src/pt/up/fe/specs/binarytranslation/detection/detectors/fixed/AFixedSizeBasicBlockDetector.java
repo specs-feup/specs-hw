@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.trace.InstructionWindow;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 /**
  * Basic block detector which only detects blocks of a specific size
@@ -30,16 +31,30 @@ public abstract class AFixedSizeBasicBlockDetector extends ASimpleSegmentDetecto
 
         // must obey these conditions
 
-        // var last = window.getLast(); // TODO: doesn't work for microblaze due to delay slots...
+        // have only one branch
+        int bcount = 0;
+        for (var i : window.getWindow()) {
+            if (i.isJump())
+                bcount++;
+        }
+        if (bcount > 1)
+            return false;
 
-        var last = window.getFromLast(1);
+        // check jump to start
+        Instruction last = null;
+        if (this.getCurrentStream().getApp()
+                .getCpuArchitectureName()
+                .getResource().equals("microblaze32")) // NOTE: this is a quick hack
+            last = window.getFromLast(1);
+        else
+            last = window.getLast(); // TODO: doesn't work for microblaze due to delay slots...
 
         if (!(last.isBackwardsJump() && last.isConditionalJump() && last.isRelativeJump()))
             return false;
 
         // target isn't start of window, skip this candidate
-        int targetAddr = last.getBranchTarget().intValue(); // TODO what if branch is based on register values?
-        int firstAddr = window.get(0).getAddress().intValue();
+        var targetAddr = last.getBranchTarget().longValue(); // TODO what if branch is based on register values?
+        var firstAddr = window.get(0).getAddress().longValue();
         if (targetAddr != firstAddr)
             return false;
 

@@ -30,7 +30,8 @@ public class BinaryTranslationUtils {
 
     // file
     public static File getFile(ELFProvider elf) {
-        File fd = SpecsIo.resourceCopy(elf.asTxtDump()); // NOTE: useful for runs at home
+        // File fd = SpecsIo.resourceCopy(elf.asTxtDump()); // NOTE: useful for runs at home
+        File fd = SpecsIo.resourceCopy(elf.getResource());
         fd.deleteOnExit();
         return fd;
     }

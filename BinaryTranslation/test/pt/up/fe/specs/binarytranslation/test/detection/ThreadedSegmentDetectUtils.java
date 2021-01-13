@@ -11,13 +11,14 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguratio
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.binarytranslation.utils.BundleStatsUtils;
 import pt.up.fe.specs.binarytranslation.utils.ClassBuilders;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 import pt.up.fe.specs.util.threadstream.ProducerEngine;
 
 public class ThreadedSegmentDetectUtils {
 
-    public static List<SegmentBundle> getSegments(ELFProvider elf, int maxWindowSize,
+    private static List<SegmentBundle> getSegments(ELFProvider elf, int minsize, int maxWindowSize,
             Class<?> producerClass, Class<?> streamClass, Class<?> detectorClass) {
 
         var iproducer = ClassBuilders.buildProducer(producerClass, elf);
@@ -39,6 +40,7 @@ public class ThreadedSegmentDetectUtils {
                     InstructionStream stream = null;
                     try {
                         stream = (InstructionStream) cons.newInstance(BinaryTranslationUtils.getFile(elf), cc);
+                        stream.silent(true);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -46,7 +48,7 @@ public class ThreadedSegmentDetectUtils {
                 });
 
         // for all window sizes
-        for (int i = 2; i <= maxWindowSize; i++) {
+        for (int i = minsize; i <= maxWindowSize; i++) {
 
             // detector
             var detector = ClassBuilders.buildDetector(detectorClass,
@@ -69,5 +71,26 @@ public class ThreadedSegmentDetectUtils {
         }
 
         return listOfSegs;
+    }
+
+    /*
+     * 
+     */
+    public static void BatchDetect(ELFProvider elfs[], int minsize, int maxsize,
+            Class<?> provider, Class<?> stream, Class<?> detector) {
+
+        var pTime = System.nanoTime();
+
+        for (var elf : elfs) {
+            System.out.println("Processing ELF: " + elf.getResource());
+            var segs = ThreadedSegmentDetectUtils.getSegments(
+                    elf, minsize, maxsize,
+                    provider, stream, detector);
+
+            BundleStatsUtils.bundleStatsDump(elf, segs, true);
+        }
+
+        pTime = (long) ((System.nanoTime() - pTime) / 1E9);
+        System.out.println("runtime: " + pTime);
     }
 }
