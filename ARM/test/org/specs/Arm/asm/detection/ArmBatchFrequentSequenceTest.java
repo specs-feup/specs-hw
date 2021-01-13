@@ -36,7 +36,7 @@ public class ArmBatchFrequentSequenceTest {
         // using the N10 version is fine, if we use the kernel start and stop bounds
 
         // ELFProvider elfs[] = ArmLivermoreELFN10.values();
-        ELFProvider elfs[] = { ArmLivermoreELFN10.diffpredict };
+        ELFProvider elfs[] = { ArmLivermoreELFN10.hydro };
         ThreadedSegmentDetectUtils.BatchDetect(elfs, 4, 50,
                 ArmTraceProvider.class,
                 ArmTraceStream.class,
