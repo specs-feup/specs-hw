@@ -1,31 +1,26 @@
 /**
- *  Copyright 2020 SPeCS.
+ * Copyright 2020 SPeCS.
  * 
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  * 
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *  under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License. under the License.
  */
 
 package pt.up.fe.specs.binarytranslation.gearman.workers.btf;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.specs.BinaryTranslation.ELFProvider;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,7 +28,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraphOutputUtils;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.graph.GraphNode;
 import pt.up.fe.specs.binarytranslation.graph.edge.GraphInput;
@@ -43,9 +37,9 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * 
- * Class that stores information about a successful response to a request from
- * the Binary Translation Tool Web Application.
- *  
+ * Class that stores information about a successful response to a request from the Binary Translation Tool Web
+ * Application.
+ * 
  * @author marantesss
  *
  */
@@ -55,22 +49,22 @@ public class BTFOutput implements IBTFOutput {
      * List of Binary Segment Graphs
      */
     private final List<BinarySegmentGraph> graphs;
-    
+
     /**
      * Instruction Stream
      */
     private InstructionStream instructionStream;
-    
+
     /**
      * Program Path
      */
-    private String program;
-    
+    private ELFProvider program;
+
     /**
      * GSON
      */
     private final Gson gson;
-     
+
     /**
      * Default Constructor
      */
@@ -78,80 +72,80 @@ public class BTFOutput implements IBTFOutput {
         this.gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         this.graphs = new ArrayList<>();
     }
-    
+
     /**
      * Constructor given an already set list of graphs
      * 
-     * @param graphs List of Binary Segment Graphs
+     * @param graphs
+     *            List of Binary Segment Graphs
      */
     public BTFOutput(GraphBundle bundle) {
         this.gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         this.graphs = bundle.getGraphs();
         this.instructionStream = bundle.getIstream();
     }
-    
+
     /**
      * Adds Binary Segment Graphs provided in a list to the graph list
      * 
-     * @param graphs New Binary Segment Graphs to add to the graph list
+     * @param graphs
+     *            New Binary Segment Graphs to add to the graph list
      */
     public void addGraphs(List<BinarySegmentGraph> graphs) {
         this.graphs.addAll(graphs);
     }
-    
+
     /**
      * Sort Binary Segment Graphs based on smallest address
      */
     public void sortAddresses() {
-        this.graphs.sort((g1, g2) ->
-            g1.getSegment().getContexts().get(0).getStartaddresses() - g2.getSegment().getContexts().get(0).getStartaddresses());
+        this.graphs.sort((g1, g2) -> g1.getSegment().getContexts().get(0).getStartaddresses()
+                - g2.getSegment().getContexts().get(0).getStartaddresses());
     }
-    
-    
+
     /**
      * TODO Figure out if this is useful or not
+     * 
      * @param s
      * @return
      */
     private static String splitCamelCase(String s) {
         return s.substring(1)
                 .replaceAll(
-           String.format("%s|%s|%s",
-              "(?<=[A-Z])(?=[A-Z][a-z])",
-              "(?<=[^A-Z])(?=[A-Z])",
-              "(?<=[A-Za-z])(?=[^A-Za-z])"
-           ),
-           " "
-        );
-     }
-    
+                        String.format("%s|%s|%s",
+                                "(?<=[A-Z])(?=[A-Z][a-z])",
+                                "(?<=[^A-Z])(?=[A-Z])",
+                                "(?<=[A-Za-z])(?=[^A-Za-z])"),
+                        " ");
+    }
+
     /**
      * 
      */
     @Override
     public byte[] getJSONBytes() {
         var outputJson = new JsonObject();
-        
+
         outputJson.add("stamps", this.getJSONStamps());
         outputJson.add("segments", this.getJSONSegments());
         outputJson.addProperty("code", this.getCode());
-                
+
         return gson.toJson(outputJson).getBytes();
     }
-    
+
     /**
      * 
      * @return
      */
     private String getCode() {
         String output = new String();
-        Path fileName = Path.of(this.program);
+        Path fileName = Path.of(this.program.getResource()); // Path.of(this.program);
         try {
             output = Files.readString(fileName).substring(0, 3000);
         } catch (IOException e) {
             SpecsLogs.msgWarn("Error message:\n", e);
         }
-         
+
         return output;
     }
 
@@ -161,14 +155,14 @@ public class BTFOutput implements IBTFOutput {
      */
     private JsonObject getJSONStamps() {
         JsonObject output = new JsonObject();
-        
+
         output.addProperty("total", this.instructionStream.getNumInstructions());
         output.addProperty("optimized", this.getOptimizedInstructions());
         output.addProperty("sequences", this.graphs.size());
-        
+
         return output;
     }
-    
+
     /**
      * TODO Not sure if this works
      *
@@ -176,7 +170,7 @@ public class BTFOutput implements IBTFOutput {
      */
     private long getOptimizedInstructions() {
         List<Number> instructionsAddress = new ArrayList<>();
-        
+
         for (var graph : this.graphs) {
             var segment = graph.getSegment();
             var startAddress = segment.getContexts().get(0).getStartaddresses();
@@ -186,7 +180,7 @@ public class BTFOutput implements IBTFOutput {
                     instructionsAddress.add(address);
             }
         }
-                
+
         return instructionsAddress.size();
     }
 
@@ -230,18 +224,18 @@ public class BTFOutput implements IBTFOutput {
             seg.addProperty("dotty", this.getDotty(g));
             output.add(seg);
         }
-        
+
         return output;
     }
-    
+
     /*
      * TODO DELETE THIS AND UPDATE THE METHOD ON BinarySegmentGraphOutputUtils
      * 
      * Write to a given output stream (file or stdio)
      */
     private String getDotty(BinarySegmentGraph graph) {
-        
-        StringBuilder sb = new StringBuilder();     
+
+        StringBuilder sb = new StringBuilder();
         sb.append("digraph G {\n\n");
 
         sb.append("graph [ dpi = 72, nodesep=\"0.1\" ];\n");
@@ -282,10 +276,10 @@ public class BTFOutput implements IBTFOutput {
             sb.append("}\n");
         }
         sb.append("}\n");
-        
+
         return sb.toString();
     }
-    
+
     /**
      * 
      * @param number
@@ -298,6 +292,7 @@ public class BTFOutput implements IBTFOutput {
 
     /**
      * Getter for instructionStream
+     * 
      * @return instructionStream
      */
     public InstructionStream getInstructionStream() {
@@ -306,19 +301,19 @@ public class BTFOutput implements IBTFOutput {
 
     /**
      * Setter for instructionStream
+     * 
      * @param instructionStream
      */
     public void setInstructionStream(InstructionStream instructionStream) {
         this.instructionStream = instructionStream;
     }
 
-    public String getProgram() {
+    public ELFProvider getProgram() {
         return program;
     }
 
-    public void setProgram(String program) {
+    public void setProgram(ELFProvider program) {
         this.program = program;
     }
-    
-    
+
 }
