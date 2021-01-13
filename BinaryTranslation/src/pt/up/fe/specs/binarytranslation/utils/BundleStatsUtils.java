@@ -91,6 +91,13 @@ public class BundleStatsUtils {
      * 
      */
     public static void bundleStatsDump(ELFProvider elf, List<SegmentBundle> segs) {
+        BundleStatsUtils.bundleStatsDump(elf, segs, false);
+    }
+
+    /*
+     * 
+     */
+    public static void bundleStatsDump(ELFProvider elf, List<SegmentBundle> segs, boolean fileOutput) {
 
         System.out.println("elf, window, nrgraphs, "
                 + "avgcontexts, maxcontexts, "
@@ -98,20 +105,23 @@ public class BundleStatsUtils {
                 + "avgilp, maxilp, "
                 + "avgipc, maxipc, "
                 + "avglds, maxlds, "
-                + "avgsts, maxsts");
+                + "avgsts, maxsts, "
+                + "avgII, maxII");
 
         for (var seg : segs) {
             var gbundle = GraphBundle.newInstance(seg);
             if (gbundle.getSegments().size() == 0) {
-                System.out.println(seg.getApplicationInformation().getAppName()
-                        + ", " + 0 + ", " + 0);
+                // System.out.println(seg.getApplicationInformation().getAppName()
+                // + ", " + 0 + ", " + 0);
                 continue;
             }
 
-            var parentfolder = new File("./output/" + elf.getFilename()
-                    + "/" + gbundle.getSegments().get(0).getSegmentType().toString()
-                    + "/windowSize" + gbundle.getSegments().get(0).getSegmentLength());
-            gbundle.generateOutput(parentfolder);
+            if (fileOutput == true) {
+                var parentfolder = new File("./output/" + elf.getFilename()
+                        + "/" + gbundle.getSegments().get(0).getSegmentType().toString()
+                        + "/windowSize" + gbundle.getSegments().get(0).getSegmentLength());
+                gbundle.generateOutput(parentfolder);
+            }
 
             // cpl
             var maxcpl = BundleStatsUtils.getMaxOf(
@@ -149,6 +159,12 @@ public class BundleStatsUtils {
             var avgsts = BundleStatsUtils.getAverageOf(
                     gbundle, func -> Integer.valueOf(func.getNumStores()));
 
+            // II
+            var avgII = BundleStatsUtils.getMaxOf(
+                    gbundle, func -> Integer.valueOf(func.getInitiationInterval()));
+            var maxII = BundleStatsUtils.getAverageOf(
+                    gbundle, func -> Integer.valueOf(func.getInitiationInterval()));
+
             System.out.println(gbundle.getApplicationInformation().getAppName()
                     + ", " + gbundle.getSegments().get(0).getSegmentLength()
                     + ", " + gbundle.getSegments().size()
@@ -157,7 +173,8 @@ public class BundleStatsUtils {
                     + ", " + avgilp + ", " + maxilp
                     + ", " + avgipc / 10.0f + ", " + maxipc / 10.0f
                     + ", " + avglds + ", " + maxlds
-                    + ", " + avgsts + ", " + maxsts);
+                    + ", " + avgsts + ", " + maxsts
+                    + ", " + avgII + ", " + maxII);
         }
     }
 }
