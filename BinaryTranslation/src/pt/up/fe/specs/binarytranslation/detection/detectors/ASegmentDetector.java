@@ -19,6 +19,8 @@ public abstract class ASegmentDetector implements SegmentDetector {
     private InstructionStream currentStream = null;
     private DetectorConfiguration config;
 
+    // TODO: create hashmap with decoded addreses to serve as decode cache
+
     /*
      * Stuff for statistics (TODO: add more) 
      */

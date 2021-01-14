@@ -39,7 +39,10 @@ public class ClassBuilders {
         return detector;
     }
 
-    public static InstructionStream buildStream(Class<?> streamClass, ELFProvider elf) {
+    /*
+     * If i want to pass a specific file
+     */
+    public static InstructionStream buildStream(Class<?> streamClass, File elfile) {
 
         /*
          * Stream constructor
@@ -57,13 +60,20 @@ public class ClassBuilders {
          */
         InstructionStream stream;
         try {
-            stream = (InstructionStream) cons.newInstance(BinaryTranslationUtils.getFile(elf));
+            stream = (InstructionStream) cons.newInstance(elfile);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         return stream;
+    }
+
+    /*
+     * Defaults to elf file in ELFProvider
+     */
+    public static InstructionStream buildStream(Class<?> streamClass, ELFProvider elf) {
+        return ClassBuilders.buildStream(streamClass, BinaryTranslationUtils.getFile(elf));
     }
 
     public static InstructionProducer buildProducer(Class<?> producerClass, ELFProvider elf) {
