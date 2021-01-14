@@ -3,8 +3,8 @@ package pt.up.fe.specs.binarytranslation.detection.detectors;
 public class DetectorConfiguration {
 
     protected Number startAddr = 0x00000000L, stopAddr = 0xFFFFFFFFL;
-    protected int minsize;
-    protected int maxsize; // segment size that will be looked for
+    protected int minsize = 2;
+    protected int maxsize = 10; // segment size that will be looked for
     protected int maxBlocks; // max forward jumping or backward jumping links in superblocks and megablocks
     protected float superblockBranchThreshold;
 
