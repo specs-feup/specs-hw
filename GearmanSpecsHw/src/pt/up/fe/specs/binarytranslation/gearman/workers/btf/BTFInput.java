@@ -85,7 +85,7 @@ public class BTFInput {
         Gson gson = new GsonBuilder().create();
         var inputOptions = gson.fromJson(dataString, Map.class);
 
-        var progname = "org/specs/MicroBlaze/asm/"
+        var progname = "org/specs/MicroBlaze/asm/N10/"
                 + inputOptions.get("program_name") + ".txt";
 
         this.program = getELF(progname);
