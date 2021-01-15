@@ -18,7 +18,7 @@ import pt.up.fe.specs.util.threadstream.ProducerEngine;
 
 public class ThreadedSegmentDetectUtils {
 
-    private static List<SegmentBundle> getSegments(ELFProvider elf, int minsize, int maxWindowSize,
+    public static List<SegmentBundle> getSegments(ELFProvider elf, int minsize, int maxWindowSize,
             Class<?> producerClass, Class<?> streamClass, Class<?> detectorClass) {
 
         var iproducer = ClassBuilders.buildProducer(producerClass, elf);

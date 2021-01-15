@@ -39,7 +39,7 @@ public class UnaryExpressionASTNode extends ExpressionASTNode {
 
     @Override
     public String getAsString() {
-        return this.getOperator() + this.getRight().getAsString();
+        return this.getOperator().getAsString() + this.getRight().getAsString();
     }
 
     @Override

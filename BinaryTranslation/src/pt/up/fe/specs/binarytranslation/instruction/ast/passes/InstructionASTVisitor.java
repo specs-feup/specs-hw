@@ -8,13 +8,13 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.Assignme
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.BinaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.FunctionExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.RangeSubscriptExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ScalarSubscriptExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.BareOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.LiteralOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.MetaOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.RangeSubscriptOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.ScalarSubscriptOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfElseStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.PlainStatementASTNode;
@@ -56,8 +56,8 @@ public abstract class InstructionASTVisitor<T> {
             return this.visit((ExpressionASTNode) node);
         }
 
-        else if (node instanceof OperandASTNode) {
-            return this.visit((OperandASTNode) node);
+        else if (node instanceof ExpressionASTNode) {
+            return this.visit((ExpressionASTNode) node);
         }
 
         else if (node instanceof OperatorASTNode) {
@@ -116,17 +116,14 @@ public abstract class InstructionASTVisitor<T> {
         else if (node instanceof UnaryExpressionASTNode)
             return this.visit((UnaryExpressionASTNode) node);
 
-        else if (node instanceof ScalarSubscriptExpressionASTNode)
-            return this.visit((ScalarSubscriptExpressionASTNode) node);
-
-        else if (node instanceof RangeSubscriptExpressionASTNode)
-            return this.visit(node);
-
         else if (node instanceof FunctionExpressionASTNode)
             return this.visit(node);
 
         else if (node instanceof OperandASTNode)
             return this.visit((OperandASTNode) node);
+
+        /* else if (node instanceof ExpressionASTNode)
+            return this.visit(node);*/
 
         return null;
     }
@@ -140,14 +137,6 @@ public abstract class InstructionASTVisitor<T> {
     };
 
     protected T visit(UnaryExpressionASTNode node) throws Exception {
-        return this.visitChildren(node);
-    };
-
-    protected T visit(ScalarSubscriptExpressionASTNode node) throws Exception {
-        return this.visitChildren(node);
-    };
-
-    protected T visit(RangeSubscriptExpressionASTNode node) throws Exception {
         return this.visitChildren(node);
     };
 
@@ -170,6 +159,12 @@ public abstract class InstructionASTVisitor<T> {
 
         else if (node instanceof MetaOperandASTNode)
             return this.visit((MetaOperandASTNode) node);
+
+        else if (node instanceof ScalarSubscriptOperandASTNode)
+            return this.visit((ScalarSubscriptOperandASTNode) node);
+
+        else if (node instanceof RangeSubscriptOperandASTNode)
+            return this.visit((RangeSubscriptOperandASTNode) node);
 
         else
             return this.visitChildren(node);
@@ -208,6 +203,14 @@ public abstract class InstructionASTVisitor<T> {
     protected T visit(ImmediateOperandASTNode node) throws Exception {
         return this.visitChildren(node);
     }
+
+    protected T visit(ScalarSubscriptOperandASTNode node) throws Exception {
+        return this.visitChildren(node);
+    };
+
+    protected T visit(RangeSubscriptOperandASTNode node) throws Exception {
+        return this.visitChildren(node);
+    };
 
     /////////////////////////////////////////////////////////////////////////
 

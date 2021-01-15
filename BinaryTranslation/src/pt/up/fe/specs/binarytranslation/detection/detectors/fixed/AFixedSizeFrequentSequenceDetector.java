@@ -30,7 +30,8 @@ public abstract class AFixedSizeFrequentSequenceDetector extends ASimpleSegmentD
 
             // do not form sequences with unknown instructions
             // do not form frequent sequences containing jumps
-            if (inst.isUnknown() || inst.isJump()) {
+            // TODO: TEMPORARY RESTRICTION ON MEMORY AND FLOAT FOR HDL GENERATION
+            if (inst.isUnknown() || inst.isJump() || inst.isMemory() || inst.isFloat()) {
                 return false;
             }
         }

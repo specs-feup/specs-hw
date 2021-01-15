@@ -9,13 +9,13 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.Assignme
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.BinaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.FunctionExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.RangeSubscriptExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ScalarSubscriptExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.BareOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.LiteralOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.MetaOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.RangeSubscriptOperandASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.ScalarSubscriptOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfElseStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.PlainStatementASTNode;
@@ -33,8 +33,8 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.Op
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ParenExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PlainStmtContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.RangesubscriptExprContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ScalarsubscriptExprContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.RangesubscriptOperandContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ScalarsubscriptOperandContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.UnaryExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.VariableExprContext;
 
@@ -144,19 +144,6 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
         }
     }
 
-    @Override
-    public InstructionASTNode visitScalarsubscriptExpr(ScalarsubscriptExprContext ctx) {
-        var idx = Integer.valueOf(ctx.idx.getText());
-        return new ScalarSubscriptExpressionASTNode((OperandASTNode) this.visit(ctx.operand()), idx);
-    }
-
-    @Override
-    public InstructionASTNode visitRangesubscriptExpr(RangesubscriptExprContext ctx) {
-        var loidx = Integer.valueOf(ctx.loidx.getText());
-        var hiidx = Integer.valueOf(ctx.hiidx.getText());
-        return new RangeSubscriptExpressionASTNode((OperandASTNode) this.visit(ctx.operand()), loidx, hiidx);
-    }
-
     // Operator level /////////////////////////////////////////////////////////
     @Override
     public OperatorASTNode visitOperator(OperatorContext ctx) {
@@ -177,5 +164,20 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
     @Override
     public MetaOperandASTNode visitMetaField(MetaFieldContext ctx) {
         return new MetaOperandASTNode(ctx.meta_field().processorRegister.getText());
+    }
+
+    @Override
+    public RangeSubscriptOperandASTNode visitRangesubscriptOperand(RangesubscriptOperandContext ctx) {
+        var loidx = Integer.valueOf(ctx.loidx.getText());
+        var hiidx = Integer.valueOf(ctx.hiidx.getText());
+        return new RangeSubscriptOperandASTNode(
+                (OperandASTNode) this.visit(ctx.operand()), loidx, hiidx);
+    }
+
+    @Override
+    public ScalarSubscriptOperandASTNode visitScalarsubscriptOperand(ScalarsubscriptOperandContext ctx) {
+        var idx = Integer.valueOf(ctx.idx.getText());
+        return new ScalarSubscriptOperandASTNode(
+                (OperandASTNode) this.visit(ctx.operand()), idx);
     }
 }
