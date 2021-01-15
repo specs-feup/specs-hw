@@ -41,11 +41,9 @@ expression
 	: operand 																# variableExpr 
 	| LPAREN expression RPAREN 												# parenExpr
 	| functionName LPAREN arguments? RPAREN									# functionExpr
-	| operand LBRACK idx=unsignednumber RBRACK 								# scalarsubscriptExpr
-	| operand LBRACK loidx=unsignednumber SEMI hiidx=unsignednumber RBRACK 	# rangesubscriptExpr
 	| operator right=expression 											# unaryExpr
 	| left=expression operator right=expression 							# binaryExpr
-	| operand rlop expression 			 									# assignmentExpr;
+	| left=expression rlop right=expression 			 					# assignmentExpr;
  
 rlop: EQ; 
 
@@ -80,7 +78,9 @@ meta_field: METASYMBOL processorRegister=ASMFIELD;
 operand:
 	(ASMFIELD | STACKPTR) 	# AsmField
    | (meta_field)	# metaField
-   | (number)		# Literal;
+   | (number)		# Literal
+   | operand LBRACK idx=unsignednumber RBRACK 								# scalarsubscriptExpr
+   | operand LBRACK loidx=unsignednumber SEMI hiidx=unsignednumber RBRACK 	# rangesubscriptExpr; 
 
 /************************************************************
  * Lexing

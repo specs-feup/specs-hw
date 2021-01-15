@@ -106,8 +106,8 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
 
     @Override
     public InstructionASTNode visitAssignmentExpr(AssignmentExprContext ctx) {
-        return new AssignmentExpressionASTNode((OperandASTNode) this.visit(ctx.operand()),
-                (ExpressionASTNode) this.visit(ctx.expression()));
+        return new AssignmentExpressionASTNode((OperandASTNode) this.visit(ctx.left),
+                (ExpressionASTNode) this.visit(ctx.right));
     }
 
     @Override
