@@ -79,8 +79,8 @@ public class ApplyInstructionPass extends InstructionASTListener {
         }
 
         System.out.println("failed looking for asm field: " + asmFieldName);
-        throw new Exception();
-        // return null;
+        // throw new Exception();
+        return null;
 
         // TODO fix null return
     }

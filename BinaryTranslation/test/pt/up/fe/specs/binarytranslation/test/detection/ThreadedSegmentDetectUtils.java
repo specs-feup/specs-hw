@@ -87,7 +87,7 @@ public class ThreadedSegmentDetectUtils {
                     elf, minsize, maxsize,
                     provider, stream, detector);
 
-            BundleStatsUtils.bundleStatsDump(elf, segs, false);
+            BundleStatsUtils.bundleStatsDump(elf, segs, true);
         }
 
         pTime = (long) ((System.nanoTime() - pTime) / 1E9);
