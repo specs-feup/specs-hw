@@ -1,20 +1,19 @@
-package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr;
+package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
 
-public class ScalarSubscriptExpressionASTNode extends SubscriptExpressionASTNode {
+public class ScalarSubscriptOperandASTNode extends SubscriptOperandASTNode {
 
     private int idx;
 
     // TODO: make idx a type of node
-    private ScalarSubscriptExpressionASTNode(int idx) {
+    private ScalarSubscriptOperandASTNode(int idx) {
         super(InstructionASTNodeType.ScalarSubscriptASTNode);
         this.idx = idx;
     }
 
-    public ScalarSubscriptExpressionASTNode(OperandASTNode operand, int idx) {
+    public ScalarSubscriptOperandASTNode(OperandASTNode operand, int idx) {
         super(InstructionASTNodeType.ScalarSubscriptASTNode, operand);
         this.idx = idx;
     }
@@ -35,6 +34,6 @@ public class ScalarSubscriptExpressionASTNode extends SubscriptExpressionASTNode
 
     @Override
     protected InstructionASTNode copyPrivate() {
-        return new ScalarSubscriptExpressionASTNode(this.getIdx());
+        return new ScalarSubscriptOperandASTNode(this.getIdx());
     }
 }

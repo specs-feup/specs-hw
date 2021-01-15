@@ -1,21 +1,20 @@
-package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr;
+package pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
 
-public class RangeSubscriptExpressionASTNode extends SubscriptExpressionASTNode {
+public class RangeSubscriptOperandASTNode extends SubscriptOperandASTNode {
 
     private int loidx, hiidx;
 
     // TODO: make idx a type of node
-    private RangeSubscriptExpressionASTNode(int loidx, int hiidx) {
+    private RangeSubscriptOperandASTNode(int loidx, int hiidx) {
         super(InstructionASTNodeType.RangeSubscriptASTNode);
         this.loidx = loidx;
         this.hiidx = hiidx;
     }
 
-    public RangeSubscriptExpressionASTNode(OperandASTNode operand, int loidx, int hiidx) {
+    public RangeSubscriptOperandASTNode(OperandASTNode operand, int loidx, int hiidx) {
         super(InstructionASTNodeType.RangeSubscriptASTNode, operand);
         this.loidx = loidx;
         this.hiidx = hiidx;
@@ -41,6 +40,6 @@ public class RangeSubscriptExpressionASTNode extends SubscriptExpressionASTNode 
 
     @Override
     protected InstructionASTNode copyPrivate() {
-        return new RangeSubscriptExpressionASTNode(this.getLoidx(), this.getHiidx());
+        return new RangeSubscriptOperandASTNode(this.getLoidx(), this.getHiidx());
     }
 }

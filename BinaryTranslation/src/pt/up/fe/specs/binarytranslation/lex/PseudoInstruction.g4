@@ -79,8 +79,8 @@ operand:
 	(ASMFIELD | STACKPTR) 	# AsmField
    | (meta_field)	# metaField
    | (number)		# Literal
-   | operand LBRACK idx=unsignednumber RBRACK 								# scalarsubscriptExpr
-   | operand LBRACK loidx=unsignednumber SEMI hiidx=unsignednumber RBRACK 	# rangesubscriptExpr; 
+   | operand LBRACK idx=unsignednumber RBRACK 								# scalarsubscriptOperand
+   | operand LBRACK loidx=unsignednumber SEMI hiidx=unsignednumber RBRACK 	# rangesubscriptOperand; 
 
 /************************************************************
  * Lexing
