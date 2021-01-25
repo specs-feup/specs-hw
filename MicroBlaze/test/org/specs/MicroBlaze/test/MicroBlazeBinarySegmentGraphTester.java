@@ -48,7 +48,7 @@ public class MicroBlazeBinarySegmentGraphTester {
 
     @Test
     public void testStaticFrequentSequence() {
-        try (MicroBlazeElfStream el = new MicroBlazeElfStream(openFile())) {
+        try (var el = new MicroBlazeElfStream(openFile())) {
             var bbd = new FrequentStaticSequenceDetector();
             getSegments(el, bbd);
         }
@@ -56,7 +56,7 @@ public class MicroBlazeBinarySegmentGraphTester {
 
     @Test
     public void testStaticBasicBlock() {
-        try (MicroBlazeElfStream el = new MicroBlazeElfStream(openFile())) {
+        try (var el = new MicroBlazeElfStream(openFile())) {
             var bbd = new StaticBasicBlockDetector();
             getSegments(el, bbd);
         }
@@ -64,7 +64,7 @@ public class MicroBlazeBinarySegmentGraphTester {
 
     @Test
     public void testTraceFrequenceSequence() {
-        try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(openFile())) {
+        try (var el = new MicroBlazeTraceStream(openFile())) {
             var bbd = new FrequentTraceSequenceDetector();
             getSegments(el, bbd);
         }
@@ -72,7 +72,7 @@ public class MicroBlazeBinarySegmentGraphTester {
 
     @Test
     public void testTraceBasicBlock() {
-        try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(openFile())) {
+        try (var el = new MicroBlazeTraceStream(openFile())) {
             var bbd = new TraceBasicBlockDetector();
             getSegments(el, bbd);
         }

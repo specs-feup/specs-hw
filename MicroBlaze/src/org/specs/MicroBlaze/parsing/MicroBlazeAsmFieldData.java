@@ -10,14 +10,11 @@ import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class MicroBlazeAsmFieldData extends AsmFieldData {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6881817344658745810L;
 
     /*
      * Create raw
@@ -47,7 +44,7 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
      * This manner of field parsing, maintains the operand order as parsed
      * in the AsmFields
      */
-    public List<Operand> getOperands() {
+    public List<Operand> getOperands(InstructionProperties props) {
 
         MicroBlazeAsmFieldType type = (MicroBlazeAsmFieldType) this.get(TYPE);
         var map1 = this.get(FIELDS);
@@ -142,7 +139,14 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
 
             // TODO add carry output here, after checking instruction type
 
-            operands.add(newWriteRegister(RD, operandmap.get(RD)));
+            // TODO QUICK HACK FOR SUPPORT OF EXCEPTION OF OPERAND TYPE IN LD/ST
+
+            if (props.getGenericType().contains(InstructionType.G_LOAD)
+                    || props.getGenericType().contains(InstructionType.G_STORE))
+                operands.add(newReadRegister(RD, operandmap.get(RD)));
+            else
+                operands.add(newWriteRegister(RD, operandmap.get(RD)));
+
             operands.add(newReadRegister(RA, operandmap.get(RA)));
             operands.add(newReadRegister(RB, operandmap.get(RB)));
 
@@ -153,9 +157,18 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
         ///////////////////////////////////////////////////////////////////////
         case TYPE_B:
 
+            // if()
+
             // TODO add carry output here, after checking instruction type
 
-            operands.add(newWriteRegister(RD, operandmap.get(RD)));
+            // TODO QUICK HACK FOR SUPPORT OF EXCEPTION OF OPERAND TYPE IN LD/ST
+
+            if (props.getGenericType().contains(InstructionType.G_LOAD)
+                    || props.getGenericType().contains(InstructionType.G_STORE))
+                operands.add(newReadRegister(RD, operandmap.get(RD)));
+            else
+                operands.add(newWriteRegister(RD, operandmap.get(RD)));
+
             operands.add(newReadRegister(RA, operandmap.get(RA)));
             operands.add(newImmediate(IMM, operandmap.get(IMM)));
 

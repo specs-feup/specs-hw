@@ -10,7 +10,7 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentTraceSequenceDetector;
-import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
+import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeSequentialDetectTest {
@@ -36,9 +36,9 @@ public class MicroBlazeSequentialDetectTest {
             if (result1.getSegments().size() == 0)
                 continue;
 
-            var gbundle = GraphBundle.newInstance(result1);
-            gbundle.generateOutput();
-            // SegmentDetectTestUtils.printBundle(result1);
+            // var gbundle = GraphBundle.newInstance(result1);
+            // gbundle.generateOutput();
+            SegmentDetectTestUtils.printBundle(result1);
         }
     }
 
