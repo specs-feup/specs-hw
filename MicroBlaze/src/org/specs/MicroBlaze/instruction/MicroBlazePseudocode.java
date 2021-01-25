@@ -132,8 +132,8 @@ public enum MicroBlazePseudocode implements InstructionPseudocode {
     rsubc("RD = RB + ~RA + 1 + getCarry(); setCarry(msb(RD));"),
     rsubk("RD = RB + ~RA + 1;"),
     rsubkc("RD = RB + ~RA + 1 + getCarry();"),
-    cmp("RD = RB + ~RA + 1; msb(RD) = signed(RA) > signed(RB);"),
-    cmpu("RD = RB + ~RA + 1; msb(RD) = unsigned(RA) > unsigned(RB);"),
+    cmp("RD = RB + ~RA + 1; RD[31] = signed(RA) > signed(RB);"),
+    cmpu("RD = RB + ~RA + 1; RD[31] = = unsigned(RA) > unsigned(RB);"),
     mul("RD = lsw(RA * RB);"),
     mulh("RD = msw(RA * RB);"),
     // TODO implement the modifiers/functions/built-ins "lsw" and "msw"
@@ -173,20 +173,29 @@ public enum MicroBlazePseudocode implements InstructionPseudocode {
     pcmpeq("RD = RB == RA;"),
     andn("RD = RA ^ ~RB;"),
     pcmpne("RD = ~(RB == RA);"),
-    sra("msb(RD) = msb(RA); setCarry(lsb(RA)); RD[1:31] = RA[0:30];"),
-    src("msb(RD) = getCarry(); setCarry(lsb(RA)); RD[1:31] = RA[0:30];"),
-    srl("msb(RD) = 0; setCarry(lsb(RA)); RD[1:31] = RA[0:30];"),
+    sra("RD[31] = msb(RA); setCarry(lsb(RA)); RD[1:31] = RA[0:30];"),
+    src("RD[31] = getCarry(); setCarry(lsb(RA)); RD[1:31] = RA[0:30];"),
+    srl("RD[31] = 0; setCarry(lsb(RA)); RD[1:31] = RA[0:30];"),
     sext8("RD = sext(RA[24:31]);"),
     sext16("RD = sext(RA[16:31]);"),
     clz("RD = clz(RA);"), // requires a built in due to complexity of code that must be generated
-    swapb("byte(RD, 0) = byte(RA, 3); "
-            + "byte(RD, 1) = byte(RA, 2); "
-            + "byte(RD, 2) = byte(RA, 1); "
-            + "byte(RD, 3) = byte(RA, 0);"),
-    swaph("byte(RD, 0) = byte(RA, 2); "
+    /*swapb("byte(RD, 0) = byte(RA, 3); "
+    + "byte(RD, 1) = byte(RA, 2); "
+    + "byte(RD, 2) = byte(RA, 1); "
+    + "byte(RD, 3) = byte(RA, 0);"),*/
+    swapb("RD[7:0] = byte(RA, 3); "
+            + "RD[15:8] = byte(RA, 2); "
+            + "RD[23:16] = byte(RA, 1); "
+            + "RD[31:24] = byte(RA, 0);"),
+
+    /* swaph("byte(RD, 0) = byte(RA, 2); "
             + "byte(RD, 1) = byte(RA, 3); "
             + "byte(RD, 2) = byte(RA, 0); "
-            + "byte(RD, 3) = byte(RA, 1);"),
+            + "byte(RD, 3) = byte(RA, 1);"),*/
+    swaph("RD[7:0] = byte(RA, 2); "
+            + "RD[15:8] = byte(RA, 3); "
+            + "RD[23:16] = byte(RA, 0); "
+            + "RD[31:24] = byte(RA, 1);"),
 
     /*   
     wic(0x9000_0068, TYPE_A, G_OTHER),
