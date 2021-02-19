@@ -12,7 +12,7 @@ import pt.up.fe.specs.binarytranslation.test.instruction.InstructionTestUtils;
 public class RiscvInstructionPropertiesTest {
 
     /*
-     * Test checks if the manually initialized data in the MicroBlazeInstructionProperties enum
+     * Test checks if the manually initialized data in the RiscvInstructionProperties enum
      * matches with what the parsers decode when initializing the enum private fields
      */
     @Test
@@ -22,7 +22,7 @@ public class RiscvInstructionPropertiesTest {
     }
 
     /*
-     * Test if all opcodes in all the instruction properties for microblaze are unique
+     * Test if all opcodes in all the instruction properties for riscv are unique
      */
     @Test
     public void uniquenesstest() {

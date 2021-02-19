@@ -191,18 +191,29 @@ public class ArmAsmOperandGetter {
             break;
         }
 
+        case LOAD_REG_LITERAL_FMT2: {
+            break;
+        }
+
         case LOAD_STORE_PAIR_NO_ALLOC:
-        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1: {
+        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT1:
+        case LOAD_STORE_PAIR_REG_PREOFFPOST_FMT2: {
             key = map.get(SIMD) << 1 | (map.get(OPCODEA));
             break;
         }
 
+        case LOAD_STORE_REG_OFF_FMT1:
+        case LOAD_STORE_REG_OFF_FMT2:
+        case LOAD_STORE_REG_OFF_FMT3:
         case LOAD_STORE_REG_IMM_PREPOST_FMT1:
         case LOAD_STORE_REG_IMM_PREPOST_FMT2:
         case LOAD_STORE_REG_IMM_PREPOST_FMT3:
         case LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT1:
         case LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT2:
-        case LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT3: {
+        case LOAD_STORE_PAIR_UNPRIV_UNSCALED_FMT3:
+        case LOAD_STORE_REG_UIMM_FMT1:
+        case LOAD_STORE_REG_UIMM_FMT2:
+        case LOAD_STORE_REG_UIMM_FMT3: {
             var isload = (map.get(OPCODEB) & 0b01);
             var issimd = map.get(SIMD) << 1;
             key = issimd | isload;
@@ -527,7 +538,6 @@ public class ArmAsmOperandGetter {
 
     // LOAD_STORE_PAIR_IMM_FMT1
     // LOAD_STORE_PAIR_IMM_FMT2
-    // LOAD_STORE_PAIR_IMM_FMT3
     // LOAD_STORE_IMM_PREPOST_FMT1
     // LOAD_STORE_IMM_PREPOST_FMT2
     // LOAD_STORE_IMM_PREPOST_FMT3

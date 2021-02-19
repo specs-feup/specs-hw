@@ -1,14 +1,11 @@
 package org.specs.Arm.asm.detection;
 
 import org.junit.Test;
-import org.specs.Arm.ArmLivermoreELFN10;
-import org.specs.Arm.stream.ArmElfStream;
-import org.specs.Arm.stream.ArmStaticProvider;
+import org.specs.Arm.ArmLivermoreELFN100;
 import org.specs.Arm.stream.ArmTraceProvider;
 import org.specs.Arm.stream.ArmTraceStream;
 import org.specs.BinaryTranslation.ELFProvider;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.ThreadedSegmentDetectUtils;
 
@@ -16,7 +13,7 @@ public class ArmBatchFrequentSequenceTest {
 
     /*
      * Stats from static frequent sequences
-     */
+     
     @Test
     public void ArmFrequentSequenceDetect() {
         ELFProvider elfs[] = ArmLivermoreELFN10.values();
@@ -26,7 +23,7 @@ public class ArmBatchFrequentSequenceTest {
                 ArmElfStream.class,
                 FrequentStaticSequenceDetector.class);
     }
-
+    */
     /*
      * Stats from trace basic blocks
      */
@@ -36,7 +33,7 @@ public class ArmBatchFrequentSequenceTest {
         // using the N10 version is fine, if we use the kernel start and stop bounds
 
         // ELFProvider elfs[] = ArmLivermoreELFN10.values();
-        ELFProvider elfs[] = { ArmLivermoreELFN10.hydro };
+        ELFProvider elfs[] = { ArmLivermoreELFN100.tri_diag };
         ThreadedSegmentDetectUtils.BatchDetect(elfs, 4, 50,
                 ArmTraceProvider.class,
                 ArmTraceStream.class,

@@ -2,6 +2,7 @@ package org.specs.MicroBlaze.test.profile;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import pt.up.fe.specs.binarytranslation.profiling.InstructionHistogram;
 import pt.up.fe.specs.binarytranslation.profiling.InstructionTypeHistogram;
 import pt.up.fe.specs.binarytranslation.test.profile.InstructionStreamProfilingUtils;
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.utilities.heapwindow.HeapWindow;
 
 public class MicroBlazeProfileTester {
 
@@ -29,8 +31,9 @@ public class MicroBlazeProfileTester {
 
     @Test
     public void MicroBlazeProfile() {
+        (new HeapWindow()).run();
 
-        Class<?> producers[] = { MicroBlazeStaticProvider.class , /*MicroBlazeTraceProvider.class*/ };
+        Class<?> producers[] = { /*MicroBlazeStaticProvider.class ,*/ MicroBlazeTraceProvider.class };
 
         var profilerList = new ArrayList<Class<?>>();
         profilerList.add(InstructionTypeHistogram.class);
