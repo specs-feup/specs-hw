@@ -28,12 +28,12 @@ public abstract class AInstructionProducer implements InstructionProducer {
      * Internal status
      */
     private final Process proc;
-    private final LineStream insts;
+    protected final LineStream insts;
 
     /*
      * Init by chilren
      */
-    private final Pattern regex;
+    protected final Pattern regex;
     private final BiFunction<String, String, Instruction> produceMethod;
 
     public AInstructionProducer(Application app, ProcessBuilder builder, ResourceProvider regex,
@@ -107,6 +107,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
      */
     private boolean advanceLineToValid(LineStream insts, Pattern regex) {
         String line = null;
+
         while (((line = insts.peekNextLine()) != null) && !SpecsStrings.matches(line, regex)) {
             insts.nextLine();
         }
@@ -117,7 +118,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
     /*
      * Initialized by non-abstract children methods
      */
-    private Instruction newInstance(String address, String instruction) {
+    protected Instruction newInstance(String address, String instruction) {
         return this.produceMethod.apply(address, instruction);
     }
 
