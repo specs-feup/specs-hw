@@ -1,10 +1,11 @@
 package org.specs.Arm.asm.generators;
 
 import org.junit.Test;
-import org.specs.Arm.ArmLivermoreELFN10;
-import org.specs.Arm.stream.ArmElfStream;
+import org.specs.Arm.ArmLivermoreELFN100;
+import org.specs.Arm.stream.ArmTraceStream;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.CustomInstructionUnitGenerator;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
@@ -15,8 +16,9 @@ public class ArmCustomInstructionUnitGeneratorTester {
     public void testCustomUnitGenerate() {
 
         // get static frequent sequence bundle
-        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreELFN10.cholesky,
-                ArmElfStream.class, StaticBasicBlockDetector.class);
+        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreELFN100.innerprod,
+                ArmTraceStream.class, TraceBasicBlockDetector.class,
+                (new DetectorConfigurationBuilder().withMaxWindow(6)).build());
 
         // transform into graph bundle
         var graphs = GraphBundle.newInstance(bundle);
@@ -24,14 +26,17 @@ public class ArmCustomInstructionUnitGeneratorTester {
         // generate custom instruction unit for one of the graphs
         var customInstGen = new CustomInstructionUnitGenerator();
 
+        /*
         // get ONE graph
         var subset = graphs.getGraphs(data -> data.getSegment().getSegmentLength() == 4);
-        /*for (var g : subset) {
+        for (var g : subset) {
             System.out.println(g.getSegment().getContexts().get(0).getStartaddresses());
             System.out.println(g.getSegment().getRepresentation());
-        }*/
+        }
+        
+        var graph = subset.get(4);*/
 
-        var graph = subset.get(4);
+        var graph = graphs.getGraphs().get(0);
 
         for (var i : graph.getSegment().getInstructions()) {
             System.out.println(i.getRepresentation());

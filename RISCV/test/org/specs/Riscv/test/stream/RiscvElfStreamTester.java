@@ -39,7 +39,7 @@ public class RiscvElfStreamTester {
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
-                RiscvLivermoreELFN100iamf.innerprod100.getResource(), RiscvTraceStream.class);
+                RiscvLivermoreELFN100iam.innerprod100.getResource(), RiscvTraceStream.class);
     }
     
 }

@@ -82,6 +82,13 @@ public class MicroBlazeInstructionASTTest {
         testInstructionASTGen(inst);
     }
 
+    @Test
+    public void testCmp() {
+        var props = MicroBlazeInstructionProperties.cmp;
+        var inst = MicroBlazeInstruction.newInstance("0", Integer.toHexString(props.getOpCode()));
+        testInstructionASTGen(inst);
+    }
+
     /**
      * Tests if the pseudo-instruction grammar and InstructionAST generator are working properly for all instructions in
      * this ISA (by type)
