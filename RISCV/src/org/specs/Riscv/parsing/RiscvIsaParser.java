@@ -11,7 +11,6 @@ public class RiscvIsaParser extends AIsaParser {
 
     @Override
     public RiscvAsmFieldData parse(String addr, String instruction) {
-
         AsmFieldData fieldData = doparse(addr, instruction);
         return new RiscvAsmFieldData(fieldData);
     }

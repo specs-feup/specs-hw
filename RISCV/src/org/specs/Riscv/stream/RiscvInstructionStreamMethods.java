@@ -11,10 +11,12 @@ import pt.up.fe.specs.util.utilities.LineStream;
 public class RiscvInstructionStreamMethods {
 
     public static Instruction nextInstruction(LineStream insts, Pattern regex) {
-
+        System.out.println(insts.getReadLines());
         String line = null;
-        while (((line = insts.nextLine()) != null) && !SpecsStrings.matches(line, regex))
-            ;
+        
+        while (((line = insts.nextLine()) != null) && !SpecsStrings.matches(line, regex)) {
+            
+        }
 
         if (line == null) {
             return null;
