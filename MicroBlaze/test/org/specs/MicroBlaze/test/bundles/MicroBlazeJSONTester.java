@@ -3,6 +3,7 @@ package org.specs.MicroBlaze.test.bundles;
 import java.io.File;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
@@ -13,7 +14,7 @@ public class MicroBlazeJSONTester {
 
     @Test
     public void bundleStaticSegmentBundle() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.txt");
+        File fd = SpecsIo.resourceCopy(MicroBlazeLivermoreELFN10.cholesky_trace.getResource());
         fd.deleteOnExit();
         try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
             var bbd = new FrequentStaticSequenceDetector();
@@ -31,17 +32,17 @@ public class MicroBlazeJSONTester {
         }
     }
 
-    @Test
-    public void bundleStaticGraphBundle() {
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.txt");
-        fd.deleteOnExit();
-        try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
-            var bbd = new FrequentStaticSequenceDetector();
-            var bundle = bbd.detectSegments(el);
-            var gbundle = GraphBundle.newInstance(bundle);
-
-            // create JSON object
-            gbundle.toJSON();
-        }
-    }
+//    @Test
+//    public void bundleStaticGraphBundle() {
+//        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.txt");
+//        fd.deleteOnExit();
+//        try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
+//            var bbd = new FrequentStaticSequenceDetector();
+//            var bundle = bbd.detectSegments(el);
+//            var gbundle = GraphBundle.newInstance(bundle);
+//
+//            // create JSON object
+//            gbundle.toJSON();
+//        }
+//    }
 }
