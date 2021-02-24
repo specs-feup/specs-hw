@@ -37,6 +37,3 @@ ivy/
 ### ignore media formats
 *.mp4
 *.wmv
-
-### User-specific paths
-RISCV/src/org/specs/Riscv/RiscvResource.java
