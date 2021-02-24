@@ -18,6 +18,7 @@ import java.util.Iterator;
 import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
@@ -33,6 +34,8 @@ public abstract class AInstruction implements Instruction {
 
     @Expose
     private String instruction;
+    
+    private RegisterDump registers = RegisterDump.nullDump;
 
     // decoded field data (abstract class)
     private final InstructionData idata;
@@ -234,6 +237,14 @@ public abstract class AInstruction implements Instruction {
         String prt = "0x" + Long.toHexString(this.getAddress().longValue()) + ":";
         prt += this.getInstruction() + "\t " + getRepresentation() + "\t "; // + this.express();
         return prt;
+    }
+
+    public RegisterDump getRegisters() {
+        return registers;
+    }
+
+    public void setRegisters(RegisterDump registers) {
+        this.registers = registers;
     }
 
     /* 
