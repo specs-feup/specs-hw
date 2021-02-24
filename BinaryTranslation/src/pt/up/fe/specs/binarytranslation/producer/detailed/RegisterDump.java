@@ -14,7 +14,7 @@ public class RegisterDump {
         regs.put(register, value);
     }
 
-    public long getValue(String register) {
+    public Long getValue(String register) {
         return regs.get(register);
     }
     
