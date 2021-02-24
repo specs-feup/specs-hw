@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.instruction;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 /**
  * Represents a generic assembly instruction.
@@ -290,6 +291,14 @@ public interface Instruction {
      * executed representation, to a symbolic representation
      */
     default void makeSymbolic(Integer address, Map<String, String> regremap) {
+        return;
+    }
+    
+    default RegisterDump getRegisters() {
+        return null;
+    }
+
+    default void setRegisters(RegisterDump registers) {
         return;
     }
 }

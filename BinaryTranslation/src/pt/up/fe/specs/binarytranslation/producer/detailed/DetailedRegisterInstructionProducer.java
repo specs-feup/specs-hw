@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.producer.detailed;
 import java.util.function.BiFunction;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBFilter;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBRegisterFilter;
@@ -20,6 +21,14 @@ public class DetailedRegisterInstructionProducer extends ADetailedTraceProducer 
         if (fil instanceof GDBRegisterFilter)
             return (RegisterDump) fil.getResult();
         else
-            return new RegisterDump();
+            return RegisterDump.nullDump;
+    }
+    
+    @Override
+    public Instruction nextInstruction() {
+        RegisterDump reg = nextRegister();
+        Instruction inst = super.nextInstruction();
+        inst.setRegisters(reg);
+        return inst;
     }
 }

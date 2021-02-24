@@ -239,10 +239,12 @@ public abstract class AInstruction implements Instruction {
         return prt;
     }
 
+    @Override
     public RegisterDump getRegisters() {
         return registers;
     }
 
+    @Override
     public void setRegisters(RegisterDump registers) {
         this.registers = registers;
     }
