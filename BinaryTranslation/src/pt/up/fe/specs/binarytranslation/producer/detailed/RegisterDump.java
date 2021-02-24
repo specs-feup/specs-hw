@@ -7,7 +7,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class RegisterDump {
-    HashMap<String, Long> regs = new HashMap<>();
+    protected HashMap<String, Long> regs = new HashMap<>();
+    public static RegisterDump nullDump = new RegisterDumpNull();
 
     public void add(String register, long value) {
         regs.put(register, value);
