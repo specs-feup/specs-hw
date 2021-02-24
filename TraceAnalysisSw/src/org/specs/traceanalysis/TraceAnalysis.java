@@ -24,6 +24,8 @@ public class TraceAnalysis {
     }
 
     public boolean analyze() {
+        MemoryProfiler mem = new MemoryProfiler(provider);
+        mem.profile();
         return true;
     }
 }
