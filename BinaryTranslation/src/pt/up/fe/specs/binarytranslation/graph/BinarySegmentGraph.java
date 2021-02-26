@@ -62,9 +62,9 @@ public class BinarySegmentGraph implements BinaryTranslationOutput {
     private float estimatedIPC = -1;
 
     @Expose
-    List<GraphNode> nodes;
+    private List<GraphNode> nodes;
 
-    BinarySegment seg;
+    private BinarySegment seg;
 
     // references to the node inputs/outputs which
     // are top/bottom level on this graph

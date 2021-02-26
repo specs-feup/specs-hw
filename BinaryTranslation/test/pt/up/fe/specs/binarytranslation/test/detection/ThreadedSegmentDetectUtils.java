@@ -87,7 +87,14 @@ public class ThreadedSegmentDetectUtils {
                     elf, minsize, maxsize,
                     provider, stream, detector);
 
-            BundleStatsUtils.bundleStatsDump(elf, segs, true);
+            for (var bundle : segs) {
+                for (var bs : bundle.getSegments()) {
+                    bs.printSegment();
+                    System.out.print("\n");
+                }
+            }
+
+            BundleStatsUtils.bundleStatsDump(elf, segs, false);
         }
 
         pTime = (long) ((System.nanoTime() - pTime) / 1E9);

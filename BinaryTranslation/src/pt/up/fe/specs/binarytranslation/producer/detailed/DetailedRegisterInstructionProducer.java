@@ -9,6 +9,7 @@ import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBRegisterFilt
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public class DetailedRegisterInstructionProducer extends ADetailedTraceProducer {
+
     protected DetailedRegisterInstructionProducer(Application app, ResourceProvider regex,
             BiFunction<String, String, Instruction> produceMethod) {
         super(app, regex, produceMethod);
@@ -22,7 +23,7 @@ public class DetailedRegisterInstructionProducer extends ADetailedTraceProducer 
         else
             return RegisterDump.nullDump;
     }
-    
+
     @Override
     public Instruction nextInstruction() {
         RegisterDump reg = nextRegister();
