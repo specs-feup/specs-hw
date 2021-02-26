@@ -1,8 +1,5 @@
 package pt.up.fe.specs.binarytranslation.producer.detailed.filter;
 
-import java.util.Arrays;
-import java.util.regex.Pattern;
-
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.util.utilities.LineStream;
 
@@ -19,23 +16,23 @@ public class GDBRegisterFilter extends GDBFilter {
         String line = null;
 
         while (((line = lines.peekNextLine()) != null)) {
-            //System.out.println("RegFilter processing line: " + line);
+            // System.out.println("RegFilter processing line: " + line);
             if (line.startsWith("mucounteren") || line.startsWith("rmsr")) {
                 lines.nextLine();
                 break;
             } else {
                 line = line.replaceAll("\\s+", " ");
                 String[] elems = line.split(" ");
-                //TODO: replace by a provided regex
+                // TODO: replace by a provided regex
                 if (belongsToISA(elems[0])) {
-                    //System.out.println("Found valid reg: " + line);
+                    // System.out.println("Found valid reg: " + line);
                     try {
                         if (elems.length > 1) {
                             long val = Long.decode(elems[1]);
                             dump.add(elems[0], val);
                         }
                     } catch (Exception e) {
-                        
+
                     }
                 }
             }
@@ -45,8 +42,8 @@ public class GDBRegisterFilter extends GDBFilter {
     }
 
     private boolean belongsToISA(String string) {
-        //return Arrays.asList(this.regs).contains(string);
-        //return Pattern.matches(pattern, string);
+        // return Arrays.asList(this.regs).contains(string);
+        // return Pattern.matches(pattern, string);
         return true;
     }
 
