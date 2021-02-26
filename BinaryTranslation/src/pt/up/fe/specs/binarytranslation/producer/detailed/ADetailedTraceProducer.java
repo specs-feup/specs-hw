@@ -6,7 +6,6 @@ import java.util.function.BiFunction;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.producer.AInstructionProducer;
 import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBFilter;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBNullFilter;
