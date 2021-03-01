@@ -5,8 +5,6 @@ import pt.up.fe.specs.util.utilities.LineStream;
 
 public class GDBRegisterFilter extends GDBFilter {
     private RegisterDump dump = new RegisterDump();
-    private String pattern = "^\\D{0,2}\\d{1,2}$";
-
     public GDBRegisterFilter(LineStream lines) {
         super(lines);
     }
@@ -17,7 +15,7 @@ public class GDBRegisterFilter extends GDBFilter {
 
         while (((line = lines.peekNextLine()) != null)) {
             // System.out.println("RegFilter processing line: " + line);
-            if (line.startsWith("mucounteren") || line.startsWith("rmsr")) {
+            if (line.startsWith("mucounteren") || line.startsWith("shr")) {
                 lines.nextLine();
                 break;
             } else {
