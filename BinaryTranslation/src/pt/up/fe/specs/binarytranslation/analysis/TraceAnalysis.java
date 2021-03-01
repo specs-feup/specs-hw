@@ -10,9 +10,13 @@ public class TraceAnalysis {
         this.provider = provider;
     }
 
-    public boolean analyze() {
+    public boolean generateMemoryProfile() {
         MemoryProfiler mem = new MemoryProfiler(this.provider);
         mem.profile();
+        return true;
+    }
+    
+    public boolean basicBlockInOuts(boolean traceAware) {
         return true;
     }
 }
