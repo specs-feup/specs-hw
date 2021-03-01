@@ -26,20 +26,27 @@ public class MemoryProfiler {
         this.provider = provider;
     }
 
-    public void profile() {
+    public boolean profile() {
         Instruction inst = provider.nextInstruction();
-
+        if (inst == null)
+            return false;
+        int heartbeat = 0;
+        
         while (inst != null) {
             if (!Collections.disjoint(inst.getData().getGenericTypes(), loadstores)) {
                 queue.add(inst);
             }
             inst = provider.nextInstruction();
+            if (heartbeat % 1000 == 0)
+                System.out.println("Still alive (inst=" + heartbeat + ")");
+            heartbeat++;
         }
         printResolvedTrace(true);
 
         var table = buildHistogram();
 
         printHistogram(table, false);
+        return true;
     }
 
     private void printHistogram(HashMap<Long, Integer[]> table, boolean decimal) {
