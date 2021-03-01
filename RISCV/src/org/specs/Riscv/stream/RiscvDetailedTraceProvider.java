@@ -1,4 +1,4 @@
-package org.specs.Riscv.stream.detailed;
+package org.specs.Riscv.stream;
 
 import java.io.File;
 import org.specs.Riscv.RiscvApplication;
