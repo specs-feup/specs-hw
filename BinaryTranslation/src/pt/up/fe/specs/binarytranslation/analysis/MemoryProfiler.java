@@ -72,7 +72,7 @@ public class MemoryProfiler {
         Queue<Instruction> newq = new LinkedList<>();
         Instruction inst = queue.poll();
         while (inst != null) {
-            printInstructionWithRegisters(inst, decimal);
+            AnalysisUtils.printInstructionWithRegisters(inst, decimal);
             newq.add(inst);
             inst = queue.poll();
         }
@@ -98,28 +98,6 @@ public class MemoryProfiler {
         }
         return table;
 
-    }
-
-    private void printInstructionWithRegisters(Instruction inst, boolean decimal) {
-        StringBuilder sb = new StringBuilder();
-        String space = "  ";
-
-        sb.append(String.format("%-4s", inst.getName())).append(space);
-
-        for (Operand op : inst.getData().getOperands()) {
-            if (op.isRegister()) {
-                String reg = op.getProperties().getPrefix() + op.getStringValue();
-                Long val = inst.getRegisters().getValue(reg);
-                String strVal = val == null ? "??" : (decimal ? String.valueOf(val) : String.format("0x%08X", val));
-                sb.append(String.format("%-16s", reg + "{" + strVal + "}")).append(space);
-            }
-            if (op.isImmediate()) {
-                long imm = Long.parseLong(op.getStringValue(), 16);
-                String strImm = decimal ? String.valueOf(imm) : String.format("0x%08X", imm);
-                sb.append(String.format("%-10s", strImm)).append(space);
-            }
-        }
-        System.out.println(sb.toString());
     }
 
     /**

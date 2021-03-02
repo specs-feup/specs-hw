@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.analysis;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.detection.segments.TraceBasicBlock;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class BasicBlockAnalyser {
@@ -24,6 +25,7 @@ public class BasicBlockAnalyser {
     }
 
     private void processSegment(BinarySegment seg) {
-        seg.printSegment();
+        TraceBasicBlock bb = (TraceBasicBlock) seg;
+        AnalysisUtils.printSegmentWithRegisters(bb);
     }
 }
