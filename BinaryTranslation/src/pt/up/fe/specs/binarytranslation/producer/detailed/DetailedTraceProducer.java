@@ -13,8 +13,8 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public abstract class ADetailedTraceProducer extends TraceInstructionProducer {
-    protected ADetailedTraceProducer(Application app, ResourceProvider regex,
+public class DetailedTraceProducer extends TraceInstructionProducer {
+    protected DetailedTraceProducer(Application app, ResourceProvider regex,
             BiFunction<String, String, Instruction> produceMethod) {
         super(app, regex, produceMethod);
         // TODO Auto-generated constructor stub
