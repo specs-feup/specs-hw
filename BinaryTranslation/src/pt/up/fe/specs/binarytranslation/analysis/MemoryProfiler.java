@@ -16,6 +16,7 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 public class MemoryProfiler {
 
     private ATraceInstructionStream stream;
+    private DetailedRegisterInstructionProducer prod;
     private Queue<Instruction> queue = new LinkedList<>();
     private ArrayList<InstructionType> loadstores = new ArrayList<>();
     {
@@ -26,21 +27,25 @@ public class MemoryProfiler {
     public MemoryProfiler(ATraceInstructionStream stream) {
         this.stream = stream;
     }
+    
+    public MemoryProfiler(DetailedRegisterInstructionProducer prod) {
+        this.prod = prod;
+    }
 
-    public boolean profile() {
+    public boolean profileWithStream() {
         Instruction inst = stream.nextInstruction();
         if (inst == null)
             return false;
-        int heartbeat = 0;
         
         while (inst != null) {
             if (!Collections.disjoint(inst.getData().getGenericTypes(), loadstores)) {
                 queue.add(inst);
             }
             inst = stream.nextInstruction();
-            if (heartbeat % 1000 == 0)
-                System.out.println("Still alive (inst=" + heartbeat + ")");
-            heartbeat++;
+//            if (inst != null) {
+//                if (inst.getRegisters().isEmpty())
+//                    inst = stream.nextInstruction();
+//            }
         }
         printResolvedTrace(true);
 
@@ -50,6 +55,25 @@ public class MemoryProfiler {
         return true;
     }
 
+    public boolean profileWithProducer() {
+        Instruction inst = prod.nextInstruction();
+        if (inst == null)
+            return false;
+        
+        while (inst != null) {
+            if (!Collections.disjoint(inst.getData().getGenericTypes(), loadstores)) {
+                queue.add(inst);
+            }
+            inst = prod.nextInstruction();
+        }
+        printResolvedTrace(true);
+
+        var table = buildHistogram();
+
+        printHistogram(table, false);
+        return true;
+    }
+    
     private void printHistogram(HashMap<Long, Integer[]> table, boolean decimal) {
         List<Long> sortedAddr = new ArrayList<Long>(table.keySet());
         Collections.sort(sortedAddr);
