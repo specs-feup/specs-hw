@@ -15,7 +15,5 @@ public class RiscvTraceAnalysisTest {
     public void testRiscVAnalysis() {
         var fd = BinaryTranslationUtils.getFile(RiscvLivermoreELFN100iam.innerprod100);
         var dip = new RiscvDetailedTraceProvider(fd);
-        var ta = new TraceAnalysis(dip);
-        assertTrue(ta.generateMemoryProfile());
     }
 }
