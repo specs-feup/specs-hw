@@ -11,10 +11,11 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.producer.detailed.DetailedRegisterInstructionProducer;
+import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class MemoryProfiler {
 
-    private DetailedRegisterInstructionProducer provider;
+    private ATraceInstructionStream stream;
     private Queue<Instruction> queue = new LinkedList<>();
     private ArrayList<InstructionType> loadstores = new ArrayList<>();
     {
@@ -22,12 +23,12 @@ public class MemoryProfiler {
         loadstores.add(InstructionType.G_STORE);
     }
 
-    public MemoryProfiler(DetailedRegisterInstructionProducer provider) {
-        this.provider = provider;
+    public MemoryProfiler(ATraceInstructionStream stream) {
+        this.stream = stream;
     }
 
     public boolean profile() {
-        Instruction inst = provider.nextInstruction();
+        Instruction inst = stream.nextInstruction();
         if (inst == null)
             return false;
         int heartbeat = 0;
@@ -36,7 +37,7 @@ public class MemoryProfiler {
             if (!Collections.disjoint(inst.getData().getGenericTypes(), loadstores)) {
                 queue.add(inst);
             }
-            inst = provider.nextInstruction();
+            inst = stream.nextInstruction();
             if (heartbeat % 1000 == 0)
                 System.out.println("Still alive (inst=" + heartbeat + ")");
             heartbeat++;
