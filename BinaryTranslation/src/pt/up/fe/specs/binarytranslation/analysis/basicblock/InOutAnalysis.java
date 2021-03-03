@@ -1,17 +1,16 @@
-package pt.up.fe.specs.binarytranslation.analysis;
+package pt.up.fe.specs.binarytranslation.analysis.basicblock;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.detection.segments.TraceBasicBlock;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class BasicBlockAnalyser {
+public class InOutAnalysis {
     
     private ATraceInstructionStream stream;
     private TraceBasicBlockDetector det;
 
-    public BasicBlockAnalyser(ATraceInstructionStream stream) {
+    public InOutAnalysis(ATraceInstructionStream stream) {
         this.stream = stream;
         this.det = new TraceBasicBlockDetector();
     }
@@ -25,7 +24,7 @@ public class BasicBlockAnalyser {
     }
 
     private void processSegment(BinarySegment seg) {
-        TraceBasicBlock bb = (TraceBasicBlock) seg;
-        AnalysisUtils.printSegmentWithRegisters(bb);
+        var bbio = new BasicBlockInOuts(seg.getInstructions());
+        bbio.calculateInOuts();
     }
 }
