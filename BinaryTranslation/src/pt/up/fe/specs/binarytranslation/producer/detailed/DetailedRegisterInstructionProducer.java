@@ -8,7 +8,9 @@ import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBFilter;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBRegisterFilter;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
-public class DetailedRegisterInstructionProducer extends ADetailedTraceProducer {
+public class DetailedRegisterInstructionProducer extends DetailedTraceProducer {
+    protected int count = 0;
+    protected boolean showStillAlive = true;
 
     protected DetailedRegisterInstructionProducer(Application app, ResourceProvider regex,
             BiFunction<String, String, Instruction> produceMethod) {
@@ -27,9 +29,20 @@ public class DetailedRegisterInstructionProducer extends ADetailedTraceProducer 
     @Override
     public Instruction nextInstruction() {
         RegisterDump reg = nextRegister();
+        
         Instruction inst = super.nextInstruction();
-        if (inst != null)
+        if (inst != null) {
             inst.setRegisters(reg);
+            if (showStillAlive) {
+                count++;
+                if (count % 1000 == 0)
+                    System.out.println("Producer still alive (inst=" + count + ")");
+            }
+        }
         return inst;
+    }
+    
+    public void setDisplayStillAlive(boolean display) {
+        this.showStillAlive = display;
     }
 }
