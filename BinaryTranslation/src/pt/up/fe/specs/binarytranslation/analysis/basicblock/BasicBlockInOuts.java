@@ -1,9 +1,8 @@
 package pt.up.fe.specs.binarytranslation.analysis.basicblock;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,9 +20,12 @@ public class BasicBlockInOuts {
 
     public void calculateInOuts() {
         System.out.println("use/def registers: " + regs.toString());
+        HashMap<Instruction, InstructionSets> instSets = new HashMap<>();
         
         for (Instruction i : insts) {
-            i.printInstruction();
+            InstructionSets sets = new InstructionSets(i, regs);
+            instSets.put(i, sets);
+            //fill def and use
         }
     }
 
@@ -41,13 +43,5 @@ public class BasicBlockInOuts {
         var newList = lst.stream().distinct().collect(Collectors.toCollection(ArrayList::new));
         Collections.sort(newList);
         return newList;
-    }
-
-    private void setRegister(String reg, BitSet bitset, boolean set) {
-        int bit = regs.indexOf(reg);
-        if (set)
-            bitset.set(bit);
-        else
-            bitset.clear(bit);
     }
 }
