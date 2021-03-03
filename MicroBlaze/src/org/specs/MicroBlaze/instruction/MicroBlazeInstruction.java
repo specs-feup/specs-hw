@@ -27,6 +27,7 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 public class MicroBlazeInstruction extends AInstruction {
 
@@ -131,7 +132,10 @@ public class MicroBlazeInstruction extends AInstruction {
         String copyinst = new String(this.getInstruction());
         MicroBlazeInstructionData copyData = this.getData().copy();
         MicroBlazeAsmFieldData copyFieldData = this.getFieldData().copy();
-        return new MicroBlazeInstruction(copyaddr, copyinst, copyData, copyFieldData, this.getProperties());
+        RegisterDump copyDump = this.getRegisters().copy();
+        var cpy = new MicroBlazeInstruction(copyaddr, copyinst, copyData, copyFieldData, this.getProperties());
+        cpy.setRegisters(copyDump);
+        return cpy;
     }
 
     @Override

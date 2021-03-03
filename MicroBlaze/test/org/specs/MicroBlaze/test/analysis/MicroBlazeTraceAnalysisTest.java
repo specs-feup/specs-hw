@@ -30,16 +30,23 @@ public class MicroBlazeTraceAnalysisTest {
     }
 
     @Test
-    public void testMemoryProfiler() {
-        var prod = getStream(MicroBlazeLivermoreELFN10.innerprod);
+    public void testMemoryProfilerStream() {
+        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod);
+        var mem = new MemoryProfiler(stream);
+        assertTrue(mem.profileWithStream());
+    }
+    
+    @Test
+    public void testMemoryProfilerProducer() {
+        var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
+        var prod = new MicroBlazeDetailedTraceProvider(fd);
         var mem = new MemoryProfiler(prod);
-        assertTrue(mem.profile());
+        assertTrue(mem.profileWithProducer());
     }
 
     @Test
     public void testDetailedStream() {
         var stream = getStream(MicroBlazeLivermoreELFN10.innerprod);
-        int heartbeat = 0;
         
         System.out.println("Testing detailed stream");
         Instruction inst = stream.nextInstruction();
@@ -51,9 +58,6 @@ public class MicroBlazeTraceAnalysisTest {
                 regNo++;
             else
                 regYes++;
-            heartbeat++;
-            if (heartbeat % 1000 == 0)
-                System.out.println("Still alive (inst=" + heartbeat + ")");
             inst = stream.nextInstruction();
         }
         System.out.println("End");
