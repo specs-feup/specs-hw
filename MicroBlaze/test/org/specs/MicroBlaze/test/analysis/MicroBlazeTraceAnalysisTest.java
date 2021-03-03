@@ -1,6 +1,5 @@
 package org.specs.MicroBlaze.test.analysis;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedOutputStream;
@@ -23,25 +22,24 @@ import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class MicroBlazeTraceAnalysisTest {
 
-    private MicroBlazeDetailedTraceProvider getProvider(ELFProvider file) {
+    private MicroBlazeTraceStream getStream(ELFProvider file) {
         var fd = BinaryTranslationUtils.getFile(file);
         var prod = new MicroBlazeDetailedTraceProvider(fd);
-        return prod;
+        var stream = new MicroBlazeTraceStream(prod);
+        return stream;
     }
 
     @Test
     public void testMemoryProfiler() {
-        var prod = getProvider(MicroBlazeLivermoreELFN10.innerprod);
+        var prod = getStream(MicroBlazeLivermoreELFN10.innerprod);
         var mem = new MemoryProfiler(prod);
         assertTrue(mem.profile());
     }
 
     @Test
     public void testDetailedStream() {
-        var prod = getProvider(MicroBlazeLivermoreELFN10.innerprod);
-        var stream = new MicroBlazeTraceStream(prod);
+        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod);
         int heartbeat = 0;
-        //stream.rawDump();
         
         System.out.println("Testing detailed stream");
         Instruction inst = stream.nextInstruction();
@@ -66,7 +64,8 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testInstPerSecondNoRegisters() {
         System.out.println("--- Without registers ---");
-        var prod1 = new MicroBlazeTraceProvider(BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod));
+        var fd1 = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
+        var prod1 = new MicroBlazeTraceProvider(fd1);
         var perf1 = new BtfPerformance(prod1);
         perf1.calcInstructionsPerSecond();
     }
@@ -74,15 +73,15 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testInstPerSecondWithRegisters() {
         System.out.println("--- With registers ---");
-        var prod2 = getProvider(MicroBlazeLivermoreELFN10.innerprod);
+        var fd2 = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
+        var prod2 = new MicroBlazeDetailedTraceProvider(fd2);
         var perf2 = new BtfPerformance(prod2);
         perf2.calcInstructionsPerSecond();
     }
     
     @Test
     public void testBasicBlockDetection() {
-        var prod = getProvider(MicroBlazeLivermoreELFN10.innerprod);
-        var stream = new MicroBlazeTraceStream(prod);
+        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod);
         
         BasicBlockAnalyser bba = new BasicBlockAnalyser(stream);
         bba.analyse();
@@ -91,8 +90,7 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testDumpTrace() throws FileNotFoundException {
         System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream("dump.txt"))));
-        var prod = getProvider(MicroBlazeLivermoreELFN10.innerprod);
-        var stream = new MicroBlazeTraceStream(prod);
+        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod);
         stream.rawDump();
         stream.close();
     }
