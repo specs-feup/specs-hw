@@ -14,9 +14,9 @@ import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.analysis.BasicBlockAnalyser;
 import pt.up.fe.specs.binarytranslation.analysis.BtfPerformance;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryProfiler;
+import pt.up.fe.specs.binarytranslation.analysis.basicblock.InOutAnalysis;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
@@ -87,7 +87,7 @@ public class MicroBlazeTraceAnalysisTest {
     public void testBasicBlockDetection() {
         var stream = getStream(MicroBlazeLivermoreELFN10.innerprod);
         
-        BasicBlockAnalyser bba = new BasicBlockAnalyser(stream);
+        InOutAnalysis bba = new InOutAnalysis(stream);
         bba.analyse();
     }
     
