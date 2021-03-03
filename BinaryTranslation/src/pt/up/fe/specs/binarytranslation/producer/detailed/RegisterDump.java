@@ -36,4 +36,12 @@ public class RegisterDump {
     public boolean isEmpty() {
         return regs.size() == 0;
     }
+
+    public RegisterDump copy() {
+        RegisterDump copyDump = new RegisterDump();
+        for (String key : regs.keySet()) {
+            copyDump.add(key, regs.get(key));
+        }
+        return copyDump;
+    }
 }
