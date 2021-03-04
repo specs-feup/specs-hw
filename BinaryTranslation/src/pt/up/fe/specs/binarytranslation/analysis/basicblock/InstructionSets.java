@@ -102,4 +102,18 @@ public class InstructionSets {
         }
         return "{" + String.join(",", regsToPrint) + "}";
     }
+    
+    public String getHash() {
+        String hash1 = "";
+        String hash2 = "";
+        String hash3 = "";
+        String hash4 = "";
+        for (int i = 0; i < in.length(); i++) {
+            hash1 += use.get(i) ? "1" : "0";
+            hash2 += def.get(i) ? "1" : "0";
+            hash3 += in.get(i) ? "1" : "0";
+            hash4 += out.get(i) ? "1" : "0";
+        }
+        return hash1 + hash2 + hash3 + hash4;
+    }
 }
