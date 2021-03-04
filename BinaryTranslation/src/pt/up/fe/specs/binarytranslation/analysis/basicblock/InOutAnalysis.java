@@ -24,7 +24,7 @@ public class InOutAnalysis {
     }
 
     private void processSegment(BinarySegment seg) {
-        var bbio = new BasicBlockInOuts(seg.getInstructions());
+        var bbio = new BasicBlockInOuts(seg);
         bbio.calculateInOuts();
     }
 }
