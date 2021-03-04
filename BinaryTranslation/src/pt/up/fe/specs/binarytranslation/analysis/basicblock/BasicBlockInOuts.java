@@ -24,8 +24,31 @@ public class BasicBlockInOuts {
         
         for (Instruction i : insts) {
             InstructionSets sets = new InstructionSets(i, regs);
+            findUseDefs(i, sets);
             instSets.put(i, sets);
-            //fill def and use
+        }
+        
+        printUseDefs(instSets);
+    }
+
+    private void printUseDefs(HashMap<Instruction, InstructionSets> instSets) {
+        for (Instruction i : instSets.keySet()) {
+            InstructionSets sets = instSets.get(i);
+            String str = String.format("%-40s", i.getString() + sets.toString());
+            System.out.println(str);
+        }
+        
+    }
+
+    private void findUseDefs(Instruction i, InstructionSets sets) {
+        for (Operand op : i.getData().getOperands()) {
+            if (op.isRegister()) {
+                String reg = op.getProperties().getPrefix() + op.getStringValue();
+                if (op.isRead())
+                    sets.setUse(reg);
+                if (op.isWrite())
+                    sets.setDef(reg);
+            }
         }
     }
 
