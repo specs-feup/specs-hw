@@ -39,8 +39,21 @@ public class BasicBlockInOuts {
             findUseDefs(i, is);
             sets.add(is);
         }
-        String hash = doIteration(sets);
-        System.out.println(hash);
+        String oldHash = "";
+        boolean changing = true;
+        int iter = 0;
+        
+        while (changing) {
+            String newHash = doIteration(sets);
+            System.out.println("Iter " + iter + ": " + newHash);
+            if (newHash.compareTo(oldHash) == 0)
+                changing = false;
+            else
+                oldHash = newHash;
+            iter++;
+            //FOR DEBUG ONLY!
+            //changing = iter != 10;
+        }
         
         printUseDefs(sets);
     }
