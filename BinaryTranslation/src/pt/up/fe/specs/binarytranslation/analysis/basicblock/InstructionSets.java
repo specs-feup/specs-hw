@@ -88,7 +88,7 @@ public class InstructionSets {
         StringBuilder sb = new StringBuilder();
         sb.append(" use").append(bitsetString(use));
         sb.append(" def").append(bitsetString(def));
-        sb.append(" in").append(bitsetString(in));
+        sb.append("  in").append(bitsetString(in));
         sb.append(" out").append(bitsetString(out));
         return sb.toString();
     }
