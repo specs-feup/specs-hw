@@ -1,6 +1,7 @@
 package pt.up.fe.specs.binarytranslation.analysis.basicblock;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -31,22 +32,44 @@ public class BasicBlockInOuts {
     }
 
     public void calculateInOuts() {
-        LinkedHashMap<Instruction, InstructionSets> instSets = new LinkedHashMap<>();
+        ArrayList<InstructionSets> sets = new ArrayList<>();
         
         for (Instruction i : insts) {
-            InstructionSets sets = new InstructionSets(i, regs);
-            findUseDefs(i, sets);
-            instSets.put(i, sets);
+            InstructionSets is = new InstructionSets(i, regs);
+            findUseDefs(i, is);
+            sets.add(is);
         }
+        doIteration(sets);
         
-        printUseDefs(instSets);
+        printUseDefs(sets);
+    }
+    
+    private void doIteration(ArrayList<InstructionSets> sets) {
+        for (int i = sets.size() - 1; i >= 0; i--) {
+            InstructionSets currSets = sets.get(i);
+            if (i < sets.size() - 1) {
+                InstructionSets succSets = sets.get(i + 1);
+                
+                //out[n] = union of in[s], where s = successor
+                currSets.setOutSet(succSets.getInSet());
+                
+                //in[n] = use[n] union (out[n] - def[n])
+                BitSet def = currSets.getDefSet();
+                BitSet use = currSets.getUseSet();
+                
+                BitSet diff = (BitSet) currSets.getOutSet().clone();
+                diff.andNot(def);
+                diff.or(use);
+                currSets.setInSet(diff);
+            }
+        }
     }
 
-    private void printUseDefs(LinkedHashMap<Instruction, InstructionSets> instSets) {
+    private void printUseDefs(ArrayList<InstructionSets> sets) {
         System.out.println("\nuse/def registers: " + regs.toString());
-        for (Instruction i : instSets.keySet()) {
-            InstructionSets sets = instSets.get(i);
-            String str = String.format("%-40s", i.getString() + sets.toString());
+        for (int i = 0; i < insts.size(); i++) {
+            InstructionSets is = sets.get(i);
+            String str = String.format("%-40s", insts.get(i).getString()) + is.toString();
             System.out.println(str);
         }
         

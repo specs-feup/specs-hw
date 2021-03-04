@@ -50,21 +50,38 @@ public class InstructionSets {
         return inst;
     }
 
-    public BitSet getUse() {
+    public BitSet getUseSet() {
         return use;
     }
 
-    public BitSet getDef() {
+    public BitSet getDefSet() {
         return def;
     }
 
-    public BitSet getIn() {
+    public BitSet getInSet() {
         return in;
     }
 
-    public BitSet getOut() {
+    public BitSet getOutSet() {
         return out;
     }
+    
+    public void setUseSet(BitSet set) {
+        this.use = set;
+    }
+
+    public void setDefSet(BitSet set) {
+        this.def = set;
+    }
+    
+    public void setInSet(BitSet set) {
+        this.in = set;
+    }
+    
+    public void setOutSet(BitSet set) {
+        this.out = set;
+    }
+
     
     @Override
     public String toString() {
