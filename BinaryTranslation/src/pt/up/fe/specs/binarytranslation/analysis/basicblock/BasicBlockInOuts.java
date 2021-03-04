@@ -56,6 +56,25 @@ public class BasicBlockInOuts {
         }
         
         printUseDefs(sets);
+        
+        printResult(sets);
+    }
+    
+    private void printResult(ArrayList<InstructionSets> sets) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Basic Block In/Outs:\n");
+        sb.append("In: ");
+        for (int i = 0; i < sets.get(0).getInSet().length(); i++) {
+            if (sets.get(0).getInSet().get(i))
+                sb.append(regs.get(i) + " ");
+        }
+        sb.append("\nOut: ");
+        for (int i = 0; i < sets.get(sets.size() - 1).getOutSet().length(); i++) {
+            if (sets.get(sets.size() - 1).getOutSet().get(i))
+                sb.append(regs.get(i) + " ");
+        }
+        sb.append("\n");
+        System.out.println(sb.toString());
     }
     
     private String doIteration(ArrayList<InstructionSets> sets) {
