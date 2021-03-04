@@ -39,12 +39,14 @@ public class BasicBlockInOuts {
             findUseDefs(i, is);
             sets.add(is);
         }
-        doIteration(sets);
+        String hash = doIteration(sets);
+        System.out.println(hash);
         
         printUseDefs(sets);
     }
     
-    private void doIteration(ArrayList<InstructionSets> sets) {
+    private String doIteration(ArrayList<InstructionSets> sets) {
+        String hash = "";
         for (int i = sets.size() - 1; i >= 0; i--) {
             InstructionSets currSets = sets.get(i);
             if (i < sets.size() - 1) {
@@ -62,7 +64,9 @@ public class BasicBlockInOuts {
                 diff.or(use);
                 currSets.setInSet(diff);
             }
+            hash += currSets.getHash();
         }
+        return hash;
     }
 
     private void printUseDefs(ArrayList<InstructionSets> sets) {
