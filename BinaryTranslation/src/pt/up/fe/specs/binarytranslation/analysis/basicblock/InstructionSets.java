@@ -65,4 +65,24 @@ public class InstructionSets {
     public BitSet getOut() {
         return out;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" use").append(bitsetString(use));
+        sb.append(" def").append(bitsetString(def));
+        sb.append(" in").append(bitsetString(in));
+        sb.append(" out").append(bitsetString(out));
+        return sb.toString();
+    }
+    
+    private String bitsetString(BitSet bs) {
+        var regsToPrint = new ArrayList<String>();
+        for (int i = 0; i < bs.length(); i++) {
+            if (bs.get(i)) {
+                regsToPrint.add(regs.get(i));
+            }
+        }
+        return "{" + String.join(",", regsToPrint) + "}";
+    }
 }
