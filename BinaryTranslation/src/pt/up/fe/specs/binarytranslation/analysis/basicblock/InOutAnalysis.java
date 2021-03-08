@@ -17,6 +17,11 @@ public class InOutAnalysis {
     
     public void analyse() {
         SegmentBundle bun = det.detectSegments(stream);
+        if (bun.getSegments().size() == 0) {
+            System.out.println("No basic blocks were detected");
+            return;
+        }
+        
         System.out.println(bun.getSummary());
         for (var seg : bun.getSegments()) {
             processSegment(seg);
