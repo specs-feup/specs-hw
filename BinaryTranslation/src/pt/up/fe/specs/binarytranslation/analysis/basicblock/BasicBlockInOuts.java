@@ -61,24 +61,29 @@ public class BasicBlockInOuts {
 
     private void printResult(ArrayList<InstructionSets> sets) {
         StringBuilder sb = new StringBuilder();
+        
         sb.append("Basic Block In/Outs:\n");
         sb.append("In: ");
         for (int i = 0; i < sets.get(0).getInSet().length(); i++) {
             if (sets.get(0).getInSet().get(i))
                 sb.append(regs.get(i) + " ");
         }
+        
         sb.append("\nOut: ");
-        for (int i = 0; i < sets.get(sets.size() - 1).getOutSet().length(); i++) {
-            if (sets.get(sets.size() - 1).getOutSet().get(i))
+        BitSet outs = calculateBBOuts(sets);
+        for (int i = 0; i < outs.length(); i++) {
+            if (outs.get(i))
                 sb.append(regs.get(i) + " ");
         }
+        
         sb.append("\n");
         System.out.println(sb.toString());
     }
 
     private String doIteration(ArrayList<InstructionSets> sets) {
         String hash = "";
-        for (int i = sets.size() - 1; i >= 0; i--) {
+        //for (int i = sets.size() - 1; i >= 0; i--) {
+        for (int i = 0; i < sets.size(); i++) {
             InstructionSets currSets = sets.get(i);
             if (i < sets.size() - 1) {
                 InstructionSets succSets = sets.get(i + 1);
@@ -149,5 +154,14 @@ public class BasicBlockInOuts {
         // Sort array with custom comparator
         Collections.sort(newList, regCompare);
         return newList;
+    }
+    
+    public BitSet calculateBBOuts(ArrayList<InstructionSets> sets) {
+        BitSet outs = new BitSet(regs.size());
+        for (InstructionSets s : sets) {
+            BitSet out = s.getDefSet();
+            outs.or(out);
+        }
+        return outs;
     }
 }
