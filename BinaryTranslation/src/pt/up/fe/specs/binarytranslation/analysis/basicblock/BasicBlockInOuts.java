@@ -138,8 +138,8 @@ public class BasicBlockInOuts {
             }
         }
         Comparator<String> regCompare = (String r1, String r2) -> {
-            r1 = r1.replace("r", "");
-            r2 = r2.replace("r", "");
+            r1 = r1.replaceAll("[^\\d.]", "");
+            r2 = r2.replaceAll("[^\\d.]", "");
             int n1 = Integer.parseInt(r1);
             int n2 = Integer.parseInt(r2);
             return n1 > n2 ? 1 : -1;
