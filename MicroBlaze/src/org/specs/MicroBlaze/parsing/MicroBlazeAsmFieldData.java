@@ -141,8 +141,7 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
 
             // TODO QUICK HACK FOR SUPPORT OF EXCEPTION OF OPERAND TYPE IN LD/ST
 
-            if (props.getGenericType().contains(InstructionType.G_LOAD)
-                    || props.getGenericType().contains(InstructionType.G_STORE))
+            if (props.getGenericType().contains(InstructionType.G_STORE))
                 operands.add(newReadRegister(RD, operandmap.get(RD)));
             else
                 operands.add(newWriteRegister(RD, operandmap.get(RD)));
@@ -163,8 +162,7 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
 
             // TODO QUICK HACK FOR SUPPORT OF EXCEPTION OF OPERAND TYPE IN LD/ST
 
-            if (props.getGenericType().contains(InstructionType.G_LOAD)
-                    || props.getGenericType().contains(InstructionType.G_STORE))
+            if (props.getGenericType().contains(InstructionType.G_STORE))
                 operands.add(newReadRegister(RD, operandmap.get(RD)));
             else
                 operands.add(newWriteRegister(RD, operandmap.get(RD)));
