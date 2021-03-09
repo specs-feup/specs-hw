@@ -1,8 +1,13 @@
-package pt.up.fe.specs.binarytranslation.analysis.basicblock;
+package pt.up.fe.specs.binarytranslation.analysis;
 
+import java.util.List;
+
+import pt.up.fe.specs.binarytranslation.analysis.inouts.ASequenceInOuts;
+import pt.up.fe.specs.binarytranslation.analysis.inouts.BasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.detection.segments.TraceBasicBlock;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class InOutAnalysis {
@@ -15,7 +20,7 @@ public class InOutAnalysis {
         this.det = new TraceBasicBlockDetector();
     }
     
-    public void analyse() {
+    public void analyse(boolean complete) {
         SegmentBundle bun = det.detectSegments(stream);
         if (bun.getSegments().size() == 0) {
             System.out.println("No basic blocks were detected");
@@ -23,13 +28,15 @@ public class InOutAnalysis {
         }
         
         System.out.println(bun.getSummary());
-        for (var seg : bun.getSegments()) {
-            processSegment(seg);
+        List<BinarySegment> bbs = bun.getSegments();
+        
+        if (complete) {
+            
+        } else {
+            for (BinarySegment bb : bbs) {
+                BasicBlockInOuts inouts = new BasicBlockInOuts(bb);
+                inouts.calculateInOuts();
+            }
         }
-    }
-
-    private void processSegment(BinarySegment seg) {
-        var bbio = new BasicBlockInOuts(seg);
-        bbio.calculateInOuts();
     }
 }

@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.basicblock;
+package pt.up.fe.specs.binarytranslation.analysis.inouts;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -7,26 +7,21 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.detection.segments.TraceBasicBlock;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
-public class BasicBlockInOuts {
-    private TraceBasicBlock bb;
-    private List<Instruction> insts;
-    private ArrayList<String> regs;
-    private ArrayList<InstructionType> loadstores = new ArrayList<>();
+public abstract class ASequenceInOuts {
+    protected List<Instruction> insts;
+    protected ArrayList<String> regs;
+    protected ArrayList<InstructionType> loadstores = new ArrayList<>();
     {
         loadstores.add(InstructionType.G_LOAD);
         loadstores.add(InstructionType.G_STORE);
     }
 
-    public BasicBlockInOuts(BinarySegment seg) {
-        seg.printSegment();
-        this.bb = (TraceBasicBlock) seg;
-        this.insts = seg.getInstructions();
+    public ASequenceInOuts(List<Instruction> insts) {
+        this.insts = insts;
         this.regs = findAllRegistersOfSeq(insts);
     }
 
@@ -54,36 +49,16 @@ public class BasicBlockInOuts {
             // changing = iter != 10;
         }
 
-        printUseDefs(sets);
+        printSequenceInOuts(sets);
 
         printResult(sets);
     }
 
-    private void printResult(ArrayList<InstructionSets> sets) {
-        StringBuilder sb = new StringBuilder();
-        
-        sb.append("Basic Block In/Outs:\n");
-        sb.append("In: ");
-        for (int i = 0; i < sets.get(0).getInSet().length(); i++) {
-            if (sets.get(0).getInSet().get(i))
-                sb.append(regs.get(i) + " ");
-        }
-        
-        sb.append("\nOut: ");
-        BitSet outs = calculateBBOuts(sets);
-        for (int i = 0; i < outs.length(); i++) {
-            if (outs.get(i))
-                sb.append(regs.get(i) + " ");
-        }
-        
-        sb.append("\n");
-        System.out.println(sb.toString());
-    }
+    protected abstract void printResult(ArrayList<InstructionSets> sets);
 
-    private String doIteration(ArrayList<InstructionSets> sets) {
+    protected String doIteration(ArrayList<InstructionSets> sets) {
         String hash = "";
-        //for (int i = sets.size() - 1; i >= 0; i--) {
-        for (int i = 0; i < sets.size(); i++) {
+        for (int i = sets.size() - 1; i >= 0; i--) {
             InstructionSets currSets = sets.get(i);
             if (i < sets.size() - 1) {
                 InstructionSets succSets = sets.get(i + 1);
@@ -105,7 +80,7 @@ public class BasicBlockInOuts {
         return hash;
     }
 
-    private void printUseDefs(ArrayList<InstructionSets> sets) {
+    protected void printSequenceInOuts(ArrayList<InstructionSets> sets) {
         System.out.println("\nuse/def registers: " + regs.toString());
         for (int i = 0; i < insts.size(); i++) {
             InstructionSets is = sets.get(i);
@@ -115,7 +90,7 @@ public class BasicBlockInOuts {
 
     }
 
-    private void findUseDefs(Instruction i, InstructionSets sets) {
+    protected void findUseDefs(Instruction i, InstructionSets sets) {
         for (Operand op : i.getData().getOperands()) {
             if (op.isRegister()) {
                 String reg = getRegName(op);
@@ -127,7 +102,7 @@ public class BasicBlockInOuts {
         }
     }
 
-    public static String getRegName(Operand op) {
+    protected static String getRegName(Operand op) {
         return op.getProperties().getPrefix() + op.getStringValue();
     }
 
@@ -154,14 +129,5 @@ public class BasicBlockInOuts {
         // Sort array with custom comparator
         Collections.sort(newList, regCompare);
         return newList;
-    }
-    
-    public BitSet calculateBBOuts(ArrayList<InstructionSets> sets) {
-        BitSet outs = new BitSet(regs.size());
-        for (InstructionSets s : sets) {
-            BitSet out = s.getDefSet();
-            outs.or(out);
-        }
-        return outs;
     }
 }
