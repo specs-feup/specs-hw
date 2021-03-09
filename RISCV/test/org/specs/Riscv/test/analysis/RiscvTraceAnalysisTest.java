@@ -7,7 +7,8 @@ import org.specs.Riscv.RiscvLivermoreELFN100iam;
 import org.specs.Riscv.stream.RiscvDetailedTraceProvider;
 import org.specs.Riscv.stream.RiscvTraceStream;
 
-import pt.up.fe.specs.binarytranslation.analysis.basicblock.InOutAnalysis;
+import pt.up.fe.specs.binarytranslation.analysis.InOutAnalysis;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class RiscvTraceAnalysisTest {
@@ -21,9 +22,15 @@ public class RiscvTraceAnalysisTest {
 
     
     @Test
-    public void testRiscVAnalysis() {
-        var fd = BinaryTranslationUtils.getFile(RiscvLivermoreELFN100iam.innerprod100);
-        var dip = new RiscvDetailedTraceProvider(fd);
+    public void testRiscvDetailedProvider() {
+        var fd = BinaryTranslationUtils.getFile(RiscvGccELF.autocor);
+        var prov = new RiscvDetailedTraceProvider(fd);
+        Instruction i = prov.nextInstruction();
+        while (i != null) {
+            i.printInstruction();
+            i = prov.nextInstruction();
+        }
+        prov.close();
     }
     
     @Test
