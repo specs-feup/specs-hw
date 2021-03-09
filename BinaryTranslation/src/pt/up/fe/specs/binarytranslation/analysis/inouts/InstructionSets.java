@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.basicblock;
+package pt.up.fe.specs.binarytranslation.analysis.inouts;
 
 import java.util.ArrayList;
 import java.util.BitSet;
