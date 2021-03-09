@@ -8,26 +8,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public abstract class ASequenceInOuts {
     protected List<Instruction> insts;
     protected ArrayList<String> regs;
-    protected ArrayList<InstructionType> loadstores = new ArrayList<>();
-    {
-        loadstores.add(InstructionType.G_LOAD);
-        loadstores.add(InstructionType.G_STORE);
-    }
+    protected ArrayList<InstructionSets> sets;
 
     public ASequenceInOuts(List<Instruction> insts) {
         this.insts = insts;
         this.regs = findAllRegistersOfSeq(insts);
+        this.sets = new ArrayList<>();
     }
 
     public void calculateInOuts() {
-        ArrayList<InstructionSets> sets = new ArrayList<>();
-
         for (Instruction i : insts) {
             InstructionSets is = new InstructionSets(i, regs);
             findUseDefs(i, is);
@@ -48,13 +42,9 @@ public abstract class ASequenceInOuts {
             // FOR DEBUG ONLY!
             // changing = iter != 10;
         }
-
-        printSequenceInOuts(sets);
-
-        printResult(sets);
     }
 
-    protected abstract void printResult(ArrayList<InstructionSets> sets);
+    public abstract void printResult();
 
     protected String doIteration(ArrayList<InstructionSets> sets) {
         String hash = "";
@@ -80,7 +70,7 @@ public abstract class ASequenceInOuts {
         return hash;
     }
 
-    protected void printSequenceInOuts(ArrayList<InstructionSets> sets) {
+    public void printSequenceInOuts() {
         System.out.println("\nuse/def registers: " + regs.toString());
         for (int i = 0; i < insts.size(); i++) {
             InstructionSets is = sets.get(i);

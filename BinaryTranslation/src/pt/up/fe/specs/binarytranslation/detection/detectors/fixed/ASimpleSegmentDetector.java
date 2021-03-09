@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,9 +8,12 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
 import pt.up.fe.specs.binarytranslation.detection.trace.InstructionWindow;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 public abstract class ASimpleSegmentDetector extends ASegmentDetector {
+    
+    private List<Instruction> processedInsts = new ArrayList<>();
 
     /*
      * 
@@ -53,8 +57,11 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
         var window = new InstructionWindow(this.getConfig().getMaxsize());
 
         // make 1st window
-        while (!window.isFull())
-            window.add(istream.nextInstruction());
+        while (!window.isFull()) {
+            var inst = istream.nextInstruction();
+            this.processedInsts.add(inst);
+            window.add(inst);
+        }
 
         // process entire stream
         while (true) {
@@ -79,11 +86,16 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
             // shift window by 1
             else {
                 var inst = istream.nextInstruction();
+                this.processedInsts.add(inst);
                 window.add(inst);
             }
         }
 
         // Remove all sequences which only happen once
         super.removeUnique(addrs, hashed);
+    }
+
+    public List<Instruction> getProcessedInsts() {
+        return processedInsts;
     }
 }

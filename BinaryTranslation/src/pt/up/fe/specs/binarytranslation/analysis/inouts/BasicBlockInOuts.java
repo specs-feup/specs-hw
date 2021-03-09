@@ -24,7 +24,7 @@ public class BasicBlockInOuts extends ASequenceInOuts {
     }
 
     @Override
-    protected void printResult(ArrayList<InstructionSets> sets) {
+    public void printResult() {
       StringBuilder sb = new StringBuilder();
       
       sb.append("\nBasic Block In/Outs:\n");
