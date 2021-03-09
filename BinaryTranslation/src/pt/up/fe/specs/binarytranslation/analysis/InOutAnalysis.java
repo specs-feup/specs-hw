@@ -35,11 +35,15 @@ public class InOutAnalysis {
             System.out.println(insts.size() + " instructions detected");
             TraceInOuts inouts = new TraceInOuts(insts, bbs);
             inouts.calculateInOuts();
+            
+            inouts.printUseDefRegisters();
             inouts.printSequenceInOuts();
         } else {
             for (BinarySegment bb : bbs) {
                 BasicBlockInOuts inouts = new BasicBlockInOuts(bb);
                 inouts.calculateInOuts();
+
+                inouts.printUseDefRegisters();
                 inouts.printSequenceInOuts();
                 inouts.printResult();
             }

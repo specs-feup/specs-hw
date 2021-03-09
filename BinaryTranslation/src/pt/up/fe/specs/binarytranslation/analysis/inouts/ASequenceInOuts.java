@@ -33,7 +33,6 @@ public abstract class ASequenceInOuts {
 
         while (changing) {
             String newHash = doIteration(sets);
-            System.out.println("Iter " + iter + ": " + newHash);
             if (newHash.compareTo(oldHash) == 0)
                 changing = false;
             else
@@ -71,15 +70,21 @@ public abstract class ASequenceInOuts {
     }
 
     public void printSequenceInOuts() {
-        System.out.println("\nuse/def registers: " + regs.toString());
         for (int i = 0; i < insts.size(); i++) {
-            InstructionSets is = sets.get(i);
-            String str = String.format("%-40s", insts.get(i).getString()) + is.toString();
-            System.out.println(str);
+            printInstWithSets(i);
         }
-
     }
 
+    protected void printInstWithSets(int i) {
+        InstructionSets is = sets.get(i);
+        String str = String.format("%-40s", insts.get(i).getString()) + is.toString();
+        System.out.println(str);
+    }
+    
+    public void printUseDefRegisters() {
+        System.out.println("\nuse/def registers: " + regs.toString());
+    }
+    
     protected void findUseDefs(Instruction i, InstructionSets sets) {
         for (Operand op : i.getData().getOperands()) {
             if (op.isRegister()) {
