@@ -6,15 +6,13 @@ import java.util.BitSet;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class InstructionSets {
-    private Instruction inst;
     private ArrayList<String> regs;
     private BitSet use;
     private BitSet def;
     private BitSet in;
     private BitSet out;
 
-    public InstructionSets(Instruction inst, ArrayList<String> regs) {
-        this.inst = inst;
+    public InstructionSets(ArrayList<String> regs) {
         this.regs = regs;
         this.use = new BitSet(regs.size());
         this.def = new BitSet(regs.size());
@@ -46,9 +44,6 @@ public class InstructionSets {
             bitset.clear(bit);
     }
 
-    public Instruction getInst() {
-        return inst;
-    }
 
     public BitSet getUseSet() {
         return use;

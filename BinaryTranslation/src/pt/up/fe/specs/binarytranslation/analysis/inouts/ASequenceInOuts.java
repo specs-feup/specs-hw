@@ -23,7 +23,7 @@ public abstract class ASequenceInOuts {
 
     public void calculateInOuts() {
         for (Instruction i : insts) {
-            InstructionSets is = new InstructionSets(i, regs);
+            InstructionSets is = new InstructionSets(regs);
             findUseDefs(i, is);
             sets.add(is);
         }
@@ -38,8 +38,6 @@ public abstract class ASequenceInOuts {
             else
                 oldHash = newHash;
             iter++;
-            // FOR DEBUG ONLY!
-            // changing = iter != 10;
         }
     }
 
