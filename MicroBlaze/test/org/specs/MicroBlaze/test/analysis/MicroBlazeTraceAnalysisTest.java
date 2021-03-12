@@ -16,6 +16,7 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.analysis.BtfPerformance;
 import pt.up.fe.specs.binarytranslation.analysis.InOutAnalysis;
+import pt.up.fe.specs.binarytranslation.analysis.InOutMode;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryProfiler;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
@@ -99,7 +100,7 @@ public class MicroBlazeTraceAnalysisTest {
         var stream = getStream(elf);
         
         InOutAnalysis bba = new InOutAnalysis(stream);
-        bba.analyse(false);
+        bba.analyse(InOutMode.BASIC_BLOCK);
     }
     
     @Test
@@ -108,7 +109,26 @@ public class MicroBlazeTraceAnalysisTest {
         var stream = getStream(elf);
         
         InOutAnalysis bba = new InOutAnalysis(stream);
-        bba.analyse(true);
+        bba.analyse(InOutMode.TRACE);
+    }
+    
+    @Test
+    public void testSimpleBasicBlockInOuts() {
+        // No basic blocks detected with these!
+        //var elf = MicroBlazeGccOptimizationLevels.autocor2;
+        //var elf = MicroBlazeGccOptimizationLevels.dotprod2;
+        //var elf = MicroBlazeLivermoreELFN10.matmul;
+        //var elf = MicroBlazeLivermoreELFN10.hydro;
+        //var elf = MicroBlazeLivermoreELFN10.diffpredict;
+        //var elf = MicroBlazeLivermoreELFN10.tri_diag;
+        //var elf = MicroBlazeLivermoreELFN10.pic2d;
+        
+        var elf = MicroBlazeLivermoreELFN10.innerprod;
+        //var elf = MicroBlazeLivermoreELFN10.linrec;
+        var stream = getStream(elf);
+        
+        InOutAnalysis bba = new InOutAnalysis(stream);
+        bba.analyse(InOutMode.SIMPLE_BASIC_BLOCK);
     }
     
     @Test
