@@ -12,8 +12,8 @@ public class SimpleBasicBlockInOuts extends ASequenceInOuts {
     private BinarySegment basicBlock;
     private InstructionSets inouts;
 
-    public SimpleBasicBlockInOuts(List<Instruction> insts, BinarySegment seg) {
-        super(insts);
+    public SimpleBasicBlockInOuts(BinarySegment seg) {
+        super(seg.getInstructions());
         this.basicBlock = seg;
     }
     
@@ -37,8 +37,8 @@ public class SimpleBasicBlockInOuts extends ASequenceInOuts {
             in.andNot(usedef.getDefSet());
             in.or(usedef.getUseSet());
         }
-        
-        printResult();
+        inouts.setOutSet(out);
+        inouts.setInSet(in);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SimpleBasicBlockInOuts extends ASequenceInOuts {
             if (out.get(i))
                 sb.append(regs.get(i) + " ");
         }
-
+        System.out.println(sb.toString());
     }
 
 }
