@@ -42,6 +42,10 @@ public enum MicroBlazeLivermoreELFN10 implements ELFProvider {
     public String asTxtDump() {
         return this.fullPath.replace(".elf", ".txt");
     }
+    
+    public String asTraceTxtDump() {
+        return this.fullPath.replace(".elf", "_trace.txt");
+    }
 
     public Number getKernelStart() {
         return kernelStart;
