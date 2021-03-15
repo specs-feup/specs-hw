@@ -8,6 +8,8 @@ public interface ELFProvider extends ResourceProvider {
     public String getResource();
 
     public String asTxtDump();
+    
+    public String asTraceTxtDump();
 
     public Number getKernelStart();
 
