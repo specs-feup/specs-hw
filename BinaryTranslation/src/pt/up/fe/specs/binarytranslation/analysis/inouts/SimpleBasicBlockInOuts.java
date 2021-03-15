@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
@@ -25,17 +26,22 @@ public class SimpleBasicBlockInOuts extends ASequenceInOuts {
         InstructionSets usedef = new InstructionSets(regs);
         findUseDefs(last, usedef);
         
-        BitSet out = usedef.getDefSet();
-        BitSet in = usedef.getUseSet();
+        BitSet use = usedef.getUseSet();
+        BitSet def = usedef.getDefSet();
+        BitSet out = def;
+        BitSet in = use;
+        System.out.println(AnalysisUtils.printSet(in, regs) + "  " + AnalysisUtils.printSet(out, regs));
         
         for (int i = insts.size() - 2; i >= 0; i--) {
             Instruction inst = insts.get(i);
-            findUseDefs(inst, usedef);
+            InstructionSets tmp = new InstructionSets(regs);
+            findUseDefs(inst, tmp);
             
-            out.or(usedef.getDefSet());
+            out.or(tmp.getDefSet());
             
-            in.andNot(usedef.getDefSet());
-            in.or(usedef.getUseSet());
+            in.andNot(tmp.getDefSet());
+            in.or(tmp.getUseSet());
+            System.out.println(AnalysisUtils.printSet(in, regs) + "  " + AnalysisUtils.printSet(out, regs));
         }
         inouts.setOutSet(out);
         inouts.setInSet(in);
@@ -46,6 +52,10 @@ public class SimpleBasicBlockInOuts extends ASequenceInOuts {
         StringBuilder sb = new StringBuilder();
         BitSet in = inouts.getInSet();
         BitSet out = inouts.getOutSet();
+        
+        for (Instruction i : basicBlock.getInstructions()) {
+            sb.append(i.getString()).append("\n");
+        }
         
         sb.append("\nBasic Block In/Outs:\n");
         sb.append("In: ");
