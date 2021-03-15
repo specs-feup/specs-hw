@@ -50,4 +50,9 @@ public enum ArmLivermoreELFN100 implements ELFProvider {
         return this.fullPath;
     }
 
+    @Override
+    public String asTraceTxtDump() {
+        return this.fullPath.replace(".elf", "_trace.txt");
+    }
+
 }
