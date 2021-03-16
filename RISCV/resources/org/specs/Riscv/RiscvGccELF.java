@@ -35,4 +35,9 @@ public enum RiscvGccELF implements ELFProvider {
     public String getResource() {
         return this.fullPath;
     }
+
+    @Override
+    public String asTraceTxtDump() {
+        return this.fullPath.replace(".elf", "_trace.txt");
+    }
 }

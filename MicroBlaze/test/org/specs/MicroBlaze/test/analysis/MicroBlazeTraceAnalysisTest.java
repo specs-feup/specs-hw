@@ -3,6 +3,7 @@ package org.specs.MicroBlaze.test.analysis;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -20,11 +21,17 @@ import pt.up.fe.specs.binarytranslation.analysis.InOutMode;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryProfiler;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeTraceAnalysisTest {
 
-    private MicroBlazeTraceStream getStream(ELFProvider file) {
-        var fd = BinaryTranslationUtils.getFile(file);
+    private MicroBlazeTraceStream getStream(ELFProvider file, boolean generate) {
+        String f = file.getResource();
+        if (!generate) {
+            f = ((MicroBlazeLivermoreELFN10) file).asTraceTxtDump();
+        }
+        File fd = SpecsIo.resourceCopy(f);
+        fd.deleteOnExit();
         var prod = new MicroBlazeDetailedTraceProvider(fd);
         var stream = new MicroBlazeTraceStream(prod);
         return stream;
@@ -32,11 +39,11 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testMemoryProfilerStream() {
-        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod);
+        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod, false);
         var mem = new MemoryProfiler(stream);
         assertTrue(mem.profileWithStream());
     }
-    
+
     @Test
     public void testMemoryProfilerProducer() {
         var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
@@ -47,13 +54,13 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testDetailedStream() {
-        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod);
-        
+        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod, false);
+
         System.out.println("Testing detailed stream");
         Instruction inst = stream.nextInstruction();
         int regYes = 0;
         int regNo = 0;
-        
+
         while (inst != null) {
             if (inst.getRegisters().isEmpty())
                 regNo++;
@@ -83,58 +90,71 @@ public class MicroBlazeTraceAnalysisTest {
         var perf2 = new BtfPerformance(prod2);
         perf2.calcInstructionsPerSecond();
     }
-    
+
     @Test
     public void testBasicBlockInOuts() {
         // No basic blocks detected with these!
-        //var elf = MicroBlazeGccOptimizationLevels.autocor2;
-        //var elf = MicroBlazeGccOptimizationLevels.dotprod2;
-        //var elf = MicroBlazeLivermoreELFN10.matmul;
-        //var elf = MicroBlazeLivermoreELFN10.hydro;
-        //var elf = MicroBlazeLivermoreELFN10.diffpredict;
-        //var elf = MicroBlazeLivermoreELFN10.tri_diag;
-        //var elf = MicroBlazeLivermoreELFN10.pic2d;
-        
+        // var elf = MicroBlazeGccOptimizationLevels.autocor2;
+        // var elf = MicroBlazeGccOptimizationLevels.dotprod2;
+        // var elf = MicroBlazeLivermoreELFN10.matmul;
+        // var elf = MicroBlazeLivermoreELFN10.hydro;
+        // var elf = MicroBlazeLivermoreELFN10.diffpredict;
+        // var elf = MicroBlazeLivermoreELFN10.tri_diag;
+        // var elf = MicroBlazeLivermoreELFN10.pic2d;
+
         var elf = MicroBlazeLivermoreELFN10.innerprod;
-        //var elf = MicroBlazeLivermoreELFN10.linrec;
-        var stream = getStream(elf);
-        
+        // var elf = MicroBlazeLivermoreELFN10.linrec;
+        var stream = getStream(elf, false);
+
         InOutAnalysis bba = new InOutAnalysis(stream);
         bba.analyse(InOutMode.BASIC_BLOCK);
     }
-    
+
     @Test
     public void testTraceInOuts() {
-        var elf = MicroBlazeLivermoreELFN10.innerprod;
-        var stream = getStream(elf);
-        
+        //var elf = MicroBlazeLivermoreELFN10.innerprod;
+        var elf = MicroBlazeLivermoreELFN10.linrec;
+        var stream = getStream(elf, false);
+
         InOutAnalysis bba = new InOutAnalysis(stream);
         bba.analyse(InOutMode.TRACE);
     }
-    
+
     @Test
     public void testSimpleBasicBlockInOuts() {
         // No basic blocks detected with these!
-        //var elf = MicroBlazeGccOptimizationLevels.autocor2;
-        //var elf = MicroBlazeGccOptimizationLevels.dotprod2;
-        //var elf = MicroBlazeLivermoreELFN10.matmul;
-        //var elf = MicroBlazeLivermoreELFN10.hydro;
-        //var elf = MicroBlazeLivermoreELFN10.diffpredict;
-        //var elf = MicroBlazeLivermoreELFN10.tri_diag;
-        //var elf = MicroBlazeLivermoreELFN10.pic2d;
-        
-        var elf = MicroBlazeLivermoreELFN10.innerprod;
-        //var elf = MicroBlazeLivermoreELFN10.linrec;
-        var stream = getStream(elf);
-        
+        // var elf = MicroBlazeGccOptimizationLevels.autocor2;
+        // var elf = MicroBlazeGccOptimizationLevels.dotprod2;
+        // var elf = MicroBlazeLivermoreELFN10.matmul;
+        // var elf = MicroBlazeLivermoreELFN10.hydro;
+        // var elf = MicroBlazeLivermoreELFN10.diffpredict;
+        // var elf = MicroBlazeLivermoreELFN10.tri_diag;
+        // var elf = MicroBlazeLivermoreELFN10.pic2d;
+
+        //var elf = MicroBlazeLivermoreELFN10.innerprod;
+        var elf = MicroBlazeLivermoreELFN10.linrec;
+        var stream = getStream(elf, false);
+
         InOutAnalysis bba = new InOutAnalysis(stream);
         bba.analyse(InOutMode.SIMPLE_BASIC_BLOCK);
     }
-    
+
     @Test
     public void testDumpTrace() throws FileNotFoundException {
-        System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream("dump.txt"))));
-        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod);
+        // var elf = MicroBlazeGccOptimizationLevels.autocor2;
+        // var elf = MicroBlazeGccOptimizationLevels.dotprod2;
+        // var elf = MicroBlazeLivermoreELFN10.matmul;
+        // var elf = MicroBlazeLivermoreELFN10.hydro;
+        var elf = MicroBlazeLivermoreELFN10.diffpredict;
+        // var elf = MicroBlazeLivermoreELFN10.tri_diag;
+        //var elf = MicroBlazeLivermoreELFN10.pic2d;
+
+        //var elf = MicroBlazeLivermoreELFN10.innerprod;
+        //var elf = MicroBlazeLivermoreELFN10.linrec;
+        
+        var f = ((MicroBlazeLivermoreELFN10) elf).asTraceTxtDump();
+        System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream(f))));
+        var stream = getStream(elf, true);
         stream.rawDump();
         stream.close();
     }

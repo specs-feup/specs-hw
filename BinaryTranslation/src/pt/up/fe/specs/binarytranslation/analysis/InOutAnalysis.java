@@ -52,9 +52,10 @@ public class InOutAnalysis {
         }
         if (mode == InOutMode.SIMPLE_BASIC_BLOCK) {
             for (BinarySegment bb : bbs) {
-                List<Instruction> insts = det.getProcessedInsts();
-                SimpleBasicBlockInOuts inouts = new SimpleBasicBlockInOuts(insts, bb);
+                SimpleBasicBlockInOuts inouts = new SimpleBasicBlockInOuts(bb);
                 inouts.calculateInOuts();
+                inouts.printResult();
+                
             }
         }
     }

@@ -52,4 +52,9 @@ public enum MicroBlazeGccOptimizationLevels implements ELFProvider {
         return this.kernelStop;
     }
 
+    @Override
+    public String asTraceTxtDump() {
+        return this.fullPath.replace(".elf", "_trace.txt");
+    }
+
 }
