@@ -58,5 +58,14 @@ public class InOutAnalysis {
                 
             }
         }
+        if (mode == InOutMode.ELIMINATION) {
+            for (BinarySegment bb : bbs) {
+                System.out.println("Running elimination analysis for detected Basic Block");
+                bb.printSegment();
+                System.out.println("");
+                var elim = new InOutElimination(bb, det.getProcessedInsts());
+                elim.eliminate(15);
+            }
+        }
     }
 }
