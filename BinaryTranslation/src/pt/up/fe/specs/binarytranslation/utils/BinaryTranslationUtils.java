@@ -29,6 +29,13 @@ public class BinaryTranslationUtils {
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 
     // file
+    public static File getFile(String path) {
+        File fd = SpecsIo.resourceCopy(path);
+        fd.deleteOnExit();
+        return fd;
+    }
+
+    // file
     public static File getFile(ELFProvider elf) {
         // File fd = SpecsIo.resourceCopy(elf.asTxtDump()); // NOTE: useful for runs at home
         File fd = SpecsIo.resourceCopy(elf.getResource());
