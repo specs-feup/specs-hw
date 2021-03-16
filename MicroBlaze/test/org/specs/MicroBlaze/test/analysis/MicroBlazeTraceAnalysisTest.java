@@ -131,23 +131,55 @@ public class MicroBlazeTraceAnalysisTest {
         // var elf = MicroBlazeLivermoreELFN10.tri_diag;
         // var elf = MicroBlazeLivermoreELFN10.pic2d;
 
-        //var elf = MicroBlazeLivermoreELFN10.innerprod;
-        var elf = MicroBlazeLivermoreELFN10.linrec;
+        var elf = MicroBlazeLivermoreELFN10.innerprod;
+        //var elf = MicroBlazeLivermoreELFN10.linrec;
         var stream = getStream(elf, false);
 
         InOutAnalysis bba = new InOutAnalysis(stream);
         bba.analyse(InOutMode.SIMPLE_BASIC_BLOCK);
+    }
+    
+    @Test
+    public void testBasicBlockElimination() {
+        // var elf = MicroBlazeGccOptimizationLevels.autocor2;
+        // var elf = MicroBlazeGccOptimizationLevels.dotprod2;
+        // var elf = MicroBlazeLivermoreELFN10.matmul;
+        // var elf = MicroBlazeLivermoreELFN10.hydro;
+        // var elf = MicroBlazeLivermoreELFN10.diffpredict;
+        // var elf = MicroBlazeLivermoreELFN10.tri_diag;
+        // var elf = MicroBlazeLivermoreELFN10.pic2d;
+        
+        var elf = MicroBlazeLivermoreELFN10.cholesky;
+        //var elf = MicroBlazeLivermoreELFN10.hydro2d;
+        //var elf = MicroBlazeLivermoreELFN10.hydro2dimpl;
+        //var elf = MicroBlazeLivermoreELFN10.intpredict;
+        //var elf = MicroBlazeLivermoreELFN10.pic1d;
+
+        //var elf = MicroBlazeLivermoreELFN10.innerprod;
+        //var elf = MicroBlazeLivermoreELFN10.linrec;
+        var stream = getStream(elf, false);
+
+        InOutAnalysis bba = new InOutAnalysis(stream);
+        bba.analyse(InOutMode.ELIMINATION);
     }
 
     @Test
     public void testDumpTrace() throws FileNotFoundException {
         // var elf = MicroBlazeGccOptimizationLevels.autocor2;
         // var elf = MicroBlazeGccOptimizationLevels.dotprod2;
-        // var elf = MicroBlazeLivermoreELFN10.matmul;
-        // var elf = MicroBlazeLivermoreELFN10.hydro;
-        var elf = MicroBlazeLivermoreELFN10.diffpredict;
-        // var elf = MicroBlazeLivermoreELFN10.tri_diag;
+        
+        //var elf = MicroBlazeLivermoreELFN10.matmul;
+        //var elf = MicroBlazeLivermoreELFN10.hydro;
+        //var elf = MicroBlazeLivermoreELFN10.diffpredict;
+        //var elf = MicroBlazeLivermoreELFN10.tri_diag;
         //var elf = MicroBlazeLivermoreELFN10.pic2d;
+        
+        //var elf = MicroBlazeLivermoreELFN10.cholesky;
+        //var elf = MicroBlazeLivermoreELFN10.hydro2d;
+        //var elf = MicroBlazeLivermoreELFN10.hydro2dimpl;
+        //var elf = MicroBlazeLivermoreELFN10.intpredict;
+        //var elf = MicroBlazeLivermoreELFN10.pic1d;
+        var elf = MicroBlazeLivermoreELFN10.state_frag;
 
         //var elf = MicroBlazeLivermoreELFN10.innerprod;
         //var elf = MicroBlazeLivermoreELFN10.linrec;
