@@ -1,8 +1,5 @@
 package pt.up.fe.specs.binarytranslation.producer;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
@@ -11,6 +8,7 @@ import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -39,7 +37,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
     public AInstructionProducer(Application app, ProcessBuilder builder, ResourceProvider regex,
             BiFunction<String, String, Instruction> produceMethod) {
         this.app = app;
-        this.proc = AInstructionProducer.newProcess(builder);
+        this.proc = BinaryTranslationUtils.newProcess(builder);
         this.insts = AInstructionProducer.newLineStream(this.proc);
         this.regex = Pattern.compile(regex.getResource());
         this.produceMethod = produceMethod;
@@ -63,30 +61,14 @@ public abstract class AInstructionProducer implements InstructionProducer {
         }
     }
 
-    private static Process newProcess(ProcessBuilder builder) {
-
-        // start gdb
-        Process proc = null;
-        try {
-            builder.directory(new File("."));
-            builder.redirectErrorStream(true); // redirects stderr to stdout
-            proc = builder.start();
-
-        } catch (IOException e) {
-            throw new RuntimeException("Could not run process bin with name: " + proc);
-        }
-
-        return proc;
-    }
-
     private static LineStream newLineStream(Process proc) {
 
         // No error detected, obtain LineStream via a concurrentchannel to allow for a
         // small wait for the exe to generate the stdout
         LineStream insts = null;
         try {
-            ConcurrentChannel<LineStream> lineStreamChannel = new ConcurrentChannel<>(1);
-            InputStream inputStream = proc.getInputStream();
+            var lineStreamChannel = new ConcurrentChannel<LineStream>(1);
+            var inputStream = proc.getInputStream();
             lineStreamChannel.createProducer().offer(LineStream.newInstance(inputStream, "proc_stdout"));
             insts = lineStreamChannel.createConsumer().poll(1, TimeUnit.SECONDS);
 
