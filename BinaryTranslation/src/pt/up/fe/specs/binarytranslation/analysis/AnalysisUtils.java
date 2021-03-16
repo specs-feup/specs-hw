@@ -1,5 +1,8 @@
 package pt.up.fe.specs.binarytranslation.analysis;
 
+import java.util.ArrayList;
+import java.util.BitSet;
+
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -40,5 +43,15 @@ public class AnalysisUtils {
         for (var inst : seg.getInstructions()) {
             printInstructionWithRegisters(inst, false);
         }
+    }
+    
+    public static String printSet(BitSet set, ArrayList<String> regs) {
+        var regsToPrint = new ArrayList<String>();
+        for (int i = 0; i < set.length(); i++) {
+            if (set.get(i)) {
+                regsToPrint.add(regs.get(i));
+            }
+        }
+        return "{" + String.join(",", regsToPrint) + "}";
     }
 }

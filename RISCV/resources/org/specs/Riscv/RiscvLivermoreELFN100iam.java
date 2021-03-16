@@ -53,4 +53,9 @@ public enum RiscvLivermoreELFN100iam implements ELFProvider {
     public String getResource() {
         return this.fullPath;
     }
+
+    public String asTraceTxtDump() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
