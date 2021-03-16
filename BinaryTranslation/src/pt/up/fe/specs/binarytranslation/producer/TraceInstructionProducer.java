@@ -28,16 +28,12 @@ public class TraceInstructionProducer extends AInstructionProducer {
     private static ProcessBuilder getProperProcess(Application app) {
 
         var elfname = app.getElffile();
-        var gdbtmpl = app.getGdbtmpl();
-        var gdbexe = app.getGdb();
-        var dtbfile = app.getDtbfile();
-        var qemuexe = app.getQemuexe();
         var name = elfname.getName();
         var extension = name.subSequence(name.length() - 3, name.length());
 
         // Output from GNU based objdump
         if (extension.equals("elf"))
-            return TraceInstructionProducer.newSimulatorBuilder(elfname, gdbtmpl, gdbexe, dtbfile, qemuexe);
+            return TraceInstructionProducer.newSimulatorBuilder(app);
 
         // Output from file (previous dump)
         else if (IS_WINDOWS)
@@ -47,11 +43,15 @@ public class TraceInstructionProducer extends AInstructionProducer {
             return new ProcessBuilder(Arrays.asList("cat", elfname.getAbsolutePath()));
     }
 
-    public static ProcessBuilder newSimulatorBuilder(File elfname,
-            ResourceProvider gdbtmpl, ResourceProvider gdbexe,
-            ResourceProvider dtbfile, ResourceProvider qemuexe) {
+    public static ProcessBuilder newSimulatorBuilder(Application app) {
 
-        String elfpath = elfname.getAbsolutePath();
+        var elfname = app.getElffile();
+        var gdbtmpl = app.getGdbtmpl();
+        var gdbexe = app.getGdb();
+        var dtbfile = app.getDtbfile();
+        var qemuexe = app.getQemuexe();
+        var elfpath = elfname.getAbsolutePath();
+
         var gdbScript = new Replacer(gdbtmpl);
         gdbScript.replace("<ELFNAME>", elfpath);
         gdbScript.replace("<QEMUBIN>", qemuexe.getResource());
