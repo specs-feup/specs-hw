@@ -1,16 +1,20 @@
 package pt.up.fe.specs.binarytranslation.gdb;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
+import pt.up.fe.specs.util.collections.concurrentchannel.ChannelProducer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
+import pt.up.fe.specs.util.utilities.LineStream;
 
 /**
  * Represents an interactive underlying GDB + QEMU process
@@ -25,8 +29,10 @@ public class GDBRun implements AutoCloseable {
      */
     private final Process proc;
     private final Application app;
-    private final BufferedReader stdout, stderr;
-    private final BufferedWriter stdin;
+    private final ConcurrentChannel<String> stdout, stdin;
+    private final ChannelConsumer<String> stdoutConsumer;
+    private final ChannelProducer<String> stdinProducer;
+    // private final ConcurrentChannel<String> stdin;
 
     /*
      * Constructor for a non-interactive scripting run
@@ -47,13 +53,30 @@ public class GDBRun implements AutoCloseable {
         // this.stdout = GDBRun.getStdIO(LineStream.newInstance(proc.getInputStream(), "proc_stdout"));
         // this.stderr = GDBRun.getStdIO(LineStream.newInstance(proc.getErrorStream(), "proc_stderr"));
 
+        // channels
+        this.stdout = new ConcurrentChannel<String>(1);
+        this.stdoutConsumer = this.stdout.createConsumer();
+
+        this.stdin = new ConcurrentChannel<String>(1);
+        this.stdinProducer = this.stdin.createProducer();
+
+        // stdout thread
+        Executors.newSingleThreadExecutor()
+                .execute(() -> this.stdoutThread(this.proc.getInputStream(), "proc_stdout"));
+
+        // stderr thread
+        Executors.newSingleThreadExecutor()
+                .execute(() -> this.stderrThread(this.proc.getErrorStream(), "proc_stderr"));
+
+        // stdin thread
+        Executors.newSingleThreadExecutor()
+                .execute(() -> this.stdinThread(this.proc.getOutputStream()));
+
+        /*
         this.stdout = GDBRun.getStdIO(new BufferedReader(new InputStreamReader(proc.getInputStream())));
         this.stderr = GDBRun.getStdIO(new BufferedReader(new InputStreamReader(proc.getErrorStream())));
-        this.stdin = GDBRun.getStdIO(new BufferedWriter(new OutputStreamWriter(proc.getOutputStream())));
+        this.stdin = GDBRun.getStdIO(new BufferedWriter(new OutputStreamWriter(proc.getOutputStream())));*/
 
-        // consume GDB header text
-        // while (this.getGDBResponse() != null)
-        // ;
     }
 
     /*
@@ -131,35 +154,90 @@ public class GDBRun implements AutoCloseable {
         return stdio;
     }*/
 
-    private static <T> T getStdIO(T channelContent) {
+    private void stdoutThread(InputStream istream, String name) {
 
+        var lstream = LineStream.newInstance(istream, name);
+        var producer = this.stdout.createProducer();
+
+        // this thread will block here if "nextLine" is waiting for content
+        // of if main thread has not read the concurrentchannel for the
+        // previous stdout line
+        while (lstream.hasNextLine()) {
+            producer.put(lstream.peekNextLine());
+            lstream.nextLine();
+        }
+
+        lstream.close();
+
+        // thread end
+        return;
+    }
+
+    private void stderrThread(InputStream istream, String name) {
+
+        var lstream = LineStream.newInstance(istream, name);
+        while (lstream.hasNextLine()) {
+            lstream.nextLine();
+        }
+        lstream.close();
+
+        // thread end
+        return;
+    }
+
+    private void stdinThread(OutputStream ostream) {
+
+        var bw = new BufferedWriter(new OutputStreamWriter(ostream));
+        var consumer = this.stdin.createConsumer();
+
+        try {
+            while (this.proc.isAlive()) {
+                bw.write(consumer.take());
+                bw.newLine();
+                bw.flush();
+            }
+            // thread end
+            bw.close();
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return;
+    }
+
+    /*
+    private static <T> T getStdIO(T channelContent) {
+    
         T stdio = null;
         try {
             var lineStreamChannel = new ConcurrentChannel<T>(1);
             lineStreamChannel.createProducer().offer(channelContent);
             stdio = lineStreamChannel.createConsumer().poll(1, TimeUnit.SECONDS);
-
+    
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-
+    
         if (stdio == null) {
             throw new RuntimeException("Could not obtain stdio of GDB process");
         }
-
+    
         return stdio;
     }
+    */
 
-    public void sendGDBCommand(String cmd) throws IOException {
-        this.stdin.write(cmd);
-        this.stdin.flush();
+    public void sendGDBCommand(String cmd) {
+        this.stdinProducer.put(cmd);
     }
 
-    public String getGDBResponse() throws IOException {
-        if (this.stdout.ready())
-            return this.stdout.readLine();
-        else
-            return null;
+    public String getGDBResponse() throws InterruptedException {
+        // return this.stdoutConsumer.take();
+        return this.stdoutConsumer.poll(1, TimeUnit.SECONDS);
     }
 
     @Override
