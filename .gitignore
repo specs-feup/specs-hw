@@ -37,3 +37,27 @@ ivy/
 ### ignore media formats
 *.mp4
 *.wmv
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/cholesky_trace.txt
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/diffpredict_trace.txt
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/hydro2d_trace.txt
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/hydro2dimpl_trace.txt
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/hydro_trace.txt
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/intpredict_trace.txt
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/linrec_trace.txt
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/matmul_trace.txt
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/pic1d_trace.txt
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/pic2d_trace.txt
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/state_frag_trace.txt
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/N10/tri_diag_trace.txt
