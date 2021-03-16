@@ -83,7 +83,7 @@ public abstract class ASequenceInOuts {
         System.out.println("\nuse/def registers: " + regs.toString());
     }
     
-    protected void findUseDefs(Instruction i, InstructionSets sets) {
+    public static void findUseDefs(Instruction i, InstructionSets sets) {
         for (Operand op : i.getData().getOperands()) {
             if (op.isRegister()) {
                 String reg = getRegName(op);
@@ -95,7 +95,7 @@ public abstract class ASequenceInOuts {
         }
     }
 
-    protected static String getRegName(Operand op) {
+    public static String getRegName(Operand op) {
         return op.getProperties().getPrefix() + op.getStringValue();
     }
 

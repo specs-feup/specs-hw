@@ -111,4 +111,14 @@ public class InstructionSets {
         }
         return hash1 + hash2 + hash3 + hash4;
     }
+    
+    public ArrayList<String> setToList(BitSet bs) {
+        var out = new ArrayList<String>();
+        for (int i = 0; i < bs.length(); i++) {
+            if (bs.get(i)) {
+                out.add(regs.get(i));
+            }
+        }
+        return out;
+    }
 }
