@@ -1,6 +1,5 @@
 package pt.up.fe.specs.binarytranslation.producer;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.function.BiFunction;
 
@@ -17,11 +16,13 @@ public class StaticInstructionProducer extends AInstructionProducer {
      */
     public StaticInstructionProducer(Application app, ResourceProvider regex,
             BiFunction<String, String, Instruction> produceMethod) {
-        super(app, getProperProcess(app.getElffile(), app.getObjdump()), regex, produceMethod);
+        super(app, getProperProcess(app), regex, produceMethod);
     }
 
-    private static ProcessBuilder getProperProcess(File elfname, ResourceProvider objdumpexe) {
+    private static ProcessBuilder getProperProcess(Application app) {
 
+        var elfname = app.getElffile();
+        var objdumpexe = app.getObjdump();
         var name = elfname.getName();
         var extension = name.subSequence(name.length() - 3, name.length());
 

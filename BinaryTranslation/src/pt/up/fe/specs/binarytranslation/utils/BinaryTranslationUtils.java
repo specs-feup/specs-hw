@@ -90,6 +90,25 @@ public class BinaryTranslationUtils {
     /*
      * 
      */
+    public static Process newProcess(ProcessBuilder builder) {
+
+        // start gdb
+        Process proc = null;
+        try {
+            builder.directory(new File("."));
+            builder.redirectErrorStream(true); // redirects stderr to stdout
+            proc = builder.start();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Could not run process bin with name: " + proc);
+        }
+
+        return proc;
+    }
+
+    /*
+     * 
+     */
     private static BufferedReader getOutputStreamReader(ProcessBuilder pb) {
 
         // call program

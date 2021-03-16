@@ -19,16 +19,19 @@ public class TraceInstructionProducer extends AInstructionProducer {
      */
     protected TraceInstructionProducer(Application app, ResourceProvider regex,
             BiFunction<String, String, Instruction> produceMethod) {
-        super(app, TraceInstructionProducer.getProperProcess(app.getElffile(),
-                app.getGdbtmpl(), app.getGdb(), app.getDtbfile(), app.getQemuexe()), regex, produceMethod);
+        super(app, TraceInstructionProducer.getProperProcess(app), regex, produceMethod);
     }
 
     /*
      * Determine process to use based on file extension and OS
      */
-    private static ProcessBuilder getProperProcess(File elfname,
-            ResourceProvider gdbtmpl, ResourceProvider gdbexe, ResourceProvider dtbfile, ResourceProvider qemuexe) {
+    private static ProcessBuilder getProperProcess(Application app) {
 
+        var elfname = app.getElffile();
+        var gdbtmpl = app.getGdbtmpl();
+        var gdbexe = app.getGdb();
+        var dtbfile = app.getDtbfile();
+        var qemuexe = app.getQemuexe();
         var name = elfname.getName();
         var extension = name.subSequence(name.length() - 3, name.length());
 
