@@ -1,10 +1,6 @@
 package pt.up.fe.specs.binarytranslation.analysis.inouts;
 
-import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.List;
-
-import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
@@ -30,7 +26,7 @@ public class SimpleBasicBlockInOuts extends ASequenceInOuts {
         BitSet def = usedef.getDefSet();
         BitSet out = def;
         BitSet in = use;
-        System.out.println(AnalysisUtils.printSet(in, regs) + "  " + AnalysisUtils.printSet(out, regs));
+        //System.out.println(AnalysisUtils.printSet(in, regs) + "  " + AnalysisUtils.printSet(out, regs));
         
         for (int i = insts.size() - 2; i >= 0; i--) {
             Instruction inst = insts.get(i);
@@ -41,7 +37,7 @@ public class SimpleBasicBlockInOuts extends ASequenceInOuts {
             
             in.andNot(tmp.getDefSet());
             in.or(tmp.getUseSet());
-            System.out.println(AnalysisUtils.printSet(in, regs) + "  " + AnalysisUtils.printSet(out, regs));
+            //System.out.println(AnalysisUtils.printSet(in, regs) + "  " + AnalysisUtils.printSet(out, regs));
         }
         inouts.setOutSet(out);
         inouts.setInSet(in);
@@ -70,6 +66,10 @@ public class SimpleBasicBlockInOuts extends ASequenceInOuts {
                 sb.append(regs.get(i) + " ");
         }
         System.out.println(sb.toString());
+    }
+
+    public InstructionSets getInouts() {
+        return inouts;
     }
 
 }
