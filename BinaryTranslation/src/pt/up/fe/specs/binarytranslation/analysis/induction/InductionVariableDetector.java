@@ -37,11 +37,19 @@ public class InductionVariableDetector {
         
         var sb = new StringBuilder();
         for (var k : keys) {
-            sb.append(k).append(": ");
+            boolean isZero = true;
             for (var diff : diffs) {
-                sb.append(diff.get(k)).append("| ");
+                if (diff.get(k) != 0)
+                    isZero = false;
             }
-            sb.append("\n");
+            if (!isZero) {
+                sb.append(k).append(": ");
+                for (var diff : diffs) {
+                    sb.append(diff.get(k)).append("| ");
+                }
+                sb.append("\n");
+            }
+
         }
         System.out.println(sb.toString());
     }
