@@ -5,10 +5,10 @@ import java.util.concurrent.TimeUnit;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.AInstructionProducer;
 
-public class BtfPerformance {
+public class BtfPerformanceAnalyzer {
     private AInstructionProducer provider;
 
-    public BtfPerformance(AInstructionProducer provider) {
+    public BtfPerformanceAnalyzer(AInstructionProducer provider) {
         this.provider = provider;
     }
 

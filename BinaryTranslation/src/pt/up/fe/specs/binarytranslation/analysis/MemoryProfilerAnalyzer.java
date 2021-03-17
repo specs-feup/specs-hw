@@ -13,9 +13,8 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.producer.detailed.DetailedRegisterInstructionProducer;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class MemoryProfiler {
+public class MemoryProfilerAnalyzer extends ATraceAnalyzer {
 
-    private ATraceInstructionStream stream;
     private DetailedRegisterInstructionProducer prod;
     private Queue<Instruction> queue = new LinkedList<>();
     private ArrayList<InstructionType> loadstores = new ArrayList<>();
@@ -24,11 +23,12 @@ public class MemoryProfiler {
         loadstores.add(InstructionType.G_STORE);
     }
 
-    public MemoryProfiler(ATraceInstructionStream stream) {
-        this.stream = stream;
+    public MemoryProfilerAnalyzer(ATraceInstructionStream stream) {
+        super(stream);
     }
     
-    public MemoryProfiler(DetailedRegisterInstructionProducer prod) {
+    public MemoryProfilerAnalyzer(DetailedRegisterInstructionProducer prod) {
+        super(null);
         this.prod = prod;
     }
 

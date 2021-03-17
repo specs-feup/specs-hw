@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis;
+package pt.up.fe.specs.binarytranslation.analysis.elimination;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +8,12 @@ import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrence
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
-public class InOutElimination {
+public class OutElimination {
 
     private BinarySegment bb;
     private List<Instruction> insts;
 
-    public InOutElimination(BinarySegment bb, List<Instruction> insts) {
+    public OutElimination(BinarySegment bb, List<Instruction> insts) {
         this.bb = bb;
         this.insts = insts;
     }
@@ -25,7 +25,7 @@ public class InOutElimination {
         var inouts = sbbio.getInouts();
         
         for (var o : occur.getOccurrences()) {
-            var elim = new InOutOccurrenceElimination(o, occur, insts, inouts);
+            var elim = new OutEliminationOccurrence(o, occur, insts, inouts);
             elim.eliminate(windowSize);
         }
     }
