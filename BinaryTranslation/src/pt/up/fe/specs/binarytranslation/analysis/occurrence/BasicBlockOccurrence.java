@@ -58,6 +58,9 @@ public class BasicBlockOccurrence {
 
     public RegisterDump getRegisters() {
         var dump = new RegisterDump();
+        for (var i : insts) {
+            dump.merge(i.getRegisters());
+        }
         return dump;
     }
 

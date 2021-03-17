@@ -2,34 +2,32 @@ package pt.up.fe.specs.binarytranslation.analysis;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.analysis.elimination.OutElimination;
 import pt.up.fe.specs.binarytranslation.analysis.inouts.BasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.inouts.SimpleBasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.inouts.TraceInOuts;
-import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class InOutAnalysis {
+public class InOutAnalyzer extends ATraceAnalyzer {
+    public enum InOutMode {
+        BASIC_BLOCK,
+        SIMPLE_BASIC_BLOCK,
+        TRACE,
+        ELIMINATION
+    };
     
-    private ATraceInstructionStream stream;
     private TraceBasicBlockDetector det;
 
-    public InOutAnalysis(ATraceInstructionStream stream) {
-        this.stream = stream;
+    public InOutAnalyzer(ATraceInstructionStream stream) {
+        super(stream);
         this.det = new TraceBasicBlockDetector();
     }
     
     public void analyse(InOutMode mode) {
-        SegmentBundle bun = det.detectSegments(stream);
-        if (bun.getSegments().size() == 0) {
-            System.out.println("No basic blocks were detected");
-            return;
-        }
-        
-        System.out.println(bun.getSummary());
-        List<BinarySegment> bbs = bun.getSegments();
+        List<BinarySegment> bbs = AnalysisUtils.getSegments(stream, det);
         
         if (mode == InOutMode.TRACE) {
             List<Instruction> insts = det.getProcessedInsts();
@@ -63,7 +61,7 @@ public class InOutAnalysis {
                 System.out.println("Running elimination analysis for detected Basic Block");
                 bb.printSegment();
                 System.out.println("");
-                var elim = new InOutElimination(bb, det.getProcessedInsts());
+                var elim = new OutElimination(bb, det.getProcessedInsts());
                 elim.eliminate(15);
             }
         }

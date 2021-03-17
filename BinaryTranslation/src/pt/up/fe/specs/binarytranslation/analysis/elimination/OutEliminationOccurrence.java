@@ -1,21 +1,22 @@
-package pt.up.fe.specs.binarytranslation.analysis;
+package pt.up.fe.specs.binarytranslation.analysis.elimination;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.inouts.InstructionSets;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrence;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
-public class InOutOccurrenceElimination {
+public class OutEliminationOccurrence {
 
     private List<Instruction> insts;
     private BasicBlockOccurrence bb;
     private ArrayList<String> outs;
     private BasicBlockOccurrenceTracker tracker;
 
-    public InOutOccurrenceElimination(BasicBlockOccurrence bb, 
+    public OutEliminationOccurrence(BasicBlockOccurrence bb, 
                                     BasicBlockOccurrenceTracker tracker, 
                                     List<Instruction> insts, 
                                     InstructionSets inouts) {
