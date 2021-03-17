@@ -3,42 +3,61 @@ package pt.up.fe.specs.binarytranslation.analysis;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.analysis.inouts.ASequenceInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.inouts.InstructionSets;
-import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrence;
+import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class InOutOccurrenceElimination {
 
     private List<Instruction> insts;
-    private BinarySegment bb;
-    private Integer idx;
-    private InstructionSets inouts;
-    private int start;
+    private BasicBlockOccurrence bb;
     private ArrayList<String> outs;
+    private BasicBlockOccurrenceTracker tracker;
 
-    public InOutOccurrenceElimination(BinarySegment bb, Integer idx, List<Instruction> insts, InstructionSets inouts) {
+    public InOutOccurrenceElimination(BasicBlockOccurrence bb, 
+                                    BasicBlockOccurrenceTracker tracker, 
+                                    List<Instruction> insts, 
+                                    InstructionSets inouts) {
         this.bb = bb;
-        this.idx = idx;
+        this.tracker = tracker;
         this.insts = insts;
-        this.inouts = inouts;
-        this.start = idx + bb.getSegmentLength() + 1;
         this.outs = inouts.setToList(inouts.getOutSet());
     }
 
-    public void eliminate(int window) {
-        System.out.println("\nEliminating occurrence " + idx + "-" + start + " of basic block " + bb.getUniqueId());
+    public ArrayList<String> eliminate(int window) {
+        System.out.println(bb.toString());
         System.out.println("Using a window of " + window + " instructions");
-        int curr = start;
+        
+        var toEliminate = new ArrayList<String>();
+        
+        int curr = bb.getEndPos() + 1;
         for (int i = curr; i < curr + window; i++) {
             var next = insts.get(i);
+            //System.out.println("Processing inst " + i);
+            if (tracker.basicBlockFromPosition(i) != null) {
+                System.out.println("Cannot proceed any further, another BB occurrence was reached");
+                AnalysisUtils.printSeparator(40);
+                return toEliminate;
+            }
+            
             for (var op : next.getData().getOperands()) {
-                if (op.isRegister() && op.isWrite()) {
-                    String regName = ASequenceInOuts.getRegName(op);
-                    if (outs.contains(regName))
-                        System.out.println("Out register " + regName + " is overwritten before it is used again");
+                if (op.isRegister()) {
+                    String regName = AnalysisUtils.getRegName(op);
+                    if (outs.contains(regName)) {
+                        if (op.isRead()) {
+                            System.out.println("Out register " + regName + " is used");
+                            outs.remove(regName);
+                        }
+                        if (op.isWrite()) {
+                            System.out.println("Out register " + regName + " is defined before it is used");
+                            toEliminate.add(regName);
+                        }
+                    }
                 }
             }       
         }
+        AnalysisUtils.printSeparator(40);
+        return toEliminate;
     }
 }

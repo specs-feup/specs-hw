@@ -54,4 +54,15 @@ public class AnalysisUtils {
         }
         return "{" + String.join(",", regsToPrint) + "}";
     }
+
+    public static String getRegName(Operand op) {
+        return op.getProperties().getPrefix() + op.getStringValue();
+    }
+    
+    public static void printSeparator(int size) {
+        String s = "";
+        for (int i = 0; i < size; i++)
+            s += "-";
+        System.out.println(s);
+    }
 }
