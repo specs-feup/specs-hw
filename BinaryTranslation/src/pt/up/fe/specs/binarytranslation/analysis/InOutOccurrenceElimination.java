@@ -34,7 +34,7 @@ public class InOutOccurrenceElimination {
         int curr = bb.getEndPos() + 1;
         for (int i = curr; i < curr + window; i++) {
             var next = insts.get(i);
-            System.out.println("Processing inst " + i);
+            //System.out.println("Processing inst " + i);
             if (tracker.basicBlockFromPosition(i) != null) {
                 System.out.println("Cannot proceed any further, another BB occurrence was reached");
                 AnalysisUtils.printSeparator(40);
@@ -49,7 +49,7 @@ public class InOutOccurrenceElimination {
                             System.out.println("Out register " + regName + " is used");
                             outs.remove(regName);
                         }
-                        if (op.isWrite()) {
+                        if (op.isWrite() && outs.contains(regName)) {
                             System.out.println("Out register " + regName + " is defined before it is used");
                             toEliminate.add(regName);
                         }

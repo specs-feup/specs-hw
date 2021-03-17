@@ -10,10 +10,12 @@ public class BasicBlockOccurrenceTracker {
     
     private BinarySegment bb;
     private ArrayList<BasicBlockOccurrence> occurrences;
+    private List<Instruction> trace;
     
     public BasicBlockOccurrenceTracker(BinarySegment bb, List<Instruction> insts) {
         this.bb = bb;
         this.occurrences = new ArrayList<>();
+        this.trace = insts;
         
         int id = 0;
         long start = bb.getInstructions().get(0).getAddress();
@@ -29,7 +31,8 @@ public class BasicBlockOccurrenceTracker {
             }
             if (inst.getAddress() == end && expectingEnd) {
                 expectingEnd = false;
-                var newOccurrence = new BasicBlockOccurrence(id, bb, newIdx);
+                var subList = trace.subList(newIdx, i);
+                var newOccurrence = new BasicBlockOccurrence(id, bb, newIdx, subList);
                 occurrences.add(newOccurrence);
                 id++;
             }
@@ -50,5 +53,9 @@ public class BasicBlockOccurrenceTracker {
                 return o;
         }
         return null;
+    }
+
+    public List<Instruction> getTrace() {
+        return trace;
     }
 }
