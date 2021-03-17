@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.analysis.inouts.SimpleBasicBlockInOuts;
+import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
@@ -23,13 +24,13 @@ public class InOutElimination {
         sbbio.calculateInOuts();
         var inouts = sbbio.getInouts();
         
-        for (Integer i : occur) {
-            var elim = new InOutOccurrenceElimination(bb, i, insts, inouts);
+        for (var o : occur.getOccurrences()) {
+            var elim = new InOutOccurrenceElimination(o, occur, insts, inouts);
             elim.eliminate(windowSize);
         }
     }
 
-    public ArrayList<Integer> findBBOccurrences(BinarySegment bb) {
+    public BasicBlockOccurrenceTracker findBBOccurrences(BinarySegment bb) {
         ArrayList<Integer> occur = new ArrayList<>();
 
         long start = bb.getInstructions().get(0).getAddress();
@@ -45,6 +46,6 @@ public class InOutElimination {
                 occur.add(i);
             }
         }
-        return occur;
+        return new BasicBlockOccurrenceTracker(bb, occur);
     }
 }
