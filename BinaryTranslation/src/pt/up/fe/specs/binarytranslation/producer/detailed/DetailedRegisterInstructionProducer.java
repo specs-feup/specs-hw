@@ -36,7 +36,7 @@ public class DetailedRegisterInstructionProducer extends DetailedTraceProducer {
             if (showStillAlive) {
                 count++;
                 if (count % 1000 == 0)
-                    System.out.println("Producer still alive (inst=" + count + ")");
+                    System.err.println("Producer still alive (inst=" + count + ")");
             }
         }
         return inst;

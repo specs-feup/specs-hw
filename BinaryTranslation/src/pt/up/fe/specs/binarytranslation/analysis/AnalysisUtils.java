@@ -2,11 +2,15 @@ package pt.up.fe.specs.binarytranslation.analysis;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class AnalysisUtils {
     
@@ -53,5 +57,27 @@ public class AnalysisUtils {
             }
         }
         return "{" + String.join(",", regsToPrint) + "}";
+    }
+
+    public static String getRegName(Operand op) {
+        return op.getProperties().getPrefix() + op.getStringValue();
+    }
+    
+    public static void printSeparator(int size) {
+        String s = "";
+        for (int i = 0; i < size; i++)
+            s += "-";
+        System.out.println(s);
+    }
+    
+    public static List<BinarySegment> getSegments(ATraceInstructionStream stream, TraceBasicBlockDetector det) {
+        SegmentBundle bun = det.detectSegments(stream);
+        if (bun.getSegments().size() == 0) {
+            System.out.println("No basic blocks were detected");
+            return null;
+        }
+        
+        System.out.println(bun.getSummary());
+        return bun.getSegments();
     }
 }

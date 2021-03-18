@@ -44,4 +44,14 @@ public class RegisterDump {
         }
         return copyDump;
     }
+
+    public void merge(RegisterDump mergeRegs) {
+        for (var m : mergeRegs.getRegisterMap().keySet()) {
+            regs.put(m, mergeRegs.getValue(m));
+        }
+    }
+
+    public HashMap<String, Long> getRegisterMap() {
+        return regs;
+    }
 }
