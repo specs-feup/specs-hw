@@ -18,4 +18,9 @@ public interface ProcessRun {
      * 
      */
     public Process getProc();
+
+    /*
+     * 
+     */
+    public boolean isAlive();
 }

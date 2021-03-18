@@ -43,6 +43,14 @@ public class TraceInstructionProducer extends AInstructionProducer {
             return new ProcessBuilder(Arrays.asList("cat", elfname.getAbsolutePath()));
     }
 
+    /*public static ProcessBuilder newSimulatorBuilder(Application app) {
+        
+        var gdb = new GDBRun(app);
+        gdb.loadFile(app);
+        
+        
+    }*/
+
     public static ProcessBuilder newSimulatorBuilder(Application app) {
 
         var elfname = app.getElffile();

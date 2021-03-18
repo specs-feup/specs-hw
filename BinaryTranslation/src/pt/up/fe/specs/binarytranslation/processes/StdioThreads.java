@@ -3,37 +3,12 @@ package pt.up.fe.specs.binarytranslation.processes;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.concurrent.Executors;
 
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public class StdioThreadUtils {
+public class StdioThreads {
 
-    protected static void attachThreads(ProcessRun run) {
-
-        StdioThreadUtils.attachIn(run);
-        StdioThreadUtils.attachOut(run);
-    }
-
-    protected static void attachOut(ProcessRun run) {
-
-        // stdout thread
-        Executors.newSingleThreadExecutor()
-                .execute(() -> StdioThreadUtils.stdoutThread(run));
-
-        // stderr thread
-        Executors.newSingleThreadExecutor()
-                .execute(() -> StdioThreadUtils.stderrThread(run));
-    }
-
-    public static void attachIn(ProcessRun run) {
-
-        // stdin thread
-        Executors.newSingleThreadExecutor()
-                .execute(() -> StdioThreadUtils.stdinThread(run));
-    }
-
-    private static void stdoutThread(ProcessRun run) {
+    protected static void stdoutThread(ProcessRun run) {
 
         var lstream = LineStream.newInstance(run.getProc().getInputStream(), "gdb_stdout");
         var producer = run.getStdout().createProducer();
@@ -52,7 +27,7 @@ public class StdioThreadUtils {
         return;
     }
 
-    private static void stderrThread(ProcessRun run) {
+    protected static void stderrThread(ProcessRun run) {
 
         var lstream = LineStream.newInstance(run.getProc().getErrorStream(), "gdb_stderr");
         while (lstream.hasNextLine()) {
@@ -64,7 +39,7 @@ public class StdioThreadUtils {
         return;
     }
 
-    private static void stdinThread(ProcessRun run) {
+    protected static void stdinThread(ProcessRun run) {
 
         var bw = new BufferedWriter(new OutputStreamWriter(run.getProc().getOutputStream()));
         var consumer = run.getStdin().createConsumer();

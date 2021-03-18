@@ -63,7 +63,7 @@ public class GDBRun extends AProcessRun {
      */
     public GDBRun(Application app, File scriptFile) {
         super(GDBRun.getArgs(app, scriptFile));
-        StdioThreadUtils.attachThreads(this);
+        super.attachThreads();
     }
 
     /*
@@ -119,24 +119,65 @@ public class GDBRun extends AProcessRun {
      */
     public void stepi() {
         this.sendGDBCommand("stepi 1");
-        // this.sendGDBCommand("x/x $pc");
-        // return this.consumeAllGDBResponse();
+        // discard garbage
+        this.consumeAllGDBResponse();
     }
 
     /*
-     * 
+     * (gdb) help x
+     *  Examine memory: x/FMT ADDRESS.
+     *  ADDRESS is an expression for the memory address to examine.
+     *  FMT is a repeat count followed by a format letter and a size letter.
+     *  Format letters are o(octal), x(hex), d(decimal), u(unsigned decimal),
+     *    t(binary), f(float), a(address), i(instruction), c(char) and s(string),
+     *    T(OSType), A(floating point values in hex).
+     *  Size letters are b(byte), h(halfword), w(word), g(giant, 8 bytes).
+     *  The specified number of objects of the specified size are printed
+     *  according to the format.
      */
-    public String readMemory(long addr) {
-        this.sendGDBCommand("x/x " + Long.toHexString(addr));
-        return this.getGDBResponse();
+    private String readMemory(String fmt) {
+        this.sendGDBCommand("x/" + fmt);
+        return this.consumeAllGDBResponse();
+    }
+
+    public String readByte(long startaddr) {
+        return this.readByte(startaddr, 1);
+    }
+
+    public String readByte(long startaddr, int count) {
+        return this.readMemory(count + "xb " + startaddr);
+    }
+
+    public String readHalfWord(long startaddr) {
+        return this.readHalfWord(startaddr, 1);
+    }
+
+    public String readHalfWord(long startaddr, int count) {
+        return this.readMemory(count + "xh " + startaddr);
+    }
+
+    public String readWord(long startaddr) {
+        return this.readWord(startaddr, 1);
+    }
+
+    public String readWord(long startaddr, int count) {
+        return this.readMemory(count + "xw " + startaddr);
     }
 
     /*
-     * 
+     *     AARCH64_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
+     *     MICROBLAZE_INSTRUCTION_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
+     *     RISC_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
+     *     
+     *     ALL EQUAL! --> ("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)")
      */
+    private static final Pattern INSTPATTERN = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
+
     public String getAddrAndInstruction() {
         this.sendGDBCommand("x/x $pc");
-        return this.getGDBResponse();
+        var response = this.getGDBResponse();
+        var addrandinst = SpecsStrings.getRegex(response, INSTPATTERN);
+        return addrandinst.get(0) + ":" + addrandinst.get(1);
     }
 
     /*
@@ -150,6 +191,8 @@ public class GDBRun extends AProcessRun {
     /*
      * 
      */
+    private static final Pattern VARPATTERN = Pattern.compile("0x([0-9a-f]+)\\s*(.*)");
+
     public HashMap<Number, String> getVariableList() {
 
         // send command
@@ -157,14 +200,13 @@ public class GDBRun extends AProcessRun {
 
         // get list
         var map = new HashMap<Number, String>();
-        var regex = Pattern.compile("0x([0-9a-f]+)\\s*(.*)");
         String line = null;
         while ((line = this.getGDBResponse()) != null) {
 
-            if (!SpecsStrings.matches(line, regex))
+            if (!SpecsStrings.matches(line, VARPATTERN))
                 continue;
 
-            var addrAndVar = SpecsStrings.getRegex(line, regex);
+            var addrAndVar = SpecsStrings.getRegex(line, VARPATTERN);
             var addr = addrAndVar.get(0).trim();
             var varname = addrAndVar.get(1).trim();
             map.put(Long.parseLong(addr, 16), varname);
@@ -188,7 +230,7 @@ public class GDBRun extends AProcessRun {
         while ((line = super.receive()) != null) {
             output.append(line + "\n");
         }
-        return output.toString();
+        return output.toString().stripTrailing();
     }
 
     /*
