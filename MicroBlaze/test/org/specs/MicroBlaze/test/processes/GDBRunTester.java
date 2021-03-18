@@ -1,10 +1,10 @@
-package org.specs.MicroBlaze.test.gdb;
+package org.specs.MicroBlaze.test.processes;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 
-import pt.up.fe.specs.binarytranslation.gdb.GDBRun;
+import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class GDBRunTester {
@@ -47,11 +47,27 @@ public class GDBRunTester {
                     + " -mon chardev=char0,mode=readline -serial chardev:char0 -gdb chardev:char0 -S";
 
             gdb.launchTarget(remoteCommand);
-            for (int i = 0; i < 10; i++) {
+
+            /* gdb.sendGDBCommand("while $pc != 0x80\nstepi 1\nx/x $pc\nend");
+            
+            String line = null;
+            while ((line = gdb.getGDBResponse()) != null) {
+                System.out.println(line);
+            }*/
+
+            // stepi
+            for (int i = 0; i < 50; i++) {
                 gdb.stepi();
                 System.out.println(gdb.getAddrAndInstruction());
-                // System.out.println(gdb.getRegisters());
             }
+
+            System.out.println(gdb.getVariableList());
+
+            // memory dump
+            for (int i = 0; i < 5; i++) {
+                System.out.println(gdb.readWord(1000 + i * 4));
+            }
+            System.out.println(gdb.readWord(1000, 50));
 
             // var variables = gdb.getVariableList();
             // System.out.println(variables);
