@@ -47,12 +47,13 @@ public class OutEliminationOccurrence {
                     String regName = AnalysisUtils.getRegName(op);
                     if (outs.contains(regName)) {
                         if (op.isRead()) {
-                            System.out.println("Out register " + regName + " is used");
+                            //System.out.println("Out register " + regName + " is used");
                             outs.remove(regName);
                         }
                         if (op.isWrite() && outs.contains(regName)) {
                             System.out.println("Out register " + regName + " is defined before it is used");
                             toEliminate.add(regName);
+                            outs.remove(regName);
                         }
                     }
                 }

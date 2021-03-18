@@ -20,6 +20,7 @@ public class InductionVariableAnalyzer extends ATraceAnalyzer {
         List<Instruction> insts = det.getProcessedInsts();
         
         for (var bb : segs) {
+            bb.printSegment();
             var ivd = new InductionVariableDetector(bb, insts);
             ivd.printDifferences();
         }
