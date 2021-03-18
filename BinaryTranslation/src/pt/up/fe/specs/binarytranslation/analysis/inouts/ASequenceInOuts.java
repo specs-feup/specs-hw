@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
@@ -83,10 +84,10 @@ public abstract class ASequenceInOuts {
         System.out.println("\nuse/def registers: " + regs.toString());
     }
     
-    protected void findUseDefs(Instruction i, InstructionSets sets) {
+    public static void findUseDefs(Instruction i, InstructionSets sets) {
         for (Operand op : i.getData().getOperands()) {
             if (op.isRegister()) {
-                String reg = getRegName(op);
+                String reg = AnalysisUtils.getRegName(op);
                 if (op.isRead())
                     sets.setUse(reg);
                 if (op.isWrite())
@@ -95,17 +96,13 @@ public abstract class ASequenceInOuts {
         }
     }
 
-    protected static String getRegName(Operand op) {
-        return op.getProperties().getPrefix() + op.getStringValue();
-    }
-
     public static ArrayList<String> findAllRegistersOfSeq(List<Instruction> insts) {
         ArrayList<String> lst = new ArrayList<>();
 
         for (Instruction i : insts) {
             for (Operand op : i.getData().getOperands()) {
                 if (op.isRegister()) {
-                    String reg = getRegName(op);
+                    String reg = AnalysisUtils.getRegName(op);
                     lst.add(reg);
                 }
             }
