@@ -1,16 +1,13 @@
-package pt.up.fe.specs.binarytranslation.gdb;
+package pt.up.fe.specs.binarytranslation.processes;
 
-import java.util.Arrays;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsStrings;
-import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
-import pt.up.fe.specs.util.collections.concurrentchannel.ChannelProducer;
-import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 
 /**
  * Represents an interactive underlying GDB + QEMU process
@@ -18,7 +15,7 @@ import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
  * @author nuno
  *
  */
-public class GDBRun implements AutoCloseable {
+public class GDBRun extends AProcessRun {
 
     // USEFUL: https://os.mbed.com/docs/mbed-os/v6.7/debug-test/debug-microbit.html
 
@@ -26,11 +23,7 @@ public class GDBRun implements AutoCloseable {
      * Internal status
      */
     private boolean targetOpen = false;
-    private final Process proc;
-    // private final Application app;
-    private final ConcurrentChannel<String> stdout, stdin;
-    private final ChannelConsumer<String> stdoutConsumer;
-    private final ChannelProducer<String> stdinProducer;
+    private Application app;
 
     /*
      * Constructor for a non-interactive scripting run
@@ -41,42 +34,42 @@ public class GDBRun implements AutoCloseable {
     
     }*/
 
-    protected ConcurrentChannel<String> getStdin() {
-        return stdin;
+    protected Application getApp() {
+        return app;
     }
 
-    protected ConcurrentChannel<String> getStdout() {
-        return stdout;
-    }
-
-    protected Process getProc() {
-        return proc;
+    /*
+     * 
+     */
+    private static List<String> getArgs(Application app, File scriptFile) {
+        var args = new ArrayList<String>();
+        args.add(app.getGdb().getResource());
+        if (scriptFile != null) {
+            args.add("-x");
+            args.add(scriptFile.getAbsolutePath());
+        }
+        return args;
     }
 
     /*
      * 
      */
     public GDBRun(Application app) {
-
-        // channels
-        this.stdout = new ConcurrentChannel<String>(1);
-        this.stdoutConsumer = this.stdout.createConsumer();
-
-        this.stdin = new ConcurrentChannel<String>(1);
-        this.stdinProducer = this.stdin.createProducer();
-
-        // this.app = app;
-        this.proc = BinaryTranslationUtils.newProcess(
-                new ProcessBuilder(Arrays.asList(app.getGdb().getResource())));
-
-        GDBRunUtils.attachThreads(this);
-        this.basicSetup();
+        this(app, null);
     }
 
     /*
      * 
      */
-    private void basicSetup() {
+    public GDBRun(Application app, File scriptFile) {
+        super(GDBRun.getArgs(app, scriptFile));
+        StdioThreadUtils.attachThreads(this);
+    }
+
+    /*
+     * 
+     */
+    public void basicSetup() {
         this.sendGDBCommand("set confirm off");
         this.sendGDBCommand("undisplay");
         this.sendGDBCommand("set print address off");
@@ -183,7 +176,7 @@ public class GDBRun implements AutoCloseable {
      * Send any command
      */
     public void sendGDBCommand(String cmd) {
-        this.stdinProducer.put(cmd);
+        super.send(cmd);
     }
 
     /*
@@ -192,7 +185,7 @@ public class GDBRun implements AutoCloseable {
     public String consumeAllGDBResponse() {
         var output = new StringBuilder();
         String line = null;
-        while ((line = this.getGDBResponse()) != null) {
+        while ((line = super.receive()) != null) {
             output.append(line + "\n");
         }
         return output.toString();
@@ -202,27 +195,6 @@ public class GDBRun implements AutoCloseable {
      * Get single output line from GDB process
      */
     public String getGDBResponse() {
-        String ret = null;
-        try {
-            ret = this.stdoutConsumer.poll(10, TimeUnit.MILLISECONDS); // TODO: best?
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return ret;
-    }
-
-    /*
-     * 
-     */
-    @Override
-    public void close() {
-
-        try {
-            proc.waitFor();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        return super.receive();
     }
 }
