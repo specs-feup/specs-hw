@@ -16,13 +16,18 @@ public interface InstructionProducer extends ObjectProducer<Instruction> {
      * 
      * @return the next instruction of the stream, or null if there are no more instructions in the stream
      */
-    Instruction nextInstruction();
+    public Instruction nextInstruction();
+
+    /**
+     * 
+     */
+    // public RegisterDump queryRegisters();
 
     /**
      * 
      * @return
      */
-    Integer getInstructionWidth();
+    public Integer getInstructionWidth();
 
     /**
      * Outputs the unprocessed incoming stream

@@ -1,6 +1,7 @@
 package pt.up.fe.specs.binarytranslation.processes;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
@@ -42,6 +43,11 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
         return this.proc;
     }
 
+    @Override
+    public boolean isAlive() {
+        return this.proc.isAlive();
+    }
+
     /*
      * into process stdin
      */
@@ -52,7 +58,7 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
     /*
      * from process stdout
      */
-    public String receive() {
+    protected String receive() {
         String ret = null;
         try {
             ret = this.stdoutConsumer.poll(10, TimeUnit.MILLISECONDS); // TODO: best?
@@ -61,6 +67,39 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
             e.printStackTrace();
         }
         return ret;
+    }
+
+    /*
+     * 
+     */
+    protected void attachThreads() {
+        this.attachStdOut();
+        this.attachStdErr();
+        this.attachStdIn();
+    }
+
+    /*
+     * 
+     */
+    protected void attachStdOut() {
+        Executors.newSingleThreadExecutor()
+                .execute(() -> StdioThreads.stdoutThread(this));
+    }
+
+    /*
+     * 
+     */
+    protected void attachStdErr() {
+        Executors.newSingleThreadExecutor()
+                .execute(() -> StdioThreads.stderrThread(this));
+    }
+
+    /*
+     * 
+     */
+    protected void attachStdIn() {
+        Executors.newSingleThreadExecutor()
+                .execute(() -> StdioThreads.stdinThread(this));
     }
 
     /*
