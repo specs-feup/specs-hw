@@ -1,34 +1,14 @@
-package pt.up.fe.specs.binarytranslation.gdb;
+package pt.up.fe.specs.binarytranslation.processes;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.concurrent.Executors;
 
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public class GDBRunUtils {
+public class StdioThreads {
 
-    protected static void attachThreads(GDBRun run) {
-
-        // stdout thread
-        Executors.newSingleThreadExecutor()
-                .execute(() -> GDBRunUtils.stdoutThread(run));
-
-        // stderr thread
-        Executors.newSingleThreadExecutor()
-                .execute(() -> GDBRunUtils.stderrThread(run));
-
-        // stdin thread
-        Executors.newSingleThreadExecutor()
-                .execute(() -> GDBRunUtils.stdinThread(run));
-
-        // discard header
-        run.consumeAllGDBResponse();
-        return;
-    }
-
-    private static void stdoutThread(GDBRun run) {
+    protected static void stdoutThread(ProcessRun run) {
 
         var lstream = LineStream.newInstance(run.getProc().getInputStream(), "gdb_stdout");
         var producer = run.getStdout().createProducer();
@@ -47,7 +27,7 @@ public class GDBRunUtils {
         return;
     }
 
-    private static void stderrThread(GDBRun run) {
+    protected static void stderrThread(ProcessRun run) {
 
         var lstream = LineStream.newInstance(run.getProc().getErrorStream(), "gdb_stderr");
         while (lstream.hasNextLine()) {
@@ -59,7 +39,7 @@ public class GDBRunUtils {
         return;
     }
 
-    private static void stdinThread(GDBRun run) {
+    protected static void stdinThread(ProcessRun run) {
 
         var bw = new BufferedWriter(new OutputStreamWriter(run.getProc().getOutputStream()));
         var consumer = run.getStdin().createConsumer();

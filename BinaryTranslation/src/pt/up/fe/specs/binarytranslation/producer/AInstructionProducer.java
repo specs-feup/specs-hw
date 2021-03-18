@@ -29,7 +29,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
     protected final LineStream insts;
 
     /*
-     * Init by chilren
+     * Init by children
      */
     protected final Pattern regex;
     private final BiFunction<String, String, Instruction> produceMethod;
