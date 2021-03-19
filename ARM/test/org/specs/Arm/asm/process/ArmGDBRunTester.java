@@ -1,0 +1,62 @@
+package org.specs.Arm.asm.process;
+
+import org.junit.Test;
+import org.specs.Arm.ArmApplication;
+import org.specs.Arm.ArmLivermoreELFN10;
+
+import pt.up.fe.specs.binarytranslation.processes.GDBRun;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+
+public class ArmGDBRunTester {
+
+    @Test
+    public void test() {
+        var fd = BinaryTranslationUtils.getFile(ArmLivermoreELFN10.innerprod);
+        var app = new ArmApplication(fd);
+
+        try (var gdb = new GDBRun(app)) {
+
+            gdb.loadFile(app);
+
+            // copy dtb to local folder
+            var dtb = BinaryTranslationUtils.getFile(app.getDtbfile().getResource());
+            dtb.deleteOnExit();
+
+            var remoteCommand = app.getQemuexe().getResource()
+                    + " --nographic -M arm-generic-fdt"
+                    + " -dtb " + dtb.getAbsolutePath()
+                    + " -device loader,file=" + app.getElffile().getAbsolutePath()
+                    + ",cpu-num=0 -device loader,addr=0xfd1a0104,data=0x8000000e,data-len=4"
+                    + " -chardev stdio,mux=on,id=char0 -mon chardev=char0,mode=readline -serial chardev:char0 -gdb chardev:char0 -S";
+
+            gdb.launchTarget(remoteCommand);
+
+            /* gdb.sendGDBCommand("while $pc != 0x80\nstepi 1\nx/x $pc\nend");
+            
+            String line = null;
+            while ((line = gdb.getGDBResponse()) != null) {
+                System.out.println(line);
+            }*/
+
+            // stepi
+            for (int i = 0; i < 50; i++) {
+                gdb.stepi();
+                System.out.println(gdb.getAddrAndInstruction());
+            }
+
+            System.out.println(gdb.getVariableList());
+
+            // memory dump
+            for (int i = 0; i < 5; i++) {
+                System.out.println(gdb.readWord(1000 + i * 4));
+            }
+            System.out.println(gdb.readWord(1000, 50));
+
+            // var variables = gdb.getVariableList();
+            // System.out.println(variables);
+
+            // kill target and quit gdb
+            gdb.quit();
+        }
+    }
+}
