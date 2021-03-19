@@ -8,5 +8,5 @@ while $pc != 0x80
 stepi 1
 x/x $pc
 end
-kill
+<KILL>
 quit

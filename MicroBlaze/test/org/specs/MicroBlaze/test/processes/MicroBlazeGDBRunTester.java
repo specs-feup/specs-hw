@@ -7,7 +7,7 @@ import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
-public class GDBRunTester {
+public class MicroBlazeGDBRunTester {
 
     /*
      * set confirm off
@@ -33,20 +33,20 @@ public class GDBRunTester {
 
         try (var gdb = new GDBRun(app)) {
 
-            gdb.loadFile(app);
+            System.out.println(gdb.loadFile(app));
 
             // copy dtb to local folder
             var dtb = BinaryTranslationUtils.getFile(app.getDtbfile().getResource());
             dtb.deleteOnExit();
 
-            var remoteCommand = app.getQemuexe().getResource()
+            var remoteCommand = app.getQemuexe().getResource() + ".exe"
                     + " -nographic -M microblaze-fdt-plnx -m 64 -display none"
-                    + " -kernel " + app.getElffile().getAbsolutePath()
-                    + " -dtb " + dtb.getAbsolutePath()
+                    + " -kernel " + app.getElffile().getAbsolutePath().replace("\\", "/")
+                    + " -dtb " + dtb.getAbsolutePath().replace("\\", "/")
                     + " -chardev stdio,mux=on,id=char0"
                     + " -mon chardev=char0,mode=readline -serial chardev:char0 -gdb chardev:char0 -S";
 
-            gdb.launchTarget(remoteCommand);
+            System.out.println(gdb.launchTarget(remoteCommand));
 
             /* gdb.sendGDBCommand("while $pc != 0x80\nstepi 1\nx/x $pc\nend");
             
