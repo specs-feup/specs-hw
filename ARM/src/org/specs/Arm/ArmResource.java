@@ -4,6 +4,9 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public enum ArmResource implements ResourceProvider {
 
+    // FOR WINDOWS GNU TOOLS FOR ARM
+    // https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-a/downloads
+
     // README:
     // One thing to remember is that the libusb libs that come with Vivado are probably meant to be used with
     // the QEMU versions found in https://github.com/Xilinx/qemu
