@@ -20,8 +20,8 @@ public enum RiscvResource implements ResourceProvider {
     // to compile riscv for baremetal:
     // riscv32-unknown-elf gcc -ffreestanding -specs=nosys.specs -O2 -Wl,--no-relax -Wl,--gc-sections -nostartfiles
     // -Wl,-T,../riscv32-virt.ld $^ -o $@
-
     // https://github.com/riscv/riscv-qemu/wiki
+
     // https://github.com/michaeljclark/riscv-probe
     // https://theintobooks.wordpress.com/2019/12/28/hello-world-on-risc-v-with-qemu/
     // https://github.com/noteed/riscv-hello-c
@@ -34,7 +34,6 @@ public enum RiscvResource implements ResourceProvider {
     RISCV_GDB("riscv32-unknown-elf-gdb"),
     RISCV_READELF("riscv32-unknown-elf-readelf"),
     RISCV_OBJDUMP("riscv32-unknown-elf-objdump"),
-
 
     RISC_DUMP_REGEX("([0-9a-f]+):\\s([0-9a-f]+)"),
     RISC_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
