@@ -17,6 +17,7 @@ import pt.up.fe.specs.util.SpecsStrings;
  */
 public class GDBRun extends AProcessRun {
 
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
     // USEFUL: https://os.mbed.com/docs/mbed-os/v6.7/debug-test/debug-microbit.html
 
     /*
@@ -64,6 +65,9 @@ public class GDBRun extends AProcessRun {
     public GDBRun(Application app, File scriptFile) {
         super(GDBRun.getArgs(app, scriptFile));
         super.attachThreads();
+
+        // discard launch header
+        this.consumeAllGDBResponse();
     }
 
     /*
@@ -82,6 +86,8 @@ public class GDBRun extends AProcessRun {
     public String loadFile(Application app) {
         var fd = app.getElffile();
         var elfpath = fd.getAbsolutePath();
+        if (IS_WINDOWS)
+            elfpath = elfpath.replace("\\", "/");
         this.sendGDBCommand("file " + elfpath);
         return this.consumeAllGDBResponse();
     }
