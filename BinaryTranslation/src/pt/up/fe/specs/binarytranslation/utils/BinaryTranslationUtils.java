@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -126,7 +127,7 @@ public class BinaryTranslationUtils {
             proc = pb.start();
 
         } catch (IOException e) {
-            throw new RuntimeException("Could not run process bin with name: " + proc);
+            throw new RuntimeException("Could not run process bin with name: " + pb.command());
         }
 
         try {
@@ -191,15 +192,26 @@ public class BinaryTranslationUtils {
     /*.
      * Output compilation flags for a given elf, using a given variant of a GNU based "readelf"
      */
-    public static String getCompilationInfo(String elfname, String readelbinary) {
+    public static String getCompilationInfo(File elfname, String readelbinary) {
 
         // assume that windows doesnt have tools
-        if (BinaryTranslationUtils.IS_WINDOWS)
-            return "GNU tools unavailable to extract compilation information!";
+        // if (BinaryTranslationUtils.IS_WINDOWS)
+        // return "GNU tools unavailable to extract compilation information!";
 
         // call readelf
-        var internalcmd = readelbinary + " -wi " + elfname + " | grep -i compilation -A6";
-        var arguments = Arrays.asList("/bin/bash", "-c", internalcmd);
+        List<String> arguments = null;
+        if (IS_WINDOWS) {
+            readelbinary += ".exe";
+            var internalcmd = readelbinary + " -wi "
+                    + elfname.getAbsolutePath() + "| findstr /irc:DW_AT_producer";
+            arguments = Arrays.asList("cmd.exe", "/C", internalcmd);
+
+        } else {
+            var internalcmd = readelbinary + " -wi "
+                    + elfname.getAbsolutePath() + " | grep -i compilation -A6";
+            arguments = Arrays.asList("/bin/bash", "-c", internalcmd);
+        }
+
         ProcessBuilder pb = new ProcessBuilder(arguments);
         var output = BinaryTranslationUtils.getAllOutput(pb);
         Pattern pat = Pattern.compile("GNU.*");

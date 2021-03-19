@@ -49,7 +49,7 @@ public abstract class Application {
         this.gdbTmpl = gdbtmpl;
         this.qemuExe = qemuexe;
         this.dtbFile = dtbfile;
-        this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elffile.getPath(), readelf.getResource());
+        this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elffile, readelf.getResource());
     }
 
     public String getAppName() {

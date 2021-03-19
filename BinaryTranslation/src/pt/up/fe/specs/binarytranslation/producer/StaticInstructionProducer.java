@@ -26,9 +26,13 @@ public class StaticInstructionProducer extends AInstructionProducer {
         var name = elfname.getName();
         var extension = name.subSequence(name.length() - 3, name.length());
 
+        var objdumppath = objdumpexe.getResource();
+        if (IS_WINDOWS)
+            objdumppath += ".exe";
+
         // Output from GNU based objdump
         if (extension.equals("elf"))
-            return new ProcessBuilder(Arrays.asList(objdumpexe.getResource(), "-d", elfname.getAbsolutePath()));
+            return new ProcessBuilder(Arrays.asList(objdumppath, "-d", elfname.getAbsolutePath()));
 
         // Output from file (previous dump)
         else if (IS_WINDOWS)

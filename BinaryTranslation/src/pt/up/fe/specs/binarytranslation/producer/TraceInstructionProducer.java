@@ -6,6 +6,7 @@ import java.util.function.BiFunction;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
@@ -53,26 +54,33 @@ public class TraceInstructionProducer extends AInstructionProducer {
 
     public static ProcessBuilder newSimulatorBuilder(Application app) {
 
-        var elfname = app.getElffile();
-        var gdbtmpl = app.getGdbtmpl();
-        var gdbexe = app.getGdb();
-        var dtbfile = app.getDtbfile();
-        var qemuexe = app.getQemuexe();
-        var elfpath = elfname.getAbsolutePath();
-
-        var gdbScript = new Replacer(gdbtmpl);
-        gdbScript.replace("<ELFNAME>", elfpath);
-        gdbScript.replace("<QEMUBIN>", qemuexe.getResource());
-
-        // DTB only required by microblaze, for now
-        if (dtbfile != null) {
-            // copy dtb to local folder
-            File fd = SpecsIo.resourceCopy(dtbfile.getResource());
-            fd.deleteOnExit();
-            gdbScript.replace("<DTBFILE>", fd.getAbsolutePath());
+        var elfpath = app.getElffile().getAbsolutePath();
+        var qemuexe = app.getQemuexe().getResource();
+        var gdbexepath = app.getGdb().getResource();
+        if (IS_WINDOWS) {
+            qemuexe += ".exe";
+            gdbexepath += ".exe";
+            elfpath = elfpath.replace("\\", "/");
         }
 
+        var gdbScript = new Replacer(app.getGdbtmpl());
+        gdbScript.replace("<ELFNAME>", elfpath);
+        gdbScript.replace("<QEMUBIN>", qemuexe);
+
+        if (app.getDtbfile() != null) {
+            var fd = BinaryTranslationUtils.getFile(app.getDtbfile().getResource());
+            var dtbpath = fd.getAbsolutePath();
+            if (IS_WINDOWS)
+                dtbpath = dtbpath.replace("\\", "/");
+            gdbScript.replace("<DTBFILE>", dtbpath);
+        }
+
+        if (IS_WINDOWS)
+            gdbScript.replace("<KILL>", "");
+        else
+            gdbScript.replace("<KILL>", "kill");
+
         SpecsIo.write(new File("tmpscript.gdb"), gdbScript.toString());
-        return new ProcessBuilder(Arrays.asList(gdbexe.getResource(), "-x", "tmpscript.gdb"));
+        return new ProcessBuilder(Arrays.asList(gdbexepath, "-x", "tmpscript.gdb"));
     }
 }
