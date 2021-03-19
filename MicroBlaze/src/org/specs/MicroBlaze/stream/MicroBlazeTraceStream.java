@@ -1,7 +1,6 @@
 package org.specs.MicroBlaze.stream;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.asm.MicroBlazeELFDump;

@@ -4,6 +4,12 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public enum MicroBlazeResource implements ResourceProvider {
 
+    // FOR WINDOWS GNU TOOLS FOR MICROBLAZE
+    // https://www.xilinx.com/products/design-tools/guest-resources.html#2020
+
+    // FOR QEMU BUILDS FOR MICROBLAZE, SEE THE XILINX QEMU FORK
+    // https://github.com/Xilinx/qemu.git
+
     // NOTE: if libcurl3 is missing in ubuntu 20.04, do this:
     // 1. add "deb http://cz.archive.ubuntu.com/ubuntu bionic main universe" to /etc/apt/sources.list
     // 2. sudo apt-get update
@@ -15,7 +21,7 @@ public enum MicroBlazeResource implements ResourceProvider {
 
     QEMU_MICROBLAZE_GDB_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl.gdb"),
     QEMU_MICROBLAZE_BAREMETAL_DTB("org/specs/MicroBlaze/qemu/system.dtb"),
-    QEMU_MICROBLAZE_EXE("/media/nuno/HDD/work/projects/myqemus/qemu-system-microblazeel"), // TODO fix
+    QEMU_MICROBLAZE_EXE("qemu-system-microblazeel"),
 
     MICROBLAZE_GCC("mb-gcc"),
     MICROBLAZE_GDB("mb-gdb"),
