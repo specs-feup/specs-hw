@@ -28,25 +28,20 @@ public class StringProcessRun extends AProcessRun {
      * from process stdout
      */
     public String receive() {
-        return this.receive(1);
+        return this.receive(10);
     }
 
     /*
      * 
      */
-    public String receive(int seconds) {
+    public String receive(int mseconds) {
         String ret = null;
         try {
             // indefinite wait
-            if (seconds == -1)
+            if (mseconds == -1)
                 ret = this.stdoutConsumer.take(); // TODO: best?
             else
-                ret = this.stdoutConsumer.poll(seconds, TimeUnit.SECONDS); // TODO: best?
-            // when launching QEMU under GDB, the "target remote" command
-            // takes longer than 10ms to complete, hence the 1s timeout for
-            // all reads from stdout of the process
-            // This shouldn't introduce delays in any other circumstances
-            // since poll returns immediately
+                ret = this.stdoutConsumer.poll(mseconds, TimeUnit.MILLISECONDS); // TODO: best?
 
         } catch (InterruptedException e) {
             e.printStackTrace();

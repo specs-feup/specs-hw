@@ -40,6 +40,18 @@ public class TraceInstructionProducer extends AInstructionProducer {
     }
 
     @Override
+    public void rawDump() {
+        if ((this.prun instanceof GDBRun)) {
+            var gdb = (GDBRun) this.prun;
+            gdb.runToEnd();
+        }
+        super.rawDump();
+    }
+
+    /*
+     * 
+     */
+    @Override
     public RegisterDump getRegisters() {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;

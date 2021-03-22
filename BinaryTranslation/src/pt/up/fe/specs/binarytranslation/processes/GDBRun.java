@@ -67,7 +67,16 @@ public class GDBRun extends StringProcessRun {
     public GDBRun(Application app, File scriptFile) {
         super(GDBRun.getArgs(app, scriptFile));
         super.attachThreads();
-        this.getGDBResponse(); // consume a single garbage line produced from the start of gdb
+        this.getGDBResponse(1000); // consume a single garbage line produced from the start of gdb
+        // Note:
+        // when launching QEMU under GDB, the "target remote" command
+        // takes longer than 10ms to complete, hence the 1s timeout for
+        // all reads from stdout of the process
+        // This shouldn't introduce delays in any other circumstances
+        // since poll returns immediately
+
+        // check if a target was opened
+        this.targetOpen = this.hasTarget();
     }
 
     /*
@@ -98,7 +107,9 @@ public class GDBRun extends StringProcessRun {
     public String launchTarget(String remoteCommand) {
         this.sendGDBCommand("target remote | " + remoteCommand);
         this.targetOpen = true; // TODO: no way to make sure if true?
-        return this.consumeAllGDBResponse();
+        return this.getGDBResponse(3000);
+        // 3 second timeout to give time for the remote to launch
+        // return this.consumeAllGDBResponse();
     }
 
     /*
@@ -126,6 +137,23 @@ public class GDBRun extends StringProcessRun {
     public void runUntil(long addr) {
         var hexaddr = Long.toHexString(addr);
         this.runUntil("0x" + hexaddr);
+    }
+
+    /*
+     *
+     */
+    public void runToEnd() {
+        if (this.targetOpen) {
+            this.sendGDBCommand("set $v = -1");
+            this.sendGDBCommand("while $pc != $v");
+            this.sendGDBCommand("set var $v = $pc");
+            this.sendGDBCommand("stepi 1");
+            this.sendGDBCommand("x/x $pc");
+            this.sendGDBCommand("end");
+            this.sendGDBCommand("kill");
+            this.sendGDBCommand("quit");
+            // this.discardAllGDBResponse();
+        }
     }
 
     /*
@@ -191,11 +219,16 @@ public class GDBRun extends StringProcessRun {
     }
 
     /*
-     *     AARCH64_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
-     *     MICROBLAZE_INSTRUCTION_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
-     *     RISC_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
-     *     
-     *     ALL EQUAL! --> ("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)")
+     * info target
+     */
+    private boolean hasTarget() {
+        this.sendGDBCommand("info target");
+        var allresponse = this.consumeAllGDBResponse();
+        return allresponse.contains("serial");
+    }
+
+    /*
+     *
      */
     private static final Pattern INSTPATTERN = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
 
@@ -209,7 +242,6 @@ public class GDBRun extends StringProcessRun {
     /*
      * 
      */
-    // private static final Pattern REGPATTERN = Pattern.compile("([0-9a-z]+)\\s*0x([0-9a-f]+)\\s*([0-9]+)");
     private static final Pattern REGPATTERN = Pattern.compile("([0-9a-z]+)\\s*0x([0-9a-f]+)\\s.*");
 
     public RegisterDump getRegisters() {
@@ -295,5 +327,12 @@ public class GDBRun extends StringProcessRun {
      */
     private String getGDBResponse() {
         return super.receive();
+    }
+
+    /*
+     * 
+     */
+    private String getGDBResponse(int mseconds) {
+        return super.receive(mseconds);
     }
 }
