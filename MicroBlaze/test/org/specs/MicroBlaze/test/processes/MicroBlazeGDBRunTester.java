@@ -41,6 +41,15 @@ public class MicroBlazeGDBRunTester {
 
             var dump = gdb.getRegisters();
             dump.prettyPrint();
+
+            gdb.stepi();
+            dump = gdb.getRegisters();
+            dump.prettyPrint();
+
+            // check for outstanding output?
+            // var output = gdb.getG
+            gdb.killTarget();
+            gdb.quit();
         }
     }
 

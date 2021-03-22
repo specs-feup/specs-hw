@@ -1,20 +1,27 @@
 package pt.up.fe.specs.binarytranslation.producer.detailed;
 
 import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 public class RegisterDump {
 
-    private HashMap<String, Long> regs;
+    private Map<String, Long> regs;
     // public static RegisterDump nullDump = new RegisterDumpNull();
 
     public RegisterDump() {
         this.regs = new HashMap<>();
+    }
+
+    public RegisterDump(RegisterDump that) {
+        this();
+        for (var key : that.regs.keySet()) {
+            this.regs.put(key, regs.get(key));
+        }
     }
 
     public static RegisterDump newInstance(String rawRegisterDump, Pattern matchpat) {
@@ -38,43 +45,43 @@ public class RegisterDump {
         regs.put(register, value);
     }
 
+    public void add(RegisterDump mergeRegs) {
+        for (var m : mergeRegs.getRegisterMap().keySet()) {
+            regs.put(m, mergeRegs.getValue(m));
+        }
+    }
+
     public Long getValue(String register) {
         return regs.get(register);
     }
 
-    public void prettyPrint() {
-        HashMap<String, Long> sortedMap = this.regs.entrySet().stream()
-                .sorted(Entry.comparingByValue())
-                .collect(Collectors.toMap(Entry::getKey, Entry::getValue,
-                        (e1, e2) -> e1, HashMap::new));
+    @Override
+    public String toString() {
+        var sBuilder = new StringBuilder();
+
+        var sortedMap = new TreeMap<String, Long>();
+        sortedMap.putAll(this.regs);
         int mod = sortedMap.keySet().size() / 3;
+
         int i = 1;
-        for (String key : sortedMap.keySet()) {
-            System.out.print(key + ": " + sortedMap.get(key));
-            System.out.print(i % mod == 0 ? "\n" : ", ");
+        for (var key : sortedMap.keySet()) {
+            sBuilder.append(key + ": 0x" + Long.toHexString(sortedMap.get(key)));
+            sBuilder.append(i % mod == 0 ? "\n" : ",\t");
             i++;
         }
+
+        return sBuilder.toString();
+    }
+
+    public void prettyPrint() {
+        System.out.println(this.toString());
     }
 
     public boolean isEmpty() {
         return regs.size() == 0;
     }
 
-    public RegisterDump copy() {
-        RegisterDump copyDump = new RegisterDump();
-        for (String key : regs.keySet()) {
-            copyDump.add(key, regs.get(key));
-        }
-        return copyDump;
-    }
-
-    public void merge(RegisterDump mergeRegs) {
-        for (var m : mergeRegs.getRegisterMap().keySet()) {
-            regs.put(m, mergeRegs.getValue(m));
-        }
-    }
-
-    public HashMap<String, Long> getRegisterMap() {
+    public Map<String, Long> getRegisterMap() {
         return regs;
     }
 }

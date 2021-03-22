@@ -38,6 +38,7 @@ public class MicroBlazeStreamTester {
                 MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeTraceStream.class);
     }
 
+    // TODO: rawDump now doesnt work if the qemu template doesnt include the loop...
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(

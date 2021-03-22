@@ -1,6 +1,5 @@
 package pt.up.fe.specs.binarytranslation.analysis.elimination;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.analysis.inouts.SimpleBasicBlockInOuts;
@@ -23,7 +22,7 @@ public class OutElimination {
         var sbbio = new SimpleBasicBlockInOuts(bb);
         sbbio.calculateInOuts();
         var inouts = sbbio.getInouts();
-        
+
         for (var o : occur.getOccurrences()) {
             var elim = new OutEliminationOccurrence(o, occur, insts, inouts);
             elim.eliminate(windowSize);
