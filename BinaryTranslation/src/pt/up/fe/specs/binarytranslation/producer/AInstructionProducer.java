@@ -72,11 +72,10 @@ public abstract class AInstructionProducer implements InstructionProducer {
 
     @Override
     public Instruction nextInstruction() {
-
         String line = null;
-        while (((line = this.prun.receive()) != null) && !SpecsStrings.matches(line, getRegex())) {
-            // insts.next();
-        }
+        while (((line = this.prun.receive()) != null)
+                && !SpecsStrings.matches(line, getRegex()))
+            ;
         if (line == null)
             return null;
 
@@ -88,7 +87,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         this.prun.close();
     }
 }

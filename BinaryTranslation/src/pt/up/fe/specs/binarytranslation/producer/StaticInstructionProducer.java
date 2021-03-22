@@ -31,22 +31,5 @@ public class StaticInstructionProducer extends AInstructionProducer {
         // txt dump
         else
             return new TxtDump(app.getElffile());
-
-        /*
-        var objdumppath = objdumpexe.getResource();
-        if (IS_WINDOWS)
-            objdumppath += ".exe";
-        
-        // Output from GNU based objdump
-        if (extension.equals("elf"))
-            return new ProcessBuilder(Arrays.asList(objdumppath, "-d", elfname.getAbsolutePath()));
-        
-        // Output from file (previous dump)
-        else if (IS_WINDOWS)
-            return new ProcessBuilder(Arrays.asList("cmd", "/c", "type", elfname.getAbsolutePath()));
-        
-        else // if (IS_LINUX)
-            return new ProcessBuilder(Arrays.asList("cat", elfname.getAbsolutePath()));
-            */
     }
 }

@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.processes;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.concurrent.TimeUnit;
 
@@ -10,15 +11,14 @@ import pt.up.fe.specs.util.utilities.LineStream;
 
 public class StdioThreads {
 
-    private static LineStream newLineStream(Process proc, String name) {
+    private static LineStream newLineStream(InputStream stream, String name) {
 
         // No error detected, obtain LineStream via a concurrentchannel to allow for a
         // small wait for the exe to generate the stdout
         LineStream insts = null;
         try {
             var lineStreamChannel = new ConcurrentChannel<LineStream>(1);
-            var inputStream = proc.getInputStream();
-            lineStreamChannel.createProducer().offer(LineStream.newInstance(inputStream, name));
+            lineStreamChannel.createProducer().offer(LineStream.newInstance(stream, name));
             insts = lineStreamChannel.createConsumer().poll(1, TimeUnit.SECONDS);
 
         } catch (InterruptedException e) {
@@ -34,8 +34,7 @@ public class StdioThreads {
 
     protected static void stdoutThread(ProcessRun run) {
 
-        // var lstream = LineStream.newInstance(run.getProc().getInputStream(), "gdb_stdout");
-        var lstream = StdioThreads.newLineStream(run.getProc(), "proc_stdout");
+        var lstream = StdioThreads.newLineStream(run.getProc().getInputStream(), "proc_stdout");
         var producer = run.getStdout().createProducer();
 
         // this thread will block here if "nextLine" is waiting for content
@@ -54,8 +53,7 @@ public class StdioThreads {
 
     protected static void stderrThread(ProcessRun run) {
 
-        // var lstream = LineStream.newInstance(run.getProc().getErrorStream(), "proc_stderr");
-        var lstream = StdioThreads.newLineStream(run.getProc(), "proc_stderror");
+        var lstream = StdioThreads.newLineStream(run.getProc().getErrorStream(), "proc_stderror");
         while (lstream.hasNextLine()) {
             lstream.nextLine();
         }

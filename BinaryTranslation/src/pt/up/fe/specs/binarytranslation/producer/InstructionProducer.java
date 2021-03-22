@@ -22,7 +22,7 @@ public interface InstructionProducer extends ObjectProducer<Instruction> {
     /**
      * Only implementable by a @TraceInstructionProducer which is executing a simulator @ProcessRun
      */
-    default public RegisterDump queryRegisters() {
+    default public RegisterDump getRegisters() {
         return null;
     }
 
