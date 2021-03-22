@@ -28,25 +28,25 @@ public class RiscvTraceAnalysisTest {
         var stream = new RiscvTraceStream(prod);
         return stream;
     }
-    
+
     @Test
     public void testRiscvDetailedProvider() {
         var fd = BinaryTranslationUtils.getFile(RiscvGccELF.autocor);
-        var prov = new RiscvDetailedTraceProvider(fd);
-        Instruction i = prov.nextInstruction();
-        while (i != null) {
-            i.printInstruction();
-            i = prov.nextInstruction();
+        try (var prov = new RiscvDetailedTraceProvider(fd)) {
+            Instruction i = prov.nextInstruction();
+            while (i != null) {
+                i.printInstruction();
+                i = prov.nextInstruction();
+            }
         }
-        prov.close();
     }
-    
+
     @Test
     public void testRiscvInOuts() {
-        //var elf = RiscvLivermoreELFN100iam.innerprod100;
+        // var elf = RiscvLivermoreELFN100iam.innerprod100;
         var elf = RiscvGccELF.autocor;
         var stream = getStream(elf, true);
-        
+
         InOutAnalyzer bba = new InOutAnalyzer(stream);
         bba.analyse(InOutMode.BASIC_BLOCK);
     }
