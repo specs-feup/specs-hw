@@ -27,7 +27,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
     /*
      * Init by children
      */
-    protected final Pattern regex;
+    private final Pattern regex;
     private final BiFunction<String, String, Instruction> produceMethod;
 
     public AInstructionProducer(Application app, StringProcessRun prun, ResourceProvider regex,

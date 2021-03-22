@@ -34,8 +34,9 @@ public abstract class AInstruction implements Instruction {
 
     @Expose
     private String instruction;
-    
-    private RegisterDump registers = RegisterDump.nullDump;
+
+    private RegisterDump registers = null; // RegisterDump.nullDump;
+    // TODO fix later
 
     // decoded field data (abstract class)
     private final InstructionData idata;
