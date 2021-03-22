@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.producer;
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.NullInstruction;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.util.threadstream.ObjectProducer;
 
 public interface InstructionProducer extends ObjectProducer<Instruction> {
@@ -19,9 +20,11 @@ public interface InstructionProducer extends ObjectProducer<Instruction> {
     public Instruction nextInstruction();
 
     /**
-     * 
+     * Only implementable by a @TraceInstructionProducer which is executing a simulator @ProcessRun
      */
-    // public RegisterDump queryRegisters();
+    default public RegisterDump queryRegisters() {
+        return null;
+    }
 
     /**
      * 

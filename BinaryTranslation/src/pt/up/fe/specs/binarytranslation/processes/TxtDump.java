@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TxtDump extends AProcessRun {
+public class TxtDump extends StringProcessRun {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
     private static final List<String> WARGS = Arrays.asList("cmd", "/c", "type");

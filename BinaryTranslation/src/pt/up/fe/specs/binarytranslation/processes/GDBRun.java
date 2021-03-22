@@ -15,7 +15,7 @@ import pt.up.fe.specs.util.SpecsStrings;
  * @author nuno
  *
  */
-public class GDBRun extends AProcessRun {
+public class GDBRun extends StringProcessRun {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
     // USEFUL: https://os.mbed.com/docs/mbed-os/v6.7/debug-test/debug-microbit.html
