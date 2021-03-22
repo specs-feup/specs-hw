@@ -14,10 +14,10 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 public class DetailedTraceProducer extends TraceInstructionProducer {
+
     protected DetailedTraceProducer(Application app, ResourceProvider regex,
             BiFunction<String, String, Instruction> produceMethod) {
         super(app, regex, produceMethod);
-        // TODO Auto-generated constructor stub
     }
 
     public GDBFilter nextElement(Class<? extends GDBFilter> gdbFilter) {

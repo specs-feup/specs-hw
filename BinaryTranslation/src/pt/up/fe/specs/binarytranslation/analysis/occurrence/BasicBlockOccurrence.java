@@ -1,6 +1,5 @@
 package pt.up.fe.specs.binarytranslation.analysis.occurrence;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
@@ -8,7 +7,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 public class BasicBlockOccurrence {
-    
+
     private int endPos;
     private int startPos;
     private BinarySegment bb;
@@ -22,7 +21,7 @@ public class BasicBlockOccurrence {
         this.insts = insts;
         this.endPos = startPos + bb.getSegmentLength();
     }
-    
+
     public boolean belongsToOccurrence(int instPos) {
         return instPos >= startPos && instPos <= endPos;
     }
@@ -42,7 +41,7 @@ public class BasicBlockOccurrence {
     public int getStartPos() {
         return startPos;
     }
-    
+
     @Override
     public String toString() {
         var sb = new StringBuilder();
@@ -59,7 +58,7 @@ public class BasicBlockOccurrence {
     public RegisterDump getRegisters() {
         var dump = new RegisterDump();
         for (var i : insts) {
-            dump.merge(i.getRegisters());
+            dump.add(i.getRegisters());
         }
         return dump;
     }

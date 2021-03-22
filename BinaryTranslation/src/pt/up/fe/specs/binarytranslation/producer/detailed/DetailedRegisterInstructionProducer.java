@@ -23,13 +23,14 @@ public class DetailedRegisterInstructionProducer extends DetailedTraceProducer {
         if (fil instanceof GDBRegisterFilter)
             return (RegisterDump) fil.getResult();
         else
-            return RegisterDump.nullDump;
+            return null; // RegisterDump.nullDump;
+        // TODO fix later
     }
 
     @Override
     public Instruction nextInstruction() {
         RegisterDump reg = nextRegister();
-        
+
         Instruction inst = super.nextInstruction();
         if (inst != null) {
             inst.setRegisters(reg);
@@ -41,7 +42,7 @@ public class DetailedRegisterInstructionProducer extends DetailedTraceProducer {
         }
         return inst;
     }
-    
+
     public void setDisplayStillAlive(boolean display) {
         this.showStillAlive = display;
     }
