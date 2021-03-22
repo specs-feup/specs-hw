@@ -26,6 +26,40 @@ public class MicroBlazeGDBRunTester {
     -mon chardev=char0,mode=readline -serial chardev:char0 -gdb chardev:char0 -S
      */
 
+    /**
+     * Test register gathering
+     */
+    @Test
+    public void testRegister() {
+        var elf = MicroBlazeLivermoreELFN10.innerprod;
+        var fd = BinaryTranslationUtils.getFile(elf);
+        var app = new MicroBlazeApplication(fd);
+        try (var gdb = new GDBRun(app, BinaryTranslationUtils.FillGDBScript(app))) {
+
+            // run until innerprod
+            gdb.runUntil(elf.getKernelStart().toString());
+
+            var dump = gdb.getRegisters();
+            dump.prettyPrint();
+        }
+    }
+
+    /**
+     * Test the GDBRun class by giving it a script and consuming all output
+     */
+    @Test
+    public void testScript() {
+        var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
+        var app = new MicroBlazeApplication(fd);
+        try (var gdb = new GDBRun(app, BinaryTranslationUtils.FillGDBScript(app))) {
+
+            String line = null;
+            while ((line = gdb.receive()) != null) {
+                System.out.println(line);
+            }
+        }
+    }
+
     @Test
     public void test() {
         var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);

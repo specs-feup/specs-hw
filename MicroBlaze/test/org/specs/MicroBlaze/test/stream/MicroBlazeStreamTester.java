@@ -1,7 +1,6 @@
 package org.specs.MicroBlaze.test.stream;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
@@ -34,11 +33,17 @@ public class MicroBlazeStreamTester {
     }
 
     @Test
-    public void testTrace() throws FileNotFoundException {
+    public void testTrace() {
         InstructionStreamTestUtils.printStream(
                 MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeTraceStream.class);
     }
-    
+
+    @Test
+    public void testTraceRaw() {
+        InstructionStreamTestUtils.rawDump(
+                MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeTraceStream.class);
+    }
+
     @Test
     public void test() {
 
@@ -54,11 +59,5 @@ public class MicroBlazeStreamTester {
                 }
             }
         }
-    }
-
-    @Test
-    public void testTraceRaw() {
-        InstructionStreamTestUtils.rawDump(
-                MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeTraceStream.class);
     }
 }

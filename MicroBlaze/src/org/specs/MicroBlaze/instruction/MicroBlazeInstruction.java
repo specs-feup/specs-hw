@@ -128,11 +128,14 @@ public class MicroBlazeInstruction extends AInstruction {
     @Override
     public MicroBlazeInstruction copy() {
 
-        String copyaddr = new String(Long.toHexString(this.getAddress().intValue()));
-        String copyinst = new String(this.getInstruction());
-        MicroBlazeInstructionData copyData = this.getData().copy();
-        MicroBlazeAsmFieldData copyFieldData = this.getFieldData().copy();
-        RegisterDump copyDump = this.getRegisters().copy();
+        var copyaddr = new String(Long.toHexString(this.getAddress().intValue()));
+        var copyinst = new String(this.getInstruction());
+        var copyData = this.getData().copy();
+        var copyFieldData = this.getFieldData().copy();
+
+        // RegisterDump copyDump = this.getRegisters().copy();
+        var copyDump = new RegisterDump(this.getRegisters());
+
         var cpy = new MicroBlazeInstruction(copyaddr, copyinst, copyData, copyFieldData, this.getProperties());
         cpy.setRegisters(copyDump);
         return cpy;
