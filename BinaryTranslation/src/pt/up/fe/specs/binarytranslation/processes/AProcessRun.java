@@ -2,11 +2,8 @@ package pt.up.fe.specs.binarytranslation.processes;
 
 import java.util.List;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
-import pt.up.fe.specs.util.collections.concurrentchannel.ChannelProducer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 
 public abstract class AProcessRun implements ProcessRun, AutoCloseable {
@@ -14,18 +11,13 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
     /*
      * 
      */
-    private Process proc;
-    private final ConcurrentChannel<String> stdout, stdin;
-    private final ChannelConsumer<String> stdoutConsumer;
-    private final ChannelProducer<String> stdinProducer;
+    protected Process proc;
+    protected final ConcurrentChannel<String> stdout, stdin;
 
     public AProcessRun(List<String> args) {
         this.stdout = new ConcurrentChannel<String>(1);
-        this.stdoutConsumer = this.stdout.createConsumer();
         this.stdin = new ConcurrentChannel<String>(1);
-        this.stdinProducer = this.stdin.createProducer();
         this.proc = BinaryTranslationUtils.newProcess(new ProcessBuilder(args));
-        // StdioThreadUtils.attachThreads(this);
     }
 
     @Override
@@ -46,27 +38,6 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
     @Override
     public boolean isAlive() {
         return this.proc.isAlive();
-    }
-
-    /*
-     * into process stdin
-     */
-    protected void send(String cmd) {
-        this.stdinProducer.put(cmd);
-    }
-
-    /*
-     * from process stdout
-     */
-    protected String receive() {
-        String ret = null;
-        try {
-            ret = this.stdoutConsumer.poll(10, TimeUnit.MILLISECONDS); // TODO: best?
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return ret;
     }
 
     /*

@@ -5,7 +5,9 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 
-public class ObjDump extends AProcessRun {
+public class ObjDump extends StringProcessRun {
+
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 
     /*
      * 
@@ -14,7 +16,11 @@ public class ObjDump extends AProcessRun {
         var args = new ArrayList<String>();
         var elfname = app.getElffile();
         var objdumpexe = app.getObjdump();
-        args.add(objdumpexe.getResource());
+        var objdumppath = objdumpexe.getResource();
+        if (IS_WINDOWS)
+            objdumppath += ".exe";
+
+        args.add(objdumppath);
         args.add("-d");
         args.add(elfname.getAbsolutePath());
         return args;
