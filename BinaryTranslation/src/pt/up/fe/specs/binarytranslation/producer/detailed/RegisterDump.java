@@ -1,14 +1,38 @@
 package pt.up.fe.specs.binarytranslation.producer.detailed;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import pt.up.fe.specs.util.SpecsStrings;
+import pt.up.fe.specs.util.utilities.LineStream;
+
 public class RegisterDump {
-    protected HashMap<String, Long> regs = new HashMap<>();
-    public static RegisterDump nullDump = new RegisterDumpNull();
+
+    private HashMap<String, Long> regs;
+    // public static RegisterDump nullDump = new RegisterDumpNull();
+
+    public RegisterDump() {
+        this.regs = new HashMap<>();
+    }
+
+    public static RegisterDump newInstance(String rawRegisterDump, Pattern matchpat) {
+
+        var dump = new RegisterDump();
+        var lstream = LineStream.newInstance(rawRegisterDump);
+        while (lstream.peekNextLine() != null) {
+            var line = lstream.nextLine();
+            if (!SpecsStrings.matches(line, matchpat))
+                continue;
+
+            var regAndValue = SpecsStrings.getRegex(line, matchpat);
+            var reg = regAndValue.get(0).trim();
+            var value = Long.valueOf(regAndValue.get(1).trim(), 16);
+            dump.regs.put(reg, value);
+        }
+        return dump;
+    }
 
     public void add(String register, long value) {
         regs.put(register, value);
@@ -17,13 +41,12 @@ public class RegisterDump {
     public Long getValue(String register) {
         return regs.get(register);
     }
-    
+
     public void prettyPrint() {
-        HashMap<String, Long> sortedMap = 
-                this.regs.entrySet().stream()
-               .sorted(Entry.comparingByValue())
-               .collect(Collectors.toMap(Entry::getKey, Entry::getValue,
-                                         (e1, e2) -> e1, HashMap::new));
+        HashMap<String, Long> sortedMap = this.regs.entrySet().stream()
+                .sorted(Entry.comparingByValue())
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue,
+                        (e1, e2) -> e1, HashMap::new));
         int mod = sortedMap.keySet().size() / 3;
         int i = 1;
         for (String key : sortedMap.keySet()) {

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
@@ -46,6 +47,7 @@ public class GDBRun extends StringProcessRun {
         var args = new ArrayList<String>();
         args.add(app.getGdb().getResource());
         if (scriptFile != null) {
+            args.add("-q"); // supresses intro and copywright text at start!
             args.add("-x");
             args.add(scriptFile.getAbsolutePath());
         }
@@ -65,9 +67,7 @@ public class GDBRun extends StringProcessRun {
     public GDBRun(Application app, File scriptFile) {
         super(GDBRun.getArgs(app, scriptFile));
         super.attachThreads();
-
-        // discard launch header
-        this.consumeAllGDBResponse();
+        this.getGDBResponse(); // consume a single garbage line produced from the start of gdb
     }
 
     /*
@@ -123,10 +123,30 @@ public class GDBRun extends StringProcessRun {
     /*
      * 
      */
+    public void runUntil(long addr) {
+        var hexaddr = Long.toHexString(addr);
+        this.runUntil("0x" + hexaddr);
+    }
+
+    /*
+     * 
+     */
+    public void runUntil(String hexaddr) {
+        // this.sendGDBCommand("while $pc != " + hexaddr + "\nstepi 1\nend");
+        this.sendGDBCommand("break *" + hexaddr);
+        this.consumeAllGDBResponse(); // consume ack
+        this.sendGDBCommand("c"); // continue
+        this.getGDBResponse(); // consume "Continuing."
+        this.getGDBResponse(); // consume ""
+        this.waitForGDB();
+    }
+
+    /*
+     * 
+     */
     public void stepi() {
         this.sendGDBCommand("stepi 1");
-        // discard garbage
-        this.consumeAllGDBResponse();
+        this.discardAllGDBResponse();
     }
 
     /*
@@ -183,15 +203,31 @@ public class GDBRun extends StringProcessRun {
         this.sendGDBCommand("x/x $pc");
         var response = this.getGDBResponse();
         var addrandinst = SpecsStrings.getRegex(response, INSTPATTERN);
-        return addrandinst.get(0) + ":" + addrandinst.get(1);
+        return "0x" + addrandinst.get(0) + ":" + "0x" + addrandinst.get(1);
     }
 
     /*
      * 
      */
-    public String getRegisters() {
+    // private static final Pattern REGPATTERN = Pattern.compile("([0-9a-z]+)\\s*0x([0-9a-f]+)\\s*([0-9]+)");
+    private static final Pattern REGPATTERN = Pattern.compile("([0-9a-z]+)\\s*0x([0-9a-f]+)\\s.*");
+
+    public RegisterDump getRegisters() {
         this.sendGDBCommand("info registers");
-        return this.consumeAllGDBResponse();
+
+        var dump = new RegisterDump();
+        String line = null;
+        while ((line = this.getGDBResponse()) != null) {
+            if (!SpecsStrings.matches(line, REGPATTERN))
+                continue;
+
+            var regAndValue = SpecsStrings.getRegex(line, REGPATTERN);
+            var reg = regAndValue.get(0).trim();
+            var value = Long.valueOf(regAndValue.get(1).trim(), 16);
+            dump.add(reg, value);
+        }
+
+        return dump;
     }
 
     /*
@@ -230,7 +266,7 @@ public class GDBRun extends StringProcessRun {
     /*
      * Get all lines available from GDB process
      */
-    public String consumeAllGDBResponse() {
+    private String consumeAllGDBResponse() {
         var output = new StringBuilder();
         String line = null;
         while ((line = super.receive()) != null) {
@@ -240,9 +276,24 @@ public class GDBRun extends StringProcessRun {
     }
 
     /*
+     * Get and discard
+     */
+    private void discardAllGDBResponse() {
+        while (super.receive() != null)
+            ;
+    }
+
+    /* 
+     * Wait for continue run
+     */
+    private void waitForGDB() {
+        super.receive(-1);
+    }
+
+    /*
      * Get single output line from GDB process
      */
-    public String getGDBResponse() {
+    private String getGDBResponse() {
         return super.receive();
     }
 }

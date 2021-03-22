@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
@@ -220,6 +221,40 @@ public class BinaryTranslationUtils {
             return mat.group(0);
         else
             return "Could not retrieve build information!";
+    }
+
+    /*
+     * 
+     */
+    public static File FillGDBScript(Application app) {
+
+        var elfpath = app.getElffile().getAbsolutePath();
+        var qemuexe = app.getQemuexe().getResource();
+        if (IS_WINDOWS) {
+            qemuexe += ".exe";
+            elfpath = elfpath.replace("\\", "/");
+        }
+
+        var gdbScript = new Replacer(app.getGdbtmpl());
+        gdbScript.replace("<ELFNAME>", elfpath);
+        gdbScript.replace("<QEMUBIN>", qemuexe);
+
+        if (app.getDtbfile() != null) {
+            var fd = BinaryTranslationUtils.getFile(app.getDtbfile().getResource());
+            var dtbpath = fd.getAbsolutePath();
+            if (IS_WINDOWS)
+                dtbpath = dtbpath.replace("\\", "/");
+            gdbScript.replace("<DTBFILE>", dtbpath);
+        }
+
+        if (IS_WINDOWS)
+            gdbScript.replace("<KILL>", "");
+        else
+            gdbScript.replace("<KILL>", "kill");
+
+        var fd = new File("tmpscript.gdb");
+        SpecsIo.write(fd, gdbScript.toString());
+        return fd;
     }
 
     /*
