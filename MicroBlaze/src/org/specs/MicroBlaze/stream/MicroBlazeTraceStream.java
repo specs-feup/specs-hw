@@ -3,21 +3,19 @@ package org.specs.MicroBlaze.stream;
 import java.io.File;
 
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
-import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;
 import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
 public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
     // three auxiliary vars to help with mb-gdb bug
-    private final MicroBlazeELFDump elfdump;
-    private Instruction afterbug = null;
-    private boolean haveStoredInst = false;
+    // private final MicroBlazeELFDump elfdump;
+    // private Instruction afterbug = null;
+    // private boolean haveStoredInst = false;
 
     /*
      * IMPORTANT: this bug occurs using the mb-gdb binary bundled with vivado 2018.3; 
@@ -27,8 +25,8 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
      *  an IMM always executes, and therefore we can go fetch it. For branches, there is 
      *  no way to know which instruction to fetch...
      */
-    private static MicroBlazeELFDump GDBbugHandle(File elfname) {
-
+    /*private static MicroBlazeELFDump GDBbugHandle(File elfname) {
+    
         // this if-else is only here to replace the "cholesky_trace.txt" auxiliary
         // trace file with the equivalent ELF dump, so that tests can run on Jenkins without GNU tools
         File auxname = null;
@@ -38,7 +36,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         // } else {
         // auxname = elfname;
         // }
-
+    
         if (elfname.getName().contains("_trace.txt")) {
             String name = "org/specs/MicroBlaze/asm/N10/" + elfname.getName().replace("_trace", "");
             auxname = SpecsIo.resourceCopy(name);
@@ -46,14 +44,14 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         } else {
             auxname = elfname;
         }
-
+    
         // Workaround for mb-gdb bug of stepping over
         // two instructions at once when it hits an "imm"
         // NOTE: it also doesn't output the instructions in delay slots!!
         // 1. open the ELF
         // 2. dump all the ELF into a local list
         return new MicroBlazeELFDump(auxname);
-    }
+    }*/
 
     /*
      * Auxiliary constructor so that streams can be built from the threading engine
@@ -61,12 +59,12 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
      */
     public MicroBlazeTraceStream(File elfname, ChannelConsumer<Instruction> channel) {
         super(new ChanneledInstructionProducer(new MicroBlazeApplication(elfname), channel));
-        this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfname);
+        // this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfname);
     }
 
     public MicroBlazeTraceStream(File elfname) {
         super(new MicroBlazeTraceProvider(elfname));
-        this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfname);
+        // this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfname);
     }
 
     /**
@@ -76,54 +74,53 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
      *            an initialized custom trace provider
      */
     public MicroBlazeTraceStream(TraceInstructionProducer prod) {
-        super(prod);
-        File elfname = prod.getApp().getElffile();
-        this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfname);
+        this(prod.getApp().getElffile());
     }
 
+    /*
     @Override
     public Instruction peekNext() {
         if (this.haveStoredInst)
             return this.afterbug;
         else
             return super.peekNext();
-    }
+    }*/
 
     /*
      * NOTE: this override will no longer be necessary once mg-gdb is bug free...
      */
-    @Override
+    /*@Override
     public Instruction nextInstruction() {
-
+    
         Instruction i = null;
-
+    
         if (haveStoredInst == true) {
             i = afterbug;
             haveStoredInst = false;
-
+    
         } else {
             i = super.nextInstruction();
         }
-
+    
         if (i != null) {
-            // get another one if trueInteger
+            // get another one if true
             if (i.isImmediateValue() || (i.getDelay() > 0)) {
-
+    
                 // NOTE, doing simple elfdump.getInstruction returns a reference, and we want new objects
                 // after a call to nextInstruction() ALWAYS! Therefore, copy() must be appended
                 Instruction tmpInst = elfdump.getInstruction(i.getAddress() + this.getInstructionWidth());
                 afterbug = tmpInst.copy();
                 haveStoredInst = true;
             }
-
+    
             this.numcycles += i.getLatency();
             this.numinsts++;
-
+    
             // TODO: temporary fix for duplicated insts
             // if (i.getRegisters().isEmpty())
             // return nextInstruction();
         }
-
+    
         return i;
-    }
+    }*/
 }

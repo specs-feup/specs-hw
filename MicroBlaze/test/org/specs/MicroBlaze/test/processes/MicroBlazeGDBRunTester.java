@@ -48,7 +48,7 @@ public class MicroBlazeGDBRunTester {
 
             // check for outstanding output?
             // var output = gdb.getG
-            gdb.killTarget();
+            System.out.println(gdb.killTarget());
             gdb.quit();
         }
     }
