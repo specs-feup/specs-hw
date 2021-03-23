@@ -44,8 +44,11 @@ public class TraceInstructionProducer extends AInstructionProducer {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;
             gdb.runToEnd();
-        }
-        super.rawDump();
+            super.rawDump();
+            gdb.killTarget();
+            gdb.quit();
+        } else
+            super.rawDump();
     }
 
     /*
@@ -68,8 +71,12 @@ public class TraceInstructionProducer extends AInstructionProducer {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;
             gdb.stepi();
-            var line = gdb.getAddrAndInstruction().split(":");
-            return this.newInstance(line[0], line[1]);
+            var line = gdb.getAddrAndInstruction();
+            if (line == null)
+                return null;
+
+            var splits = line.split(":");
+            return this.newInstance(splits[0], splits[1]);
 
         } else {
             return super.nextInstruction();
