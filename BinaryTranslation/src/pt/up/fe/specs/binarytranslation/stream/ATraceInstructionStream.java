@@ -18,6 +18,11 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
     }
 
     @Override
+    public boolean advanceTo(long addr) {
+        return this.getProducer().advanceTo(addr);
+    }
+
+    @Override
     public Instruction nextInstruction() {
 
         var newinst = super.nextInstruction();
