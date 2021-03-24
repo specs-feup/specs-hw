@@ -40,6 +40,16 @@ public class TraceInstructionProducer extends AInstructionProducer {
     }
 
     @Override
+    public boolean advanceTo(long addr) {
+        if ((this.prun instanceof GDBRun)) {
+            var gdb = (GDBRun) this.prun;
+            gdb.runUntil(addr);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void rawDump() {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;
