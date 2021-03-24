@@ -2,6 +2,7 @@ package org.specs.MicroBlaze.test.processes;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
@@ -31,20 +32,27 @@ public class MicroBlazeGDBRunTester {
      */
     @Test
     public void testRegister() {
-        var elf = MicroBlazeLivermoreELFN10.innerprod;
+        var elf = MicroBlazeLivermoreELFN100.matmul100;
         var fd = BinaryTranslationUtils.getFile(elf);
         var app = new MicroBlazeApplication(fd);
         try (var gdb = new GDBRun(app, BinaryTranslationUtils.FillGDBScript(app))) {
 
-            // run until innerprod
+            // run until kernel start
             gdb.runUntil(elf.getKernelStart().toString());
 
+            for (int i = 0; i < 200; i++) {
+                gdb.stepi();
+                System.out.println(gdb.getAddrAndInstruction());
+            }
+
+            /*
             var dump = gdb.getRegisters();
             dump.prettyPrint();
-
+            
             gdb.stepi();
             dump = gdb.getRegisters();
             dump.prettyPrint();
+            */
 
             // check for outstanding output?
             // var output = gdb.getG
