@@ -12,7 +12,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 public abstract class ASimpleSegmentDetector extends ASegmentDetector {
-    
+
     private List<Instruction> processedInsts = new ArrayList<>();
 
     /*
@@ -89,6 +89,10 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
                 this.processedInsts.add(inst);
                 window.add(inst);
             }
+
+            // check for premature quit condition
+            if (window.getLast().getAddress() == this.getConfig().getPrematureStopAddr())
+                break;
         }
 
         // Remove all sequences which only happen once

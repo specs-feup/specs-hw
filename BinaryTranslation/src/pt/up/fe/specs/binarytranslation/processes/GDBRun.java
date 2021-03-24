@@ -117,8 +117,6 @@ public class GDBRun extends StringProcessRun {
      */
     public String killTarget() {
         this.sendGDBCommand("kill");
-        // this.sendGDBCommand("monitor quit");
-        // this.sendGDBCommand("disconnect");
         this.targetOpen = false;
         return this.consumeAllGDBResponse();
     }
@@ -157,13 +155,28 @@ public class GDBRun extends StringProcessRun {
      * 
      */
     public void runUntil(String hexaddr) {
-        // this.sendGDBCommand("while $pc != " + hexaddr + "\nstepi 1\nend");
-        this.sendGDBCommand("break *" + hexaddr);
-        this.consumeAllGDBResponse(); // consume ack
-        this.sendGDBCommand("c"); // continue
-        this.getGDBResponse(); // consume "Continuing."
-        this.getGDBResponse(); // consume ""
-        this.waitForGDB();
+        if (this.targetOpen) {
+            this.sendGDBCommand("break *" + hexaddr);
+            this.consumeAllGDBResponse(); // consume ack
+            this.sendGDBCommand("c"); // continue
+            while (!this.waitForGDB().contains("Breakpoint"))
+                ;
+
+            /*
+             * 
+            String ret = null;
+            do {
+                ret = this.waitForGDB();
+                System.out.println(ret);
+            } while (!ret.contains("Breakpoint"));
+            */
+
+            /*
+            System.out.println(this.getGDBResponse()); // consume "Continuing."
+            System.out.println(this.getGDBResponse()); // consume ""
+            System.out.println(this.waitForGDB());
+            */
+        }
     }
 
     /*
@@ -324,8 +337,8 @@ public class GDBRun extends StringProcessRun {
     /* 
      * Wait for continue run
      */
-    private void waitForGDB() {
-        super.receive(-1);
+    private String waitForGDB() {
+        return super.receive(-1);
     }
 
     /*
