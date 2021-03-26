@@ -41,7 +41,7 @@ public class MicroBlazeTraceAnalysisTest {
     public void testMemoryProfilerStream() {
         var stream = getStream(MicroBlazeLivermoreELFN10.innerprod, false);
         var mem = new MemoryProfilerAnalyzer(stream);
-        assertTrue(mem.profileWithStream());
+        assertTrue(mem.profile(true));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class MicroBlazeTraceAnalysisTest {
         var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
         var prod = new MicroBlazeDetailedTraceProvider(fd);
         var mem = new MemoryProfilerAnalyzer(prod);
-        assertTrue(mem.profileWithProducer());
+        assertTrue(mem.profile(false));
     }
 
     @Test
@@ -182,8 +182,8 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testInductionVariableDetection() {
-        var elf = MicroBlazeLivermoreELFN10.innerprod;
-        // var elf = MicroBlazeLivermoreELFN10.linrec;
+        //var elf = MicroBlazeLivermoreELFN10.innerprod;
+        var elf = MicroBlazeLivermoreELFN10.linrec;
         var stream = getStream(elf, false);
 
         InductionVariableAnalyzer ivd = new InductionVariableAnalyzer(stream);
