@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.analysis;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
@@ -9,10 +10,20 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBloc
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class AnalysisUtils {
+    
+    public static boolean isLoadStore(Instruction inst) {
+        var types = inst.getData().getGenericTypes();
+        var loadstores = new ArrayList<>();
+        loadstores.add(InstructionType.G_LOAD);
+        loadstores.add(InstructionType.G_STORE);
+
+        return !Collections.disjoint(types, loadstores);
+    }
     
     /**
      * Prints an instruction with the values of its registers
