@@ -1,8 +1,18 @@
 package pt.up.fe.specs.binarytranslation.analysis.induction;
 
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
+import org.jgrapht.nio.dot.DOTExporter;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
@@ -23,6 +33,32 @@ public class InductionVariableDetector {
             regs.prettyPrint();
             AnalysisUtils.printSeparator(40);
         }
+    }
+    
+    public ArrayList<String> findAddressRegisterChain() {
+        var out = new ArrayList<String>();
+        
+        for (var i : tracker.getBasicBlock().getInstructions()) {
+            if (AnalysisUtils.isLoadStore(i)) {
+                var builder = new AddressGraphBuilder(tracker.getBasicBlock().getInstructions(), i);
+                var graph = builder.calculateChain();
+                printGraph(graph);
+            }
+        }
+        return out;
+    }
+    
+    public void printGraph(Graph<AddressVertex, DefaultEdge> graph) {
+        DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
+        exporter.setVertexAttributeProvider((v) -> {
+            Map<String, Attribute> map = new LinkedHashMap<>();
+            map.put("label", DefaultAttribute.createAttribute(v.getLabel()));
+            map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
+            return map;
+        });
+        Writer writer = new StringWriter();
+        exporter.exportGraph(graph, writer);
+        System.out.println(writer.toString());
     }
     
     public void printDifferences() {

@@ -22,7 +22,8 @@ public class InductionVariableAnalyzer extends ATraceAnalyzer {
         for (var bb : segs) {
             bb.printSegment();
             var ivd = new InductionVariableDetector(bb, insts);
-            ivd.printDifferences();
+            //ivd.printDifferences();
+            ivd.findAddressRegisterChain();
         }
     }
 }
