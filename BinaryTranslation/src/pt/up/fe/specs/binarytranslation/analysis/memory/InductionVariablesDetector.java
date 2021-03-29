@@ -1,28 +1,28 @@
-package pt.up.fe.specs.binarytranslation.analysis.induction;
+package pt.up.fe.specs.binarytranslation.analysis.memory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
-public class InductionVariableDetector {
-    private BasicBlockOccurrenceTracker tracker;
-
-    public InductionVariableDetector(BinarySegment bb, List<Instruction> insts) {
-        this.tracker = new BasicBlockOccurrenceTracker(bb, insts);
+public class InductionVariablesDetector extends APropertyDetector {
+    public InductionVariablesDetector(BinarySegment bb, List<Instruction> insts) {
+        super(bb, insts);
     }
-    
-    public void printOccurrenceRegisters() {
-        for (var o : tracker.getOccurrences()) {
-            var regs = o.getRegisters();
-            regs.prettyPrint();
-            AnalysisUtils.printSeparator(40);
+
+    public HashMap<String, Long> registerDiff(RegisterDump r1, RegisterDump r2) {
+        var diff = new HashMap<String, Long>();
+        for (var k : r1.getRegisterMap().keySet()) {
+            long i1 = r1.getRegisterMap().get(k);
+            long i2 = r2.getRegisterMap().get(k);
+            long id = i2 - i1;
+            diff.put(k, id);
         }
+        return diff;
     }
     
     public void printDifferences() {
@@ -87,16 +87,5 @@ public class InductionVariableDetector {
             }
         }
         return sb.toString();
-    }
-
-    public HashMap<String, Long> registerDiff(RegisterDump r1, RegisterDump r2) {
-        var diff = new HashMap<String, Long>();
-        for (var k : r1.getRegisterMap().keySet()) {
-            long i1 = r1.getRegisterMap().get(k);
-            long i2 = r2.getRegisterMap().get(k);
-            long id = i2 - i1;
-            diff.put(k, id);
-        }
-        return diff;
     }
 }

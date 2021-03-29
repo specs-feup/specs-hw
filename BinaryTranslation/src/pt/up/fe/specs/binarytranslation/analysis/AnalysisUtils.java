@@ -1,18 +1,52 @@
 package pt.up.fe.specs.binarytranslation.analysis;
 
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
+import org.jgrapht.nio.dot.DOTExporter;
+
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class AnalysisUtils {
+    private static HashMap<String, String> enumToSymbol;
+    static {
+        enumToSymbol = new HashMap<>();
+        enumToSymbol.put("bslli", "<<");
+    }
+    
+    public static String mapEnum(String elem) {
+        if (enumToSymbol.containsKey(elem))
+            return enumToSymbol.get(elem);
+        else return elem;
+    }
+    
+    public static boolean isLoadStore(Instruction inst) {
+        var types = inst.getData().getGenericTypes();
+        var loadstores = new ArrayList<>();
+        loadstores.add(InstructionType.G_LOAD);
+        loadstores.add(InstructionType.G_STORE);
+
+        return !Collections.disjoint(types, loadstores);
+    }
     
     /**
      * Prints an instruction with the values of its registers
@@ -79,5 +113,18 @@ public class AnalysisUtils {
         
         System.out.println(bun.getSummary());
         return bun.getSegments();
+    }
+    
+    public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph) {
+        DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
+        exporter.setVertexAttributeProvider((v) -> {
+            Map<String, Attribute> map = new LinkedHashMap<>();
+            map.put("label", DefaultAttribute.createAttribute(v.getLabel()));
+            map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
+            return map;
+        });
+        Writer writer = new StringWriter();
+        exporter.exportGraph(graph, writer);
+        return writer.toString();
     }
 }
