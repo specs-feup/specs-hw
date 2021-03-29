@@ -42,7 +42,7 @@ public class PartialAddressGraphBuilder {
     private AddressVertex iterate(String register, int index) {
         var ret = AddressVertex.nullVertex;
         boolean exit = false;
-        
+
         for (int i = index; i >= 0; i--) {
             var inst = this.basicBlock.get(i);
             var ops = inst.getData().getOperands();
@@ -52,14 +52,21 @@ public class PartialAddressGraphBuilder {
 
                 if (reg0.equals(register)) {
                     exit = true;
-                    
+
                     // Build operation node
-                    String opName = inst.getData().getPlainName();
-                    // TODO: map operation name to enum operand
+                    // TODO: map other enums to symbols (is there already a way to do this?)
+                    String enumName = inst.getProperties().getEnumName();
+                    String opName = AnalysisUtils.mapEnum(enumName);
+
                     var opNode = new AddressVertex(opName, AddressVertexType.OPERATION);
                     graph.addVertex(opNode);
                     ret = opNode;
 
+                    //Special case: op is another load/store
+                    //in this case, stop expanding
+                    if (AnalysisUtils.isLoadStore(inst))
+                        break;
+                    
                     // Handle first operand
                     var op1 = ops.get(1);
                     var previous = AddressVertex.nullVertex;
@@ -117,7 +124,7 @@ public class PartialAddressGraphBuilder {
         }
         return ret;
     }
-    
+
     public String getOperationSymbol(Instruction i) {
         return "";
     }

@@ -5,6 +5,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,17 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class AnalysisUtils {
+    private static HashMap<String, String> enumToSymbol;
+    static {
+        enumToSymbol = new HashMap<>();
+        enumToSymbol.put("bslli", "<<");
+    }
+    
+    public static String mapEnum(String elem) {
+        if (enumToSymbol.containsKey(elem))
+            return enumToSymbol.get(elem);
+        else return elem;
+    }
     
     public static boolean isLoadStore(Instruction inst) {
         var types = inst.getData().getGenericTypes();
