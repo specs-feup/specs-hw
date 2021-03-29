@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.induction;
+package pt.up.fe.specs.binarytranslation.analysis.memory;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.induction.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class PartialAddressGraphBuilder {
