@@ -35,10 +35,9 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             var mad = new MemoryAddressDetector(bb, insts);
             var graphs = mad.detectGraphs();
             System.out.println("\nDetected the following graphs:");
-//            for (var graph : graphs) {
-//                String s = AnalysisUtils.graphToDot(graph);
-//                System.out.println(s);
-//            }
+            
+            //can handle each graph individually, or merge them into one
+            //merging for now, to simplify output
             var merged = mergeGraphs(graphs);
             System.out.println(AnalysisUtils.graphToDot(merged));
             
