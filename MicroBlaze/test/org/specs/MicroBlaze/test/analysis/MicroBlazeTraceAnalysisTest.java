@@ -17,7 +17,7 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.analysis.BtfPerformanceAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.InOutAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.InductionVariableAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.MemoryAddressAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryProfilerAnalyzer;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
@@ -181,12 +181,12 @@ public class MicroBlazeTraceAnalysisTest {
     }
 
     @Test
-    public void testInductionVariableDetection() {
+    public void testAddresses() {
         //var elf = MicroBlazeLivermoreELFN10.innerprod;
         var elf = MicroBlazeLivermoreELFN10.linrec;
         var stream = getStream(elf, false);
 
-        InductionVariableAnalyzer ivd = new InductionVariableAnalyzer(stream);
-        ivd.analyze();
+        var maa = new MemoryAddressAnalyzer(stream);
+        maa.analyze();
     }
 }
