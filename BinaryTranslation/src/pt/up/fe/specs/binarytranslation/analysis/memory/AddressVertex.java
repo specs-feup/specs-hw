@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.induction;
+package pt.up.fe.specs.binarytranslation.analysis.memory;
 
 public class AddressVertex {
     public enum AddressVertexType {

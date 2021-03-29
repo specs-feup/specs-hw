@@ -1,64 +1,28 @@
-package pt.up.fe.specs.binarytranslation.analysis.induction;
+package pt.up.fe.specs.binarytranslation.analysis.memory;
 
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.nio.Attribute;
-import org.jgrapht.nio.DefaultAttribute;
-import org.jgrapht.nio.dot.DOTExporter;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
-public class InductionVariableDetector {
-    private BasicBlockOccurrenceTracker tracker;
+public class InductionVariablesDetector extends APropertyDetector {
+    public InductionVariablesDetector(BinarySegment bb, List<Instruction> insts) {
+        super(bb, insts);
+    }
 
-    public InductionVariableDetector(BinarySegment bb, List<Instruction> insts) {
-        this.tracker = new BasicBlockOccurrenceTracker(bb, insts);
-    }
-    
-    public void printOccurrenceRegisters() {
-        for (var o : tracker.getOccurrences()) {
-            var regs = o.getRegisters();
-            regs.prettyPrint();
-            AnalysisUtils.printSeparator(40);
+    public HashMap<String, Long> registerDiff(RegisterDump r1, RegisterDump r2) {
+        var diff = new HashMap<String, Long>();
+        for (var k : r1.getRegisterMap().keySet()) {
+            long i1 = r1.getRegisterMap().get(k);
+            long i2 = r2.getRegisterMap().get(k);
+            long id = i2 - i1;
+            diff.put(k, id);
         }
-    }
-    
-    public ArrayList<String> findAddressRegisterChain() {
-        var out = new ArrayList<String>();
-        
-        for (var i : tracker.getBasicBlock().getInstructions()) {
-            if (AnalysisUtils.isLoadStore(i)) {
-                var builder = new AddressGraphBuilder(tracker.getBasicBlock().getInstructions(), i);
-                var graph = builder.calculateChain();
-                printGraph(graph);
-            }
-        }
-        return out;
-    }
-    
-    public void printGraph(Graph<AddressVertex, DefaultEdge> graph) {
-        DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
-        exporter.setVertexAttributeProvider((v) -> {
-            Map<String, Attribute> map = new LinkedHashMap<>();
-            map.put("label", DefaultAttribute.createAttribute(v.getLabel()));
-            map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
-            return map;
-        });
-        Writer writer = new StringWriter();
-        exporter.exportGraph(graph, writer);
-        System.out.println(writer.toString());
+        return diff;
     }
     
     public void printDifferences() {
@@ -123,16 +87,5 @@ public class InductionVariableDetector {
             }
         }
         return sb.toString();
-    }
-
-    public HashMap<String, Long> registerDiff(RegisterDump r1, RegisterDump r2) {
-        var diff = new HashMap<String, Long>();
-        for (var k : r1.getRegisterMap().keySet()) {
-            long i1 = r1.getRegisterMap().get(k);
-            long i2 = r2.getRegisterMap().get(k);
-            long id = i2 - i1;
-            diff.put(k, id);
-        }
-        return diff;
     }
 }
