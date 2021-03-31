@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
@@ -26,7 +27,6 @@ public class MicroBlazeSequentialDetectTest {
             var istream1 = new MicroBlazeTraceStream(fd);
             istream1.silent(false);
             istream1.advanceTo(elf.getKernelStart().longValue());
-
             System.out.println("Looking for segments of size: " + i);
 
             var detector1 = new TraceBasicBlockDetector(// new FrequentTraceSequenceDetector(
@@ -37,8 +37,10 @@ public class MicroBlazeSequentialDetectTest {
                             .withPrematureStopAddr(elf.getKernelStop().longValue())
                             .build());
             var result1 = detector1.detectSegments(istream1);
-            if (result1.getSegments().size() == 0)
+            if (result1.getSegments().size() == 0) {
+                System.out.println("No segments detected with window = " + i);
                 continue;
+            }
 
             // var gbundle = GraphBundle.newInstance(result1);
             // gbundle.generateOutput();

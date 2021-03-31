@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
@@ -62,6 +63,7 @@ public class MicroBlazeParallelDetectTest {
         for (var consumer : streamengine.getConsumers()) {
             var result1 = (SegmentBundle) consumer.getConsumeResult();
             // SegmentDetectTestUtils.printBundle(result1);
+            System.out.println(result1.getSummary());
             var gbundle = GraphBundle.newInstance(result1);
             if (gbundle.getSegments().size() != 0)
                 gbundle.generateOutput();
@@ -69,6 +71,11 @@ public class MicroBlazeParallelDetectTest {
 
         // results1.toJSON();
         // results2.toJSON();
+    }
+    
+    @Test
+    public void testSingleParallelDetector() {
+        this.testParallelDetectors(MicroBlazeLivermoreELFN10.innerprod);
     }
 
     @Test
