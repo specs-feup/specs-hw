@@ -26,7 +26,7 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
     public Instruction nextInstruction() {
 
         var newinst = super.nextInstruction();
-        if (this.numinsts % 10000 == 0 && !this.isSilent()) {
+        if (this.numinsts % 100 == 0 && !this.isSilent()) {
             System.out.println(this.numinsts + " instructions simulated...");
         }
 
