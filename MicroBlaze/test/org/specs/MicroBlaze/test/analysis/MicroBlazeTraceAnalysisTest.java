@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
@@ -182,11 +183,13 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testAddresses() {
-        //var elf = MicroBlazeLivermoreELFN10.innerprod;
-        var elf = MicroBlazeLivermoreELFN10.linrec;
-        var stream = getStream(elf, false);
-
-        var maa = new MemoryAddressAnalyzer(stream);
-        maa.analyze();
+        //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+        //var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
+        var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+        
+        var fd = BinaryTranslationUtils.getFile(elf);
+        var stream = new MicroBlazeTraceStream(fd);
+        var maa = new MemoryAddressAnalyzer(stream, elf);
+        maa.analyze(window);
     }
 }
