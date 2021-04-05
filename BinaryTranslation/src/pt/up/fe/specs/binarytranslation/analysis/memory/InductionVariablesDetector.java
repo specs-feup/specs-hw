@@ -8,6 +8,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
@@ -27,7 +28,7 @@ public class InductionVariablesDetector extends APropertyDetector {
         }
         return diff;
     }
-    
+
     public void printDifferences() {
         var keys = tracker.getOccurrences().get(0).getRegisters().getRegisterMap().keySet();
         var diffs = new ArrayList<HashMap<String, Long>>();
@@ -37,7 +38,7 @@ public class InductionVariablesDetector extends APropertyDetector {
             var bd = registerDiff(b1, b2);
             diffs.add(bd);
         }
-        
+
         var sb = new StringBuilder();
         for (var k : keys) {
             boolean isZero = true;
@@ -56,7 +57,7 @@ public class InductionVariablesDetector extends APropertyDetector {
         }
         System.out.println(sb.toString());
     }
-    
+
     public void printInstDifferences() {
         var rows = tracker.getBasicBlock().getInstructions().size();
         var cols = tracker.getOccurrences().size();
@@ -69,7 +70,7 @@ public class InductionVariablesDetector extends APropertyDetector {
                 regs[row][col] = regInfo;
             }
         }
-        
+
         var sb = new StringBuilder();
         for (int i = 0; i < regs.length; i++) {
             for (int j = 0; j < regs[i].length; j++) {
@@ -79,7 +80,7 @@ public class InductionVariablesDetector extends APropertyDetector {
         }
         System.out.println(sb.toString());
     }
-    
+
     private String getRelevantRegs(Instruction inst) {
         StringBuilder sb = new StringBuilder();
         for (var op : inst.getData().getOperands()) {
@@ -96,17 +97,17 @@ public class InductionVariablesDetector extends APropertyDetector {
         var res = new ArrayList<String>();
         var regs = tracker.getRegisters();
         String[][] fullRes = new String[regs.size()][4];
-        
+
         for (int i = 0; i < regs.size(); i++) {
             String reg = regs.get(i);
-            
+
             boolean c1 = conditionPartOfAddress(reg, mergedGraph);
             boolean c2 = conditionHasIncrement(reg);
             boolean c3 = conditionIsInComparison(reg);
             if (c1 && c2 && c3)
                 res.add(reg);
-            
-            //For full output
+
+            // For full output
             fullRes[i][0] = reg;
             fullRes[i][1] = Boolean.toString(c1);
             fullRes[i][2] = Boolean.toString(c2);
@@ -115,7 +116,7 @@ public class InductionVariablesDetector extends APropertyDetector {
         printFullResult(fullRes);
         return res;
     }
-    
+
     private void printFullResult(String[][] fullRes) {
         for (int i = 0; i < fullRes.length; i++) {
             var sb = new StringBuilder(fullRes[i][0] + ": ");
@@ -125,16 +126,50 @@ public class InductionVariablesDetector extends APropertyDetector {
             System.out.println(sb.toString());
         }
     }
-    
+
     private boolean conditionPartOfAddress(String reg, Graph<AddressVertex, DefaultEdge> mergedGraph) {
+        for (var vertex : mergedGraph.vertexSet()) {
+            if (vertex.getType() == AddressVertexType.REGISTER) {
+                if (vertex.getLabel().equals(reg))
+                    return true;
+            }
+        }
         return false;
     }
-    
+
     private boolean conditionHasIncrement(String reg) {
+        for (var inst : tracker.getBasicBlockInsts()) {
+            if (inst.isAdd() || inst.isSub() || inst.isMul()) {
+                if (inst.getData().getOperands().size() == 3) {
+
+                    var op0 = inst.getData().getOperands().get(0);
+                    var op1 = inst.getData().getOperands().get(1);
+                    var op3 = inst.getData().getOperands().get(2);
+
+                    if (op0.isRegister() && op1.isRegister() && op3.isImmediate()) {
+                        var reg0 = AnalysisUtils.getRegName(op0);
+                        var reg1 = AnalysisUtils.getRegName(op1);
+                        if (reg0.equals(reg) && reg1.equals(reg))
+                            return true;
+                    }
+                }
+            }
+        }
         return false;
     }
-    
+
     private boolean conditionIsInComparison(String reg) {
+        for (var inst : tracker.getBasicBlockInsts()) {
+            if (inst.isLogical()) {
+                for (var op : inst.getData().getOperands()) {
+                    if (op.isRegister()) {
+                        var currReg = AnalysisUtils.getRegName(op);
+                        if (currReg.equals(reg))
+                            return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 }
