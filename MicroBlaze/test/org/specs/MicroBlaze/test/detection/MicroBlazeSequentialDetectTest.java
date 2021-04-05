@@ -20,7 +20,7 @@ public class MicroBlazeSequentialDetectTest {
         // file
         var fd = BinaryTranslationUtils.getFile(elf);
 
-        int minwindow = 10, maxwindow = 10;
+        int minwindow = 4, maxwindow = 30;
 
         // do all detectors sequentially
         for (int i = minwindow; i <= maxwindow; i++) {
@@ -45,13 +45,14 @@ public class MicroBlazeSequentialDetectTest {
             // var gbundle = GraphBundle.newInstance(result1);
             // gbundle.generateOutput();
             SegmentDetectTestUtils.printBundle(result1);
+            return;
         }
     }
 
     @Test
     public void testSequentialDetectors() {
         // for (var file : MicroBlazeLivermoreELFN100.values()) {
-        for (var file : Arrays.asList(MicroBlazeLivermoreELFN10.innerprod)) {
+        for (var file : Arrays.asList(MicroBlazeLivermoreELFN10.state_frag)) {
             this.testSequentialDetectors(file);
         }
     }
