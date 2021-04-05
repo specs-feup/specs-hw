@@ -59,8 +59,12 @@ public class BasicBlockOccurrenceTracker {
     public List<Instruction> getTrace() {
         return trace;
     }
+    
+    public List<Instruction> getBasicBlockInsts() {
+        return bb.getInstructions();
+    }
 
     public ArrayList<String> getRegisters() {
-        return AnalysisUtils.findAllRegistersOfSeq(bb.getInstructions());
+        return AnalysisUtils.findAllRegistersOfSeq(getBasicBlockInsts());
     }
 }
