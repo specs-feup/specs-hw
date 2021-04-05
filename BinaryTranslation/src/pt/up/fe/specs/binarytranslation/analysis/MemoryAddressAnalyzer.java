@@ -54,14 +54,13 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             System.out.println("\nCalculating memory address graphs...");
             var mad = new MemoryAddressDetector(bb, insts);
             var graphs = mad.detectGraphs();
-            System.out.println("\nDetected graph:");
             
             //can handle each graph individually, or merge them into one
             //merging for now, to simplify output
             var mergedGraph = mergeGraphs(graphs);
             String sgraph = AnalysisUtils.graphToDot(mergedGraph);
             var url = AnalysisUtils.generateGraphURL(sgraph);
-            System.out.println("Graph URL: " + url);
+            System.out.println("Graph URL:\n" + url);
             
             //induction vars
             System.out.println("\nCalculating induction variables...");
@@ -69,7 +68,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             var regs = ivd.detectVariables(mergedGraph);
             
             System.out.println("Detected the following candidate variables:");
-            System.out.println(String.join(", ", (String[]) regs.toArray()));
+            System.out.println(String.join(", ", regs));
             AnalysisUtils.printSeparator(40);
         }
     }
