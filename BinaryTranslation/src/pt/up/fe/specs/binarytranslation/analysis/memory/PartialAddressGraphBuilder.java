@@ -1,6 +1,11 @@
 package pt.up.fe.specs.binarytranslation.analysis.memory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
@@ -13,15 +18,41 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 public class PartialAddressGraphBuilder {
     private String startReg;
     private AddressVertex root;
-    private int idx;
-    private List<Instruction> basicBlock;
     private Graph<AddressVertex, DefaultEdge> graph;
+    private List<Instruction> modifiedBasicBlock;
+    private int modifiedIdx;
 
     public PartialAddressGraphBuilder(String reg, int idx, List<Instruction> basicBlock, String prefix) {
         this.startReg = reg;
-        this.idx = idx;
-        this.basicBlock = basicBlock;
         this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        
+        //Basic block needs to undergo a small transformation to consider insts after the jump
+        this.modifiedBasicBlock = getModifiedSequence(basicBlock);
+        this.modifiedIdx = getModifiedIndex(idx, basicBlock, modifiedBasicBlock);
+    }
+
+    private int getModifiedIndex(int idx, List<Instruction> bb, List<Instruction> mbb) {
+        var inst = bb.get(idx);
+        for (int i = 0; i < mbb.size(); i++) {
+            if (mbb.get(i) == inst)
+                return i;
+        }
+        return -1;
+    }
+
+    private List<Instruction> getModifiedSequence(List<Instruction> bb) {
+        var stack = new Stack<Instruction>();
+        for (int i = bb.size() - 1; i >= 0; i--) {
+            var inst = bb.get(i);
+            if (inst.isJump())
+                break;
+            else
+                stack.add(inst);
+        }
+        var prolog = new ArrayList<Instruction>(stack);
+        List<Instruction> res = new ArrayList<>();
+        Stream.of(prolog, bb).forEach(res::addAll);
+        return res;
     }
 
     public Graph<AddressVertex, DefaultEdge> generateGraph() {
@@ -32,7 +63,7 @@ public class PartialAddressGraphBuilder {
         this.root = new AddressVertex(startReg, AddressVertexType.REGISTER);
         graph.addVertex(root);
 
-        var parent = iterate(startReg, idx);
+        var parent = iterate(startReg, modifiedIdx);
         if (parent != AddressVertex.nullVertex) {
             graph.addEdge(parent, root);
         }
@@ -44,7 +75,7 @@ public class PartialAddressGraphBuilder {
         boolean exit = false;
 
         for (int i = index; i >= 0; i--) {
-            var inst = this.basicBlock.get(i);
+            var inst = this.modifiedBasicBlock.get(i);
             var ops = inst.getData().getOperands();
 
             if (ops.size() != 0 && ops.get(0).isRegister()) {
@@ -62,11 +93,11 @@ public class PartialAddressGraphBuilder {
                     graph.addVertex(opNode);
                     ret = opNode;
 
-                    //Special case: op is another load/store
-                    //in this case, stop expanding
+                    // Special case: op is another load/store
+                    // in this case, stop expanding
                     if (AnalysisUtils.isLoadStore(inst))
                         break;
-                    
+
                     // Handle first operand
                     var op1 = ops.get(1);
                     var previous = AddressVertex.nullVertex;

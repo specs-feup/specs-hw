@@ -10,7 +10,6 @@ import org.jgrapht.graph.DefaultEdge;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class AddressGraphBuilder {
@@ -36,7 +35,7 @@ public class AddressGraphBuilder {
             String offsetReg = AnalysisUtils.getRegName(offset);
 
             var targetV = new AddressVertex(targetReg, AddressVertexType.REGISTER);
-            var memAccessV = new AddressVertex(isLoad() ? "Memory Access (load)" : "Memory Access (store)",
+            var memAccessV = new AddressVertex(inst.isLoad() ? "Memory Access (load)" : "Memory Access (store)",
                     AddressVertexType.OPERATION);
             var sumV = new AddressVertex("+", AddressVertexType.OPERATION);
 
@@ -47,7 +46,7 @@ public class AddressGraphBuilder {
             fullGraph.addVertex(sumV);
             fullGraph.addEdge(baseBuilder.getRoot(), sumV);
             fullGraph.addEdge(sumV, memAccessV);
-            if (isLoad())
+            if (inst.isLoad())
                 fullGraph.addEdge(memAccessV, targetV);
             else
                 fullGraph.addEdge(targetV, memAccessV);
@@ -66,10 +65,6 @@ public class AddressGraphBuilder {
             return fullGraph;
         }
         return null;
-    }
-
-    private boolean isLoad() {
-        return inst.getData().getGenericTypes().contains(InstructionType.G_LOAD);
     }
 
     public List<String> findContributingRegisters(Operand op) {
