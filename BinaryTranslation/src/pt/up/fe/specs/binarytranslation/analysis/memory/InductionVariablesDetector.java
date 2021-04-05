@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -87,5 +90,51 @@ public class InductionVariablesDetector extends APropertyDetector {
             }
         }
         return sb.toString();
+    }
+
+    public ArrayList<String> detectVariables(Graph<AddressVertex, DefaultEdge> mergedGraph) {
+        var res = new ArrayList<String>();
+        var regs = tracker.getRegisters();
+        String[][] fullRes = new String[regs.size()][4];
+        
+        for (int i = 0; i < regs.size(); i++) {
+            String reg = regs.get(i);
+            
+            boolean c1 = conditionPartOfAddress(reg, mergedGraph);
+            boolean c2 = conditionHasIncrement(reg);
+            boolean c3 = conditionIsInComparison(reg);
+            if (c1 && c2 && c3)
+                res.add(reg);
+            
+            //For full output
+            fullRes[i][0] = reg;
+            fullRes[i][1] = Boolean.toString(c1);
+            fullRes[i][2] = Boolean.toString(c2);
+            fullRes[i][3] = Boolean.toString(c3);
+        }
+        printFullResult(fullRes);
+        return res;
+    }
+    
+    private void printFullResult(String[][] fullRes) {
+        for (int i = 0; i < fullRes.length; i++) {
+            var sb = new StringBuilder(fullRes[i][0] + ": ");
+            sb.append(fullRes[i][1] + ", ");
+            sb.append(fullRes[i][2] + ", ");
+            sb.append(fullRes[i][3]);
+            System.out.println(sb.toString());
+        }
+    }
+    
+    private boolean conditionPartOfAddress(String reg, Graph<AddressVertex, DefaultEdge> mergedGraph) {
+        return false;
+    }
+    
+    private boolean conditionHasIncrement(String reg) {
+        return false;
+    }
+    
+    private boolean conditionIsInComparison(String reg) {
+        return false;
     }
 }

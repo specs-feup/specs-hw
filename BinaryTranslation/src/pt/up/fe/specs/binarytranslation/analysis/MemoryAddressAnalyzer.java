@@ -58,15 +58,16 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             
             //can handle each graph individually, or merge them into one
             //merging for now, to simplify output
-            var merged = mergeGraphs(graphs);
-            System.out.println(AnalysisUtils.graphToDot(merged));
+            var mergedGraph = mergeGraphs(graphs);
+            System.out.println(AnalysisUtils.graphToDot(mergedGraph));
             
             //induction vars
             System.out.println("\nCalculating induction variables...");
             var ivd = new InductionVariablesDetector(bb, insts);
-            //...
-            System.out.println("Detected the following induction variables:");
-            //...
+            var regs = ivd.detectVariables(mergedGraph);
+            
+            System.out.println("Detected the following candidate variables:");
+            System.out.println(String.join(", ", (String[]) regs.toArray()));
             AnalysisUtils.printSeparator(40);
         }
     }
