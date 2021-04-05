@@ -183,9 +183,13 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testAddresses() {
-        //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+        var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
         //var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+        //var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+        //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
+        //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+        //svar elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
+        //var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
         
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);

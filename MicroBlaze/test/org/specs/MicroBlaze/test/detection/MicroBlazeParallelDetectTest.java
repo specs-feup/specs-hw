@@ -14,6 +14,7 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
+import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.threadstream.ProducerEngine;
 
@@ -32,7 +33,7 @@ public class MicroBlazeParallelDetectTest {
         File fd = SpecsIo.resourceCopy(elf.getResource());
         fd.deleteOnExit();
 
-        int minwindow = 4, maxwindow = 20;
+        int minwindow = 4, maxwindow = 30;
 
         // producer
         var iproducer = new MicroBlazeTraceProvider(fd);
@@ -63,7 +64,8 @@ public class MicroBlazeParallelDetectTest {
         for (var consumer : streamengine.getConsumers()) {
             var result1 = (SegmentBundle) consumer.getConsumeResult();
             // SegmentDetectTestUtils.printBundle(result1);
-            System.out.println(result1.getSummary());
+            //System.out.println(result1.getSummary());
+            SegmentDetectTestUtils.printBundle(result1);
             var gbundle = GraphBundle.newInstance(result1);
             if (gbundle.getSegments().size() != 0)
                 gbundle.generateOutput();
@@ -80,9 +82,11 @@ public class MicroBlazeParallelDetectTest {
 
     @Test
     public void testParallelDetectors() {
-        for (var file : MicroBlazeLivermoreELFN100.values()) {
+        for (var file : MicroBlazeLivermoreELFN10.values()) {
             // for (var file : Arrays.asList(MicroBlazeLivermoreELFN100.innerprod100)) {
+            System.out.println("Kernel: " + file.getFilename());
             this.testParallelDetectors(file);
+            System.out.println("----------------------------------------------------------");
         }
     }
 }
