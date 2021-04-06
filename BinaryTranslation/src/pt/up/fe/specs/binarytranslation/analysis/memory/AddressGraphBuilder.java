@@ -36,7 +36,7 @@ public class AddressGraphBuilder {
 
             var targetV = new AddressVertex(targetReg, AddressVertexType.REGISTER);
             var memAccessV = new AddressVertex(inst.isLoad() ? "Memory Access (load)" : "Memory Access (store)",
-                    AddressVertexType.OPERATION);
+                    AddressVertexType.MEMORY);
             var sumV = new AddressVertex("+", AddressVertexType.OPERATION);
 
             var baseBuilder = new PartialAddressGraphBuilder(baseReg, startIdx - 1, basicBlock, "b");

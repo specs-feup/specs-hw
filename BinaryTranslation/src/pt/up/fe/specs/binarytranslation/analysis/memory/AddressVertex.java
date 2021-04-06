@@ -5,6 +5,7 @@ public class AddressVertex {
         OPERATION,
         REGISTER,
         IMMEDIATE,
+        MEMORY,
         NULL
     };
     
