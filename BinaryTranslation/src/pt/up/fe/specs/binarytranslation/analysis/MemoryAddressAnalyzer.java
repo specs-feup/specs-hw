@@ -62,6 +62,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             String sgraph = AnalysisUtils.graphToDot(mergedGraph);
             var url = AnalysisUtils.generateGraphURL(sgraph);
             System.out.println("Graph URL:\n" + url);
+            printExpressions(graphs);
             
             //induction vars
             System.out.println("\nCalculating induction variables...");
@@ -74,6 +75,24 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
         }
     }
     
+    private void printExpressions(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs) {
+        System.out.println("Expressions for each memory access:");
+        for (var graph : graphs) {
+            String s = MemoryAddressDetector.buildMemoryExpression(graph, findGraphRoot(graph));
+            System.out.println(s);
+        }
+        System.out.println("\n");
+    }
+
+    private AddressVertex findGraphRoot(Graph<AddressVertex, DefaultEdge> graph) {
+        var root = AddressVertex.nullVertex;
+        for (var v : graph.vertexSet()) {
+            if (graph.outDegreeOf(v) == 0)
+                root = v;
+        }
+        return root;
+    }
+
     public Graph<AddressVertex, DefaultEdge> mergeGraphs(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs) {
         Graph<AddressVertex, DefaultEdge> merged = new DefaultDirectedGraph<>(DefaultEdge.class);
         for (var graph : graphs) {
