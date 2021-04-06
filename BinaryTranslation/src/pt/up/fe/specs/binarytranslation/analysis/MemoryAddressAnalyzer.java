@@ -61,16 +61,18 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             var mergedGraph = mergeGraphs(graphs);
             String sgraph = AnalysisUtils.graphToDot(mergedGraph);
             var url = AnalysisUtils.generateGraphURL(sgraph);
-            System.out.println("Graph URL:\n" + url);
+            System.out.println("Graph URL:\n" + url + "\n");
             printExpressions(graphs);
             
             //induction vars
             System.out.println("\nCalculating induction variables...");
             var ivd = new InductionVariablesDetector(bb, insts);
-            var regs = ivd.detectVariables(mergedGraph, true);
+            var regs = ivd.detectVariables(mergedGraph, false);
             
-            System.out.println("Detected the following candidate variables:");
-            System.out.println(String.join(", ", regs));
+            System.out.println("Detected the following induction variable(s) and stride(s):");
+            for (var reg : regs.keySet()) {
+                System.out.println("Register " + reg +" , stride = " + regs.get(reg));
+            }
             AnalysisUtils.printSeparator(40);
         }
     }
@@ -81,7 +83,6 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             String s = MemoryAddressDetector.buildMemoryExpression(graph, findGraphRoot(graph));
             System.out.println(s);
         }
-        System.out.println("\n");
     }
 
     private AddressVertex findGraphRoot(Graph<AddressVertex, DefaultEdge> graph) {
