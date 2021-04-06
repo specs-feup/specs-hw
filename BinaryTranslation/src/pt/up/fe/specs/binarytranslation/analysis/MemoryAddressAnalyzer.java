@@ -48,6 +48,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
         List<Instruction> insts = det.getProcessedInsts();
         
         for (var bb : segs) {
+            AnalysisUtils.printSeparator(40);
             System.out.println("Memory address analysis for segment:");
             bb.printSegment();
             
@@ -65,7 +66,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             //induction vars
             System.out.println("\nCalculating induction variables...");
             var ivd = new InductionVariablesDetector(bb, insts);
-            var regs = ivd.detectVariables(mergedGraph);
+            var regs = ivd.detectVariables(mergedGraph, true);
             
             System.out.println("Detected the following candidate variables:");
             System.out.println(String.join(", ", regs));

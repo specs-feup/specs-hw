@@ -11,6 +11,7 @@ import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 public class InductionVariablesDetector extends APropertyDetector {
@@ -93,7 +94,7 @@ public class InductionVariablesDetector extends APropertyDetector {
         return sb.toString();
     }
 
-    public ArrayList<String> detectVariables(Graph<AddressVertex, DefaultEdge> mergedGraph) {
+    public ArrayList<String> detectVariables(Graph<AddressVertex, DefaultEdge> mergedGraph, boolean verbose) {
         var res = new ArrayList<String>();
         var regs = tracker.getRegisters();
         String[][] fullRes = new String[regs.size()][4];
@@ -107,13 +108,15 @@ public class InductionVariablesDetector extends APropertyDetector {
             if (c1 && c2 && c3)
                 res.add(reg);
 
-            // For full output
-            fullRes[i][0] = reg;
-            fullRes[i][1] = Boolean.toString(c1);
-            fullRes[i][2] = Boolean.toString(c2);
-            fullRes[i][3] = Boolean.toString(c3);
+            if (verbose) {
+                fullRes[i][0] = reg;
+                fullRes[i][1] = Boolean.toString(c1);
+                fullRes[i][2] = Boolean.toString(c2);
+                fullRes[i][3] = Boolean.toString(c3);
+            }
         }
-        printFullResult(fullRes);
+        if (verbose)
+            printFullResult(fullRes);
         return res;
     }
 
@@ -160,7 +163,7 @@ public class InductionVariablesDetector extends APropertyDetector {
 
     private boolean conditionIsInComparison(String reg) {
         for (var inst : tracker.getBasicBlockInsts()) {
-            if (inst.isLogical()) {
+            if (inst.getData().getGenericTypes().contains(InstructionType.G_CMP)) {
                 for (var op : inst.getData().getOperands()) {
                     if (op.isRegister()) {
                         var currReg = AnalysisUtils.getRegName(op);
