@@ -15,6 +15,7 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 public class InductionVariablesDetector extends APropertyDetector {
+    
     public InductionVariablesDetector(BinarySegment bb, List<Instruction> insts) {
         super(bb, insts);
     }
@@ -94,19 +95,20 @@ public class InductionVariablesDetector extends APropertyDetector {
         return sb.toString();
     }
 
-    public ArrayList<String> detectVariables(Graph<AddressVertex, DefaultEdge> mergedGraph, boolean verbose) {
-        var res = new ArrayList<String>();
+    public HashMap<String, Integer> detectVariables(Graph<AddressVertex, DefaultEdge> mergedGraph, boolean verbose) {
+        var res = new HashMap<String, Integer>();
         var regs = tracker.getRegisters();
         String[][] fullRes = new String[regs.size()][4];
 
         for (int i = 0; i < regs.size(); i++) {
             String reg = regs.get(i);
+            var regIncrements = findIncrements();
 
             boolean c1 = conditionPartOfAddress(reg, mergedGraph);
-            boolean c2 = conditionHasIncrement(reg);
+            boolean c2 = conditionHasIncrement(reg, regIncrements);
             boolean c3 = conditionIsInComparison(reg);
             if (c1 && c2 && c3)
-                res.add(reg);
+                res.put(reg, regIncrements.get(reg));
 
             if (verbose) {
                 fullRes[i][0] = reg;
@@ -140,7 +142,13 @@ public class InductionVariablesDetector extends APropertyDetector {
         return false;
     }
 
-    private boolean conditionHasIncrement(String reg) {
+    private boolean conditionHasIncrement(String reg, HashMap<String, Integer> map) {
+        return map.containsKey(reg);
+    }
+    
+    private HashMap<String, Integer> findIncrements() {
+        var map = new HashMap<String, Integer>();
+        
         for (var inst : tracker.getBasicBlockInsts()) {
             if (inst.isAdd() || inst.isSub() || inst.isMul()) {
                 if (inst.getData().getOperands().size() == 3) {
@@ -152,13 +160,15 @@ public class InductionVariablesDetector extends APropertyDetector {
                     if (op0.isRegister() && op1.isRegister() && op3.isImmediate()) {
                         var reg0 = AnalysisUtils.getRegName(op0);
                         var reg1 = AnalysisUtils.getRegName(op1);
-                        if (reg0.equals(reg) && reg1.equals(reg))
-                            return true;
+                        if (reg0.equals(reg1)) {
+                            int inc = Integer.decode(op3.getRepresentation());
+                            map.put(reg0, inc);
+                        }
                     }
                 }
             }
         }
-        return false;
+        return map;
     }
 
     private boolean conditionIsInComparison(String reg) {

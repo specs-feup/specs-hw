@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.traverse.DepthFirstIterator;
-
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
@@ -45,7 +43,7 @@ public class MemoryAddressDetector extends APropertyDetector {
 
             var start = getParents(graph, getParents(graph, root).get(0)).get(0);
 
-            sb.append(buildAddressExpression(graph, start));
+            sb.append(buildAddressExpression(graph, start, true));
             sb.append("]");
         }
         if (root.getType() == AddressVertexType.MEMORY) {
@@ -69,13 +67,13 @@ public class MemoryAddressDetector extends APropertyDetector {
                 }
             }
 
-            sb.append(buildAddressExpression(graph, addrStart));
+            sb.append(buildAddressExpression(graph, addrStart, true));
             sb.append("] <- ").append(dataToStore.getLabel());
         }
         return sb.toString();
     }
 
-    private static String buildAddressExpression(Graph<AddressVertex, DefaultEdge> graph, AddressVertex current) {
+    private static String buildAddressExpression(Graph<AddressVertex, DefaultEdge> graph, AddressVertex current, boolean first) {
 
         if (current.getType() == AddressVertexType.IMMEDIATE) {
             return current.getLabel();
@@ -85,18 +83,21 @@ public class MemoryAddressDetector extends APropertyDetector {
             if (parents.size() == 0)
                 return current.getLabel();
             else
-                return buildAddressExpression(graph, parents.get(0));
+                return buildAddressExpression(graph, parents.get(0), false);
         }
         if (current.getType() == AddressVertexType.OPERATION) {
             var parents = getParents(graph, current);
             var op1 = parents.get(0);
             var op2 = parents.get(1);
             
-            var s1 = buildAddressExpression(graph, op1);
+            var s1 = buildAddressExpression(graph, op1, false);
             var s2 = current.getLabel();
-            var s3 = buildAddressExpression(graph, op2);
+            var s3 = buildAddressExpression(graph, op2, false);
             
-            return "(" + s1 + " " + s2 + " " + s3 + ")";
+            if (first)
+                return s1 + " " + s2 + " " + s3;
+            else
+                return "(" + s1 + " " + s2 + " " + s3 + ")";
         }
         return "";
     }
