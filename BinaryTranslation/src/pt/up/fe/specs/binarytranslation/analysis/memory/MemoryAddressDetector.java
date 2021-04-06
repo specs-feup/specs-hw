@@ -43,13 +43,7 @@ public class MemoryAddressDetector extends APropertyDetector {
         if (root.getType() == AddressVertexType.REGISTER) {
             sb.append(root.getLabel()).append(" <- mem[");
 
-            var start = AddressVertex.nullVertex;
-            for (var edge : graph.edgesOf(root)) {
-                var parent = graph.getEdgeSource(edge);
-                for (var edge1 : graph.edgesOf(parent)) {
-                    start = graph.getEdgeSource(edge1);
-                }
-            }
+            var start = getParents(graph, getParents(graph, root).get(0)).get(0);
 
             sb.append(buildAddressExpression(graph, start));
             sb.append("]");
@@ -59,8 +53,9 @@ public class MemoryAddressDetector extends APropertyDetector {
 
             var addrStart = AddressVertex.nullVertex;
             var dataToStore = AddressVertex.nullVertex;
-            for (var edge : graph.edgesOf(root)) {
-                var parent = graph.getEdgeSource(edge);
+            var parents = getParents(graph, root);
+
+            for (var parent : parents) {
                 switch (parent.getType()) {
                 case OPERATION:
                     addrStart = parent;
@@ -80,7 +75,38 @@ public class MemoryAddressDetector extends APropertyDetector {
         return sb.toString();
     }
 
-    private static String buildAddressExpression(Graph<AddressVertex, DefaultEdge> graph, AddressVertex start) {
-        return "expression";
+    private static String buildAddressExpression(Graph<AddressVertex, DefaultEdge> graph, AddressVertex current) {
+
+        if (current.getType() == AddressVertexType.IMMEDIATE) {
+            return current.getLabel();
+        }
+        if (current.getType() == AddressVertexType.REGISTER) {
+            var parents = getParents(graph, current);
+            if (parents.size() == 0)
+                return current.getLabel();
+            else
+                return buildAddressExpression(graph, parents.get(0));
+        }
+        if (current.getType() == AddressVertexType.OPERATION) {
+            var parents = getParents(graph, current);
+            var op1 = parents.get(0);
+            var op2 = parents.get(1);
+            
+            var s1 = buildAddressExpression(graph, op1);
+            var s2 = current.getLabel();
+            var s3 = buildAddressExpression(graph, op2);
+            
+            return "(" + s1 + " " + s2 + " " + s3 + ")";
+        }
+        return "";
+    }
+
+    private static ArrayList<AddressVertex> getParents(Graph<AddressVertex, DefaultEdge> graph, AddressVertex current) {
+        var res = new ArrayList<AddressVertex>();
+        for (var edge : graph.edgesOf(current)) {
+            if (graph.getEdgeSource(edge) != current)
+                res.add(graph.getEdgeSource(edge));
+        }
+        return res;
     }
 }
