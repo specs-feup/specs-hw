@@ -12,36 +12,16 @@ import org.specs.BinaryTranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.InductionVariablesDetector;
 import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class MemoryAddressAnalyzer extends ATraceAnalyzer {
 
-    private ELFProvider elf;
-
     public MemoryAddressAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
-        super(stream);
-        this.elf = elf;
+        super(stream, elf);
     }
-    
-    private TraceBasicBlockDetector buildDetector(int window) {
-        stream.silent(false);
-        stream.advanceTo(elf.getKernelStart().longValue());
-        System.out.println("Looking for segments of size: " + window);
-
-        var detector = new TraceBasicBlockDetector(// new FrequentTraceSequenceDetector(
-                new DetectorConfigurationBuilder()
-                        .withMaxWindow(window)
-                        .withStartAddr(elf.getKernelStart())
-                        .withStopAddr(elf.getKernelStop())
-                        .withPrematureStopAddr(elf.getKernelStop().longValue())
-                        .build());
-        return detector;
-    }
-
+   
     public void analyze(int window) {
         var det = buildDetector(window);
         List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
