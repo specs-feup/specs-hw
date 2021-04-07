@@ -21,18 +21,19 @@ public class DetailedTraceProducer extends TraceInstructionProducer {
     }
 
     public GDBFilter nextElement(Class<? extends GDBFilter> gdbFilter) {
-        GDBFilter fil = null;
-        try {
-            Constructor<?> cons = gdbFilter.getConstructor(LineStream.class);
-            fil = (GDBFilter) cons.newInstance(this.insts);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            SpecsLogs.msgSevere("Error message:\n" + e.toString());
-        }
-        if (fil.filter())
-            return fil;
-        else {
-            return new GDBNullFilter(this.insts);
-        }
+//        GDBFilter fil = null;
+//        try {
+//            Constructor<?> cons = gdbFilter.getConstructor(LineStream.class);
+//            fil = (GDBFilter) cons.newInstance(this.insts);
+//        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+//                | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+//            SpecsLogs.msgSevere("Error message:\n" + e.toString());
+//        }
+//        if (fil.filter())
+//            return fil;
+//        else {
+//            return new GDBNullFilter(this.insts);
+//        }
+        return null;
     }
 }

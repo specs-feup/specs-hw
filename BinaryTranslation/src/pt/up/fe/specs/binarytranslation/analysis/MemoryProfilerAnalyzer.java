@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.specs.BinaryTranslation.ELFProvider;
+
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
@@ -18,13 +20,8 @@ public class MemoryProfilerAnalyzer extends ATraceAnalyzer {
     private DetailedRegisterInstructionProducer prod;
     private Queue<Instruction> queue = new LinkedList<>();
 
-    public MemoryProfilerAnalyzer(ATraceInstructionStream stream) {
-        super(stream);
-    }
-    
-    public MemoryProfilerAnalyzer(DetailedRegisterInstructionProducer prod) {
-        super(null);
-        this.prod = prod;
+    public MemoryProfilerAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
+        super(stream, elf);
     }
 
     public boolean profile(boolean useStream) {
