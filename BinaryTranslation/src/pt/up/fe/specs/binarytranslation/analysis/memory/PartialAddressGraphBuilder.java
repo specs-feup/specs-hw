@@ -22,20 +22,29 @@ public class PartialAddressGraphBuilder {
     private List<Instruction> modifiedBasicBlock;
     private int modifiedIdx;
 
-    public PartialAddressGraphBuilder(String reg, int idx, List<Instruction> basicBlock, String prefix) {
+    public PartialAddressGraphBuilder(String reg, int idx, List<Instruction> basicBlock) {
         this.startReg = reg;
         this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
-        
-        //Basic block needs to undergo a small transformation to consider insts after the jump
+
+        // Basic block needs to undergo a small transformation to consider insts after the jump
         this.modifiedBasicBlock = getModifiedSequence(basicBlock);
         this.modifiedIdx = getModifiedIndex(idx, basicBlock, modifiedBasicBlock);
     }
 
     private int getModifiedIndex(int idx, List<Instruction> bb, List<Instruction> mbb) {
-        var inst = bb.get(idx);
-        for (int i = 0; i < mbb.size(); i++) {
-            if (mbb.get(i) == inst)
-                return i;
+        if (idx != -1) {
+            var inst = bb.get(idx);
+            for (int i = 0; i < mbb.size(); i++) {
+                if (mbb.get(i) == inst)
+                    return i;
+            }
+        } 
+        else {
+            var inst = bb.get(0);
+            for (int i = 0; i < mbb.size(); i++) {
+                if (mbb.get(i) == inst)
+                    return i - 1;
+            }
         }
         return -1;
     }

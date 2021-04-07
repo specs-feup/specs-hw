@@ -39,7 +39,7 @@ public class AddressGraphBuilder {
                     AddressVertexType.MEMORY);
             var sumV = new AddressVertex("+", AddressVertexType.OPERATION);
 
-            var baseBuilder = new PartialAddressGraphBuilder(baseReg, startIdx - 1, basicBlock, "b");
+            var baseBuilder = new PartialAddressGraphBuilder(baseReg, startIdx - 1, basicBlock);
             var fullGraph = baseBuilder.generateGraph();
             fullGraph.addVertex(targetV);
             fullGraph.addVertex(memAccessV);
@@ -57,7 +57,7 @@ public class AddressGraphBuilder {
                 fullGraph.addVertex(immV);
                 fullGraph.addEdge(immV, sumV);
             } else {
-                var offsetBuilder = new PartialAddressGraphBuilder(offsetReg, startIdx - 1, basicBlock, "o");
+                var offsetBuilder = new PartialAddressGraphBuilder(offsetReg, startIdx - 1, basicBlock);
                 var offsetGraph = offsetBuilder.generateGraph();
                 Graphs.addGraph(fullGraph, offsetGraph);
                 fullGraph.addEdge(offsetBuilder.getRoot(), sumV);
