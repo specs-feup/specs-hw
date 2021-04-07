@@ -39,6 +39,8 @@ public class AnalysisUtils {
         enumToSymbol = new HashMap<>();
         enumToSymbol.put("bslli", "<<");
         enumToSymbol.put("addk", "+");
+        enumToSymbol.put("addik", "+");
+        enumToSymbol.put("muli", "*");
     }
 
     public static String mapEnum(String elem) {
