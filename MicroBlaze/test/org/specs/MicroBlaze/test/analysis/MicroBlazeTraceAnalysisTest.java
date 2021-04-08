@@ -10,6 +10,7 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
+import org.specs.MicroBlaze.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProvider;
@@ -146,12 +147,13 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testBasicBlockElimination() {
-        var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
+        //var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
         //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
         //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
         //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
         //var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
         //var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+        var elf = MicroBlazeLivermoreELFN10.state_frag; int window = 31;
         
         //var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
         
@@ -180,14 +182,20 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testAddresses() {
-        var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
+        // Livermore N10
+        //var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
         //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
         //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
         //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
         //var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
         //var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+        //var elf = MicroBlazeLivermoreELFN10.state_frag; int window = 31;
         
+        // Livermore N100
         //var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+        
+        // GCC optimization levels
+        var elf = MicroBlazeGccOptimizationLevels.test2; int window = 22;
         
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);

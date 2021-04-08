@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
+import org.specs.MicroBlaze.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
@@ -33,7 +34,7 @@ public class MicroBlazeParallelDetectTest {
         File fd = SpecsIo.resourceCopy(elf.getResource());
         fd.deleteOnExit();
 
-        int minwindow = 4, maxwindow = 30;
+        int minwindow = 5, maxwindow = 50;
 
         // producer
         var iproducer = new MicroBlazeTraceProvider(fd);
@@ -50,11 +51,17 @@ public class MicroBlazeParallelDetectTest {
             // var detector1 = new FrequentTraceSequenceDetector(
             // var detector1 = new FrequentStaticSequenceDetector(
             var detector1 = new TraceBasicBlockDetector(
+                    elf.getKernelStart() != null ?
                     new DetectorConfigurationBuilder()
                             .withMaxWindow(i)
                             .withStartAddr(elf.getKernelStart())
                             .withStopAddr(elf.getKernelStop())
-                            .build());
+                            .build() :
+                                new DetectorConfigurationBuilder()
+                                .withMaxWindow(i)
+                                .build()           
+                            
+                    );
             streamengine.subscribe(istream -> detector1.detectSegments((InstructionStream) istream));
         }
 
@@ -77,7 +84,7 @@ public class MicroBlazeParallelDetectTest {
     
     @Test
     public void testSingleParallelDetector() {
-        this.testParallelDetectors(MicroBlazeLivermoreELFN10.innerprod);
+        this.testParallelDetectors(MicroBlazeGccOptimizationLevels.test2);
     }
 
     @Test
