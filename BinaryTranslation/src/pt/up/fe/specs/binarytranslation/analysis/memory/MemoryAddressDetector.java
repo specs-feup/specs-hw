@@ -87,12 +87,31 @@ public class MemoryAddressDetector extends APropertyDetector {
         }
         if (current.getType() == AddressVertexType.OPERATION) {
             var parents = getParents(graph, current);
-            var op1 = parents.get(0);
-            var op2 = parents.get(1);
+            String s1 = "";
+            String s2 = "";
+            String s3 = "";
             
-            var s1 = buildAddressExpression(graph, op1, false);
-            var s2 = current.getLabel();
-            var s3 = buildAddressExpression(graph, op2, false);
+            if (parents.size() == 2) {
+                var op1 = parents.get(0);
+                var op2 = parents.get(1);
+                
+                s1 = buildAddressExpression(graph, op1, false);
+                s2 = current.getLabel();
+                s3 = buildAddressExpression(graph, op2, false);
+            }
+            if (parents.size() == 1) {
+                var op1 = parents.get(0);
+                s1 = buildAddressExpression(graph, op1, false); 
+                
+                s2 = "?";
+                if (current.getLabel().equals("+")) {
+                    s2 = "*";
+                }
+                if (current.getLabel().equals("*")) {
+                    s2 = "^";
+                }
+                s3 = "2";
+            }
             
             if (first)
                 return s1 + " " + s2 + " " + s3;
