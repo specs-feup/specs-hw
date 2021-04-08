@@ -10,24 +10,27 @@ public abstract class ATraceAnalyzer {
     protected ATraceInstructionStream stream;
     protected ELFProvider elf;
 
-
     public ATraceAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
         this.stream = stream;
         this.elf = elf;
     }
-    
+
     protected TraceBasicBlockDetector buildDetector(int window) {
         stream.silent(false);
-        stream.advanceTo(elf.getKernelStart().longValue());
+        if (elf.getKernelStart() != null)
+            stream.advanceTo(elf.getKernelStart().longValue());
         System.out.println("Looking for segments of size: " + window);
 
         var detector = new TraceBasicBlockDetector(
-                new DetectorConfigurationBuilder()
+                elf.getKernelStart() != null ? new DetectorConfigurationBuilder()
                         .withMaxWindow(window)
                         .withStartAddr(elf.getKernelStart())
                         .withStopAddr(elf.getKernelStop())
                         .withPrematureStopAddr(elf.getKernelStop().longValue())
-                        .build());
+                        .build()
+                        : new DetectorConfigurationBuilder()
+                                .withMaxWindow(window)
+                                .build());
         return detector;
     }
 }
