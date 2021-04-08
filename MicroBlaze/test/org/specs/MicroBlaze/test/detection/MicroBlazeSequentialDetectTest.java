@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
+import org.specs.MicroBlaze.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
@@ -20,22 +21,28 @@ public class MicroBlazeSequentialDetectTest {
         // file
         var fd = BinaryTranslationUtils.getFile(elf);
 
-        int minwindow = 4, maxwindow = 30;
+        int minwindow = 4, maxwindow = 20;
 
         // do all detectors sequentially
         for (int i = minwindow; i <= maxwindow; i++) {
             var istream1 = new MicroBlazeTraceStream(fd);
             istream1.silent(false);
-            istream1.advanceTo(elf.getKernelStart().longValue());
+            if (elf.getKernelStart() != null) 
+                istream1.advanceTo(elf.getKernelStart().longValue());
             System.out.println("Looking for segments of size: " + i);
 
-            var detector1 = new TraceBasicBlockDetector(// new FrequentTraceSequenceDetector(
+            var detector1 = new TraceBasicBlockDetector(
+                    elf.getKernelStart() != null ?
                     new DetectorConfigurationBuilder()
                             .withMaxWindow(i)
                             .withStartAddr(elf.getKernelStart())
                             .withStopAddr(elf.getKernelStop())
                             .withPrematureStopAddr(elf.getKernelStop().longValue())
-                            .build());
+                            .build() :
+                            new DetectorConfigurationBuilder()
+                                    .withMaxWindow(i)
+                                    .build()
+                                );
             var result1 = detector1.detectSegments(istream1);
             if (result1.getSegments().size() == 0) {
                 System.out.println("No segments detected with window = " + i);
@@ -52,7 +59,7 @@ public class MicroBlazeSequentialDetectTest {
     @Test
     public void testSequentialDetectors() {
         // for (var file : MicroBlazeLivermoreELFN100.values()) {
-        for (var file : Arrays.asList(MicroBlazeLivermoreELFN10.state_frag)) {
+        for (var file : Arrays.asList(MicroBlazeGccOptimizationLevels.autocor2)) {
             this.testSequentialDetectors(file);
         }
     }
