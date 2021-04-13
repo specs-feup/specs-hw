@@ -5,6 +5,12 @@ Hardware-related libraries and applications
 
 Coming soon!
 
+# Related Projects
+
+[PEPCC – Power Efficiency and Performance for Embedded and HPC Systems with Custom CGRAs](https://pepcc.inesctec.pt/)
+- [Web Demo and Video Demos](https://pepcc.inesctec.pt/?page_id=616)
+- [Project Timeline](https://pepcc.inesctec.pt/?page_id=213)
+
 # Publications
 
 - N. Paulino, J. C. Ferreira, "A Binary Translation Framework for Automated Hardware Generation", Demo at the 2020 International Design Automation and Test in Europe Conference (DATE), 2020
