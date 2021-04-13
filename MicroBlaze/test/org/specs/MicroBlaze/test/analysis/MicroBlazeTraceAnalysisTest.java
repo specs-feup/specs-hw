@@ -13,6 +13,7 @@ import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
+import org.specs.MicroBlaze.asm.MicroBlazeRegisterConventions;
 import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
@@ -199,7 +200,7 @@ public class MicroBlazeTraceAnalysisTest {
         
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
-        var maa = new MemoryAddressAnalyzer(stream, elf);
+        var maa = new MemoryAddressAnalyzer(stream, elf, new MicroBlazeRegisterConventions());
         maa.analyze(window);
     }
 }
