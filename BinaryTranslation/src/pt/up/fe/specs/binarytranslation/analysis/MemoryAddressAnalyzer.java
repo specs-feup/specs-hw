@@ -12,14 +12,18 @@ import org.specs.BinaryTranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.InductionVariablesDetector;
 import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressDetector;
+import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryDisambiguator;
+import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class MemoryAddressAnalyzer extends ATraceAnalyzer {
+    private RegisterProperties isaProps;
 
-    public MemoryAddressAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
+    public MemoryAddressAnalyzer(ATraceInstructionStream stream, ELFProvider elf, RegisterProperties isaProps) {
         super(stream, elf);
+        this.isaProps = isaProps;
     }
    
     public void analyze(int window) {
@@ -47,12 +51,17 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             //induction vars
             System.out.println("\nCalculating induction variables...");
             var ivd = new InductionVariablesDetector(bb, insts);
-            var regs = ivd.detectVariables(mergedGraph, false);
+            var indVars = ivd.detectVariables(mergedGraph, false);
             
             System.out.println("Detected the following induction variable(s) and stride(s):");
-            for (var reg : regs.keySet()) {
-                System.out.println("Register " + reg +" , stride = " + regs.get(reg));
+            for (var reg : indVars.keySet()) {
+                System.out.println("Register " + reg +" , stride = " + indVars.get(reg));
             }
+            
+            //memory disambiguation
+            var memDis = new MemoryDisambiguator(graphs, indVars, isaProps);
+            memDis.disambiguate();
+            
             AnalysisUtils.printSeparator(40);
         }
     }
