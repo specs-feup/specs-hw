@@ -96,7 +96,7 @@ public class PartialAddressGraphBuilder {
                     // Build operation node
                     // TODO: map other enums to symbols (is there already a way to do this?)
                     String enumName = inst.getProperties().getEnumName();
-                    String opName = AnalysisUtils.mapEnum(enumName);
+                    String opName = AnalysisUtils.mapInstructionsToSymbol(enumName);
 
                     var opNode = new AddressVertex(opName, AddressVertexType.OPERATION);
                     graph.addVertex(opNode);

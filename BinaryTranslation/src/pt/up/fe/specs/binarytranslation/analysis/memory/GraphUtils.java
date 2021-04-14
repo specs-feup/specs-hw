@@ -1,11 +1,20 @@
 package pt.up.fe.specs.binarytranslation.analysis.memory;
 
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
+import org.jgrapht.nio.dot.DOTExporter;
+
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 
 /**
  * Class with static methods to manipulate memory address graphs
@@ -40,4 +49,25 @@ public class GraphUtils {
         return res;
     }
 
+    public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph) {
+        DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
+        exporter.setVertexAttributeProvider((v) -> {
+            Map<String, Attribute> map = new LinkedHashMap<>();
+            map.put("label", DefaultAttribute.createAttribute(v.getLabel()));
+            map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
+            return map;
+        });
+        Writer writer = new StringWriter();
+        exporter.exportGraph(graph, writer);
+        return writer.toString();
+    }
+
+    public static ArrayList<AddressVertex> findAllNodesOfType(Graph<AddressVertex, DefaultEdge> graph, AddressVertexType type) {
+        var res = new ArrayList<AddressVertex>();
+        for (var v : graph.vertexSet()) {
+            if (v.getType() == type)
+                res.add(v);
+        }
+        return res;
+    }
 }
