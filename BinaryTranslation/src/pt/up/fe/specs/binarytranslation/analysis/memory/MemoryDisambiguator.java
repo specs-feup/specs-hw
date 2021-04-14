@@ -21,8 +21,36 @@ public class MemoryDisambiguator {
     }
 
     public void disambiguate() {
-        // TODO Auto-generated method stub
+        for (var graph : graphs) {
+            var addrRegs = getAddressRegisters(graph);
+            for (var reg : addrRegs) {
+                printRegisterProperties(reg);
+            }
+        }
+    }
+    
+    private void printRegisterProperties(String reg) {
+        System.out.println("Properties of register " + reg + ":");
+        if (isaProps.isParameter(reg))
+            System.out.println(reg + " is a function parameter");
+        if (isaProps.isReturn(reg))
+            System.out.println(reg + " is a return value");
+        if (isaProps.isStackPointer(reg))
+            System.out.println(reg + " is the stack pointer");
+        if (isaProps.isTemporary(reg))
+            System.out.println(reg + " is a temporary value");
+        if (isaProps.isZero(reg))
+            System.out.println(reg + " is zero");
+        if (indVars.containsKey(reg))
+            System.out.println(reg + " is an induction variable of stride " + indVars.get(reg));
+    }
+
+    private ArrayList<String> getAddressRegisters(Graph<AddressVertex, DefaultEdge> graph) {
+        var regs = new ArrayList<String>();
         
+        
+        
+        return regs;
     }
 
 }

@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jgrapht.Graph;
-import org.jgrapht.Graphs;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.specs.BinaryTranslation.ELFProvider;
 
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
+import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.InductionVariablesDetector;
 import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressDetector;
 import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryDisambiguator;
@@ -42,7 +41,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             
             //can handle each graph individually, or merge them into one
             //merging for now, to simplify output
-            var mergedGraph = mergeGraphs(graphs);
+            var mergedGraph = GraphUtils.mergeGraphs(graphs);
             String sgraph = AnalysisUtils.graphToDot(mergedGraph);
             var url = AnalysisUtils.generateGraphURL(sgraph);
             System.out.println("Graph URL:\n" + url + "\n");
@@ -69,25 +68,8 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
     private void printExpressions(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs) {
         System.out.println("Expressions for each memory access:");
         for (var graph : graphs) {
-            String s = MemoryAddressDetector.buildMemoryExpression(graph, findGraphRoot(graph));
+            String s = MemoryAddressDetector.buildMemoryExpression(graph, GraphUtils.findGraphRoot(graph));
             System.out.println(s);
         }
-    }
-
-    private AddressVertex findGraphRoot(Graph<AddressVertex, DefaultEdge> graph) {
-        var root = AddressVertex.nullVertex;
-        for (var v : graph.vertexSet()) {
-            if (graph.outDegreeOf(v) == 0)
-                root = v;
-        }
-        return root;
-    }
-
-    public Graph<AddressVertex, DefaultEdge> mergeGraphs(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs) {
-        Graph<AddressVertex, DefaultEdge> merged = new DefaultDirectedGraph<>(DefaultEdge.class);
-        for (var graph : graphs) {
-            Graphs.addGraph(merged, graph);
-        }
-        return merged;
     }
 }
