@@ -10,14 +10,18 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.EdgeReversedGraph;
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.dot.DOTExporter;
+import org.jgrapht.traverse.BreadthFirstIterator;
 
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 
 /**
  * Class with static methods to manipulate memory address graphs
+ * 
  * @author Tiago
  *
  */
@@ -62,12 +66,38 @@ public class GraphUtils {
         return writer.toString();
     }
 
-    public static ArrayList<AddressVertex> findAllNodesOfType(Graph<AddressVertex, DefaultEdge> graph, AddressVertexType type) {
+    public static ArrayList<AddressVertex> findAllNodesOfType(Graph<AddressVertex, DefaultEdge> graph,
+            AddressVertexType type) {
         var res = new ArrayList<AddressVertex>();
         for (var v : graph.vertexSet()) {
             if (v.getType() == type)
                 res.add(v);
         }
+        return res;
+    }
+
+    public static ArrayList<AddressVertex> findAllNodesWithProperty(Graph<AddressVertex, DefaultEdge> graph,
+            AddressVertexProperty property) {
+        var res = new ArrayList<AddressVertex>();
+        for (var v : graph.vertexSet()) {
+            if (v.getProperty() == property)
+                res.add(v);
+        }
+        return res;
+    }
+    
+    public static ArrayList<AddressVertex> findAllPredecessors(Graph<AddressVertex, DefaultEdge> graph, AddressVertex v) {
+        var reversed = new EdgeReversedGraph<AddressVertex, DefaultEdge> (graph);
+        return findAllSuccessors(reversed, v);
+    }
+    
+    public static ArrayList<AddressVertex> findAllSuccessors(Graph<AddressVertex, DefaultEdge> graph, AddressVertex v) {
+        var iter = new BreadthFirstIterator<AddressVertex, DefaultEdge> (graph, v);
+        var res = new ArrayList<AddressVertex>();
+        
+        while (iter.hasNext()) {
+            res.add(iter.next());
+        } 
         return res;
     }
 }
