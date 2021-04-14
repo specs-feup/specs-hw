@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jgrapht.Graph;
-import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
@@ -28,15 +27,22 @@ public class MemoryDisambiguator {
 
     public void disambiguate() {
         System.out.println("");
+        var addressRegs = new ArrayList<String>();
+        
         for (var graph : graphs) {
             String expr = MemoryAddressDetector.buildMemoryExpression(graph);
             System.out.println("Memory disambiguation for memory access " + expr + ":");
             var addrRegs = getFilteredRegisters(graph);
             for (var reg : addrRegs) {
                 printRegisterProperties(reg);
+                if (isaProps.isParameter(reg) || isaProps.isTemporary(reg)) {
+                    if (!indVars.containsKey(reg))
+                        addressRegs.add(reg);
+                }
             }
             System.out.println("");
         }
+        System.out.println("Address registers: " + addressRegs.stream().distinct().collect(Collectors.toList()));
     }
     
     private void printRegisterProperties(String reg) {
