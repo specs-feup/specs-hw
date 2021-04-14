@@ -41,7 +41,7 @@ public class MemoryAddressDetector extends APropertyDetector {
         if (root.getType() == AddressVertexType.REGISTER) {
             sb.append(root.getLabel()).append(" <- mem[");
 
-            var start = getParents(graph, getParents(graph, root).get(0)).get(0);
+            var start = GraphUtils.getParents(graph, GraphUtils.getParents(graph, root).get(0)).get(0);
 
             sb.append(buildAddressExpression(graph, start, true));
             sb.append("]");
@@ -51,7 +51,7 @@ public class MemoryAddressDetector extends APropertyDetector {
 
             var addrStart = AddressVertex.nullVertex;
             var dataToStore = AddressVertex.nullVertex;
-            var parents = getParents(graph, root);
+            var parents = GraphUtils.getParents(graph, root);
 
             for (var parent : parents) {
                 switch (parent.getType()) {
@@ -79,14 +79,14 @@ public class MemoryAddressDetector extends APropertyDetector {
             return current.getLabel();
         }
         if (current.getType() == AddressVertexType.REGISTER) {
-            var parents = getParents(graph, current);
+            var parents = GraphUtils.getParents(graph, current);
             if (parents.size() == 0)
                 return current.getLabel();
             else
                 return buildAddressExpression(graph, parents.get(0), false);
         }
         if (current.getType() == AddressVertexType.OPERATION) {
-            var parents = getParents(graph, current);
+            var parents = GraphUtils.getParents(graph, current);
             String s1 = "";
             String s2 = "";
             String s3 = "";
@@ -119,14 +119,5 @@ public class MemoryAddressDetector extends APropertyDetector {
                 return "(" + s1 + " " + s2 + " " + s3 + ")";
         }
         return "";
-    }
-
-    private static ArrayList<AddressVertex> getParents(Graph<AddressVertex, DefaultEdge> graph, AddressVertex current) {
-        var res = new ArrayList<AddressVertex>();
-        for (var edge : graph.edgesOf(current)) {
-            if (graph.getEdgeSource(edge) != current)
-                res.add(graph.getEdgeSource(edge));
-        }
-        return res;
     }
 }
