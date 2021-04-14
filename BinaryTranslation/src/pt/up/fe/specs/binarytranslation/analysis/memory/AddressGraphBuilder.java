@@ -8,6 +8,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
@@ -28,46 +29,60 @@ public class AddressGraphBuilder {
         if (inst.getData().getOperands().size() == 3) {
             Operand target = inst.getData().getOperands().get(0);
             Operand base = inst.getData().getOperands().get(1);
-            Operand offset = inst.getData().getOperands().get(2);
+            Operand offset = inst.getData().getOperands().get(2);    
 
             String targetReg = AnalysisUtils.getRegName(target);
             String baseReg = AnalysisUtils.getRegName(base);
             String offsetReg = AnalysisUtils.getRegName(offset);
 
+            //Build memory access node
             var targetV = new AddressVertex(targetReg, AddressVertexType.REGISTER);
             var memAccessV = new AddressVertex(inst.isLoad() ? "Memory Access (load)" : "Memory Access (store)",
                     AddressVertexType.MEMORY);
             var sumV = new AddressVertex("+", AddressVertexType.OPERATION);
 
+            //Build base address graph
             var baseBuilder = new PartialAddressGraphBuilder(baseReg, startIdx - 1, basicBlock);
             var fullGraph = baseBuilder.generateGraph();
+            var baseV = baseBuilder.getRoot();
+            baseV.setProperty(AddressVertexProperty.BASE_ADDR_START);
+
+            //Add memory access to base addr graph, and connect
             fullGraph.addVertex(targetV);
             fullGraph.addVertex(memAccessV);
             fullGraph.addVertex(sumV);
-            fullGraph.addEdge(baseBuilder.getRoot(), sumV);
+            fullGraph.addEdge(baseV, sumV);
             fullGraph.addEdge(sumV, memAccessV);
-            if (inst.isLoad())
-                fullGraph.addEdge(memAccessV, targetV);
-            else
-                fullGraph.addEdge(targetV, memAccessV);
 
+            //Build offset graph
             if (offset.isImmediate()) {
                 String immVal = offset.getRepresentation();
                 var immV = new AddressVertex(immVal, AddressVertexType.IMMEDIATE);
+                immV.setProperty(AddressVertexProperty.OFFSET_START);
                 fullGraph.addVertex(immV);
                 fullGraph.addEdge(immV, sumV);
             } else {
                 var offsetBuilder = new PartialAddressGraphBuilder(offsetReg, startIdx - 1, basicBlock);
                 var offsetGraph = offsetBuilder.generateGraph();
                 Graphs.addGraph(fullGraph, offsetGraph);
-                fullGraph.addEdge(offsetBuilder.getRoot(), sumV);
+                var immV = offsetBuilder.getRoot();
+                immV.setProperty(AddressVertexProperty.OFFSET_START);
+                fullGraph.addEdge(immV, sumV);
             }
+            
+            // Connect load/store destination/source register to the rest
+            if (inst.isLoad())
+                fullGraph.addEdge(memAccessV, targetV);
+            else
+                fullGraph.addEdge(targetV, memAccessV);
+            
             return fullGraph;
         }
         return null;
     }
 
-    public List<String> findContributingRegisters(Operand op) {
+    @Deprecated
+    private List<String> findContributingRegisters(Operand op) {
         var regs = new ArrayList<String>();
         regs.add(AnalysisUtils.getRegName(op));
 
