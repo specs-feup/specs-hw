@@ -34,6 +34,11 @@ public class MemoryAddressDetector extends APropertyDetector {
         }
         return out;
     }
+    
+    public static String buildMemoryExpression(Graph<AddressVertex, DefaultEdge> graph) {
+        var root = GraphUtils.findGraphRoot(graph);
+        return buildMemoryExpression(graph, root);
+    }
 
     public static String buildMemoryExpression(Graph<AddressVertex, DefaultEdge> graph, AddressVertex root) {
         var sb = new StringBuilder();
