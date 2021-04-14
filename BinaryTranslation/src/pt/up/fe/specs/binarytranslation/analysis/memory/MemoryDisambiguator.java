@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.analysis.memory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class MemoryDisambiguator {
         for (var graph : graphs) {
             String expr = MemoryAddressDetector.buildMemoryExpression(graph);
             System.out.println("Memory disambiguation for memory access " + expr + ":");
-            var addrRegs = getAddressRegisters(graph);
+            var addrRegs = getFilteredRegisters(graph);
             for (var reg : addrRegs) {
                 printRegisterProperties(reg);
             }
@@ -57,15 +58,30 @@ public class MemoryDisambiguator {
         System.out.println(reg + ": " + String.join(", ", props));
     }
 
-    private List<String> getAddressRegisters(Graph<AddressVertex, DefaultEdge> graph) {
+    private List<String> getFilteredRegisters(Graph<AddressVertex, DefaultEdge> graph) {
         var regs = new ArrayList<String>();
         var baseStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.BASE_ADDR_START).get(0);
-        var elems = GraphUtils.findAllPredecessors(graph, baseStart);
+        var elems1 = findAddressRegisters(graph, baseStart);
+        var offsetStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.OFFSET_START).get(0);
+        var elems2 = findAddressRegisters(graph, offsetStart);
+        var elems = new LinkedHashSet<AddressVertex>(elems1);
+        elems.addAll(elems2);
         
         for (var elem : elems) {
             if (elem.getType() == AddressVertexType.REGISTER)
                 regs.add(elem.getLabel());
         }
         return regs.stream().distinct().collect(Collectors.toList());
+    }
+    
+    private List<AddressVertex> findAddressRegisters(Graph<AddressVertex, DefaultEdge> graph, AddressVertex start) {
+        var elems = GraphUtils.findAllPredecessors(graph, start);
+        var filtered = new ArrayList<AddressVertex>(); {
+            for (var elem : elems) {
+               if (graph.inDegreeOf(elem) == 0)
+                   filtered.add(elem);
+            }
+        }
+        return filtered;
     }
 }
