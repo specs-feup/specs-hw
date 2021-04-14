@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.elimination;
+package pt.up.fe.specs.binarytranslation.analysis.inouts.elimination;
 
 import java.util.ArrayList;
 import java.util.List;
