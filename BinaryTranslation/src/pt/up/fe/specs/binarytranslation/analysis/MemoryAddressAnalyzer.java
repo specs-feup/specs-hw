@@ -42,7 +42,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             //can handle each graph individually, or merge them into one
             //merging for now, to simplify output
             var mergedGraph = GraphUtils.mergeGraphs(graphs);
-            String sgraph = AnalysisUtils.graphToDot(mergedGraph);
+            String sgraph = GraphUtils.graphToDot(mergedGraph);
             var url = AnalysisUtils.generateGraphURL(sgraph);
             System.out.println("Graph URL:\n" + url + "\n");
             printExpressions(graphs);

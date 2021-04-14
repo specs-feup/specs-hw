@@ -2,8 +2,6 @@ package pt.up.fe.specs.binarytranslation.analysis;
 
 import java.awt.Desktop;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -11,18 +9,9 @@ import java.util.BitSet;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.nio.Attribute;
-import org.jgrapht.nio.DefaultAttribute;
-import org.jgrapht.nio.dot.DOTExporter;
-
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
@@ -43,7 +32,7 @@ public class AnalysisUtils {
         enumToSymbol.put("muli", "*");
     }
 
-    public static String mapEnum(String elem) {
+    public static String mapInstructionsToSymbol(String elem) {
         if (enumToSymbol.containsKey(elem))
             return enumToSymbol.get(elem);
         else
@@ -127,19 +116,6 @@ public class AnalysisUtils {
 
         System.out.println(bun.getSummary());
         return bun.getSegments();
-    }
-
-    public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph) {
-        DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
-        exporter.setVertexAttributeProvider((v) -> {
-            Map<String, Attribute> map = new LinkedHashMap<>();
-            map.put("label", DefaultAttribute.createAttribute(v.getLabel()));
-            map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
-            return map;
-        });
-        Writer writer = new StringWriter();
-        exporter.exportGraph(graph, writer);
-        return writer.toString();
     }
 
     public static ArrayList<String> findAllRegistersOfSeq(List<Instruction> insts) {

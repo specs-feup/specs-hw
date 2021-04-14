@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
 
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 
 public class MemoryDisambiguator {
@@ -47,10 +49,16 @@ public class MemoryDisambiguator {
 
     private ArrayList<String> getAddressRegisters(Graph<AddressVertex, DefaultEdge> graph) {
         var regs = new ArrayList<String>();
-        
-        
+        var baseStart = getBaseAddressStart(graph);
+
         
         return regs;
+    }
+    
+    private AddressVertex getBaseAddressStart(Graph<AddressVertex, DefaultEdge> graph) {
+        var mem = GraphUtils.findAllNodesOfType(graph, AddressVertexType.MEMORY).get(0);
+        var op = AddressVertex.nullVertex;
+        return null;
     }
 
 }
