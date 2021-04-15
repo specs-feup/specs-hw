@@ -27,22 +27,44 @@ public class MemoryDisambiguator {
 
     public void disambiguate() {
         System.out.println("");
-        var addressRegs = new ArrayList<String>();
+        var totalRegisters = new ArrayList<String>();
         
         for (var graph : graphs) {
             String expr = MemoryAddressDetector.buildMemoryExpression(graph);
             System.out.println("Memory disambiguation for memory access " + expr + ":");
-            var addrRegs = getFilteredRegisters(graph);
-            for (var reg : addrRegs) {
-                printRegisterProperties(reg);
-                if (isaProps.isParameter(reg) || isaProps.isTemporary(reg)) {
-                    if (!indVars.containsKey(reg))
-                        addressRegs.add(reg);
-                }
-            }
+            
+            // Get all registers used for address
+            var registers = getGraphAddressRegisters(graph);
+            registers = filterRegisterList(registers);
+            System.out.println("Registers involved in address: " + registers);
+            
+            //disambiguate
+            //...
+            
+            // Add registers to basic bloc list for reporting
+            totalRegisters.addAll(registers);
             System.out.println("");
         }
-        System.out.println("Address registers: " + addressRegs.stream().distinct().collect(Collectors.toList()));
+        
+        // Report on all registers used for addresses in this basic block
+        var res = totalRegisters.stream().distinct().collect(Collectors.toList());
+        System.out.println("All registers invovled in addresses in this basic block: " + res);
+    }
+
+    /**
+     * Filters induction variables out of the register list
+     * @param graph
+     * @return
+     */
+    private ArrayList<String> filterRegisterList(List<String> registers) {
+        var res = new ArrayList<String>();
+
+        for (var reg : registers) {
+            printRegisterProperties(reg);
+            if (!indVars.containsKey(reg))
+                res.add(reg);
+        }
+        return res;
     }
     
     private void printRegisterProperties(String reg) {
@@ -64,12 +86,17 @@ public class MemoryDisambiguator {
         System.out.println(reg + ": " + String.join(", ", props));
     }
 
-    private List<String> getFilteredRegisters(Graph<AddressVertex, DefaultEdge> graph) {
+    /**
+     * Finds all registers used on a memory address calculation
+     * @param graph
+     * @return
+     */
+    private List<String> getGraphAddressRegisters(Graph<AddressVertex, DefaultEdge> graph) {
         var regs = new ArrayList<String>();
         var baseStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.BASE_ADDR_START).get(0);
-        var elems1 = findAddressRegisters(graph, baseStart);
+        var elems1 = getSubgraphAddressRegisters(graph, baseStart);
         var offsetStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.OFFSET_START).get(0);
-        var elems2 = findAddressRegisters(graph, offsetStart);
+        var elems2 = getSubgraphAddressRegisters(graph, offsetStart);
         var elems = new LinkedHashSet<AddressVertex>(elems1);
         elems.addAll(elems2);
         
@@ -80,7 +107,13 @@ public class MemoryDisambiguator {
         return regs.stream().distinct().collect(Collectors.toList());
     }
     
-    private List<AddressVertex> findAddressRegisters(Graph<AddressVertex, DefaultEdge> graph, AddressVertex start) {
+    /**
+     * Finds all registers used on a subgraph of a memory access (base or offset),
+     * ignoring intermediate registers
+     * @param graph
+     * @return
+     */
+    private List<AddressVertex> getSubgraphAddressRegisters(Graph<AddressVertex, DefaultEdge> graph, AddressVertex start) {
         var elems = GraphUtils.findAllPredecessors(graph, start);
         var filtered = new ArrayList<AddressVertex>(); {
             for (var elem : elems) {
