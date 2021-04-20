@@ -24,7 +24,7 @@ public class DetailedTraceProducer extends TraceInstructionProducer {
         GDBFilter fil = null;
         try {
             Constructor<?> cons = gdbFilter.getConstructor(LineStream.class);
-            fil = (GDBFilter) cons.newInstance(this.insts);
+            fil = (GDBFilter) cons.newInstance(null);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             SpecsLogs.msgSevere("Error message:\n" + e.toString());
@@ -32,7 +32,7 @@ public class DetailedTraceProducer extends TraceInstructionProducer {
         if (fil.filter())
             return fil;
         else {
-            return new GDBNullFilter(this.insts);
+            return new GDBNullFilter(null);
         }
     }
 }
