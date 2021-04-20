@@ -6,7 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jOptions"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SpecsUtils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BinaryTranslation"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/InstructionSimulator"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
