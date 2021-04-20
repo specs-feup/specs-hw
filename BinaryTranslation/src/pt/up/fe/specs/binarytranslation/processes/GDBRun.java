@@ -62,12 +62,13 @@ public class GDBRun extends StringProcessRun {
     }
 
     /*
-     * 
+     * NOTE: For windows, the run environment should have this var set SET HOME=%USERPROFILE%
+     * in case gdb is called from a prompt which is not MSYS (which is what happens when running via Eclipse)
      */
     public GDBRun(Application app, File scriptFile) {
         super(GDBRun.getArgs(app, scriptFile));
         super.attachThreads();
-        this.getGDBResponse(1000); // consume a single garbage line produced from the start of gdb
+        this.getGDBResponse(5000); // consume a single garbage line produced from the start of gdb
         // Note:
         // when launching QEMU under GDB, the "target remote" command
         // takes longer than 10ms to complete, hence the 1s timeout for
