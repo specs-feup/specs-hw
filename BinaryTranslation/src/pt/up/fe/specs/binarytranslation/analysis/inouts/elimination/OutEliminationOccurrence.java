@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.elimination;
+package pt.up.fe.specs.binarytranslation.analysis.inouts.elimination;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,11 @@ public class OutEliminationOccurrence {
         
         int curr = bb.getEndPos() + 1;
         for (int i = curr; i < curr + window; i++) {
+            if (i >= insts.size()) {
+                System.out.println("Trace finished before window could reach the end");
+                return toEliminate;
+            }
+                
             var next = insts.get(i);
             //System.out.println("Processing inst " + i);
             if (tracker.basicBlockFromPosition(i) != null) {

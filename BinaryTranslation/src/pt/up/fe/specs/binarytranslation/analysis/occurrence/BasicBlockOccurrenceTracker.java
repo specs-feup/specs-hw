@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.analysis.occurrence;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
@@ -57,5 +58,13 @@ public class BasicBlockOccurrenceTracker {
 
     public List<Instruction> getTrace() {
         return trace;
+    }
+    
+    public List<Instruction> getBasicBlockInsts() {
+        return bb.getInstructions();
+    }
+
+    public ArrayList<String> getRegisters() {
+        return AnalysisUtils.findAllRegistersOfSeq(getBasicBlockInsts());
     }
 }

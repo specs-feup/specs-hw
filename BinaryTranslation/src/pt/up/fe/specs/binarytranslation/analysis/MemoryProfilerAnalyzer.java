@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.specs.BinaryTranslation.ELFProvider;
+
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
@@ -17,61 +19,35 @@ public class MemoryProfilerAnalyzer extends ATraceAnalyzer {
 
     private DetailedRegisterInstructionProducer prod;
     private Queue<Instruction> queue = new LinkedList<>();
-    private ArrayList<InstructionType> loadstores = new ArrayList<>();
-    {
-        loadstores.add(InstructionType.G_LOAD);
-        loadstores.add(InstructionType.G_STORE);
+
+    public MemoryProfilerAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
+        super(stream, elf);
     }
 
-    public MemoryProfilerAnalyzer(ATraceInstructionStream stream) {
-        super(stream);
+    public boolean profile(boolean useStream) {
+        Instruction inst = nextInstruction(useStream);
+        if (inst == null)
+            return false;
+        
+        while (inst != null) {
+            if (AnalysisUtils.isLoadStore(inst)) {
+                queue.add(inst);
+            }
+            inst = nextInstruction(useStream);
+        }
+        printResolvedTrace(true);
+
+        var table = buildHistogram();
+
+        printHistogram(table, false);
+        return true;
     }
     
-    public MemoryProfilerAnalyzer(DetailedRegisterInstructionProducer prod) {
-        super(null);
-        this.prod = prod;
-    }
-
-    public boolean profileWithStream() {
-        Instruction inst = stream.nextInstruction();
-        if (inst == null)
-            return false;
-        
-        while (inst != null) {
-            if (!Collections.disjoint(inst.getData().getGenericTypes(), loadstores)) {
-                queue.add(inst);
-            }
-            inst = stream.nextInstruction();
-//            if (inst != null) {
-//                if (inst.getRegisters().isEmpty())
-//                    inst = stream.nextInstruction();
-//            }
-        }
-        printResolvedTrace(true);
-
-        var table = buildHistogram();
-
-        printHistogram(table, false);
-        return true;
-    }
-
-    public boolean profileWithProducer() {
-        Instruction inst = prod.nextInstruction();
-        if (inst == null)
-            return false;
-        
-        while (inst != null) {
-            if (!Collections.disjoint(inst.getData().getGenericTypes(), loadstores)) {
-                queue.add(inst);
-            }
-            inst = prod.nextInstruction();
-        }
-        printResolvedTrace(true);
-
-        var table = buildHistogram();
-
-        printHistogram(table, false);
-        return true;
+    public Instruction nextInstruction(boolean useStream) {
+        if (useStream)
+            return stream.nextInstruction();
+        else
+            return prod.nextInstruction();
     }
     
     private void printHistogram(HashMap<Long, Integer[]> table, boolean decimal) {
@@ -135,13 +111,13 @@ public class MemoryProfilerAnalyzer extends ATraceAnalyzer {
      */
     private Long getMemoryAddr(Instruction inst) {
         Operand op = inst.getData().getOperands().get(1);
-        long res = inst.getRegisters().getValue(op.getProperties().getPrefix() + op.getStringValue());
+        long res = inst.getRegisters().getValue(AnalysisUtils.getRegName(op));
 
         if (inst.getData().getOperands().size() == 3) {
             op = inst.getData().getOperands().get(2);
             long add = 0;
             if (op.isRegister()) {
-                add = inst.getRegisters().getValue(op.getProperties().getPrefix() + op.getStringValue());
+                add = inst.getRegisters().getValue(AnalysisUtils.getRegName(op));
             }
             if (op.isImmediate()) {
                 add = Long.parseLong(op.getStringValue(), 16);

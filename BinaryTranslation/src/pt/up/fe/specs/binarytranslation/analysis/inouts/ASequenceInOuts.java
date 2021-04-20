@@ -2,10 +2,7 @@ package pt.up.fe.specs.binarytranslation.analysis.inouts;
 
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -18,7 +15,7 @@ public abstract class ASequenceInOuts {
 
     public ASequenceInOuts(List<Instruction> insts) {
         this.insts = insts;
-        this.regs = findAllRegistersOfSeq(insts);
+        this.regs = AnalysisUtils.findAllRegistersOfSeq(insts);
         this.sets = new ArrayList<>();
     }
 
@@ -94,30 +91,5 @@ public abstract class ASequenceInOuts {
                     sets.setDef(reg);
             }
         }
-    }
-
-    public static ArrayList<String> findAllRegistersOfSeq(List<Instruction> insts) {
-        ArrayList<String> lst = new ArrayList<>();
-
-        for (Instruction i : insts) {
-            for (Operand op : i.getData().getOperands()) {
-                if (op.isRegister()) {
-                    String reg = AnalysisUtils.getRegName(op);
-                    lst.add(reg);
-                }
-            }
-        }
-        Comparator<String> regCompare = (String r1, String r2) -> {
-            r1 = r1.replaceAll("[^\\d.]", "");
-            r2 = r2.replaceAll("[^\\d.]", "");
-            int n1 = Integer.parseInt(r1);
-            int n2 = Integer.parseInt(r2);
-            return n1 > n2 ? 1 : -1;
-        };
-        // Remove duplicates
-        var newList = lst.stream().distinct().collect(Collectors.toCollection(ArrayList::new));
-        // Sort array with custom comparator
-        Collections.sort(newList, regCompare);
-        return newList;
     }
 }
