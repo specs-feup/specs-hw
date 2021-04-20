@@ -132,12 +132,12 @@ public class MicroBlazeInstruction extends AInstruction {
         var copyinst = new String(this.getInstruction());
         var copyData = this.getData().copy();
         var copyFieldData = this.getFieldData().copy();
-
-        // RegisterDump copyDump = this.getRegisters().copy();
-        var copyDump = new RegisterDump(this.getRegisters());
-
         var cpy = new MicroBlazeInstruction(copyaddr, copyinst, copyData, copyFieldData, this.getProperties());
-        cpy.setRegisters(copyDump);
+
+        if (this.getRegisters() != null) {
+            var copyDump = new RegisterDump(this.getRegisters());
+            cpy.setRegisters(copyDump);
+        }
         return cpy;
     }
 
