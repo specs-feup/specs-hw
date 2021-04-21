@@ -40,9 +40,13 @@ public class StdioThreads {
         // this thread will block here if "nextLine" is waiting for content
         // of if main thread has not read the concurrentchannel for the
         // previous stdout line
-        while (lstream.hasNextLine()) {
-            producer.put(lstream.peekNextLine());
-            lstream.nextLine();
+        // while (lstream.hasNextLine()) {
+        while (run.getProc().isAlive()) {
+            var peek = lstream.peekNextLine();
+            if (peek != null) {
+                producer.put(peek);
+                lstream.nextLine();
+            }
         }
 
         lstream.close();
