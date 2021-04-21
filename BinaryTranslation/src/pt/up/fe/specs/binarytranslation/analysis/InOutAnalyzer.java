@@ -2,11 +2,12 @@ package pt.up.fe.specs.binarytranslation.analysis;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.analysis.elimination.OutElimination;
+import org.specs.BinaryTranslation.ELFProvider;
+
 import pt.up.fe.specs.binarytranslation.analysis.inouts.BasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.inouts.SimpleBasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.inouts.TraceInOuts;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.analysis.inouts.elimination.OutElimination;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
@@ -18,15 +19,14 @@ public class InOutAnalyzer extends ATraceAnalyzer {
         TRACE,
         ELIMINATION
     };
-    
-    private TraceBasicBlockDetector det;
 
-    public InOutAnalyzer(ATraceInstructionStream stream) {
-        super(stream);
-        this.det = new TraceBasicBlockDetector();
+    public InOutAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
+        super(stream, elf);
     }
     
-    public void analyse(InOutMode mode) {
+    public void analyse(InOutMode mode, int window) {
+        var det = buildDetector(window);
+        
         List<BinarySegment> bbs = AnalysisUtils.getSegments(stream, det);
         
         if (mode == InOutMode.TRACE) {

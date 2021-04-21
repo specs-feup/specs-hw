@@ -22,7 +22,6 @@ public enum MicroBlazeResource implements ResourceProvider {
     QEMU_MICROBLAZE_GDB_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl.gdb"),
     QEMU_MICROBLAZE_BAREMETAL_DTB("org/specs/MicroBlaze/qemu/system.dtb"),
     QEMU_MICROBLAZE_EXE("qemu-system-microblazeel"),
-    // QEMU_MICROBLAZE_EXE("/media/nuno/HDD/work/projects/myqemus/qemu-system-microblazeel"),
 
     MICROBLAZE_GCC("mb-gcc"),
     MICROBLAZE_GDB("mb-gdb"),

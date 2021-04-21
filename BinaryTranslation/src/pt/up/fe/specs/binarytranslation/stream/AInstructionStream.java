@@ -32,10 +32,6 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
         this.numcycles = 0;
     }
 
-    protected InstructionProducer getProducer() {
-        return producer;
-    }
-
     @Override
     public void silent(boolean isSilent) {
         this.silent = isSilent;

@@ -17,7 +17,11 @@ public enum MicroBlazeGccOptimizationLevels implements ELFProvider {
     dotprod2s("org/specs/MicroBlaze/asm/GCC/dotprod-O2-small.elf", null, null),
     dotprod3("org/specs/MicroBlaze/asm/GCC/dotprod-O3.elf", null, null),
     dotprodf("org/specs/MicroBlaze/asm/GCC/dotprod-Ofast.elf", null, null),
-    matmul0("org/specs/MicroBlaze/asm/GCC/matmul-O0.elf", null, null);
+    matmul0("org/specs/MicroBlaze/asm/GCC/matmul-O0.elf", null, null),
+    test2("org/specs/MicroBlaze/asm/GCC/test-O2.elf", null, null),
+    fir1("org/specs/MicroBlaze/asm/GCC/fir-O1.elf", null, null),
+    fir2("org/specs/MicroBlaze/asm/GCC/fir-O2.elf", null, null),
+    fir3("org/specs/MicroBlaze/asm/GCC/fir-O3.elf", null, null);
 
     // private String elfname;
     private String fullPath;

@@ -62,12 +62,13 @@ public class GDBRun extends StringProcessRun {
     }
 
     /*
-     * 
+     * NOTE: For windows, the run environment should have this var set SET HOME=%USERPROFILE%
+     * in case gdb is called from a prompt which is not MSYS (which is what happens when running via Eclipse)
      */
     public GDBRun(Application app, File scriptFile) {
         super(GDBRun.getArgs(app, scriptFile));
         super.attachThreads();
-        this.getGDBResponse(1000); // consume a single garbage line produced from the start of gdb
+        this.getGDBResponse(5000); // consume a single garbage line produced from the start of gdb
         // Note:
         // when launching QEMU under GDB, the "target remote" command
         // takes longer than 10ms to complete, hence the 1s timeout for
@@ -144,10 +145,15 @@ public class GDBRun extends StringProcessRun {
      */
     public void runToEnd() {
         if (this.targetOpen) {
-            this.sendGDBCommand("while $pc != _exit");
+            this.sendGDBCommand("set $v = -1");
+            this.sendGDBCommand("while $pc != $v");
+            this.sendGDBCommand("set var $v = $pc");
             this.sendGDBCommand("stepi 1");
             this.sendGDBCommand("x/x $pc");
             this.sendGDBCommand("end");
+            this.sendGDBCommand("kill");
+            this.sendGDBCommand("quit");
+            // this.discardAllGDBResponse();
         }
     }
 
@@ -155,28 +161,13 @@ public class GDBRun extends StringProcessRun {
      * 
      */
     public void runUntil(String hexaddr) {
-        if (this.targetOpen) {
-            this.sendGDBCommand("break *" + hexaddr);
-            this.consumeAllGDBResponse(); // consume ack
-            this.sendGDBCommand("c"); // continue
-            while (!this.waitForGDB().contains("Breakpoint"))
-                ;
-
-            /*
-             * 
-            String ret = null;
-            do {
-                ret = this.waitForGDB();
-                System.out.println(ret);
-            } while (!ret.contains("Breakpoint"));
-            */
-
-            /*
-            System.out.println(this.getGDBResponse()); // consume "Continuing."
-            System.out.println(this.getGDBResponse()); // consume ""
-            System.out.println(this.waitForGDB());
-            */
-        }
+        // this.sendGDBCommand("while $pc != " + hexaddr + "\nstepi 1\nend");
+        this.sendGDBCommand("break *" + hexaddr);
+        this.consumeAllGDBResponse(); // consume ack
+        this.sendGDBCommand("c"); // continue
+        this.getGDBResponse(); // consume "Continuing."
+        this.getGDBResponse(); // consume ""
+        this.waitForGDB();
     }
 
     /*
@@ -244,18 +235,9 @@ public class GDBRun extends StringProcessRun {
 
     public String getAddrAndInstruction() {
         this.sendGDBCommand("x/x $pc");
-        String line = null, ret = null;
-        while ((line = this.getGDBResponse(1000)) != null) {
-            if (!SpecsStrings.matches(line, INSTPATTERN))
-                continue;
-
-            var addrandinst = SpecsStrings.getRegex(line, INSTPATTERN);
-            ret = addrandinst.get(0) + ":" + addrandinst.get(1);
-            break;
-        }
-        // if (ret == null)
-        // System.out.println("OPS");
-        return ret;
+        var response = this.getGDBResponse();
+        var addrandinst = SpecsStrings.getRegex(response, INSTPATTERN);
+        return "0x" + addrandinst.get(0) + ":" + "0x" + addrandinst.get(1);
     }
 
     /*
@@ -337,8 +319,8 @@ public class GDBRun extends StringProcessRun {
     /* 
      * Wait for continue run
      */
-    private String waitForGDB() {
-        return super.receive(-1);
+    private void waitForGDB() {
+        super.receive(-1);
     }
 
     /*

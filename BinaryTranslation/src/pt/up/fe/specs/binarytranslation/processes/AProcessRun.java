@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.processes;
 
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
@@ -79,11 +80,13 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
     @Override
     public void close() {
 
-        /*try {
-            proc.waitFor();
+        try {
+            if (!proc.waitFor(2, TimeUnit.SECONDS))
+                proc.destroy();
+
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }*/
+        }
     }
 }
