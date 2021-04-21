@@ -19,7 +19,7 @@ public class MicroBlazeSequentialDetectTest {
         // file
         var fd = BinaryTranslationUtils.getFile(elf);
 
-        int minwindow = 10, maxwindow = 10;
+        int minwindow = 8, maxwindow = 12;
 
         // do all detectors sequentially
         for (int i = minwindow; i <= maxwindow; i++) {

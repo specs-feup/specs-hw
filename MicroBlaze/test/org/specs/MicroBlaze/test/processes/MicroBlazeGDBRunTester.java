@@ -40,10 +40,17 @@ public class MicroBlazeGDBRunTester {
             // run until kernel start
             gdb.runUntil(elf.getKernelStart().toString());
 
-            for (int i = 0; i < 200; i++) {
+            for (int i = 0; i < 10; i++) {
+                System.out.println(gdb.getRegisters());
                 gdb.stepi();
                 System.out.println(gdb.getAddrAndInstruction());
             }
+
+            // memory dump
+            for (int i = 0; i < 5; i++) {
+                System.out.println(gdb.readWord(1000 + i * 4));
+            }
+            System.out.println(gdb.readWord(1000, 50));
 
             /*
             var dump = gdb.getRegisters();
