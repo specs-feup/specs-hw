@@ -11,6 +11,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 
@@ -24,7 +25,7 @@ public class MemoryDisambiguator {
     public MemoryDisambiguator(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, 
                                 HashMap<String, Integer> indVars, 
                                 RegisterProperties isaProps,
-                                BasicBlockOccurrenceTracker tracker) {
+                                BasicBlockOccurrenceTracker tracker) {        
         this.graphs = graphs;
         this.indVars = indVars;
         this.isaProps = isaProps;
@@ -35,7 +36,7 @@ public class MemoryDisambiguator {
         System.out.println("");
         var totalRegisters = new ArrayList<String>();
         
-        for (var graph : graphs) {
+        for (var graph : graphs) {            
             String expr = MemoryAddressDetector.buildMemoryExpression(graph);
             System.out.println("Memory disambiguation for memory access " + expr + ":");
             

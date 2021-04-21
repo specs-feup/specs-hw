@@ -17,8 +17,9 @@ public abstract class ATraceAnalyzer {
 
     protected TraceBasicBlockDetector buildDetector(int window) {
         stream.silent(false);
+        stream.advanceTo(elf.getKernelStart().longValue());
         
-        System.out.println("Looking for segments of size: " + window);
+        System.out.println("Building detector for window size " + window);
 
         var detector = new TraceBasicBlockDetector(
                 elf.getKernelStart() != null ? new DetectorConfigurationBuilder()

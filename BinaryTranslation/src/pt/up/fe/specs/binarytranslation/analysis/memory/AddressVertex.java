@@ -34,6 +34,10 @@ public class AddressVertex {
     public String getLabel() {
         return label;
     }
+    
+    public void setLabel(String newLabel) {
+        this.label = newLabel;
+    }
 
     public AddressVertexType getType() {
         return type;
