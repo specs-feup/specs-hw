@@ -23,26 +23,26 @@ public class MicroBlazeStreamTester {
     @Test
     public void testStatic() {
         InstructionStreamTestUtils.printStream(
-                MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeElfStream.class);
+                MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
     }
 
     @Test
     public void testStaticRaw() {
         InstructionStreamTestUtils.rawDump(
-                MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeElfStream.class);
+                MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
     }
 
     @Test
     public void testTrace() {
         InstructionStreamTestUtils.printStream(
-                MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeTraceStream.class);
+                MicroBlazeLivermoreELFN10.matmul, MicroBlazeTraceStream.class);
     }
 
     // TODO: rawDump now doesnt work if the qemu template doesnt include the loop...
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
-                MicroBlazeLivermoreELFN10.innerprod.getResource(), MicroBlazeTraceStream.class);
+                MicroBlazeLivermoreELFN10.matmul, MicroBlazeTraceStream.class);
     }
 
     @Test

@@ -28,5 +28,8 @@
 	<dependencies>
 		<dependency org="org.antlr" name="antlr4-runtime" rev="4.6"/>
 		<dependency org="com.google.code.gson" name="gson" rev="2.4"/>
+		<dependency org="org.jgrapht" name="jgrapht-core" rev="1.5.1"/>
+		<dependency org="org.jgrapht" name="jgrapht-io" rev="1.5.1"/>
 	</dependencies>
+	
 </ivy-module>

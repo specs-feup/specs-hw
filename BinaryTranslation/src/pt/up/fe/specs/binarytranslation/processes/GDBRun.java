@@ -145,15 +145,10 @@ public class GDBRun extends StringProcessRun {
      */
     public void runToEnd() {
         if (this.targetOpen) {
-            this.sendGDBCommand("set $v = -1");
-            this.sendGDBCommand("while $pc != $v");
-            this.sendGDBCommand("set var $v = $pc");
+            this.sendGDBCommand("while $pc != _exit");
             this.sendGDBCommand("stepi 1");
             this.sendGDBCommand("x/x $pc");
             this.sendGDBCommand("end");
-            this.sendGDBCommand("kill");
-            this.sendGDBCommand("quit");
-            // this.discardAllGDBResponse();
         }
     }
 
@@ -161,13 +156,28 @@ public class GDBRun extends StringProcessRun {
      * 
      */
     public void runUntil(String hexaddr) {
-        // this.sendGDBCommand("while $pc != " + hexaddr + "\nstepi 1\nend");
-        this.sendGDBCommand("break *" + hexaddr);
-        this.consumeAllGDBResponse(); // consume ack
-        this.sendGDBCommand("c"); // continue
-        this.getGDBResponse(); // consume "Continuing."
-        this.getGDBResponse(); // consume ""
-        this.waitForGDB();
+        if (this.targetOpen) {
+            this.sendGDBCommand("break *" + hexaddr);
+            this.consumeAllGDBResponse(); // consume ack
+            this.sendGDBCommand("c"); // continue
+            while (!this.waitForGDB().contains("Breakpoint"))
+                ;
+
+            /*
+             * 
+            String ret = null;
+            do {
+                ret = this.waitForGDB();
+                System.out.println(ret);
+            } while (!ret.contains("Breakpoint"));
+            */
+
+            /*
+            System.out.println(this.getGDBResponse()); // consume "Continuing."
+            System.out.println(this.getGDBResponse()); // consume ""
+            System.out.println(this.waitForGDB());
+            */
+        }
     }
 
     /*
@@ -235,9 +245,18 @@ public class GDBRun extends StringProcessRun {
 
     public String getAddrAndInstruction() {
         this.sendGDBCommand("x/x $pc");
-        var response = this.getGDBResponse();
-        var addrandinst = SpecsStrings.getRegex(response, INSTPATTERN);
-        return "0x" + addrandinst.get(0) + ":" + "0x" + addrandinst.get(1);
+        String line = null, ret = null;
+        while ((line = this.getGDBResponse(1000)) != null) {
+            if (!SpecsStrings.matches(line, INSTPATTERN))
+                continue;
+
+            var addrandinst = SpecsStrings.getRegex(line, INSTPATTERN);
+            ret = addrandinst.get(0) + ":" + addrandinst.get(1);
+            break;
+        }
+        // if (ret == null)
+        // System.out.println("OPS");
+        return ret;
     }
 
     /*
@@ -319,8 +338,8 @@ public class GDBRun extends StringProcessRun {
     /* 
      * Wait for continue run
      */
-    private void waitForGDB() {
-        super.receive(-1);
+    private String waitForGDB() {
+        return super.receive(-1);
     }
 
     /*

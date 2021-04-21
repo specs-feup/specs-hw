@@ -58,7 +58,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             }
             
             //memory disambiguation
-            var memDis = new MemoryDisambiguator(graphs, indVars, isaProps);
+            var memDis = new MemoryDisambiguator(graphs, indVars, isaProps, ivd.getTracker());
             memDis.disambiguate();
             
             AnalysisUtils.printSeparator(40);

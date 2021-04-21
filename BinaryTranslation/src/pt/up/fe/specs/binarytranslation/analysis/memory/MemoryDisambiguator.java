@@ -11,6 +11,8 @@ import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
+import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 
 public class MemoryDisambiguator {
@@ -18,18 +20,23 @@ public class MemoryDisambiguator {
     private ArrayList<Graph<AddressVertex, DefaultEdge>> graphs;
     private HashMap<String, Integer> indVars;
     private RegisterProperties isaProps;
+    private BasicBlockOccurrenceTracker tracker;
 
-    public MemoryDisambiguator(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars, RegisterProperties isaProps) {
+    public MemoryDisambiguator(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, 
+                                HashMap<String, Integer> indVars, 
+                                RegisterProperties isaProps,
+                                BasicBlockOccurrenceTracker tracker) {        
         this.graphs = graphs;
         this.indVars = indVars;
         this.isaProps = isaProps;
+        this.tracker = tracker;
     }
 
     public void disambiguate() {
         System.out.println("");
         var totalRegisters = new ArrayList<String>();
         
-        for (var graph : graphs) {
+        for (var graph : graphs) {            
             String expr = MemoryAddressDetector.buildMemoryExpression(graph);
             System.out.println("Memory disambiguation for memory access " + expr + ":");
             
@@ -39,7 +46,12 @@ public class MemoryDisambiguator {
             System.out.println("Registers involved in address: " + registers);
             
             //disambiguate
-            //...
+            System.out.println("Trying to find source of address registers:\n");
+            var sourceDet = new RegisterSourceDetector(tracker);
+            for (var register : registers) {
+                System.out.println(register  + ":");
+                sourceDet.findSource(register);
+            }
             
             // Add registers to basic bloc list for reporting
             totalRegisters.addAll(registers);
