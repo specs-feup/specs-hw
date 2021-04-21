@@ -14,6 +14,14 @@ public interface InstructionProducer extends ObjectProducer<Instruction> {
     }
 
     /**
+     * Advance to a given address (basically used to set a gdb breakpoint and run), returns false if the producer does
+     * not implement this feature
+     */
+    default boolean advanceTo(long addr) {
+        return false;
+    }
+
+    /**
      * 
      * @return the next instruction of the stream, or null if there are no more instructions in the stream
      */

@@ -3,9 +3,11 @@ package pt.up.fe.specs.binarytranslation.test.stream;
 import java.io.File;
 import java.lang.reflect.Constructor;
 
+import org.specs.BinaryTranslation.ELFProvider;
+
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class InstructionStreamTestUtils {
 
@@ -13,10 +15,9 @@ public class InstructionStreamTestUtils {
         void apply(InstructionStream el);
     }
 
-    private static void workload(String filename, Class<?> streamClass, WorkloadInterface doWork) {
+    private static void workload(ELFProvider elf, Class<?> streamClass, WorkloadInterface doWork) {
 
-        File fd = SpecsIo.resourceCopy(filename);
-        fd.deleteOnExit();
+        var fd = BinaryTranslationUtils.getFile(elf);
 
         Constructor<?> cons;
         try {
@@ -41,15 +42,15 @@ public class InstructionStreamTestUtils {
         }
     }
 
-    public static void printStream(String filename, Class<?> streamClass) {
-        workload(filename, streamClass, InstructionStreamTestUtils::printStreamWorkload);
+    public static void printStream(ELFProvider elf, Class<?> streamClass) {
+        workload(elf, streamClass, InstructionStreamTestUtils::printStreamWorkload);
     }
 
     private static void rawDumpWorkload(InstructionStream el) {
         el.rawDump();
     }
 
-    public static void rawDump(String filename, Class<?> streamClass) {
-        workload(filename, streamClass, InstructionStreamTestUtils::rawDumpWorkload);
+    public static void rawDump(ELFProvider elf, Class<?> streamClass) {
+        workload(elf, streamClass, InstructionStreamTestUtils::rawDumpWorkload);
     }
 }

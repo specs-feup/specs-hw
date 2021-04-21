@@ -68,7 +68,7 @@ public class MicroBlazeDetectorsTest {
     @Test
     public void testTraceBasicBlockDetector() {
         // TODO ensure trace is called here
-        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.cholesky,
+        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.matmul, // MicroBlazeLivermoreELFN10.cholesky,
                 MicroBlazeTraceStream.class, TraceBasicBlockDetector.class);
         SegmentDetectTestUtils.printBundle(bundle);
     }

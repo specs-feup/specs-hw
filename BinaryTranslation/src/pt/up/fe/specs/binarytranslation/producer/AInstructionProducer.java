@@ -51,7 +51,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
     @Override
     public void rawDump() {
         String line = null;
-        while ((line = this.prun.receive()) != null) {
+        while ((line = this.prun.receive(100)) != null) {
             System.out.print(line + "\n");
         }
     }
@@ -73,7 +73,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
     @Override
     public Instruction nextInstruction() {
         String line = null;
-        while (((line = this.prun.receive()) != null)
+        while (((line = this.prun.receive(100)) != null)
                 && !SpecsStrings.matches(line, getRegex()))
             ;
         if (line == null)

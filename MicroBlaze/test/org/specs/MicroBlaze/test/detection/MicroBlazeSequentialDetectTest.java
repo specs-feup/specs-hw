@@ -1,36 +1,40 @@
 package org.specs.MicroBlaze.test.detection;
 
-import java.io.File;
 import java.util.Arrays;
 
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentTraceSequenceDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
-import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class MicroBlazeSequentialDetectTest {
 
     private void testSequentialDetectors(ELFProvider elf) {
 
         // file
-        File fd = SpecsIo.resourceCopy(elf.getResource());
-        fd.deleteOnExit();
+        var fd = BinaryTranslationUtils.getFile(elf);
 
-        int minwindow = 3, maxwindow = 3;
+        int minwindow = 8, maxwindow = 12;
 
         // do all detectors sequentially
         for (int i = minwindow; i <= maxwindow; i++) {
             var istream1 = new MicroBlazeTraceStream(fd);
-            var detector1 = new FrequentTraceSequenceDetector(
+            istream1.silent(false);
+            istream1.advanceTo(elf.getKernelStart().longValue());
+
+            System.out.println("Looking for segments of size: " + i);
+
+            var detector1 = new TraceBasicBlockDetector(// new FrequentTraceSequenceDetector(
                     new DetectorConfigurationBuilder()
                             .withMaxWindow(i)
                             .withStartAddr(elf.getKernelStart())
                             .withStopAddr(elf.getKernelStop())
+                            .withPrematureStopAddr(elf.getKernelStop().longValue())
                             .build());
             var result1 = detector1.detectSegments(istream1);
             if (result1.getSegments().size() == 0)
@@ -45,7 +49,7 @@ public class MicroBlazeSequentialDetectTest {
     @Test
     public void testSequentialDetectors() {
         // for (var file : MicroBlazeLivermoreELFN100.values()) {
-        for (var file : Arrays.asList(MicroBlazeLivermoreELFN100.innerprod100)) {
+        for (var file : Arrays.asList(MicroBlazeLivermoreELFN10.innerprod)) {
             this.testSequentialDetectors(file);
         }
     }

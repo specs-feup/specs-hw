@@ -32,11 +32,11 @@ public class InductionVariablesDetector extends APropertyDetector {
     }
 
     public void printDifferences() {
-        var keys = tracker.getOccurrences().get(0).getRegisters().getRegisterMap().keySet();
+        var keys = getTracker().getOccurrences().get(0).getRegisters().getRegisterMap().keySet();
         var diffs = new ArrayList<HashMap<String, Long>>();
-        for (int i = 0; i < tracker.getOccurrences().size() - 1; i++) {
-            var b1 = tracker.getOccurrences().get(i).getRegisters();
-            var b2 = tracker.getOccurrences().get(i + 1).getRegisters();
+        for (int i = 0; i < getTracker().getOccurrences().size() - 1; i++) {
+            var b1 = getTracker().getOccurrences().get(i).getRegisters();
+            var b2 = getTracker().getOccurrences().get(i + 1).getRegisters();
             var bd = registerDiff(b1, b2);
             diffs.add(bd);
         }
@@ -61,11 +61,11 @@ public class InductionVariablesDetector extends APropertyDetector {
     }
 
     public void printInstDifferences() {
-        var rows = tracker.getBasicBlock().getInstructions().size();
-        var cols = tracker.getOccurrences().size();
+        var rows = getTracker().getBasicBlock().getInstructions().size();
+        var cols = getTracker().getOccurrences().size();
         String[][] regs = new String[rows][cols];
-        for (int col = 0; col < tracker.getOccurrences().size(); col++) {
-            var bb = tracker.getOccurrences().get(col);
+        for (int col = 0; col < getTracker().getOccurrences().size(); col++) {
+            var bb = getTracker().getOccurrences().get(col);
             for (int row = 0; row < bb.getInsts().size(); row++) {
                 var inst = bb.getInsts().get(row);
                 String regInfo = getRelevantRegs(inst);
@@ -97,7 +97,7 @@ public class InductionVariablesDetector extends APropertyDetector {
 
     public HashMap<String, Integer> detectVariables(Graph<AddressVertex, DefaultEdge> mergedGraph, boolean verbose) {
         var res = new HashMap<String, Integer>();
-        var regs = tracker.getRegisters();
+        var regs = getTracker().getRegisters();
         String[][] fullRes = new String[regs.size()][4];
 
         for (int i = 0; i < regs.size(); i++) {
@@ -149,7 +149,7 @@ public class InductionVariablesDetector extends APropertyDetector {
     private HashMap<String, Integer> findIncrements() {
         var map = new HashMap<String, Integer>();
         
-        for (var inst : tracker.getBasicBlockInsts()) {
+        for (var inst : getTracker().getBasicBlockInsts()) {
             if (inst.isAdd() || inst.isSub() || inst.isMul()) {
                 if (inst.getData().getOperands().size() == 3) {
 
@@ -172,7 +172,7 @@ public class InductionVariablesDetector extends APropertyDetector {
     }
 
     private boolean conditionIsInComparison(String reg) {
-        for (var inst : tracker.getBasicBlockInsts()) {
+        for (var inst : getTracker().getBasicBlockInsts()) {
             if (inst.getData().getGenericTypes().contains(InstructionType.G_CMP)) {
                 for (var op : inst.getData().getOperands()) {
                     if (op.isRegister()) {
