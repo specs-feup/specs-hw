@@ -40,25 +40,12 @@ public class TraceInstructionProducer extends AInstructionProducer {
     }
 
     @Override
-    public boolean advanceTo(long addr) {
-        if ((this.prun instanceof GDBRun)) {
-            var gdb = (GDBRun) this.prun;
-            gdb.runUntil(addr);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public void rawDump() {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;
             gdb.runToEnd();
-            super.rawDump();
-            gdb.killTarget();
-            gdb.quit();
-        } else
-            super.rawDump();
+        }
+        super.rawDump();
     }
 
     /*
@@ -81,12 +68,8 @@ public class TraceInstructionProducer extends AInstructionProducer {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;
             gdb.stepi();
-            var line = gdb.getAddrAndInstruction();
-            if (line == null)
-                return null;
-
-            var splits = line.split(":");
-            return this.newInstance(splits[0], splits[1]);
+            var line = gdb.getAddrAndInstruction().split(":");
+            return this.newInstance(line[0], line[1]);
 
         } else {
             return super.nextInstruction();

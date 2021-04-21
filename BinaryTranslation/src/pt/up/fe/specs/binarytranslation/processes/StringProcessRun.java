@@ -28,7 +28,7 @@ public class StringProcessRun extends AProcessRun {
      * from process stdout
      */
     public String receive() {
-        return this.receive(2);
+        return this.receive(10);
     }
 
     /*

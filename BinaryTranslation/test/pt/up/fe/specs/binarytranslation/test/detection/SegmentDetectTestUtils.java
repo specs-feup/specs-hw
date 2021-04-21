@@ -47,7 +47,6 @@ public class SegmentDetectTestUtils {
             DetectorConfiguration config) {
 
         var stream = ClassBuilders.buildStream(streamClass, elffile);
-        stream.silent(false);
         var detector = ClassBuilders.buildDetector(detectorClass, config);
         var bundle = detector.detectSegments(stream);
         return bundle;

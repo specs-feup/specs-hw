@@ -12,24 +12,24 @@ public class ArmStreamTester {
     @Test
     public void testStatic() {
         InstructionStreamTestUtils.printStream(
-                ArmLivermoreELFN10.innerprod, ArmElfStream.class);
+                ArmLivermoreELFN10.innerprod.getResource(), ArmElfStream.class);
     }
 
     @Test
     public void testStaticRaw() {
         InstructionStreamTestUtils.rawDump(
-                ArmLivermoreELFN10.innerprod, ArmElfStream.class);
+                ArmLivermoreELFN10.innerprod.getResource(), ArmElfStream.class);
     }
 
     @Test
     public void testTrace() {
         InstructionStreamTestUtils.printStream(
-                ArmLivermoreELFN10.innerprod, ArmTraceStream.class);
+                ArmLivermoreELFN10.innerprod.getResource(), ArmTraceStream.class);
     }
 
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
-                ArmLivermoreELFN10.innerprod, ArmTraceStream.class);
+                ArmLivermoreELFN10.innerprod.getResource(), ArmTraceStream.class);
     }
 }

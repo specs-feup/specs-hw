@@ -28,9 +28,7 @@
 	<dependencies>
 		<dependency org="org.antlr" name="antlr4-runtime" rev="4.6"/>
 		<dependency org="com.google.code.gson" name="gson" rev="2.4"/>
-		<!-- https://mvnrepository.com/artifact/org.jgrapht/jgrapht-core -->
 		<dependency org="org.jgrapht" name="jgrapht-core" rev="1.5.1"/>
-		<!-- https://mvnrepository.com/artifact/org.jgrapht/jgrapht-io -->
 		<dependency org="org.jgrapht" name="jgrapht-io" rev="1.5.1"/>
 	</dependencies>
 	
