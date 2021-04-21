@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <interface id="1" language="java" name="pt.up.fe.specs.binarytranslation.instruction.Instruction" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/instruction/Instruction.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="189" x="1572" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="2" language="java" name="pt.up.fe.specs.binarytranslation.instruction.operand.AOperand" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/instruction/operand/AOperand.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="225" x="1039" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="pt.up.fe.specs.binarytranslation.producer.AInstructionProducer" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/producer/AInstructionProducer.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="182" x="1282" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="pt.up.fe.specs.binarytranslation.instruction.AInstruction" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/instruction/AInstruction.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="189" x="2360" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="pt.up.fe.specs.binarytranslation.stream.AInstructionStream" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/stream/AInstructionStream.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="175" x="2093" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="pt.up.fe.specs.binarytranslation.instruction.InstructionData" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/instruction/InstructionData.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="189" x="1781" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="7" language="java" name="pt.up.fe.specs.binarytranslation.stream.InstructionStream" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/stream/InstructionStream.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="175" x="2589" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="8" language="java" name="pt.up.fe.specs.binarytranslation.producer.InstructionProducer" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/producer/InstructionProducer.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="182" x="1708" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="9" language="java" name="pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/stream/ATraceInstructionStream.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="175" x="1930" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/stream/AStaticInstructionStream.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="175" x="2145" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="pt.up.fe.specs.binarytranslation.producer.StaticInstructionProducer" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/producer/StaticInstructionProducer.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="182" x="1282" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/producer/TraceInstructionProducer.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="182" x="1039" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="13" language="java" name="pt.up.fe.specs.binarytranslation.instruction.operand.Operand" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/instruction/operand/Operand.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="225" x="1307" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="14" language="java" name="pt.up.fe.specs.binarytranslation.graph.GraphNode" project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/graph/GraphNode.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="169" x="2188" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="pt.up.fe.specs.binarytranslation.graph.GraphBundle" project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/graph/GraphBundle.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="169" x="2825" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/graph/BinarySegmentGraph.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="169" x="2804" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="pt.up.fe.specs.binarytranslation.asm.Application" project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/asm/Application.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="164" x="1325" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="pt.up.fe.specs.binarytranslation.asm.ELFDump" project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/asm/ELFDump.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="164" x="1504" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="19" language="java" name="pt.up.fe.specs.binarytranslation.asm.parsing.IsaParser" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/asm/parsing/IsaParser.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="197" x="3034" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="20" language="java" name="pt.up.fe.specs.binarytranslation.asm.parsing.AIsaParser" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/asm/parsing/AIsaParser.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="197" x="3034" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" 
+    name="pt.up.fe.specs.binarytranslation.asm.parsing.binaryasmparser.BinaryAsmInstructionParser" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/asm/parsing/binaryasmparser/BinaryAsmInstructionParser.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="270" x="352" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="22" language="java" name="pt.up.fe.specs.binarytranslation.asm.parsing.binaryasmparser.BinaryAsmRule" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/asm/parsing/binaryasmparser/BinaryAsmRule.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="270" x="461" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="23" language="java" name="pt.up.fe.specs.binarytranslation.asm.parsing.binaryasmparser.ConstantRule" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/asm/parsing/binaryasmparser/ConstantRule.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="270" x="972" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="24" language="java" name="pt.up.fe.specs.binarytranslation.asm.parsing.binaryasmparser.FieldRule" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/asm/parsing/binaryasmparser/FieldRule.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="270" x="42" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="pt.up.fe.specs.binarytranslation.asm.parsing.binaryasmparser.IgnoreRule" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/asm/parsing/binaryasmparser/IgnoreRule.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="270" x="662" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="26" language="java" name="pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/detection/segments/BinarySegment.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="228" x="2804" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="27" language="java" name="pt.up.fe.specs.binarytranslation.detection.segments.ABinarySegment" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/detection/segments/ABinarySegment.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="228" x="771" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="28" language="java" name="pt.up.fe.specs.binarytranslation.detection.segments.ABasicBlock" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/detection/segments/ABasicBlock.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="228" x="503" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="29" language="java" name="pt.up.fe.specs.binarytranslation.detection.segments.AFrequentSequence" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/detection/segments/AFrequentSequence.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="228" x="771" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="30" language="java" name="pt.up.fe.specs.binarytranslation.detection.segments.StaticBasicBlock" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/detection/segments/StaticBasicBlock.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="228" x="235" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="31" language="java" name="pt.up.fe.specs.binarytranslation.detection.segments.TraceBasicBlock" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/detection/segments/TraceBasicBlock.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="228" x="503" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="32" language="java" name="pt.up.fe.specs.binarytranslation.detection.segments.FrequentStaticSequence" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/detection/segments/FrequentStaticSequence.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="228" x="1039" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="33" language="java" name="pt.up.fe.specs.binarytranslation.detection.segments.FrequentTraceSequence" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/detection/segments/FrequentTraceSequence.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="228" x="771" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="34" language="java" name="pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/detection/segments/SegmentContext.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="228" x="235" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <association id="35">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="36" name="idata"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="38">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="39" name="istream"/>      
+      <multiplicity id="40" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="41">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="27"/>  
+  </generalization>  
+  <realization id="42">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="8"/>  
+  </realization>  
+  <realization id="43">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="19"/>  
+  </realization>  
+  <association id="44">    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="45" name="appinfo"/>      
+      <multiplicity id="46" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="47">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <association id="48">    
+    <bendpoint x="1251" y="130"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="49" name="app"/>      
+      <multiplicity id="50" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="51">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="22"/>  
+  </realization>  
+  <association id="52">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="53" name="inst"/>      
+      <multiplicity id="54" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="55">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="56">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="27"/>  
+  </generalization>  
+  <realization id="57">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="13"/>  
+  </realization>  
+  <generalization id="58">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="59">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="60" name="graphs"/>      
+      <multiplicity id="61" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="62">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="63" name="appdata"/>      
+      <multiplicity id="64" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="65">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <realization id="66">    
+    <bendpoint x="2000" y="223"/>    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="1"/>  
+  </realization>  
+  <association id="67">    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="68" name="contexts"/>      
+      <multiplicity id="69" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="70">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <realization id="71">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="26"/>  
+  </realization>  
+  <association id="72">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="73" name="producer"/>      
+      <multiplicity id="74" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="75">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="76" name="nodes"/>      
+      <multiplicity id="77" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="78">    
+    <bendpoint x="3003" y="130"/>    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="79" name="segments"/>      
+      <multiplicity id="80" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="81">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="82" name="seg"/>      
+      <multiplicity id="83" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="84">    
+    <end type="SOURCE" refId="21" navigable="false">      
+      <attribute id="85" name="rules"/>      
+      <multiplicity id="86" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="87">    
+    <bendpoint x="1547" y="223"/>    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="88" name="elfdump"/>      
+      <multiplicity id="89" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="90">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="22"/>  
+  </realization>  
+  <realization id="91">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <generalization id="92">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="28"/>  
+  </generalization>  
+  <generalization id="93">    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <realization id="94">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="22"/>  
+  </realization>  
+  <association id="95">    
+    <bendpoint x="1294" y="223"/>    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="96" name="instlist"/>      
+      <multiplicity id="97" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="98">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="28"/>  
+  </generalization>  
+  <association id="99">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="100" name="operands"/>      
+      <multiplicity id="101" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false" static="false"/>    
+    <operations public="false" package="false" protected="false" private="false" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
