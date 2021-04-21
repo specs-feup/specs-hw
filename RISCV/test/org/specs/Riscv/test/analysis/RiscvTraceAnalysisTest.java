@@ -46,8 +46,7 @@ public class RiscvTraceAnalysisTest {
         // var elf = RiscvLivermoreELFN100iam.innerprod100;
         var elf = RiscvGccELF.autocor;
         var stream = getStream(elf, true);
-
-        InOutAnalyzer bba = new InOutAnalyzer(stream);
-        bba.analyse(InOutMode.BASIC_BLOCK);
+        var bba = new InOutAnalyzer(stream, elf);
+        bba.analyse(InOutMode.BASIC_BLOCK, 10);
     }
 }
