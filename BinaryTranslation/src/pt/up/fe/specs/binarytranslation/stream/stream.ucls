@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <interface id="1" language="java" name="pt.up.fe.specs.binarytranslation.stream.InstructionStream" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/stream/InstructionStream.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="207" width="182" x="1611" y="428"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="2" language="java" name="pt.up.fe.specs.binarytranslation.stream.AInstructionStream" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/stream/AInstructionStream.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="315" width="220" x="1793" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="pt.up.fe.specs.binarytranslation.stream.AStaticInstructionStream" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/stream/AStaticInstructionStream.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="117" width="247" x="2340" y="428"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/stream/ATraceInstructionStream.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="117" width="247" x="1833" y="428"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="5" language="java" name="pt.up.fe.specs.binarytranslation.stream.InstructionStreamType" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/stream/InstructionStreamType.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="117" width="197" x="286" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <interface id="6" language="java" name="pt.up.fe.specs.binarytranslation.producer.InstructionProducer" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/producer/InstructionProducer.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="153" width="182" x="1389" y="428"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="7" language="java" name="pt.up.fe.specs.binarytranslation.producer.AInstructionProducer" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/producer/AInstructionProducer.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="351" width="530" x="767" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="pt.up.fe.specs.binarytranslation.producer.StaticInstructionProducer" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/producer/StaticInstructionProducer.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="474" x="253" y="428"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer" 
+    project="BinaryTranslation" 
+    file="/BinaryTranslation/src/pt/up/fe/specs/binarytranslation/producer/TraceInstructionProducer.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="135" width="582" x="767" y="428"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="org.specs.Arm.stream.ArmStaticProvider" project="ARM" 
+    file="/ARM/src/org/specs/Arm/stream/ArmStaticProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="137" x="437" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="org.specs.MicroBlaze.stream.MicroBlazeStaticProvider" project="MicroBlaze" 
+    file="/MicroBlaze/src/org/specs/MicroBlaze/stream/MicroBlazeStaticProvider.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="81" width="170" x="43" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="org.specs.Riscv.stream.RiscvStaticProvider" project="RISCV" 
+    file="/RISCV/src/org/specs/Riscv/stream/RiscvStaticProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="144" x="253" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="org.specs.Arm.stream.ArmTraceProvider" project="ARM" 
+    file="/ARM/src/org/specs/Arm/stream/ArmTraceProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="138" x="799" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="org.specs.MicroBlaze.stream.MicroBlazeTraceProvider" project="MicroBlaze" 
+    file="/MicroBlaze/src/org/specs/MicroBlaze/stream/MicroBlazeTraceProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="171" x="977" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="org.specs.Riscv.stream.RiscvTraceProvider" project="RISCV" 
+    file="/RISCV/src/org/specs/Riscv/stream/RiscvTraceProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="145" x="614" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="org.specs.Arm.stream.ArmElfStream" project="ARM" 
+    file="/ARM/src/org/specs/Arm/stream/ArmElfStream.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="269" x="2203" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="org.specs.MicroBlaze.stream.MicroBlazeElfStream" project="MicroBlaze" 
+    file="/MicroBlaze/src/org/specs/MicroBlaze/stream/MicroBlazeElfStream.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="302" x="2512" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="org.specs.Riscv.stream.RiscvElfStream" project="RISCV" 
+    file="/RISCV/src/org/specs/Riscv/stream/RiscvElfStream.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="276" x="2854" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="org.specs.Arm.stream.ArmTraceStream" project="ARM" 
+    file="/ARM/src/org/specs/Arm/stream/ArmTraceStream.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="285" x="1188" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="org.specs.MicroBlaze.stream.MicroBlazeTraceStream" project="MicroBlaze" 
+    file="/MicroBlaze/src/org/specs/MicroBlaze/stream/MicroBlazeTraceStream.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="318" x="1845" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="org.specs.Riscv.stream.RiscvTraceStream" project="RISCV" 
+    file="/RISCV/src/org/specs/Riscv/stream/RiscvTraceStream.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="292" x="1513" y="675"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <realization id="22">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <generalization id="23">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="24">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="25">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <realization id="26">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </realization>  
+  <generalization id="27">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <generalization id="28">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <association id="29">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="30" name="producer"/>      
+      <multiplicity id="31" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="32">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <generalization id="33">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="34">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <generalization id="35">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="36">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <generalization id="37">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="38">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <generalization id="39">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="40">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="41">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <generalization id="42">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
