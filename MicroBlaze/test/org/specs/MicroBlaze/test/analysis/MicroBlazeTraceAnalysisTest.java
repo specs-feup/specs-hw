@@ -185,7 +185,7 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testAddresses() {
         // Livermore N10
-        var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
+        //var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
         //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
         //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
         //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
@@ -199,6 +199,7 @@ public class MicroBlazeTraceAnalysisTest {
         // GCC optimization levels
         //var elf = MicroBlazeGccOptimizationLevels.test2; int window = 22;
         //var elf = MicroBlazeGccOptimizationLevels.fir1; int window = 12;
+        var elf = MicroBlazeGccOptimizationLevels.firparam2; int window = 10;
         
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
