@@ -35,14 +35,14 @@ public class MicroBlazeStreamTester {
     @Test
     public void testTrace() {
         InstructionStreamTestUtils.printStream(
-                MicroBlazeLivermoreELFN10.matmul, MicroBlazeTraceStream.class);
+                MicroBlazeLivermoreELFN10.innerprod, MicroBlazeTraceStream.class);
     }
 
     // TODO: rawDump now doesnt work if the qemu template doesnt include the loop...
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
-                MicroBlazeLivermoreELFN10.matmul, MicroBlazeTraceStream.class);
+                MicroBlazeLivermoreELFN10.innerprod, MicroBlazeTraceStream.class);
     }
 
     @Test
