@@ -21,7 +21,9 @@ public enum MicroBlazeGccOptimizationLevels implements ELFProvider {
     test2("org/specs/MicroBlaze/asm/GCC/test-O2.elf", null, null),
     fir1("org/specs/MicroBlaze/asm/GCC/fir-O1.elf", null, null),
     fir2("org/specs/MicroBlaze/asm/GCC/fir-O2.elf", null, null),
-    fir3("org/specs/MicroBlaze/asm/GCC/fir-O3.elf", null, null);
+    fir3("org/specs/MicroBlaze/asm/GCC/fir-O3.elf", null, null),
+    firparam1("org/specs/MicroBlaze/asm/GCC/fir-param-O1.elf", null, null),
+    firparam2("org/specs/MicroBlaze/asm/GCC/fir-param-O2.elf", null, null);
 
     // private String elfname;
     private String fullPath;
