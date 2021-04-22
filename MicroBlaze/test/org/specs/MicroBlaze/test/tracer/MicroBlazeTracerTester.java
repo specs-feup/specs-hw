@@ -2,6 +2,7 @@ package org.specs.MicroBlaze.test.tracer;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.tracer.StreamTracer;
@@ -13,33 +14,36 @@ public class MicroBlazeTracerTester {
     @Test
     public void testBasicBlockTrace() {
 
-        /*
-        var istream = ClassBuilders.buildStream(MicroBlazeTraceStream.class, MicroBlazeLivermoreELFN10.innerprod);
-        var tracer = new StreamTracer(istream);
-        
-        
-        // get one basic block
-        var bb1 = tracer.nextBasicBlock();
-        System.out.println(bb1.toString());
-        
-        // get another basic block
-        var bb2 = tracer.nextBasicBlock();
-        System.out.println(bb2.toString());
-        
-        // consume everything else
-        while (istream.nextInstruction() != null) {
-        }
-        ;*/
-
-        int i = 10;
+        int i = 5;
         var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
         try (var istream = new MicroBlazeTraceStream(fd)) {
 
+            // basic blocks
             var tracer = new StreamTracer(istream);
             TraceBasicBlock tbb = null;
             while ((tbb = tracer.nextBasicBlock()) != null && i > 0) {
                 System.out.println(tbb.toString());
                 i--;
+            }
+
+            istream.close();
+        }
+    }
+
+    @Test
+    public void testSuperBlockTrace() {
+
+        var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN100.pic1d100);
+        try (var istream = new MicroBlazeTraceStream(fd)) {
+
+            // super block? max size 5
+            var tracer = new StreamTracer(istream);
+            // TraceSuperBlock sblock = null;
+            // while ((sblock = tracer.nextSuperBlock(20)) != null) {
+            while (!istream.isClosed()) {
+                var sblock = tracer.nextSuperBlock(20);
+                if (sblock != null)
+                    System.out.println(sblock.toString());
             }
 
             istream.close();
