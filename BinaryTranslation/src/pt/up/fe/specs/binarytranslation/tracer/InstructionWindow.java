@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.detection.trace;
+package pt.up.fe.specs.binarytranslation.tracer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 // TODO: replace list of instructions into traceunits
+// or not??
 
 public class InstructionWindow {
 

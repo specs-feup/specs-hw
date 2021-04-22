@@ -7,9 +7,9 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
-import pt.up.fe.specs.binarytranslation.detection.trace.InstructionWindow;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
+import pt.up.fe.specs.binarytranslation.tracer.InstructionWindow;
 
 public abstract class ASimpleSegmentDetector extends ASegmentDetector {
 

@@ -11,10 +11,10 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.MegaBlock;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
-import pt.up.fe.specs.binarytranslation.detection.trace.InstructionWindow;
-import pt.up.fe.specs.binarytranslation.detection.trace.TraceUnit;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
+import pt.up.fe.specs.binarytranslation.tracer.InstructionWindow;
+import pt.up.fe.specs.binarytranslation.tracer.TraceUnit;
 
 /**
  * 
