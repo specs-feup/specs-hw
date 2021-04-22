@@ -11,7 +11,6 @@ import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 
@@ -53,6 +52,10 @@ public class MemoryDisambiguator {
                 sourceDet.findSource(register);
             }
             
+            // Report on the memory access function
+            System.out.println("Memory access function:");
+            System.out.println(MemoryAddressDetector.buildAddressFunction(graph, registers));
+            
             // Add registers to basic bloc list for reporting
             totalRegisters.addAll(registers);
             System.out.println("");
@@ -60,7 +63,7 @@ public class MemoryDisambiguator {
         
         // Report on all registers used for addresses in this basic block
         var res = totalRegisters.stream().distinct().collect(Collectors.toList());
-        System.out.println("All registers invovled in addresses in this basic block: " + res);
+        System.out.println("All registers involved in addresses in this basic block: " + res);
     }
 
     /**

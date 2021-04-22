@@ -83,6 +83,16 @@ public class MemoryAddressDetector extends APropertyDetector {
         }
         return sb.toString();
     }
+    
+    public static String buildAddressFunction(Graph<AddressVertex, DefaultEdge> graph, List<String> args) {
+        var root = GraphUtils.findGraphRoot(graph);
+        var start = GraphUtils.getParents(graph, GraphUtils.getParents(graph, root).get(0)).get(0);
+        var sb = new StringBuilder("f(");
+        sb.append(String.join(", ", args));
+        sb.append(") = ");
+        sb.append(buildAddressExpression(graph, start, true));
+        return sb.toString();
+    }
 
     private static String buildAddressExpression(Graph<AddressVertex, DefaultEdge> graph, AddressVertex current, boolean first) {
 

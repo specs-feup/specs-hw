@@ -31,23 +31,21 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
         List<Instruction> insts = det.getProcessedInsts();
         
         for (var bb : segs) {
-            AnalysisUtils.printSeparator(40);
             System.out.println("Memory address analysis for segment:");
             bb.printSegment();
+            AnalysisUtils.printSeparator(40);
             
             System.out.println("\nCalculating memory address graphs...");
             var mad = new MemoryAddressDetector(bb, insts);
             var graphs = mad.detectGraphs();
-            
-            //can handle each graph individually, or merge them into one
-            //merging for now, to simplify output
             var mergedGraph = GraphUtils.mergeGraphs(graphs);
             String sgraph = GraphUtils.graphToDot(mergedGraph);
             var url = AnalysisUtils.generateGraphURL(sgraph);
+            
             System.out.println("Graph URL:\n" + url + "\n");
             printExpressions(graphs);
+            AnalysisUtils.printSeparator(40);
             
-            //induction vars
             System.out.println("\nCalculating induction variables...");
             var ivd = new InductionVariablesDetector(bb, insts);
             var indVars = ivd.detectVariables(mergedGraph, false);
@@ -56,12 +54,13 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             for (var reg : indVars.keySet()) {
                 System.out.println("Register " + reg +" , stride = " + indVars.get(reg));
             }
+            AnalysisUtils.printSeparator(40);
             
             //memory disambiguation
             var memDis = new MemoryDisambiguator(graphs, indVars, isaProps, ivd.getTracker());
             memDis.disambiguate();
             
-            AnalysisUtils.printSeparator(40);
+            AnalysisUtils.printSeparator(80);
         }
     }
     
