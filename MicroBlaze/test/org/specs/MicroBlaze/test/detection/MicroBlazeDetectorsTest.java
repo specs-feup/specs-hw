@@ -79,9 +79,12 @@ public class MicroBlazeDetectorsTest {
     @Test
     public void testMegablock() {
         var builder = new DetectorConfigurationBuilder();
-        builder.withMaxBlocks(10).withMaxWindow(1000);
 
-        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.matmul,
+        var elf = MicroBlazeLivermoreELFN10.matmul;
+        builder.withMaxBlocks(10).withMaxWindow(1000).withStartAddr(elf.getKernelStart())
+                .withStopAddr(elf.getKernelStop());
+
+        var bundle = SegmentDetectTestUtils.detect(elf,
                 MicroBlazeTraceStream.class, FixedSizeMegablockDetectorV2.class, builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }

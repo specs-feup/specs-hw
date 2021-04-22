@@ -152,7 +152,11 @@ public class MicroBlazeInstruction extends AInstruction {
         if (this.isJump()) {
             int fullopcode = new BigInteger(this.getInstruction(), 16).intValue();
             short jmpval = (short) (fullopcode & 0x0000FFFF);
-            return (this.getAddress().longValue() + jmpval);
+
+            if (this.isRelativeJump())
+                return (this.getAddress().longValue() + jmpval);
+            else
+                return (jmpval);
             // TODO replace mask with mask built based on elf instruction width
             // or info about instruction set
         }

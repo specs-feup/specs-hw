@@ -19,7 +19,6 @@ import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
-import pt.up.fe.specs.util.SpecsStrings;
 
 /**
  * Generic implementation of interface instruction.
@@ -91,10 +90,10 @@ public abstract class AInstruction implements Instruction {
         return idata.getDelay();
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return SpecsStrings.toHexString(address.longValue(), 8) + ": " + instruction;
-    }
+    }*/
 
     // Check for instruction type /////////////////////////////////////////////
     @Override
@@ -227,6 +226,11 @@ public abstract class AInstruction implements Instruction {
                 str += ", ";
         }
 
+        // target if branch
+        if (this.isJump())
+            str += "\t// target: 0x" +
+                    Long.toHexString(this.getBranchTarget().longValue());
+
         return str;
     }
 
@@ -234,7 +238,7 @@ public abstract class AInstruction implements Instruction {
      * Creates addr:instruction String.
      */
     @Override
-    public String getString() {
+    public String toString() {
         String prt = "0x" + Long.toHexString(this.getAddress().longValue()) + ":";
         prt += this.getInstruction() + "\t " + getRepresentation() + "\t "; // + this.express();
         return prt;
