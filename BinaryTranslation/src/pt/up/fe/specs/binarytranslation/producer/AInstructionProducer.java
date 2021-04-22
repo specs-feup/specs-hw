@@ -88,6 +88,11 @@ public abstract class AInstructionProducer implements InstructionProducer {
 
     @Override
     public void close() {
-        this.prun.close();
+        try {
+            this.prun.close();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

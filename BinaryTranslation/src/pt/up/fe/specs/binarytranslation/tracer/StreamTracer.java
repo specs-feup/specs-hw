@@ -78,7 +78,7 @@ public class StreamTracer {
                 break;
 
             // add if forwards branch
-            tbblist.add(this.nextBasicBlock());
+            tbblist.add(nbb);
         }
 
         // ugly but works for now
