@@ -220,7 +220,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     shi(2, 0, TYPE_B, G_STORE),
     swi(2, 0, TYPE_B, G_STORE),
 
-    unknown(1, 1, UNDEFINED, G_UNKN);
+    unknown(UNDEFINED, G_UNKN);
 
     /*
      * Instruction property fields
