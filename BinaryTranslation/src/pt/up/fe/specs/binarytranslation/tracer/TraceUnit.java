@@ -5,11 +5,6 @@ public interface TraceUnit {
     /*
      * 
      */
-    public int getHash();
-
-    /*
-     * 
-     */
     public TraceUnitType getType();
 
     /*

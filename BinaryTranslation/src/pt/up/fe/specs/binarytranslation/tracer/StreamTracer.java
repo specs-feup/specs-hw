@@ -15,11 +15,14 @@ public class StreamTracer {
 
     // TODO need buffer for previous traceunit and then append/discard oldest??
     // e.g. list of basic blocks etc
+    // no, that should be the detectors job
 
     public StreamTracer(InstructionStream istream) {
         this.istream = istream;
         this.window = new InstructionWindow(100); // TODO edit this default
     }
+
+    // TODO: build some kind of graph representation for the entire trace? using this class?
 
     /*
      * 
@@ -45,7 +48,7 @@ public class StreamTracer {
         var delayctr = 0;
         var tilist = new ArrayList<TraceInstruction>();
         while (true) {
-            var ti = this.nextInstruction(); // TODO: one instruction is throw away here for the next call... is it?...
+            var ti = this.nextInstruction();
             if (ti == null)
                 return null; // ugly but works for now...
 
@@ -74,11 +77,15 @@ public class StreamTracer {
         var tbblist = new ArrayList<TraceBasicBlock>();
         while (maxsize-- > 0) {
             var nbb = this.nextBasicBlock();
-            if (nbb == null || nbb.getType() == TraceUnitType.TraceBasicBlock_back)
+            if (nbb == null)// || nbb.getType() == TraceUnitType.TraceBasicBlock_back)
                 break;
 
-            // add if forwards branch
+            // add
             tbblist.add(nbb);
+
+            // if backwards, end block, but add
+            if (nbb.getType() == TraceUnitType.TraceBasicBlock_back)
+                break;
         }
 
         // ugly but works for now
