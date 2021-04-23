@@ -13,6 +13,11 @@ public abstract class ATraceUnit implements TraceUnit {
         return type;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return this.hashCode() == obj.hashCode();
+    }
+
     // TODO: if the detector wishes to determine equality based on
     // relative operands (i.e. symbolification), then it can
     // query the TraceUnit for a full list, and do whatever

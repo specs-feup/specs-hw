@@ -12,8 +12,8 @@ public class TraceInstruction extends ATraceUnit {
     }
 
     @Override
-    public int getHash() {
-        return this.inst.getAddress().hashCode();
+    public int hashCode() {
+        return this.inst.getAddress().intValue(); // .hashCode();
     }
 
     public Instruction getActual() {

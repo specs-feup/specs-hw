@@ -18,10 +18,10 @@ public class TraceBasicBlock extends ATraceUnit {
     }
 
     @Override
-    public int getHash() {
+    public int hashCode() {
         int hash = 0;
         for (var tinst : this.tilist) {
-            hash += tinst.getHash();
+            hash += tinst.hashCode();
         }
         return hash; // TODO: works??
     }

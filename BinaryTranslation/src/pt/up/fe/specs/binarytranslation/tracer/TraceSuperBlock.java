@@ -11,11 +11,12 @@ public class TraceSuperBlock extends ATraceUnit {
         this.tbblist = tbblist;
     }
 
+    // used in map comparisons
     @Override
-    public int getHash() {
+    public int hashCode() {
         int hash = 0;
         for (var tbb : this.tbblist) {
-            hash += tbb.getHash();
+            hash += tbb.hashCode();
         }
         return hash; // TODO: works??
     }
