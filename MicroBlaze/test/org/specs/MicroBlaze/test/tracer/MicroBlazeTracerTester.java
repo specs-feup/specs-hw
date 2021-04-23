@@ -1,12 +1,14 @@
 package org.specs.MicroBlaze.test.tracer;
 
+import java.util.HashMap;
+
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.tracer.StreamTracer;
 import pt.up.fe.specs.binarytranslation.tracer.TraceBasicBlock;
+import pt.up.fe.specs.binarytranslation.tracer.TraceSuperBlock;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class MicroBlazeTracerTester {
@@ -33,20 +35,36 @@ public class MicroBlazeTracerTester {
     @Test
     public void testSuperBlockTrace() {
 
-        var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN100.pic1d100);
+        // <superblock, hit counter>
+        var superblockMap = new HashMap<TraceSuperBlock, Integer>();
+
+        var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.matmul);
         try (var istream = new MicroBlazeTraceStream(fd)) {
 
-            // super block? max size 5
+            // super block? max size 50
             var tracer = new StreamTracer(istream);
-            // TraceSuperBlock sblock = null;
-            // while ((sblock = tracer.nextSuperBlock(20)) != null) {
             while (!istream.isClosed()) {
-                var sblock = tracer.nextSuperBlock(20);
-                if (sblock != null)
-                    System.out.println(sblock.toString());
-            }
+                var sblock = tracer.nextSuperBlock(50);
+                if (sblock == null)
+                    continue;
 
-            istream.close();
+                if (superblockMap.containsKey(sblock)) {
+                    var ctr = superblockMap.get(sblock);
+                    superblockMap.put(sblock, ++ctr);
+                } else {
+                    superblockMap.put(sblock, 1);
+                }
+
+                // if (sblock != null)
+                // System.out.println(sblock.toString());
+            }
+        }
+
+        var itr = superblockMap.entrySet().iterator();
+        while (itr.hasNext()) {
+            var entry = itr.next();
+            System.out.println("Iterations " + entry.getValue()
+                    + " - hash: " + entry.getKey().hashCode() + "\n" + entry.getKey());
         }
     }
 
