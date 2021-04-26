@@ -67,12 +67,12 @@ public class AnalysisUtils {
             if (op.isRegister()) {
                 String reg = op.getProperties().getPrefix() + op.getStringValue();
                 Long val = inst.getRegisters().getValue(reg);
-                String strVal = val == null ? "??" : (decimal ? String.valueOf(val) : String.format("0x%08X", val));
+                String strVal = val == null ? "??" : (decimal ? String.valueOf(val) : String.format("0x%X", val));
                 sb.append(String.format("%-16s", reg + "{" + strVal + "}")).append(space);
             }
             if (op.isImmediate()) {
                 long imm = Long.parseLong(op.getStringValue(), 16);
-                String strImm = decimal ? String.valueOf(imm) : String.format("0x%08X", imm);
+                String strImm = decimal ? String.valueOf(imm) : String.format("0x%X", imm);
                 sb.append(String.format("%-10s", strImm)).append(space);
             }
         }

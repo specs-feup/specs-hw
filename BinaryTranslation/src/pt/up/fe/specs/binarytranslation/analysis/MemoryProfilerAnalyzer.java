@@ -43,6 +43,14 @@ public class MemoryProfilerAnalyzer extends ATraceAnalyzer {
         return true;
     }
     
+    public void printLoadStoreInstructions() {
+        Instruction inst = stream.nextInstruction();
+        while (inst != null) {
+             System.out.println(inst.getRegisters().isEmpty());
+             inst = stream.nextInstruction();
+        }
+    }
+    
     public Instruction nextInstruction(boolean useStream) {
         if (useStream)
             return stream.nextInstruction();

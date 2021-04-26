@@ -9,16 +9,23 @@ public class AddressVertex {
         NULL
     };
     public enum AddressVertexProperty {
-        BASE_ADDR_START,
-        OFFSET_START,
+        OFFSET,
+        BASE_ADDR,
         INDUCTION_VAR,
         STRIDE,
+        NULL
+    }
+    public enum AddressVertexIsaInfo {
+        RA,
+        RB,
+        RD,
         NULL
     }
     
     private String label;
     private AddressVertexType type;
     private AddressVertexProperty property = AddressVertexProperty.NULL;
+    private AddressVertexIsaInfo isaInfo = AddressVertexIsaInfo.NULL;
     public static AddressVertex nullVertex = new AddressVertex("", AddressVertexType.NULL);
     
     public AddressVertex(String label, AddressVertexType type) {
@@ -29,6 +36,11 @@ public class AddressVertex {
     public AddressVertex(String label, AddressVertexType type, AddressVertexProperty property) {
         this(label, type);
         this.property = property;
+    }
+    
+    public AddressVertex(String label, AddressVertexType type, AddressVertexIsaInfo isaInfo) {
+        this(label, type);
+        this.isaInfo = isaInfo;
     }
 
     public String getLabel() {
@@ -54,5 +66,13 @@ public class AddressVertex {
 
     public void setProperty(AddressVertexProperty property) {
         this.property = property;
+    }
+
+    public AddressVertexIsaInfo getIsaInfo() {
+        return isaInfo;
+    }
+
+    public void setIsaInfo(AddressVertexIsaInfo isaInfo) {
+        this.isaInfo = isaInfo;
     }
 }

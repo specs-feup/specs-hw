@@ -11,6 +11,8 @@ import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 
@@ -29,11 +31,21 @@ public class MemoryDisambiguator {
         this.indVars = indVars;
         this.isaProps = isaProps;
         this.tracker = tracker;
+        
+        for (var g : graphs) {
+            //Convert shifts to mults
+            var trans1 = new TransformShiftsToMult(g);
+            trans1.applyToGraph();
+            //Convert hex to decimal
+            var trans2 = new TransformHexToDecimal(g);
+            trans2.applyToGraph();
+        }
     }
 
     public void disambiguate() {
         System.out.println("");
         var totalRegisters = new ArrayList<String>();
+        var memoryFunctions = new ArrayList<String>();
         
         for (var graph : graphs) {            
             String expr = MemoryAddressDetector.buildMemoryExpression(graph);
@@ -41,20 +53,20 @@ public class MemoryDisambiguator {
             
             // Get all registers used for address
             var registers = getGraphAddressRegisters(graph);
-            registers = filterRegisterList(registers);
-            System.out.println("Registers involved in address: " + registers);
+            var filtered = filterRegisterList(registers);
+            System.out.println("Registers involved in address: " + filtered);
             
             //disambiguate
             System.out.println("Trying to find source of address registers:\n");
             var sourceDet = new RegisterSourceDetector(tracker);
-            for (var register : registers) {
+            for (var register : filtered) {
                 System.out.println(register  + ":");
                 sourceDet.findSource(register);
             }
             
-            // Report on the memory access function
-            System.out.println("Memory access function:");
-            System.out.println(MemoryAddressDetector.buildAddressFunction(graph, registers));
+            // Add memory function to report later
+            var fun = MemoryAddressDetector.buildAddressFunction(graph, registers, indVars);
+            memoryFunctions.add(fun);
             
             // Add registers to basic bloc list for reporting
             totalRegisters.addAll(registers);
@@ -64,6 +76,11 @@ public class MemoryDisambiguator {
         // Report on all registers used for addresses in this basic block
         var res = totalRegisters.stream().distinct().collect(Collectors.toList());
         System.out.println("All registers involved in addresses in this basic block: " + res);
+        
+        // Report memory functions
+        System.out.println("Memory access functions:");
+        for (var fun : memoryFunctions)
+            System.out.println(fun);
     }
 
     /**
@@ -108,9 +125,9 @@ public class MemoryDisambiguator {
      */
     private List<String> getGraphAddressRegisters(Graph<AddressVertex, DefaultEdge> graph) {
         var regs = new ArrayList<String>();
-        var baseStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.BASE_ADDR_START).get(0);
+        var baseStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.BASE_ADDR).get(0);
         var elems1 = getSubgraphAddressRegisters(graph, baseStart);
-        var offsetStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.OFFSET_START).get(0);
+        var offsetStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.OFFSET).get(0);
         var elems2 = getSubgraphAddressRegisters(graph, offsetStart);
         var elems = new LinkedHashSet<AddressVertex>(elems1);
         elems.addAll(elems2);

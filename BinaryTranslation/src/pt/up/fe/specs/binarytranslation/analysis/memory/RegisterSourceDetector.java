@@ -27,6 +27,6 @@ public class RegisterSourceDetector extends APropertyDetector {
             }
             i--;
         }
-        AnalysisUtils.printInstructionList(new ArrayList<Instruction>(stack));
+        //AnalysisUtils.printInstructionList(new ArrayList<Instruction>(stack));
     }
 }

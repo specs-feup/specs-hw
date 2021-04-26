@@ -16,6 +16,7 @@ import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.dot.DOTExporter;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexIsaInfo;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 
@@ -57,7 +58,14 @@ public class GraphUtils {
         DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexAttributeProvider((v) -> {
             Map<String, Attribute> map = new LinkedHashMap<>();
-            map.put("label", DefaultAttribute.createAttribute(v.getLabel()));
+            
+            String label = v.getLabel();
+            if (v.getIsaInfo() != AddressVertexIsaInfo.NULL)
+                label += "\n{" + v.getIsaInfo() + "}";
+            if (v.getProperty() != AddressVertexProperty.NULL) 
+                label += "\n{" + v.getProperty() + "}";
+            
+            map.put("label", DefaultAttribute.createAttribute(label));
             map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
             return map;
         });
