@@ -94,6 +94,16 @@ public class GraphUtils {
         return res;
     }
     
+    public static ArrayList<AddressVertex> findAllNodesWithIsaInfo(Graph<AddressVertex, DefaultEdge> graph,
+            AddressVertexIsaInfo isaInfo) {
+        var res = new ArrayList<AddressVertex>();
+        for (var v : graph.vertexSet()) {
+            if (v.getIsaInfo() == isaInfo)
+                res.add(v);
+        }
+        return res;
+    }
+    
     public static ArrayList<AddressVertex> findAllPredecessors(Graph<AddressVertex, DefaultEdge> graph, AddressVertex v) {
         var reversed = new EdgeReversedGraph<AddressVertex, DefaultEdge> (graph);
         return findAllSuccessors(reversed, v);
