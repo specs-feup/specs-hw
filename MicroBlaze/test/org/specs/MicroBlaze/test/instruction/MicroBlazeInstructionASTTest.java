@@ -6,8 +6,10 @@ import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstructionProperties;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
 
+import pt.up.fe.specs.binarytranslation.graph2dotty.DottyGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplySSAPass;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
@@ -40,6 +42,10 @@ public class MicroBlazeInstructionASTTest {
         ast.accept(new ApplyInstructionPass());
         System.out.println(ast.toString());
         System.out.println(ast.getRootnode().getAsString());
+
+        // new dotty generation test
+        var dottygen = new DottyGenerator<InstructionASTNode>();
+        dottygen.generateDotty(ast.getRootnode());
     }
 
     @Test
