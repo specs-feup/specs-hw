@@ -8,6 +8,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexIsaInfo;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -28,46 +29,56 @@ public class AddressGraphBuilder {
     public Graph<AddressVertex, DefaultEdge> calculateChain() {
         if (inst.getData().getOperands().size() == 3) {
             Operand target = inst.getData().getOperands().get(0);
-            Operand base = inst.getData().getOperands().get(1);
-            Operand offset = inst.getData().getOperands().get(2);    
+            Operand op1 = inst.getData().getOperands().get(1);
+            Operand op2 = inst.getData().getOperands().get(2);    
 
             String targetReg = AnalysisUtils.getRegName(target);
-            String baseReg = AnalysisUtils.getRegName(base);
-            String offsetReg = AnalysisUtils.getRegName(offset);
+            String op1Reg = AnalysisUtils.getRegName(op1);
+            String op2Reg = AnalysisUtils.getRegName(op2);
 
             //Build memory access node
             var targetV = new AddressVertex(targetReg, AddressVertexType.REGISTER);
+            targetV.setIsaInfo(AddressVertexIsaInfo.RD);
             var memAccessV = new AddressVertex(inst.isLoad() ? "Memory Access (load)" : "Memory Access (store)",
                     AddressVertexType.MEMORY);
             var sumV = new AddressVertex("+", AddressVertexType.OPERATION);
 
-            //Build base address graph
-            var baseBuilder = new PartialAddressGraphBuilder(baseReg, startIdx - 1, basicBlock);
-            var fullGraph = baseBuilder.generateGraph();
-            var baseV = baseBuilder.getRoot();
-            baseV.setProperty(AddressVertexProperty.BASE_ADDR_START);
+            //Build rA graph
+            var rABuilder = new PartialAddressGraphBuilder(op1Reg, startIdx - 1, basicBlock);
+            var fullGraph = rABuilder.generateGraph();
+            var rAV = rABuilder.getRoot();
+            rAV.setIsaInfo(AddressVertexIsaInfo.RA);
 
-            //Add memory access to base addr graph, and connect
+            //Add memory access to rA graph, and connect
             fullGraph.addVertex(targetV);
             fullGraph.addVertex(memAccessV);
             fullGraph.addVertex(sumV);
-            fullGraph.addEdge(baseV, sumV);
+            fullGraph.addEdge(rAV, sumV);
             fullGraph.addEdge(sumV, memAccessV);
 
-            //Build offset graph
-            if (offset.isImmediate()) {
-                String immVal = offset.getRepresentation();
+            //Build rB graph
+            if (op2.isImmediate()) {
+                String immVal = op2.getRepresentation();
                 var immV = new AddressVertex(immVal, AddressVertexType.IMMEDIATE);
-                immV.setProperty(AddressVertexProperty.OFFSET_START);
+                
+                //TODO: assign BASE_ADDR and OFFSET when an IMM is present
+                // below assumption is not always true
+                immV.setProperty(AddressVertexProperty.OFFSET);
+                rAV.setProperty(AddressVertexProperty.BASE_ADDR);
+                
                 fullGraph.addVertex(immV);
                 fullGraph.addEdge(immV, sumV);
             } else {
-                var offsetBuilder = new PartialAddressGraphBuilder(offsetReg, startIdx - 1, basicBlock);
-                var offsetGraph = offsetBuilder.generateGraph();
-                Graphs.addGraph(fullGraph, offsetGraph);
-                var immV = offsetBuilder.getRoot();
-                immV.setProperty(AddressVertexProperty.OFFSET_START);
-                fullGraph.addEdge(immV, sumV);
+                var rBBuilder = new PartialAddressGraphBuilder(op2Reg, startIdx - 1, basicBlock);
+                var rBGraph = rBBuilder.generateGraph();
+                Graphs.addGraph(fullGraph, rBGraph);
+                var rBV = rBBuilder.getRoot();
+                rBV.setIsaInfo(AddressVertexIsaInfo.RB);
+                
+                //Set rA and rB using MicroBlaze GCC conventions
+                rBV.setProperty(AddressVertexProperty.BASE_ADDR);
+                rAV.setProperty(AddressVertexProperty.OFFSET);
+                fullGraph.addEdge(rBV, sumV);
             }
             
             // Connect load/store destination/source register to the rest

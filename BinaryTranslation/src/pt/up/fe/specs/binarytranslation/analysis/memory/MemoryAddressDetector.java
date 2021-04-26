@@ -1,6 +1,7 @@
 package pt.up.fe.specs.binarytranslation.analysis.memory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
@@ -30,10 +31,6 @@ public class MemoryAddressDetector extends APropertyDetector {
             if (AnalysisUtils.isLoadStore(i)) {
                 var builder = new AddressGraphBuilder(getTracker().getBasicBlock().getInstructions(), i);
                 var graph = builder.calculateChain();
-                
-                //Convert shifts to mults
-                var trans = new TransformShiftsToMult(graph);
-                trans.applyToGraph();
                 
                 out.add(graph);
             }
@@ -84,13 +81,29 @@ public class MemoryAddressDetector extends APropertyDetector {
         return sb.toString();
     }
     
-    public static String buildAddressFunction(Graph<AddressVertex, DefaultEdge> graph, List<String> args) {
+    public static String buildAddressFunction(Graph<AddressVertex, DefaultEdge> graph, List<String> args, HashMap<String, Integer> indVars) {
         var root = GraphUtils.findGraphRoot(graph);
         var start = GraphUtils.getParents(graph, GraphUtils.getParents(graph, root).get(0)).get(0);
         var sb = new StringBuilder("f(");
         sb.append(String.join(", ", args));
         sb.append(") = ");
         sb.append(buildAddressExpression(graph, start, true));
+        
+        List<String> argsIndVars = new ArrayList<>();
+        for (var arg : args) {
+            if (indVars.containsKey(arg))
+                argsIndVars.add(arg);
+        }
+        if (argsIndVars.size() > 0) {
+            sb.append("    (").append(String.join(", ", argsIndVars));
+            sb.append(argsIndVars.size() == 1 ? " is an induction var with increment " : " are induction vars with increment");
+            List<String> strides = new ArrayList<>();
+            for (var arg : argsIndVars) {
+                strides.add(indVars.get(arg) + "");
+            }
+            sb.append(String.join(", ", strides)).append(")");
+        }
+        
         return sb.toString();
     }
 
