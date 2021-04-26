@@ -11,7 +11,7 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public class StreamTracer {
 
     private InstructionStream istream;
-    private InstructionWindow window;
+    private InstructionWindow window; // useless??
 
     // TODO need buffer for previous traceunit and then append/discard oldest??
     // e.g. list of basic blocks etc
@@ -95,5 +95,10 @@ public class StreamTracer {
             return null;
     }
 
-    // TODO: the tracer should output TraceUnits of a requested type
+    /*
+     * 
+     */
+    public boolean hasNext() {
+        return this.istream.hasNext();
+    }
 }

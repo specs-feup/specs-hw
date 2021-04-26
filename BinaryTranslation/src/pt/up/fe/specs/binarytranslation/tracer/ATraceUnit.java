@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.tracer;
 
 public abstract class ATraceUnit implements TraceUnit {
 
+    protected Long targetAddr = 0L;
     private final TraceUnitType type;
 
     public ATraceUnit(TraceUnitType type) {
@@ -14,8 +15,50 @@ public abstract class ATraceUnit implements TraceUnit {
     }
 
     @Override
+    public Long getTargetAddr() {
+        return targetAddr;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return this.hashCode() == obj.hashCode();
+    }
+
+    /*
+     * True if addresses of two units follow
+     * i.e. if "this" comes after "other" 
+     */
+    public boolean follows(TraceUnit other) {
+        var otherEndAddr = other.getEnd().getAddress();
+        var thisStartAddr = this.getStart().getAddress();
+        return thisStartAddr.longValue() == (otherEndAddr.longValue() + 4);
+    }
+
+    /*
+     * True if addresses of two units follow
+     * i.e. if "other" comes after "this"
+     */
+    public boolean precedes(TraceUnit other) {
+        var otherStartAddr = other.getStart().getAddress();
+        var thisEndAddr = this.getEnd().getAddress();
+        return otherStartAddr.longValue() == (thisEndAddr.longValue() + 4);
+    }
+
+    /*
+     * True if "this" jumps to "other"
+     */
+    public boolean jumpsTo(TraceUnit other) {
+        var otherStartAddr = other.getStart().getAddress();
+        return otherStartAddr.longValue() == (this.targetAddr.longValue());
+    }
+
+    /*
+     * True if "other" jumps to "this"
+     */
+    public boolean targetOf(TraceUnit other) {
+        var otherTargetAddr = other.getTargetAddr();
+        var thisStartAddr = this.getStart().getAddress();
+        return thisStartAddr.longValue() == (otherTargetAddr.longValue());
     }
 
     // TODO: if the detector wishes to determine equality based on
@@ -26,27 +69,4 @@ public abstract class ATraceUnit implements TraceUnit {
     // for trace detectors, its just a matter of
     // directly calling the TraceUnit hash, which is
     // just addr based
-
-    /*
-    @Override
-    public List<Instruction> getList() {
-        return ilist;
-    }
-    
-    @Override
-    public Instruction getStart() {
-        return ilist.get(0);
-    }*/
-
-    /*
-    @Override
-    public int getHash() {
-        // TODO replace with something better?
-        var bld = new StringBuilder();
-        for (var inst : this.ilist)
-            bld.append(inst.getAddress().toString());
-    
-        // TODO: this hash isnt sensitive to operand abstraction (should it be)?
-        return bld.toString().hashCode();
-    }*/
 }
