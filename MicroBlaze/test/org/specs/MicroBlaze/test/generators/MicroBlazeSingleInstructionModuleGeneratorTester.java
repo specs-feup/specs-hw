@@ -3,9 +3,9 @@ package org.specs.MicroBlaze.test.generators;
 import org.junit.Test;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
-import pt.up.fe.specs.binarytranslation.graph2dotty.DottyGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule.SingleInstructionModuleGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class MicroBlazeSingleInstructionModuleGeneratorTester {
 

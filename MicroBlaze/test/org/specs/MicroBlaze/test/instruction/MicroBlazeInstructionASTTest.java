@@ -6,13 +6,13 @@ import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstructionProperties;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
 
-import pt.up.fe.specs.binarytranslation.graph2dotty.DottyGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplySSAPass;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
+import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class MicroBlazeInstructionASTTest {
 

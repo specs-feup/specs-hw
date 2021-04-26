@@ -7,12 +7,13 @@ import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.graph2dotty.DottyGenerator;
+import pt.up.fe.specs.binarytranslation.tracer.StaticGraphGenerator;
 import pt.up.fe.specs.binarytranslation.tracer.StreamTracer;
 import pt.up.fe.specs.binarytranslation.tracer.TraceBasicBlock;
 import pt.up.fe.specs.binarytranslation.tracer.TraceGraphNode;
 import pt.up.fe.specs.binarytranslation.tracer.TraceSuperBlock;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class MicroBlazeTracerTester {
 
@@ -25,21 +26,26 @@ public class MicroBlazeTracerTester {
         var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
         try (var istream = new MicroBlazeElfStream(fd)) {
 
+            var graph = StaticGraphGenerator.generateStaticGraph(istream);
+            var dottyprinter = new DottyGenerator<TraceGraphNode>();
+            dottyprinter.generateDotty(graph.getHead());
+
+            /*
             // head
             TraceGraphNode head = null;
-
+            
             // basic blocks
             var tracer = new StreamTracer(istream);
             int i = 20; // just for testing!
             while (tracer.hasNext()) {
-
+            
                 // next block
                 var next = tracer.nextBasicBlock();
-
+            
                 // first
                 if (head == null)
                     head = new TraceGraphNode(next);
-
+            
                 // others
                 else {
                     var newBlock = new TraceGraphNode(next);
@@ -52,15 +58,11 @@ public class MicroBlazeTracerTester {
                 if (i == 0)
                     break;
             }
-
+            
             // recover head
             while (head.hasParent())
                 head = head.getParent();
-
-            var dottyprinter = new DottyGenerator<TraceGraphNode>();
-            dottyprinter.generateDotty(head);
-
-            istream.close();
+            */
         }
     }
 
