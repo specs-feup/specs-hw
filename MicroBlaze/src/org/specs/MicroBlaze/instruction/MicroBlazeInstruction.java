@@ -150,8 +150,9 @@ public class MicroBlazeInstruction extends AInstruction {
     @Override
     public Number getBranchTarget() {
         if (this.isJump()) {
-            int fullopcode = new BigInteger(this.getInstruction(), 16).intValue();
-            short jmpval = (short) (fullopcode & 0x0000FFFF);
+            long fullopcode = new BigInteger(this.getInstruction(), 16).intValue();
+            // short jmpval = (short) (fullopcode & 0x0000FFFF);
+            long jmpval = (long) (fullopcode & 0x0000FFFF);
 
             if (this.isRelativeJump())
                 return (this.getAddress().longValue() + jmpval);
