@@ -2,15 +2,11 @@ package pt.up.fe.specs.binarytranslation.tracer;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+
 public class TraceBasicBlock extends ATraceUnit {
 
     private List<TraceInstruction> tilist;
-
-    /*
-    public TraceBasicBlock(List<TraceInstruction> tilist) {
-        super(TraceUnitType.TraceBasicBlock);
-        this.tilist = tilist;
-    }*/
 
     public TraceBasicBlock(List<TraceInstruction> tilist, TraceUnitType bbtype) {
         super(bbtype);
@@ -35,19 +31,13 @@ public class TraceBasicBlock extends ATraceUnit {
         return bld.toString();
     }
 
-    /*
-     * basic block can be defined by start and end 
-     * (do I need the end???)
-     
     @Override
-    public int getHash() {
-        var bld = new StringBuilder();
-        bld.append(this.getStart().getAddress().toString());
-        bld.append(this.getEnd().getAddress().toString());
-    
-        // TODO: replace with something better?
-        // this hash isnt sensitive to operand abstraction (should it be)?
-        return bld.toString().hashCode();
+    public Instruction getStart() {
+        return this.tilist.get(0).getActual();
     }
-    */
+
+    @Override
+    public Instruction getEnd() {
+        return this.tilist.get(this.tilist.size() - 1).getActual();
+    }
 }

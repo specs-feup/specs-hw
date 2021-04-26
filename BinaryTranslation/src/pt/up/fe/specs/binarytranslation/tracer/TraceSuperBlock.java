@@ -2,6 +2,8 @@ package pt.up.fe.specs.binarytranslation.tracer;
 
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+
 public class TraceSuperBlock extends ATraceUnit {
 
     private List<TraceBasicBlock> tbblist;
@@ -28,5 +30,15 @@ public class TraceSuperBlock extends ATraceUnit {
             bld.append(bb.toString());
         }
         return bld.toString();
+    }
+
+    @Override
+    public Instruction getStart() {
+        return this.tbblist.get(0).getStart();
+    }
+
+    @Override
+    public Instruction getEnd() {
+        return this.tbblist.get(this.tbblist.size() - 1).getEnd();
     }
 }

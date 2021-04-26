@@ -8,6 +8,7 @@ public class TraceInstruction extends ATraceUnit {
 
     public TraceInstruction(Instruction inst) {
         super(TraceUnitType.TraceInstruction);
+        this.targetAddr = inst.getAddress() + 4;
         this.inst = inst;
     }
 
@@ -23,5 +24,15 @@ public class TraceInstruction extends ATraceUnit {
     @Override
     public String toString() {
         return this.inst.toString();
+    }
+
+    @Override
+    public Instruction getStart() {
+        return this.inst;
+    }
+
+    @Override
+    public Instruction getEnd() {
+        return this.inst;
     }
 }
