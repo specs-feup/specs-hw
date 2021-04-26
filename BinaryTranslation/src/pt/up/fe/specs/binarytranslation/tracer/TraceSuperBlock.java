@@ -9,7 +9,8 @@ public class TraceSuperBlock extends ATraceUnit {
     private List<TraceBasicBlock> tbblist;
 
     public TraceSuperBlock(List<TraceBasicBlock> tbblist) {
-        super(TraceUnitType.TraceSuperBlock);
+        super(TraceUnitType.TraceSuperBlock,
+                tbblist.get(tbblist.size() - 1).getTargetAddr());
         this.tbblist = tbblist;
     }
 
@@ -40,5 +41,17 @@ public class TraceSuperBlock extends ATraceUnit {
     @Override
     public Instruction getEnd() {
         return this.tbblist.get(this.tbblist.size() - 1).getEnd();
+    }
+
+    /*
+     * True if any instruction in this TraceUnit
+     * includes the target of the "other"
+     */
+    public boolean includesTarget(TraceUnit other) {
+        for (var tbb : this.tbblist) {
+            if (tbb.includesTarget(other))
+                return true;
+        }
+        return false;
     }
 }
