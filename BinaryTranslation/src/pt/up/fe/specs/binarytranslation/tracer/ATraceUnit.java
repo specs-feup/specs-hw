@@ -1,12 +1,23 @@
 package pt.up.fe.specs.binarytranslation.tracer;
 
+import java.util.List;
+
 public abstract class ATraceUnit implements TraceUnit {
 
-    protected Long targetAddr = 0L;
+    private final Long targetAddr;
     private final TraceUnitType type;
 
-    public ATraceUnit(TraceUnitType type) {
+    public ATraceUnit(TraceUnitType type, Long targetAddr) {
         this.type = type;
+        this.targetAddr = targetAddr;
+    }
+
+    protected static Long getBranchTarget(List<TraceInstruction> tilist) {
+        for (var inst : tilist)
+            if (inst.getActual().isJump())
+                return (Long) inst.getActual().getBranchTarget();
+
+        return 0L;
     }
 
     @Override

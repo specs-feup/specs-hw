@@ -1,12 +1,14 @@
 package pt.up.fe.specs.binarytranslation.tracer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pt.up.fe.specs.util.treenode.ATreeNode;
 
 public class TraceGraphNode extends ATreeNode<TraceGraphNode> {
 
-    // int takenWeight, nonTakenWeight;
     private TraceUnit tunit;
-    private TraceGraphNode taken, nontaken;
+    private List<Integer> childWeight = new ArrayList<>();
 
     public TraceGraphNode(TraceUnit tunit) {
         super(null);
@@ -18,7 +20,6 @@ public class TraceGraphNode extends ATreeNode<TraceGraphNode> {
     }
 
     public void setTaken(TraceGraphNode taken) {
-        this.taken = taken;
         this.addChild(taken);
     }
 

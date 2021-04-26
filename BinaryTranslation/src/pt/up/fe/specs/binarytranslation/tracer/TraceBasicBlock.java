@@ -9,7 +9,7 @@ public class TraceBasicBlock extends ATraceUnit {
     private List<TraceInstruction> tilist;
 
     public TraceBasicBlock(List<TraceInstruction> tilist, TraceUnitType bbtype) {
-        super(bbtype);
+        super(bbtype, TraceBasicBlock.getBranchTarget(tilist));
         this.tilist = tilist;
     }
 
@@ -39,5 +39,18 @@ public class TraceBasicBlock extends ATraceUnit {
     @Override
     public Instruction getEnd() {
         return this.tilist.get(this.tilist.size() - 1).getActual();
+    }
+
+    /*
+     * True if any instruction in this TraceUnit
+     * includes the target of the "other"
+     */
+    public boolean includesTarget(TraceUnit other) {
+        var otherTargetAddr = other.getTargetAddr();
+        for (var inst : this.tilist) {
+            if (inst.getActual().getAddress().longValue() == otherTargetAddr.longValue())
+                return true;
+        }
+        return false;
     }
 }
