@@ -1,7 +1,14 @@
 package org.specs.MicroBlaze.test.tracer;
 
+import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
+import org.jgrapht.nio.dot.DOTExporter;
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
@@ -10,10 +17,9 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 import pt.up.fe.specs.binarytranslation.tracer.StaticGraphGenerator;
 import pt.up.fe.specs.binarytranslation.tracer.StreamTracer;
 import pt.up.fe.specs.binarytranslation.tracer.TraceBasicBlock;
-import pt.up.fe.specs.binarytranslation.tracer.TraceGraphNode;
 import pt.up.fe.specs.binarytranslation.tracer.TraceSuperBlock;
+import pt.up.fe.specs.binarytranslation.tracer.TraceUnit;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class MicroBlazeTracerTester {
 
@@ -26,43 +32,22 @@ public class MicroBlazeTracerTester {
         var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
         try (var istream = new MicroBlazeElfStream(fd)) {
 
-            var graph = StaticGraphGenerator.generateStaticGraph(istream);
-            var dottyprinter = new DottyGenerator<TraceGraphNode>();
-            dottyprinter.generateDotty(graph.getHead());
+            // using TreeNode
+            // var graph = StaticGraphGenerator.generateStaticGraph(istream);
+            // System.out.println(DottyGenerator.buildDotty(graph.getHead()));
 
-            /*
-            // head
-            TraceGraphNode head = null;
-            
-            // basic blocks
-            var tracer = new StreamTracer(istream);
-            int i = 20; // just for testing!
-            while (tracer.hasNext()) {
-            
-                // next block
-                var next = tracer.nextBasicBlock();
-            
-                // first
-                if (head == null)
-                    head = new TraceGraphNode(next);
-            
-                // others
-                else {
-                    var newBlock = new TraceGraphNode(next);
-                    // if (next.follows(head.getUnit())) {
-                    head.addChild(newBlock);
-                    head = newBlock;
-                    // }
-                }
-                i--;
-                if (i == 0)
-                    break;
-            }
-            
-            // recover head
-            while (head.hasParent())
-                head = head.getParent();
-            */
+            // Using JGraphT
+            var graph = StaticGraphGenerator.generateStaticGraph(istream);
+
+            var exporter = new DOTExporter<TraceUnit, DefaultEdge>();
+            exporter.setVertexAttributeProvider(v -> {
+                Map<String, Attribute> map = new LinkedHashMap<>();
+                map.put("label", DefaultAttribute.createAttribute(v.getStart().getAddress().toString()));
+                return map;
+            });
+            var writer = new StringWriter();
+            exporter.exportGraph(graph, writer);
+            System.out.println(writer.toString());
         }
     }
 
