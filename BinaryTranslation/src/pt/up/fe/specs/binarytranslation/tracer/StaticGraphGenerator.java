@@ -4,55 +4,65 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 public class StaticGraphGenerator {
 
-    /*
-     * Using TreeNode
-     
-    public static TraceUnitGraph generateStaticGraph(InstructionStream istream) {
-    
-        // basic blocks
-        var tracer = new StreamTracer(istream);
-    
-        // head
-        var head = new TraceGraphNode(tracer.nextBasicBlock());
-        var tgraph = new TraceUnitGraph(head);
-    
-        int i = 50; // just for testing!
-        while (tracer.hasNext()) {
-    
-            // next block
-            var next = tracer.nextBasicBlock();
-            System.out.println(next);
-            tgraph.insert(new TraceGraphNode(next));
-    
-            // count down
-            i--;
-            if (i == 0)
-                break;
-        }
-    
-        return tgraph;
-    }*/
+    private StreamTracer tracer;
+
+    public StaticGraphGenerator(InstructionStream istream) {
+        this.tracer = new StreamTracer(istream);
+    }
 
     /*
-     * Using JGraphT
+     * 
      */
-    public static TraceUnitGraphT generateStaticGraph(InstructionStream istream) {
+    private TraceUnit skipTo(Number startAddr) {
+
+        // advance until start of kernel
+        TraceUnit next = null;
+        do {
+            next = tracer.nextBasicBlock();
+        } while (next.getStart().getAddress().longValue() != startAddr.longValue());
+
+        return next;
+    }
+
+    /*
+     * 
+     */
+    public TraceUnitGraphT generateStaticGraph() {
+        return this.generateStaticGraph(0x00000000, 0xFFFFFFFF);
+    }
+
+    /*
+     * 
+     */
+    public TraceUnitGraphT generateStaticGraph(Number startAddr) {
+        return this.generateStaticGraph(startAddr, 0xFFFFFFFF);
+    }
+
+    /*
+     * 
+     */
+    public TraceUnitGraphT generateStaticGraph(Number startAddr, Number stopAddr) {
 
         // basic blocks
-        var tracer = new StreamTracer(istream);
         var tgraph = new TraceUnitGraphT();
 
-        // int i = 50; // just for testing!
+        // skip to start
+        var first = this.skipTo(startAddr);
+        tgraph.insert(first);
+
+        // int i = 200; // just for testing!
         while (tracer.hasNext()) {
 
             // next block
             var next = tracer.nextBasicBlock();
             tgraph.insert(next);
+            if (next.getEnd().getAddress().longValue() == stopAddr.longValue())
+                break;
 
             // count down
-            // i--;
-            // if (i == 0)
-            // break;
+            /*i--;
+            if (i == 0)
+                break;*/
         }
 
         return tgraph;
