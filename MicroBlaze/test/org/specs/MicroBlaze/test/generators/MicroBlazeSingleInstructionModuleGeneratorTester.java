@@ -4,8 +4,6 @@ import org.junit.Test;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule.SingleInstructionModuleGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class MicroBlazeSingleInstructionModuleGeneratorTester {
 
@@ -18,7 +16,7 @@ public class MicroBlazeSingleInstructionModuleGeneratorTester {
         // unit.emit(System.out);
 
         // new dotty generation test
-        var dottygen = new DottyGenerator<HardwareNode>();
-        dottygen.generateDotty(unit.getTree().getRoot());
+        // var dottygen = new DottyGenerator<HardwareNode>();
+        // dottygen.generateDotty(unit.getTree().getRoot());
     }
 }

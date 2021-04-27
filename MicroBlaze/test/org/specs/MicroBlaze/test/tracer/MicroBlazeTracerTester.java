@@ -1,5 +1,6 @@
 package org.specs.MicroBlaze.test.tracer;
 
+import java.io.File;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -10,6 +11,7 @@ import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.dot.DOTExporter;
 import org.junit.Test;
+import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
@@ -20,16 +22,23 @@ import pt.up.fe.specs.binarytranslation.tracer.TraceBasicBlock;
 import pt.up.fe.specs.binarytranslation.tracer.TraceSuperBlock;
 import pt.up.fe.specs.binarytranslation.tracer.TraceUnit;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeTracerTester {
+
+    @Test
+    public void testTraceGraphingStaticAllELFs() {
+        for (var file : MicroBlazeLivermoreELFN10.values()) {
+            testTraceGraphingStatic(file);
+        }
+    }
 
     /*
      * test graphing a trace
      */
-    @Test
-    public void testTraceGraphingStatic() {
+    private void testTraceGraphingStatic(ELFProvider elf) {
 
-        var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
+        var fd = BinaryTranslationUtils.getFile(elf);
         try (var istream = new MicroBlazeElfStream(fd)) {
 
             // using TreeNode
@@ -37,17 +46,26 @@ public class MicroBlazeTracerTester {
             // System.out.println(DottyGenerator.buildDotty(graph.getHead()));
 
             // Using JGraphT
-            var graph = StaticGraphGenerator.generateStaticGraph(istream);
+            var graphGenerator = new StaticGraphGenerator(istream);
+            var graph = graphGenerator.generateStaticGraph(elf.getKernelStart(), elf.getKernelStop());
+
+            // dotty.append(tagname + "[shape = box, label = \"" + me.replace("\n", "\\l") + "\"];\n");
 
             var exporter = new DOTExporter<TraceUnit, DefaultEdge>();
             exporter.setVertexAttributeProvider(v -> {
                 Map<String, Attribute> map = new LinkedHashMap<>();
-                map.put("label", DefaultAttribute.createAttribute(v.getStart().getAddress().toString()));
+                map.put("label", DefaultAttribute.createAttribute(v.toString().replace("\n", "\\l")));
+                map.put("shape", DefaultAttribute.createAttribute("box"));
                 return map;
             });
             var writer = new StringWriter();
             exporter.exportGraph(graph, writer);
-            System.out.println(writer.toString());
+
+            var dotfile = new File("./output/" + elf.getFilename().replace(".elf", ".dot"));
+            SpecsIo.write(dotfile, writer.toString());
+            BinaryTranslationUtils.renderDotty(dotfile);
+
+            // System.out.println(writer.toString());
         }
     }
 
