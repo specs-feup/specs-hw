@@ -17,6 +17,11 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 public class MicroBlazeAsmFieldData extends AsmFieldData {
 
     /*
+     * 
+     */
+    private static int previousIMMValue = 0; // quick fix for immextension values...
+
+    /*
      * Create raw
      */
     public MicroBlazeAsmFieldData(Number addr, AsmFieldType type, Map<String, String> fields) {
@@ -82,19 +87,22 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
         ///////////////////////////////////////////////////////////////////////
         case UILBRANCH:
             operands.add(newWriteRegister(RD, operandmap.get(RD)));
-            operands.add(newImmediate(IMM, operandmap.get(IMM)));
+            operands.add(newImmediate(IMM, operandmap.get(IMM) | (previousIMMValue << 16)));
+            previousIMMValue = 0;
             break;
 
         ///////////////////////////////////////////////////////////////////////
         case UIBRANCH:
-            operands.add(newImmediate(IMM, operandmap.get(IMM)));
+            operands.add(newImmediate(IMM, operandmap.get(IMM) | (previousIMMValue << 16)));
+            previousIMMValue = 0;
             break;
 
         ///////////////////////////////////////////////////////////////////////
         case CIBRANCH:
         case RETURN:
             operands.add(newReadRegister(RA, operandmap.get(RA)));
-            operands.add(newImmediate(IMM, operandmap.get(IMM)));
+            operands.add(newImmediate(IMM, operandmap.get(IMM) | (previousIMMValue << 16)));
+            previousIMMValue = 0;
             break;
 
         ///////////////////////////////////////////////////////////////////////
@@ -132,6 +140,7 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
         ///////////////////////////////////////////////////////////////////////
         case IMM:
             operands.add(newImmediate(IMM, operandmap.get(IMM)));
+            previousIMMValue = operandmap.get(IMM);
             break;
 
         ///////////////////////////////////////////////////////////////////////

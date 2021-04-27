@@ -13,7 +13,6 @@
 
 package org.specs.MicroBlaze.instruction;
 
-import java.math.BigInteger;
 import java.util.Arrays;
 
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
@@ -150,14 +149,22 @@ public class MicroBlazeInstruction extends AInstruction {
     @Override
     public Number getBranchTarget() {
         if (this.isJump()) {
-            long fullopcode = new BigInteger(this.getInstruction(), 16).intValue();
+            // int fullopcode = new BigInteger(this.getInstruction(), 16).intValue();
             // short jmpval = (short) (fullopcode & 0x0000FFFF);
-            long jmpval = (long) (fullopcode & 0x0000FFFF);
+            // int jmpval = (int) (fullopcode & 0x0000FFFF);
+            var numops = this.getData().getOperands().size();
+            var jmpval = this.getData().getOperands().get(numops - 1).getNumberValue();
 
+            long finalvalue = 0;
             if (this.isRelativeJump())
-                return (this.getAddress().longValue() + jmpval);
+                finalvalue = (this.getAddress().longValue() + jmpval.longValue());
+            // return (this.getAddress().longValue() + jmpval);
             else
-                return (jmpval);
+                finalvalue = jmpval.longValue();
+            // return (jmpval);
+
+            return finalvalue;
+
             // TODO replace mask with mask built based on elf instruction width
             // or info about instruction set
         }
