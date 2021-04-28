@@ -31,6 +31,7 @@ public class MicroBlazeTracerTester {
         for (var file : MicroBlazeLivermoreELFN10.values()) {
             testTraceGraphingStatic(file);
         }
+        // testTraceGraphingStatic(MicroBlazeLivermoreELFN10.innerprod);
     }
 
     /*
@@ -61,7 +62,7 @@ public class MicroBlazeTracerTester {
             var writer = new StringWriter();
             exporter.exportGraph(graph, writer);
 
-            var dotfile = new File("./output/" + elf.getFilename().replace(".elf", ".dot"));
+            var dotfile = new File("./output/" + elf.getFilename().replace(".elf", "_Instruction" + ".dot"));
             SpecsIo.write(dotfile, writer.toString());
             BinaryTranslationUtils.renderDotty(dotfile);
 

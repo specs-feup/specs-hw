@@ -17,9 +17,10 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 public class MicroBlazeAsmFieldData extends AsmFieldData {
 
     /*
-     * 
+     * Helpers for IMM values
      */
-    private static int previousIMMValue = 0; // quick fix for immextension values...
+    private static boolean postedImm = false;
+    private static int upper16Imm = 0;
 
     /*
      * Create raw
@@ -65,12 +66,29 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
         // assign to Operand objects based on field format
         List<Operand> operands = new ArrayList<Operand>();
 
+        // resolve IMM value first, operation has any
+        int fullimm = 0;
+        if (operandmap.containsKey(IMM)) {
+            var lower16 = operandmap.get(IMM);
+
+            // sign extend if no posted IMM
+            if (MicroBlazeAsmFieldData.postedImm == false) {
+                fullimm = (lower16 << (16)) >> (16);
+            }
+
+            // else combine (assume upper16Imm already shifted up 16 bits)
+            else {
+                MicroBlazeAsmFieldData.postedImm = false;
+                fullimm = upper16Imm | lower16;
+            }
+        }
+
         // order of operands MUST be preserved (or should be)
         switch (type) {
 
         ///////////////////////////////////////////////////////////////////////
         case MBAR:
-            operands.add(newImmediate(IMM, operandmap.get(IMM)));
+            operands.add(newImmediate(IMM, operandmap.get(IMM))); // TODO: needs fullIMM?
             break;
 
         ///////////////////////////////////////////////////////////////////////
@@ -87,22 +105,19 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
         ///////////////////////////////////////////////////////////////////////
         case UILBRANCH:
             operands.add(newWriteRegister(RD, operandmap.get(RD)));
-            operands.add(newImmediate(IMM, operandmap.get(IMM) | (previousIMMValue << 16)));
-            previousIMMValue = 0;
+            operands.add(newImmediate(IMM, fullimm));
             break;
 
         ///////////////////////////////////////////////////////////////////////
         case UIBRANCH:
-            operands.add(newImmediate(IMM, operandmap.get(IMM) | (previousIMMValue << 16)));
-            previousIMMValue = 0;
+            operands.add(newImmediate(IMM, fullimm));
             break;
 
         ///////////////////////////////////////////////////////////////////////
         case CIBRANCH:
         case RETURN:
             operands.add(newReadRegister(RA, operandmap.get(RA)));
-            operands.add(newImmediate(IMM, operandmap.get(IMM) | (previousIMMValue << 16)));
-            previousIMMValue = 0;
+            operands.add(newImmediate(IMM, fullimm));
             break;
 
         ///////////////////////////////////////////////////////////////////////
@@ -115,14 +130,14 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
         case IBARREL_FMT1:
             operands.add(newWriteRegister(RD, operandmap.get(RD)));
             operands.add(newReadRegister(RA, operandmap.get(RA)));
-            operands.add(newImmediate(IMM, operandmap.get(IMM)));
+            operands.add(newImmediate(IMM, fullimm));
             break;
 
         ///////////////////////////////////////////////////////////////////////
         case IBARREL_FMT2:
             operands.add(newWriteRegister(RD, operandmap.get(RD)));
             operands.add(newReadRegister(RA, operandmap.get(RA)));
-            operands.add(newImmediate(IMM, operandmap.get(IMM)));
+            operands.add(newImmediate(IMM, operandmap.get(IMM))); // TODO: needs full IMM?
             operands.add(newImmediate(IMMW, operandmap.get(IMMW)));
             break;
 
@@ -140,7 +155,8 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
         ///////////////////////////////////////////////////////////////////////
         case IMM:
             operands.add(newImmediate(IMM, operandmap.get(IMM)));
-            previousIMMValue = operandmap.get(IMM);
+            MicroBlazeAsmFieldData.upper16Imm = (operandmap.get(IMM) << 16);
+            MicroBlazeAsmFieldData.postedImm = true;
             break;
 
         ///////////////////////////////////////////////////////////////////////
@@ -177,7 +193,7 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
                 operands.add(newWriteRegister(RD, operandmap.get(RD)));
 
             operands.add(newReadRegister(RA, operandmap.get(RA)));
-            operands.add(newImmediate(IMM, operandmap.get(IMM)));
+            operands.add(newImmediate(IMM, fullimm));
 
             // TODO add carry input here, after checking instruction type
 

@@ -46,12 +46,6 @@ public class MicroBlazeInstruction extends AInstruction {
     }
 
     /*
-     * Use these to post an imm notification and resolve it later
-     */
-    // private static Boolean postedImm = false;
-    // private static int immValue = 0;
-
-    /*
      * Static "constructor"
      */
     public static MicroBlazeInstruction newInstance(String address, String instruction) {
@@ -59,58 +53,8 @@ public class MicroBlazeInstruction extends AInstruction {
         var props = instSet.process(fieldData);
         var idata = new MicroBlazeInstructionData(props, fieldData);
         var inst = new MicroBlazeInstruction(address, instruction, idata, fieldData, props);
-
-        /*
-        // store imm value if instruction is imm
-        if (inst.isImmediateValue() && MicroBlazeInstruction.postedImm == false) {
-            MicroBlazeInstruction.postedImm = true;
-            MicroBlazeInstruction.immValue = inst.getData().getOperands().get(0).getValue().intValue();
-        }
-        
-        // process previous imm value if any
-        else if (MicroBlazeInstruction.postedImm == true) {
-            inst.completeImm(MicroBlazeInstruction.immValue);
-            MicroBlazeInstruction.postedImm = false;
-        
-        }
-        
-        // if only lower 16 is given
-        else {
-            inst.extendImm();
-        }
-        */
         return inst;
     }
-
-    /*
-     * 
-    private void extendImm() {
-        // get imm value operand
-        for (Operand op : this.getData().getOperands())
-            if (op.isImmediate()) {
-                int lower16 = op.getValue().intValue();
-                int fullimm = (lower16 << (16)) >> (16);
-                Number num = fullimm;
-                op.overrideValue(num);
-            }
-    
-        return;
-    }
-    
-    private void completeImm(int immValue) {
-    
-        // get imm value operand
-        for (Operand op : this.getData().getOperands())
-            if (op.isImmediate()) {
-                int upper16 = MicroBlazeInstruction.immValue << 16;
-                int lower16 = op.getValue().intValue();
-                Number fullimm = upper16 | lower16;
-                op.overrideValue(fullimm);
-            }
-    
-        return;
-    }
-    */
 
     /*
      * Create the instruction
@@ -149,19 +93,14 @@ public class MicroBlazeInstruction extends AInstruction {
     @Override
     public Number getBranchTarget() {
         if (this.isJump()) {
-            // int fullopcode = new BigInteger(this.getInstruction(), 16).intValue();
-            // short jmpval = (short) (fullopcode & 0x0000FFFF);
-            // int jmpval = (int) (fullopcode & 0x0000FFFF);
             var numops = this.getData().getOperands().size();
             var jmpval = this.getData().getOperands().get(numops - 1).getNumberValue();
 
             long finalvalue = 0;
             if (this.isRelativeJump())
                 finalvalue = (this.getAddress().longValue() + jmpval.longValue());
-            // return (this.getAddress().longValue() + jmpval);
             else
                 finalvalue = jmpval.longValue();
-            // return (jmpval);
 
             return finalvalue;
 
