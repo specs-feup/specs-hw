@@ -7,8 +7,16 @@ public class TraceInstruction extends ATraceUnit {
     private final Instruction inst;
 
     public TraceInstruction(Instruction inst) {
-        super(TraceUnitType.TraceInstruction, inst.getAddress() + 4);
+        super(TraceUnitType.TraceInstruction,
+                TraceInstruction.getBranchTarget(inst));
         this.inst = inst;
+    }
+
+    protected static Long getBranchTarget(Instruction inst) {
+        if (inst.isJump())
+            return (Long) inst.getBranchTarget();
+        else
+            return inst.getAddress() + 4;
     }
 
     @Override

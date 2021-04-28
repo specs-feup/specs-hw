@@ -303,6 +303,13 @@ public class BinaryTranslationUtils {
     /*
      * 
      */
+    public static int signExtend16(int value, int currlen) {
+        return (value << (16 - currlen)) >> (16 - currlen);
+    }
+
+    /*
+     * 
+     */
     public static int signExtend32(int value, int currlen) {
         return (value << (32 - currlen)) >> (32 - currlen);
     }
