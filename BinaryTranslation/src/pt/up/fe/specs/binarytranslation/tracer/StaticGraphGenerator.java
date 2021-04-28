@@ -18,7 +18,8 @@ public class StaticGraphGenerator {
         // advance until start of kernel
         TraceUnit next = null;
         do {
-            next = tracer.nextBasicBlock();
+            next = tracer.nextInstruction();
+            // next = tracer.nextBasicBlock();
         } while (next.getStart().getAddress().longValue() != startAddr.longValue());
 
         return next;
@@ -54,7 +55,8 @@ public class StaticGraphGenerator {
         while (tracer.hasNext()) {
 
             // next block
-            var next = tracer.nextBasicBlock();
+            var next = tracer.nextInstruction();
+            // var next = tracer.nextBasicBlock();
             tgraph.insert(next);
             if (next.getEnd().getAddress().longValue() == stopAddr.longValue())
                 break;

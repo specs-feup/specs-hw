@@ -32,10 +32,13 @@ public class TraceUnitGraphT extends AbstractBaseGraph<TraceUnit, DefaultEdge> {
 
         for (var unit : allUnits) {
             // insert newNode as child of candidate parent, if parent jumps to or precedes newNode
-            if (unit.jumpsTo(newNode)
-                    || unit.precedes(newNode)
-                    || newNode.includesTarget(unit)) {
+            if (unit.jumpsTo(newNode) || unit.precedes(newNode) || newNode.includesTarget(unit)) {
                 this.addEdge(unit, newNode);
+            }
+
+            // backwards jumps?
+            if ((newNode != unit) && (newNode.jumpsTo(unit) || unit.includesTarget(newNode))) {
+                this.addEdge(newNode, unit);
             }
         }
     }
