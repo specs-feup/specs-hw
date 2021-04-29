@@ -3,18 +3,13 @@ package pt.up.fe.specs.binarytranslation.stream;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
 
-public abstract class ATraceInstructionStream extends AInstructionStream {
+public abstract class ATraceInstructionStream extends AInstructionStream implements TraceInstructionStream {
 
     /*
      * Output from QEMU Execution
      */
     protected ATraceInstructionStream(InstructionProducer traceProducer) {
         super(traceProducer);
-    }
-
-    @Override
-    public InstructionStreamType getType() {
-        return InstructionStreamType.TRACE;
     }
 
     @Override
