@@ -43,9 +43,12 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
             String name = "org/specs/MicroBlaze/asm/N10/" + elfname.getName().replace("_trace", "");
             auxname = SpecsIo.resourceCopy(name);
             auxname.deleteOnExit();
+            System.out.println(name);
         } else {
             auxname = elfname;
         }
+
+
 
         // Workaround for mb-gdb bug of stepping over
         // two instructions at once when it hits an "imm"

@@ -62,9 +62,11 @@ public class AddressGraphBuilder {
                 var immV = new AddressVertex(immVal, AddressVertexType.IMMEDIATE);
                 
                 //TODO: assign BASE_ADDR and OFFSET when an IMM is present
-                // below assumption is not always true
-                immV.setProperty(AddressVertexProperty.OFFSET);
+                // Below assumption is not always true
+                // Use later transform for a more educated guess
                 rAV.setProperty(AddressVertexProperty.BASE_ADDR);
+                immV.setProperty(AddressVertexProperty.OFFSET);
+
                 
                 fullGraph.addVertex(immV);
                 fullGraph.addEdge(immV, sumV);
@@ -76,8 +78,8 @@ public class AddressGraphBuilder {
                 rBV.setIsaInfo(AddressVertexIsaInfo.RB);
                 
                 //Set rA and rB using MicroBlaze GCC conventions
-                rBV.setProperty(AddressVertexProperty.BASE_ADDR);
                 rAV.setProperty(AddressVertexProperty.OFFSET);
+                rBV.setProperty(AddressVertexProperty.BASE_ADDR);
                 fullGraph.addEdge(rBV, sumV);
             }
             
