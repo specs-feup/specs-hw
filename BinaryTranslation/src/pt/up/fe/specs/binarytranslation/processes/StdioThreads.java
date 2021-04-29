@@ -41,7 +41,6 @@ public class StdioThreads {
         // of if main thread has not read the concurrentchannel for the
         // previous stdout line
         while (lstream.hasNextLine()) {
-            // while (run.getProc().isAlive()) {
             var peek = lstream.peekNextLine();
             if (peek != null) {
                 producer.put(peek);
