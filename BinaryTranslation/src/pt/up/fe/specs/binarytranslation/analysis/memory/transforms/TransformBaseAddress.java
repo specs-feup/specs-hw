@@ -19,22 +19,23 @@ public class TransformBaseAddress extends AGraphTransform {
     protected Graph<AddressVertex, DefaultEdge> applyTransform(Graph<AddressVertex, DefaultEdge> g) {
         var rA = GraphUtils.findAllNodesWithIsaInfo(g, AddressVertexIsaInfo.RA).get(0);
         var rB = GraphUtils.findAllNodesWithIsaInfo(g, AddressVertexIsaInfo.RB).get(0);
-        
-        if (rB.getType() == AddressVertexType.IMMEDIATE)
+
+        if (rB.getType() != AddressVertexType.IMMEDIATE)
             return g;
+
+        var rAParents = GraphUtils.getParents(g, rA);
+        boolean isOffset = false;
         
-        int rAParents = GraphUtils.getParents(g, rA).size();
-        int rBParents = GraphUtils.getParents(g, rB).size();
-        
-        if (rAParents > rBParents) {
-            rA.setProperty(AddressVertexProperty.OFFSET);
-            rB.setProperty(AddressVertexProperty.BASE_ADDR);
+        //Heuristic: consider it an offset if it has a shift
+        for (var vertex : rAParents) {
+            if (vertex.getType() == AddressVertexType.OPERATION) {
+                var l = vertex.getLabel();
+                if (l.equals("<<") || l.equals(">>")) {
+                    isOffset = true;
+                }
+            }
         }
-        else {
-            rA.setProperty(AddressVertexProperty.BASE_ADDR);
-            rB.setProperty(AddressVertexProperty.OFFSET);
-        }
-        
+        rA.setProperty(isOffset ? AddressVertexProperty.OFFSET : AddressVertexProperty.BASE_ADDR);
         return g;
     }
 
