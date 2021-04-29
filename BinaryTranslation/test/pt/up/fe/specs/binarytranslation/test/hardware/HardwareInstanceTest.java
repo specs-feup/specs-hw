@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.test;
+package pt.up.fe.specs.binarytranslation.test.hardware;
 
 import org.junit.Test;
 

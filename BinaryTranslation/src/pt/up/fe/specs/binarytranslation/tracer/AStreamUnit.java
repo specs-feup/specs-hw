@@ -2,17 +2,17 @@ package pt.up.fe.specs.binarytranslation.tracer;
 
 import java.util.List;
 
-public abstract class ATraceUnit implements TraceUnit {
+public abstract class AStreamUnit implements StreamUnit {
 
     private final Long targetAddr;
-    private final TraceUnitType type;
+    private final StreamUnitType type;
 
-    public ATraceUnit(TraceUnitType type, Long targetAddr) {
+    public AStreamUnit(StreamUnitType type, Long targetAddr) {
         this.type = type;
         this.targetAddr = targetAddr;
     }
 
-    protected static Long getBranchTarget(List<TraceInstruction> tilist) {
+    protected static Long getBranchTarget(List<StreamInstruction> tilist) {
         for (var inst : tilist)
             if (inst.getActual().isJump())
                 return (Long) inst.getActual().getBranchTarget();
@@ -21,7 +21,7 @@ public abstract class ATraceUnit implements TraceUnit {
     }
 
     @Override
-    public TraceUnitType getType() {
+    public StreamUnitType getType() {
         return type;
     }
 
@@ -39,7 +39,8 @@ public abstract class ATraceUnit implements TraceUnit {
      * True if addresses of two units follow
      * i.e. if "this" comes after "other" 
      */
-    public boolean follows(TraceUnit other) {
+    @Override
+    public boolean follows(StreamUnit other) {
         var otherEndAddr = other.getEnd().getAddress();
         var thisStartAddr = this.getStart().getAddress();
         return thisStartAddr.longValue() == (otherEndAddr.longValue() + 4);
@@ -49,7 +50,8 @@ public abstract class ATraceUnit implements TraceUnit {
      * True if addresses of two units follow
      * i.e. if "other" comes after "this"
      */
-    public boolean precedes(TraceUnit other) {
+    @Override
+    public boolean precedes(StreamUnit other) {
         var otherStartAddr = other.getStart().getAddress();
         var thisEndAddr = this.getEnd().getAddress();
         return otherStartAddr.longValue() == (thisEndAddr.longValue() + 4);
@@ -58,7 +60,8 @@ public abstract class ATraceUnit implements TraceUnit {
     /*
      * True if "this" jumps to "other"
      */
-    public boolean jumpsTo(TraceUnit other) {
+    @Override
+    public boolean jumpsTo(StreamUnit other) {
         var otherStartAddr = other.getStart().getAddress();
         return otherStartAddr.longValue() == (this.targetAddr.longValue());
     }
@@ -66,7 +69,8 @@ public abstract class ATraceUnit implements TraceUnit {
     /*
      * True if "other" jumps to "this"
      */
-    public boolean targetOf(TraceUnit other) {
+    @Override
+    public boolean targetOf(StreamUnit other) {
         var otherTargetAddr = other.getTargetAddr();
         var thisStartAddr = this.getStart().getAddress();
         return thisStartAddr.longValue() == (otherTargetAddr.longValue());

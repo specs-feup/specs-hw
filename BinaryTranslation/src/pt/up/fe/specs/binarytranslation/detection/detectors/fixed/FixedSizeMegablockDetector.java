@@ -13,7 +13,7 @@ import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.binarytranslation.tracer.InstructionWindow;
-import pt.up.fe.specs.binarytranslation.tracer.TraceUnit;
+import pt.up.fe.specs.binarytranslation.tracer.StreamUnit;
 
 /**
  * 
@@ -29,7 +29,7 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
     /*
      * Check if candidate sequence is valid
      */
-    private Boolean validSequence(List<TraceUnit> units, InstructionWindow window) {
+    private Boolean validSequence(List<StreamUnit> units, InstructionWindow window) {
 
         // all start and end instruction of trace unit must exist in the window
         for (var unit : units)
@@ -64,7 +64,7 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
     /*
      * Get the pair which represent the start and end of sequential block!
      */
-    private TraceUnit getTraceUnit(InstructionStream istream, InstructionWindow window) {
+    private StreamUnit getTraceUnit(InstructionStream istream, InstructionWindow window) {
 
         if (!istream.hasNext())
             return null;
@@ -78,7 +78,7 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
 
             // target of a taken branch
             if ((addr2 - addr1) != istream.getInstructionWidth())
-                return new TraceUnit(startInst, previs);
+                return new StreamUnit(startInst, previs);
 
             // advance
             previs = window.add(istream.nextInstruction());
@@ -90,7 +90,7 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
     /*
      * Expands the TraceUnits into full instruction list
      */
-    private List<Instruction> expandTraceUnits(List<TraceUnit> units, InstructionWindow window) {
+    private List<Instruction> expandTraceUnits(List<StreamUnit> units, InstructionWindow window) {
 
         var fullList = new ArrayList<Instruction>();
         for (var unit : units)
@@ -125,7 +125,7 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
         var instWindow = new InstructionWindow(this.getConfig().getMaxsize());
 
         // list of trace Units (e.g., start-end addr pair of basic block)
-        var unitWindow = new ArrayList<TraceUnit>();
+        var unitWindow = new ArrayList<StreamUnit>();
 
         // desired number of basic blocks in Megablock
         // save first instruction after a jump

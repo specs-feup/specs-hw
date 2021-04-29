@@ -2,12 +2,12 @@ package pt.up.fe.specs.binarytranslation.tracer;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
-public interface TraceUnit {
+public interface StreamUnit {
 
     /*
      * 
      */
-    public TraceUnitType getType();
+    public StreamUnitType getType();
 
     /*
      * 
@@ -28,27 +28,27 @@ public interface TraceUnit {
      * True if addresses of two units follow
      * i.e. if "this" comes after "other" 
      */
-    public boolean follows(TraceUnit other);
+    public boolean follows(StreamUnit other);
 
     /*
      * True if addresses of two units follow
      * i.e. if "other" comes after "this"
      */
-    public boolean precedes(TraceUnit other);
+    public boolean precedes(StreamUnit other);
 
     /*
      * True if any instruction in this TraceUnit
      * includes the target of the "other"
      */
-    public boolean includesTarget(TraceUnit other);
+    public boolean includesTarget(StreamUnit other);
 
     /*
      * True if "this" jumps to "other"
      */
-    public boolean jumpsTo(TraceUnit other);
+    public boolean jumpsTo(StreamUnit other);
 
     /*
      * True if "other" jumps to "this"
      */
-    public boolean targetOf(TraceUnit other);
+    public boolean targetOf(StreamUnit other);
 }

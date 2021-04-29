@@ -4,12 +4,12 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
-public class TraceSuperBlock extends ATraceUnit {
+public class StreamSuperBlock extends AStreamUnit {
 
-    private List<TraceBasicBlock> tbblist;
+    private List<StreamBasicBlock> tbblist;
 
-    public TraceSuperBlock(List<TraceBasicBlock> tbblist) {
-        super(TraceUnitType.TraceSuperBlock,
+    public StreamSuperBlock(List<StreamBasicBlock> tbblist) {
+        super(StreamUnitType.StreamSuperBlock,
                 tbblist.get(tbblist.size() - 1).getTargetAddr());
         this.tbblist = tbblist;
     }
@@ -47,7 +47,7 @@ public class TraceSuperBlock extends ATraceUnit {
      * True if any instruction in this TraceUnit
      * includes the target of the "other"
      */
-    public boolean includesTarget(TraceUnit other) {
+    public boolean includesTarget(StreamUnit other) {
         for (var tbb : this.tbblist) {
             if (tbb.includesTarget(other))
                 return true;
