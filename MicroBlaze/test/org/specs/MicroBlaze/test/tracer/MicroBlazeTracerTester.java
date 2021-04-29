@@ -1,28 +1,17 @@
 package org.specs.MicroBlaze.test.tracer;
 
-import java.io.File;
-import java.io.StringWriter;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.nio.Attribute;
-import org.jgrapht.nio.DefaultAttribute;
-import org.jgrapht.nio.dot.DOTExporter;
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.tracer.StaticGraphGenerator;
-import pt.up.fe.specs.binarytranslation.tracer.StreamTracer;
-import pt.up.fe.specs.binarytranslation.tracer.TraceBasicBlock;
-import pt.up.fe.specs.binarytranslation.tracer.TraceSuperBlock;
-import pt.up.fe.specs.binarytranslation.tracer.TraceUnit;
+import pt.up.fe.specs.binarytranslation.tracer.StreamBasicBlock;
+import pt.up.fe.specs.binarytranslation.tracer.StreamSuperBlock;
+import pt.up.fe.specs.binarytranslation.tracer.StreamUnitGenerator;
+import pt.up.fe.specs.binarytranslation.tracer.StreamUnitGraphGenerator;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeTracerTester {
 
@@ -40,54 +29,42 @@ public class MicroBlazeTracerTester {
     private void testTraceGraphingStatic(ELFProvider elf) {
 
         var fd = BinaryTranslationUtils.getFile(elf);
-        try (var istream = new MicroBlazeElfStream(fd)) {
-
-            // using TreeNode
-            // var graph = StaticGraphGenerator.generateStaticGraph(istream);
-            // System.out.println(DottyGenerator.buildDotty(graph.getHead()));
+        try (var istream = new MicroBlazeTraceStream(fd)) {
 
             // Using JGraphT
-            var graphGenerator = new StaticGraphGenerator(istream);
-            var graph = graphGenerator.generateStaticGraph(elf.getKernelStart(), elf.getKernelStop());
-
-            // dotty.append(tagname + "[shape = box, label = \"" + me.replace("\n", "\\l") + "\"];\n");
-
-            var exporter = new DOTExporter<TraceUnit, DefaultEdge>();
-            exporter.setVertexAttributeProvider(v -> {
-                Map<String, Attribute> map = new LinkedHashMap<>();
-                map.put("label", DefaultAttribute.createAttribute(v.toString().replace("\n", "\\l")));
-                map.put("shape", DefaultAttribute.createAttribute("box"));
-                return map;
-            });
-            var writer = new StringWriter();
-            exporter.exportGraph(graph, writer);
-
-            var dotfile = new File("./output/" + elf.getFilename().replace(".elf", "_Instruction" + ".dot"));
-            SpecsIo.write(dotfile, writer.toString());
-            BinaryTranslationUtils.renderDotty(dotfile);
-
-            // System.out.println(writer.toString());
+            var graphGenerator = new StreamUnitGraphGenerator(istream);
+            var graph = graphGenerator.generateBasicBlockGraph(elf.getKernelStart(), elf.getKernelStop());
+            var pngName = "./output/" + elf.getFilename().replace(".elf", "_basic.png");
+            BinaryTranslationUtils.renderDotty(pngName, graph.toDotty());
         }
     }
 
     /*
      * Get BasicBlockTraceUnit's from elf stream (does this even make sense???) 
-     */
+     
+     // TODO: its not easy to generate a static elf graph just like this,
+     // since consecutive basic blocks in the elf dump, when read in sequence,
+     // dont necessarily flow into eachother... e.g., ends of functions
+     // dont flow into other functions
+    
+     // in the best case, I can generate static function graphs <---- TODO?? 
+     
     @Test
     public void testBasicBlockTraceUnit_static() {
-
+    
         var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
         try (var istream = new MicroBlazeElfStream(fd)) {
-
+    
             // basic blocks
-            var tracer = new StreamTracer(istream);
+            var tracer = new StreamUnitGenerator(istream);
             while (tracer.hasNext()) {
                 System.out.println(tracer.nextBasicBlock().toString());
             }
-
+    
             istream.close();
         }
     }
+    */
 
     /*
      * Get BasicBlockTraceUnit's from trace stream 
@@ -100,8 +77,8 @@ public class MicroBlazeTracerTester {
         try (var istream = new MicroBlazeTraceStream(fd)) {
 
             // basic blocks
-            var tracer = new StreamTracer(istream);
-            TraceBasicBlock tbb = null;
+            var tracer = new StreamUnitGenerator(istream);
+            StreamBasicBlock tbb = null;
             while ((tbb = tracer.nextBasicBlock()) != null && i > 0) {
                 System.out.println(tbb.toString());
                 i--;
@@ -115,15 +92,15 @@ public class MicroBlazeTracerTester {
     public void testSuperBlockTraceUnit() {
 
         // <superblock, hit counter>
-        var superblockMap = new HashMap<TraceSuperBlock, Integer>();
+        var superblockMap = new HashMap<StreamSuperBlock, Integer>();
 
         var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.matmul);
         try (var istream = new MicroBlazeTraceStream(fd)) {
 
-            // super block? max size 50
-            var tracer = new StreamTracer(istream);
+            // super block
+            var tracer = new StreamUnitGenerator(istream);
             while (!istream.isClosed()) {
-                var sblock = tracer.nextSuperBlock(50);
+                var sblock = tracer.nextSuperBlock();
                 if (sblock == null)
                     continue;
 
