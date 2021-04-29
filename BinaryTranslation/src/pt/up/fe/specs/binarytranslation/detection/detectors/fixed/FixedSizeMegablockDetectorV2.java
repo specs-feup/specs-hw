@@ -14,7 +14,7 @@ import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.binarytranslation.tracer.InstructionWindow;
-import pt.up.fe.specs.binarytranslation.tracer.TraceUnit;
+import pt.up.fe.specs.binarytranslation.tracer.StreamUnit;
 
 /**
  * 
@@ -36,7 +36,7 @@ public class FixedSizeMegablockDetectorV2 extends ASegmentDetector {
      * Get the pair which represent the start and end of a block which
      * can contain any number of backwards or forwards branches, but ends in a backwards branch
      */
-    private TraceUnit getCandidate(InstructionStream istream, InstructionWindow window) {
+    private StreamUnit getCandidate(InstructionStream istream, InstructionWindow window) {
 
         if (!istream.hasNext())
             return null;
@@ -51,7 +51,7 @@ public class FixedSizeMegablockDetectorV2 extends ASegmentDetector {
             if ((addr2 < addr1) && window.exists(addr2)) {
                 var targetis = window.getLatestByAddr(addr2);
                 if (addr2.compareTo(targetis.getAddress()) == 0)
-                    return new TraceUnit(targetis, previs);
+                    return new StreamUnit(targetis, previs);
             }
 
             // advance
@@ -64,7 +64,7 @@ public class FixedSizeMegablockDetectorV2 extends ASegmentDetector {
     /*
      * Expands the TraceUnits into full instruction list
      */
-    private List<Instruction> expandTraceUnits(List<TraceUnit> units, InstructionWindow window) {
+    private List<Instruction> expandTraceUnits(List<StreamUnit> units, InstructionWindow window) {
 
         var fullList = new ArrayList<Instruction>();
         for (var unit : units)
@@ -87,7 +87,7 @@ public class FixedSizeMegablockDetectorV2 extends ASegmentDetector {
         // int blockNr = this.getConfig().getMaxBlocks() + 1;
 
         // process entire stream
-        TraceUnit candidate = null;
+        StreamUnit candidate = null;
         while ((candidate = getCandidate(istream, instWindow)) != null) {
 
             // turn pairs in to flat list

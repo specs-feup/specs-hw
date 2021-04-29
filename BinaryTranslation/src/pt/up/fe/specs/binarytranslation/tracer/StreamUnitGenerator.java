@@ -2,51 +2,52 @@ package pt.up.fe.specs.binarytranslation.tracer;
 
 import java.util.ArrayList;
 
-import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
 /**
- * Reduces incoming instructions into different types of trace units In the simplest cast, the StreamTracer is just a
- * passthrough for instructions, packed into the TraceInstruction object
+ * Reduces incoming instructions into different types of trace units In the simplest case, the StreamTracer is just a
+ * passthrough for instructions, packed into the @StreamInstruction object
  */
-public class StreamTracer {
+public class StreamUnitGenerator {
 
-    private InstructionStream istream;
+    private TraceInstructionStream istream;
     private InstructionWindow window; // useless??
 
-    // TODO need buffer for previous traceunit and then append/discard oldest??
-    // e.g. list of basic blocks etc
-    // no, that should be the detectors job
-
-    public StreamTracer(InstructionStream istream) {
+    public StreamUnitGenerator(TraceInstructionStream istream) {
         this.istream = istream;
         this.window = new InstructionWindow(100); // TODO edit this default
     }
 
-    // TODO: build some kind of graph representation for the entire trace? using this class?
+    /*
+     * 
+     */
+    public void advanceTo(long addr) {
+        this.istream.advanceTo(addr);
+    }
 
     /*
      * 
      */
-    public TraceInstruction nextInstruction() {
+    public StreamInstruction nextInstruction() {
         var inst = istream.nextInstruction();
         if (inst == null)
             return null;
 
         else {
             this.window.add(inst); // keep for whatever?
-            return new TraceInstruction(inst);
+            return new StreamInstruction(inst);
         }
     }
 
     /*
      * 
      */
-    public TraceBasicBlock nextBasicBlock() {
+    public StreamBasicBlock nextBasicBlock() {
 
         // get TraceUnits until a branch happens
-        var bbtype = TraceUnitType.TraceBasicBlock_fwd;
+        var bbtype = StreamUnitType.StreamBasicBlock_fwd;
         var delayctr = 0;
-        var tilist = new ArrayList<TraceInstruction>();
+        var tilist = new ArrayList<StreamInstruction>();
         while (true) {
             var ti = this.nextInstruction();
             if (ti == null)
@@ -56,8 +57,8 @@ public class StreamTracer {
             if (ti.getActual().isJump()) {
                 delayctr = ti.getActual().getDelay();
                 bbtype = ti.getActual().isBackwardsJump()
-                        ? TraceUnitType.TraceBasicBlock_back
-                        : TraceUnitType.TraceBasicBlock_fwd;
+                        ? StreamUnitType.StreamBasicBlock_back
+                        : StreamUnitType.StreamBasicBlock_fwd;
                 break;
             }
         }
@@ -66,16 +67,16 @@ public class StreamTracer {
         while (delayctr-- > 0)
             tilist.add(this.nextInstruction());
 
-        return new TraceBasicBlock(tilist, bbtype);
+        return new StreamBasicBlock(tilist, bbtype);
     }
 
     /*
      * 
      */
-    public TraceSuperBlock nextSuperBlock(int maxsize) {
+    public StreamSuperBlock nextSuperBlock() {
 
-        var tbblist = new ArrayList<TraceBasicBlock>();
-        while (maxsize-- > 0) {
+        var tbblist = new ArrayList<StreamBasicBlock>();
+        while (true) {
             var nbb = this.nextBasicBlock();
             if (nbb == null)// || nbb.getType() == TraceUnitType.TraceBasicBlock_back)
                 break;
@@ -84,13 +85,13 @@ public class StreamTracer {
             tbblist.add(nbb);
 
             // if backwards, end block, but add
-            if (nbb.getType() == TraceUnitType.TraceBasicBlock_back)
+            if (nbb.getType() == StreamUnitType.StreamBasicBlock_back)
                 break;
         }
 
         // ugly but works for now
         if (tbblist.size() > 0)
-            return new TraceSuperBlock(tbblist);
+            return new StreamSuperBlock(tbblist);
         else
             return null;
     }

@@ -2,13 +2,13 @@ package pt.up.fe.specs.binarytranslation.tracer;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
-public class TraceInstruction extends ATraceUnit {
+public class StreamInstruction extends AStreamUnit {
 
     private final Instruction inst;
 
-    public TraceInstruction(Instruction inst) {
-        super(TraceUnitType.TraceInstruction,
-                TraceInstruction.getBranchTarget(inst));
+    public StreamInstruction(Instruction inst) {
+        super(StreamUnitType.StreamInstruction,
+                StreamInstruction.getBranchTarget(inst));
         this.inst = inst;
     }
 
@@ -47,7 +47,7 @@ public class TraceInstruction extends ATraceUnit {
      * True if any instruction in this TraceUnit
      * includes the target of the "other"
      */
-    public boolean includesTarget(TraceUnit other) {
+    public boolean includesTarget(StreamUnit other) {
         var otherTargetAddr = other.getTargetAddr();
         return this.inst.getAddress().longValue() == otherTargetAddr.longValue();
     }
