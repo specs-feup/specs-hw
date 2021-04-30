@@ -11,6 +11,7 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplySSAPass;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
+import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class MicroBlazeInstructionASTTest {
 
@@ -36,14 +37,17 @@ public class MicroBlazeInstructionASTTest {
     public void testAddiAST() {
         // 248: 20c065e8 addi r6, r0, 26088 // 65e8 <_SDA_BASE_>
         var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
-        var ast = new InstructionAST(addi);
-        ast.accept(new ApplyInstructionPass());
-        System.out.println(ast.toString());
-        System.out.println(ast.getRootnode().getAsString());
 
-        // new dotty generation test
-        // var dottygen = new DottyGenerator<InstructionASTNode>();
-        // dottygen.generateDotty(ast.getRootnode());
+        var ast = new InstructionAST(addi);
+        var dotty1 = DottyGenerator.buildDotty(ast.getRootnode());
+        System.out.println(dotty1);
+
+        ast.accept(new ApplyInstructionPass());
+        var dotty2 = DottyGenerator.buildDotty(ast.getRootnode());
+        System.out.println(dotty2);
+
+        // System.out.println(ast.toString());
+        // System.out.println(ast.getRootnode().getAsString());
     }
 
     @Test
