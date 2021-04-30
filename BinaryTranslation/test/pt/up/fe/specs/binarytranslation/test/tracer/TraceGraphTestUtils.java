@@ -15,7 +15,7 @@ public class TraceGraphTestUtils {
     /*
      * test graphing a trace
      */
-    public static void testTraceGraphingStatic(ELFProvider elf,
+    public static void testTraceStreamGraph(ELFProvider elf,
             Class<? extends TraceInstructionStream> streamClass) {
 
         var fd = BinaryTranslationUtils.getFile(elf);

@@ -14,6 +14,9 @@ import org.jgrapht.util.SupplierUtil;
 
 public class StreamUnitGraph extends AbstractBaseGraph<StreamUnit, StreamUnitEdge> {
 
+    // resource
+    // https://paulosuzart.github.io/blog/2020/08/08/graphs-with-jgrapht/
+
     /**
      * NOTE: remember that vertex equality is checked by the override hashCode and equals functions in each @StreamUnit
      * child
@@ -25,6 +28,13 @@ public class StreamUnitGraph extends AbstractBaseGraph<StreamUnit, StreamUnitEdg
             .weighted(true)
             .allowingSelfLoops(true)
             .edgeClass(StreamUnitEdge.class).buildType();
+
+    /*
+     * last inserted unit;
+     * when inserting a new unit for a TraceInstructionStream
+     * I only need to insert edges to the last one
+     */
+    private StreamUnit tailUnit;
 
     public StreamUnitGraph() {
         super(null, SupplierUtil.createSupplier(StreamUnitEdge.class), GTYPE);
@@ -55,23 +65,23 @@ public class StreamUnitGraph extends AbstractBaseGraph<StreamUnit, StreamUnitEdg
         return writer.toString();
     }
 
+    // TODO: commented methods make sense for static analysis??
     /*
      * 
-     */
     private void weightUpdate(StreamUnit newNode) {
-
+    
         this.addVertex(newNode);
         var allUnits = this.vertexSet();
-
+    
         // if edge already exists, increment weigh
         for (var unit : allUnits) {
-
+    
             // a -> b
             if (this.containsEdge(newNode, unit)) {
                 var e1 = this.getEdge(newNode, unit);
                 this.setEdgeWeight(e1, e1.getWeight() + 1);
             }
-
+    
             // b -> a
             if (this.containsEdge(unit, newNode)) {
                 var e1 = this.getEdge(unit, newNode);
@@ -79,23 +89,20 @@ public class StreamUnitGraph extends AbstractBaseGraph<StreamUnit, StreamUnitEdg
             }
         }
     }
-
-    /*
-     * 
-     */
+    
     private void realInsert(StreamUnit newNode) {
-
+    
         this.addVertex(newNode);
         var allUnits = this.vertexSet();
-
+    
         for (var unit : allUnits) {
-
+    
             // insert newNode as child of candidate parent, if parent jumps to or precedes newNode
             if (unit.jumpsTo(newNode) || unit.precedes(newNode) || newNode.includesTarget(unit)) {
                 var n = this.addEdge(unit, newNode);
                 this.setEdgeWeight(n, 1);
             }
-
+    
             // backwards jumps?
             if ((newNode != unit) && (newNode.jumpsTo(unit) || unit.includesTarget(newNode))) {
                 var n = this.addEdge(newNode, unit);
@@ -103,23 +110,47 @@ public class StreamUnitGraph extends AbstractBaseGraph<StreamUnit, StreamUnitEdg
             }
         }
     }
-
+    
     /*
      * Insert a new unit 
-     */
+    */
     public void insert(StreamUnit newNode) {
 
-        var allUnits = this.vertexSet();
+        // first
+        if (this.tailUnit == null) {
+            this.addVertex(newNode);
+        }
 
+        // check if edge already exists
+        else {
+            var edge = this.getEdge(this.tailUnit, newNode);
+            if (edge != null) {
+                this.setEdgeWeight(edge, edge.getWeight() + 1);
+            }
+
+            // add vertex
+            else {
+                this.addVertex(newNode);
+                var n = this.addEdge(this.tailUnit, newNode);
+                this.setEdgeWeight(n, 1);
+            }
+        }
+
+        // new tail
+        this.tailUnit = newNode;
+
+        /*
         /**
          * first check if equal @StreamUnit exists if so, do not insert, and instead only check edge weights
-         */
+        
         if (allUnits.contains(newNode)) {
             weightUpdate(newNode);
         }
-
+        
         else {
             realInsert(newNode);
+            this.tailUnit = newNode;
         }
+        */
     }
 }
