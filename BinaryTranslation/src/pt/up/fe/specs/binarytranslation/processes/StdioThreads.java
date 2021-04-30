@@ -76,6 +76,17 @@ public class StdioThreads {
                 bw.newLine();
                 bw.flush();
             }
+
+            /*
+            while (true) {
+                var st = consumer.take(); // wait for "main" thread to produce stuff
+                if (run.getProc().isAlive()) { // can only send to proc if proc is alive
+                    bw.write(st);
+                    bw.newLine();
+                    bw.flush();
+                } else
+                    break;
+            }*/
             bw.close();
 
         } catch (IOException e) {

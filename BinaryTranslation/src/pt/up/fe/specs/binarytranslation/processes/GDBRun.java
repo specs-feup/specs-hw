@@ -27,15 +27,6 @@ public class GDBRun extends StringProcessRun {
     private boolean targetOpen = false;
     private Application app;
 
-    /*
-     * Constructor for a non-interactive scripting run
-     
-    public GDBRun(Application app, ResourceProvider gdbtmpl) {
-        this.app = app;
-        this.proc = BinaryTranslationUtils.newGDB(this.app);
-    
-    }*/
-
     protected Application getApp() {
         return app;
     }
@@ -68,10 +59,10 @@ public class GDBRun extends StringProcessRun {
     public GDBRun(Application app, File scriptFile) {
         super(GDBRun.getArgs(app, scriptFile));
         super.attachThreads();
-        this.getGDBResponse(5000); // consume a single garbage line produced from the start of gdb
+        this.consumeAllGDBResponse(5000); // consume garbage lines produced from the start of gdb
         // Note:
         // when launching QEMU under GDB, the "target remote" command
-        // takes longer than 10ms to complete, hence the 1s timeout for
+        // takes longer than 10ms to complete, hence the 5s timeout for
         // all reads from stdout of the process
         // This shouldn't introduce delays in any other circumstances
         // since poll returns immediately
@@ -316,12 +307,19 @@ public class GDBRun extends StringProcessRun {
     }
 
     /*
-     * Get all lines available from GDB process
+     * 
      */
     private String consumeAllGDBResponse() {
+        return this.consumeAllGDBResponse(2);
+    }
+
+    /*
+     * Get all lines available from GDB process
+     */
+    private String consumeAllGDBResponse(int mseconds) {
         var output = new StringBuilder();
         String line = null;
-        while ((line = super.receive()) != null) {
+        while ((line = super.receive(mseconds)) != null) {
             output.append(line + "\n");
         }
         return output.toString().stripTrailing();

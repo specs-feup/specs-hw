@@ -93,7 +93,7 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
     @Override
     public void close() {
         try {
-            // this.producer.close();
+            this.producer.close();
             super.close();
         } catch (Exception e) {
             // TODO Auto-generated catch block

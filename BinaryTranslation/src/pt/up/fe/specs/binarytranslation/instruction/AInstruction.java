@@ -13,11 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.instruction;
 
-import java.util.Iterator;
-
 import com.google.gson.annotations.Expose;
 
-import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 /**
@@ -216,8 +213,8 @@ public abstract class AInstruction implements Instruction {
      */
     @Override
     public String getRepresentation() {
-        String str = this.getName() + "\t";
-        Iterator<Operand> it = this.getData().getOperands().iterator();
+        var str = this.getName() + "\t";
+        var it = this.getData().getOperands().iterator();
 
         while (it.hasNext()) {
             var curr = it.next();
@@ -240,7 +237,7 @@ public abstract class AInstruction implements Instruction {
     @Override
     public String toString() {
         String prt = "0x" + Long.toHexString(this.getAddress().longValue()) + ":";
-        prt += this.getInstruction() + "\t " + getRepresentation() + "\t "; // + this.express();
+        prt += this.getInstruction() + "\t " + getRepresentation() + "\t ";
         return prt;
     }
 
