@@ -14,7 +14,7 @@ public class MicroBlazeTracerTester {
             TraceGraphTestUtils.testTraceStreamGraph(file, MicroBlazeTraceStream.class);
         }*/
         TraceGraphTestUtils.testTraceStreamGraph(
-                MicroBlazeLivermoreELFN10.pic2d, MicroBlazeTraceStream.class);
+                MicroBlazeLivermoreELFN10.innerprod, MicroBlazeTraceStream.class);
     }
 
     /*
