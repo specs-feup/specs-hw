@@ -20,10 +20,11 @@ public class RegisterDump {
     public RegisterDump(RegisterDump that) {
         this();
         for (var key : that.regs.keySet()) {
-            this.regs.put(key, regs.get(key));
+            this.regs.put(key, that.regs.get(key));
         }
     }
 
+    // TODO pass thing function to GDB method getRegisters?
     public static RegisterDump newInstance(String rawRegisterDump, Pattern matchpat) {
 
         var dump = new RegisterDump();

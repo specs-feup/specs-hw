@@ -73,10 +73,6 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
 
         this.numcycles += inst.getLatency();
         this.numinsts++;
-
-        // if (this.dumpStream)
-        // System.out.println(inst.getRepresentation());
-
         return inst;
     }
 

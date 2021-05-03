@@ -31,6 +31,7 @@ public abstract class AInstruction implements Instruction {
     @Expose
     private String instruction;
 
+    @Expose
     private RegisterDump registers = null; // RegisterDump.nullDump;
     // TODO fix later
 
@@ -213,22 +214,35 @@ public abstract class AInstruction implements Instruction {
      */
     @Override
     public String getRepresentation() {
-        var str = this.getName() + "\t";
+        var str = new StringBuilder();
+        str.append(this.getName() + "\t");
         var it = this.getData().getOperands().iterator();
-
         while (it.hasNext()) {
             var curr = it.next();
-            str += " " + curr.getRepresentation();
+            str.append(" " + curr.getRepresentation());
             if (it.hasNext() && !curr.isSubOperation())
-                str += ", ";
+                str.append(", ");
         }
 
         // target if branch
         if (this.isJump())
-            str += "\t// target: 0x" +
-                    Long.toHexString(this.getBranchTarget().longValue());
+            str.append("\t// target: 0x" +
+                    Long.toHexString(this.getBranchTarget().longValue()));
 
-        return str;
+        // register values
+        if (this.registers != null) {
+            str.append("\tregs: (");
+            var it2 = this.getData().getOperands().iterator();
+            while (it2.hasNext()) {
+                var curr = it2.next();
+                if (curr.isRegister() && curr.isRead()) {
+                    str.append(curr.getRepresentation() + " = ");
+                    str.append(this.getRegisters().getValue(curr.getRepresentation()) + "  ");
+                }
+            }
+            str.append(")");
+        }
+        return str.toString();
     }
 
     /*
@@ -250,50 +264,4 @@ public abstract class AInstruction implements Instruction {
     public void setRegisters(RegisterDump registers) {
         this.registers = registers;
     }
-
-    /* 
-     * TODO: very clunky here
-     * TODO: replace with SymbolicInstruction class!
-     
-    @Override
-    public void makeSymbolic(Integer address, Map<String, String> regremap) throws NullPointerException {
-    
-        // symbolify address
-        this.address = address;
-    
-        // symbolify operands
-        for (Operand op : this.getData().getOperands()) {
-            if (!op.isSubOperation() && !op.isSpecial()) {
-                // TODO move this condition to the construction of the
-                // regremap map
-    
-                var tmp = op.getRepresentation();
-    
-                String r = null;
-                try {
-                    r = regremap.get(tmp);
-    
-                } catch (NullPointerException e) {
-                    throw e;
-                }
-                // TODO if a certain operand doesnt have a remap value, it should not be made symbolic!
-    
-                String r2 = null;
-                try {
-                    r2 = r.substring(r.indexOf('<') + 1, r.indexOf('>')); // NOTE: and ugly hack, but works...
-    
-                } catch (NullPointerException e) {
-                    throw e;
-                }
-    
-                op.setSymbolic(r2);
-    
-                // TODO: BIG ISSUE
-                // for ARM, i cannot symbolify the address, since one of the IMM operands is computed from it...
-                // this happens for ldr for instance, and others
-                // check for "fielddata.getAddr()" in arm operand getter
-            }
-        }
-    }
-    */
 }
