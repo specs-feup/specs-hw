@@ -1,8 +1,11 @@
 package pt.up.fe.specs.binarytranslation.analysis.prologue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.APropertyDetector;
@@ -11,7 +14,7 @@ import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class PrologueDetector extends APropertyDetector {
-
+    private static int depth = 10;
     private RegisterProperties props;
 
     public PrologueDetector(BasicBlockOccurrenceTracker tracker, RegisterProperties props) {
@@ -19,25 +22,75 @@ public class PrologueDetector extends APropertyDetector {
         this.props = props;
     }
 
-    public ArrayList<Instruction> findPrologue(String register) {
+    private List<Instruction> findPrologue() {
         int i = getTracker().getOccurrences().get(0).getStartPos();
         var stack = new Stack<Instruction>();
-
-        while (i >= 0) {
+        int stop = i - depth;
+        
+        while (i >= stop) {
             var inst = getTracker().getTrace().get(i);
-            for (var op : inst.getData().getOperands()) {
-                if (op.isRegister()) {
-                    if (AnalysisUtils.getRegName(op).equals(register))
-                        stack.add(inst);
-                }
-            }
+            stack.add(inst);
             i--;
         }
         return new ArrayList<Instruction>(stack);
     }
     
-    public Map<String, String> getRegisterInits() {
-        var regState = props.getAllRegisters();
-        return null;
+    private Map<String, List<String>> getRegisterInitState() {
+        var regs = props.getAllRegisters();
+        var regState = new HashMap<String, List<String>>();
+        for (var reg : regs) {
+            regState.put(reg, new ArrayList<String>());
+        }
+        return regState;
+    }
+    
+    public Map<String, List<String>> getRegisterState() {
+        var prologue = findPrologue();
+        var state = getRegisterInitState();
+        
+        for (var inst : prologue) {
+            if (inst.isLogical() || inst.isAdd() || inst.isSub() || inst.isMul() /*|| inst.isUnary()*/) {
+                var opRD = inst.getData().getOperands().get(0);
+                String rD = AnalysisUtils.getRegName(opRD);
+                var replace = getReplacement(rD, state, inst);
+                state.put(rD, replace);
+            }
+        }
+        return cleanState(state);
+    }
+
+    private Map<String, List<String>> cleanState(Map<String, List<String>> state) {
+        for (var key : state.keySet()) {
+            var regList = state.get(key);
+            regList = regList.stream().distinct().collect(Collectors.toList());
+        }
+        return state;
+    }
+
+    private List<String> getReplacement(String rD, Map<String, List<String>> state, Instruction inst) {
+        var preexisting = state.get(rD);
+        for (int i = 1; i < inst.getData().getOperands().size(); i++) {
+            var op = inst.getData().getOperands().get(i);
+            var opReg = AnalysisUtils.getRegName(op);
+            var opPreexisting = state.get(opReg);
+            if (opPreexisting.size() == 0) {
+                preexisting.add(opReg);
+            }
+            else {
+                preexisting.addAll(opPreexisting);
+            }
+        }
+        return preexisting;
+    }
+    
+    public static void printPrologueState(Map<String, List<String>> state) {
+        System.out.println("Prologue state with window = " + depth);
+        for (var key : state.keySet()) {
+            var list = state.get(key);
+            if (list.size() != 0) {
+                System.out.println(key + " <- " + list.toString());
+            }
+        }
+        System.out.println("(Only registers with dependencies are shown)");
     }
 }
