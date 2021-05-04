@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jgrapht.Graph;
@@ -19,6 +20,7 @@ import org.jgrapht.traverse.BreadthFirstIterator;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexIsaInfo;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 
 /**
  * Class with static methods to manipulate memory address graphs
@@ -117,5 +119,14 @@ public class GraphUtils {
             res.add(iter.next());
         } 
         return res;
+    }
+
+    public static List<AddressVertex> getVerticesWithType(Graph<AddressVertex, DefaultEdge> graph, AddressVertexType type) {
+        var ret = new ArrayList<AddressVertex>();
+        for (var v : graph.vertexSet()) {
+            if (v.getType() == type)
+                ret.add(v);
+        }
+        return ret;
     }
 }
