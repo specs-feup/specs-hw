@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.jgrapht.Graph;
@@ -18,7 +19,6 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformBase
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
-import pt.up.fe.specs.binarytranslation.analysis.prologue.PrologueDetector;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.util.SpecsLogs;
 
@@ -33,15 +33,17 @@ public class MemoryDisambiguator {
             TransformHexToDecimal.class,
             TransformShiftsToMult.class
     };
+    private Map<String, List<String>> prologueDeps;
 
     public MemoryDisambiguator(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs,
             HashMap<String, Integer> indVars,
             RegisterProperties isaProps,
-            BasicBlockOccurrenceTracker tracker) {
+            BasicBlockOccurrenceTracker tracker, Map<String, List<String>> prologueDeps) {
         this.graphs = graphs;
         this.indVars = indVars;
         this.isaProps = isaProps;
         this.tracker = tracker;
+        this.prologueDeps = prologueDeps;
 
         for (var graph : graphs) {
             applyTransforms(graph);

@@ -9,15 +9,20 @@ import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 public class InductionVariablesDetector extends APropertyDetector {
-    
+
     public InductionVariablesDetector(BinarySegment bb, List<Instruction> insts) {
         super(bb, insts);
+    }
+
+    public InductionVariablesDetector(BasicBlockOccurrenceTracker tracker) {
+        super(tracker);
     }
 
     public HashMap<String, Long> registerDiff(RegisterDump r1, RegisterDump r2) {
@@ -95,7 +100,8 @@ public class InductionVariablesDetector extends APropertyDetector {
         return sb.toString();
     }
 
-    public HashMap<String, Integer> detectVariables(Graph<AddressVertex, DefaultEdge> mergedGraph, boolean verbose) {
+    public HashMap<String, Integer> detectVariables(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs,
+            boolean verbose) {
         var res = new HashMap<String, Integer>();
         var regs = getTracker().getRegisters();
         String[][] fullRes = new String[regs.size()][4];
@@ -104,7 +110,7 @@ public class InductionVariablesDetector extends APropertyDetector {
             String reg = regs.get(i);
             var regIncrements = findIncrements();
 
-            boolean c1 = conditionPartOfAddress(reg, mergedGraph);
+            boolean c1 = conditionPartOfAddress(reg, graphs);
             boolean c2 = conditionHasIncrement(reg, regIncrements);
             boolean c3 = conditionIsInComparison(reg);
             if (c1 && c2 && c3)
@@ -132,11 +138,13 @@ public class InductionVariablesDetector extends APropertyDetector {
         }
     }
 
-    private boolean conditionPartOfAddress(String reg, Graph<AddressVertex, DefaultEdge> mergedGraph) {
-        for (var vertex : mergedGraph.vertexSet()) {
-            if (vertex.getType() == AddressVertexType.REGISTER) {
-                if (vertex.getLabel().equals(reg))
-                    return true;
+    private boolean conditionPartOfAddress(String reg, ArrayList<Graph<AddressVertex, DefaultEdge>> graphs) {
+        for (var graph : graphs) {
+            for (var vertex : graph.vertexSet()) {
+                if (vertex.getType() == AddressVertexType.REGISTER) {
+                    if (vertex.getLabel().equals(reg))
+                        return true;
+                }
             }
         }
         return false;
@@ -145,10 +153,10 @@ public class InductionVariablesDetector extends APropertyDetector {
     private boolean conditionHasIncrement(String reg, HashMap<String, Integer> map) {
         return map.containsKey(reg);
     }
-    
+
     private HashMap<String, Integer> findIncrements() {
         var map = new HashMap<String, Integer>();
-        
+
         for (var inst : getTracker().getBasicBlockInsts()) {
             if (inst.isAdd() || inst.isSub() || inst.isMul()) {
                 if (inst.getData().getOperands().size() == 3) {
