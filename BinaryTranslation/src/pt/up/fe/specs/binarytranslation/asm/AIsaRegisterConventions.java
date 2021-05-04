@@ -1,14 +1,20 @@
 package pt.up.fe.specs.binarytranslation.asm;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public abstract class AIsaRegisterConventions implements RegisterProperties {    
+public abstract class AIsaRegisterConventions implements RegisterProperties {
+    protected List<String> registers;
     protected List<String> parameters;
     protected List<String> temporaries;
     protected List<String> returnVals;
     protected String stackPointer;
     protected String zero;
+    
+    protected void setAllRegisters(String...regs) {
+        registers = Collections.unmodifiableList(Arrays.asList(regs));
+    }
     
     protected void setStackPointer(String reg) {
         stackPointer = reg;
@@ -19,15 +25,19 @@ public abstract class AIsaRegisterConventions implements RegisterProperties {
     }
 
     protected void setParameters(String... regs) {
-        parameters = Arrays.asList(regs);
+        parameters = Collections.unmodifiableList(Arrays.asList(regs));
     }
     
     protected void setTemporaries(String... regs) {
-        temporaries = Arrays.asList(regs);
+        temporaries = Collections.unmodifiableList(Arrays.asList(regs));
     }
     
     protected void setReturnVals(String... regs) {
-        returnVals = Arrays.asList(regs);
+        returnVals = Collections.unmodifiableList(Arrays.asList(regs));
+    }
+    
+    public List<String> getAllRegisters() {
+        return registers;
     }
 
     public List<String> getParameters() {
