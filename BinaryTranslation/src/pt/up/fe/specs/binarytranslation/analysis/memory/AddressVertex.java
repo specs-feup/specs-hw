@@ -6,6 +6,8 @@ public class AddressVertex {
         REGISTER,
         IMMEDIATE,
         MEMORY,
+        LOAD_TARGET,
+        STORE_TARGET,
         NULL
     };
     public enum AddressVertexProperty {
@@ -53,6 +55,10 @@ public class AddressVertex {
 
     public AddressVertexType getType() {
         return type;
+    }
+    
+    public void setType(AddressVertexType type) {
+        this.type = type;
     }
     
     @Override

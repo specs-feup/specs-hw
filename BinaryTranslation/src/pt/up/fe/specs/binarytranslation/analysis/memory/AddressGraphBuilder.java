@@ -30,44 +30,43 @@ public class AddressGraphBuilder {
         if (inst.getData().getOperands().size() == 3) {
             Operand target = inst.getData().getOperands().get(0);
             Operand op1 = inst.getData().getOperands().get(1);
-            Operand op2 = inst.getData().getOperands().get(2);    
+            Operand op2 = inst.getData().getOperands().get(2);
 
             String targetReg = AnalysisUtils.getRegName(target);
             String op1Reg = AnalysisUtils.getRegName(op1);
             String op2Reg = AnalysisUtils.getRegName(op2);
 
-            //Build memory access node
+            // Build memory access node
             var targetV = new AddressVertex(targetReg, AddressVertexType.REGISTER);
             targetV.setIsaInfo(AddressVertexIsaInfo.RD);
             var memAccessV = new AddressVertex(inst.isLoad() ? "Memory Access (load)" : "Memory Access (store)",
                     AddressVertexType.MEMORY);
             var sumV = new AddressVertex("+", AddressVertexType.OPERATION);
 
-            //Build rA graph
+            // Build rA graph
             var rABuilder = new PartialAddressGraphBuilder(op1Reg, startIdx - 1, basicBlock);
             var fullGraph = rABuilder.generateGraph();
             var rAV = rABuilder.getRoot();
             rAV.setIsaInfo(AddressVertexIsaInfo.RA);
 
-            //Add memory access to rA graph, and connect
+            // Add memory access to rA graph, and connect
             fullGraph.addVertex(targetV);
             fullGraph.addVertex(memAccessV);
             fullGraph.addVertex(sumV);
             fullGraph.addEdge(rAV, sumV);
             fullGraph.addEdge(sumV, memAccessV);
 
-            //Build rB graph
+            // Build rB graph
             if (op2.isImmediate()) {
                 String immVal = op2.getRepresentation();
                 var immV = new AddressVertex(immVal, AddressVertexType.IMMEDIATE);
-                
-                //TODO: assign BASE_ADDR and OFFSET when an IMM is present
+
+                // TODO: assign BASE_ADDR and OFFSET when an IMM is present
                 // Below assumption is not always true
                 // Use later transform for a more educated guess
                 rAV.setProperty(AddressVertexProperty.BASE_ADDR);
                 immV.setProperty(AddressVertexProperty.OFFSET);
 
-                
                 fullGraph.addVertex(immV);
                 fullGraph.addEdge(immV, sumV);
             } else {
@@ -76,19 +75,22 @@ public class AddressGraphBuilder {
                 Graphs.addGraph(fullGraph, rBGraph);
                 var rBV = rBBuilder.getRoot();
                 rBV.setIsaInfo(AddressVertexIsaInfo.RB);
-                
-                //Set rA and rB using MicroBlaze GCC conventions
+
+                // Set rA and rB using MicroBlaze GCC conventions
                 rAV.setProperty(AddressVertexProperty.OFFSET);
                 rBV.setProperty(AddressVertexProperty.BASE_ADDR);
                 fullGraph.addEdge(rBV, sumV);
             }
-            
+
             // Connect load/store destination/source register to the rest
-            if (inst.isLoad())
+            if (inst.isLoad()) {
                 fullGraph.addEdge(memAccessV, targetV);
-            else
+                targetV.setType(AddressVertexType.LOAD_TARGET);
+            } else {
                 fullGraph.addEdge(targetV, memAccessV);
-            
+                targetV.setType(AddressVertexType.STORE_TARGET);
+            }
+
             return fullGraph;
         }
         return null;
