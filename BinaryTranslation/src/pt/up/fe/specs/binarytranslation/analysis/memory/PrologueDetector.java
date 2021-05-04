@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.prologue;
+package pt.up.fe.specs.binarytranslation.analysis.memory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +8,6 @@ import java.util.Stack;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.memory.APropertyDetector;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
