@@ -18,6 +18,7 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformBase
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
+import pt.up.fe.specs.binarytranslation.analysis.prologue.PrologueDetector;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.util.SpecsLogs;
 
@@ -75,12 +76,8 @@ public class MemoryDisambiguator {
             System.out.println("Registers involved in address: " + filtered);
 
             // disambiguate
-            System.out.println("Trying to find source of address registers:\n");
-            var sourceDet = new RegisterSourceDetector(tracker);
-            for (var register : filtered) {
-                System.out.println(register + ":");
-                sourceDet.findSource(register);
-            }
+            System.out.println("TBD\n");
+            
 
             // Add memory function to report later
             var fun = MemoryAddressDetector.buildAddressFunction(graph, registers, indVars);
