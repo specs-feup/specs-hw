@@ -9,6 +9,8 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.specs.BinaryTranslation.ELFProvider;
 
+import pt.up.fe.specs.binarytranslation.analysis.inouts.InstructionSets;
+import pt.up.fe.specs.binarytranslation.analysis.inouts.SimpleBasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
@@ -41,6 +43,9 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
 
             // Print BB instructions
             handleBasicBlockSummary(bb);
+            
+            // Get Basic Block In/Outs
+            var inouts = handleInOuts(bb);
 
             // Prologue dependencies
             var prologueDeps = handlePrologueDependencies(tracker);
@@ -54,12 +59,19 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             // Memory disambiguation
             // handleMemoryDisambiguation(tracker, prologueDeps, graphs, indVars);
 
-            handleMemoryComparison(prologueDeps, graphs, indVars);
+            // Compare memory accesses
+            handleMemoryComparison(prologueDeps, graphs, indVars, inouts);
         }
+    }
+    
+    private InstructionSets handleInOuts(BinarySegment bb) {
+        var inoutFinder = new SimpleBasicBlockInOuts(bb);
+        inoutFinder.calculateInOuts();
+        return inoutFinder.getInouts();
     }
 
     private void handleMemoryComparison(Map<String, List<String>> prologueDeps,
-            ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars) {
+            ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars, InstructionSets inouts) {
         var loadGraphs = new ArrayList<Graph<AddressVertex, DefaultEdge>>();
         var storeGraphs = new ArrayList<Graph<AddressVertex, DefaultEdge>>();
         for (var graph : graphs) {
