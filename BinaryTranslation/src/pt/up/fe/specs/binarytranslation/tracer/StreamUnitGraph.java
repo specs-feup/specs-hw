@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.tracer;
 
 import java.io.StringWriter;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jgrapht.GraphType;
@@ -36,8 +37,20 @@ public class StreamUnitGraph extends AbstractBaseGraph<StreamUnit, StreamUnitEdg
      */
     private StreamUnit tailUnit;
 
+    /*
+     * create for interactive insertion
+     */
     public StreamUnitGraph() {
         super(null, SupplierUtil.createSupplier(StreamUnitEdge.class), GTYPE);
+    }
+
+    /*
+     * create from known list
+     */
+    public StreamUnitGraph(List<StreamUnit> units) {
+        this();
+        for (var unit : units)
+            this.insert(unit);
     }
 
     // TODO: add toDotty and toPNG to output interface class??
@@ -65,52 +78,6 @@ public class StreamUnitGraph extends AbstractBaseGraph<StreamUnit, StreamUnitEdg
         return writer.toString();
     }
 
-    // TODO: commented methods make sense for static analysis??
-    /*
-     * 
-    private void weightUpdate(StreamUnit newNode) {
-    
-        this.addVertex(newNode);
-        var allUnits = this.vertexSet();
-    
-        // if edge already exists, increment weigh
-        for (var unit : allUnits) {
-    
-            // a -> b
-            if (this.containsEdge(newNode, unit)) {
-                var e1 = this.getEdge(newNode, unit);
-                this.setEdgeWeight(e1, e1.getWeight() + 1);
-            }
-    
-            // b -> a
-            if (this.containsEdge(unit, newNode)) {
-                var e1 = this.getEdge(unit, newNode);
-                this.setEdgeWeight(e1, e1.getWeight() + 1);
-            }
-        }
-    }
-    
-    private void realInsert(StreamUnit newNode) {
-    
-        this.addVertex(newNode);
-        var allUnits = this.vertexSet();
-    
-        for (var unit : allUnits) {
-    
-            // insert newNode as child of candidate parent, if parent jumps to or precedes newNode
-            if (unit.jumpsTo(newNode) || unit.precedes(newNode) || newNode.includesTarget(unit)) {
-                var n = this.addEdge(unit, newNode);
-                this.setEdgeWeight(n, 1);
-            }
-    
-            // backwards jumps?
-            if ((newNode != unit) && (newNode.jumpsTo(unit) || unit.includesTarget(newNode))) {
-                var n = this.addEdge(newNode, unit);
-                this.setEdgeWeight(n, 1);
-            }
-        }
-    }
-    
     /*
      * Insert a new unit 
     */
@@ -138,19 +105,5 @@ public class StreamUnitGraph extends AbstractBaseGraph<StreamUnit, StreamUnitEdg
 
         // new tail
         this.tailUnit = newNode;
-
-        /*
-        /**
-         * first check if equal @StreamUnit exists if so, do not insert, and instead only check edge weights
-        
-        if (allUnits.contains(newNode)) {
-            weightUpdate(newNode);
-        }
-        
-        else {
-            realInsert(newNode);
-            this.tailUnit = newNode;
-        }
-        */
     }
 }

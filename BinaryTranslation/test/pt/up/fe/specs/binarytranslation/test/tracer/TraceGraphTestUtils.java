@@ -23,8 +23,8 @@ public class TraceGraphTestUtils {
 
             // Using JGraphT
             var graphGenerator = new StreamUnitGraphGenerator((TraceInstructionStream) istream);
-            var graph = graphGenerator.generateBasicBlockGraph(elf.getKernelStart(), elf.getKernelStop());
-            var pngName = "./output/" + elf.getFilename().replace(".elf", "_basic.png");
+            var graph = graphGenerator.generateInstructionGraph(elf.getKernelStart(), elf.getKernelStop());
+            var pngName = "./output/" + elf.getFilename().replace(".elf", "_inst.png");
             BinaryTranslationUtils.renderDotty(pngName, graph.toDotty());
 
         } catch (Exception e) {

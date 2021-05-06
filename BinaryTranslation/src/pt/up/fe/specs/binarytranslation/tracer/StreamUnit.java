@@ -25,6 +25,11 @@ public interface StreamUnit {
     public Long getTargetAddr();
 
     /*
+     * 
+     */
+    public boolean containsAddr(Long addr);
+
+    /*
      * True if addresses of two units follow
      * i.e. if "this" comes after "other" 
      */

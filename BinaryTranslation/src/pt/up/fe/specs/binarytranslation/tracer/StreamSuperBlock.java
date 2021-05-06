@@ -43,10 +43,20 @@ public class StreamSuperBlock extends AStreamUnit {
         return this.tbblist.get(this.tbblist.size() - 1).getEnd();
     }
 
+    @Override
+    public boolean containsAddr(Long addr) {
+        for (var tbb : this.tbblist) {
+            if (tbb.containsAddr(addr))
+                return true;
+        }
+        return false;
+    }
+
     /*
      * True if any instruction in this TraceUnit
      * includes the target of the "other"
      */
+    @Override
     public boolean includesTarget(StreamUnit other) {
         for (var tbb : this.tbblist) {
             if (tbb.includesTarget(other))

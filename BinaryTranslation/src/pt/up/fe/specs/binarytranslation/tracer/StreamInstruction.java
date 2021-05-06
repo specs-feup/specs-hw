@@ -43,10 +43,16 @@ public class StreamInstruction extends AStreamUnit {
         return this.inst;
     }
 
+    @Override
+    public boolean containsAddr(Long addr) {
+        return this.inst.getAddress().longValue() == addr.longValue();
+    }
+
     /*
      * True if any instruction in this TraceUnit
      * includes the target of the "other"
      */
+    @Override
     public boolean includesTarget(StreamUnit other) {
         var otherTargetAddr = other.getTargetAddr();
         return this.inst.getAddress().longValue() == otherTargetAddr.longValue();
