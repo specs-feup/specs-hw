@@ -41,6 +41,15 @@ public class StreamBasicBlock extends AStreamUnit {
         return this.tilist.get(this.tilist.size() - 1).getActual();
     }
 
+    @Override
+    public boolean containsAddr(Long addr) {
+        for (var tinst : this.tilist) {
+            if (tinst.getActual().getAddress().longValue() == addr.longValue())
+                return true;
+        }
+        return false;
+    }
+
     /*
      * True if any instruction in this TraceUnit
      * includes the target of the "other"
