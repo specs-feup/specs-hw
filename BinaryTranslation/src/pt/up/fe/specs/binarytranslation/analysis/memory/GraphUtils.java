@@ -56,6 +56,35 @@ public class GraphUtils {
         return res;
     }
 
+    public static AddressVertex getBaseAddr(Graph<AddressVertex, DefaultEdge> graph) {
+        for (var v : graph.vertexSet()) {
+            if (v.getProperty() == AddressVertexProperty.BASE_ADDR)
+                return v;
+        }
+        return null;
+    }
+    
+    public static AddressVertex getOffset(Graph<AddressVertex, DefaultEdge> graph) {
+        for (var v : graph.vertexSet()) {
+            if (v.getProperty() == AddressVertexProperty.OFFSET)
+                return v;
+        }
+        return null;
+    }
+    
+    public static AddressVertex getExpressionStart(Graph<AddressVertex, DefaultEdge> graph) {
+        AddressVertex start = null;
+        for (var v : graph.vertexSet()) {
+            if (v.getType() == AddressVertexType.MEMORY)
+                start = v;
+        }
+        for (var v : getParents(graph, start)) {
+            if (v.getIsaInfo() != AddressVertexIsaInfo.RD) 
+                return v;
+        }
+        return AddressVertex.nullVertex;
+    }
+    
     public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph) {
         DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexAttributeProvider((v) -> {
