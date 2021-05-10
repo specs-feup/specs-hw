@@ -185,4 +185,8 @@ public class AnalysisUtils {
             System.out.println(inst.getAddress() + ": " + inst.getRepresentation());
         }
     }
+    
+    public static String hexToDec(String hex) {
+        return "" + Integer.decode(hex);
+    }
 }
