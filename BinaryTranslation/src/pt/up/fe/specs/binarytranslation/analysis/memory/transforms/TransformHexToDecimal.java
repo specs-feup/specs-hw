@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.analysis.memory.transforms;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
+import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 
@@ -18,10 +19,8 @@ public class TransformHexToDecimal extends AGraphTransform {
             if (v.getType() == AddressVertexType.IMMEDIATE) {
                 var label = v.getLabel();
                 if (label.startsWith("0x")) {
-                    int n = Integer.decode(label);
-                    v.setLabel(Integer.toString(n));
+                    v.setLabel(AnalysisUtils.hexToDec(label));
                 }
-                    
             }
         }
         return g;
