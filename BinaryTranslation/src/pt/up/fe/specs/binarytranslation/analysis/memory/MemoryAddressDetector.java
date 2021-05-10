@@ -45,8 +45,8 @@ public class MemoryAddressDetector extends APropertyDetector {
 
     public static String buildMemoryExpression(Graph<AddressVertex, DefaultEdge> graph, AddressVertex root) {
         var sb = new StringBuilder();
-
-        if (root.getType() == AddressVertexType.REGISTER) {
+        
+        if (root.getType() == AddressVertexType.LOAD_TARGET) {
             sb.append(root.getLabel()).append(" <- mem[");
 
             var start = GraphUtils.getParents(graph, GraphUtils.getParents(graph, root).get(0)).get(0);

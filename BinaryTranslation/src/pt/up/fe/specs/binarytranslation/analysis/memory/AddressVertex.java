@@ -44,6 +44,14 @@ public class AddressVertex {
         this(label, type);
         this.isaInfo = isaInfo;
     }
+    
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+        sb.append("Vertex ").append(label).append(", type=").append(type).append(", property=")
+        .append(property).append(", isaInfo=").append(isaInfo);
+        return sb.toString();
+    }
 
     public String getLabel() {
         return label;
@@ -59,11 +67,6 @@ public class AddressVertex {
     
     public void setType(AddressVertexType type) {
         this.type = type;
-    }
-    
-    @Override
-    public String toString() {
-        return getLabel() + " - " + getType();
     }
 
     public AddressVertexProperty getProperty() {
