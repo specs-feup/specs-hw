@@ -25,6 +25,7 @@ public class AddressVertex {
     }
     
     private String label;
+    private boolean keep = false;
     private AddressVertexType type;
     private AddressVertexProperty property = AddressVertexProperty.NULL;
     private AddressVertexIsaInfo isaInfo = AddressVertexIsaInfo.NULL;
@@ -83,5 +84,13 @@ public class AddressVertex {
 
     public void setIsaInfo(AddressVertexIsaInfo isaInfo) {
         this.isaInfo = isaInfo;
+    }
+
+    public boolean isKeep() {
+        return keep;
+    }
+
+    public void setKeep(boolean keep) {
+        this.keep = keep;
     }
 }
