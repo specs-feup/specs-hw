@@ -25,7 +25,7 @@ public class PrologueDetector extends APropertyDetector {
         int i = getTracker().getOccurrences().get(0).getStartPos();
         var stack = new Stack<Instruction>();
         int stop = i - depth;
-        
+
         while (i >= stop) {
             var inst = getTracker().getTrace().get(i);
             stack.add(inst);
@@ -33,7 +33,7 @@ public class PrologueDetector extends APropertyDetector {
         }
         return new ArrayList<Instruction>(stack);
     }
-    
+
     private Map<String, List<String>> getRegisterInitState() {
         var regs = props.getAllRegisters();
         var regState = new HashMap<String, List<String>>();
@@ -42,11 +42,11 @@ public class PrologueDetector extends APropertyDetector {
         }
         return regState;
     }
-    
+
     public Map<String, List<String>> getRegisterState() {
         var prologue = findPrologue();
         var state = getRegisterInitState();
-        
+
         for (var inst : prologue) {
             if (inst.isLogical() || inst.isAdd() || inst.isSub() || inst.isMul() /*|| inst.isUnary()*/) {
                 var opRD = inst.getData().getOperands().get(0);
@@ -61,7 +61,15 @@ public class PrologueDetector extends APropertyDetector {
     private Map<String, List<String>> cleanState(Map<String, List<String>> state) {
         for (var key : state.keySet()) {
             var regList = state.get(key);
-            regList = regList.stream().distinct().collect(Collectors.toList());
+            var cleansed = regList.stream().distinct().collect(Collectors.toList());
+            for (int i = 0; i < cleansed.size(); i++) {
+                var elem = cleansed.get(i);
+                if (elem.contains("0x"))
+                    cleansed.set(i, AnalysisUtils.hexToDec(elem));
+                if (props.isZero(elem))
+                    cleansed.set(i, "0");
+            }
+            state.put(key, cleansed);
         }
         return state;
     }
@@ -70,18 +78,24 @@ public class PrologueDetector extends APropertyDetector {
         var preexisting = state.get(rD);
         for (int i = 1; i < inst.getData().getOperands().size(); i++) {
             var op = inst.getData().getOperands().get(i);
-            var opReg = AnalysisUtils.getRegName(op);
-            var opPreexisting = state.get(opReg);
-            if (opPreexisting.size() == 0) {
-                preexisting.add(opReg);
+            if (op.isRegister()) {
+
+                var opReg = AnalysisUtils.getRegName(op);
+                var opPreexisting = state.get(opReg);
+
+                if (opPreexisting.size() == 0) {
+                    preexisting.add(opReg);
+                } else {
+                    preexisting.addAll(opPreexisting);
+                }
             }
-            else {
-                preexisting.addAll(opPreexisting);
+            if (op.isImmediate()) {
+                preexisting.add(op.getRepresentation());
             }
         }
         return preexisting;
     }
-    
+
     public static void printPrologueState(Map<String, List<String>> state) {
         System.out.println("Prologue state with window = " + depth);
         for (var key : state.keySet()) {
