@@ -1,7 +1,11 @@
 package pt.up.fe.specs.binarytranslation.analysis.memory;
 
+import java.awt.Desktop;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,6 +26,7 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVer
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * Class with static methods to manipulate memory address graphs
@@ -176,5 +181,37 @@ public class GraphUtils {
         for (var v : path)
             strPath.add(v.getLabel());
         return String.join("->", strPath);
+    }
+
+    public static String generateGraphURL(String dotGraph) {
+        String base = "https://dreampuf.github.io/GraphvizOnline/#";
+        try {
+            URI uri;
+            uri = new URI(
+                    base,
+                    dotGraph,
+                    null);
+            String url = uri.toASCIIString();
+            url = url.replace("#:", "#");
+            return url;
+        } catch (URISyntaxException e) {
+            SpecsLogs.warn("Error message:\n", e);
+        }
+        return base;
+    }
+
+    public static void openGraphInBrowser(String dotGraph) {
+        Desktop desktop = java.awt.Desktop.getDesktop();
+        try {
+            // specify the protocol along with the URL
+            URI oURL = new URI(
+                    "https://dreampuf.github.io/GraphvizOnline/#",
+                    dotGraph,
+                    null);
+            desktop.browse(oURL);
+        } catch (URISyntaxException | IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

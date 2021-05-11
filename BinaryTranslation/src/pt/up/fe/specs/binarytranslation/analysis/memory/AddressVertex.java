@@ -8,6 +8,7 @@ public class AddressVertex {
         MEMORY,
         LOAD_TARGET,
         STORE_TARGET,
+        CHECK,
         NULL
     };
     public enum AddressVertexProperty {

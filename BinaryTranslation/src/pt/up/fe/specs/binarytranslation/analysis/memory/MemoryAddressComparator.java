@@ -23,7 +23,7 @@ import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 
 public class MemoryAddressComparator {
 
@@ -41,7 +41,33 @@ public class MemoryAddressComparator {
     public boolean compare(Graph<AddressVertex, DefaultEdge> load, Graph<AddressVertex, DefaultEdge> store) {
         var reducedLoad = treeSubtract(load, store);
         var reducedStore = treeSubtract(store, load);
+        
+        printComparisonGraph(reducedLoad, reducedStore);
 
+        return compareSimplifiedGraphs(reducedLoad, reducedStore);
+    }
+
+    private void printComparisonGraph(Graph<AddressVertex, DefaultEdge> reducedLoad,
+            Graph<AddressVertex, DefaultEdge> reducedStore) {
+        var loadRoot = GraphUtils.findGraphRoot(reducedLoad);
+        var storeRoot = GraphUtils.findGraphRoot(reducedStore);
+        
+        Graph<AddressVertex, DefaultEdge> merged = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graphs.addGraph(merged, reducedLoad);
+        Graphs.addGraph(merged, reducedStore);
+        
+        var comparison = new AddressVertex("Check if equal", AddressVertexType.CHECK);
+        merged.addVertex(comparison);
+        merged.addEdge(loadRoot, comparison);
+        merged.addEdge(storeRoot, comparison);
+        
+        var dot = GraphUtils.graphToDot(merged);
+        System.out.println(GraphUtils.generateGraphURL(dot));
+    }
+
+    private boolean compareSimplifiedGraphs(Graph<AddressVertex, DefaultEdge> reducedLoad,
+            Graph<AddressVertex, DefaultEdge> reducedStore) {
+        // TODO Auto-generated method stub
         return false;
     }
 
@@ -58,12 +84,8 @@ public class MemoryAddressComparator {
         // Use post-order traversal!!!
         postOrderTraversal(mainClone, mainStart, sub, subStart);
 
-
         // Remove stuff after memory access, not really important
         removeExtraNodes(mainStart, mainClone);
-        
-        var dot = GraphUtils.graphToDot(mainClone);
-        System.out.println(AnalysisUtils.generateGraphURL(dot));
 
         return mainClone;
     }

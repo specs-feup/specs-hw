@@ -96,7 +96,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
         var graphs = mad.detectGraphs();
         var mergedGraph = GraphUtils.mergeGraphs(graphs);
         String sgraph = GraphUtils.graphToDot(mergedGraph);
-        var url = AnalysisUtils.generateGraphURL(sgraph);
+        var url = GraphUtils.generateGraphURL(sgraph);
 
         System.out.println("Graph URL:\n" + url + "\n");
         printExpressions(graphs);
