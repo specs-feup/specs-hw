@@ -1,9 +1,5 @@
 package pt.up.fe.specs.binarytranslation.analysis;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
@@ -24,7 +20,6 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.util.SpecsLogs;
 
 public class AnalysisUtils {
     private static HashMap<String, String> enumToSymbol;
@@ -146,38 +141,6 @@ public class AnalysisUtils {
         // Sort array with custom comparator
         Collections.sort(newList, regCompare);
         return newList;
-    }
-
-    public static void openGraphInBrowser(String dotGraph) {
-        Desktop desktop = java.awt.Desktop.getDesktop();
-        try {
-            // specify the protocol along with the URL
-            URI oURL = new URI(
-                    "https://dreampuf.github.io/GraphvizOnline/#",
-                    dotGraph,
-                    null);
-            desktop.browse(oURL);
-        } catch (URISyntaxException | IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    public static String generateGraphURL(String dotGraph) {
-        String base = "https://dreampuf.github.io/GraphvizOnline/#";
-        try {
-            URI uri;
-            uri = new URI(
-                    base,
-                    dotGraph,
-                    null);
-            String url = uri.toASCIIString();
-            url = url.replace("#:", "#");
-            return url;
-        } catch (URISyntaxException e) {
-            SpecsLogs.warn("Error message:\n", e);
-        }
-        return base;
     }
 
     public static void printInstructionList(ArrayList<Instruction> insts) {
