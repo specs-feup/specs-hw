@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.EdgeReversedGraph;
@@ -61,7 +62,7 @@ public class GraphUtils {
             if (v.getProperty() == AddressVertexProperty.BASE_ADDR)
                 return v;
         }
-        return null;
+        return AddressVertex.nullVertex;
     }
     
     public static AddressVertex getOffset(Graph<AddressVertex, DefaultEdge> graph) {
@@ -69,7 +70,15 @@ public class GraphUtils {
             if (v.getProperty() == AddressVertexProperty.OFFSET)
                 return v;
         }
-        return null;
+        return AddressVertex.nullVertex;
+    }
+    
+    public static AddressVertex getMemoryOp(Graph<AddressVertex, DefaultEdge> graph) {
+        for (var v : graph.vertexSet()) {
+            if (v.getType() == AddressVertexType.MEMORY)
+                return v;
+        }
+        return AddressVertex.nullVertex;
     }
     
     public static AddressVertex getExpressionStart(Graph<AddressVertex, DefaultEdge> graph) {
@@ -157,5 +166,15 @@ public class GraphUtils {
                 ret.add(v);
         }
         return ret;
+    }
+
+    public static String pathBetweenTwoVertices(Graph<AddressVertex, DefaultEdge> graph, AddressVertex source, AddressVertex sink) {
+        var dijkstra = new DijkstraShortestPath<AddressVertex, DefaultEdge>(graph);
+        var path = dijkstra.getPath(source, sink).getVertexList();
+        
+        var strPath = new ArrayList<String>();
+        for (var v : path)
+            strPath.add(v.getLabel());
+        return String.join("->", strPath);
     }
 }
