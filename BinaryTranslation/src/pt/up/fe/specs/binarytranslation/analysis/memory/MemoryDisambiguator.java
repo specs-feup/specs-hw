@@ -22,6 +22,7 @@ import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrence
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.util.SpecsLogs;
 
+@Deprecated
 public class MemoryDisambiguator {
 
     private ArrayList<Graph<AddressVertex, DefaultEdge>> graphs;

@@ -11,7 +11,7 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 
 public class TransformBaseAddress extends AGraphTransform {
 
-    protected TransformBaseAddress(Graph<AddressVertex, DefaultEdge> graph) {
+    public TransformBaseAddress(Graph<AddressVertex, DefaultEdge> graph) {
         super(graph);
     }
 

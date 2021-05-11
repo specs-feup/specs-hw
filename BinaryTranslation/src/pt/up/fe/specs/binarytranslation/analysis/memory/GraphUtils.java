@@ -36,7 +36,7 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class GraphUtils {
 
-    public static Graph<AddressVertex, DefaultEdge> mergeGraphs(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs) {
+    public static Graph<AddressVertex, DefaultEdge> mergeGraphs(List<Graph<AddressVertex, DefaultEdge>> graphs) {
         Graph<AddressVertex, DefaultEdge> merged = new DefaultDirectedGraph<>(DefaultEdge.class);
         for (var graph : graphs) {
             Graphs.addGraph(merged, graph);
@@ -69,7 +69,7 @@ public class GraphUtils {
         }
         return AddressVertex.nullVertex;
     }
-    
+
     public static AddressVertex getOffset(Graph<AddressVertex, DefaultEdge> graph) {
         for (var v : graph.vertexSet()) {
             if (v.getProperty() == AddressVertexProperty.OFFSET)
@@ -77,7 +77,7 @@ public class GraphUtils {
         }
         return AddressVertex.nullVertex;
     }
-    
+
     public static AddressVertex getMemoryOp(Graph<AddressVertex, DefaultEdge> graph) {
         for (var v : graph.vertexSet()) {
             if (v.getType() == AddressVertexType.MEMORY)
@@ -85,7 +85,7 @@ public class GraphUtils {
         }
         return AddressVertex.nullVertex;
     }
-    
+
     public static AddressVertex getExpressionStart(Graph<AddressVertex, DefaultEdge> graph) {
         AddressVertex start = null;
         for (var v : graph.vertexSet()) {
@@ -93,23 +93,23 @@ public class GraphUtils {
                 start = v;
         }
         for (var v : getParents(graph, start)) {
-            if (v.getIsaInfo() != AddressVertexIsaInfo.RD) 
+            if (v.getIsaInfo() != AddressVertexIsaInfo.RD)
                 return v;
         }
         return AddressVertex.nullVertex;
     }
-    
+
     public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph) {
         DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexAttributeProvider((v) -> {
             Map<String, Attribute> map = new LinkedHashMap<>();
-            
+
             String label = v.getLabel();
             if (v.getIsaInfo() != AddressVertexIsaInfo.NULL)
                 label += "\n{" + v.getIsaInfo() + "}";
-            if (v.getProperty() != AddressVertexProperty.NULL) 
+            if (v.getProperty() != AddressVertexProperty.NULL)
                 label += "\n{" + v.getProperty() + "}";
-            
+
             map.put("label", DefaultAttribute.createAttribute(label));
             map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
             return map;
@@ -138,7 +138,7 @@ public class GraphUtils {
         }
         return res;
     }
-    
+
     public static ArrayList<AddressVertex> findAllNodesWithIsaInfo(Graph<AddressVertex, DefaultEdge> graph,
             AddressVertexIsaInfo isaInfo) {
         var res = new ArrayList<AddressVertex>();
@@ -148,23 +148,25 @@ public class GraphUtils {
         }
         return res;
     }
-    
-    public static ArrayList<AddressVertex> findAllPredecessors(Graph<AddressVertex, DefaultEdge> graph, AddressVertex v) {
-        var reversed = new EdgeReversedGraph<AddressVertex, DefaultEdge> (graph);
+
+    public static ArrayList<AddressVertex> findAllPredecessors(Graph<AddressVertex, DefaultEdge> graph,
+            AddressVertex v) {
+        var reversed = new EdgeReversedGraph<AddressVertex, DefaultEdge>(graph);
         return findAllSuccessors(reversed, v);
     }
-    
+
     public static ArrayList<AddressVertex> findAllSuccessors(Graph<AddressVertex, DefaultEdge> graph, AddressVertex v) {
-        var iter = new BreadthFirstIterator<AddressVertex, DefaultEdge> (graph, v);
+        var iter = new BreadthFirstIterator<AddressVertex, DefaultEdge>(graph, v);
         var res = new ArrayList<AddressVertex>();
-        
+
         while (iter.hasNext()) {
             res.add(iter.next());
-        } 
+        }
         return res;
     }
 
-    public static List<AddressVertex> getVerticesWithType(Graph<AddressVertex, DefaultEdge> graph, AddressVertexType type) {
+    public static List<AddressVertex> getVerticesWithType(Graph<AddressVertex, DefaultEdge> graph,
+            AddressVertexType type) {
         var ret = new ArrayList<AddressVertex>();
         for (var v : graph.vertexSet()) {
             if (v.getType() == type)
@@ -173,12 +175,17 @@ public class GraphUtils {
         return ret;
     }
 
-    public static String pathBetweenTwoVertices(Graph<AddressVertex, DefaultEdge> graph, AddressVertex source, AddressVertex sink) {
+    public static String pathBetweenTwoVertices(Graph<AddressVertex, DefaultEdge> graph, AddressVertex source,
+            AddressVertex sink) {
         var dijkstra = new DijkstraShortestPath<AddressVertex, DefaultEdge>(graph);
-        var path = dijkstra.getPath(source, sink).getVertexList();
-        
+        var path = dijkstra.getPath(source, sink);
+        if (path == null) {
+            return "No path";
+        }
+        var pathList = path.getVertexList();
+
         var strPath = new ArrayList<String>();
-        for (var v : path)
+        for (var v : pathList)
             strPath.add(v.getLabel());
         return String.join("->", strPath);
     }

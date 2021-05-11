@@ -62,7 +62,8 @@ public class MemoryAddressComparator {
         merged.addEdge(storeRoot, comparison);
         
         var dot = GraphUtils.graphToDot(merged);
-        System.out.println(GraphUtils.generateGraphURL(dot));
+        var url = GraphUtils.generateGraphURL(dot);
+        System.out.println("Alias check graph: " + url);
     }
 
     private boolean compareSimplifiedGraphs(Graph<AddressVertex, DefaultEdge> reducedLoad,

@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.analysis;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,10 @@ import pt.up.fe.specs.binarytranslation.analysis.inouts.InstructionSets;
 import pt.up.fe.specs.binarytranslation.analysis.inouts.SimpleBasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.AGraphTransform;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformBaseAddress;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.InductionVariablesDetector;
 import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressComparator;
@@ -24,9 +29,15 @@ import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
+import pt.up.fe.specs.util.SpecsLogs;
 
 public class MemoryAddressAnalyzer extends ATraceAnalyzer {
     private RegisterProperties isaProps;
+    private Class<?> transforms[] = {
+            TransformBaseAddress.class,
+            TransformHexToDecimal.class,
+            TransformShiftsToMult.class
+    };
 
     public MemoryAddressAnalyzer(ATraceInstructionStream stream, ELFProvider elf, RegisterProperties isaProps) {
         super(stream, elf);
@@ -43,7 +54,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
 
             // Print BB instructions
             handleBasicBlockSummary(bb);
-            
+
             // Get Basic Block In/Outs
             var inouts = handleInOuts(bb);
 
@@ -53,25 +64,52 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             // Memory graphs
             var graphs = handleMemoryGraphs(insts, bb);
 
+            // Clean up memory graphs
+            cleanUpGraphs(graphs);
+
             // Induction variables
             var indVars = handleInductionVariables(tracker, graphs);
 
-            // Memory disambiguation
-            // handleMemoryDisambiguation(tracker, prologueDeps, graphs, indVars);
-
-            // Compare memory accesses
+            // Check alias for every RAW dependency
             handleMemoryComparison(prologueDeps, graphs, indVars, inouts);
         }
     }
-    
+
     private InstructionSets handleInOuts(BinarySegment bb) {
         var inoutFinder = new SimpleBasicBlockInOuts(bb);
         inoutFinder.calculateInOuts();
         return inoutFinder.getInouts();
     }
 
+    private void cleanUpGraphs(List<Graph<AddressVertex, DefaultEdge>> graphs) {
+        for (var graph : graphs) {
+            // for (var cl : transforms) {
+            // try {
+            // Constructor<?> cons = cl.getConstructor(cl);
+            // var trans = (AGraphTransform) cons.newInstance(graph);
+            // trans.applyToGraph();
+            //
+            // } catch (Exception e) {
+            // SpecsLogs.warn("Error message:\n", e);
+            // }
+            // }
+            //var t1 = new TransformBaseAddress(graph);
+            //t1.applyToGraph();
+            var t2 = new TransformHexToDecimal(graph);
+            t2.applyToGraph();
+            var t3 = new TransformShiftsToMult(graph);
+            t3.applyToGraph();
+        }
+
+        var mergedGraph = GraphUtils.mergeGraphs(graphs);
+        String sgraph = GraphUtils.graphToDot(mergedGraph);
+        var url = GraphUtils.generateGraphURL(sgraph);
+        System.out.println("Graph URL:\n" + url + "\n");
+    }
+
     private void handleMemoryComparison(Map<String, List<String>> prologueDeps,
-            ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars, InstructionSets inouts) {
+            ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars,
+            InstructionSets inouts) {
         var loadGraphs = new ArrayList<Graph<AddressVertex, DefaultEdge>>();
         var storeGraphs = new ArrayList<Graph<AddressVertex, DefaultEdge>>();
         for (var graph : graphs) {
@@ -80,12 +118,18 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             else
                 storeGraphs.add(graph);
         }
-        
+
         var comparator = new MemoryAddressComparator(prologueDeps, graphs, indVars);
-        for (var store : storeGraphs) {
-            for (var load : loadGraphs) {
+        for (int i = 0; i < storeGraphs.size(); i++) {
+            var store = storeGraphs.get(i);
+
+            for (int j = 0; j < loadGraphs.size(); j++) {
+                var load = loadGraphs.get(j);
+
+                System.out.println("Alias check for load/store pair L" + j + "-S" + i + ":");
                 var noConflict = comparator.compare(load, store);
-                System.out.println(noConflict ? "No conflict" : "Conflict");
+                System.out.println(noConflict ? "No alias" : "Possible alias");
+                AnalysisUtils.printSeparator(20);
             }
         }
     }
@@ -94,11 +138,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
         System.out.println("\nCalculating memory address graphs...");
         var mad = new MemoryAddressDetector(bb, insts);
         var graphs = mad.detectGraphs();
-        var mergedGraph = GraphUtils.mergeGraphs(graphs);
-        String sgraph = GraphUtils.graphToDot(mergedGraph);
-        var url = GraphUtils.generateGraphURL(sgraph);
 
-        System.out.println("Graph URL:\n" + url + "\n");
         printExpressions(graphs);
         AnalysisUtils.printSeparator(40);
         return graphs;
@@ -110,6 +150,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
         AnalysisUtils.printSeparator(40);
     }
 
+    @Deprecated
     private void handleMemoryDisambiguation(BasicBlockOccurrenceTracker tracker, Map<String, List<String>> prologueDeps,
             ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars) {
         var memDis = new MemoryDisambiguator(graphs, indVars, isaProps, tracker, prologueDeps);
