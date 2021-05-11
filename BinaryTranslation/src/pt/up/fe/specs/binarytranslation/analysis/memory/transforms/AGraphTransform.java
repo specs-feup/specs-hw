@@ -8,7 +8,7 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 public abstract class AGraphTransform {
     protected Graph<AddressVertex, DefaultEdge> graph;
     
-    protected AGraphTransform(Graph<AddressVertex, DefaultEdge> graph) {
+    public AGraphTransform(Graph<AddressVertex, DefaultEdge> graph) {
         this.graph = graph;
     }
     
