@@ -177,6 +177,11 @@ public class GraphUtils {
 
     public static String pathBetweenTwoVertices(Graph<AddressVertex, DefaultEdge> graph, AddressVertex source,
             AddressVertex sink) {
+        return pathBetweenTwoVertices(graph, source, sink, 0);
+    }
+    
+    public static String pathBetweenTwoVertices(Graph<AddressVertex, DefaultEdge> graph, AddressVertex source,
+            AddressVertex sink, int limit) {
         var dijkstra = new DijkstraShortestPath<AddressVertex, DefaultEdge>(graph);
         var path = dijkstra.getPath(source, sink);
         if (path == null) {
@@ -187,7 +192,11 @@ public class GraphUtils {
         var strPath = new ArrayList<String>();
         for (var v : pathList)
             strPath.add(v.getLabel());
-        return String.join("->", strPath);
+        
+        if (limit == 0 || limit > strPath.size())
+            return String.join("->", strPath);
+        else
+            return String.join("->", strPath.subList(0, limit));
     }
 
     public static String generateGraphURL(String dotGraph) {

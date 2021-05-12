@@ -28,15 +28,20 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 
 public class TransformRemoveTemporaryVertices extends AGraphTransform {
-
+    private AddressVertexType type = AddressVertexType.REGISTER;
+    
     public TransformRemoveTemporaryVertices(Graph<AddressVertex, DefaultEdge> graph) {
         super(graph);
-        // TODO Auto-generated constructor stub
+    }
+    
+    public TransformRemoveTemporaryVertices(Graph<AddressVertex, DefaultEdge> graph, AddressVertexType type) {
+        super(graph);
+        this.type = type;
     }
 
     @Override
     protected Graph<AddressVertex, DefaultEdge> applyTransform(Graph<AddressVertex, DefaultEdge> g) {
-        var regs = GraphUtils.getVerticesWithType(g, AddressVertexType.REGISTER);
+        var regs = GraphUtils.getVerticesWithType(g, type);
         var toRemove = new ArrayList<AddressVertex>();
         
         for (var v : regs) {
@@ -53,7 +58,12 @@ public class TransformRemoveTemporaryVertices extends AGraphTransform {
                     outVertex = g.getEdgeTarget(e);
                 }
                 
-                if (inVertex.getType() == AddressVertexType.OPERATION && outVertex.getType() == AddressVertexType.OPERATION) {
+                if (type == AddressVertexType.REGISTER) {
+                    if (inVertex.getType() == AddressVertexType.OPERATION && outVertex.getType() == AddressVertexType.OPERATION) {
+                        toRemove.add(v);
+                        graph.addEdge(inVertex, outVertex);
+                    }
+                } else {
                     toRemove.add(v);
                     graph.addEdge(inVertex, outVertex);
                 }

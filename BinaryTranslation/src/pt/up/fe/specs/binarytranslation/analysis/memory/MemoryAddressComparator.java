@@ -24,6 +24,8 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveOrphanOperations;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveTemporaryVertices;
 
 public class MemoryAddressComparator {
 
@@ -85,8 +87,16 @@ public class MemoryAddressComparator {
         // Use post-order traversal!!!
         postOrderTraversal(mainClone, mainStart, sub, subStart);
 
-        // Remove stuff after memory access, not really important
+        // Remove stuff after the memory access
         removeExtraNodes(mainStart, mainClone);
+        
+        // Remove orphan operation vertices
+        var trans1 = new TransformRemoveOrphanOperations(mainClone);
+        trans1.applyToGraph();
+        
+        // Remove intermediary operation vertices
+        var trans2 = new TransformRemoveTemporaryVertices(mainClone, AddressVertexType.OPERATION);
+        trans2.applyToGraph();
 
         return mainClone;
     }
@@ -123,6 +133,9 @@ public class MemoryAddressComparator {
 
         // Do the comparison to mainClone, and remove if it exists
         var subStart = GraphUtils.getExpressionStart(sub);
+        //THIS SOLVES ALL THE PROBLEMS, IT'S A MIRACLE
+        if (currVertex.getType() == AddressVertexType.OPERATION)
+            return;
         AddressVertex toRemove = treeHasVertex(mainClone, sub, currVertex, mainStart, subStart);
         if (toRemove != AddressVertex.nullVertex)
             mainClone.removeVertex(toRemove);
@@ -135,8 +148,10 @@ public class MemoryAddressComparator {
 
         for (var v : mainClone.vertexSet()) {
             if (v.getLabel().equals(currVertex.getLabel())) {
-                String path1 = GraphUtils.pathBetweenTwoVertices(sub, currVertex, subStart);
-                String path2 = GraphUtils.pathBetweenTwoVertices(mainClone, v, mainStart);
+                String path1 = GraphUtils.pathBetweenTwoVertices(sub, currVertex, subStart, 3);
+                String path2 = GraphUtils.pathBetweenTwoVertices(mainClone, v, mainStart, 3);
+                System.out.println(path1);
+                System.out.println(path2);
                 if (path1.equals(path2))
                     ret = v;
             }
