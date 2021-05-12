@@ -36,8 +36,12 @@ public class TransformRemoveOrphanOperations extends AGraphTransform {
         var toRemove = new ArrayList<AddressVertex>();
         
         for (var v : g.vertexSet()) {
-            if (v.getType() == AddressVertexType.OPERATION && g.inDegreeOf(v) == 0)
-                toRemove.add(v);
+            if (v.getType() == AddressVertexType.OPERATION) {
+                if (g.inDegreeOf(v) == 0)
+                    toRemove.add(v);
+                if (g.inDegreeOf(v) == 1 && g.outDegreeOf(v) == 0)
+                    toRemove.add(v);
+            }
         }
         g.removeAllVertices(toRemove);
         return g;

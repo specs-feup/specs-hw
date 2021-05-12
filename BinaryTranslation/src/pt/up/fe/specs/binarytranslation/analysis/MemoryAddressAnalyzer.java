@@ -122,7 +122,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
                 storeGraphs.add(graph);
         }
 
-        var comparator = new MemoryAddressComparator(prologueDeps, graphs, indVars);
+        var comparator = new MemoryAddressComparator(prologueDeps, graphs, indVars, isaProps);
         for (int i = 0; i < storeGraphs.size(); i++) {
             var store = storeGraphs.get(i);
 

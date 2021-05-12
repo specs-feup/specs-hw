@@ -107,7 +107,7 @@ public class MemoryAddressDetector extends APropertyDetector {
         return sb.toString();
     }
 
-    private static String buildAddressExpression(Graph<AddressVertex, DefaultEdge> graph, AddressVertex current, boolean first) {
+    public static String buildAddressExpression(Graph<AddressVertex, DefaultEdge> graph, AddressVertex current, boolean first) {
 
         if (current.getType() == AddressVertexType.IMMEDIATE) {
             return current.getLabel();
@@ -119,7 +119,7 @@ public class MemoryAddressDetector extends APropertyDetector {
             else
                 return buildAddressExpression(graph, parents.get(0), false);
         }
-        if (current.getType() == AddressVertexType.OPERATION) {
+        if (current.getType() == AddressVertexType.OPERATION || current.getType() == AddressVertexType.CHECK) {
             var parents = GraphUtils.getParents(graph, current);
             String s1 = "";
             String s2 = "";
