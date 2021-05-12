@@ -26,18 +26,21 @@ import org.jgrapht.graph.DefaultEdge;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveOrphanOperations;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveTemporaryVertices;
+import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 
 public class MemoryAddressComparator {
 
     private Map<String, List<String>> prologueDeps;
     private ArrayList<Graph<AddressVertex, DefaultEdge>> graphs;
     private HashMap<String, Integer> indVars;
+    private RegisterProperties isaProps;
 
     public MemoryAddressComparator(Map<String, List<String>> prologueDeps,
-            ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars) {
+            ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars, RegisterProperties isaProps) {
         this.prologueDeps = prologueDeps;
         this.graphs = graphs;
         this.indVars = indVars;
+        this.isaProps = isaProps;
     }
 
     public boolean compare(Graph<AddressVertex, DefaultEdge> load, Graph<AddressVertex, DefaultEdge> store) {
@@ -58,20 +61,52 @@ public class MemoryAddressComparator {
         Graphs.addGraph(merged, reducedLoad);
         Graphs.addGraph(merged, reducedStore);
         
-        var comparison = new AddressVertex("Check if equal", AddressVertexType.CHECK);
+        var comparison = new AddressVertex("==", AddressVertexType.CHECK);
         merged.addVertex(comparison);
         merged.addEdge(loadRoot, comparison);
         merged.addEdge(storeRoot, comparison);
         
         var dot = GraphUtils.graphToDot(merged);
         var url = GraphUtils.generateGraphURL(dot);
-        System.out.println("Alias check graph: " + url);
+        System.out.println("Alias check graph:\n" + url + "\n");
+        
+        var expr1 = MemoryAddressDetector.buildAddressExpression(reducedLoad, loadRoot, true);
+        var expr2 = MemoryAddressDetector.buildAddressExpression(reducedStore, storeRoot, true);
+        System.out.println("ALIAS IF " + expr1 + " == " + expr2 + "\n");
     }
 
     private boolean compareSimplifiedGraphs(Graph<AddressVertex, DefaultEdge> reducedLoad,
             Graph<AddressVertex, DefaultEdge> reducedStore) {
-        // TODO Auto-generated method stub
+        var regLd = GraphUtils.getVerticesWithType(reducedLoad, AddressVertexType.REGISTER);
+        var regSt = GraphUtils.getVerticesWithType(reducedStore, AddressVertexType.REGISTER);
+        
+        System.out.println("Registers used in Load:");
+        for (var v : regLd)
+            printRegisterProperties(v.getLabel());
+        System.out.println("Registers used in Store:");
+        for (var v : regSt)
+            printRegisterProperties(v.getLabel());
+        
         return false;
+    }
+    
+    private void printRegisterProperties(String reg) {
+        var<String> props = new ArrayList<String>();
+
+        if (isaProps.isParameter(reg))
+            props.add("Parameter");
+        if (isaProps.isReturn(reg))
+            props.add("Return value");
+        if (isaProps.isStackPointer(reg))
+            props.add("Stack pointer");
+        if (isaProps.isTemporary(reg))
+            props.add("Temporary value");
+        if (isaProps.isZero(reg))
+            props.add("Zero");
+        if (indVars.containsKey(reg))
+            props.add("Induction variable of stride " + indVars.get(reg));
+
+        System.out.println("  - " + reg + ": " + String.join(", ", props));
     }
 
     private Graph<AddressVertex, DefaultEdge> treeSubtract(Graph<AddressVertex, DefaultEdge> main,
@@ -97,6 +132,9 @@ public class MemoryAddressComparator {
         // Remove intermediary operation vertices
         var trans2 = new TransformRemoveTemporaryVertices(mainClone, AddressVertexType.OPERATION);
         trans2.applyToGraph();
+        
+        // Remove orphans again, as the previous transform might create more
+        trans1.applyToGraph();
 
         return mainClone;
     }
@@ -133,7 +171,7 @@ public class MemoryAddressComparator {
 
         // Do the comparison to mainClone, and remove if it exists
         var subStart = GraphUtils.getExpressionStart(sub);
-        //THIS SOLVES ALL THE PROBLEMS, IT'S A MIRACLE
+
         if (currVertex.getType() == AddressVertexType.OPERATION)
             return;
         AddressVertex toRemove = treeHasVertex(mainClone, sub, currVertex, mainStart, subStart);
@@ -150,8 +188,6 @@ public class MemoryAddressComparator {
             if (v.getLabel().equals(currVertex.getLabel())) {
                 String path1 = GraphUtils.pathBetweenTwoVertices(sub, currVertex, subStart, 3);
                 String path2 = GraphUtils.pathBetweenTwoVertices(mainClone, v, mainStart, 3);
-                System.out.println(path1);
-                System.out.println(path2);
                 if (path1.equals(path2))
                     ret = v;
             }
