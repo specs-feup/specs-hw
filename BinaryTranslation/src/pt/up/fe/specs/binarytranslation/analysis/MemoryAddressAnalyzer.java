@@ -17,6 +17,7 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVer
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.AGraphTransform;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformBaseAddress;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.InductionVariablesDetector;
@@ -99,6 +100,8 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
             t2.applyToGraph();
             var t3 = new TransformShiftsToMult(graph);
             t3.applyToGraph();
+            var t4 = new TransformRemoveTemporaryVertices(graph);
+            t4.applyToGraph();
         }
 
         var mergedGraph = GraphUtils.mergeGraphs(graphs);
