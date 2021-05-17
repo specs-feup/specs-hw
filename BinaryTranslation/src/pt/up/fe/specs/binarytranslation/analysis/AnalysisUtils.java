@@ -152,4 +152,27 @@ public class AnalysisUtils {
     public static String hexToDec(String hex) {
         return "" + Integer.decode(hex);
     }
+    
+    public static List<Instruction> getCompleteTrace(ATraceInstructionStream stream, long start, long end) {
+        var ret = new ArrayList<Instruction>();
+        Instruction inst = null;
+        //stream.advanceTo(start);
+        boolean addToList = start == 0;
+        int instN = -1;
+        
+        while ((inst = stream.nextInstruction()) != null) {
+            instN++;
+            if (inst.getAddress() == start) {
+                System.out.println("Found start at pos. " + instN);
+                addToList = true;
+            }
+            if (addToList)
+                ret.add(inst);
+            if (inst.getAddress() == end) {
+                System.out.println("Found ending at pos. " + instN);
+                return ret;
+            }
+        }
+        return ret;
+    }
 }
