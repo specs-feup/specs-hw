@@ -20,6 +20,7 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.analysis.BtfPerformanceAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.InOutAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryAddressAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryProfilerAnalyzer;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -204,6 +205,16 @@ public class MicroBlazeTraceAnalysisTest {
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
         var maa = new MemoryAddressAnalyzer(stream, elf, new MicroBlazeRegisterConventions());
+        maa.analyze(window);
+    }
+    
+    @Test
+    public void testMemoryAccessTypes() {
+        var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
+        
+        var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
+        var stream = new MicroBlazeTraceStream(fd);
+        var maa = new MemoryAccessTypesAnalyzer(stream, elf);
         maa.analyze(window);
     }
 }
