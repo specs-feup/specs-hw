@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Map;
 
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
@@ -43,15 +45,16 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testMemoryProfilerStream() {
-        var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
-        //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
-        //var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
-        //var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
-        
-        //var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
-        
+        var elf = MicroBlazeLivermoreELFN10.linrec;
+        int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
+        // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+        // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
+        // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+
+        // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+
         var stream = getStream(MicroBlazeLivermoreELFN10.innerprod, false);
         var mem = new MemoryProfilerAnalyzer(stream, elf);
         assertTrue(mem.profile(true));
@@ -98,15 +101,16 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testBasicBlockInOuts() {
-        var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
-        //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
-        //var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
-        //var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
-        
-        //var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
-        
+        var elf = MicroBlazeLivermoreELFN10.linrec;
+        int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
+        // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+        // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
+        // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+
+        // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
         InOutAnalyzer bba = new InOutAnalyzer(stream, elf);
@@ -115,15 +119,16 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testTraceInOuts() {
-        var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
-        //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
-        //var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
-        //var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
-        
-        //var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
-        
+        var elf = MicroBlazeLivermoreELFN10.linrec;
+        int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
+        // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+        // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
+        // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+
+        // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
         InOutAnalyzer bba = new InOutAnalyzer(stream, elf);
@@ -132,14 +137,15 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testSimpleBasicBlockInOuts() {
-        var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
-        //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
-        //var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
-        //var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
-        
-        //var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+        var elf = MicroBlazeLivermoreELFN10.linrec;
+        int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
+        // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+        // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
+        // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+
+        // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
 
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
@@ -149,16 +155,17 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testBasicBlockElimination() {
-        //var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
-        //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
-        //var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
-        //var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
-        var elf = MicroBlazeLivermoreELFN10.state_frag; int window = 31;
-        
-        //var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
-        
+        // var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
+        // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+        // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
+        // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+        var elf = MicroBlazeLivermoreELFN10.state_frag;
+        int window = 31;
+
+        // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
         InOutAnalyzer bba = new InOutAnalyzer(stream, elf);
@@ -171,50 +178,66 @@ public class MicroBlazeTraceAnalysisTest {
         // var elf = MicroBlazeGccOptimizationLevels.dotprod2;
         var elf = MicroBlazeGccOptimizationLevels.fir3;
 
-//        for (var elf : MicroBlazeLivermoreELFN10.values()) {
-//            if (elf == MicroBlazeLivermoreELFN10.cholesky_trace || elf == MicroBlazeLivermoreELFN10.pic2d)
-//                continue;
-            var f = elf.asTraceTxtDump();
-            System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream(f))));
-            var stream = getStream(elf, true);
-            stream.rawDump();
-            stream.close();
-            System.err.println("Saved trace of " + elf.getFilename());
-        //}
+        // for (var elf : MicroBlazeLivermoreELFN10.values()) {
+        // if (elf == MicroBlazeLivermoreELFN10.cholesky_trace || elf == MicroBlazeLivermoreELFN10.pic2d)
+        // continue;
+        var f = elf.asTraceTxtDump();
+        System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream(f))));
+        var stream = getStream(elf, true);
+        stream.rawDump();
+        stream.close();
+        System.err.println("Saved trace of " + elf.getFilename());
+        // }
     }
 
     @Test
     public void testAddresses() {
         // Livermore N10
-        var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
-        //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
-        //var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
-        //var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
-        //var elf = MicroBlazeLivermoreELFN10.state_frag; int window = 31;
-        
+        var elf = MicroBlazeLivermoreELFN10.linrec;
+        int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
+        // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+        // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
+        // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+        // var elf = MicroBlazeLivermoreELFN10.state_frag; int window = 31;
+
         // Livermore N100
-        //var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
-        
+        // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+
         // GCC optimization levels
-        //var elf = MicroBlazeGccOptimizationLevels.test2; int window = 22;
-        //var elf = MicroBlazeGccOptimizationLevels.fir1; int window = 12;
-        //var elf = MicroBlazeGccOptimizationLevels.firparam2; int window = 10;
-        
+        // var elf = MicroBlazeGccOptimizationLevels.test2; int window = 22;
+        // var elf = MicroBlazeGccOptimizationLevels.fir1; int window = 12;
+        // var elf = MicroBlazeGccOptimizationLevels.firparam2; int window = 10;
+
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
         var maa = new MemoryAddressAnalyzer(stream, elf, new MicroBlazeRegisterConventions());
         maa.analyze(window);
     }
-    
+
     @Test
     public void testMemoryAccessTypes() {
-        var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        
-        var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
-        var stream = new MicroBlazeTraceStream(fd);
-        var maa = new MemoryAccessTypesAnalyzer(stream, elf);
-        maa.analyze(window);
+        var elfs = Map.of(MicroBlazeLivermoreELFN10.linrec, 10,
+                MicroBlazeLivermoreELFN10.innerprod, 10,
+                MicroBlazeLivermoreELFN10.hydro, 14,
+                MicroBlazeLivermoreELFN10.cholesky, 18,
+                //MicroBlazeLivermoreELFN10.hydro2d, 17,
+                MicroBlazeLivermoreELFN10.tri_diag, 11,
+                MicroBlazeLivermoreELFN10.state_frag, 31);
+        var graphs = new ArrayList<String>();
+
+        for (var elf : elfs.keySet()) {
+            var window = elfs.get(elf);
+            var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
+            var stream = new MicroBlazeTraceStream(fd);
+            var analyzer = new MemoryAccessTypesAnalyzer(stream, elf);
+            graphs.addAll(analyzer.analyze(window));
+        }
+
+        System.out.println("--------------------------");
+        for (var g : graphs) {
+            System.out.println(g);
+        }
     }
 }
