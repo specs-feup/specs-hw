@@ -13,10 +13,12 @@
 
 package pt.up.fe.specs.binarytranslation.analysis;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.specs.BinaryTranslation.ELFProvider;
 
+import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -28,7 +30,7 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         super(stream, elf);
     }
 
-    public void analyze(int window) {
+    public ArrayList<String> analyze(int window) {
 //        var trace = AnalysisUtils.getCompleteTrace(stream,
 //                elf.getKernelStart() == null ? 0 : elf.getKernelStart().longValue(),
 //                elf.getKernelStop() == null ? -1 : elf.getKernelStop().longValue());
@@ -37,12 +39,21 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         var det = buildDetector(window);
         List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
         List<Instruction> insts = det.getProcessedInsts();
+        
+        var graphList = new ArrayList<String>();
+        graphList.add(elf.getFilename());
 
         for (var bb : segs) {
             var mad = new MemoryAddressDetector(bb, insts);
             var graphs = mad.detectGraphs();
-
+            //for (var g : graphs) {
+                String dot = GraphUtils.graphToDot(GraphUtils.mergeGraphs(graphs), elf.toString());
+                String url = GraphUtils.generateGraphURL(dot);
+                graphList.add(url);
+                
+            //}
             MemoryAddressAnalyzer.printExpressions(graphs);
         }
+        return graphList;
     }
 }

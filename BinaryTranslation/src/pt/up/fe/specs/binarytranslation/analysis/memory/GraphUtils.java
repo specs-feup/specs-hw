@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
@@ -99,7 +100,7 @@ public class GraphUtils {
         return AddressVertex.nullVertex;
     }
 
-    public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph) {
+    public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph, String title) {
         DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexAttributeProvider((v) -> {
             Map<String, Attribute> map = new LinkedHashMap<>();
@@ -114,9 +115,16 @@ public class GraphUtils {
             map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
             return map;
         });
+        Supplier<Map<String, Attribute>> sup = () -> Map.of("label", DefaultAttribute.createAttribute(title),
+                                                            "labelloc", DefaultAttribute.createAttribute("t"));
+        exporter.setGraphAttributeProvider(sup);
         Writer writer = new StringWriter();
         exporter.exportGraph(graph, writer);
         return writer.toString();
+    }
+    
+    public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph) {
+        return graphToDot(graph, "");
     }
 
     public static ArrayList<AddressVertex> findAllNodesOfType(Graph<AddressVertex, DefaultEdge> graph,
@@ -179,7 +187,7 @@ public class GraphUtils {
             AddressVertex sink) {
         return pathBetweenTwoVertices(graph, source, sink, 0);
     }
-    
+
     public static String pathBetweenTwoVertices(Graph<AddressVertex, DefaultEdge> graph, AddressVertex source,
             AddressVertex sink, int limit) {
         var dijkstra = new DijkstraShortestPath<AddressVertex, DefaultEdge>(graph);
@@ -192,7 +200,7 @@ public class GraphUtils {
         var strPath = new ArrayList<String>();
         for (var v : pathList)
             strPath.add(v.getLabel());
-        
+
         if (limit == 0 || limit > strPath.size())
             return String.join("->", strPath);
         else
