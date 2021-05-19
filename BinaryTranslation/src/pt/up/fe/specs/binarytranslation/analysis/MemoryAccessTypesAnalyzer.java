@@ -80,7 +80,7 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         var exprGraph = GraphUtils.getExpressionGraph(graph);
 
         for (var type : GraphTemplateType.values()) {
-            var template = GraphTemplateFactory.getTemplate(type);
+            var template = GraphTemplateFactory.getTemplate(type).getGraph();
             var iso = new VF2GraphIsomorphismInspector<AddressVertex, DefaultEdge>(exprGraph, template,
                     new VertexComparator(), new EdgeComparator());
             if (iso.isomorphismExists())
@@ -108,10 +108,7 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
                     return -1;
             }
             if (type1 == AddressVertexType.IMMEDIATE && type2 == AddressVertexType.IMMEDIATE) {
-                if (label1.equals(label2))
-                    return 0;
-                else
-                    return -1;
+                return 0;
             }
             if (type1 == AddressVertexType.MEMORY && type2 == AddressVertexType.MEMORY)
                 return 0;
