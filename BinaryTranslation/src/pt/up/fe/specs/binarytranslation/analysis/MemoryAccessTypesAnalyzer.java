@@ -29,6 +29,7 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVer
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressDetector;
 import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateFactory;
+import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateReport;
 import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateType;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveTemporaryVertices;
@@ -43,7 +44,7 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         super(stream, elf);
     }
 
-    public ArrayList<String> analyze(int window) {
+    public GraphTemplateReport analyze(int window) {
         // var trace = AnalysisUtils.getCompleteTrace(stream,
         // elf.getKernelStart() == null ? 0 : elf.getKernelStart().longValue(),
         // elf.getKernelStop() == null ? -1 : elf.getKernelStop().longValue());
@@ -52,9 +53,9 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         var det = buildDetector(window);
         List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
         List<Instruction> insts = det.getProcessedInsts();
-
-        var graphList = new ArrayList<String>();
-        graphList.add(elf.getFilename());
+        
+        var title = elf.getFilename();
+        var report = new GraphTemplateReport(title);
 
         for (var bb : segs) {
             var mad = new MemoryAddressDetector(bb, insts);
@@ -68,24 +69,17 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
                 t3.applyToGraph();
 
                 var graphCategory = matchGraph(graph);
-                System.out.println(graphCategory);
+                String url = GraphUtils.generateGraphURL(GraphUtils.graphToDot(graph, title));
+                report.addEntry(url, graphCategory, bb.getOccurences());
             }
-
-            String dot = GraphUtils.graphToDot(GraphUtils.mergeGraphs(graphs), elf.toString());
-            String url = GraphUtils.generateGraphURL(dot);
-            graphList.add(url);
-            // MemoryAddressAnalyzer.printExpressions(graphs);
         }
-        return graphList;
+        return report;
     }
 
     private GraphTemplateType matchGraph(Graph<AddressVertex, DefaultEdge> graph) {
         var exprGraph = GraphUtils.getExpressionGraph(graph);
 
         for (var type : GraphTemplateType.values()) {
-            if (type == GraphTemplateType.TYPE_0)
-                continue;
-
             var template = GraphTemplateFactory.getTemplate(type);
             var iso = new VF2GraphIsomorphismInspector<AddressVertex, DefaultEdge>(exprGraph, template,
                     new VertexComparator(), new EdgeComparator());

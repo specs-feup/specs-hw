@@ -30,7 +30,7 @@ public class GraphTemplateFactory {
         case TYPE_2:
             return new GraphTemplateType2().getGraph();
         case TYPE_0:
-            return null;
+            return new GraphTemplateType0().getGraph();
         default:
             return null;
         }
