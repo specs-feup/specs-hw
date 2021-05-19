@@ -25,6 +25,8 @@ import pt.up.fe.specs.binarytranslation.analysis.InOutAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryAddressAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryProfilerAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateReport;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsIo;
@@ -225,19 +227,20 @@ public class MicroBlazeTraceAnalysisTest {
                 //MicroBlazeLivermoreELFN10.hydro2d, 17,
                 MicroBlazeLivermoreELFN10.tri_diag, 11,
                 MicroBlazeLivermoreELFN10.state_frag, 31);
-        var graphs = new ArrayList<String>();
+        var reports = new ArrayList<GraphTemplateReport>();
 
         for (var elf : elfs.keySet()) {
             var window = elfs.get(elf);
             var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
             var stream = new MicroBlazeTraceStream(fd);
             var analyzer = new MemoryAccessTypesAnalyzer(stream, elf);
-            graphs.addAll(analyzer.analyze(window));
+            reports.add(analyzer.analyze(window));
         }
 
         System.out.println("--------------------------");
-        for (var g : graphs) {
-            System.out.println(g);
+        for (var r : reports) {
+            System.out.println(r.toString());
+            System.out.println("---------------------------");
         }
     }
 }
