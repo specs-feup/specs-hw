@@ -100,6 +100,16 @@ public class GraphUtils {
         return AddressVertex.nullVertex;
     }
 
+    public static Graph<AddressVertex, DefaultEdge> getExpressionGraph(Graph<AddressVertex, DefaultEdge> graph) {
+        Graph<AddressVertex, DefaultEdge> sub = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graphs.addGraph(sub, graph);
+        var mem = findAllNodesOfType(sub, AddressVertexType.MEMORY);
+        var rd = findAllNodesWithIsaInfo(graph, AddressVertexIsaInfo.RD);
+        sub.removeAllVertices(mem);
+        sub.removeAllVertices(rd);
+        return sub;
+    }
+    
     public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph, String title) {
         DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexAttributeProvider((v) -> {

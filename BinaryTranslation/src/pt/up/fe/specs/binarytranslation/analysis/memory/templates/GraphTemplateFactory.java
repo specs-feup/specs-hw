@@ -17,14 +17,22 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
+
 public class GraphTemplateFactory {
-    public static AGraphTemplate getTemplate(GraphTemplateType type) {
+    public static Graph<AddressVertex, DefaultEdge> getTemplate(GraphTemplateType type) {
         switch(type) {
         case TYPE_1:
-            return new GraphTemplateType1();
+            return new GraphTemplateType1().getGraph();
         case TYPE_2:
-            return new GraphTemplateType2();
+            return new GraphTemplateType2().getGraph();
+        case TYPE_0:
+            return null;
+        default:
+            return null;
         }
-        return null;
     }
 }

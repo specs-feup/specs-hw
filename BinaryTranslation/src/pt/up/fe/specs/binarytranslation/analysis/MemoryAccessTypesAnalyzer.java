@@ -28,6 +28,8 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressDetector;
+import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateFactory;
+import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateType;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
@@ -77,13 +79,20 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         return graphList;
     }
 
-    // WIP - example of isomorphism
-    private boolean matchGraph(Graph<AddressVertex, DefaultEdge> graph) {
-        var template = new DefaultDirectedGraph<>(DefaultEdge.class);
-        template.addVertex(new AddressVertex("r1", AddressVertexType.REGISTER));
+    private GraphTemplateType matchGraph(Graph<AddressVertex, DefaultEdge> graph) {
+        var exprGraph = GraphUtils.getExpressionGraph(graph);
 
-        var iso = new VF2GraphIsomorphismInspector(graph, template, new VertexComparator(), new EdgeComparator());
-        return iso.isomorphismExists();
+        for (var type : GraphTemplateType.values()) {
+            if (type == GraphTemplateType.TYPE_0)
+                continue;
+
+            var template = GraphTemplateFactory.getTemplate(type);
+            var iso = new VF2GraphIsomorphismInspector<AddressVertex, DefaultEdge>(exprGraph, template,
+                    new VertexComparator(), new EdgeComparator());
+            if (iso.isomorphismExists())
+                return type;
+        }
+        return GraphTemplateType.TYPE_0;
     }
 
     private class VertexComparator implements Comparator<AddressVertex> {
