@@ -36,7 +36,8 @@ public class MemoryAddressComparator {
     private RegisterProperties isaProps;
 
     public MemoryAddressComparator(Map<String, List<String>> prologueDeps,
-            ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars, RegisterProperties isaProps) {
+            ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars,
+            RegisterProperties isaProps) {
         this.prologueDeps = prologueDeps;
         this.graphs = graphs;
         this.indVars = indVars;
@@ -46,7 +47,7 @@ public class MemoryAddressComparator {
     public boolean compare(Graph<AddressVertex, DefaultEdge> load, Graph<AddressVertex, DefaultEdge> store) {
         var reducedLoad = treeSubtract(load, store);
         var reducedStore = treeSubtract(store, load);
-        
+
         printComparisonGraph(reducedLoad, reducedStore);
 
         return compareSimplifiedGraphs(reducedLoad, reducedStore);
@@ -56,20 +57,20 @@ public class MemoryAddressComparator {
             Graph<AddressVertex, DefaultEdge> reducedStore) {
         var loadRoot = GraphUtils.findGraphRoot(reducedLoad);
         var storeRoot = GraphUtils.findGraphRoot(reducedStore);
-        
+
         Graph<AddressVertex, DefaultEdge> merged = new DefaultDirectedGraph<>(DefaultEdge.class);
         Graphs.addGraph(merged, reducedLoad);
         Graphs.addGraph(merged, reducedStore);
-        
+
         var comparison = new AddressVertex("==", AddressVertexType.CHECK);
         merged.addVertex(comparison);
         merged.addEdge(loadRoot, comparison);
         merged.addEdge(storeRoot, comparison);
-        
+
         var dot = GraphUtils.graphToDot(merged);
         var url = GraphUtils.generateGraphURL(dot);
         System.out.println("Alias check graph:\n" + url + "\n");
-        
+
         var expr1 = MemoryAddressDetector.buildAddressExpression(reducedLoad, loadRoot, true);
         var expr2 = MemoryAddressDetector.buildAddressExpression(reducedStore, storeRoot, true);
         System.out.println("ALIAS IF " + expr1 + " == " + expr2 + "\n");
@@ -79,19 +80,19 @@ public class MemoryAddressComparator {
             Graph<AddressVertex, DefaultEdge> reducedStore) {
         var regLd = GraphUtils.getVerticesWithType(reducedLoad, AddressVertexType.REGISTER);
         var regSt = GraphUtils.getVerticesWithType(reducedStore, AddressVertexType.REGISTER);
-        
+
         System.out.println("Registers used in Load:");
         for (var v : regLd)
             printRegisterProperties(v.getLabel());
         System.out.println("Registers used in Store:");
         for (var v : regSt)
             printRegisterProperties(v.getLabel());
-        
+
         return false;
     }
-    
+
     private void printRegisterProperties(String reg) {
-        var<String> props = new ArrayList<String>();
+        var props = new ArrayList<String>();
 
         if (isaProps.isParameter(reg))
             props.add("Parameter");
@@ -124,15 +125,15 @@ public class MemoryAddressComparator {
 
         // Remove stuff after the memory access
         removeExtraNodes(mainStart, mainClone);
-        
+
         // Remove orphan operation vertices
         var trans1 = new TransformRemoveOrphanOperations(mainClone);
         trans1.applyToGraph();
-        
+
         // Remove intermediary operation vertices
         var trans2 = new TransformRemoveTemporaryVertices(mainClone, AddressVertexType.OPERATION);
         trans2.applyToGraph();
-        
+
         // Remove orphans again, as the previous transform might create more
         trans1.applyToGraph();
 
@@ -143,7 +144,7 @@ public class MemoryAddressComparator {
         var memoryOp = GraphUtils.getMemoryOp(mainClone);
         var toRemove = new ArrayList<AddressVertex>();
         toRemove.add(memoryOp);
-        
+
         var edges = mainClone.outgoingEdgesOf(memoryOp);
         for (var edge : edges) {
             var v = mainClone.getEdgeTarget(edge);

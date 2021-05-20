@@ -1,7 +1,6 @@
 package pt.up.fe.specs.binarytranslation.analysis.memory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -50,14 +49,14 @@ public class MemoryDisambiguator {
             applyTransforms(graph);
         }
     }
-    
+
     private void applyTransforms(Graph<AddressVertex, DefaultEdge> graph) {
         for (var cl : transforms) {
             try {
                 Constructor<?> cons = cl.getConstructor(cl);
                 var trans = (AGraphTransform) cons.newInstance(graph);
                 trans.applyToGraph();
-                
+
             } catch (Exception e) {
                 SpecsLogs.warn("Error message:\n", e);
             }
@@ -66,21 +65,20 @@ public class MemoryDisambiguator {
 
     public void disambiguate() {
         System.out.println("");
-        var<String> totalRegisters = new ArrayList<String>();
-        var<String> memoryFunctions = new ArrayList<String>();
+        var totalRegisters = new ArrayList<String>();
+        var memoryFunctions = new ArrayList<String>();
 
         for (var graph : graphs) {
             String expr = MemoryAddressDetector.buildMemoryExpression(graph);
             System.out.println("Memory disambiguation for memory access " + expr + ":");
 
             // Get all registers used for address
-            var<String> registers = getGraphAddressRegisters(graph);
+            var registers = getGraphAddressRegisters(graph);
             var filtered = filterRegisterList(registers);
             System.out.println("Registers involved in address: " + filtered);
 
             // disambiguate
             System.out.println("TBD\n");
-            
 
             // Add memory function to report later
             var fun = MemoryAddressDetector.buildAddressFunction(graph, registers, indVars);
@@ -108,7 +106,7 @@ public class MemoryDisambiguator {
      * @return
      */
     private ArrayList<String> filterRegisterList(List<String> registers) {
-        var<String> res = new ArrayList<String>();
+        var res = new ArrayList<String>();
 
         for (var reg : registers) {
             printRegisterProperties(reg);
@@ -119,7 +117,7 @@ public class MemoryDisambiguator {
     }
 
     private void printRegisterProperties(String reg) {
-        var<String> props = new ArrayList<String>();
+        var props = new ArrayList<String>();
 
         if (isaProps.isParameter(reg))
             props.add("Parameter");
@@ -144,12 +142,12 @@ public class MemoryDisambiguator {
      * @return
      */
     private List<String> getGraphAddressRegisters(Graph<AddressVertex, DefaultEdge> graph) {
-        var<String> regs = new ArrayList<String>();
+        var regs = new ArrayList<String>();
         var baseStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.BASE_ADDR).get(0);
-        var<AddressVertex> elems1 = getSubgraphAddressRegisters(graph, baseStart);
+        var elems1 = getSubgraphAddressRegisters(graph, baseStart);
         var offsetStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.OFFSET).get(0);
-        var<AddressVertex> elems2 = getSubgraphAddressRegisters(graph, offsetStart);
-        var<AddressVertex> elems = new LinkedHashSet<AddressVertex>(elems1);
+        var elems2 = getSubgraphAddressRegisters(graph, offsetStart);
+        var elems = new LinkedHashSet<AddressVertex>(elems1);
         elems.addAll(elems2);
 
         for (var elem : elems) {
@@ -168,7 +166,7 @@ public class MemoryDisambiguator {
     private List<AddressVertex> getSubgraphAddressRegisters(Graph<AddressVertex, DefaultEdge> graph,
             AddressVertex start) {
         var elems = GraphUtils.findAllPredecessors(graph, start);
-        var<AddressVertex> filtered = new ArrayList<AddressVertex>();
+        var filtered = new ArrayList<AddressVertex>();
         {
             for (var elem : elems) {
                 if (graph.inDegreeOf(elem) == 0)
