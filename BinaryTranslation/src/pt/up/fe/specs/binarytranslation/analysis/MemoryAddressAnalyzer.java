@@ -185,7 +185,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
         return indVars;
     }
 
-    private void printExpressions(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs) {
+    public static void printExpressions(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs) {
         System.out.println("Expressions for each memory access:");
         for (var graph : graphs) {
             String s = MemoryAddressDetector.buildMemoryExpression(graph, GraphUtils.findGraphRoot(graph));
