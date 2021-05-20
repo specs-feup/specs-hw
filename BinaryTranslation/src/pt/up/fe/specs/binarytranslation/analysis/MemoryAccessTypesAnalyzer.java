@@ -60,6 +60,9 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         for (var bb : segs) {
             var mad = new MemoryAddressDetector(bb, insts);
             var graphs = mad.detectGraphs();
+            var storeCnt = 0;
+            var loadCnt = 0;
+            
             for (var graph : graphs) {
                 var t1 = new TransformHexToDecimal(graph);
                 t1.applyToGraph();
@@ -67,10 +70,19 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
                 t2.applyToGraph();
                 var t3 = new TransformRemoveTemporaryVertices(graph);
                 t3.applyToGraph();
+                
+                String id = "";
+                if (GraphUtils.findAllNodesOfType(graph, AddressVertexType.LOAD_TARGET).size() != 0) {
+                    loadCnt++;
+                    id = "L" + loadCnt;
+                } else {
+                    storeCnt++;
+                    id = "S" + storeCnt;
+                }
 
                 var graphCategory = matchGraph(graph);
                 String url = GraphUtils.generateGraphURL(GraphUtils.graphToDot(graph, title));
-                report.addEntry(url, graphCategory, bb.getOccurences());
+                report.addEntry(url, id, graphCategory, bb.getOccurences());
             }
         }
         return report;

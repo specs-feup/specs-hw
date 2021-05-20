@@ -18,6 +18,7 @@ import java.util.List;
 
 public class GraphTemplateReport {
     private List<String> graphs;
+    private List<String> ids;
     private List<GraphTemplateType> types;
     private List<Integer> occurrences;
     private String name;
@@ -25,6 +26,7 @@ public class GraphTemplateReport {
     public GraphTemplateReport(String kernelName) {
         name = kernelName;
         graphs = new ArrayList<>();
+        ids = new ArrayList<>();
         types = new ArrayList<>();
         occurrences = new ArrayList<>();
     }
@@ -33,8 +35,9 @@ public class GraphTemplateReport {
         return name;
     }
 
-    public void addEntry(String graph, GraphTemplateType type, int occurrence) {
+    public void addEntry(String graph, String id, GraphTemplateType type, int occurrence) {
         graphs.add(graph);
+        ids.add(id);
         types.add(type);
         occurrences.add(occurrence);
     }
@@ -42,10 +45,12 @@ public class GraphTemplateReport {
     @Override
     public String toString() {
         var sb = new StringBuilder();
-        sb.append("Graph types report for ").append(name).append(":\n"); 
+        sb.append("Graph types report for ").append(name).append(":\n");
         
         for (int i = 0; i < graphs.size(); i++) {
-            sb.append(types.get(i)).append(" detected ").append(occurrences.get(i)).append(" times, graph = ")
+            
+            sb.append("Memory Access ").append(ids.get(i)).append(": matches with pattern ").append(types.get(i))
+                    .append("; detected ").append(occurrences.get(i)).append(" times, graph = ")
                     .append(graphs.get(i)).append("\n");
         }
         return sb.toString();
