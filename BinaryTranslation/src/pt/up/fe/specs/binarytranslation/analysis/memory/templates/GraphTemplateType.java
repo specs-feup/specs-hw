@@ -16,5 +16,5 @@ package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
 public enum GraphTemplateType {
     TYPE_0,
     TYPE_1,
-    TYPE_2, TYPE_3, TYPE_4
+    TYPE_2, TYPE_3, TYPE_4, TYPE_5, TYPE_6, TYPE_7
 }

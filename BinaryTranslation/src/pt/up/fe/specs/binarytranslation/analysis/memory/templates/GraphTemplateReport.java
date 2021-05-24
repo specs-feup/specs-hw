@@ -24,7 +24,7 @@ public class GraphTemplateReport {
     private String name;
 
     public GraphTemplateReport(String kernelName) {
-        name = kernelName;
+        name = "\"" + kernelName + "\"";
         graphs = new ArrayList<>();
         ids = new ArrayList<>();
         types = new ArrayList<>();

@@ -21,15 +21,21 @@ public class GraphTemplateFactory {
     public static AGraphTemplate getTemplate(GraphTemplateType type) {
         switch(type) {
         case TYPE_1:
-            return new GraphTemplateType1();
+            return new GraphTemplateType1(type);
         case TYPE_2:
-            return new GraphTemplateType2();
+            return new GraphTemplateType2(type);
         case TYPE_3:
-            return new GraphTemplateType3();
+            return new GraphTemplateType3(type);
         case TYPE_4:
-            return new GraphTemplateType4();
+            return new GraphTemplateType4(type);
+        case TYPE_5:
+            return new GraphTemplateType5(type);
+        case TYPE_6:
+            return new GraphTemplateType6(type);
+        case TYPE_7:
+            return new GraphTemplateType7(type);
         case TYPE_0:
-            return new GraphTemplateType0();
+            return new GraphTemplateType0(type);
         default:
             return null;
         }

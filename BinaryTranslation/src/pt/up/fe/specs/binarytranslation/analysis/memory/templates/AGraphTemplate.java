@@ -28,9 +28,9 @@ public abstract class AGraphTemplate {
     protected Graph<AddressVertex, DefaultEdge> graph;
     protected String templateName;
     
-    protected AGraphTemplate(String templateName) {
+    protected AGraphTemplate(GraphTemplateType type) {
         this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
-        this.templateName = templateName;
+        this.templateName = "\"Template - " + type.toString() + "\"";
     }
     
     public Graph<AddressVertex, DefaultEdge> getGraph() {
