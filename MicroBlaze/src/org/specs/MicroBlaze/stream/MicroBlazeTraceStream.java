@@ -40,7 +40,8 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         // }
 
         if (elfname.getName().contains("_trace.txt")) {
-            String name = "org/specs/MicroBlaze/asm/N10/" + elfname.getName().replace("_trace", "");
+            System.out.println(elfname.getPath());
+            String name = elfname.getPath().replace(".\\", "").replace("\\", "/").replace("_trace", "");
             auxname = SpecsIo.resourceCopy(name);
             auxname.deleteOnExit();
             System.out.println(name);
