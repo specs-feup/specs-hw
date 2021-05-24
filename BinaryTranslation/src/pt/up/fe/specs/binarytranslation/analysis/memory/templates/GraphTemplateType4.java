@@ -22,8 +22,8 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVer
 
 public class GraphTemplateType4 extends AGraphTemplate {
 
-    protected GraphTemplateType4() {
-        super("Template - Type 4");
+    protected GraphTemplateType4(GraphTemplateType type) {
+        super(type);
         var r9 = new AddressVertex("r9", AddressVertexType.REGISTER);
         var imm16 = new AddressVertex("16", AddressVertexType.IMMEDIATE);
         var r5 = new AddressVertex("r5", AddressVertexType.REGISTER);

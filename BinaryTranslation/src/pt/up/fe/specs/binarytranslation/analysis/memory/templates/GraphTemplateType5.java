@@ -20,25 +20,19 @@ package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 
-public class GraphTemplateType1 extends AGraphTemplate {
+public class GraphTemplateType5 extends AGraphTemplate {
 
-    protected GraphTemplateType1(GraphTemplateType type) {
+    protected GraphTemplateType5(GraphTemplateType type) {
         super(type);
         var r7 = new AddressVertex("r7", AddressVertexType.REGISTER);
-        var imm4 = new AddressVertex("4", AddressVertexType.IMMEDIATE);
-        var r5 = new AddressVertex("r5", AddressVertexType.REGISTER);
-        var mult = new AddressVertex("*", AddressVertexType.OPERATION);
+        var imm0 = new AddressVertex("0", AddressVertexType.IMMEDIATE);
         var add = new AddressVertex("+", AddressVertexType.OPERATION);
-        
         graph.addVertex(r7);
-        graph.addVertex(imm4);
-        graph.addVertex(r5);
-        graph.addVertex(mult);
+        graph.addVertex(imm0);
         graph.addVertex(add);
         
-        graph.addEdge(r7, mult);
-        graph.addEdge(imm4, mult);
-        graph.addEdge(mult, add);
-        graph.addEdge(r5, add);
+        graph.addEdge(r7, add);
+        graph.addEdge(imm0, add);
     }
+
 }
