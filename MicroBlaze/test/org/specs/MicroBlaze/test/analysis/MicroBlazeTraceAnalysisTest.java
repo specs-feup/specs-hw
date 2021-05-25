@@ -263,9 +263,8 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testStreaming() {
-        var elf = MicroBlazeLivermoreELFN10.linrec;
-        int window = 10;
-        // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+        //var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
+        var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
         // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
         // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
         // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
@@ -280,7 +279,9 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void findBasicBlocks() {
-        var elf = MicroBlazeRosetta.rendering3d;
+        //var elf = MicroBlazeRosetta.rendering3d;
+        var elf = MicroBlazeRosetta.facedetection;
+        
         var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
         var istream1 = new MicroBlazeTraceStream(fd);
         int minwindow = 4;
