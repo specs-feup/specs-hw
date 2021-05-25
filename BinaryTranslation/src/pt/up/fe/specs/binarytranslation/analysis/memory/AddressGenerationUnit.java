@@ -45,8 +45,8 @@ public class AddressGenerationUnit {
         var t3 = new TransformRemoveTemporaryVertices(this.graph);
         t3.applyToGraph();
         
-        this.inputs = findAllInputs();
         this.strides = strides;
+        this.inputs = findAllInputs();
         this.currIndexes = new HashMap<>();
         for (var key : strides.keySet()) {
             currIndexes.put(key, 0);
@@ -75,6 +75,56 @@ public class AddressGenerationUnit {
     }
     
     public long next(Map<String, Integer> inputMap) {
-        return 0;
+        var start = GraphUtils.findGraphRoot(graph);
+        return next(inputMap, start);
+    }
+    
+    private long next(Map<String, Integer> inputMap, AddressVertex currVertex) {
+        if (currVertex == AddressVertex.nullVertex)
+            return Long.MAX_VALUE;
+
+        var parents = GraphUtils.getParents(graph, currVertex);
+        var left = parents.size() > 0 ? parents.get(0) : AddressVertex.nullVertex;
+        long leftVal = next(inputMap, left);
+        var right = parents.size() > 1 ? parents.get(1) : AddressVertex.nullVertex;
+        long rightVal = next(inputMap, right);
+        
+        if (leftVal == Long.MAX_VALUE)
+            leftVal = rightVal;
+        if (rightVal == Long.MAX_VALUE)
+            rightVal = leftVal;
+        
+        if (currVertex.getType() == AddressVertexType.IMMEDIATE) {
+            return Long.valueOf(currVertex.getLabel());
+        }
+        if (currVertex.getType() == AddressVertexType.OPERATION) {
+            return doOperation(leftVal, rightVal, currVertex.getLabel());
+        }
+        if (currVertex.getType() == AddressVertexType.REGISTER) {
+            var reg = currVertex.getLabel();
+            if (strides.containsKey(reg)) {
+                var stride = strides.get(reg);
+                var curr = currIndexes.get(reg);
+                currIndexes.put(reg, curr + stride);
+                return curr;
+            }
+            else if (inputMap.containsKey(reg)) {
+                return inputMap.get(reg);
+            }
+        }
+        return Long.MAX_VALUE;
+    }
+
+    private long doOperation(long leftVal, long rightVal, String op) {
+        if (op.equals("*")) {
+            return leftVal * rightVal;
+        }
+        if (op.equals("-")) {
+            return leftVal - rightVal;
+        }
+        if (op.equals("+")) {
+            return leftVal + rightVal;
+        }
+        return Long.MAX_VALUE;
     }
 }
