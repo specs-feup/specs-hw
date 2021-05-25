@@ -15,6 +15,8 @@ import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
+import org.specs.MicroBlaze.MicroBlazeRosetta;
+import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.asm.MicroBlazeRegisterConventions;
 import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
@@ -25,9 +27,15 @@ import pt.up.fe.specs.binarytranslation.analysis.InOutAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryAddressAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryProfilerAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.StreamingAnalysis;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateFactory;
 import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateReport;
+import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateType;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsIo;
 
@@ -220,13 +228,16 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testMemoryAccessTypes() {
-        var elfs = Map.of(MicroBlazeLivermoreELFN10.linrec, 10,
-                MicroBlazeLivermoreELFN10.innerprod, 10,
-                MicroBlazeLivermoreELFN10.hydro, 14,
-                MicroBlazeLivermoreELFN10.cholesky, 18,
-                //MicroBlazeLivermoreELFN10.hydro2d, 17,
-                MicroBlazeLivermoreELFN10.tri_diag, 11,
-                MicroBlazeLivermoreELFN10.state_frag, 31);
+        // var elfs = Map.of(
+        // MicroBlazeLivermoreELFN10.linrec, 10,
+        // MicroBlazeLivermoreELFN10.innerprod, 10,
+        // MicroBlazeLivermoreELFN10.hydro, 14,
+        // MicroBlazeLivermoreELFN10.cholesky, 18,
+        // //MicroBlazeLivermoreELFN10.hydro2d, 17,
+        // MicroBlazeLivermoreELFN10.tri_diag, 11,
+        // MicroBlazeLivermoreELFN10.state_frag, 31);
+        var elfs = Map.of(
+                MicroBlazeLivermoreELFN100.matmul100, 15);
         var reports = new ArrayList<GraphTemplateReport>();
 
         for (var elf : elfs.keySet()) {
@@ -238,9 +249,63 @@ public class MicroBlazeTraceAnalysisTest {
         }
 
         System.out.println("--------------------------");
+        for (var temp : GraphTemplateType.values()) {
+            var url = GraphUtils.generateGraphURL(GraphTemplateFactory.getTemplate(temp).toString());
+            System.out.println(temp + ": " + url);
+        }
+
+        System.out.println("--------------------------");
         for (var r : reports) {
             System.out.println(r.toString());
             System.out.println("---------------------------");
+        }
+    }
+
+    @Test
+    public void testStreaming() {
+        var elf = MicroBlazeLivermoreELFN10.linrec;
+        int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
+        // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+        // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
+        // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+        // var elf = MicroBlazeLivermoreELFN10.state_frag; int window = 31;
+
+        var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
+        var stream = new MicroBlazeTraceStream(fd);
+        var analyzer = new StreamingAnalysis(stream, elf);
+        analyzer.analyze(window, 10);
+    }
+
+    @Test
+    public void findBasicBlocks() {
+        var elf = MicroBlazeRosetta.rendering3d;
+        var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
+        var istream1 = new MicroBlazeTraceStream(fd);
+        int minwindow = 4;
+        int maxwindow = 20;
+
+        for (int i = minwindow; i <= maxwindow; i++) {
+            istream1.silent(false);
+            istream1.advanceTo(elf.getKernelStart().longValue());
+
+            System.out.println("Looking for segments of size: " + i);
+
+            var detector1 = new TraceBasicBlockDetector(// new FrequentTraceSequenceDetector(
+                    new DetectorConfigurationBuilder()
+                            .withMaxWindow(i)
+                            .withStartAddr(elf.getKernelStart())
+                            .withStopAddr(elf.getKernelStop())
+                            .withPrematureStopAddr(elf.getKernelStop().longValue())
+                            .build());
+            var result1 = detector1.detectSegments(istream1);
+            if (result1.getSegments().size() == 0)
+                continue;
+
+            // var gbundle = GraphBundle.newInstance(result1);
+            // gbundle.generateOutput();
+            SegmentDetectTestUtils.printBundle(result1);
         }
     }
 }
