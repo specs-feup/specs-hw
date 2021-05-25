@@ -57,4 +57,8 @@ public abstract class ELFDump {
         }
         return list;
     }
+
+    public Map<Long, Instruction> getElfdump() {
+        return elfdump;
+    }
 }
