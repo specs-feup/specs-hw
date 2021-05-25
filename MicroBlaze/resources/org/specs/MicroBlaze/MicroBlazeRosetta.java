@@ -4,7 +4,7 @@ import org.specs.BinaryTranslation.ELFProvider;
 
 public enum MicroBlazeRosetta implements ELFProvider {
 
-    rendering3d("org/specs/MicroBlaze/asm/Rosetta/3d-rendering.elf", null, null),
+    rendering3d("org/specs/MicroBlaze/asm/Rosetta/3d-rendering.elf", 0x0, 0x1818),
     facedetection("org/specs/MicroBlaze/asm/Rosetta/face-detection.elf", null, null);
 
     // private String elfname;
