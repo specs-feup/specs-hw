@@ -203,7 +203,6 @@ Disassembly of section .text:
      2cc:	30730000 	addik	r3, r19, 0
      2d0:	b60f0008 	rtsd	r15, 8
      2d4:	20210028 	addi	r1, r1, 40
-	...
 
 000002e0 <_hw_exception_handler>:
      2e0:	b0000000 	imm	0
