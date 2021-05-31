@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.memory;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +26,15 @@ import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.AGraphTransform;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveOrphanOperations;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveTemporaryVertices;
+import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.util.SpecsLogs;
 
 public class BasicBlockDataFlow extends APropertyDetector {
     private Map<String, AddressVertex> vertexCache = new HashMap<String, AddressVertex>();
@@ -45,27 +53,60 @@ public class BasicBlockDataFlow extends APropertyDetector {
             var op2 = i.getData().getOperands().get(1);
             var op3 = i.getData().getOperands().size() == 3 ? i.getData().getOperands().get(2) : null;
 
+            String rD = operandAsString(op1);
+            String rA = operandAsString(op2);
+            String rB = op3 == null ? "nop" : operandAsString(op3);
+
+            var rDvert = new AddressVertex(rD, opType(op1));
+            var rAvert = new AddressVertex(rA, opType(op2));
+            var rBvert = op3 == null ? AddressVertex.nullVertex : new AddressVertex(rB, opType(op3));
+
             if (i.isMemory()) {
-                handleMemoryInstruction(i, op1, op2, op3);
+                handleMemoryInstruction(i, rDvert, rAvert, rBvert);
             }
-            if (i.isAdd() || i.isMul() || i.isLogical() || i.isSub()) {
-                handleLogicalArithmeticInstruction(i, op1, op2, op3);
+            if (i.isJump()) {
+                handleJumpInstruction(i, rDvert, rAvert, rBvert);
+            } else {
+                handleLogicalArithmeticInstruction(i, rDvert, rAvert, rBvert);
             }
         }
+
+        applyTransforms();
         return dfg;
     }
 
-    private void handleLogicalArithmeticInstruction(Instruction i, Operand op1, Operand op2, Operand op3) {
-        String rD = operandAsString(op1);
-        String rA = operandAsString(op2);
-        String rB = operandAsString(op3);
+    private void applyTransforms() {
+        var t1 = new TransformHexToDecimal(dfg);
+        var t2 = new TransformShiftsToMult(dfg);
+        var t3 = new TransformRemoveTemporaryVertices(dfg);
+        t1.applyToGraph();
+        t2.applyToGraph();
+        for (int i = 0; i < 4; i++)
+            t3.applyToGraph();
+    }
 
-        var rDvert = new AddressVertex(rD, opType(op1));
-        var rAvert = new AddressVertex(rA, opType(op2));
-        var rBvert = new AddressVertex(rB, opType(op3));
-        rDvert = addVertex(rDvert, true);
+    private void handleJumpInstruction(Instruction i, AddressVertex rDvert, AddressVertex rAvert,
+            AddressVertex rBvert) {
+        if (rBvert == AddressVertex.nullVertex) {
+            rAvert = addVertex(rAvert, false);
+            rDvert = addVertex(rDvert, false);
+            
+            var jmpVertex = new AddressVertex(AnalysisUtils.mapInstructionsToSymbol("Jump"),
+                    AddressVertexType.JUMP);
+            dfg.addVertex(jmpVertex);
+            dfg.addEdge(rAvert, jmpVertex);
+            dfg.addEdge(rDvert, jmpVertex);
+            
+        } else {
+            System.out.println("Not implemented");
+        }
+    }
+
+    private void handleLogicalArithmeticInstruction(Instruction i, AddressVertex rDvert, AddressVertex rAvert,
+            AddressVertex rBvert) {
         rAvert = addVertex(rAvert, false);
         rBvert = addVertex(rBvert, false);
+        rDvert = addVertex(rDvert, true);
 
         var opSymbol = i.getName();
         var opVertex = new AddressVertex(AnalysisUtils.mapInstructionsToSymbol(opSymbol),
@@ -76,17 +117,11 @@ public class BasicBlockDataFlow extends APropertyDetector {
         dfg.addEdge(opVertex, rDvert);
     }
 
-    private void handleMemoryInstruction(Instruction i, Operand op1, Operand op2, Operand op3) {
-        String rD = operandAsString(op1);
-        String rA = operandAsString(op2);
-        String rB = operandAsString(op3);
-
-        var rDvert = new AddressVertex(rD, opType(op1));
-        var rAvert = new AddressVertex(rA, opType(op2));
-        var rBvert = new AddressVertex(rB, opType(op3));
-        rDvert = addVertex(rDvert, i.isLoad());
+    private void handleMemoryInstruction(Instruction i, AddressVertex rDvert, AddressVertex rAvert,
+            AddressVertex rBvert) {
         rAvert = addVertex(rAvert, false);
         rBvert = addVertex(rBvert, false);
+        rDvert = addVertex(rDvert, i.isLoad());
 
         var memVert = new AddressVertex(i.isLoad() ? "Load" : "Store", AddressVertexType.MEMORY);
         dfg.addVertex(memVert);
@@ -99,18 +134,23 @@ public class BasicBlockDataFlow extends APropertyDetector {
     }
 
     private AddressVertex addVertex(AddressVertex v, boolean write) {
-        if (write) {
-            dfg.addVertex(v);
-            vertexCache.put(v.getLabel(), v);
-            return v;
-        } else {
-            if (vertexCache.containsKey(v.getLabel()))
-                return vertexCache.get(v.getLabel());
-            else {
-                vertexCache.put(v.getLabel(), v);
+        if (v.getType() == AddressVertexType.REGISTER) {
+            if (write) {
                 dfg.addVertex(v);
+                vertexCache.put(v.getLabel(), v);
                 return v;
+            } else {
+                if (vertexCache.containsKey(v.getLabel()))
+                    return vertexCache.get(v.getLabel());
+                else {
+                    vertexCache.put(v.getLabel(), v);
+                    dfg.addVertex(v);
+                    return v;
+                }
             }
+        } else {
+            dfg.addVertex(v);
+            return v;
         }
     }
 
@@ -131,12 +171,12 @@ public class BasicBlockDataFlow extends APropertyDetector {
     }
 
     private List<Instruction> getTransformedBasicBlock() {
-        var newBB = new ArrayList<Instruction>();
-        var oldBB = tracker.getBasicBlock().getInstructions();
+        var<Instruction> newBB = new ArrayList<Instruction>();
+        var<Instruction> oldBB = tracker.getBasicBlock().getInstructions();
         var size = oldBB.size();
 
         newBB.add(oldBB.get(size - 1));
-        newBB.addAll(oldBB.subList(0, size - 2));
+        newBB.addAll(oldBB.subList(0, size - 1));
         return newBB;
     }
 }

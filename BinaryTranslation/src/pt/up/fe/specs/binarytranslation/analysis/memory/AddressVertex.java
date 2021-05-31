@@ -9,7 +9,8 @@ public class AddressVertex {
         LOAD_TARGET,
         STORE_TARGET,
         CHECK,
-        NULL
+        JUMP,
+        NULL 
     };
     public enum AddressVertexProperty {
         OFFSET,

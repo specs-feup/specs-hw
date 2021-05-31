@@ -33,6 +33,9 @@ public class AnalysisUtils {
         enumToSymbol.put("fmul", "*");
         enumToSymbol.put("fadd", "+");
         enumToSymbol.put("fsub", "-");
+        enumToSymbol.put("cmp", "==");
+        enumToSymbol.put("cmpu", "==");
+        enumToSymbol.put("frsub", "-");
     }
 
     public static String mapInstructionsToSymbol(String elem) {
