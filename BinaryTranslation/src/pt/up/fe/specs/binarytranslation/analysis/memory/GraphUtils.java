@@ -134,7 +134,7 @@ public class GraphUtils {
     }
     
     public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph) {
-        return graphToDot(graph, "");
+        return graphToDot(graph, "\"Graph\"");
     }
 
     public static ArrayList<AddressVertex> findAllNodesOfType(Graph<AddressVertex, DefaultEdge> graph,
@@ -232,6 +232,11 @@ public class GraphUtils {
             SpecsLogs.warn("Error message:\n", e);
         }
         return base;
+    }
+    
+    public static String generateGraphURL(Graph<AddressVertex, DefaultEdge> graph) {
+        var str = GraphUtils.graphToDot(graph);
+        return generateGraphURL(str);
     }
 
     public static void openGraphInBrowser(String dotGraph) {

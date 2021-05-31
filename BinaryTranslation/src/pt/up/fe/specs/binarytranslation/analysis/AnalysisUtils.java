@@ -30,6 +30,9 @@ public class AnalysisUtils {
         enumToSymbol.put("addik", "+");
         enumToSymbol.put("muli", "*");
         enumToSymbol.put("rsubk","-");
+        enumToSymbol.put("fmul", "*");
+        enumToSymbol.put("fadd", "+");
+        enumToSymbol.put("fsub", "-");
     }
 
     public static String mapInstructionsToSymbol(String elem) {
