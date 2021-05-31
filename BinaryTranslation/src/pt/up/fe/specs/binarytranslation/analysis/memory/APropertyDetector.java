@@ -7,7 +7,7 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public abstract class APropertyDetector {
-    private BasicBlockOccurrenceTracker tracker;
+    public BasicBlockOccurrenceTracker tracker;
 
     public APropertyDetector(BinarySegment bb, List<Instruction> insts) {
         this.tracker = new BasicBlockOccurrenceTracker(bb, insts);

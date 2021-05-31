@@ -54,13 +54,14 @@ public class StreamingAnalysis extends ATraceAnalyzer {
                 var map = agu.getInputMap();
                 
                 for (var key : map.keySet()) {
-                    var rand = ThreadLocalRandom.current().nextInt(1000, 5000);
+                    var rand = ThreadLocalRandom.current().nextInt(4000, 6000);
                     rand = (rand / 4) * 4;  //Ensure it's a multiple of 4
                     map.put(key, rand);
                 }
                 for (int i = 0; i < iter; i++) {
                     String msg = getInputString(i, map);
-                    System.out.println("{" + msg + "} -> AGU -> " + agu.next(map));
+                    var addr = agu.next(map);
+                    System.out.println("{" + msg + "} -> AGU -> 0x" + Long.toHexString(addr));
                 }
                 System.out.println("--------");
             }
@@ -69,9 +70,9 @@ public class StreamingAnalysis extends ATraceAnalyzer {
 
     private String getInputString(int i, Map<String, Integer> map) {
         var arr = new ArrayList<String>();
-        arr.add("i=" + i);
+        arr.add("i = " + i);
         for (var key : map.keySet()) {
-            arr.add(key + "=" + map.get(key));
+            arr.add(key + " = 0x" + Long.toHexString(map.get(key)));
         }
         return String.join(", ", arr);
     }

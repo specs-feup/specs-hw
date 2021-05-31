@@ -16,6 +16,8 @@ package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
+
 public class GraphTemplateReport {
     private List<String> graphs;
     private List<String> ids;
@@ -49,9 +51,9 @@ public class GraphTemplateReport {
         
         for (int i = 0; i < graphs.size(); i++) {
             
-            sb.append("Memory Access ").append(ids.get(i)).append(": matches with pattern ").append(types.get(i))
-                    .append("; detected ").append(occurrences.get(i)).append(" times, graph = ")
-                    .append(graphs.get(i)).append("\n");
+            sb.append("name,").append(ids.get(i)).append(",").append(types.get(i))
+                    .append(",").append(occurrences.get(i))
+                    .append("\n");
         }
         return sb.toString();
     }
