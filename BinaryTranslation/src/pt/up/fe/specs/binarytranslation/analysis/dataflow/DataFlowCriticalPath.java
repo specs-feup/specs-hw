@@ -72,7 +72,7 @@ public class DataFlowCriticalPath {
         return cnt;
     }
 
-    private List<AddressVertex> findSinks() {
+    public List<AddressVertex> findSinks() {
         var sinks = new ArrayList<AddressVertex>();
 
         for (var v : graph.vertexSet()) {
@@ -82,7 +82,7 @@ public class DataFlowCriticalPath {
         return sinks;
     }
 
-    private List<AddressVertex> findSources() {
+    public List<AddressVertex> findSources() {
         var sources = new ArrayList<AddressVertex>();
 
         for (var v : graph.vertexSet()) {
