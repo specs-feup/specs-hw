@@ -41,7 +41,7 @@ public abstract class ASegmentDataFlow {
 
     public Graph<AddressVertex, DefaultEdge> buildDFG() {
         for (var i : segment) {
-            System.out.println(i.getRepresentation() + "  " + i.getData().getGenericTypes().toString());
+            //System.out.println(i.getRepresentation() + "  " + i.getData().getGenericTypes().toString());
             var op1 = i.getData().getOperands().get(0);
             var op2 = i.getData().getOperands().get(1);
             var op3 = i.getData().getOperands().size() == 3 ? i.getData().getOperands().get(2) : null;
