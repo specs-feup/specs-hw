@@ -36,10 +36,30 @@ public class BasicBlockDataflowAnalysis extends ATraceAnalyzer {
 
     public void analyze(List<Integer> windows) {
         AnalysisUtils.printSeparator(40);
+        var n = windows.size();
+        var instNumbers = new ArrayList<Integer>();
+        
         for (var i : windows) {
             var res = analyze(i);
             System.out.println(res.toString());
+            instNumbers.add(res.getInsts().size());
         }
+        
+        double mean = 0;
+        for (var i : instNumbers)
+            mean += i;
+        mean = mean / n;
+        
+        double std = 0;
+        for (var i : instNumbers)
+            std += Math.pow(i - mean, 2);
+        std = std / n;
+        std = Math.sqrt(std);
+        
+        AnalysisUtils.printSeparator(40);
+        System.out.println(AnalysisUtils.padRight("Total Basic Blocks found: ", 30) + n);
+        System.out.println(AnalysisUtils.padRight("No. inst. Mean: ", 30) + mean);
+        System.out.println(AnalysisUtils.padRight("No. inst. Standard deviation: ", 30) + std);
     }
 
     public DataFlowStatistics analyze(int window) {
