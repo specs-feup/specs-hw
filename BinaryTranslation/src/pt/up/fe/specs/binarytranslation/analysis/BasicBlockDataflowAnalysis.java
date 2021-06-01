@@ -22,6 +22,7 @@ import java.util.List;
 import org.specs.BinaryTranslation.ELFProvider;
 
 import pt.up.fe.specs.binarytranslation.analysis.dataflow.BasicBlockDataFlow;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowCriticalPath;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
@@ -47,6 +48,11 @@ public class BasicBlockDataflowAnalysis extends ATraceAnalyzer {
             System.out.println("\nDataflow graph:");
             var str = GraphUtils.generateGraphURL(dfg);
             System.out.println(str);
+            
+            var pathfinder = new DataFlowCriticalPath(dfg);
+            var path = pathfinder.calculatePath();
+            str = GraphUtils.generateGraphURL(path);
+            System.out.println("\nCritical path:\n" + str);
         }
     }
 }
