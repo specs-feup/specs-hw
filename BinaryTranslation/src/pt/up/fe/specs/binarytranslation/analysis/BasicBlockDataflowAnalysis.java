@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.specs.BinaryTranslation.ELFProvider;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.BasicBlockDataFlow;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.BasicBlockDataFlow;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;

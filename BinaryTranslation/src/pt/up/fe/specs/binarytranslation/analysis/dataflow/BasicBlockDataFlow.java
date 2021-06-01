@@ -11,43 +11,31 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.memory;
+package pt.up.fe.specs.binarytranslation.analysis.dataflow;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.AGraphTransform;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveOrphanOperations;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
-import pt.up.fe.specs.util.SpecsLogs;
 
-public class BasicBlockDataFlow extends APropertyDetector {
-    private Map<String, AddressVertex> vertexCache = new HashMap<String, AddressVertex>();
-    private Graph<AddressVertex, DefaultEdge> dfg = new DefaultDirectedGraph<>(DefaultEdge.class);
+public class BasicBlockDataFlow extends ASegmentDataFlow {
 
     public BasicBlockDataFlow(BasicBlockOccurrenceTracker tracker) {
-        super(tracker);
+        super(getTransformedBasicBlock(tracker));
     }
 
     public Graph<AddressVertex, DefaultEdge> buildDFG() {
-        var bb = getTransformedBasicBlock();
-
-        for (var i : bb) {
+        for (var i : segment) {
             System.out.println(i.getRepresentation() + "  " + i.getData().getGenericTypes().toString());
             var op1 = i.getData().getOperands().get(0);
             var op2 = i.getData().getOperands().get(1);
@@ -170,7 +158,7 @@ public class BasicBlockDataFlow extends APropertyDetector {
         return "unknown";
     }
 
-    private List<Instruction> getTransformedBasicBlock() {
+    private static List<Instruction> getTransformedBasicBlock(BasicBlockOccurrenceTracker tracker) {
         var<Instruction> newBB = new ArrayList<Instruction>();
         var<Instruction> oldBB = tracker.getBasicBlock().getInstructions();
         var size = oldBB.size();
