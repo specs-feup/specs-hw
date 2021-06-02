@@ -47,7 +47,15 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
         if (window.getLast().getDelay() > 0)
             return false;
 
-        return true;
+        // TEMPORARY HACK: cant have only LOAD or STORE (since this is usually stack operations)
+        // and including them skews the detection results
+        for (var inst : window.getWindow()) {
+            if (!inst.isLoad() && !inst.isStore())
+                return true;
+        }
+        return false;
+
+        // return true;
     }
 
     @Override
@@ -55,6 +63,11 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
             Map<Integer, List<Integer>> addrs) {
 
         var window = new InstructionWindow(this.getConfig().getMaxsize());
+
+        // MODIFICATION FOR IEEE MICRO DATA GATHERING
+        istream.setCycleCounterBounds(
+                this.getConfig().getStartAddr(),
+                this.getConfig().getStopAddr());
 
         // make 1st window
         while (!window.isFull()) {
