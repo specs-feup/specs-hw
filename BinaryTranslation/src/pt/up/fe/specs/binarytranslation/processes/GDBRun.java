@@ -27,15 +27,6 @@ public class GDBRun extends StringProcessRun {
     private boolean targetOpen = false;
     private Application app;
 
-    /*
-     * Constructor for a non-interactive scripting run
-     
-    public GDBRun(Application app, ResourceProvider gdbtmpl) {
-        this.app = app;
-        this.proc = BinaryTranslationUtils.newGDB(this.app);
-    
-    }*/
-
     protected Application getApp() {
         return app;
     }
@@ -68,10 +59,14 @@ public class GDBRun extends StringProcessRun {
     public GDBRun(Application app, File scriptFile) {
         super(GDBRun.getArgs(app, scriptFile));
         super.attachThreads();
-        this.getGDBResponse(5000); // consume a single garbage line produced from the start of gdb
+        this.getGDBResponse(5000);
+        this.consumeAllGDBResponse();
+        // first line might take a long time to launch QEMU...
+        // consume garbage lines produced from the start of gdb
+
         // Note:
         // when launching QEMU under GDB, the "target remote" command
-        // takes longer than 10ms to complete, hence the 1s timeout for
+        // takes longer than 10ms to complete, hence the 5s timeout for
         // all reads from stdout of the process
         // This shouldn't introduce delays in any other circumstances
         // since poll returns immediately
@@ -234,7 +229,7 @@ public class GDBRun extends StringProcessRun {
      */
     private boolean hasTarget() {
         this.sendGDBCommand("info target");
-        var allresponse = this.consumeAllGDBResponse();
+        var allresponse = this.consumeAllGDBResponse(100);
         return allresponse.contains("serial");
     }
 
@@ -268,8 +263,8 @@ public class GDBRun extends StringProcessRun {
         this.sendGDBCommand("info registers");
 
         var dump = new RegisterDump();
-        String line = null;
-        while ((line = this.getGDBResponse()) != null) {
+        String line = this.getGDBResponse(-1); // first line endless wait
+        do {
             if (!SpecsStrings.matches(line, REGPATTERN))
                 continue;
 
@@ -277,7 +272,7 @@ public class GDBRun extends StringProcessRun {
             var reg = regAndValue.get(0).trim();
             var value = Long.valueOf(regAndValue.get(1).trim(), 16);
             dump.add(reg, value);
-        }
+        } while ((line = this.getGDBResponse(5)) != null);
 
         return dump;
     }
@@ -316,12 +311,19 @@ public class GDBRun extends StringProcessRun {
     }
 
     /*
-     * Get all lines available from GDB process
+     * 
      */
     private String consumeAllGDBResponse() {
+        return this.consumeAllGDBResponse(2);
+    }
+
+    /*
+     * Get all lines available from GDB process
+     */
+    private String consumeAllGDBResponse(int mseconds) {
         var output = new StringBuilder();
         String line = null;
-        while ((line = super.receive()) != null) {
+        while ((line = super.receive(mseconds)) != null) {
             output.append(line + "\n");
         }
         return output.toString().stripTrailing();
