@@ -34,8 +34,9 @@ public class MicroBlazeBatchDetectTest {
     @Test
     public void MicroBlazeTraceBasicBlockDetect() {
         // ELFProvider elfs[] = MicroBlazeLivermoreELFN100.values();
-        ELFProvider elfs[] = MicroBlazePolyBenchBLAS.values();
-        ThreadedSegmentDetectUtils.BatchDetect(elfs, 4, 15,
+        // ELFProvider elfs[] = MicroBlazePolyBenchBLAS.values();
+        ELFProvider elfs[] = { MicroBlazePolyBenchBLAS.symm };
+        ThreadedSegmentDetectUtils.BatchDetect(elfs, 4, 20,
                 MicroBlazeTraceProvider.class,
                 MicroBlazeTraceStream.class,
                 TraceBasicBlockDetector.class);

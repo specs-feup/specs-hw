@@ -2,7 +2,7 @@ package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.MicroBlazePolyBench;
+import org.specs.MicroBlaze.MicroBlazePolyBenchBLAS;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -38,6 +38,6 @@ public class MicroBlazeStreamTester {
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
-                MicroBlazePolyBench.twomm.getResource(), MicroBlazeTraceStream.class);
+                MicroBlazePolyBenchBLAS.syrk.getResource(), MicroBlazeTraceStream.class);
     }
 }
