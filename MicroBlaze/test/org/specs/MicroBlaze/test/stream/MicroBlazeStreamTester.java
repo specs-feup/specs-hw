@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.MicroBlazePolyBenchBLAS;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -23,13 +24,15 @@ public class MicroBlazeStreamTester {
     @Test
     public void testStatic() {
         InstructionStreamTestUtils.printStream(
-                MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
+                MicroBlazePolyBenchBLAS.gemm, MicroBlazeElfStream.class);
+        // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
     }
 
     @Test
     public void testStaticRaw() {
         InstructionStreamTestUtils.rawDump(
-                MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
+                MicroBlazePolyBenchBLAS.gemm, MicroBlazeElfStream.class);
+        // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
     }
 
     @Test
