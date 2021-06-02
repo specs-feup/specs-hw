@@ -23,6 +23,12 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
     }
 
     @Override
+    public void setCycleCounterBounds(Number startAddr, Number stopAddr) {
+        this.boundStartAddr = startAddr.longValue();
+        this.boundStopAddr = stopAddr.longValue();
+    }
+
+    @Override
     public Instruction nextInstruction() {
 
         var newinst = super.nextInstruction();
