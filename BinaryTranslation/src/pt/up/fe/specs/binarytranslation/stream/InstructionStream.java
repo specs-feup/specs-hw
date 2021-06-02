@@ -76,4 +76,15 @@ public interface InstructionStream extends ObjectStream<Instruction> {
     default long getCycles() {
         return 0;
     }
+
+    /**
+     * NOTE: added on detached HEAD state at commit 6016995, for IEEE Micro 2021 data gathering (should be fast
+     * forwarded to master)
+     * 
+     * @param startAddr
+     * @param stopAddr
+     */
+    default void setCycleCounterBounds(Number startAddr, Number stopAddr) {
+        return;
+    }
 }
