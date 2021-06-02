@@ -8,6 +8,7 @@ import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;
 import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
@@ -17,6 +18,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
     // three auxiliary vars to help with mb-gdb bug
     private final MicroBlazeELFDump elfdump;
     private Instruction afterbug = null;
+    private RegisterDump savedRegs = null;
     private boolean haveStoredInst = false;
 
     /*
@@ -47,8 +49,6 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         } else {
             auxname = elfname;
         }
-
-
 
         // Workaround for mb-gdb bug of stepping over
         // two instructions at once when it hits an "imm"
@@ -92,6 +92,44 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
     /*
      * NOTE: this override will no longer be necessary once mg-gdb is bug free...
+     
+    @Override
+    public Instruction nextInstruction() {
+    
+        Instruction i = null;
+    
+        if (haveStoredInst == true) {
+            i = afterbug;
+            haveStoredInst = false;
+    
+        } else {
+            i = super.nextInstruction();
+        }
+    
+        if (i != null) {
+            // get another one if true
+            if (i.isImmediateValue() || (i.getDelay() > 0)) {
+    
+                // NOTE, doing simple elfdump.getInstruction returns a reference, and we want new objects
+                // after a call to nextInstruction() ALWAYS! Therefore, copy() must be appended
+                Instruction tmpInst = elfdump.getInstruction(i.getAddress() + this.getInstructionWidth());
+                afterbug = tmpInst.copy();
+                haveStoredInst = true;
+            }
+    
+            this.numcycles += i.getLatency();
+            this.numinsts++;
+    
+            // TODO: temporary fix for duplicated insts
+            // if (i.getRegisters().isEmpty())
+            // return nextInstruction();
+        }
+    
+        return i;
+    }*/
+
+    /*
+     * NOTE: this override will no longer be necessary once mg-gdb is bug free...
      */
     @Override
     public Instruction nextInstruction() {
@@ -100,6 +138,8 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
         if (haveStoredInst == true) {
             i = afterbug;
+            if (savedRegs != null)
+                i.setRegisters(new RegisterDump(savedRegs));
             haveStoredInst = false;
 
         } else {
@@ -115,6 +155,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
                 Instruction tmpInst = elfdump.getInstruction(i.getAddress() + this.getInstructionWidth());
                 afterbug = tmpInst.copy();
                 haveStoredInst = true;
+                savedRegs = i.getRegisters();
             }
 
             this.numcycles += i.getLatency();

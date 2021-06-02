@@ -26,7 +26,7 @@ public class MicroBlazeBatchDetectTest {
         // ELFProvider elfs[] = MicroBlazeLivermoreELFN100.values();
         // ELFProvider elfs[] = { MicroBlazeLivermoreELFN100.innerprod100 };
         ELFProvider elfs[] = MicroBlazePolyBenchBLAS.values();
-        ThreadedSegmentDetectUtils.BatchDetect(elfs, 2, 15,
+        ThreadedSegmentDetectUtils.BatchDetect(elfs, 2, 20,
                 MicroBlazeStaticProvider.class,
                 MicroBlazeElfStream.class,
                 FrequentStaticSequenceDetector.class);
