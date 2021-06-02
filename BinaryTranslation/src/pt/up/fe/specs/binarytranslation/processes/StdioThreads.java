@@ -40,8 +40,7 @@ public class StdioThreads {
         // this thread will block here if "nextLine" is waiting for content
         // of if main thread has not read the concurrentchannel for the
         // previous stdout line
-        // while (lstream.hasNextLine()) {
-        while (run.getProc().isAlive()) {
+        while (lstream.hasNextLine()) {
             var peek = lstream.peekNextLine();
             if (peek != null) {
                 producer.put(peek);
@@ -77,6 +76,17 @@ public class StdioThreads {
                 bw.newLine();
                 bw.flush();
             }
+
+            /*
+            while (true) {
+                var st = consumer.take(); // wait for "main" thread to produce stuff
+                if (run.getProc().isAlive()) { // can only send to proc if proc is alive
+                    bw.write(st);
+                    bw.newLine();
+                    bw.flush();
+                } else
+                    break;
+            }*/
             bw.close();
 
         } catch (IOException e) {
