@@ -39,7 +39,7 @@ public class MicroBlazeStreamTester {
     @Test
     public void testTrace() {
         InstructionStreamTestUtils.printStream(
-                MicroBlazePolyBenchBLAS.gesummv, MicroBlazeTraceStream.class);
+                MicroBlazePolyBenchBLAS.gemm, MicroBlazeTraceStream.class);
     }
 
     // TODO: rawDump now doesnt work if the qemu template doesnt include the loop...

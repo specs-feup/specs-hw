@@ -71,7 +71,7 @@ public class MicroBlazeDetectorsTest {
 
         var elf = MicroBlazePolyBenchBLAS.gemm;
         var builder = new DetectorConfigurationBuilder();
-        builder.withMaxWindow(13)
+        builder.withMaxWindow(12)
                 .withStartAddr(elf.getKernelStart())
                 .withStopAddr(elf.getKernelStop())
                 .withPrematureStopAddr(elf.getKernelStop())
