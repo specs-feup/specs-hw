@@ -46,7 +46,8 @@ public abstract class AFixedSizeBasicBlockDetector extends ASimpleSegmentDetecto
                 .getCpuArchitectureName()
                 .getResource().equals("microblaze32")) // NOTE: this is a quick hack
 
-            if (window.getFromLast(1).isBackwardsJump())
+            if (window.getFromLast(1).isBackwardsJump()) // still a bug here, if a branch without delay is second to
+                                                         // last
                 last = window.getFromLast(1);
             else
                 last = window.getLast();
