@@ -57,7 +57,7 @@ public abstract class ASegmentDataFlow {
             if (i.isMemory()) {
                 handleMemoryInstruction(i, rDvert, rAvert, rBvert);
             }
-            if (i.isJump()) {
+            else if (i.isJump()) {
                 handleJumpInstruction(i, rDvert, rAvert, rBvert);
             } else {
                 handleLogicalArithmeticInstruction(i, rDvert, rAvert, rBvert);

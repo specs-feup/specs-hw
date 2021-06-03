@@ -109,7 +109,7 @@ public class GraphUtils {
         sub.removeAllVertices(rd);
         return sub;
     }
-    
+
     public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph, String title) {
         DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexAttributeProvider((v) -> {
@@ -123,16 +123,29 @@ public class GraphUtils {
 
             map.put("label", DefaultAttribute.createAttribute(label));
             map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
+            map.put("color", DefaultAttribute.createAttribute(v.getColor()));
+            map.put("penwidth", DefaultAttribute.createAttribute("2.5"));
             return map;
         });
+
+        exporter.setEdgeAttributeProvider((e) -> {
+            Map<String, Attribute> map = new LinkedHashMap<>();
+
+            if (graph.getEdgeSource(e).getColor().equals("red") && graph.getEdgeTarget(e).getColor().equals("red"))
+                map.put("color", DefaultAttribute.createAttribute("red"));
+
+            map.put("penwidth", DefaultAttribute.createAttribute("1.5"));
+            return map;
+        });
+
         Supplier<Map<String, Attribute>> sup = () -> Map.of("label", DefaultAttribute.createAttribute(title),
-                                                            "labelloc", DefaultAttribute.createAttribute("t"));
+                "labelloc", DefaultAttribute.createAttribute("t"));
         exporter.setGraphAttributeProvider(sup);
         Writer writer = new StringWriter();
         exporter.exportGraph(graph, writer);
         return writer.toString();
     }
-    
+
     public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph) {
         return graphToDot(graph, "\"Graph\"");
     }
@@ -233,7 +246,7 @@ public class GraphUtils {
         }
         return base;
     }
-    
+
     public static String generateGraphURL(Graph<AddressVertex, DefaultEdge> graph) {
         var str = GraphUtils.graphToDot(graph);
         return generateGraphURL(str);
