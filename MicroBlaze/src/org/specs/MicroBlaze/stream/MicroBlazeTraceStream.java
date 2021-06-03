@@ -142,13 +142,17 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
                 i.setRegisters(new RegisterDump(savedRegs));
             haveStoredInst = false;
 
+            // this is called via super.nextInstruction in other cases
+            if (i != null)
+                this.counterIncreases(i);
+
         } else {
             i = super.nextInstruction();
         }
 
         if (i != null) {
             // get another one if true
-            if (i.isImmediateValue() || (i.getDelay() > 0)) {
+            if (i.isImmediateValue()) {// || (i.getDelay() > 0)) {
 
                 // NOTE, doing simple elfdump.getInstruction returns a reference, and we want new objects
                 // after a call to nextInstruction() ALWAYS! Therefore, copy() must be appended
@@ -158,8 +162,8 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
                 savedRegs = i.getRegisters();
             }
 
-            this.numcycles += i.getLatency();
-            this.numinsts++;
+            // this.numcycles += i.getLatency();
+            // this.numinsts++;
 
             // TODO: temporary fix for duplicated insts
             // if (i.getRegisters().isEmpty())

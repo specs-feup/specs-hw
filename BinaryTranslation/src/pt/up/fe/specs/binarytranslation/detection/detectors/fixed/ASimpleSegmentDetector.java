@@ -64,6 +64,9 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
 
         var window = new InstructionWindow(this.getConfig().getMaxsize());
 
+        if (this.getConfig().getSkipToAddr().longValue() != -1)
+            istream.advanceTo(this.getConfig().getSkipToAddr().longValue());
+
         // MODIFICATION FOR IEEE MICRO DATA GATHERING
         istream.setCycleCounterBounds(
                 this.getConfig().getStartAddr(),
@@ -104,7 +107,7 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
             }
 
             // check for premature quit condition
-            if (window.getLast().getAddress() == this.getConfig().getPrematureStopAddr())
+            if (window.getLast().getAddress().longValue() == this.getConfig().getPrematureStopAddr().longValue())
                 break;
         }
 
