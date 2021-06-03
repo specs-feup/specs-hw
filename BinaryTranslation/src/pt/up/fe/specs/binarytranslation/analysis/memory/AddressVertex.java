@@ -31,6 +31,7 @@ public class AddressVertex {
     private AddressVertexType type;
     private AddressVertexProperty property = AddressVertexProperty.NULL;
     private AddressVertexIsaInfo isaInfo = AddressVertexIsaInfo.NULL;
+    private String color = "black";
     public static AddressVertex nullVertex = new AddressVertex("", AddressVertexType.NULL);
     
     public AddressVertex(String label, AddressVertexType type) {
@@ -94,5 +95,13 @@ public class AddressVertex {
 
     public void setKeep(boolean keep) {
         this.keep = keep;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

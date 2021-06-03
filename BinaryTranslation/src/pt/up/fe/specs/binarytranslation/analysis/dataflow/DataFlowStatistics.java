@@ -13,7 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.dataflow;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
@@ -43,31 +45,80 @@ public class DataFlowStatistics {
             if (v.getType() == AddressVertexType.OPERATION)
                 setPathSize(getPathSize() + 1);
         }
+        for (var v : path.vertexSet())
+            v.setColor("red");
     }
 
     @Override
     public String toString() {
+        var label = new StringBuilder()
+                .append("Critical path size: ")
+                .append(pathSize)
+                .append("\\l")
+                .append("Number of inst.: ")
+                .append(insts.size())
+                .append("\\l")
+                .append("Sources: ")
+                .append(sources.toString())
+                .append("\\l")
+                .append("Sinks: ")
+                .append(sinks.toString())
+                .append("\\l")
+                .append("Op counts:")
+                .append("\\l");
+        
+        var cnt = getOpCount();
+        for (var key : cnt.keySet()) {
+            if (!key.equals("Load") && !key.equals("Store"))
+            label.append(key + " : " + cnt.get(key) + "\\l");
+        }
+        if (cnt.containsKey("Load"))
+            label.append("Load" + " : " + cnt.get("Load") + "\\l");
+        if (cnt.containsKey("Store"))
+            label.append("Store" + " : " + cnt.get("Store") + "\\l");
+        
+        var dfg = GraphUtils.graphToDot(graph);
+        dfg = dfg.replace("}", "");
+        dfg += "nstat[label=\"" + label.toString() + "\",shape=rect,labeljust=l,nojustify=true]\n}";
+        
         var sb = new StringBuilder("DataFlow Statistics\n")
                 .append("----------------------\n")
-                .append(AnalysisUtils.padRight("DFG: ", 20))
-                .append(GraphUtils.generateGraphURL(graph))
-                .append("\n")
-                .append(AnalysisUtils.padRight("Critical path: ", 20))
-                .append(GraphUtils.generateGraphURL(path))
-                .append("\n")
-                .append(AnalysisUtils.padRight("Critical path size: ", 20))
-                .append(pathSize)
-                .append("\n")
-                .append(AnalysisUtils.padRight("Number of inst.: ", 20))
-                .append(insts.size())
-                .append("\n")
-                .append(AnalysisUtils.padRight("Sources: ", 20))
-                .append(sources.toString())
-                .append("\n")
-                .append(AnalysisUtils.padRight("Sinks: ", 20))
-                .append(sinks.toString())
+                .append("DFG:\n")
+                .append(GraphUtils.generateGraphURL(dfg))
                 .append("\n");
+
         return sb.toString();
+    }
+    
+    private Map<String, Integer> getOpCount() {
+        var map = new HashMap<String, Integer>();
+        for (var v : graph.vertexSet()) {
+            if (v.getType() == AddressVertexType.OPERATION || v.getType() == AddressVertexType.MEMORY) {
+                var op = labelToFullName(v.getLabel());
+                if (map.containsKey(op))
+                    map.put(op, map.get(op) + 1);
+                else
+                    map.put(op, 1);
+            }
+        }
+        return map;
+    }
+
+    private String labelToFullName(String label) {
+        switch (label) {
+        case "+":
+            return "Add";
+        case "-":
+            return "Sub";
+        case "*":
+            return "Mult";
+        case "/":
+            return "Div";
+        case "==":
+            return "Cmp";
+        default:
+            return label;
+        }
     }
 
     public Graph<AddressVertex, DefaultEdge> getGraph() {
