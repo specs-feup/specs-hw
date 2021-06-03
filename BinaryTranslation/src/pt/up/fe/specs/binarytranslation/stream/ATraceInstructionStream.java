@@ -32,8 +32,9 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
     public Instruction nextInstruction() {
 
         var newinst = super.nextInstruction();
-        if (this.numinsts % 10000 == 0 && !this.isSilent()) {
-            System.out.println(this.numinsts + " instructions simulated...");
+        if (this.numBoundCycles % 10000 == 0 && !this.isSilent()) {
+            System.out.println(this.numBoundCycles + " bound cycles simulated... at addr 0x"
+                    + Long.toHexString(newinst.getAddress()));
         }
 
         return newinst;

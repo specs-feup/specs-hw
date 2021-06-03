@@ -2,6 +2,7 @@ package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.MicroBlazePolyBenchBLAS;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -67,9 +68,18 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testTraceBasicBlockDetector() {
+
+        var elf = MicroBlazePolyBenchBLAS.gemm;
+        var builder = new DetectorConfigurationBuilder();
+        builder.withMaxWindow(13)
+                .withStartAddr(elf.getKernelStart())
+                .withStopAddr(elf.getKernelStop())
+                .withPrematureStopAddr(elf.getKernelStop())
+                .withSkipToAddr(elf.getKernelStart());
+
         // TODO ensure trace is called here
-        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.matmul, // MicroBlazeLivermoreELFN10.cholesky,
-                MicroBlazeTraceStream.class, TraceBasicBlockDetector.class);
+        var bundle = SegmentDetectTestUtils.detect(
+                elf, MicroBlazeTraceStream.class, TraceBasicBlockDetector.class, builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
 

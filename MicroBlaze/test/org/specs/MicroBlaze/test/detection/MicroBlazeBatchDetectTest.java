@@ -3,7 +3,6 @@ package org.specs.MicroBlaze.test.detection;
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazePolyBenchBLAS;
-import org.specs.MicroBlaze.MicroBlazePolyBenchBLASLarge;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeStaticProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
@@ -60,9 +59,9 @@ public class MicroBlazeBatchDetectTest {
         // (new MemoryProfiler()).execute();
         // ELFProvider elfs[] = MicroBlazeLivermoreELFN100.values();
         // ELFProvider elfs[] = MicroBlazePolyBenchBLAS.values();
-        ELFProvider elfs[] = MicroBlazePolyBenchBLASLarge.values();
-        // ELFProvider elfs[] = { MicroBlazePolyBenchBLAS.symm };
-        ThreadedSegmentDetectUtils.BatchDetect(elfs, 4, 20,
+        // ELFProvider elfs[] = MicroBlazePolyBenchBLASLarge.values();
+        ELFProvider elfs[] = { MicroBlazePolyBenchBLAS.gemm };
+        ThreadedSegmentDetectUtils.BatchDetect(elfs, 8, 13,
                 MicroBlazeTraceProvider.class,
                 MicroBlazeTraceStream.class,
                 TraceBasicBlockDetector.class);

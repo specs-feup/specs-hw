@@ -78,11 +78,7 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
         return this.producer.nextInstruction();
     }
 
-    @Override
-    public Instruction nextInstruction() {
-        var inst = this.next();
-        if (inst == null)
-            return null;
+    protected void counterIncreases(Instruction inst) {
 
         this.numcycles += inst.getLatency();
         this.numinsts++;
@@ -94,7 +90,15 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
                 this.numBoundInsts++;
             }
         }
+    }
 
+    @Override
+    public Instruction nextInstruction() {
+        var inst = this.next();
+        if (inst == null)
+            return null;
+
+        this.counterIncreases(inst);
         // if (this.dumpStream)
         // System.out.println(inst.getRepresentation());
 

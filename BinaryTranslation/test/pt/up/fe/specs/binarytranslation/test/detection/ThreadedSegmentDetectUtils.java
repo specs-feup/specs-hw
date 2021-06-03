@@ -23,6 +23,9 @@ public class ThreadedSegmentDetectUtils {
 
         var iproducer = ClassBuilders.buildProducer(producerClass, elf);
 
+        // tmp hack for speed
+        // iproducer.advanceTo(elf.getKernelStart().longValue());
+
         /*
          * Stream constructor
          */
@@ -40,10 +43,11 @@ public class ThreadedSegmentDetectUtils {
                     InstructionStream stream = null;
                     try {
                         stream = (InstructionStream) cons.newInstance(BinaryTranslationUtils.getFile(elf), cc);
-                        stream.silent(true);
+                        stream.silent(false);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                     return stream;
                 });
 
@@ -56,6 +60,7 @@ public class ThreadedSegmentDetectUtils {
                             .withMaxWindow(i)
                             .withStartAddr(elf.getKernelStart())
                             .withStopAddr(elf.getKernelStop())
+                            .withPrematureStopAddr(elf.getKernelStop())
                             .build());
 
             streamengine.subscribe(istream -> detector.detectSegments((InstructionStream) istream));
