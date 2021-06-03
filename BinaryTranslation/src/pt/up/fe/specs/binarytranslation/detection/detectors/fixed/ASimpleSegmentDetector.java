@@ -75,9 +75,11 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
         // make 1st window
         while (!window.isFull()) {
             var inst = istream.nextInstruction();
-            this.processedInsts.add(inst);
+            // this.processedInsts.add(inst);
             window.add(inst);
         }
+
+        int addctr = 0;
 
         // process entire stream
         while (true) {
@@ -93,6 +95,7 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
 
                 // add sequence to map which is indexed by hashCode + startaddr
                 super.addHashSequenceToList(hashed, newseq);
+                addctr++;
             }
 
             // done
@@ -102,7 +105,7 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
             // shift window by 1
             else {
                 var inst = istream.nextInstruction();
-                this.processedInsts.add(inst);
+                // this.processedInsts.add(inst);
                 window.add(inst);
             }
 
@@ -110,6 +113,7 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
             if (window.getLast().getAddress().longValue() == this.getConfig().getPrematureStopAddr().longValue())
                 break;
         }
+        System.out.println(addctr);
 
         // Remove all sequences which only happen once
         super.removeUnique(addrs, hashed);

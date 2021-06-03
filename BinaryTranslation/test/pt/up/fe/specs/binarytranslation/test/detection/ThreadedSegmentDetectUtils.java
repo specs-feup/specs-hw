@@ -22,10 +22,6 @@ public class ThreadedSegmentDetectUtils {
             Class<?> producerClass, Class<?> streamClass, Class<?> detectorClass) {
 
         var iproducer = ClassBuilders.buildProducer(producerClass, elf);
-
-        // tmp hack for speed
-        // iproducer.advanceTo(elf.getKernelStart().longValue());
-
         /*
          * Stream constructor
          */
