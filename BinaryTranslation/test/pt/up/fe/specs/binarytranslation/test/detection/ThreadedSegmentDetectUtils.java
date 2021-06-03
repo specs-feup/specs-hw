@@ -39,7 +39,7 @@ public class ThreadedSegmentDetectUtils {
                     InstructionStream stream = null;
                     try {
                         stream = (InstructionStream) cons.newInstance(BinaryTranslationUtils.getFile(elf), cc);
-                        stream.silent(false);
+                        stream.silent(true);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -56,6 +56,7 @@ public class ThreadedSegmentDetectUtils {
                             .withMaxWindow(i)
                             .withStartAddr(elf.getKernelStart())
                             .withStopAddr(elf.getKernelStop())
+                            .withSkipToAddr(elf.getKernelStart())
                             .withPrematureStopAddr(elf.getKernelStop())
                             .build());
 
