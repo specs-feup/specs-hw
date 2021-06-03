@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jgrapht.Graph;
+import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -34,21 +35,22 @@ public class DataFlowCriticalPath {
     public Graph<AddressVertex, DefaultEdge> calculatePath() {
         var sources = findSources();
         var sinks = findSinks();
-        List<AddressVertex> currPath = new ArrayList<AddressVertex>();
+        List<AddressVertex> bestPath = new ArrayList<AddressVertex>();
 
         for (var source : sources) {
             for (var sink : sinks) {
-                var dijkstra = new DijkstraShortestPath<AddressVertex, DefaultEdge>(graph);
-                var path = dijkstra.getPath(source, sink);
-                if (path == null)
-                    continue;
-
-                var pathList = path.getVertexList();
-                if (pathSize(pathList) > pathSize(currPath))
-                    currPath = pathList;
+                //ar dijkstra = new DijkstraShortestPath<AddressVertex, DefaultEdge>(graph);
+                //var path = dijkstra.getPath(source, sink);
+                
+                var alg = new AllDirectedPaths<AddressVertex, DefaultEdge>(graph);
+                for (var path : alg.getAllPaths(source, sink, true, null)) {
+                    var currPath = path.getVertexList();
+                    if (pathSize(currPath) > pathSize(bestPath))
+                        bestPath = currPath;
+                }
             }
         }
-        return pathToGraph(currPath);
+        return pathToGraph(bestPath);
     }
 
     private Graph<AddressVertex, DefaultEdge> pathToGraph(List<AddressVertex> currPath) {

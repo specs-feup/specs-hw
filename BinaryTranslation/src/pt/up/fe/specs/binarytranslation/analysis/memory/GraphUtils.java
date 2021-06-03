@@ -130,9 +130,12 @@ public class GraphUtils {
 
         exporter.setEdgeAttributeProvider((e) -> {
             Map<String, Attribute> map = new LinkedHashMap<>();
-
-            if (graph.getEdgeSource(e).getColor().equals("red") && graph.getEdgeTarget(e).getColor().equals("red"))
+            var source = graph.getEdgeSource(e);
+            var target = graph.getEdgeTarget(e);
+            
+            if (source.getColor().equals("red") && target.getColor().equals("red")) {
                 map.put("color", DefaultAttribute.createAttribute("red"));
+            }
 
             map.put("penwidth", DefaultAttribute.createAttribute("1.5"));
             return map;
