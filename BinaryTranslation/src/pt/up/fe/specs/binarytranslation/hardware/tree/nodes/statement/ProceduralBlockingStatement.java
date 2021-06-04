@@ -16,8 +16,14 @@ public class ProceduralBlockingStatement extends SingleStatement {
     }
 
     @Override
+    public String toContentString() {
+        return " = ";
+    }
+
+    @Override
     public String getAsString() {
-        return this.getTarget().getAsString() + " = " + this.getExpression().getAsString() + ";";
+        return this.getTarget().getAsString()
+                + this.toContentString() + this.getExpression().getAsString() + ";";
     }
 
     @Override

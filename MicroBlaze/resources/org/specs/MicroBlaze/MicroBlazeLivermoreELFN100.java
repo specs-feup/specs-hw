@@ -33,14 +33,17 @@ public enum MicroBlazeLivermoreELFN100 implements ELFProvider {
         this.kernelStop = kernelStop;
     }
 
+    @Override
     public String asTxtDump() {
         return this.fullPath.replace(".elf", ".txt");
     }
 
+    @Override
     public Number getKernelStart() {
         return kernelStart;
     }
 
+    @Override
     public Number getKernelStop() {
         return kernelStop;
     }

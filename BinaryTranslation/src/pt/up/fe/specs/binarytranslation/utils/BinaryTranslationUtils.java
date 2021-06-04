@@ -258,6 +258,33 @@ public class BinaryTranslationUtils {
     }
 
     /*
+     * 
+     */
+    public static void renderDotty(String pngName, String dottyContents) {
+        var dotfile = new File(pngName.replace(".png", ".dot"));
+        dotfile.deleteOnExit();
+        SpecsIo.write(dotfile, dottyContents);
+        BinaryTranslationUtils.renderDotty(dotfile);
+    }
+
+    /*
+     * Render the dotty file into a PNG file (calls dot executable)
+     */
+    public static void renderDotty(File dotfile) {
+
+        var dotpath = dotfile.getAbsolutePath();
+        var pngpath = dotpath.replace(".dot", ".png");
+
+        // render dotty
+        var arguments = Arrays.asList(BinaryTranslationResource.DOTTY_BINARY.getResource(),
+                "-Tpng", dotfile.getAbsolutePath(), "-o", pngpath);
+
+        // dot -Tps filename.dot -o outfile.ps
+        ProcessBuilder pb = new ProcessBuilder(arguments);
+        BinaryTranslationUtils.newProcess(pb);
+    }
+
+    /*
      * Get SPeCS copyright text with current year
      */
     public static String getSPeCSCopyright() {
@@ -265,6 +292,13 @@ public class BinaryTranslationUtils {
         var crreplacer = new Replacer(crtext);
         crreplacer.replace("<THEYEAR>", LocalDateTime.now().getYear());
         return crreplacer.toString();
+    }
+
+    /*
+     * 
+     */
+    public static int signExtend16(int value, int currlen) {
+        return (value << (16 - currlen)) >> (16 - currlen);
     }
 
     /*

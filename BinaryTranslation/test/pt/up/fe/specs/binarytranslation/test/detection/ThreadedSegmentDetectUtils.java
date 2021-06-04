@@ -1,7 +1,6 @@
 package pt.up.fe.specs.binarytranslation.test.detection;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,58 +20,63 @@ public class ThreadedSegmentDetectUtils {
     public static List<SegmentBundle> getSegments(ELFProvider elf, int minsize, int maxWindowSize,
             Class<?> producerClass, Class<?> streamClass, Class<?> detectorClass) {
 
-        var iproducer = ClassBuilders.buildProducer(producerClass, elf);
-        /*
-         * Stream constructor
-         */
-        Constructor<?> cons;
         try {
-            cons = streamClass.getConstructor(File.class, ChannelConsumer.class);
+            /*
+             * 
+             */
+            var iproducer = ClassBuilders.buildProducer(producerClass, elf);
+
+            /*
+             * Stream constructor
+             */
+            var cons = streamClass.getConstructor(File.class, ChannelConsumer.class);
+
+            /*
+             *  host for threads
+             */
+            var streamengine = new ProducerEngine<>(iproducer, op -> op.nextInstruction(),
+                    cc -> {
+                        InstructionStream stream = null;
+                        try {
+                            stream = (InstructionStream) cons.newInstance(BinaryTranslationUtils.getFile(elf), cc);
+                            stream.silent(true);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        return stream;
+                    });
+
+            // for all window sizes
+            for (int i = minsize; i <= maxWindowSize; i++) {
+
+                // detector
+                var detector = ClassBuilders.buildDetector(detectorClass,
+                        new DetectorConfigurationBuilder()
+                                .withMaxWindow(i)
+                                .withStartAddr(elf.getKernelStart())
+                                .withStopAddr(elf.getKernelStop())
+                                .withSkipToAddr(elf.getKernelStart())
+                                .withPrematureStopAddr(elf.getKernelStop())
+                                .build());
+
+                streamengine.subscribe(istream -> detector.detectSegments((InstructionStream) istream));
+            }
+
+            // launch all threads (blocking)
+            streamengine.launch();
+
+            var listOfSegs = new ArrayList<SegmentBundle>();
+            for (var consumer : streamengine.getConsumers()) {
+                var results1 = (SegmentBundle) consumer.getConsumeResult();
+                listOfSegs.add(results1);
+            }
+
+            return listOfSegs;
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        // host for threads
-        var streamengine = new ProducerEngine<>(iproducer, op -> op.nextInstruction(),
-                cc -> {
-                    InstructionStream stream = null;
-                    try {
-                        stream = (InstructionStream) cons.newInstance(BinaryTranslationUtils.getFile(elf), cc);
-                        stream.silent(true);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    return stream;
-                });
-
-        // for all window sizes
-        for (int i = minsize; i <= maxWindowSize; i++) {
-
-            // detector
-            var detector = ClassBuilders.buildDetector(detectorClass,
-                    new DetectorConfigurationBuilder()
-                            .withMaxWindow(i)
-                            .withStartAddr(elf.getKernelStart())
-                            .withStopAddr(elf.getKernelStop())
-                            .withSkipToAddr(elf.getKernelStart())
-                            .withPrematureStopAddr(elf.getKernelStop())
-                            .build());
-
-            streamengine.subscribe(istream -> detector.detectSegments((InstructionStream) istream));
-        }
-
-        // launch all threads (blocking)
-        streamengine.launch();
-
-        var listOfSegs = new ArrayList<SegmentBundle>();
-        for (var consumer : streamengine.getConsumers()) {
-            var results1 = (SegmentBundle) consumer.getConsumeResult();
-            listOfSegs.add(results1);
-        }
-
-        return listOfSegs;
     }
 
     /*
@@ -88,13 +92,6 @@ public class ThreadedSegmentDetectUtils {
             var segs = ThreadedSegmentDetectUtils.getSegments(
                     elf, minsize, maxsize,
                     provider, stream, detector);
-
-            /*for (var bundle : segs) {
-                for (var bs : bundle.getSegments()) {
-                    bs.printSegment();
-                    System.out.print("\n");
-                }
-            }*/
 
             BundleStatsUtils.bundleStatsDump(elf, segs, true);
         }

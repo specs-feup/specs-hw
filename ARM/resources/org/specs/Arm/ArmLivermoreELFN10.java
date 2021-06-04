@@ -8,10 +8,10 @@ public enum ArmLivermoreELFN10 implements ELFProvider {
     diffpredict("org/specs/Arm/asm/N10/diffpredict_N10.elf", 0x1500, 0x15bc),
     // glinearrec("org/specs/Arm/asm/N10/glinearrec_N10.elf", 0x3100, 0x31dc),
     // linrecurrence? (there are 2 linear recurrence kernels); this one doesnt work?
-    hydro("org/specs/Arm/asm/N10/hydro_N10.elf", 0x2990, 0x2a1c),
+    hydro("org/specs/Arm/asm/N10/hydro_N10.elf", 0x2990, 0x2a14), // 0x2a1c),
     hydro2d("org/specs/Arm/asm/N10/hydro2d_N10.elf", 0x2b90, 0x2e9c),
     hydro2dimpl("org/specs/Arm/asm/N10/hydro2dimpl_N10.elf", 0x2f68, 0x3074),
-    innerprod("org/specs/Arm/asm/N10/innerprod_N10.elf", 0x1488, 0x14fc),
+    innerprod("org/specs/Arm/asm/N10/innerprod_N10.elf", 0x1488, 0x14f4), // 0x14fc),
     intpredict("org/specs/Arm/asm/N10/intpredict_N10.elf", 0x1e30, 0x1f7c),
     linrec("org/specs/Arm/asm/N10/linrec_N10.elf", 0x18f0, 0x19a4),
     matmul("org/specs/Arm/asm/N10/matmul_N10.elf", 0x2ea0, 0x2f64),

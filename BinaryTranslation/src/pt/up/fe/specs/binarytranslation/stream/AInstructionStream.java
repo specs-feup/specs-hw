@@ -99,9 +99,6 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
             return null;
 
         this.counterIncreases(inst);
-        // if (this.dumpStream)
-        // System.out.println(inst.getRepresentation());
-
         return inst;
     }
 

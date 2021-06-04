@@ -18,6 +18,11 @@ public class HardwareErrorMessage extends HardwareNode {
     }
 
     @Override
+    public String toContentString() {
+        return this.getAsString();
+    }
+
+    @Override
     protected HardwareNode copyPrivate() {
         return new HardwareErrorMessage(this.errorText);
     }

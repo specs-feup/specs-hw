@@ -28,8 +28,6 @@ public class InstructionStreamTestUtils {
         }
 
         try (InstructionStream el = (InstructionStream) cons.newInstance(fd)) {
-
-            el.advanceTo(elf.getKernelStart().longValue());
             doWork.apply(el);
 
         } catch (Exception e) {
