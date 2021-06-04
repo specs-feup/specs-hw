@@ -28,7 +28,12 @@ public abstract class ABinaryHardwareExpression extends HardwareExpression {
     }
 
     @Override
+    public String toContentString() {
+        return this.expressionOperator;
+    }
+
+    @Override
     public String getAsString() {
-        return this.getLeft().getAsString() + " " + this.expressionOperator + " " + this.getRight().getAsString();
+        return this.getLeft().getAsString() + " " + this.toContentString() + " " + this.getRight().getAsString();
     }
 }

@@ -20,8 +20,7 @@ import java.util.Optional;
 
 import org.specs.MicroBlaze.legacy.ArgumentsProperties.ArgumentProperty;
 
-import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
-import pt.up.fe.specs.binarytranslation.legacy.TraceInstruction32;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
 
@@ -30,7 +29,7 @@ import pt.up.fe.specs.util.SpecsStrings;
  * 
  * @author Joao Bispo
  */
-public class MbInstruction implements TraceInstruction32 {
+public class MbInstruction { // implements TraceInstruction32 {
 
     /**
      * INSTANCE VARIABLES
@@ -67,12 +66,10 @@ public class MbInstruction implements TraceInstruction32 {
         return new MbInstruction(address, instructionName, newOperandList, encodedInst);
     }
 
-    @Override
     public int getAddress32() {
         return address;
     }
 
-    @Override
     public String getInstruction() {
         StringBuilder builder = new StringBuilder();
 
@@ -90,12 +87,10 @@ public class MbInstruction implements TraceInstruction32 {
         return builder.toString();
     }
 
-    @Override
     public Integer getCycles() {
         return cycles;
     }
 
-    @Override
     public Optional<Integer> getEncoded() {
         return Optional.ofNullable(encodedInst);
     }
@@ -184,10 +179,10 @@ public class MbInstruction implements TraceInstruction32 {
         return getAsm();
     }
 
-    public static MbInstruction create(TraceInstruction32 traceInstruction) {
-        return create(traceInstruction.getAddress32(),
-                traceInstruction.getInstruction(), traceInstruction.getCycles(),
-                traceInstruction.getEncoded().orElse(null));
+    public static MbInstruction create(Instruction traceInstruction) {
+        return create(traceInstruction.getAddress().intValue(),
+                traceInstruction.getInstruction(), Integer.valueOf(traceInstruction.getLatency()),
+                null);
     }
 
     public static MbInstruction create(int address, String instruction) {
@@ -222,28 +217,5 @@ public class MbInstruction implements TraceInstruction32 {
         }
 
         return new MbInstruction(address, instructionName, cycle, operands, instInt);
-    }
-
-    @Override
-    public boolean isJump() {
-        return OperationProperties.isJump(instructionName);
-    }
-
-    @Override
-    public boolean isBackwardsJump() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean isImmediateValue() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public InstructionPseudocode getPseudocode() {
-        // TODO Auto-generated method stub
-        return null;
     }
 }

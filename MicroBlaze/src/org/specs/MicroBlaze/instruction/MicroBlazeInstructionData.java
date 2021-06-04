@@ -12,11 +12,6 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class MicroBlazeInstructionData extends InstructionData {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 3481800030791924186L;
-
     /*
      * Only public constructor
      */

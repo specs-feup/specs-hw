@@ -34,18 +34,10 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         // this if-else is only here to replace the "cholesky_trace.txt" auxiliary
         // trace file with the equivalent ELF dump, so that tests can run on Jenkins without GNU tools
         File auxname = null;
-        // if (elfname.getName().equals("cholesky_trace.txt")) {
-        // auxname = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.txt");
-        // auxname.deleteOnExit();
-        // } else {
-        // auxname = elfname;
-        // }
-
         if (elfname.getName().contains("_trace.txt")) {
             String name = elfname.getPath().replace(".\\", "").replace("\\", "/").replace("_trace", "");
             auxname = SpecsIo.resourceCopy(name);
             auxname.deleteOnExit();
-            System.out.println(name);
         } else {
             auxname = elfname;
         }
@@ -92,44 +84,6 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
     /*
      * NOTE: this override will no longer be necessary once mg-gdb is bug free...
-     
-    @Override
-    public Instruction nextInstruction() {
-    
-        Instruction i = null;
-    
-        if (haveStoredInst == true) {
-            i = afterbug;
-            haveStoredInst = false;
-    
-        } else {
-            i = super.nextInstruction();
-        }
-    
-        if (i != null) {
-            // get another one if true
-            if (i.isImmediateValue() || (i.getDelay() > 0)) {
-    
-                // NOTE, doing simple elfdump.getInstruction returns a reference, and we want new objects
-                // after a call to nextInstruction() ALWAYS! Therefore, copy() must be appended
-                Instruction tmpInst = elfdump.getInstruction(i.getAddress() + this.getInstructionWidth());
-                afterbug = tmpInst.copy();
-                haveStoredInst = true;
-            }
-    
-            this.numcycles += i.getLatency();
-            this.numinsts++;
-    
-            // TODO: temporary fix for duplicated insts
-            // if (i.getRegisters().isEmpty())
-            // return nextInstruction();
-        }
-    
-        return i;
-    }*/
-
-    /*
-     * NOTE: this override will no longer be necessary once mg-gdb is bug free...
      */
     @Override
     public Instruction nextInstruction() {
@@ -161,9 +115,6 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
                 haveStoredInst = true;
                 savedRegs = i.getRegisters();
             }
-
-            // this.numcycles += i.getLatency();
-            // this.numinsts++;
 
             // TODO: temporary fix for duplicated insts
             // if (i.getRegisters().isEmpty())
