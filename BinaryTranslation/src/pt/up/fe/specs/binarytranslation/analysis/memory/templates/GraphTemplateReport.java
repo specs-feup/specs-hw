@@ -36,6 +36,10 @@ public class GraphTemplateReport {
     public String getName() {
         return name;
     }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public void addEntry(String graph, String id, GraphTemplateType type, int occurrence) {
         graphs.add(graph);
@@ -47,15 +51,15 @@ public class GraphTemplateReport {
     @Override
     public String toString() {
         var sb = new StringBuilder();
-        sb.append("Graph types report for ").append(name).append(":\n");
-        for (var g : graphs) {
-            sb.append(g).append("\n");
-        }
-        sb.append("\n");
+//        sb.append("Graph types report for ").append(name).append(":\n");
+//        for (var g : graphs) {
+//            sb.append(g).append("\n");
+//        }
+//        sb.append("\n");
         
         for (int i = 0; i < graphs.size(); i++) {
             
-            sb.append("name,").append(ids.get(i)).append(",").append(types.get(i))
+            sb.append(name).append(",").append(ids.get(i)).append(",").append(types.get(i))
                     .append(",").append(occurrences.get(i))
                     .append("\n");
         }
