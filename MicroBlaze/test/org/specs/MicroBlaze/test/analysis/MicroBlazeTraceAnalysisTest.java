@@ -3,9 +3,12 @@ package org.specs.MicroBlaze.test.analysis;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +45,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.SpecsLogs;
 
 public class MicroBlazeTraceAnalysisTest {
 
@@ -239,7 +243,8 @@ public class MicroBlazeTraceAnalysisTest {
          MicroBlazeLivermoreELFN10.cholesky, 18,
          //MicroBlazeLivermoreELFN10.hydro2d, 17,
          MicroBlazeLivermoreELFN10.tri_diag, 11,
-         MicroBlazeLivermoreELFN10.state_frag, 31);
+         MicroBlazeLivermoreELFN10.state_frag, 31
+         );
 //        var elfs = Map.of(
 //                MicroBlazeLivermoreELFN100.matmul100, 15);
         var reports = new ArrayList<GraphTemplateReport>();
@@ -249,19 +254,30 @@ public class MicroBlazeTraceAnalysisTest {
             var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
             var stream = new MicroBlazeTraceStream(fd);
             var analyzer = new MemoryAccessTypesAnalyzer(stream, elf);
-            reports.add(analyzer.analyze(window));
+            var rep = analyzer.analyze(window);
+            rep.setName(elf.name());
+            reports.add(rep);
         }
 
-        System.out.println("--------------------------");
-        for (var temp : GraphTemplateType.values()) {
-            var url = GraphUtils.generateGraphURL(GraphTemplateFactory.getTemplate(temp).toString());
-            System.out.println(temp + ": " + url);
-        }
-
-        System.out.println("--------------------------");
+//        System.out.println("--------------------------");
+//        for (var temp : GraphTemplateType.values()) {
+//            var url = GraphUtils.generateGraphURL(GraphTemplateFactory.getTemplate(temp).toString());
+//            System.out.println(temp + ": " + url);
+//        }
+        
+        var sb = new StringBuilder();
         for (var r : reports) {
-            System.out.println(r.toString());
-            System.out.println("---------------------------");
+            sb.append(r.toString());
+        }
+        System.out.println("--------------------------");
+        System.out.println(sb.toString());
+        System.out.println("--------------------------");
+        
+        var csv = new File("patterns.csv");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(csv))) {
+            writer.write(sb.toString());
+        } catch (IOException e) {
+            SpecsLogs.warn("Error message:\n", e);
         }
     }
 
@@ -318,12 +334,12 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testBasicBlockDataFlow() {
         //var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+        //var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
         //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
-        //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
-        // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
-        // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
-        // var elf = MicroBlazeLivermoreELFN10.state_frag; int window = 31;
+        var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+        //var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
+        //var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+        //var elf = MicroBlazeLivermoreELFN10.state_frag; int window = 31;
 
         var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
         var stream = new MicroBlazeTraceStream(fd);
