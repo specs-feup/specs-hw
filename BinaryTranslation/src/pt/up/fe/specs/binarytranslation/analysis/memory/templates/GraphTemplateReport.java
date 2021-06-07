@@ -48,6 +48,10 @@ public class GraphTemplateReport {
     public String toString() {
         var sb = new StringBuilder();
         sb.append("Graph types report for ").append(name).append(":\n");
+        for (var g : graphs) {
+            sb.append(g).append("\n");
+        }
+        sb.append("\n");
         
         for (int i = 0; i < graphs.size(); i++) {
             
