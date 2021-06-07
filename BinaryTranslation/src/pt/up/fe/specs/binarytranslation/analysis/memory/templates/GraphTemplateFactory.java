@@ -34,6 +34,14 @@ public class GraphTemplateFactory {
             return new GraphTemplateType6(type);
         case TYPE_7:
             return new GraphTemplateType7(type);
+        case TYPE_8:
+            return new GraphTemplateType8(type);
+        case TYPE_9:
+            return new GraphTemplateType9(type);
+        case TYPE_10:
+            return new GraphTemplateType10(type);
+        case TYPE_11:
+            return new GraphTemplateType11(type);
         case TYPE_0:
             return new GraphTemplateType0(type);
         default:
