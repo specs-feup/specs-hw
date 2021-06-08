@@ -25,5 +25,5 @@ public enum GraphTemplateType {
     TYPE_8,
     TYPE_9,
     TYPE_10,
-    TYPE_11
+    TYPE_11, TYPE_12, TYPE_13
 }
