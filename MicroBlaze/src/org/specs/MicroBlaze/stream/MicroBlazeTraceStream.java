@@ -8,6 +8,7 @@ import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;
 import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
@@ -17,6 +18,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
     // three auxiliary vars to help with mb-gdb bug
     private final MicroBlazeELFDump elfdump;
     private Instruction afterbug = null;
+    private RegisterDump savedRegs = null;
     private boolean haveStoredInst = false;
 
     /*
@@ -43,12 +45,9 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
             String name = elfname.getPath().replace(".\\", "").replace("\\", "/").replace("_trace", "");
             auxname = SpecsIo.resourceCopy(name);
             auxname.deleteOnExit();
-            System.out.println(name);
         } else {
             auxname = elfname;
         }
-
-
 
         // Workaround for mb-gdb bug of stepping over
         // two instructions at once when it hits an "imm"
@@ -100,6 +99,8 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
         if (haveStoredInst == true) {
             i = afterbug;
+            if (savedRegs != null)
+                i.setRegisters(new RegisterDump(savedRegs));
             haveStoredInst = false;
 
         } else {
@@ -115,6 +116,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
                 Instruction tmpInst = elfdump.getInstruction(i.getAddress() + this.getInstructionWidth());
                 afterbug = tmpInst.copy();
                 haveStoredInst = true;
+                savedRegs = i.getRegisters();
             }
 
             this.numcycles += i.getLatency();
