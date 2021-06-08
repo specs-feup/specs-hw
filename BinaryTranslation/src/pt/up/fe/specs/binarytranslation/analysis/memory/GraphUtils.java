@@ -251,8 +251,7 @@ public class GraphUtils {
     }
 
     public static String generateGraphURL(Graph<AddressVertex, DefaultEdge> graph) {
-        var str = GraphUtils.graphToDot(graph);
-        return generateGraphURL(str);
+        return GraphUtils.generateGraphURL(graph, "Graph");
     }
 
     public static void openGraphInBrowser(String dotGraph) {
@@ -268,5 +267,10 @@ public class GraphUtils {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public static String generateGraphURL(Graph<AddressVertex, DefaultEdge> composite, String name) {
+        var str = GraphUtils.graphToDot(composite, name);
+        return generateGraphURL(str);
     }
 }

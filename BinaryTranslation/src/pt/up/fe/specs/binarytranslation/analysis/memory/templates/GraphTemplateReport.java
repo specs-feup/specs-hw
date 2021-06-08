@@ -16,14 +16,21 @@ package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+
+import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 
 public class GraphTemplateReport {
-    private List<String> graphs;
+    private List<Graph<AddressVertex, DefaultEdge>> graphs;
     private List<String> ids;
     private List<GraphTemplateType> types;
     private List<Integer> occurrences;
     private String name;
+    private String segmentID = "?";
 
     public GraphTemplateReport(String kernelName) {
         name = "\"" + kernelName + "\"";
@@ -41,28 +48,38 @@ public class GraphTemplateReport {
         this.name = name;
     }
 
-    public void addEntry(String graph, String id, GraphTemplateType type, int occurrence) {
+    public void addEntry(Graph<AddressVertex, DefaultEdge> graph, String id, GraphTemplateType type, int occurrence) {
         graphs.add(graph);
         ids.add(id);
         types.add(type);
         occurrences.add(occurrence);
     }
+    
+    public void setSegmentID(String id) {
+        this.segmentID = id;
+    }
 
     @Override
     public String toString() {
         var sb = new StringBuilder();
-//        sb.append("Graph types report for ").append(name).append(":\n");
-//        for (var g : graphs) {
-//            sb.append(g).append("\n");
-//        }
-//        sb.append("\n");
         
         for (int i = 0; i < graphs.size(); i++) {
             
-            sb.append(name).append(",").append(ids.get(i)).append(",").append(types.get(i))
+            sb.append(name).append(",").append(segmentID + "-" + ids.get(i)).append(",").append(types.get(i))
                     .append(",").append(occurrences.get(i))
                     .append("\n");
         }
         return sb.toString();
+    }
+    
+    public String getCompositeGraph() {
+        var composite = new DefaultDirectedGraph<AddressVertex, DefaultEdge>(DefaultEdge.class);
+        for (var g : graphs)
+            Graphs.addGraph(composite, g);
+        return GraphUtils.generateGraphURL(composite, name + "-" + segmentID);
+    }
+
+    public List<Graph<AddressVertex, DefaultEdge>> getGraphs() {
+        return graphs;
     }
 }

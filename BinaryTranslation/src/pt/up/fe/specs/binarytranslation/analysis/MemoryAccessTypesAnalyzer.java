@@ -44,7 +44,7 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         super(stream, elf);
     }
 
-    public GraphTemplateReport analyze(int window) {
+    public GraphTemplateReport analyzeSegment(int window) {
         // var trace = AnalysisUtils.getCompleteTrace(stream,
         // elf.getKernelStart() == null ? 0 : elf.getKernelStart().longValue(),
         // elf.getKernelStop() == null ? -1 : elf.getKernelStop().longValue());
@@ -56,7 +56,7 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         
         var title = elf.getFilename();
         var report = new GraphTemplateReport(title);
-
+        
         for (var bb : segs) {
             var mad = new MemoryAddressDetector(bb, insts);
             var graphs = mad.detectGraphs();
@@ -81,9 +81,8 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
                 }
 
                 var graphCategory = matchGraph(graph);
-                String url = GraphUtils.generateGraphURL(GraphUtils.graphToDot(graph, title));
-                report.addEntry(url, id, graphCategory, bb.getOccurences());
-            }
+                report.addEntry(graph, id, graphCategory, bb.getOccurences());
+            }            
         }
         return report;
     }
@@ -133,5 +132,16 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         public int compare(DefaultEdge e1, DefaultEdge e2) {
             return 0;
         }
+    }
+
+    public ArrayList<GraphTemplateReport> analyze(Integer[] window) {
+        var reports = new ArrayList<GraphTemplateReport>();
+        
+        for (int i = 0; i < window.length; i++) {
+            var report = analyzeSegment(window[i]);
+            report.setSegmentID("BB" + i);
+            reports.add(report);
+        }
+        return reports;
     }
 }
