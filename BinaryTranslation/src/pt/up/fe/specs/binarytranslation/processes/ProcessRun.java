@@ -23,4 +23,9 @@ public interface ProcessRun {
      * 
      */
     public boolean isAlive();
+
+    /*
+     * 
+     */
+    public String receive(int i);
 }
