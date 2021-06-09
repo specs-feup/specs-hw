@@ -65,7 +65,7 @@ public class GraphTemplateReport {
         
         for (int i = 0; i < graphs.size(); i++) {
             
-            sb.append(name).append(",").append(segmentID + "-" + ids.get(i)).append(",").append(types.get(i))
+            sb.append(name).append(",").append(segmentID).append(",").append(ids.get(i)).append(",").append(types.get(i))
                     .append(",").append(occurrences.get(i))
                     .append("\n");
         }
