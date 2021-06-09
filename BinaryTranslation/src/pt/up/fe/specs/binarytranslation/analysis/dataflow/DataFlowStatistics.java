@@ -32,22 +32,33 @@ public class DataFlowStatistics {
     private List<Instruction> insts;
     private List<String> sources;
     private List<String> sinks;
+    private double ilp;
     private int pathSize = 0;
 
     public DataFlowStatistics(Graph<AddressVertex, DefaultEdge> graph, Graph<AddressVertex, DefaultEdge> path,
             List<Instruction> insts, List<String> sources, List<String> sinks) {
-        this.setGraph(graph);
-        this.setPath(path);
-        this.setInsts(insts);
-        this.setSources(sources);
-        this.setSinks(sinks);
+        this.graph = graph;
+        this.path = path;
+        this.insts = insts;
+        this.sources = sources;
+        this.sinks = sinks;
+        
         for (var v : path.vertexSet()) {
-            if (v.getType() == AddressVertexType.OPERATION)
-                setPathSize(getPathSize() + 1);
+            if (v.getType() == AddressVertexType.OPERATION || v.getType() == AddressVertexType.MEMORY)
+                this.pathSize++;
         }
+        
+        double cnt = 0;
+        for (var v : graph.vertexSet()) {
+            if (v.getType() == AddressVertexType.OPERATION || v.getType() == AddressVertexType.MEMORY)
+                cnt++;
+        }
+        this.ilp = cnt / (double) pathSize;
+        
         for (var v : path.vertexSet())
             v.setColor("red");
     }
+
 
     @Override
     public String toString() {
@@ -80,14 +91,8 @@ public class DataFlowStatistics {
         var dfg = GraphUtils.graphToDot(graph);
         dfg = dfg.replace("}", "");
         dfg += "nstat[label=\"" + label.toString() + "\",shape=rect,labeljust=l,nojustify=true]\n}";
-        
-        var sb = new StringBuilder("DataFlow Statistics\n")
-                .append("----------------------\n")
-                .append("DFG:\n")
-                .append(GraphUtils.generateGraphURL(dfg))
-                .append("\n");
 
-        return sb.toString();
+        return GraphUtils.generateGraphURL(dfg);
     }
     
     private Map<String, Integer> getOpCount() {
@@ -125,47 +130,28 @@ public class DataFlowStatistics {
         return graph;
     }
 
-    public void setGraph(Graph<AddressVertex, DefaultEdge> graph) {
-        this.graph = graph;
-    }
-
     public Graph<AddressVertex, DefaultEdge> getPath() {
         return path;
-    }
-
-    public void setPath(Graph<AddressVertex, DefaultEdge> path) {
-        this.path = path;
     }
 
     public List<Instruction> getInsts() {
         return insts;
     }
-
-    public void setInsts(List<Instruction> insts) {
-        this.insts = insts;
-    }
-
+    
     public List<String> getSources() {
         return sources;
-    }
-
-    public void setSources(List<String> sources) {
-        this.sources = sources;
     }
 
     public List<String> getSinks() {
         return sinks;
     }
 
-    public void setSinks(List<String> sinks) {
-        this.sinks = sinks;
-    }
 
     public int getPathSize() {
         return pathSize;
     }
 
-    public void setPathSize(int pathSize) {
-        this.pathSize = pathSize;
+    public double getILP() {
+        return ilp;
     }
 }
