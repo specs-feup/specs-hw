@@ -52,4 +52,13 @@ public class GraphTemplateFactory {
             return null;
         }
     }
+    
+    public static String getAllTemplates() {
+        var sb = new StringBuilder();
+        for (var tmp : GraphTemplateType.values()) {
+            var g = getTemplate(tmp).toString();
+            sb.append(g).append("\n");
+        }
+        return sb.toString();
+    }
 }

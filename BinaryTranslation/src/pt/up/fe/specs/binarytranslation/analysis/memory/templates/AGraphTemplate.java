@@ -39,6 +39,6 @@ public abstract class AGraphTemplate {
     
     @Override
     public String toString() {
-        return GraphUtils.graphToDot(graph, templateName);
+        return GraphUtils.generateGraphURL(graph, templateName);
     }
 }

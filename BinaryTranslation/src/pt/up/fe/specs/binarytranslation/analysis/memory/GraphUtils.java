@@ -269,8 +269,8 @@ public class GraphUtils {
         }
     }
 
-    public static String generateGraphURL(Graph<AddressVertex, DefaultEdge> composite, String name) {
-        var str = GraphUtils.graphToDot(composite, name);
+    public static String generateGraphURL(Graph<AddressVertex, DefaultEdge> graph, String name) {
+        var str = GraphUtils.graphToDot(graph, name);
         return generateGraphURL(str);
     }
 }
