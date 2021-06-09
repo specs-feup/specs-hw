@@ -249,33 +249,33 @@ public class MicroBlazeTraceAnalysisTest {
         // var elfs = Map.of(
         // MicroBlazeLivermoreELFN100.matmul100, 15);
         var elfs = Map.of(
-                MicroBlazePolyBenchBLASSmall.gemm, new Integer[] { 8, 13 },
-                MicroBlazePolyBenchBLASSmall.gemver, new Integer[] { 8, 10, 12, 15 },
-                MicroBlazePolyBenchBLASSmall.gesummv, new Integer[] { 16 },
-                MicroBlazePolyBenchBLASSmall.symm, new Integer[] { 18 },
-                MicroBlazePolyBenchBLASSmall.syrk, new Integer[] { 7, 14 },
-                MicroBlazePolyBenchBLASSmall.syrk2, new Integer[] { 7 },
-                MicroBlazePolyBenchBLASSmall.trmm, new Integer[] { 12 });
+//                MicroBlazePolyBenchBLASSmall.gemm, new Integer[] { 8, 13 },
+//                MicroBlazePolyBenchBLASSmall.gemver, new Integer[] { 8, 10, 12, 15 },
+//                MicroBlazePolyBenchBLASSmall.gesummv, new Integer[] { 16 },
+//                MicroBlazePolyBenchBLASSmall.symm, new Integer[] { 18 }
+                MicroBlazePolyBenchBLASSmall.syrk, new Integer[] { 7, 14 }
+//                MicroBlazePolyBenchBLASSmall.syrk2, new Integer[] { 7 },
+//                MicroBlazePolyBenchBLASSmall.trmm, new Integer[] { 12 }
+                );
         var allReports = new ArrayList<GraphTemplateReport>();
         var allGraphs = new HashMap<String, String>();
 
         for (var elf : elfs.keySet()) {
             var windows = elfs.get(elf);
-            int segmentID = 1;
+            int id = 1;
 
             for (var window : windows) {
                 var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
                 var stream = new MicroBlazeTraceStream(fd);
                 var analyzer = new MemoryAccessTypesAnalyzer(stream, elf);
-                var id = "BB" + segmentID;
                 var name = elf.name();
-
                 var report = analyzer.analyzeSegment(window);
+                
                 report.setName(name);
-                report.setSegmentID(id);
                 allReports.add(report);
+ 
+                //BUG here: not contemplating multiple BBs found in the same window
                 allGraphs.put(name + "_" + id, report.getCompositeGraph());
-                segmentID++;
             }
         }
 
@@ -289,6 +289,7 @@ public class MicroBlazeTraceAnalysisTest {
 
         // Print repot
         var sb = new StringBuilder();
+        sb.append("Benchmark,Basic Block ID,Memory Access ID,Memory Access Type,#Occurrences\n");
         for (var r : allReports) {
             sb.append(r.toString());
         }
@@ -359,16 +360,16 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testBasicBlockDataFlow() {
         var elfs = Map.of(
-                // MicroBlazePolyBenchBLASSmall.gemm, new Integer[] { 8, 13 },
-                // MicroBlazePolyBenchBLASSmall.gemver, new Integer[] { 8, 10, 12, 15 },
-                // MicroBlazePolyBenchBLASSmall.gesummv, new Integer[] { 16 },
-                // MicroBlazePolyBenchBLASSmall.symm, new Integer[] { 18 },
-                MicroBlazePolyBenchBLASSmall.syrk, new Integer[] { 7, 14 }// ,
-        // MicroBlazePolyBenchBLASSmall.syrk2, new Integer[] { 7 },
-        // MicroBlazePolyBenchBLASSmall.trmm, new Integer[] { 12 }
+                MicroBlazePolyBenchBLASSmall.gemm, new Integer[] { 8, 13 },
+                MicroBlazePolyBenchBLASSmall.gemver, new Integer[] { 8, 10, 12, 15 },
+                MicroBlazePolyBenchBLASSmall.gesummv, new Integer[] { 16 },
+                MicroBlazePolyBenchBLASSmall.symm, new Integer[] { 18 },
+                MicroBlazePolyBenchBLASSmall.syrk, new Integer[] { 7, 14 },
+                MicroBlazePolyBenchBLASSmall.syrk2, new Integer[] { 7 },
+                MicroBlazePolyBenchBLASSmall.trmm, new Integer[] { 12 }
         );
-        var basicBlockCSV = new StringBuilder("Bench,BasicBlockID,NInst,PathSize,ILP\n");
-        var benchCSV = new StringBuilder("Bench,NBasicBlocks,NInstMean,NInstSTD\n");
+        var basicBlockCSV = new StringBuilder("Benchmark,Basic Block ID,#Inst,Critical Path Size,ILP Measure\n");
+        var benchCSV = new StringBuilder("Benchmark,#BasicBlocks,#Inst Mean,#Inst STD\n");
 
         for (var elf : elfs.keySet()) {
             AnalysisUtils.printSeparator(40);
