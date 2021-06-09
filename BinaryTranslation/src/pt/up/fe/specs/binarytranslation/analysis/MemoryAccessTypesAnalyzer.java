@@ -45,11 +45,6 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
     }
 
     public GraphTemplateReport analyzeSegment(int window) {
-        // var trace = AnalysisUtils.getCompleteTrace(stream,
-        // elf.getKernelStart() == null ? 0 : elf.getKernelStart().longValue(),
-        // elf.getKernelStop() == null ? -1 : elf.getKernelStop().longValue());
-        // System.out.println("Trace has " + trace.size() + " instructions");
-
         var det = buildDetector(window);
         List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
         List<Instruction> insts = det.getProcessedInsts();
@@ -82,7 +77,8 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
 
                 var graphCategory = matchGraph(graph);
                 report.addEntry(graph, id, graphCategory, bb.getOccurences());
-            }            
+            }
+            GraphTemplateReport.incrementLastID();
         }
         return report;
     }
@@ -132,16 +128,5 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         public int compare(DefaultEdge e1, DefaultEdge e2) {
             return 0;
         }
-    }
-
-    public ArrayList<GraphTemplateReport> analyze(Integer[] window) {
-        var reports = new ArrayList<GraphTemplateReport>();
-        
-        for (int i = 0; i < window.length; i++) {
-            var report = analyzeSegment(window[i]);
-            report.setSegmentID("BB" + i);
-            reports.add(report);
-        }
-        return reports;
     }
 }
