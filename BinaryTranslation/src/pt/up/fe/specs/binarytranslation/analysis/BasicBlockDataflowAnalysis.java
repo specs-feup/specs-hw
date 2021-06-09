@@ -59,7 +59,8 @@ public class BasicBlockDataflowAnalysis extends ATraceAnalyzer {
                 if (v.getType() == AddressVertexType.REGISTER)
                     sources.add(v.getLabel());
             }
-            res.add(new DataFlowStatistics(dfg, path, bb.getInstructions(), sources, sinks));
+            var stats = new DataFlowStatistics(dfg, path, bb.getInstructions(), sources, sinks);
+            res.add(stats);
         }
         return res;
     }

@@ -29,8 +29,10 @@ public class GraphTemplateReport {
     private List<String> ids;
     private List<GraphTemplateType> types;
     private List<Integer> occurrences;
+    private List<String> basicBlockIDs;
     private String name;
     private String segmentID = "?";
+    private static int lastID = 1;
 
     public GraphTemplateReport(String kernelName) {
         name = "\"" + kernelName + "\"";
@@ -38,6 +40,7 @@ public class GraphTemplateReport {
         ids = new ArrayList<>();
         types = new ArrayList<>();
         occurrences = new ArrayList<>();
+        basicBlockIDs = new ArrayList<>();
     }
 
     public String getName() {
@@ -53,19 +56,16 @@ public class GraphTemplateReport {
         ids.add(id);
         types.add(type);
         occurrences.add(occurrence);
+        basicBlockIDs.add("BB" + lastID);
     }
     
-    public void setSegmentID(String id) {
-        this.segmentID = id;
-    }
-
     @Override
     public String toString() {
         var sb = new StringBuilder();
         
         for (int i = 0; i < graphs.size(); i++) {
             
-            sb.append(name).append(",").append(segmentID).append(",").append(ids.get(i)).append(",").append(types.get(i))
+            sb.append(name).append(",").append(basicBlockIDs.get(i)).append(",").append(ids.get(i)).append(",").append(types.get(i))
                     .append(",").append(occurrences.get(i))
                     .append("\n");
         }
@@ -81,5 +81,17 @@ public class GraphTemplateReport {
 
     public List<Graph<AddressVertex, DefaultEdge>> getGraphs() {
         return graphs;
+    }
+
+    public static int getLastID() {
+        return lastID;
+    }
+    
+    public static void setLastID(int id) {
+        lastID = id;
+    }
+
+    public static void incrementLastID() {
+        lastID++;
     }
 }
