@@ -26,9 +26,9 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 
 public class DataFlowCriticalPath {
-    private Graph<AddressVertex, DefaultEdge> graph;
+    private ASegmentDataFlowGraph graph;
 
-    public DataFlowCriticalPath(Graph<AddressVertex, DefaultEdge> graph) {
+    public DataFlowCriticalPath(ASegmentDataFlowGraph graph) {
         this.graph = graph;
     }
 

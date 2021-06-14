@@ -18,9 +18,10 @@ import java.util.List;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
-public class BasicBlockDataFlow extends ASegmentDataFlow {
+public class BasicBlockDataFlowGraph extends ASegmentDataFlowGraph {
+    private static final long serialVersionUID = -4935282237892925083L;
 
-    public BasicBlockDataFlow(BasicBlockOccurrenceTracker tracker) {
+    public BasicBlockDataFlowGraph(BasicBlockOccurrenceTracker tracker) {
         super(getTransformedBasicBlock(tracker));
     }
 

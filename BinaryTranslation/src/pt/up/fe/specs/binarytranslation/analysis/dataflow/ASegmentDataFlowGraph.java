@@ -20,6 +20,7 @@ import java.util.Map;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
@@ -30,16 +31,18 @@ import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShif
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
-public abstract class ASegmentDataFlow {
+public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<AddressVertex, DefaultEdge> {
+    private static final long serialVersionUID = 4454283993649695154L;
     protected Map<String, AddressVertex> vertexCache = new HashMap<String, AddressVertex>();
-    protected Graph<AddressVertex, DefaultEdge> dfg = new DefaultDirectedGraph<>(DefaultEdge.class);
     protected List<Instruction> segment;
 
-    public ASegmentDataFlow(List<Instruction> segment) {
+    public ASegmentDataFlowGraph(List<Instruction> segment) {
+        super(DefaultEdge.class);
         this.segment = segment;
+        buildDFG();
     }
 
-    public Graph<AddressVertex, DefaultEdge> buildDFG() {
+    private void buildDFG() {
         for (var i : segment) {
             var op1 = i.getData().getOperands().get(0);
             var op2 = i.getData().getOperands().get(1);
@@ -63,13 +66,12 @@ public abstract class ASegmentDataFlow {
         }
 
         applyTransforms();
-        return dfg;
     }
 
     private void applyTransforms() {
-        var t1 = new TransformHexToDecimal(dfg);
-        var t2 = new TransformShiftsToMult(dfg);
-        var t3 = new TransformRemoveTemporaryVertices(dfg);
+        var t1 = new TransformHexToDecimal(this);
+        var t2 = new TransformShiftsToMult(this);
+        var t3 = new TransformRemoveTemporaryVertices(this);
         t1.applyToGraph();
         t2.applyToGraph();
         for (int i = 0; i < 4; i++)
@@ -84,9 +86,9 @@ public abstract class ASegmentDataFlow {
 
             var jmpVertex = new AddressVertex(AnalysisUtils.mapInstructionsToSymbol("Jump"),
                     AddressVertexType.JUMP);
-            dfg.addVertex(jmpVertex);
-            dfg.addEdge(rAvert, jmpVertex);
-            dfg.addEdge(rDvert, jmpVertex);
+            addVertex(jmpVertex);
+            addEdge(rAvert, jmpVertex);
+            addEdge(rDvert, jmpVertex);
 
         } else {
             System.out.println("Not implemented");
@@ -102,10 +104,10 @@ public abstract class ASegmentDataFlow {
         var opSymbol = i.getName();
         var opVertex = new AddressVertex(AnalysisUtils.mapInstructionsToSymbol(opSymbol),
                 AddressVertexType.OPERATION);
-        dfg.addVertex(opVertex);
-        dfg.addEdge(rAvert, opVertex);
-        dfg.addEdge(rBvert, opVertex);
-        dfg.addEdge(opVertex, rDvert);
+        addVertex(opVertex);
+        addEdge(rAvert, opVertex);
+        addEdge(rBvert, opVertex);
+        addEdge(opVertex, rDvert);
     }
 
     private void handleMemoryInstruction(Instruction i, AddressVertex rDvert, AddressVertex rAvert,
@@ -115,19 +117,19 @@ public abstract class ASegmentDataFlow {
         rDvert = addVertex(rDvert, i.isLoad());
 
         var memVert = new AddressVertex(i.isLoad() ? "Load" : "Store", AddressVertexType.MEMORY);
-        dfg.addVertex(memVert);
-        dfg.addEdge(rAvert, memVert);
-        dfg.addEdge(rBvert, memVert);
+        addVertex(memVert);
+        addEdge(rAvert, memVert);
+        addEdge(rBvert, memVert);
         if (i.isLoad())
-            dfg.addEdge(memVert, rDvert);
+            addEdge(memVert, rDvert);
         else
-            dfg.addEdge(rDvert, memVert);
+            addEdge(rDvert, memVert);
     }
 
     private AddressVertex addVertex(AddressVertex v, boolean write) {
         if (v.getType() == AddressVertexType.REGISTER) {
             if (write) {
-                dfg.addVertex(v);
+                addVertex(v);
                 vertexCache.put(v.getLabel(), v);
                 return v;
             } else {
@@ -135,12 +137,12 @@ public abstract class ASegmentDataFlow {
                     return vertexCache.get(v.getLabel());
                 else {
                     vertexCache.put(v.getLabel(), v);
-                    dfg.addVertex(v);
+                    addVertex(v);
                     return v;
                 }
             }
         } else {
-            dfg.addVertex(v);
+            addVertex(v);
             return v;
         }
     }
