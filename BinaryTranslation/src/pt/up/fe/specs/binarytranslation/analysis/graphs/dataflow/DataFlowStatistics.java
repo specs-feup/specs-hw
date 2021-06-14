@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.dataflow;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,20 +21,21 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class DataFlowStatistics {
-    private Graph<DataFlowVertex, DefaultEdge> graph;
-    private Graph<DataFlowVertex, DefaultEdge> path;
+    private Graph<BtfVertex, DefaultEdge> graph;
+    private Graph<BtfVertex, DefaultEdge> path;
     private List<Instruction> insts;
     private List<String> sources;
     private List<String> sinks;
     private double ilp;
     private int pathSize = 0;
 
-    public DataFlowStatistics(Graph<DataFlowVertex, DefaultEdge> graph, Graph<DataFlowVertex, DefaultEdge> path,
+    public DataFlowStatistics(Graph<BtfVertex, DefaultEdge> graph, Graph<BtfVertex, DefaultEdge> path,
             List<Instruction> insts, List<String> sources, List<String> sinks) {
         this.graph = graph;
         this.path = path;
@@ -43,13 +44,13 @@ public class DataFlowStatistics {
         this.sinks = sinks;
         
         for (var v : path.vertexSet()) {
-            if (v.getType() == DataFlowVertexType.OPERATION || v.getType() == DataFlowVertexType.MEMORY)
+            if (v.getType() == BtfVertexType.OPERATION || v.getType() == BtfVertexType.MEMORY)
                 this.pathSize++;
         }
         
         double cnt = 0;
         for (var v : graph.vertexSet()) {
-            if (v.getType() == DataFlowVertexType.OPERATION || v.getType() == DataFlowVertexType.MEMORY)
+            if (v.getType() == BtfVertexType.OPERATION || v.getType() == BtfVertexType.MEMORY)
                 cnt++;
         }
         this.ilp = cnt / (double) pathSize;
@@ -97,7 +98,7 @@ public class DataFlowStatistics {
     private Map<String, Integer> getOpCount() {
         var map = new HashMap<String, Integer>();
         for (var v : graph.vertexSet()) {
-            if (v.getType() == DataFlowVertexType.OPERATION || v.getType() == DataFlowVertexType.MEMORY) {
+            if (v.getType() == BtfVertexType.OPERATION || v.getType() == BtfVertexType.MEMORY) {
                 var op = labelToFullName(v.getLabel());
                 if (map.containsKey(op))
                     map.put(op, map.get(op) + 1);
@@ -125,11 +126,11 @@ public class DataFlowStatistics {
         }
     }
 
-    public Graph<DataFlowVertex, DefaultEdge> getGraph() {
+    public Graph<BtfVertex, DefaultEdge> getGraph() {
         return graph;
     }
 
-    public Graph<DataFlowVertex, DefaultEdge> getPath() {
+    public Graph<BtfVertex, DefaultEdge> getPath() {
         return path;
     }
 

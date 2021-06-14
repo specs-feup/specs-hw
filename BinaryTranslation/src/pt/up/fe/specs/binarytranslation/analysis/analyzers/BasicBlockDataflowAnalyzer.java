@@ -11,26 +11,27 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.specs.BinaryTranslation.ELFProvider;
 
+import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.DataFlowCriticalPath;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.DataFlowStatistics;
-import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class BasicBlockDataflowAnalysis extends ATraceAnalyzer {
+public class BasicBlockDataflowAnalyzer extends ATraceAnalyzer {
 
-    public BasicBlockDataflowAnalysis(ATraceInstructionStream stream, ELFProvider elf) {
+    public BasicBlockDataflowAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
         super(stream, elf);
     }
 

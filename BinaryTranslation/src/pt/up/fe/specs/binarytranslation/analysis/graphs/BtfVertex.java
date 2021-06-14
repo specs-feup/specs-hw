@@ -1,7 +1,7 @@
-package pt.up.fe.specs.binarytranslation.analysis.dataflow;
+package pt.up.fe.specs.binarytranslation.analysis.graphs;
 
-public class DataFlowVertex {
-    public enum DataFlowVertexType {
+public class BtfVertex {
+    public enum BtfVertexType {
         OPERATION,
         REGISTER,
         IMMEDIATE,
@@ -12,14 +12,14 @@ public class DataFlowVertex {
         JUMP,
         NULL 
     };
-    public enum DataFlowVertexProperty {
+    public enum BtfVertexProperty {
         OFFSET,
         BASE_ADDR,
         INDUCTION_VAR,
         STRIDE,
         NULL
     }
-    public enum DataFlowVertexIsaInfo {
+    public enum BtfVertexIsaInfo {
         RA,
         RB,
         RD,
@@ -27,23 +27,23 @@ public class DataFlowVertex {
     }
     
     private String label;
-    private DataFlowVertexType type;
-    private DataFlowVertexProperty property = DataFlowVertexProperty.NULL;
-    private DataFlowVertexIsaInfo isaInfo = DataFlowVertexIsaInfo.NULL;
+    private BtfVertexType type;
+    private BtfVertexProperty property = BtfVertexProperty.NULL;
+    private BtfVertexIsaInfo isaInfo = BtfVertexIsaInfo.NULL;
     private String color = "black";
-    public static DataFlowVertex nullVertex = new DataFlowVertex("", DataFlowVertexType.NULL);
+    public static BtfVertex nullVertex = new BtfVertex("", BtfVertexType.NULL);
     
-    public DataFlowVertex(String label, DataFlowVertexType type) {
+    public BtfVertex(String label, BtfVertexType type) {
         this.label = label;
         this.type = type;
     }
     
-    public DataFlowVertex(String label, DataFlowVertexType type, DataFlowVertexProperty property) {
+    public BtfVertex(String label, BtfVertexType type, BtfVertexProperty property) {
         this(label, type);
         this.property = property;
     }
     
-    public DataFlowVertex(String label, DataFlowVertexType type, DataFlowVertexIsaInfo isaInfo) {
+    public BtfVertex(String label, BtfVertexType type, BtfVertexIsaInfo isaInfo) {
         this(label, type);
         this.isaInfo = isaInfo;
     }
@@ -64,27 +64,27 @@ public class DataFlowVertex {
         this.label = newLabel;
     }
 
-    public DataFlowVertexType getType() {
+    public BtfVertexType getType() {
         return type;
     }
     
-    public void setType(DataFlowVertexType type) {
+    public void setType(BtfVertexType type) {
         this.type = type;
     }
 
-    public DataFlowVertexProperty getProperty() {
+    public BtfVertexProperty getProperty() {
         return property;
     }
 
-    public void setProperty(DataFlowVertexProperty property) {
+    public void setProperty(BtfVertexProperty property) {
         this.property = property;
     }
 
-    public DataFlowVertexIsaInfo getIsaInfo() {
+    public BtfVertexIsaInfo getIsaInfo() {
         return isaInfo;
     }
 
-    public void setIsaInfo(DataFlowVertexIsaInfo isaInfo) {
+    public void setIsaInfo(BtfVertexIsaInfo isaInfo) {
         this.isaInfo = isaInfo;
     }
 

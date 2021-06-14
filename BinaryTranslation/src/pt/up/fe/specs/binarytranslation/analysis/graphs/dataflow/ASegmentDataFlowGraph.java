@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.dataflow;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,16 +21,17 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
-public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<DataFlowVertex, DefaultEdge> {
+public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge> {
     private static final long serialVersionUID = 4454283993649695154L;
-    protected Map<String, DataFlowVertex> vertexCache = new HashMap<String, DataFlowVertex>();
+    protected Map<String, BtfVertex> vertexCache = new HashMap<String, BtfVertex>();
     protected List<Instruction> segment;
 
     public ASegmentDataFlowGraph(List<Instruction> segment) {
@@ -49,9 +50,9 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<DataFlow
             String rA = operandAsString(op2);
             String rB = op3 == null ? "nop" : operandAsString(op3);
 
-            var rDvert = new DataFlowVertex(rD, opType(op1));
-            var rAvert = new DataFlowVertex(rA, opType(op2));
-            var rBvert = op3 == null ? DataFlowVertex.nullVertex : new DataFlowVertex(rB, opType(op3));
+            var rDvert = new BtfVertex(rD, opType(op1));
+            var rAvert = new BtfVertex(rA, opType(op2));
+            var rBvert = op3 == null ? BtfVertex.nullVertex : new BtfVertex(rB, opType(op3));
 
             if (i.isMemory()) {
                 handleMemoryInstruction(i, rDvert, rAvert, rBvert);
@@ -75,14 +76,14 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<DataFlow
             t3.applyToGraph();
     }
 
-    private void handleJumpInstruction(Instruction i, DataFlowVertex rDvert, DataFlowVertex rAvert,
-            DataFlowVertex rBvert) {
-        if (rBvert == DataFlowVertex.nullVertex) {
+    private void handleJumpInstruction(Instruction i, BtfVertex rDvert, BtfVertex rAvert,
+            BtfVertex rBvert) {
+        if (rBvert == BtfVertex.nullVertex) {
             rAvert = addVertex(rAvert, false);
             rDvert = addVertex(rDvert, false);
 
-            var jmpVertex = new DataFlowVertex(AnalysisUtils.mapInstructionsToSymbol("Jump"),
-                    DataFlowVertexType.JUMP);
+            var jmpVertex = new BtfVertex(AnalysisUtils.mapInstructionsToSymbol("Jump"),
+                    BtfVertexType.JUMP);
             addVertex(jmpVertex);
             addEdge(rAvert, jmpVertex);
             addEdge(rDvert, jmpVertex);
@@ -92,28 +93,28 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<DataFlow
         }
     }
 
-    private void handleLogicalArithmeticInstruction(Instruction i, DataFlowVertex rDvert, DataFlowVertex rAvert,
-            DataFlowVertex rBvert) {
+    private void handleLogicalArithmeticInstruction(Instruction i, BtfVertex rDvert, BtfVertex rAvert,
+            BtfVertex rBvert) {
         rAvert = addVertex(rAvert, false);
         rBvert = addVertex(rBvert, false);
         rDvert = addVertex(rDvert, true);
 
         var opSymbol = i.getName();
-        var opVertex = new DataFlowVertex(AnalysisUtils.mapInstructionsToSymbol(opSymbol),
-                DataFlowVertexType.OPERATION);
+        var opVertex = new BtfVertex(AnalysisUtils.mapInstructionsToSymbol(opSymbol),
+                BtfVertexType.OPERATION);
         addVertex(opVertex);
         addEdge(rAvert, opVertex);
         addEdge(rBvert, opVertex);
         addEdge(opVertex, rDvert);
     }
 
-    private void handleMemoryInstruction(Instruction i, DataFlowVertex rDvert, DataFlowVertex rAvert,
-            DataFlowVertex rBvert) {
+    private void handleMemoryInstruction(Instruction i, BtfVertex rDvert, BtfVertex rAvert,
+            BtfVertex rBvert) {
         rAvert = addVertex(rAvert, false);
         rBvert = addVertex(rBvert, false);
         rDvert = addVertex(rDvert, i.isLoad());
 
-        var memVert = new DataFlowVertex(i.isLoad() ? "Load" : "Store", DataFlowVertexType.MEMORY);
+        var memVert = new BtfVertex(i.isLoad() ? "Load" : "Store", BtfVertexType.MEMORY);
         addVertex(memVert);
         addEdge(rAvert, memVert);
         addEdge(rBvert, memVert);
@@ -123,8 +124,8 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<DataFlow
             addEdge(rDvert, memVert);
     }
 
-    private DataFlowVertex addVertex(DataFlowVertex v, boolean write) {
-        if (v.getType() == DataFlowVertexType.REGISTER) {
+    private BtfVertex addVertex(BtfVertex v, boolean write) {
+        if (v.getType() == BtfVertexType.REGISTER) {
             if (write) {
                 addVertex(v);
                 vertexCache.put(v.getLabel(), v);
@@ -144,11 +145,11 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<DataFlow
         }
     }
 
-    private DataFlowVertexType opType(Operand op) {
+    private BtfVertexType opType(Operand op) {
         if (op.isImmediate())
-            return DataFlowVertexType.IMMEDIATE;
+            return BtfVertexType.IMMEDIATE;
         else
-            return DataFlowVertexType.REGISTER;
+            return BtfVertexType.REGISTER;
     }
 
     private String operandAsString(Operand op) {
