@@ -22,7 +22,7 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 
 public class GraphTemplateType8 extends AGraphTemplate {
 
-    protected GraphTemplateType8(GraphTemplateType type) {
+    protected GraphTemplateType8(String type) {
         super(type);
         var r7 = new BtfVertex("r7", BtfVertexType.REGISTER);
         var imm4 = new BtfVertex("4", BtfVertexType.IMMEDIATE);
@@ -41,5 +41,8 @@ public class GraphTemplateType8 extends AGraphTemplate {
         graph.addEdge(mult, add);
         graph.addEdge(imm64, add);
     }
-
+    
+    protected GraphTemplateType8() {
+        this("Type 8");
+    }
 }

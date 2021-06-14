@@ -17,23 +17,22 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 
 public abstract class AGraphTemplate {
-    protected Graph<BtfVertex, DefaultEdge> graph;
+    protected SimpleDirectedGraph<BtfVertex, DefaultEdge> graph;
     protected String templateName;
     
-    protected AGraphTemplate(GraphTemplateType type) {
-        this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
-        this.templateName = "\"Template - " + type.toString() + "\"";
+    protected AGraphTemplate(String type) {
+        this.graph = new SimpleDirectedGraph<>(DefaultEdge.class);
+        this.templateName = "\"Template - " + type + "\"";
     }
     
-    public Graph<BtfVertex, DefaultEdge> getGraph() {
+    public SimpleDirectedGraph<BtfVertex, DefaultEdge> getGraph() {
         return graph;
     }
     

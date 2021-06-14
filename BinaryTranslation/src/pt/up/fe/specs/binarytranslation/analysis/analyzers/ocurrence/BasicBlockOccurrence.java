@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.occurrence;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence;
 
 import java.util.List;
 

@@ -13,19 +13,45 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
+
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+
 public enum GraphTemplateType {
-    TYPE_0,
-    TYPE_1,
-    TYPE_2,
-    TYPE_3,
-    TYPE_4,
-    TYPE_5,
-    TYPE_6,
-    TYPE_7,
-    TYPE_8,
-    TYPE_9,
-    TYPE_10,
-    TYPE_11,
-    TYPE_12,
-    TYPE_13
+    TYPE_0(new GraphTemplateType0()),
+    TYPE_1(new GraphTemplateType1()),
+    TYPE_2(new GraphTemplateType2()),
+    TYPE_3(new GraphTemplateType3()),
+    TYPE_4(new GraphTemplateType4()),
+    TYPE_5(new GraphTemplateType5()),
+    TYPE_6(new GraphTemplateType6()),
+    TYPE_7(new GraphTemplateType7()),
+    TYPE_8(new GraphTemplateType8()),
+    TYPE_9(new GraphTemplateType9()),
+    TYPE_10(new GraphTemplateType10()),
+    TYPE_11(new GraphTemplateType11()),
+    TYPE_12(new GraphTemplateType12()),
+    TYPE_13(new GraphTemplateType13());
+    
+    private AGraphTemplate template;
+
+    GraphTemplateType(AGraphTemplate template) {
+        this.template = template;
+    }
+    
+    public AGraphTemplate getTemplate() {
+        return template;
+    }
+    
+    public SimpleDirectedGraph<BtfVertex, DefaultEdge> getTemplateGraph() {
+        return template.getGraph();
+    }
+    
+    public static String getAllTemplates() {
+        var templates = new StringBuilder();
+        for (var type : GraphTemplateType.values())
+            templates.append(type.getTemplate().toString()).append("\n");
+        return templates.toString();
+    }
 }

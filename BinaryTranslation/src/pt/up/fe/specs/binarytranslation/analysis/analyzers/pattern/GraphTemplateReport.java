@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 
 public class GraphTemplateReport {
     private List<Graph<BtfVertex, DefaultEdge>> graphs;

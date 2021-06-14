@@ -1,10 +1,11 @@
-package pt.up.fe.specs.binarytranslation.analysis.memory;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.memory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
+
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;

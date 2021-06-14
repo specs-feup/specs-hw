@@ -15,7 +15,11 @@ package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
 public class GraphTemplateType0 extends AGraphTemplate {
 
-    protected GraphTemplateType0(GraphTemplateType type) {
-        super(type);
+    protected GraphTemplateType0(String label) {
+        super(label);
+    }
+    
+    protected GraphTemplateType0() {
+        this("Type 0");
     }
 }

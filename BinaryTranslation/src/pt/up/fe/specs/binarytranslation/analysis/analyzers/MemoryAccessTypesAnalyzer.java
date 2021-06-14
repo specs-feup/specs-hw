@@ -13,24 +13,20 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import org.jgrapht.Graph;
-import org.jgrapht.Graphs;
 import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.specs.BinaryTranslation.ELFProvider;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressDetector;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.GraphTemplateReport;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateFactory;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateReport;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
@@ -88,7 +84,7 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         var exprGraph = GraphUtils.getExpressionGraph(graph);
 
         for (var type : GraphTemplateType.values()) {
-            var template = GraphTemplateFactory.getTemplate(type).getGraph();
+            var template = type.getTemplateGraph();
             var iso = new VF2GraphIsomorphismInspector<BtfVertex, DefaultEdge>(exprGraph, template,
                     new VertexComparator(), new EdgeComparator());
             if (iso.isomorphismExists())
