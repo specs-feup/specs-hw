@@ -21,11 +21,11 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 
 public abstract class AGraphTemplate {
-    protected Graph<DataFlowVertex, DefaultEdge> graph;
+    protected Graph<BtfVertex, DefaultEdge> graph;
     protected String templateName;
     
     protected AGraphTemplate(GraphTemplateType type) {
@@ -33,7 +33,7 @@ public abstract class AGraphTemplate {
         this.templateName = "\"Template - " + type.toString() + "\"";
     }
     
-    public Graph<DataFlowVertex, DefaultEdge> getGraph() {
+    public Graph<BtfVertex, DefaultEdge> getGraph() {
         return graph;
     }
     

@@ -3,20 +3,20 @@ package pt.up.fe.specs.binarytranslation.analysis.graphs.transforms;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 
 public class TransformShiftsToMult extends AGraphTransform {
 
-    public TransformShiftsToMult(Graph<DataFlowVertex, DefaultEdge> graph) {
+    public TransformShiftsToMult(Graph<BtfVertex, DefaultEdge> graph) {
         super(graph);
     }
 
     @Override
-    protected Graph<DataFlowVertex, DefaultEdge> applyTransform(Graph<DataFlowVertex, DefaultEdge> g) {
+    protected Graph<BtfVertex, DefaultEdge> applyTransform(Graph<BtfVertex, DefaultEdge> g) {
         for (var v : g.vertexSet()) {
-            if (v.getType() == DataFlowVertexType.OPERATION) {
+            if (v.getType() == BtfVertexType.OPERATION) {
                 var label = v.getLabel();
                 if (label.equals(">>") || label.equals("<<")) {
                     transformShift(g, v);
@@ -26,14 +26,14 @@ public class TransformShiftsToMult extends AGraphTransform {
         return g;
     }
 
-    private void transformShift(Graph<DataFlowVertex, DefaultEdge> g, DataFlowVertex v) {
+    private void transformShift(Graph<BtfVertex, DefaultEdge> g, BtfVertex v) {
         var parents = GraphUtils.getParents(g, v);
-        var imm = DataFlowVertex.nullVertex;
+        var imm = BtfVertex.nullVertex;
         for (var parent : parents) {
-            if (parent.getType() == DataFlowVertexType.IMMEDIATE)
+            if (parent.getType() == BtfVertexType.IMMEDIATE)
                 imm = parent;
         }
-        if (imm == DataFlowVertex.nullVertex)
+        if (imm == BtfVertex.nullVertex)
             return;
         
         long immVal = Long.decode(imm.getLabel());

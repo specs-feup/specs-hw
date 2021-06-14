@@ -18,42 +18,42 @@ import java.util.ArrayList;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 
 public class TransformRemoveTemporaryVertices extends AGraphTransform {
-    private DataFlowVertexType type = DataFlowVertexType.REGISTER;
+    private BtfVertexType type = BtfVertexType.REGISTER;
 
-    public TransformRemoveTemporaryVertices(Graph<DataFlowVertex, DefaultEdge> graph) {
+    public TransformRemoveTemporaryVertices(Graph<BtfVertex, DefaultEdge> graph) {
         super(graph);
     }
 
-    public TransformRemoveTemporaryVertices(Graph<DataFlowVertex, DefaultEdge> graph, DataFlowVertexType type) {
+    public TransformRemoveTemporaryVertices(Graph<BtfVertex, DefaultEdge> graph, BtfVertexType type) {
         super(graph);
         this.type = type;
     }
 
     @Override
-    protected Graph<DataFlowVertex, DefaultEdge> applyTransform(Graph<DataFlowVertex, DefaultEdge> g) {
+    protected Graph<BtfVertex, DefaultEdge> applyTransform(Graph<BtfVertex, DefaultEdge> g) {
         var regs = GraphUtils.getVerticesWithType(g, type);
-        var toRemove = new ArrayList<DataFlowVertex>();
+        var toRemove = new ArrayList<BtfVertex>();
 
         for (var v : regs) {
             if (g.inDegreeOf(v) == 1 && g.outDegreeOf(v) == 1) {
                 var inEdges = g.incomingEdgesOf(v);
-                var inVertex = DataFlowVertex.nullVertex;
+                var inVertex = BtfVertex.nullVertex;
                 for (var e : inEdges) {
                     inVertex = g.getEdgeSource(e);
                 }
 
                 var outEdges = g.outgoingEdgesOf(v);
-                var outVertex = DataFlowVertex.nullVertex;
+                var outVertex = BtfVertex.nullVertex;
                 for (var e : outEdges) {
                     outVertex = g.getEdgeTarget(e);
                 }
 
-                if (type == DataFlowVertexType.REGISTER) {
+                if (type == BtfVertexType.REGISTER) {
 //                    if ((inVertex.getType() == AddressVertexType.OPERATION
 //                            || inVertex.getType() == AddressVertexType.MEMORY) &&
 //                            (outVertex.getType() == AddressVertexType.OPERATION

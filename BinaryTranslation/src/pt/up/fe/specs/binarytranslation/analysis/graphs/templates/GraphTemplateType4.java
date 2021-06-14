@@ -17,20 +17,20 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 
 public class GraphTemplateType4 extends AGraphTemplate {
 
     protected GraphTemplateType4(GraphTemplateType type) {
         super(type);
-        var r9 = new DataFlowVertex("r9", DataFlowVertexType.REGISTER);
-        var imm16 = new DataFlowVertex("16", DataFlowVertexType.IMMEDIATE);
-        var r5 = new DataFlowVertex("r5", DataFlowVertexType.REGISTER);
-        var mult = new DataFlowVertex("*", DataFlowVertexType.OPERATION);
-        var add1 = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
-        var imm4 = new DataFlowVertex("4", DataFlowVertexType.IMMEDIATE);
-        var add2 = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
+        var r9 = new BtfVertex("r9", BtfVertexType.REGISTER);
+        var imm16 = new BtfVertex("16", BtfVertexType.IMMEDIATE);
+        var r5 = new BtfVertex("r5", BtfVertexType.REGISTER);
+        var mult = new BtfVertex("*", BtfVertexType.OPERATION);
+        var add1 = new BtfVertex("+", BtfVertexType.OPERATION);
+        var imm4 = new BtfVertex("4", BtfVertexType.IMMEDIATE);
+        var add2 = new BtfVertex("+", BtfVertexType.OPERATION);
         
         graph.addVertex(r9);
         graph.addVertex(imm16);

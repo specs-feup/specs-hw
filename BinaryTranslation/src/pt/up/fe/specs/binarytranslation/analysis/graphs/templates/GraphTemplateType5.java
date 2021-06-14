@@ -17,16 +17,16 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 
 public class GraphTemplateType5 extends AGraphTemplate {
 
     protected GraphTemplateType5(GraphTemplateType type) {
         super(type);
-        var r7 = new DataFlowVertex("r7", DataFlowVertexType.REGISTER);
-        var imm0 = new DataFlowVertex("0", DataFlowVertexType.IMMEDIATE);
-        var add = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
+        var r7 = new BtfVertex("r7", BtfVertexType.REGISTER);
+        var imm0 = new BtfVertex("0", BtfVertexType.IMMEDIATE);
+        var add = new BtfVertex("+", BtfVertexType.OPERATION);
         graph.addVertex(r7);
         graph.addVertex(imm0);
         graph.addVertex(add);

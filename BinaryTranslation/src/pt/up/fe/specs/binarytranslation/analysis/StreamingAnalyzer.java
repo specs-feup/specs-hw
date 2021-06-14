@@ -32,9 +32,9 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class StreamingAnalysis extends ATraceAnalyzer {
+public class StreamingAnalyzer extends ATraceAnalyzer {
 
-    public StreamingAnalysis(ATraceInstructionStream stream, ELFProvider elf) {
+    public StreamingAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
         super(stream, elf);
     }
 

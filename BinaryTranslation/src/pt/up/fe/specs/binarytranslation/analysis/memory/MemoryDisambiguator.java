@@ -11,9 +11,10 @@ import java.util.stream.Collectors;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexProperty;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexProperty;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.AGraphTransform;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformBaseAddress;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
@@ -25,7 +26,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 @Deprecated
 public class MemoryDisambiguator {
 
-    private ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs;
+    private ArrayList<Graph<BtfVertex, DefaultEdge>> graphs;
     private HashMap<String, Integer> indVars;
     private RegisterProperties isaProps;
     private BasicBlockOccurrenceTracker tracker;
@@ -36,7 +37,7 @@ public class MemoryDisambiguator {
     };
     private Map<String, List<String>> prologueDeps;
 
-    public MemoryDisambiguator(ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs,
+    public MemoryDisambiguator(ArrayList<Graph<BtfVertex, DefaultEdge>> graphs,
             HashMap<String, Integer> indVars,
             RegisterProperties isaProps,
             BasicBlockOccurrenceTracker tracker, Map<String, List<String>> prologueDeps) {
@@ -51,7 +52,7 @@ public class MemoryDisambiguator {
         }
     }
 
-    private void applyTransforms(Graph<DataFlowVertex, DefaultEdge> graph) {
+    private void applyTransforms(Graph<BtfVertex, DefaultEdge> graph) {
         for (var cl : transforms) {
             try {
                 Constructor<?> cons = cl.getConstructor(cl);
@@ -142,17 +143,17 @@ public class MemoryDisambiguator {
      * @param graph
      * @return
      */
-    private List<String> getGraphAddressRegisters(Graph<DataFlowVertex, DefaultEdge> graph) {
+    private List<String> getGraphAddressRegisters(Graph<BtfVertex, DefaultEdge> graph) {
         var regs = new ArrayList<String>();
-        var baseStart = GraphUtils.findAllNodesWithProperty(graph, DataFlowVertexProperty.BASE_ADDR).get(0);
+        var baseStart = GraphUtils.findAllNodesWithProperty(graph, BtfVertexProperty.BASE_ADDR).get(0);
         var elems1 = getSubgraphAddressRegisters(graph, baseStart);
-        var offsetStart = GraphUtils.findAllNodesWithProperty(graph, DataFlowVertexProperty.OFFSET).get(0);
+        var offsetStart = GraphUtils.findAllNodesWithProperty(graph, BtfVertexProperty.OFFSET).get(0);
         var elems2 = getSubgraphAddressRegisters(graph, offsetStart);
-        var elems = new LinkedHashSet<DataFlowVertex>(elems1);
+        var elems = new LinkedHashSet<BtfVertex>(elems1);
         elems.addAll(elems2);
 
         for (var elem : elems) {
-            if (elem.getType() == DataFlowVertexType.REGISTER)
+            if (elem.getType() == BtfVertexType.REGISTER)
                 regs.add(elem.getLabel());
         }
         return regs.stream().distinct().collect(Collectors.toList());
@@ -164,10 +165,10 @@ public class MemoryDisambiguator {
      * @param graph
      * @return
      */
-    private List<DataFlowVertex> getSubgraphAddressRegisters(Graph<DataFlowVertex, DefaultEdge> graph,
-            DataFlowVertex start) {
+    private List<BtfVertex> getSubgraphAddressRegisters(Graph<BtfVertex, DefaultEdge> graph,
+            BtfVertex start) {
         var elems = GraphUtils.findAllPredecessors(graph, start);
-        var filtered = new ArrayList<DataFlowVertex>();
+        var filtered = new ArrayList<BtfVertex>();
         {
             for (var elem : elems) {
                 if (graph.inDegreeOf(elem) == 0)
