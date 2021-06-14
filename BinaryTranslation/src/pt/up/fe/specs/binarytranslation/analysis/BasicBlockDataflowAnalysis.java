@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.specs.BinaryTranslation.ELFProvider;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.BasicBlockDataFlow;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.BasicBlockDataFlowGraph;
 import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowCriticalPath;
 import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
@@ -43,8 +43,7 @@ public class BasicBlockDataflowAnalysis extends ATraceAnalyzer {
         for (var bb : segs) {
 
             var tracker = new BasicBlockOccurrenceTracker(bb, insts);
-            var bbdf = new BasicBlockDataFlow(tracker);
-            var dfg = bbdf.buildDFG();
+            var dfg = new BasicBlockDataFlowGraph(tracker);
 
             var pathfinder = new DataFlowCriticalPath(dfg);
             var path = pathfinder.calculatePath();
