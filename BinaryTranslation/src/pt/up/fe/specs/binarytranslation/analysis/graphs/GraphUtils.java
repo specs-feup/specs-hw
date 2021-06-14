@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.memory;
+package pt.up.fe.specs.binarytranslation.analysis.graphs;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -23,10 +23,9 @@ import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.dot.DOTExporter;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexIsaInfo;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexProperty;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexIsaInfo;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexProperty;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.util.SpecsLogs;
 
@@ -38,16 +37,16 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class GraphUtils {
 
-    public static Graph<DataFlowVertex, DefaultEdge> mergeGraphs(List<Graph<DataFlowVertex, DefaultEdge>> graphs) {
-        Graph<DataFlowVertex, DefaultEdge> merged = new DefaultDirectedGraph<>(DefaultEdge.class);
+    public static Graph<BtfVertex, DefaultEdge> mergeGraphs(List<Graph<BtfVertex, DefaultEdge>> graphs) {
+        Graph<BtfVertex, DefaultEdge> merged = new DefaultDirectedGraph<>(DefaultEdge.class);
         for (var graph : graphs) {
             Graphs.addGraph(merged, graph);
         }
         return merged;
     }
 
-    public static DataFlowVertex findGraphRoot(Graph<DataFlowVertex, DefaultEdge> graph) {
-        var root = DataFlowVertex.nullVertex;
+    public static BtfVertex findGraphRoot(Graph<BtfVertex, DefaultEdge> graph) {
+        var root = BtfVertex.nullVertex;
         for (var v : graph.vertexSet()) {
             if (graph.outDegreeOf(v) == 0)
                 root = v;
@@ -55,8 +54,8 @@ public class GraphUtils {
         return root;
     }
 
-    public static ArrayList<DataFlowVertex> getParents(Graph<DataFlowVertex, DefaultEdge> graph, DataFlowVertex current) {
-        var res = new ArrayList<DataFlowVertex>();
+    public static ArrayList<BtfVertex> getParents(Graph<BtfVertex, DefaultEdge> graph, BtfVertex current) {
+        var res = new ArrayList<BtfVertex>();
         for (var edge : graph.edgesOf(current)) {
             if (graph.getEdgeSource(edge) != current)
                 res.add(graph.getEdgeSource(edge));
@@ -64,62 +63,62 @@ public class GraphUtils {
         return res;
     }
 
-    public static DataFlowVertex getBaseAddr(Graph<DataFlowVertex, DefaultEdge> graph) {
+    public static BtfVertex getBaseAddr(Graph<BtfVertex, DefaultEdge> graph) {
         for (var v : graph.vertexSet()) {
-            if (v.getProperty() == DataFlowVertexProperty.BASE_ADDR)
+            if (v.getProperty() == BtfVertexProperty.BASE_ADDR)
                 return v;
         }
-        return DataFlowVertex.nullVertex;
+        return BtfVertex.nullVertex;
     }
 
-    public static DataFlowVertex getOffset(Graph<DataFlowVertex, DefaultEdge> graph) {
+    public static BtfVertex getOffset(Graph<BtfVertex, DefaultEdge> graph) {
         for (var v : graph.vertexSet()) {
-            if (v.getProperty() == DataFlowVertexProperty.OFFSET)
+            if (v.getProperty() == BtfVertexProperty.OFFSET)
                 return v;
         }
-        return DataFlowVertex.nullVertex;
+        return BtfVertex.nullVertex;
     }
 
-    public static DataFlowVertex getMemoryOp(Graph<DataFlowVertex, DefaultEdge> graph) {
+    public static BtfVertex getMemoryOp(Graph<BtfVertex, DefaultEdge> graph) {
         for (var v : graph.vertexSet()) {
-            if (v.getType() == DataFlowVertexType.MEMORY)
+            if (v.getType() == BtfVertexType.MEMORY)
                 return v;
         }
-        return DataFlowVertex.nullVertex;
+        return BtfVertex.nullVertex;
     }
 
-    public static DataFlowVertex getExpressionStart(Graph<DataFlowVertex, DefaultEdge> graph) {
-        DataFlowVertex start = null;
+    public static BtfVertex getExpressionStart(Graph<BtfVertex, DefaultEdge> graph) {
+        BtfVertex start = null;
         for (var v : graph.vertexSet()) {
-            if (v.getType() == DataFlowVertexType.MEMORY)
+            if (v.getType() == BtfVertexType.MEMORY)
                 start = v;
         }
         for (var v : getParents(graph, start)) {
-            if (v.getIsaInfo() != DataFlowVertexIsaInfo.RD)
+            if (v.getIsaInfo() != BtfVertexIsaInfo.RD)
                 return v;
         }
-        return DataFlowVertex.nullVertex;
+        return BtfVertex.nullVertex;
     }
 
-    public static Graph<DataFlowVertex, DefaultEdge> getExpressionGraph(Graph<DataFlowVertex, DefaultEdge> graph) {
-        Graph<DataFlowVertex, DefaultEdge> sub = new DefaultDirectedGraph<>(DefaultEdge.class);
+    public static Graph<BtfVertex, DefaultEdge> getExpressionGraph(Graph<BtfVertex, DefaultEdge> graph) {
+        Graph<BtfVertex, DefaultEdge> sub = new DefaultDirectedGraph<>(DefaultEdge.class);
         Graphs.addGraph(sub, graph);
-        var mem = findAllNodesOfType(sub, DataFlowVertexType.MEMORY);
-        var rd = findAllNodesWithIsaInfo(graph, DataFlowVertexIsaInfo.RD);
+        var mem = findAllNodesOfType(sub, BtfVertexType.MEMORY);
+        var rd = findAllNodesWithIsaInfo(graph, BtfVertexIsaInfo.RD);
         sub.removeAllVertices(mem);
         sub.removeAllVertices(rd);
         return sub;
     }
 
-    public static String graphToDot(Graph<DataFlowVertex, DefaultEdge> graph, String title) {
-        DOTExporter<DataFlowVertex, DefaultEdge> exporter = new DOTExporter<>();
+    public static String graphToDot(Graph<BtfVertex, DefaultEdge> graph, String title) {
+        DOTExporter<BtfVertex, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexAttributeProvider((v) -> {
             Map<String, Attribute> map = new LinkedHashMap<>();
 
             String label = v.getLabel();
-            if (v.getIsaInfo() != DataFlowVertexIsaInfo.NULL)
+            if (v.getIsaInfo() != BtfVertexIsaInfo.NULL)
                 label += "\n{" + v.getIsaInfo() + "}";
-            if (v.getProperty() != DataFlowVertexProperty.NULL)
+            if (v.getProperty() != BtfVertexProperty.NULL)
                 label += "\n{" + v.getProperty() + "}";
 
             map.put("label", DefaultAttribute.createAttribute(label));
@@ -150,13 +149,13 @@ public class GraphUtils {
         return writer.toString();
     }
 
-    public static String graphToDot(Graph<DataFlowVertex, DefaultEdge> graph) {
+    public static String graphToDot(Graph<BtfVertex, DefaultEdge> graph) {
         return graphToDot(graph, "\"Graph\"");
     }
 
-    public static ArrayList<DataFlowVertex> findAllNodesOfType(Graph<DataFlowVertex, DefaultEdge> graph,
-            DataFlowVertexType type) {
-        var res = new ArrayList<DataFlowVertex>();
+    public static ArrayList<BtfVertex> findAllNodesOfType(Graph<BtfVertex, DefaultEdge> graph,
+            BtfVertexType type) {
+        var res = new ArrayList<BtfVertex>();
         for (var v : graph.vertexSet()) {
             if (v.getType() == type)
                 res.add(v);
@@ -164,9 +163,9 @@ public class GraphUtils {
         return res;
     }
 
-    public static ArrayList<DataFlowVertex> findAllNodesWithProperty(Graph<DataFlowVertex, DefaultEdge> graph,
-            DataFlowVertexProperty property) {
-        var res = new ArrayList<DataFlowVertex>();
+    public static ArrayList<BtfVertex> findAllNodesWithProperty(Graph<BtfVertex, DefaultEdge> graph,
+            BtfVertexProperty property) {
+        var res = new ArrayList<BtfVertex>();
         for (var v : graph.vertexSet()) {
             if (v.getProperty() == property)
                 res.add(v);
@@ -174,9 +173,9 @@ public class GraphUtils {
         return res;
     }
 
-    public static ArrayList<DataFlowVertex> findAllNodesWithIsaInfo(Graph<DataFlowVertex, DefaultEdge> graph,
-            DataFlowVertexIsaInfo isaInfo) {
-        var res = new ArrayList<DataFlowVertex>();
+    public static ArrayList<BtfVertex> findAllNodesWithIsaInfo(Graph<BtfVertex, DefaultEdge> graph,
+            BtfVertexIsaInfo isaInfo) {
+        var res = new ArrayList<BtfVertex>();
         for (var v : graph.vertexSet()) {
             if (v.getIsaInfo() == isaInfo)
                 res.add(v);
@@ -184,15 +183,15 @@ public class GraphUtils {
         return res;
     }
 
-    public static ArrayList<DataFlowVertex> findAllPredecessors(Graph<DataFlowVertex, DefaultEdge> graph,
-            DataFlowVertex v) {
-        var reversed = new EdgeReversedGraph<DataFlowVertex, DefaultEdge>(graph);
+    public static ArrayList<BtfVertex> findAllPredecessors(Graph<BtfVertex, DefaultEdge> graph,
+            BtfVertex v) {
+        var reversed = new EdgeReversedGraph<BtfVertex, DefaultEdge>(graph);
         return findAllSuccessors(reversed, v);
     }
 
-    public static ArrayList<DataFlowVertex> findAllSuccessors(Graph<DataFlowVertex, DefaultEdge> graph, DataFlowVertex v) {
-        var iter = new BreadthFirstIterator<DataFlowVertex, DefaultEdge>(graph, v);
-        var res = new ArrayList<DataFlowVertex>();
+    public static ArrayList<BtfVertex> findAllSuccessors(Graph<BtfVertex, DefaultEdge> graph, BtfVertex v) {
+        var iter = new BreadthFirstIterator<BtfVertex, DefaultEdge>(graph, v);
+        var res = new ArrayList<BtfVertex>();
 
         while (iter.hasNext()) {
             res.add(iter.next());
@@ -200,9 +199,9 @@ public class GraphUtils {
         return res;
     }
 
-    public static List<DataFlowVertex> getVerticesWithType(Graph<DataFlowVertex, DefaultEdge> graph,
-            DataFlowVertexType type) {
-        var ret = new ArrayList<DataFlowVertex>();
+    public static List<BtfVertex> getVerticesWithType(Graph<BtfVertex, DefaultEdge> graph,
+            BtfVertexType type) {
+        var ret = new ArrayList<BtfVertex>();
         for (var v : graph.vertexSet()) {
             if (v.getType() == type)
                 ret.add(v);
@@ -210,14 +209,14 @@ public class GraphUtils {
         return ret;
     }
 
-    public static String pathBetweenTwoVertices(Graph<DataFlowVertex, DefaultEdge> graph, DataFlowVertex source,
-            DataFlowVertex sink) {
+    public static String pathBetweenTwoVertices(Graph<BtfVertex, DefaultEdge> graph, BtfVertex source,
+            BtfVertex sink) {
         return pathBetweenTwoVertices(graph, source, sink, 0);
     }
 
-    public static String pathBetweenTwoVertices(Graph<DataFlowVertex, DefaultEdge> graph, DataFlowVertex source,
-            DataFlowVertex sink, int limit) {
-        var dijkstra = new DijkstraShortestPath<DataFlowVertex, DefaultEdge>(graph);
+    public static String pathBetweenTwoVertices(Graph<BtfVertex, DefaultEdge> graph, BtfVertex source,
+            BtfVertex sink, int limit) {
+        var dijkstra = new DijkstraShortestPath<BtfVertex, DefaultEdge>(graph);
         var path = dijkstra.getPath(source, sink);
         if (path == null) {
             return "No path";
@@ -251,7 +250,7 @@ public class GraphUtils {
         return base;
     }
 
-    public static String generateGraphURL(Graph<DataFlowVertex, DefaultEdge> graph) {
+    public static String generateGraphURL(Graph<BtfVertex, DefaultEdge> graph) {
         return GraphUtils.generateGraphURL(graph, "Graph");
     }
 
@@ -270,7 +269,7 @@ public class GraphUtils {
         }
     }
 
-    public static String generateGraphURL(Graph<DataFlowVertex, DefaultEdge> graph, String name) {
+    public static String generateGraphURL(Graph<BtfVertex, DefaultEdge> graph, String name) {
         var str = GraphUtils.graphToDot(graph, name);
         return generateGraphURL(str);
     }

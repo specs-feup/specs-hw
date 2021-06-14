@@ -11,11 +11,12 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.dataflow;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow;
 
 import java.util.ArrayList;
 import java.util.List;
-import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
+
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class BasicBlockDataFlowGraph extends ASegmentDataFlowGraph {

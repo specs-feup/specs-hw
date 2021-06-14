@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,8 +9,15 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.specs.BinaryTranslation.ELFProvider;
 
-import pt.up.fe.specs.binarytranslation.analysis.inouts.InstructionSets;
-import pt.up.fe.specs.binarytranslation.analysis.inouts.SimpleBasicBlockInOuts;
+import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.InstructionSets;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.SimpleBasicBlockInOuts;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.InductionVariablesDetector;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressComparator;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressDetector;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryDisambiguator;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.PrologueDetector;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
@@ -18,12 +25,6 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformBase
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
-import pt.up.fe.specs.binarytranslation.analysis.memory.InductionVariablesDetector;
-import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressComparator;
-import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressDetector;
-import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryDisambiguator;
-import pt.up.fe.specs.binarytranslation.analysis.memory.PrologueDetector;
-import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;

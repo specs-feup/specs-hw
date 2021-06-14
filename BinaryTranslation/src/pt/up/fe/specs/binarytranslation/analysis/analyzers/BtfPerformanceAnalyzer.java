@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
 import java.util.concurrent.TimeUnit;
 

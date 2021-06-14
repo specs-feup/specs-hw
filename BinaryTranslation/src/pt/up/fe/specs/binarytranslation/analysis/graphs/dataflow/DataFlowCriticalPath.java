@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.dataflow;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,8 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 
 public class DataFlowCriticalPath {
     private ASegmentDataFlowGraph graph;
@@ -31,17 +32,14 @@ public class DataFlowCriticalPath {
         this.graph = graph;
     }
 
-    public Graph<DataFlowVertex, DefaultEdge> calculatePath() {
+    public Graph<BtfVertex, DefaultEdge> calculatePath() {
         var sources = findSources();
         var sinks = findSinks();
-        List<DataFlowVertex> bestPath = new ArrayList<DataFlowVertex>();
+        List<BtfVertex> bestPath = new ArrayList<BtfVertex>();
 
         for (var source : sources) {
-            for (var sink : sinks) {
-                //ar dijkstra = new DijkstraShortestPath<AddressVertex, DefaultEdge>(graph);
-                //var path = dijkstra.getPath(source, sink);
-                
-                var alg = new AllDirectedPaths<DataFlowVertex, DefaultEdge>(graph);
+            for (var sink : sinks) {                
+                var alg = new AllDirectedPaths<BtfVertex, DefaultEdge>(graph);
                 for (var path : alg.getAllPaths(source, sink, true, null)) {
                     var currPath = path.getVertexList();
                     if (pathSize(currPath) > pathSize(bestPath))
@@ -52,8 +50,8 @@ public class DataFlowCriticalPath {
         return pathToGraph(bestPath);
     }
 
-    private Graph<DataFlowVertex, DefaultEdge> pathToGraph(List<DataFlowVertex> currPath) {
-        Graph<DataFlowVertex, DefaultEdge> path = new DefaultDirectedGraph<>(DefaultEdge.class);
+    private Graph<BtfVertex, DefaultEdge> pathToGraph(List<BtfVertex> currPath) {
+        Graph<BtfVertex, DefaultEdge> path = new DefaultDirectedGraph<>(DefaultEdge.class);
 
         for (var v : currPath)
             path.addVertex(v);
@@ -63,18 +61,18 @@ public class DataFlowCriticalPath {
         return path;
     }
 
-    private int pathSize(List<DataFlowVertex> pathList) {
+    private int pathSize(List<BtfVertex> pathList) {
         var cnt = 0;
         
         for (var v : pathList) {
-            if (v.getType() == DataFlowVertexType.OPERATION)
+            if (v.getType() == BtfVertexType.OPERATION)
                 cnt++;
         }
         return cnt;
     }
 
-    public List<DataFlowVertex> findSinks() {
-        var sinks = new ArrayList<DataFlowVertex>();
+    public List<BtfVertex> findSinks() {
+        var sinks = new ArrayList<BtfVertex>();
 
         for (var v : graph.vertexSet()) {
             if (graph.inDegreeOf(v) != 0 && graph.outDegreeOf(v) == 0)
@@ -83,8 +81,8 @@ public class DataFlowCriticalPath {
         return sinks;
     }
 
-    public List<DataFlowVertex> findSources() {
-        var sources = new ArrayList<DataFlowVertex>();
+    public List<BtfVertex> findSources() {
+        var sources = new ArrayList<BtfVertex>();
 
         for (var v : graph.vertexSet()) {
             if (graph.inDegreeOf(v) == 0 && graph.outDegreeOf(v) != 0)

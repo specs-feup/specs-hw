@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.memory;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.address;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,26 +10,30 @@ import java.util.stream.Stream;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
-public class PartialAddressGraphBuilder {
+public class AddressSubgraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge> {
+    private static final long serialVersionUID = 7667384967359919218L;
     private String startReg;
-    private DataFlowVertex root;
-    private Graph<DataFlowVertex, DefaultEdge> graph;
+    private BtfVertex root;
+    //private Graph<BtfVertex, DefaultEdge> graph;
     private List<Instruction> modifiedBasicBlock;
     private int modifiedIdx;
 
-    public PartialAddressGraphBuilder(String reg, int idx, List<Instruction> basicBlock) {
+    public AddressSubgraph(String reg, int idx, List<Instruction> basicBlock) {
+        super(DefaultEdge.class);
         this.startReg = reg;
-        this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
 
         // Basic block needs to undergo a small transformation to consider insts after the jump
         this.modifiedBasicBlock = getModifiedSequence(basicBlock);
         this.modifiedIdx = getModifiedIndex(idx, basicBlock, modifiedBasicBlock);
+        
+        generateGraph();
     }
 
     private int getModifiedIndex(int idx, List<Instruction> bb, List<Instruction> mbb) {
@@ -65,23 +69,18 @@ public class PartialAddressGraphBuilder {
         return res;
     }
 
-    public Graph<DataFlowVertex, DefaultEdge> generateGraph() {
-        // ensure idempotence
-        if (graph.vertexSet().size() != 0)
-            return graph;
-
-        this.root = new DataFlowVertex(startReg, DataFlowVertexType.REGISTER);
-        graph.addVertex(root);
+    public void generateGraph() {
+        this.root = new BtfVertex(startReg, BtfVertexType.REGISTER);
+        addVertex(root);
 
         var parent = iterate(startReg, modifiedIdx);
-        if (parent != DataFlowVertex.nullVertex) {
-            graph.addEdge(parent, root);
+        if (parent != BtfVertex.nullVertex) {
+            addEdge(parent, root);
         }
-        return graph;
     }
 
-    private DataFlowVertex iterate(String register, int index) {
-        var ret = DataFlowVertex.nullVertex;
+    private BtfVertex iterate(String register, int index) {
+        var ret = BtfVertex.nullVertex;
         boolean exit = false;
 
         for (int i = index; i >= 0; i--) {
@@ -99,8 +98,8 @@ public class PartialAddressGraphBuilder {
                     String enumName = inst.getProperties().getEnumName();
                     String opName = AnalysisUtils.mapInstructionsToSymbol(enumName);
 
-                    var opNode = new DataFlowVertex(opName, DataFlowVertexType.OPERATION);
-                    graph.addVertex(opNode);
+                    var opNode = new BtfVertex(opName, BtfVertexType.OPERATION);
+                    addVertex(opNode);
                     ret = opNode;
 
                     // Special case: op is another load/store
@@ -110,22 +109,22 @@ public class PartialAddressGraphBuilder {
 
                     // Handle first operand
                     var op1 = ops.get(1);
-                    var previous = DataFlowVertex.nullVertex;
+                    var previous = BtfVertex.nullVertex;
 
                     if (op1.isRegister()) {
                         // Build vertex
                         String reg1 = AnalysisUtils.getRegName(op1);
-                        var reg1Node = new DataFlowVertex(reg1, DataFlowVertexType.REGISTER);
+                        var reg1Node = new BtfVertex(reg1, BtfVertexType.REGISTER);
                         previous = reg1Node;
 
                         // Add vertex and connect to operation
-                        graph.addVertex(reg1Node);
-                        graph.addEdge(reg1Node, opNode);
+                        addVertex(reg1Node);
+                        addEdge(reg1Node, opNode);
 
                         // Build chain upwards, if it exists at all
                         var parent = iterate(reg1, i - 1);
-                        if (parent != DataFlowVertex.nullVertex) {
-                            graph.addEdge(parent, reg1Node);
+                        if (parent != BtfVertex.nullVertex) {
+                            addEdge(parent, reg1Node);
                         }
                     }
 
@@ -135,28 +134,28 @@ public class PartialAddressGraphBuilder {
                     if (op2.isRegister()) {
                         // Build vertex
                         String reg2 = AnalysisUtils.getRegName(op2);
-                        var reg2Node = new DataFlowVertex(reg2, DataFlowVertexType.REGISTER);
+                        var reg2Node = new BtfVertex(reg2, BtfVertexType.REGISTER);
 
                         // Special case: op1 and op2 are the same register
                         if (previous.getLabel().equals(reg2)) {
-                            graph.addEdge(previous, opNode);
+                            addEdge(previous, opNode);
                         } else {
                             // Add vertex and connect to operation
-                            graph.addVertex(reg2Node);
-                            graph.addEdge(reg2Node, opNode);
+                            addVertex(reg2Node);
+                            addEdge(reg2Node, opNode);
 
                             // Build chain upwards, if it exists at all
                             var parent = iterate(reg2, i - 1);
-                            if (parent != DataFlowVertex.nullVertex) {
-                                graph.addEdge(parent, reg2Node);
+                            if (parent != BtfVertex.nullVertex) {
+                                addEdge(parent, reg2Node);
                             }
                         }
                     }
                     if (op2.isImmediate()) {
                         String imm = op2.getRepresentation();
-                        var immNode = new DataFlowVertex(imm, DataFlowVertexType.IMMEDIATE);
-                        graph.addVertex(immNode);
-                        graph.addEdge(immNode, opNode);
+                        var immNode = new BtfVertex(imm, BtfVertexType.IMMEDIATE);
+                        addVertex(immNode);
+                        addEdge(immNode, opNode);
                     }
                 }
                 if (exit)
@@ -174,7 +173,7 @@ public class PartialAddressGraphBuilder {
         return startReg;
     }
 
-    public DataFlowVertex getRoot() {
+    public BtfVertex getRoot() {
         return root;
     }
 }

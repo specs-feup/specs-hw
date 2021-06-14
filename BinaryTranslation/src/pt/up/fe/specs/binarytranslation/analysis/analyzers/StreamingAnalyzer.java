@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +25,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.specs.BinaryTranslation.ELFProvider;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.InductionVariablesDetector;
-import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressDetector;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressGenerationUnit;
+import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.AddressGenerationUnit;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.InductionVariablesDetector;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;

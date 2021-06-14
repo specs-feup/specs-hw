@@ -1,33 +1,33 @@
-package pt.up.fe.specs.binarytranslation.analysis.memory;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.address;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
+
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexIsaInfo;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexProperty;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexIsaInfo;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexProperty;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
-public class AddressGraphBuilder {
-
+public class AddressGraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge>{
+    private static final long serialVersionUID = -7691187221132327853L;
     private List<Instruction> basicBlock;
     private Instruction inst;
     private int startIdx;
 
-    public AddressGraphBuilder(List<Instruction> basicBlock, Instruction inst) {
+    public AddressGraph(List<Instruction> basicBlock, Instruction inst) {
+        super(DefaultEdge.class);
         this.basicBlock = basicBlock;
         this.inst = inst;
         this.startIdx = basicBlock.indexOf(inst);
+        buildGraph();
     }
 
-    public Graph<DataFlowVertex, DefaultEdge> calculateChain() {
+    public void buildGraph() {
         if (inst.getData().getOperands().size() == 3) {
             Operand target = inst.getData().getOperands().get(0);
             Operand op1 = inst.getData().getOperands().get(1);
@@ -38,86 +38,58 @@ public class AddressGraphBuilder {
             String op2Reg = AnalysisUtils.getRegName(op2);
 
             // Build memory access node
-            var targetV = new DataFlowVertex(targetReg, DataFlowVertexType.REGISTER);
-            targetV.setIsaInfo(DataFlowVertexIsaInfo.RD);
-            var memAccessV = new DataFlowVertex(inst.isLoad() ? "Memory Access (load)" : "Memory Access (store)",
-                    DataFlowVertexType.MEMORY);
-            var sumV = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
+            var targetV = new BtfVertex(targetReg, BtfVertexType.REGISTER);
+            targetV.setIsaInfo(BtfVertexIsaInfo.RD);
+            var memAccessV = new BtfVertex(inst.isLoad() ? "Memory Access (load)" : "Memory Access (store)",
+                    BtfVertexType.MEMORY);
+            var sumV = new BtfVertex("+", BtfVertexType.OPERATION);
 
-            // Build rA graph
-            var rABuilder = new PartialAddressGraphBuilder(op1Reg, startIdx - 1, basicBlock);
-            var fullGraph = rABuilder.generateGraph();
-            var rAV = rABuilder.getRoot();
-            rAV.setIsaInfo(DataFlowVertexIsaInfo.RA);
+            // Build rA subgraph, add it to this graph 
+            var rAGraph = new AddressSubgraph(op1Reg, startIdx - 1, basicBlock);
+            Graphs.addGraph(this, rAGraph);
+            
+            // Set rA vertex
+            var rAV = rAGraph.getRoot();
+            rAV.setIsaInfo(BtfVertexIsaInfo.RA);
 
-            // Add memory access to rA graph, and connect
-            fullGraph.addVertex(targetV);
-            fullGraph.addVertex(memAccessV);
-            fullGraph.addVertex(sumV);
-            fullGraph.addEdge(rAV, sumV);
-            fullGraph.addEdge(sumV, memAccessV);
+            // Add memory access to rA sungraph, and connect
+            addVertex(targetV);
+            addVertex(memAccessV);
+            addVertex(sumV);
+            addEdge(rAV, sumV);
+            addEdge(sumV, memAccessV);
 
-            // Build rB graph
+            // Build rB subgraph, add it to this graph
             if (op2.isImmediate()) {
                 String immVal = op2.getRepresentation();
-                var immV = new DataFlowVertex(immVal, DataFlowVertexType.IMMEDIATE);
+                var immV = new BtfVertex(immVal, BtfVertexType.IMMEDIATE);
+                rAV.setProperty(BtfVertexProperty.BASE_ADDR);
+                immV.setProperty(BtfVertexProperty.OFFSET);
 
-                // TODO: assign BASE_ADDR and OFFSET when an IMM is present
-                // Below assumption is not always true
-                // Use later transform for a more educated guess
-                rAV.setProperty(DataFlowVertexProperty.BASE_ADDR);
-                immV.setProperty(DataFlowVertexProperty.OFFSET);
-
-                fullGraph.addVertex(immV);
-                fullGraph.addEdge(immV, sumV);
+                addVertex(immV);
+                addEdge(immV, sumV);
             } else {
-                var rBBuilder = new PartialAddressGraphBuilder(op2Reg, startIdx - 1, basicBlock);
-                var rBGraph = rBBuilder.generateGraph();
-                Graphs.addGraph(fullGraph, rBGraph);
-                var rBV = rBBuilder.getRoot();
-                rBV.setIsaInfo(DataFlowVertexIsaInfo.RB);
+                var rBGraph = new AddressSubgraph(op2Reg, startIdx - 1, basicBlock);
+                Graphs.addGraph(this, rBGraph);
+                
+                // Set rB vertex
+                var rBV = rBGraph.getRoot();
+                rBV.setIsaInfo(BtfVertexIsaInfo.RB);
 
                 // Set rA and rB using MicroBlaze GCC conventions
-                rAV.setProperty(DataFlowVertexProperty.OFFSET);
-                rBV.setProperty(DataFlowVertexProperty.BASE_ADDR);
-                fullGraph.addEdge(rBV, sumV);
+                rAV.setProperty(BtfVertexProperty.OFFSET);
+                rBV.setProperty(BtfVertexProperty.BASE_ADDR);
+                addEdge(rBV, sumV);
             }
 
             // Connect load/store destination/source register to the rest
             if (inst.isLoad()) {
-                fullGraph.addEdge(memAccessV, targetV);
-                targetV.setType(DataFlowVertexType.LOAD_TARGET);
+                addEdge(memAccessV, targetV);
+                targetV.setType(BtfVertexType.LOAD_TARGET);
             } else {
-                fullGraph.addEdge(targetV, memAccessV);
-                targetV.setType(DataFlowVertexType.STORE_TARGET);
-            }
-
-            return fullGraph;
-        }
-        return null;
-    }
-
-    @Deprecated
-    private List<String> findContributingRegisters(Operand op) {
-        var regs = new ArrayList<String>();
-        regs.add(AnalysisUtils.getRegName(op));
-
-        for (int i = startIdx - 1; i >= 0; i--) {
-            Instruction inst = this.basicBlock.get(i);
-            var ops = inst.getData().getOperands();
-
-            if (ops.size() != 0) {
-                var op0 = ops.get(0);
-                var op0name = AnalysisUtils.getRegName(op0);
-
-                if (op0.isWrite() && regs.contains(op0name)) {
-                    for (int j = 1; j < ops.size(); j++) {
-                        if (ops.get(j).isRegister())
-                            regs.add(AnalysisUtils.getRegName(ops.get(j)));
-                    }
-                }
+                addEdge(targetV, memAccessV);
+                targetV.setType(BtfVertexType.STORE_TARGET);
             }
         }
-        return regs.stream().distinct().collect(Collectors.toList());
     }
 }

@@ -1,13 +1,14 @@
-package pt.up.fe.specs.binarytranslation.analysis;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
 import java.util.List;
 
 import org.specs.BinaryTranslation.ELFProvider;
 
-import pt.up.fe.specs.binarytranslation.analysis.inouts.BasicBlockInOuts;
-import pt.up.fe.specs.binarytranslation.analysis.inouts.SimpleBasicBlockInOuts;
-import pt.up.fe.specs.binarytranslation.analysis.inouts.TraceInOuts;
-import pt.up.fe.specs.binarytranslation.analysis.inouts.elimination.OutElimination;
+import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.BasicBlockInOuts;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.OutElimination;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.SimpleBasicBlockInOuts;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.TraceInOuts;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
