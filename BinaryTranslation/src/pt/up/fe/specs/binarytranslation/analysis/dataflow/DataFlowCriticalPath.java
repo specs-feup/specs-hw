@@ -22,8 +22,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 
 public class DataFlowCriticalPath {
     private ASegmentDataFlowGraph graph;
@@ -32,17 +31,17 @@ public class DataFlowCriticalPath {
         this.graph = graph;
     }
 
-    public Graph<AddressVertex, DefaultEdge> calculatePath() {
+    public Graph<DataFlowVertex, DefaultEdge> calculatePath() {
         var sources = findSources();
         var sinks = findSinks();
-        List<AddressVertex> bestPath = new ArrayList<AddressVertex>();
+        List<DataFlowVertex> bestPath = new ArrayList<DataFlowVertex>();
 
         for (var source : sources) {
             for (var sink : sinks) {
                 //ar dijkstra = new DijkstraShortestPath<AddressVertex, DefaultEdge>(graph);
                 //var path = dijkstra.getPath(source, sink);
                 
-                var alg = new AllDirectedPaths<AddressVertex, DefaultEdge>(graph);
+                var alg = new AllDirectedPaths<DataFlowVertex, DefaultEdge>(graph);
                 for (var path : alg.getAllPaths(source, sink, true, null)) {
                     var currPath = path.getVertexList();
                     if (pathSize(currPath) > pathSize(bestPath))
@@ -53,8 +52,8 @@ public class DataFlowCriticalPath {
         return pathToGraph(bestPath);
     }
 
-    private Graph<AddressVertex, DefaultEdge> pathToGraph(List<AddressVertex> currPath) {
-        Graph<AddressVertex, DefaultEdge> path = new DefaultDirectedGraph<>(DefaultEdge.class);
+    private Graph<DataFlowVertex, DefaultEdge> pathToGraph(List<DataFlowVertex> currPath) {
+        Graph<DataFlowVertex, DefaultEdge> path = new DefaultDirectedGraph<>(DefaultEdge.class);
 
         for (var v : currPath)
             path.addVertex(v);
@@ -64,18 +63,18 @@ public class DataFlowCriticalPath {
         return path;
     }
 
-    private int pathSize(List<AddressVertex> pathList) {
+    private int pathSize(List<DataFlowVertex> pathList) {
         var cnt = 0;
         
         for (var v : pathList) {
-            if (v.getType() == AddressVertexType.OPERATION)
+            if (v.getType() == DataFlowVertexType.OPERATION)
                 cnt++;
         }
         return cnt;
     }
 
-    public List<AddressVertex> findSinks() {
-        var sinks = new ArrayList<AddressVertex>();
+    public List<DataFlowVertex> findSinks() {
+        var sinks = new ArrayList<DataFlowVertex>();
 
         for (var v : graph.vertexSet()) {
             if (graph.inDegreeOf(v) != 0 && graph.outDegreeOf(v) == 0)
@@ -84,8 +83,8 @@ public class DataFlowCriticalPath {
         return sinks;
     }
 
-    public List<AddressVertex> findSources() {
-        var sources = new ArrayList<AddressVertex>();
+    public List<DataFlowVertex> findSources() {
+        var sources = new ArrayList<DataFlowVertex>();
 
         for (var v : graph.vertexSet()) {
             if (graph.inDegreeOf(v) == 0 && graph.outDegreeOf(v) != 0)

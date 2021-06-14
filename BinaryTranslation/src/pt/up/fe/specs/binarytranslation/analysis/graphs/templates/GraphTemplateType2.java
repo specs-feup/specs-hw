@@ -15,37 +15,37 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 
-public class GraphTemplateType12 extends AGraphTemplate {
+public class GraphTemplateType2 extends AGraphTemplate {
 
-    protected GraphTemplateType12(GraphTemplateType type) {
+    protected GraphTemplateType2(GraphTemplateType type) {
         super(type);
-        var r7 = new AddressVertex("r7", AddressVertexType.REGISTER);
-        var imm4 = new AddressVertex("4", AddressVertexType.IMMEDIATE);
-        var r5 = new AddressVertex("r5", AddressVertexType.REGISTER);
-        var mult = new AddressVertex("*", AddressVertexType.OPERATION);
-        var add1 = new AddressVertex("+", AddressVertexType.OPERATION);
-        var r8 = new AddressVertex("r8", AddressVertexType.REGISTER);
-        var add2 = new AddressVertex("+", AddressVertexType.OPERATION);
+        var r7 = new DataFlowVertex("r7", DataFlowVertexType.REGISTER);
+        var imm4 = new DataFlowVertex("4", DataFlowVertexType.IMMEDIATE);
+        var r5 = new DataFlowVertex("r5", DataFlowVertexType.REGISTER);
+        var mult = new DataFlowVertex("*", DataFlowVertexType.OPERATION);
+        var add1 = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
+        var imm16 = new DataFlowVertex("64", DataFlowVertexType.IMMEDIATE);
+        var add2 = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
         
         graph.addVertex(r7);
         graph.addVertex(imm4);
         graph.addVertex(r5);
         graph.addVertex(mult);
         graph.addVertex(add1);
-        graph.addVertex(r8);
+        graph.addVertex(imm16);
         graph.addVertex(add2);
         
         graph.addEdge(r7, mult);
         graph.addEdge(imm4, mult);
         graph.addEdge(mult, add1);
-        graph.addEdge(r8, add1);
+        graph.addEdge(r5, add1);
         graph.addEdge(add1, add2);
-        graph.addEdge(r5, add2);
+        graph.addEdge(imm16, add2);
     }
 
 }

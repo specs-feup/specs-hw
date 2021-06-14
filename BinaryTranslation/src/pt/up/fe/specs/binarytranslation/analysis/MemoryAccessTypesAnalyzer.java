@@ -24,16 +24,16 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.specs.BinaryTranslation.ELFProvider;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressDetector;
-import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateFactory;
-import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateReport;
-import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateType;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveTemporaryVertices;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateFactory;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateReport;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
@@ -67,7 +67,7 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
                 t3.applyToGraph();
                 
                 String id = "";
-                if (GraphUtils.findAllNodesOfType(graph, AddressVertexType.LOAD_TARGET).size() != 0) {
+                if (GraphUtils.findAllNodesOfType(graph, DataFlowVertexType.LOAD_TARGET).size() != 0) {
                     loadCnt++;
                     id = "L" + loadCnt;
                 } else {
@@ -83,12 +83,12 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         return report;
     }
 
-    private GraphTemplateType matchGraph(Graph<AddressVertex, DefaultEdge> graph) {
+    private GraphTemplateType matchGraph(Graph<DataFlowVertex, DefaultEdge> graph) {
         var exprGraph = GraphUtils.getExpressionGraph(graph);
 
         for (var type : GraphTemplateType.values()) {
             var template = GraphTemplateFactory.getTemplate(type).getGraph();
-            var iso = new VF2GraphIsomorphismInspector<AddressVertex, DefaultEdge>(exprGraph, template,
+            var iso = new VF2GraphIsomorphismInspector<DataFlowVertex, DefaultEdge>(exprGraph, template,
                     new VertexComparator(), new EdgeComparator());
             if (iso.isomorphismExists())
                 return type;
@@ -96,17 +96,17 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         return GraphTemplateType.TYPE_0;
     }
 
-    private class VertexComparator implements Comparator<AddressVertex> {
+    private class VertexComparator implements Comparator<DataFlowVertex> {
         @Override
-        public int compare(AddressVertex o1, AddressVertex o2) {
+        public int compare(DataFlowVertex o1, DataFlowVertex o2) {
             var type1 = o1.getType();
             var type2 = o2.getType();
             var label1 = o1.getLabel();
             var label2 = o2.getLabel();
 
-            if (type1 == AddressVertexType.REGISTER && type2 == AddressVertexType.REGISTER)
+            if (type1 == DataFlowVertexType.REGISTER && type2 == DataFlowVertexType.REGISTER)
                 return 0;
-            if (type1 == AddressVertexType.OPERATION && type2 == AddressVertexType.OPERATION) {
+            if (type1 == DataFlowVertexType.OPERATION && type2 == DataFlowVertexType.OPERATION) {
                 if (label1.equals(label2))
                     return 0;
                 else if ((label1.equals("+") || label1.equals("-")) && (label2.equals("+") || label2.equals("-")))
@@ -114,10 +114,10 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
                 else
                     return -1;
             }
-            if (type1 == AddressVertexType.IMMEDIATE && type2 == AddressVertexType.IMMEDIATE) {
+            if (type1 == DataFlowVertexType.IMMEDIATE && type2 == DataFlowVertexType.IMMEDIATE) {
                 return 0;
             }
-            if (type1 == AddressVertexType.MEMORY && type2 == AddressVertexType.MEMORY)
+            if (type1 == DataFlowVertexType.MEMORY && type2 == DataFlowVertexType.MEMORY)
                 return 0;
             return -1;
         }

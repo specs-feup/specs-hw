@@ -21,8 +21,8 @@ import org.specs.BinaryTranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.dataflow.BasicBlockDataFlowGraph;
 import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowCriticalPath;
 import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowStatistics;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -51,11 +51,11 @@ public class BasicBlockDataflowAnalysis extends ATraceAnalyzer {
             var sources = new ArrayList<String>();
             var sinks = new ArrayList<String>();
             for (var v : pathfinder.findSinks()) {
-                if (v.getType() == AddressVertexType.REGISTER)
+                if (v.getType() == DataFlowVertexType.REGISTER)
                     sinks.add(v.getLabel());
             }
             for (var v : pathfinder.findSources()) {
-                if (v.getType() == AddressVertexType.REGISTER)
+                if (v.getType() == DataFlowVertexType.REGISTER)
                     sources.add(v.getLabel());
             }
             var stats = new DataFlowStatistics(dfg, path, bb.getInstructions(), sources, sinks);

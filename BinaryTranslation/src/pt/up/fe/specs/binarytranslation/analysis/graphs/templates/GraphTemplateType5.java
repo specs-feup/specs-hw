@@ -15,24 +15,24 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 
-public class GraphTemplateType9 extends AGraphTemplate {
+public class GraphTemplateType5 extends AGraphTemplate {
 
-    protected GraphTemplateType9(GraphTemplateType type) {
+    protected GraphTemplateType5(GraphTemplateType type) {
         super(type);
-        var r7 = new AddressVertex("r7", AddressVertexType.REGISTER);
-        var r4 = new AddressVertex("r4", AddressVertexType.REGISTER);
-        var add = new AddressVertex("+", AddressVertexType.OPERATION);
+        var r7 = new DataFlowVertex("r7", DataFlowVertexType.REGISTER);
+        var imm0 = new DataFlowVertex("0", DataFlowVertexType.IMMEDIATE);
+        var add = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
         graph.addVertex(r7);
-        graph.addVertex(r4);
+        graph.addVertex(imm0);
         graph.addVertex(add);
         
         graph.addEdge(r7, add);
-        graph.addEdge(r4, add);
+        graph.addEdge(imm0, add);
     }
 
 }

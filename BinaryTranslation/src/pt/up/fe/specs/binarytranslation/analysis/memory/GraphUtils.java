@@ -23,9 +23,10 @@ import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.dot.DOTExporter;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexIsaInfo;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexIsaInfo;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexProperty;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.util.SpecsLogs;
 
@@ -37,16 +38,16 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class GraphUtils {
 
-    public static Graph<AddressVertex, DefaultEdge> mergeGraphs(List<Graph<AddressVertex, DefaultEdge>> graphs) {
-        Graph<AddressVertex, DefaultEdge> merged = new DefaultDirectedGraph<>(DefaultEdge.class);
+    public static Graph<DataFlowVertex, DefaultEdge> mergeGraphs(List<Graph<DataFlowVertex, DefaultEdge>> graphs) {
+        Graph<DataFlowVertex, DefaultEdge> merged = new DefaultDirectedGraph<>(DefaultEdge.class);
         for (var graph : graphs) {
             Graphs.addGraph(merged, graph);
         }
         return merged;
     }
 
-    public static AddressVertex findGraphRoot(Graph<AddressVertex, DefaultEdge> graph) {
-        var root = AddressVertex.nullVertex;
+    public static DataFlowVertex findGraphRoot(Graph<DataFlowVertex, DefaultEdge> graph) {
+        var root = DataFlowVertex.nullVertex;
         for (var v : graph.vertexSet()) {
             if (graph.outDegreeOf(v) == 0)
                 root = v;
@@ -54,8 +55,8 @@ public class GraphUtils {
         return root;
     }
 
-    public static ArrayList<AddressVertex> getParents(Graph<AddressVertex, DefaultEdge> graph, AddressVertex current) {
-        var res = new ArrayList<AddressVertex>();
+    public static ArrayList<DataFlowVertex> getParents(Graph<DataFlowVertex, DefaultEdge> graph, DataFlowVertex current) {
+        var res = new ArrayList<DataFlowVertex>();
         for (var edge : graph.edgesOf(current)) {
             if (graph.getEdgeSource(edge) != current)
                 res.add(graph.getEdgeSource(edge));
@@ -63,62 +64,62 @@ public class GraphUtils {
         return res;
     }
 
-    public static AddressVertex getBaseAddr(Graph<AddressVertex, DefaultEdge> graph) {
+    public static DataFlowVertex getBaseAddr(Graph<DataFlowVertex, DefaultEdge> graph) {
         for (var v : graph.vertexSet()) {
-            if (v.getProperty() == AddressVertexProperty.BASE_ADDR)
+            if (v.getProperty() == DataFlowVertexProperty.BASE_ADDR)
                 return v;
         }
-        return AddressVertex.nullVertex;
+        return DataFlowVertex.nullVertex;
     }
 
-    public static AddressVertex getOffset(Graph<AddressVertex, DefaultEdge> graph) {
+    public static DataFlowVertex getOffset(Graph<DataFlowVertex, DefaultEdge> graph) {
         for (var v : graph.vertexSet()) {
-            if (v.getProperty() == AddressVertexProperty.OFFSET)
+            if (v.getProperty() == DataFlowVertexProperty.OFFSET)
                 return v;
         }
-        return AddressVertex.nullVertex;
+        return DataFlowVertex.nullVertex;
     }
 
-    public static AddressVertex getMemoryOp(Graph<AddressVertex, DefaultEdge> graph) {
+    public static DataFlowVertex getMemoryOp(Graph<DataFlowVertex, DefaultEdge> graph) {
         for (var v : graph.vertexSet()) {
-            if (v.getType() == AddressVertexType.MEMORY)
+            if (v.getType() == DataFlowVertexType.MEMORY)
                 return v;
         }
-        return AddressVertex.nullVertex;
+        return DataFlowVertex.nullVertex;
     }
 
-    public static AddressVertex getExpressionStart(Graph<AddressVertex, DefaultEdge> graph) {
-        AddressVertex start = null;
+    public static DataFlowVertex getExpressionStart(Graph<DataFlowVertex, DefaultEdge> graph) {
+        DataFlowVertex start = null;
         for (var v : graph.vertexSet()) {
-            if (v.getType() == AddressVertexType.MEMORY)
+            if (v.getType() == DataFlowVertexType.MEMORY)
                 start = v;
         }
         for (var v : getParents(graph, start)) {
-            if (v.getIsaInfo() != AddressVertexIsaInfo.RD)
+            if (v.getIsaInfo() != DataFlowVertexIsaInfo.RD)
                 return v;
         }
-        return AddressVertex.nullVertex;
+        return DataFlowVertex.nullVertex;
     }
 
-    public static Graph<AddressVertex, DefaultEdge> getExpressionGraph(Graph<AddressVertex, DefaultEdge> graph) {
-        Graph<AddressVertex, DefaultEdge> sub = new DefaultDirectedGraph<>(DefaultEdge.class);
+    public static Graph<DataFlowVertex, DefaultEdge> getExpressionGraph(Graph<DataFlowVertex, DefaultEdge> graph) {
+        Graph<DataFlowVertex, DefaultEdge> sub = new DefaultDirectedGraph<>(DefaultEdge.class);
         Graphs.addGraph(sub, graph);
-        var mem = findAllNodesOfType(sub, AddressVertexType.MEMORY);
-        var rd = findAllNodesWithIsaInfo(graph, AddressVertexIsaInfo.RD);
+        var mem = findAllNodesOfType(sub, DataFlowVertexType.MEMORY);
+        var rd = findAllNodesWithIsaInfo(graph, DataFlowVertexIsaInfo.RD);
         sub.removeAllVertices(mem);
         sub.removeAllVertices(rd);
         return sub;
     }
 
-    public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph, String title) {
-        DOTExporter<AddressVertex, DefaultEdge> exporter = new DOTExporter<>();
+    public static String graphToDot(Graph<DataFlowVertex, DefaultEdge> graph, String title) {
+        DOTExporter<DataFlowVertex, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexAttributeProvider((v) -> {
             Map<String, Attribute> map = new LinkedHashMap<>();
 
             String label = v.getLabel();
-            if (v.getIsaInfo() != AddressVertexIsaInfo.NULL)
+            if (v.getIsaInfo() != DataFlowVertexIsaInfo.NULL)
                 label += "\n{" + v.getIsaInfo() + "}";
-            if (v.getProperty() != AddressVertexProperty.NULL)
+            if (v.getProperty() != DataFlowVertexProperty.NULL)
                 label += "\n{" + v.getProperty() + "}";
 
             map.put("label", DefaultAttribute.createAttribute(label));
@@ -149,13 +150,13 @@ public class GraphUtils {
         return writer.toString();
     }
 
-    public static String graphToDot(Graph<AddressVertex, DefaultEdge> graph) {
+    public static String graphToDot(Graph<DataFlowVertex, DefaultEdge> graph) {
         return graphToDot(graph, "\"Graph\"");
     }
 
-    public static ArrayList<AddressVertex> findAllNodesOfType(Graph<AddressVertex, DefaultEdge> graph,
-            AddressVertexType type) {
-        var res = new ArrayList<AddressVertex>();
+    public static ArrayList<DataFlowVertex> findAllNodesOfType(Graph<DataFlowVertex, DefaultEdge> graph,
+            DataFlowVertexType type) {
+        var res = new ArrayList<DataFlowVertex>();
         for (var v : graph.vertexSet()) {
             if (v.getType() == type)
                 res.add(v);
@@ -163,9 +164,9 @@ public class GraphUtils {
         return res;
     }
 
-    public static ArrayList<AddressVertex> findAllNodesWithProperty(Graph<AddressVertex, DefaultEdge> graph,
-            AddressVertexProperty property) {
-        var res = new ArrayList<AddressVertex>();
+    public static ArrayList<DataFlowVertex> findAllNodesWithProperty(Graph<DataFlowVertex, DefaultEdge> graph,
+            DataFlowVertexProperty property) {
+        var res = new ArrayList<DataFlowVertex>();
         for (var v : graph.vertexSet()) {
             if (v.getProperty() == property)
                 res.add(v);
@@ -173,9 +174,9 @@ public class GraphUtils {
         return res;
     }
 
-    public static ArrayList<AddressVertex> findAllNodesWithIsaInfo(Graph<AddressVertex, DefaultEdge> graph,
-            AddressVertexIsaInfo isaInfo) {
-        var res = new ArrayList<AddressVertex>();
+    public static ArrayList<DataFlowVertex> findAllNodesWithIsaInfo(Graph<DataFlowVertex, DefaultEdge> graph,
+            DataFlowVertexIsaInfo isaInfo) {
+        var res = new ArrayList<DataFlowVertex>();
         for (var v : graph.vertexSet()) {
             if (v.getIsaInfo() == isaInfo)
                 res.add(v);
@@ -183,15 +184,15 @@ public class GraphUtils {
         return res;
     }
 
-    public static ArrayList<AddressVertex> findAllPredecessors(Graph<AddressVertex, DefaultEdge> graph,
-            AddressVertex v) {
-        var reversed = new EdgeReversedGraph<AddressVertex, DefaultEdge>(graph);
+    public static ArrayList<DataFlowVertex> findAllPredecessors(Graph<DataFlowVertex, DefaultEdge> graph,
+            DataFlowVertex v) {
+        var reversed = new EdgeReversedGraph<DataFlowVertex, DefaultEdge>(graph);
         return findAllSuccessors(reversed, v);
     }
 
-    public static ArrayList<AddressVertex> findAllSuccessors(Graph<AddressVertex, DefaultEdge> graph, AddressVertex v) {
-        var iter = new BreadthFirstIterator<AddressVertex, DefaultEdge>(graph, v);
-        var res = new ArrayList<AddressVertex>();
+    public static ArrayList<DataFlowVertex> findAllSuccessors(Graph<DataFlowVertex, DefaultEdge> graph, DataFlowVertex v) {
+        var iter = new BreadthFirstIterator<DataFlowVertex, DefaultEdge>(graph, v);
+        var res = new ArrayList<DataFlowVertex>();
 
         while (iter.hasNext()) {
             res.add(iter.next());
@@ -199,9 +200,9 @@ public class GraphUtils {
         return res;
     }
 
-    public static List<AddressVertex> getVerticesWithType(Graph<AddressVertex, DefaultEdge> graph,
-            AddressVertexType type) {
-        var ret = new ArrayList<AddressVertex>();
+    public static List<DataFlowVertex> getVerticesWithType(Graph<DataFlowVertex, DefaultEdge> graph,
+            DataFlowVertexType type) {
+        var ret = new ArrayList<DataFlowVertex>();
         for (var v : graph.vertexSet()) {
             if (v.getType() == type)
                 ret.add(v);
@@ -209,14 +210,14 @@ public class GraphUtils {
         return ret;
     }
 
-    public static String pathBetweenTwoVertices(Graph<AddressVertex, DefaultEdge> graph, AddressVertex source,
-            AddressVertex sink) {
+    public static String pathBetweenTwoVertices(Graph<DataFlowVertex, DefaultEdge> graph, DataFlowVertex source,
+            DataFlowVertex sink) {
         return pathBetweenTwoVertices(graph, source, sink, 0);
     }
 
-    public static String pathBetweenTwoVertices(Graph<AddressVertex, DefaultEdge> graph, AddressVertex source,
-            AddressVertex sink, int limit) {
-        var dijkstra = new DijkstraShortestPath<AddressVertex, DefaultEdge>(graph);
+    public static String pathBetweenTwoVertices(Graph<DataFlowVertex, DefaultEdge> graph, DataFlowVertex source,
+            DataFlowVertex sink, int limit) {
+        var dijkstra = new DijkstraShortestPath<DataFlowVertex, DefaultEdge>(graph);
         var path = dijkstra.getPath(source, sink);
         if (path == null) {
             return "No path";
@@ -250,7 +251,7 @@ public class GraphUtils {
         return base;
     }
 
-    public static String generateGraphURL(Graph<AddressVertex, DefaultEdge> graph) {
+    public static String generateGraphURL(Graph<DataFlowVertex, DefaultEdge> graph) {
         return GraphUtils.generateGraphURL(graph, "Graph");
     }
 
@@ -269,7 +270,7 @@ public class GraphUtils {
         }
     }
 
-    public static String generateGraphURL(Graph<AddressVertex, DefaultEdge> graph, String name) {
+    public static String generateGraphURL(Graph<DataFlowVertex, DefaultEdge> graph, String name) {
         var str = GraphUtils.graphToDot(graph, name);
         return generateGraphURL(str);
     }

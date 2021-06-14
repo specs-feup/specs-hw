@@ -11,12 +11,13 @@ import java.util.stream.Collectors;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.AGraphTransform;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformBaseAddress;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexProperty;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.AGraphTransform;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformBaseAddress;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.util.SpecsLogs;
@@ -24,7 +25,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 @Deprecated
 public class MemoryDisambiguator {
 
-    private ArrayList<Graph<AddressVertex, DefaultEdge>> graphs;
+    private ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs;
     private HashMap<String, Integer> indVars;
     private RegisterProperties isaProps;
     private BasicBlockOccurrenceTracker tracker;
@@ -35,7 +36,7 @@ public class MemoryDisambiguator {
     };
     private Map<String, List<String>> prologueDeps;
 
-    public MemoryDisambiguator(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs,
+    public MemoryDisambiguator(ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs,
             HashMap<String, Integer> indVars,
             RegisterProperties isaProps,
             BasicBlockOccurrenceTracker tracker, Map<String, List<String>> prologueDeps) {
@@ -50,7 +51,7 @@ public class MemoryDisambiguator {
         }
     }
 
-    private void applyTransforms(Graph<AddressVertex, DefaultEdge> graph) {
+    private void applyTransforms(Graph<DataFlowVertex, DefaultEdge> graph) {
         for (var cl : transforms) {
             try {
                 Constructor<?> cons = cl.getConstructor(cl);
@@ -141,17 +142,17 @@ public class MemoryDisambiguator {
      * @param graph
      * @return
      */
-    private List<String> getGraphAddressRegisters(Graph<AddressVertex, DefaultEdge> graph) {
+    private List<String> getGraphAddressRegisters(Graph<DataFlowVertex, DefaultEdge> graph) {
         var regs = new ArrayList<String>();
-        var baseStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.BASE_ADDR).get(0);
+        var baseStart = GraphUtils.findAllNodesWithProperty(graph, DataFlowVertexProperty.BASE_ADDR).get(0);
         var elems1 = getSubgraphAddressRegisters(graph, baseStart);
-        var offsetStart = GraphUtils.findAllNodesWithProperty(graph, AddressVertexProperty.OFFSET).get(0);
+        var offsetStart = GraphUtils.findAllNodesWithProperty(graph, DataFlowVertexProperty.OFFSET).get(0);
         var elems2 = getSubgraphAddressRegisters(graph, offsetStart);
-        var elems = new LinkedHashSet<AddressVertex>(elems1);
+        var elems = new LinkedHashSet<DataFlowVertex>(elems1);
         elems.addAll(elems2);
 
         for (var elem : elems) {
-            if (elem.getType() == AddressVertexType.REGISTER)
+            if (elem.getType() == DataFlowVertexType.REGISTER)
                 regs.add(elem.getLabel());
         }
         return regs.stream().distinct().collect(Collectors.toList());
@@ -163,10 +164,10 @@ public class MemoryDisambiguator {
      * @param graph
      * @return
      */
-    private List<AddressVertex> getSubgraphAddressRegisters(Graph<AddressVertex, DefaultEdge> graph,
-            AddressVertex start) {
+    private List<DataFlowVertex> getSubgraphAddressRegisters(Graph<DataFlowVertex, DefaultEdge> graph,
+            DataFlowVertex start) {
         var elems = GraphUtils.findAllPredecessors(graph, start);
-        var filtered = new ArrayList<AddressVertex>();
+        var filtered = new ArrayList<DataFlowVertex>();
         {
             for (var elem : elems) {
                 if (graph.inDegreeOf(elem) == 0)

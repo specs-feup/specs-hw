@@ -15,22 +15,22 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 
 public class GraphTemplateType13 extends AGraphTemplate {
 
     protected GraphTemplateType13(GraphTemplateType type) {
         super(type);
-        var r7 = new AddressVertex("r7", AddressVertexType.REGISTER);
-        var r8 = new AddressVertex("r8", AddressVertexType.REGISTER);
-        var r9 = new AddressVertex("r9", AddressVertexType.REGISTER);
-        var imm4 = new AddressVertex("4", AddressVertexType.IMMEDIATE);
-        var mult = new AddressVertex("*", AddressVertexType.OPERATION);
-        var add1 = new AddressVertex("+", AddressVertexType.OPERATION);
-        var add2 = new AddressVertex("+", AddressVertexType.OPERATION);
+        var r7 = new DataFlowVertex("r7", DataFlowVertexType.REGISTER);
+        var r8 = new DataFlowVertex("r8", DataFlowVertexType.REGISTER);
+        var r9 = new DataFlowVertex("r9", DataFlowVertexType.REGISTER);
+        var imm4 = new DataFlowVertex("4", DataFlowVertexType.IMMEDIATE);
+        var mult = new DataFlowVertex("*", DataFlowVertexType.OPERATION);
+        var add1 = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
+        var add2 = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
         
         graph.addVertex(r7);
         graph.addVertex(imm4);

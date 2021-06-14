@@ -8,7 +8,8 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -100,7 +101,7 @@ public class InductionVariablesDetector extends APropertyDetector {
         return sb.toString();
     }
 
-    public HashMap<String, Integer> detectVariables(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs,
+    public HashMap<String, Integer> detectVariables(ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs,
             boolean verbose) {
         var res = new HashMap<String, Integer>();
         var regs = getTracker().getRegisters();
@@ -138,10 +139,10 @@ public class InductionVariablesDetector extends APropertyDetector {
         }
     }
 
-    private boolean conditionPartOfAddress(String reg, ArrayList<Graph<AddressVertex, DefaultEdge>> graphs) {
+    private boolean conditionPartOfAddress(String reg, ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs) {
         for (var graph : graphs) {
             for (var vertex : graph.vertexSet()) {
-                if (vertex.getType() == AddressVertexType.REGISTER) {
+                if (vertex.getType() == DataFlowVertexType.REGISTER) {
                     if (vertex.getLabel().equals(reg))
                         return true;
                 }

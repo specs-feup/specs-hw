@@ -1,6 +1,5 @@
 package pt.up.fe.specs.binarytranslation.analysis;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,15 +9,14 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.specs.BinaryTranslation.ELFProvider;
 
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.inouts.InstructionSets;
 import pt.up.fe.specs.binarytranslation.analysis.inouts.SimpleBasicBlockInOuts;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.AGraphTransform;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformBaseAddress;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveTemporaryVertices;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformBaseAddress;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.InductionVariablesDetector;
 import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressComparator;
@@ -30,7 +28,6 @@ import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.util.SpecsLogs;
 
 public class MemoryAddressAnalyzer extends ATraceAnalyzer {
     private RegisterProperties isaProps;
@@ -82,7 +79,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
         return inoutFinder.getInouts();
     }
 
-    private void cleanUpGraphs(List<Graph<AddressVertex, DefaultEdge>> graphs) {
+    private void cleanUpGraphs(List<Graph<DataFlowVertex, DefaultEdge>> graphs) {
         for (var graph : graphs) {
             // for (var cl : transforms) {
             // try {
@@ -111,12 +108,12 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
     }
 
     private void handleMemoryComparison(Map<String, List<String>> prologueDeps,
-            ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars,
+            ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars,
             InstructionSets inouts) {
-        var loadGraphs = new ArrayList<Graph<AddressVertex, DefaultEdge>>();
-        var storeGraphs = new ArrayList<Graph<AddressVertex, DefaultEdge>>();
+        var loadGraphs = new ArrayList<Graph<DataFlowVertex, DefaultEdge>>();
+        var storeGraphs = new ArrayList<Graph<DataFlowVertex, DefaultEdge>>();
         for (var graph : graphs) {
-            if (GraphUtils.getVerticesWithType(graph, AddressVertexType.LOAD_TARGET).size() != 0)
+            if (GraphUtils.getVerticesWithType(graph, DataFlowVertexType.LOAD_TARGET).size() != 0)
                 loadGraphs.add(graph);
             else
                 storeGraphs.add(graph);
@@ -137,7 +134,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
         }
     }
 
-    private ArrayList<Graph<AddressVertex, DefaultEdge>> handleMemoryGraphs(List<Instruction> insts, BinarySegment bb) {
+    private ArrayList<Graph<DataFlowVertex, DefaultEdge>> handleMemoryGraphs(List<Instruction> insts, BinarySegment bb) {
         System.out.println("\nCalculating memory address graphs...");
         var mad = new MemoryAddressDetector(bb, insts);
         var graphs = mad.detectGraphs();
@@ -155,7 +152,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
 
     @Deprecated
     private void handleMemoryDisambiguation(BasicBlockOccurrenceTracker tracker, Map<String, List<String>> prologueDeps,
-            ArrayList<Graph<AddressVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars) {
+            ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars) {
         var memDis = new MemoryDisambiguator(graphs, indVars, isaProps, tracker, prologueDeps);
         memDis.disambiguate();
         // TODO
@@ -172,7 +169,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
     }
 
     private HashMap<String, Integer> handleInductionVariables(BasicBlockOccurrenceTracker tracker,
-            ArrayList<Graph<AddressVertex, DefaultEdge>> graphs) {
+            ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs) {
         System.out.println("\nCalculating induction variables...");
         var ivd = new InductionVariablesDetector(tracker);
         var indVars = ivd.detectVariables(graphs, false);
@@ -185,7 +182,7 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
         return indVars;
     }
 
-    public static void printExpressions(ArrayList<Graph<AddressVertex, DefaultEdge>> graphs) {
+    public static void printExpressions(ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs) {
         System.out.println("Expressions for each memory access:");
         for (var graph : graphs) {
             String s = MemoryAddressDetector.buildMemoryExpression(graph, GraphUtils.findGraphRoot(graph));

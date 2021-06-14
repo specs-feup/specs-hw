@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
 public enum GraphTemplateType {
     TYPE_0,
@@ -25,5 +25,7 @@ public enum GraphTemplateType {
     TYPE_8,
     TYPE_9,
     TYPE_10,
-    TYPE_11, TYPE_12, TYPE_13
+    TYPE_11,
+    TYPE_12,
+    TYPE_13
 }
