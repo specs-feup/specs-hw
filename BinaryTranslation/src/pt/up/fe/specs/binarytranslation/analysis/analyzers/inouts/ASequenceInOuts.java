@@ -84,7 +84,7 @@ public abstract class ASequenceInOuts {
     public static void findUseDefs(Instruction i, InstructionSets sets) {
         for (Operand op : i.getData().getOperands()) {
             if (op.isRegister()) {
-                String reg = AnalysisUtils.getRegName(op);
+                String reg = AnalysisUtils.getRegisterName(op);
                 if (op.isRead())
                     sets.setUse(reg);
                 if (op.isWrite())

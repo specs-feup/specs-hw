@@ -35,7 +35,7 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
+public class MemoryAccessTypesAnalyzer extends ABasicBlockAnalyzer {
 
     public MemoryAccessTypesAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
         super(stream, elf);

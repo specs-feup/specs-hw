@@ -1,6 +1,8 @@
 package pt.up.fe.specs.binarytranslation.analysis.graphs.transforms;
 
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
@@ -18,8 +20,10 @@ public abstract class AGraphTransform {
     }
     
     public Graph<BtfVertex, DefaultEdge> applyToCopy() {
-        //TODO
-        return graph;
+        Graph<BtfVertex, DefaultEdge> copy = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graphs.addGraph(copy, graph);
+        applyTransform(copy);
+        return copy;
     }
     
     protected abstract Graph<BtfVertex, DefaultEdge> applyTransform(Graph<BtfVertex, DefaultEdge> g);

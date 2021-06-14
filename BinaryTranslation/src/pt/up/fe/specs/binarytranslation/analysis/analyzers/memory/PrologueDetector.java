@@ -50,7 +50,7 @@ public class PrologueDetector extends APropertyDetector {
         for (var inst : prologue) {
             if (inst.isLogical() || inst.isAdd() || inst.isSub() || inst.isMul() /*|| inst.isUnary()*/) {
                 var opRD = inst.getData().getOperands().get(0);
-                String rD = AnalysisUtils.getRegName(opRD);
+                String rD = AnalysisUtils.getRegisterName(opRD);
                 var replace = getReplacement(rD, state, inst);
                 state.put(rD, replace);
             }
@@ -80,7 +80,7 @@ public class PrologueDetector extends APropertyDetector {
             var op = inst.getData().getOperands().get(i);
             if (op.isRegister()) {
 
-                var opReg = AnalysisUtils.getRegName(op);
+                var opReg = AnalysisUtils.getRegisterName(op);
                 var opPreexisting = state.get(opReg);
 
                 if (opPreexisting.size() == 0) {

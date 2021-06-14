@@ -29,7 +29,7 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class BasicBlockDataflowAnalyzer extends ATraceAnalyzer {
+public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
 
     public BasicBlockDataflowAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
         super(stream, elf);

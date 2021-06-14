@@ -13,7 +13,7 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class InOutAnalyzer extends ATraceAnalyzer {
+public class InOutAnalyzer extends ABasicBlockAnalyzer {
     public enum InOutMode {
         BASIC_BLOCK,
         SIMPLE_BASIC_BLOCK,

@@ -21,19 +21,18 @@ public class AddressSubgraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge>
     private static final long serialVersionUID = 7667384967359919218L;
     private String startReg;
     private BtfVertex root;
-    //private Graph<BtfVertex, DefaultEdge> graph;
     private List<Instruction> modifiedBasicBlock;
     private int modifiedIdx;
 
-    public AddressSubgraph(String reg, int idx, List<Instruction> basicBlock) {
+    public AddressSubgraph(String rootRegister, int instructionIdx, List<Instruction> basicBlock) {
         super(DefaultEdge.class);
-        this.startReg = reg;
+        this.startReg = rootRegister;
 
         // Basic block needs to undergo a small transformation to consider insts after the jump
         this.modifiedBasicBlock = getModifiedSequence(basicBlock);
-        this.modifiedIdx = getModifiedIndex(idx, basicBlock, modifiedBasicBlock);
+        this.modifiedIdx = getModifiedIndex(instructionIdx, basicBlock, modifiedBasicBlock);
         
-        generateGraph();
+        buildGraph();
     }
 
     private int getModifiedIndex(int idx, List<Instruction> bb, List<Instruction> mbb) {
@@ -69,7 +68,7 @@ public class AddressSubgraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge>
         return res;
     }
 
-    public void generateGraph() {
+    public void buildGraph() {
         this.root = new BtfVertex(startReg, BtfVertexType.REGISTER);
         addVertex(root);
 
@@ -88,7 +87,7 @@ public class AddressSubgraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge>
             var ops = inst.getData().getOperands();
 
             if (ops.size() != 0 && ops.get(0).isRegister()) {
-                String reg0 = AnalysisUtils.getRegName(ops.get(0));
+                String reg0 = AnalysisUtils.getRegisterName(ops.get(0));
 
                 if (reg0.equals(register)) {
                     exit = true;
@@ -104,7 +103,7 @@ public class AddressSubgraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge>
 
                     // Special case: op is another load/store
                     // in this case, stop expanding
-                    if (AnalysisUtils.isLoadStore(inst))
+                    if (inst.isMemory())
                         break;
 
                     // Handle first operand
@@ -113,7 +112,7 @@ public class AddressSubgraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge>
 
                     if (op1.isRegister()) {
                         // Build vertex
-                        String reg1 = AnalysisUtils.getRegName(op1);
+                        String reg1 = AnalysisUtils.getRegisterName(op1);
                         var reg1Node = new BtfVertex(reg1, BtfVertexType.REGISTER);
                         previous = reg1Node;
 
@@ -133,7 +132,7 @@ public class AddressSubgraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge>
 
                     if (op2.isRegister()) {
                         // Build vertex
-                        String reg2 = AnalysisUtils.getRegName(op2);
+                        String reg2 = AnalysisUtils.getRegisterName(op2);
                         var reg2Node = new BtfVertex(reg2, BtfVertexType.REGISTER);
 
                         // Special case: op1 and op2 are the same register
