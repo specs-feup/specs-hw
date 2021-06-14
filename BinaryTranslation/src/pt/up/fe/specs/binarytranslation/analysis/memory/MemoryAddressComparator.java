@@ -23,8 +23,9 @@ import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveOrphanOperations;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
@@ -32,12 +33,12 @@ import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 public class MemoryAddressComparator {
 
     private Map<String, List<String>> prologueDeps;
-    private ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs;
+    private ArrayList<Graph<BtfVertex, DefaultEdge>> graphs;
     private HashMap<String, Integer> indVars;
     private RegisterProperties isaProps;
 
     public MemoryAddressComparator(Map<String, List<String>> prologueDeps,
-            ArrayList<Graph<DataFlowVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars,
+            ArrayList<Graph<BtfVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars,
             RegisterProperties isaProps) {
         this.prologueDeps = prologueDeps;
         this.graphs = graphs;
@@ -45,7 +46,7 @@ public class MemoryAddressComparator {
         this.isaProps = isaProps;
     }
 
-    public boolean compare(Graph<DataFlowVertex, DefaultEdge> load, Graph<DataFlowVertex, DefaultEdge> store) {
+    public boolean compare(Graph<BtfVertex, DefaultEdge> load, Graph<BtfVertex, DefaultEdge> store) {
         var reducedLoad = treeSubtract(load, store);
         var reducedStore = treeSubtract(store, load);
 
@@ -54,16 +55,16 @@ public class MemoryAddressComparator {
         return compareSimplifiedGraphs(reducedLoad, reducedStore);
     }
 
-    private void printComparisonGraph(Graph<DataFlowVertex, DefaultEdge> reducedLoad,
-            Graph<DataFlowVertex, DefaultEdge> reducedStore) {
+    private void printComparisonGraph(Graph<BtfVertex, DefaultEdge> reducedLoad,
+            Graph<BtfVertex, DefaultEdge> reducedStore) {
         var loadRoot = GraphUtils.findGraphRoot(reducedLoad);
         var storeRoot = GraphUtils.findGraphRoot(reducedStore);
 
-        Graph<DataFlowVertex, DefaultEdge> merged = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<BtfVertex, DefaultEdge> merged = new DefaultDirectedGraph<>(DefaultEdge.class);
         Graphs.addGraph(merged, reducedLoad);
         Graphs.addGraph(merged, reducedStore);
 
-        var comparison = new DataFlowVertex("==", DataFlowVertexType.CHECK);
+        var comparison = new BtfVertex("==", BtfVertexType.CHECK);
         merged.addVertex(comparison);
         merged.addEdge(loadRoot, comparison);
         merged.addEdge(storeRoot, comparison);
@@ -77,10 +78,10 @@ public class MemoryAddressComparator {
         System.out.println("ALIAS IF " + expr1 + " == " + expr2 + "\n");
     }
 
-    private boolean compareSimplifiedGraphs(Graph<DataFlowVertex, DefaultEdge> reducedLoad,
-            Graph<DataFlowVertex, DefaultEdge> reducedStore) {
-        var regLd = GraphUtils.getVerticesWithType(reducedLoad, DataFlowVertexType.REGISTER);
-        var regSt = GraphUtils.getVerticesWithType(reducedStore, DataFlowVertexType.REGISTER);
+    private boolean compareSimplifiedGraphs(Graph<BtfVertex, DefaultEdge> reducedLoad,
+            Graph<BtfVertex, DefaultEdge> reducedStore) {
+        var regLd = GraphUtils.getVerticesWithType(reducedLoad, BtfVertexType.REGISTER);
+        var regSt = GraphUtils.getVerticesWithType(reducedStore, BtfVertexType.REGISTER);
 
         System.out.println("Registers used in Load:");
         for (var v : regLd)
@@ -111,13 +112,13 @@ public class MemoryAddressComparator {
         System.out.println("  - " + reg + ": " + String.join(", ", props));
     }
 
-    private Graph<DataFlowVertex, DefaultEdge> treeSubtract(Graph<DataFlowVertex, DefaultEdge> main,
-            Graph<DataFlowVertex, DefaultEdge> sub) {
+    private Graph<BtfVertex, DefaultEdge> treeSubtract(Graph<BtfVertex, DefaultEdge> main,
+            Graph<BtfVertex, DefaultEdge> sub) {
         var mainStart = GraphUtils.getExpressionStart(main);
         var subStart = GraphUtils.getExpressionStart(sub);
 
         // Create main-clone
-        Graph<DataFlowVertex, DefaultEdge> mainClone = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<BtfVertex, DefaultEdge> mainClone = new DefaultDirectedGraph<>(DefaultEdge.class);
         Graphs.addGraph(mainClone, main);
 
         // Go through each node of sub, and remove from main-clone
@@ -132,7 +133,7 @@ public class MemoryAddressComparator {
         trans1.applyToGraph();
 
         // Remove intermediary operation vertices
-        var trans2 = new TransformRemoveTemporaryVertices(mainClone, DataFlowVertexType.OPERATION);
+        var trans2 = new TransformRemoveTemporaryVertices(mainClone, BtfVertexType.OPERATION);
         trans2.applyToGraph();
 
         // Remove orphans again, as the previous transform might create more
@@ -141,9 +142,9 @@ public class MemoryAddressComparator {
         return mainClone;
     }
 
-    private void removeExtraNodes(DataFlowVertex mainStart, Graph<DataFlowVertex, DefaultEdge> mainClone) {
+    private void removeExtraNodes(BtfVertex mainStart, Graph<BtfVertex, DefaultEdge> mainClone) {
         var memoryOp = GraphUtils.getMemoryOp(mainClone);
-        var toRemove = new ArrayList<DataFlowVertex>();
+        var toRemove = new ArrayList<BtfVertex>();
         toRemove.add(memoryOp);
 
         var edges = mainClone.outgoingEdgesOf(memoryOp);
@@ -160,31 +161,31 @@ public class MemoryAddressComparator {
         mainClone.removeAllVertices(toRemove);
     }
 
-    private void postOrderTraversal(Graph<DataFlowVertex, DefaultEdge> mainClone, DataFlowVertex mainStart,
-            Graph<DataFlowVertex, DefaultEdge> sub, DataFlowVertex currVertex) {
-        if (currVertex == DataFlowVertex.nullVertex)
+    private void postOrderTraversal(Graph<BtfVertex, DefaultEdge> mainClone, BtfVertex mainStart,
+            Graph<BtfVertex, DefaultEdge> sub, BtfVertex currVertex) {
+        if (currVertex == BtfVertex.nullVertex)
             return;
 
         var parents = GraphUtils.getParents(sub, currVertex);
-        var left = parents.size() > 0 ? parents.get(0) : DataFlowVertex.nullVertex;
+        var left = parents.size() > 0 ? parents.get(0) : BtfVertex.nullVertex;
         postOrderTraversal(mainClone, mainStart, sub, left);
-        var right = parents.size() > 1 ? parents.get(1) : DataFlowVertex.nullVertex;
+        var right = parents.size() > 1 ? parents.get(1) : BtfVertex.nullVertex;
         postOrderTraversal(mainClone, mainStart, sub, right);
 
         // Do the comparison to mainClone, and remove if it exists
         var subStart = GraphUtils.getExpressionStart(sub);
 
-        if (currVertex.getType() == DataFlowVertexType.OPERATION)
+        if (currVertex.getType() == BtfVertexType.OPERATION)
             return;
-        DataFlowVertex toRemove = treeHasVertex(mainClone, sub, currVertex, mainStart, subStart);
-        if (toRemove != DataFlowVertex.nullVertex)
+        BtfVertex toRemove = treeHasVertex(mainClone, sub, currVertex, mainStart, subStart);
+        if (toRemove != BtfVertex.nullVertex)
             mainClone.removeVertex(toRemove);
     }
 
-    private DataFlowVertex treeHasVertex(Graph<DataFlowVertex, DefaultEdge> mainClone,
-            Graph<DataFlowVertex, DefaultEdge> sub, DataFlowVertex currVertex, DataFlowVertex mainStart,
-            DataFlowVertex subStart) {
-        var ret = DataFlowVertex.nullVertex;
+    private BtfVertex treeHasVertex(Graph<BtfVertex, DefaultEdge> mainClone,
+            Graph<BtfVertex, DefaultEdge> sub, BtfVertex currVertex, BtfVertex mainStart,
+            BtfVertex subStart) {
+        var ret = BtfVertex.nullVertex;
 
         for (var v : mainClone.vertexSet()) {
             if (v.getLabel().equals(currVertex.getLabel())) {

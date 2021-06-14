@@ -22,21 +22,21 @@ import java.util.ArrayList;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 
 public class TransformRemoveOrphanOperations extends AGraphTransform {
 
-    public TransformRemoveOrphanOperations(Graph<DataFlowVertex, DefaultEdge> graph) {
+    public TransformRemoveOrphanOperations(Graph<BtfVertex, DefaultEdge> graph) {
         super(graph);
     }
 
     @Override
-    protected Graph<DataFlowVertex, DefaultEdge> applyTransform(Graph<DataFlowVertex, DefaultEdge> g) {
-        var toRemove = new ArrayList<DataFlowVertex>();
+    protected Graph<BtfVertex, DefaultEdge> applyTransform(Graph<BtfVertex, DefaultEdge> g) {
+        var toRemove = new ArrayList<BtfVertex>();
         
         for (var v : g.vertexSet()) {
-            if (v.getType() == DataFlowVertexType.OPERATION) {
+            if (v.getType() == BtfVertexType.OPERATION) {
                 if (g.inDegreeOf(v) == 0)
                     toRemove.add(v);
                 if (g.inDegreeOf(v) == 1 && g.outDegreeOf(v) == 0)

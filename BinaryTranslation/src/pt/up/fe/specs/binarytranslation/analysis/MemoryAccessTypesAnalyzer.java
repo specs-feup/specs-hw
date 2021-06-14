@@ -24,10 +24,10 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.specs.BinaryTranslation.ELFProvider;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.MemoryAddressDetector;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateFactory;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateReport;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
@@ -67,7 +67,7 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
                 t3.applyToGraph();
                 
                 String id = "";
-                if (GraphUtils.findAllNodesOfType(graph, DataFlowVertexType.LOAD_TARGET).size() != 0) {
+                if (GraphUtils.findAllNodesOfType(graph, BtfVertexType.LOAD_TARGET).size() != 0) {
                     loadCnt++;
                     id = "L" + loadCnt;
                 } else {
@@ -83,12 +83,12 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         return report;
     }
 
-    private GraphTemplateType matchGraph(Graph<DataFlowVertex, DefaultEdge> graph) {
+    private GraphTemplateType matchGraph(Graph<BtfVertex, DefaultEdge> graph) {
         var exprGraph = GraphUtils.getExpressionGraph(graph);
 
         for (var type : GraphTemplateType.values()) {
             var template = GraphTemplateFactory.getTemplate(type).getGraph();
-            var iso = new VF2GraphIsomorphismInspector<DataFlowVertex, DefaultEdge>(exprGraph, template,
+            var iso = new VF2GraphIsomorphismInspector<BtfVertex, DefaultEdge>(exprGraph, template,
                     new VertexComparator(), new EdgeComparator());
             if (iso.isomorphismExists())
                 return type;
@@ -96,17 +96,17 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
         return GraphTemplateType.TYPE_0;
     }
 
-    private class VertexComparator implements Comparator<DataFlowVertex> {
+    private class VertexComparator implements Comparator<BtfVertex> {
         @Override
-        public int compare(DataFlowVertex o1, DataFlowVertex o2) {
+        public int compare(BtfVertex o1, BtfVertex o2) {
             var type1 = o1.getType();
             var type2 = o2.getType();
             var label1 = o1.getLabel();
             var label2 = o2.getLabel();
 
-            if (type1 == DataFlowVertexType.REGISTER && type2 == DataFlowVertexType.REGISTER)
+            if (type1 == BtfVertexType.REGISTER && type2 == BtfVertexType.REGISTER)
                 return 0;
-            if (type1 == DataFlowVertexType.OPERATION && type2 == DataFlowVertexType.OPERATION) {
+            if (type1 == BtfVertexType.OPERATION && type2 == BtfVertexType.OPERATION) {
                 if (label1.equals(label2))
                     return 0;
                 else if ((label1.equals("+") || label1.equals("-")) && (label2.equals("+") || label2.equals("-")))
@@ -114,10 +114,10 @@ public class MemoryAccessTypesAnalyzer extends ATraceAnalyzer {
                 else
                     return -1;
             }
-            if (type1 == DataFlowVertexType.IMMEDIATE && type2 == DataFlowVertexType.IMMEDIATE) {
+            if (type1 == BtfVertexType.IMMEDIATE && type2 == BtfVertexType.IMMEDIATE) {
                 return 0;
             }
-            if (type1 == DataFlowVertexType.MEMORY && type2 == DataFlowVertexType.MEMORY)
+            if (type1 == BtfVertexType.MEMORY && type2 == BtfVertexType.MEMORY)
                 return 0;
             return -1;
         }

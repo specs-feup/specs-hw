@@ -21,11 +21,11 @@ import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 
 public class GraphTemplateReport {
-    private List<Graph<DataFlowVertex, DefaultEdge>> graphs;
+    private List<Graph<BtfVertex, DefaultEdge>> graphs;
     private List<String> ids;
     private List<GraphTemplateType> types;
     private List<Integer> occurrences;
@@ -51,7 +51,7 @@ public class GraphTemplateReport {
         this.name = name;
     }
 
-    public void addEntry(Graph<DataFlowVertex, DefaultEdge> graph, String id, GraphTemplateType type, int occurrence) {
+    public void addEntry(Graph<BtfVertex, DefaultEdge> graph, String id, GraphTemplateType type, int occurrence) {
         graphs.add(graph);
         ids.add(id);
         types.add(type);
@@ -73,13 +73,13 @@ public class GraphTemplateReport {
     }
     
     public String getCompositeGraph() {
-        var composite = new DefaultDirectedGraph<DataFlowVertex, DefaultEdge>(DefaultEdge.class);
+        var composite = new DefaultDirectedGraph<BtfVertex, DefaultEdge>(DefaultEdge.class);
         for (var g : graphs)
             Graphs.addGraph(composite, g);
         return GraphUtils.generateGraphURL(composite, name + "-" + segmentID);
     }
 
-    public List<Graph<DataFlowVertex, DefaultEdge>> getGraphs() {
+    public List<Graph<BtfVertex, DefaultEdge>> getGraphs() {
         return graphs;
     }
 

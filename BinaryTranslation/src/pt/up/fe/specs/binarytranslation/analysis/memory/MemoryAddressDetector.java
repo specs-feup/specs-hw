@@ -6,8 +6,10 @@ import java.util.List;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.address.AddressGraph;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -25,29 +27,27 @@ public class MemoryAddressDetector extends APropertyDetector {
         }
     }
 
-    public ArrayList<Graph<DataFlowVertex, DefaultEdge>> detectGraphs() {
-        var out = new ArrayList<Graph<DataFlowVertex, DefaultEdge>>();
+    public ArrayList<Graph<BtfVertex, DefaultEdge>> detectGraphs() {
+        var out = new ArrayList<Graph<BtfVertex, DefaultEdge>>();
 
         for (var i : getTracker().getBasicBlock().getInstructions()) {
             if (AnalysisUtils.isLoadStore(i)) {
-                var builder = new AddressGraphBuilder(getTracker().getBasicBlock().getInstructions(), i);
-                var graph = builder.calculateChain();
-                
-                out.add(graph);
+                var addrGraph = new AddressGraph(getTracker().getBasicBlock().getInstructions(), i);
+                out.add(addrGraph);
             }
         }
         return out;
     }
     
-    public static String buildMemoryExpression(Graph<DataFlowVertex, DefaultEdge> graph) {
+    public static String buildMemoryExpression(Graph<BtfVertex, DefaultEdge> graph) {
         var root = GraphUtils.findGraphRoot(graph);
         return buildMemoryExpression(graph, root);
     }
 
-    public static String buildMemoryExpression(Graph<DataFlowVertex, DefaultEdge> graph, DataFlowVertex root) {
+    public static String buildMemoryExpression(Graph<BtfVertex, DefaultEdge> graph, BtfVertex root) {
         var sb = new StringBuilder();
         
-        if (root.getType() == DataFlowVertexType.LOAD_TARGET) {
+        if (root.getType() == BtfVertexType.LOAD_TARGET) {
             sb.append(root.getLabel()).append(" <- mem[");
 
             var start = GraphUtils.getParents(graph, GraphUtils.getParents(graph, root).get(0)).get(0);
@@ -55,11 +55,11 @@ public class MemoryAddressDetector extends APropertyDetector {
             sb.append(buildAddressExpression(graph, start, true));
             sb.append("]");
         }
-        if (root.getType() == DataFlowVertexType.MEMORY) {
+        if (root.getType() == BtfVertexType.MEMORY) {
             sb.append("mem[");
 
-            var addrStart = DataFlowVertex.nullVertex;
-            var dataToStore = DataFlowVertex.nullVertex;
+            var addrStart = BtfVertex.nullVertex;
+            var dataToStore = BtfVertex.nullVertex;
             var parents = GraphUtils.getParents(graph, root);
 
             for (var parent : parents) {
@@ -82,7 +82,7 @@ public class MemoryAddressDetector extends APropertyDetector {
         return sb.toString();
     }
     
-    public static String buildAddressFunction(Graph<DataFlowVertex, DefaultEdge> graph, List<String> args, HashMap<String, Integer> indVars) {
+    public static String buildAddressFunction(Graph<BtfVertex, DefaultEdge> graph, List<String> args, HashMap<String, Integer> indVars) {
         var root = GraphUtils.findGraphRoot(graph);
         var start = GraphUtils.getParents(graph, GraphUtils.getParents(graph, root).get(0)).get(0);
         var sb = new StringBuilder("f(");
@@ -108,19 +108,19 @@ public class MemoryAddressDetector extends APropertyDetector {
         return sb.toString();
     }
 
-    public static String buildAddressExpression(Graph<DataFlowVertex, DefaultEdge> graph, DataFlowVertex current, boolean first) {
+    public static String buildAddressExpression(Graph<BtfVertex, DefaultEdge> graph, BtfVertex current, boolean first) {
 
-        if (current.getType() == DataFlowVertexType.IMMEDIATE) {
+        if (current.getType() == BtfVertexType.IMMEDIATE) {
             return current.getLabel();
         }
-        if (current.getType() == DataFlowVertexType.REGISTER) {
+        if (current.getType() == BtfVertexType.REGISTER) {
             var parents = GraphUtils.getParents(graph, current);
             if (parents.size() == 0)
                 return current.getLabel();
             else
                 return buildAddressExpression(graph, parents.get(0), false);
         }
-        if (current.getType() == DataFlowVertexType.OPERATION || current.getType() == DataFlowVertexType.CHECK) {
+        if (current.getType() == BtfVertexType.OPERATION || current.getType() == BtfVertexType.CHECK) {
             var parents = GraphUtils.getParents(graph, current);
             String s1 = "";
             String s2 = "";
