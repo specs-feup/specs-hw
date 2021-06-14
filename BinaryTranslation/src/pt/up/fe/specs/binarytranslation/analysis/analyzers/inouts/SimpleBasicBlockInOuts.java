@@ -1,6 +1,7 @@
-package pt.up.fe.specs.binarytranslation.analysis.inouts;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts;
 
 import java.util.BitSet;
+
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 

@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.memory;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.memory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexProperty;
@@ -19,7 +20,6 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.AGraphTransfo
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformBaseAddress;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
-import pt.up.fe.specs.binarytranslation.analysis.occurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.util.SpecsLogs;
 

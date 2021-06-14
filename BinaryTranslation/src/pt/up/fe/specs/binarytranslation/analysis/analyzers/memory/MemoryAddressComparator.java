@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.memory;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.memory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

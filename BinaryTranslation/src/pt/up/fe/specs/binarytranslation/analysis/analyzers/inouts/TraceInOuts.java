@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.inouts;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts;
 
 import java.util.List;
 
