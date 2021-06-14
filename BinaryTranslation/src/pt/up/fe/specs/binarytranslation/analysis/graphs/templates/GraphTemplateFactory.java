@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
 public class GraphTemplateFactory {
     public static AGraphTemplate getTemplate(GraphTemplateType type) {

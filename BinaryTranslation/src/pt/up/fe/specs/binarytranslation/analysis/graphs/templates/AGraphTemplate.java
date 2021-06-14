@@ -15,17 +15,17 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 
 public abstract class AGraphTemplate {
-    protected Graph<AddressVertex, DefaultEdge> graph;
+    protected Graph<DataFlowVertex, DefaultEdge> graph;
     protected String templateName;
     
     protected AGraphTemplate(GraphTemplateType type) {
@@ -33,7 +33,7 @@ public abstract class AGraphTemplate {
         this.templateName = "\"Template - " + type.toString() + "\"";
     }
     
-    public Graph<AddressVertex, DefaultEdge> getGraph() {
+    public Graph<DataFlowVertex, DefaultEdge> getGraph() {
         return graph;
     }
     

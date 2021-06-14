@@ -15,26 +15,26 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 
 public class GraphTemplateType7 extends AGraphTemplate {
 
     protected GraphTemplateType7(GraphTemplateType type) {
         super(type);
-        var r7 = new AddressVertex("r7", AddressVertexType.REGISTER);
-        var row = new AddressVertex("Row", AddressVertexType.IMMEDIATE);
-        var r5 = new AddressVertex("r5", AddressVertexType.REGISTER);
-        var r8 = new AddressVertex("r8", AddressVertexType.REGISTER);
-        var r9 = new AddressVertex("r9", AddressVertexType.REGISTER);
-        var mult1 = new AddressVertex("*", AddressVertexType.OPERATION);
-        var mult2 = new AddressVertex("*", AddressVertexType.OPERATION);
-        var add1 = new AddressVertex("+", AddressVertexType.OPERATION);
-        var imm4 = new AddressVertex("4", AddressVertexType.IMMEDIATE);
-        var add2 = new AddressVertex("+", AddressVertexType.OPERATION);
-        var add3 = new AddressVertex("+", AddressVertexType.OPERATION);
+        var r7 = new DataFlowVertex("r7", DataFlowVertexType.REGISTER);
+        var row = new DataFlowVertex("Row", DataFlowVertexType.IMMEDIATE);
+        var r5 = new DataFlowVertex("r5", DataFlowVertexType.REGISTER);
+        var r8 = new DataFlowVertex("r8", DataFlowVertexType.REGISTER);
+        var r9 = new DataFlowVertex("r9", DataFlowVertexType.REGISTER);
+        var mult1 = new DataFlowVertex("*", DataFlowVertexType.OPERATION);
+        var mult2 = new DataFlowVertex("*", DataFlowVertexType.OPERATION);
+        var add1 = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
+        var imm4 = new DataFlowVertex("4", DataFlowVertexType.IMMEDIATE);
+        var add2 = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
+        var add3 = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
         
         graph.addVertex(r7);
         graph.addVertex(row);

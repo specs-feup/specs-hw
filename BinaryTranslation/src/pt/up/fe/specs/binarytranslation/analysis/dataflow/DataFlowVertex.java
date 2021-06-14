@@ -1,7 +1,7 @@
-package pt.up.fe.specs.binarytranslation.analysis.memory;
+package pt.up.fe.specs.binarytranslation.analysis.dataflow;
 
-public class AddressVertex {
-    public enum AddressVertexType {
+public class DataFlowVertex {
+    public enum DataFlowVertexType {
         OPERATION,
         REGISTER,
         IMMEDIATE,
@@ -12,14 +12,14 @@ public class AddressVertex {
         JUMP,
         NULL 
     };
-    public enum AddressVertexProperty {
+    public enum DataFlowVertexProperty {
         OFFSET,
         BASE_ADDR,
         INDUCTION_VAR,
         STRIDE,
         NULL
     }
-    public enum AddressVertexIsaInfo {
+    public enum DataFlowVertexIsaInfo {
         RA,
         RB,
         RD,
@@ -27,24 +27,23 @@ public class AddressVertex {
     }
     
     private String label;
-    private boolean keep = false;
-    private AddressVertexType type;
-    private AddressVertexProperty property = AddressVertexProperty.NULL;
-    private AddressVertexIsaInfo isaInfo = AddressVertexIsaInfo.NULL;
+    private DataFlowVertexType type;
+    private DataFlowVertexProperty property = DataFlowVertexProperty.NULL;
+    private DataFlowVertexIsaInfo isaInfo = DataFlowVertexIsaInfo.NULL;
     private String color = "black";
-    public static AddressVertex nullVertex = new AddressVertex("", AddressVertexType.NULL);
+    public static DataFlowVertex nullVertex = new DataFlowVertex("", DataFlowVertexType.NULL);
     
-    public AddressVertex(String label, AddressVertexType type) {
+    public DataFlowVertex(String label, DataFlowVertexType type) {
         this.label = label;
         this.type = type;
     }
     
-    public AddressVertex(String label, AddressVertexType type, AddressVertexProperty property) {
+    public DataFlowVertex(String label, DataFlowVertexType type, DataFlowVertexProperty property) {
         this(label, type);
         this.property = property;
     }
     
-    public AddressVertex(String label, AddressVertexType type, AddressVertexIsaInfo isaInfo) {
+    public DataFlowVertex(String label, DataFlowVertexType type, DataFlowVertexIsaInfo isaInfo) {
         this(label, type);
         this.isaInfo = isaInfo;
     }
@@ -65,36 +64,28 @@ public class AddressVertex {
         this.label = newLabel;
     }
 
-    public AddressVertexType getType() {
+    public DataFlowVertexType getType() {
         return type;
     }
     
-    public void setType(AddressVertexType type) {
+    public void setType(DataFlowVertexType type) {
         this.type = type;
     }
 
-    public AddressVertexProperty getProperty() {
+    public DataFlowVertexProperty getProperty() {
         return property;
     }
 
-    public void setProperty(AddressVertexProperty property) {
+    public void setProperty(DataFlowVertexProperty property) {
         this.property = property;
     }
 
-    public AddressVertexIsaInfo getIsaInfo() {
+    public DataFlowVertexIsaInfo getIsaInfo() {
         return isaInfo;
     }
 
-    public void setIsaInfo(AddressVertexIsaInfo isaInfo) {
+    public void setIsaInfo(DataFlowVertexIsaInfo isaInfo) {
         this.isaInfo = isaInfo;
-    }
-
-    public boolean isKeep() {
-        return keep;
-    }
-
-    public void setKeep(boolean keep) {
-        this.keep = keep;
     }
 
     public String getColor() {

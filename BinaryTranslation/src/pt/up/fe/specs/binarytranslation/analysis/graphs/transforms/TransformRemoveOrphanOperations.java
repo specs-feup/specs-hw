@@ -15,28 +15,28 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.memory.transforms;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.transforms;
 
 import java.util.ArrayList;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 
 public class TransformRemoveOrphanOperations extends AGraphTransform {
 
-    public TransformRemoveOrphanOperations(Graph<AddressVertex, DefaultEdge> graph) {
+    public TransformRemoveOrphanOperations(Graph<DataFlowVertex, DefaultEdge> graph) {
         super(graph);
     }
 
     @Override
-    protected Graph<AddressVertex, DefaultEdge> applyTransform(Graph<AddressVertex, DefaultEdge> g) {
-        var toRemove = new ArrayList<AddressVertex>();
+    protected Graph<DataFlowVertex, DefaultEdge> applyTransform(Graph<DataFlowVertex, DefaultEdge> g) {
+        var toRemove = new ArrayList<DataFlowVertex>();
         
         for (var v : g.vertexSet()) {
-            if (v.getType() == AddressVertexType.OPERATION) {
+            if (v.getType() == DataFlowVertexType.OPERATION) {
                 if (g.inDegreeOf(v) == 0)
                     toRemove.add(v);
                 if (g.inDegreeOf(v) == 1 && g.outDegreeOf(v) == 0)

@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.memory.templates;
+package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +21,11 @@ import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 
 public class GraphTemplateReport {
-    private List<Graph<AddressVertex, DefaultEdge>> graphs;
+    private List<Graph<DataFlowVertex, DefaultEdge>> graphs;
     private List<String> ids;
     private List<GraphTemplateType> types;
     private List<Integer> occurrences;
@@ -51,7 +51,7 @@ public class GraphTemplateReport {
         this.name = name;
     }
 
-    public void addEntry(Graph<AddressVertex, DefaultEdge> graph, String id, GraphTemplateType type, int occurrence) {
+    public void addEntry(Graph<DataFlowVertex, DefaultEdge> graph, String id, GraphTemplateType type, int occurrence) {
         graphs.add(graph);
         ids.add(id);
         types.add(type);
@@ -73,13 +73,13 @@ public class GraphTemplateReport {
     }
     
     public String getCompositeGraph() {
-        var composite = new DefaultDirectedGraph<AddressVertex, DefaultEdge>(DefaultEdge.class);
+        var composite = new DefaultDirectedGraph<DataFlowVertex, DefaultEdge>(DefaultEdge.class);
         for (var g : graphs)
             Graphs.addGraph(composite, g);
         return GraphUtils.generateGraphURL(composite, name + "-" + segmentID);
     }
 
-    public List<Graph<AddressVertex, DefaultEdge>> getGraphs() {
+    public List<Graph<DataFlowVertex, DefaultEdge>> getGraphs() {
         return graphs;
     }
 

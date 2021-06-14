@@ -21,21 +21,20 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class DataFlowStatistics {
-    private Graph<AddressVertex, DefaultEdge> graph;
-    private Graph<AddressVertex, DefaultEdge> path;
+    private Graph<DataFlowVertex, DefaultEdge> graph;
+    private Graph<DataFlowVertex, DefaultEdge> path;
     private List<Instruction> insts;
     private List<String> sources;
     private List<String> sinks;
     private double ilp;
     private int pathSize = 0;
 
-    public DataFlowStatistics(Graph<AddressVertex, DefaultEdge> graph, Graph<AddressVertex, DefaultEdge> path,
+    public DataFlowStatistics(Graph<DataFlowVertex, DefaultEdge> graph, Graph<DataFlowVertex, DefaultEdge> path,
             List<Instruction> insts, List<String> sources, List<String> sinks) {
         this.graph = graph;
         this.path = path;
@@ -44,13 +43,13 @@ public class DataFlowStatistics {
         this.sinks = sinks;
         
         for (var v : path.vertexSet()) {
-            if (v.getType() == AddressVertexType.OPERATION || v.getType() == AddressVertexType.MEMORY)
+            if (v.getType() == DataFlowVertexType.OPERATION || v.getType() == DataFlowVertexType.MEMORY)
                 this.pathSize++;
         }
         
         double cnt = 0;
         for (var v : graph.vertexSet()) {
-            if (v.getType() == AddressVertexType.OPERATION || v.getType() == AddressVertexType.MEMORY)
+            if (v.getType() == DataFlowVertexType.OPERATION || v.getType() == DataFlowVertexType.MEMORY)
                 cnt++;
         }
         this.ilp = cnt / (double) pathSize;
@@ -98,7 +97,7 @@ public class DataFlowStatistics {
     private Map<String, Integer> getOpCount() {
         var map = new HashMap<String, Integer>();
         for (var v : graph.vertexSet()) {
-            if (v.getType() == AddressVertexType.OPERATION || v.getType() == AddressVertexType.MEMORY) {
+            if (v.getType() == DataFlowVertexType.OPERATION || v.getType() == DataFlowVertexType.MEMORY) {
                 var op = labelToFullName(v.getLabel());
                 if (map.containsKey(op))
                     map.put(op, map.get(op) + 1);
@@ -126,11 +125,11 @@ public class DataFlowStatistics {
         }
     }
 
-    public Graph<AddressVertex, DefaultEdge> getGraph() {
+    public Graph<DataFlowVertex, DefaultEdge> getGraph() {
         return graph;
     }
 
-    public Graph<AddressVertex, DefaultEdge> getPath() {
+    public Graph<DataFlowVertex, DefaultEdge> getPath() {
         return path;
     }
 

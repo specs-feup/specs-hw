@@ -25,18 +25,19 @@ import java.util.Map;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveTemporaryVertices;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 
 public class AddressGenerationUnit {
-    private Graph<AddressVertex, DefaultEdge> graph;
+    private Graph<DataFlowVertex, DefaultEdge> graph;
     private List<String> inputs;
     private Map<String, Integer> strides;
     private Map<String, Integer> currIndexes;
 
-    public AddressGenerationUnit(Graph<AddressVertex, DefaultEdge> graph, Map<String, Integer> strides) {
+    public AddressGenerationUnit(Graph<DataFlowVertex, DefaultEdge> graph, Map<String, Integer> strides) {
         this.graph = GraphUtils.getExpressionGraph(graph);
         var t1 = new TransformHexToDecimal(this.graph);
         t1.applyToGraph();
@@ -55,14 +56,14 @@ public class AddressGenerationUnit {
 
     private List<String> findAllInputs() {
         var regs = new ArrayList<String>();
-        for (var reg : GraphUtils.findAllNodesOfType(graph, AddressVertexType.REGISTER)) {
+        for (var reg : GraphUtils.findAllNodesOfType(graph, DataFlowVertexType.REGISTER)) {
             if (!strides.keySet().contains(reg.getLabel()))
                 regs.add(reg.getLabel());
         }
         return regs;
     }
 
-    public Graph<AddressVertex, DefaultEdge> getGraph() {
+    public Graph<DataFlowVertex, DefaultEdge> getGraph() {
         return graph;
     }
     
@@ -79,14 +80,14 @@ public class AddressGenerationUnit {
         return next(inputMap, start);
     }
     
-    private long next(Map<String, Integer> inputMap, AddressVertex currVertex) {
-        if (currVertex == AddressVertex.nullVertex)
+    private long next(Map<String, Integer> inputMap, DataFlowVertex currVertex) {
+        if (currVertex == DataFlowVertex.nullVertex)
             return Long.MAX_VALUE;
 
         var parents = GraphUtils.getParents(graph, currVertex);
-        var left = parents.size() > 0 ? parents.get(0) : AddressVertex.nullVertex;
+        var left = parents.size() > 0 ? parents.get(0) : DataFlowVertex.nullVertex;
         long leftVal = next(inputMap, left);
-        var right = parents.size() > 1 ? parents.get(1) : AddressVertex.nullVertex;
+        var right = parents.size() > 1 ? parents.get(1) : DataFlowVertex.nullVertex;
         long rightVal = next(inputMap, right);
         
         if (leftVal == Long.MAX_VALUE)
@@ -94,13 +95,13 @@ public class AddressGenerationUnit {
         if (rightVal == Long.MAX_VALUE)
             rightVal = leftVal;
         
-        if (currVertex.getType() == AddressVertexType.IMMEDIATE) {
+        if (currVertex.getType() == DataFlowVertexType.IMMEDIATE) {
             return Long.valueOf(currVertex.getLabel());
         }
-        if (currVertex.getType() == AddressVertexType.OPERATION) {
+        if (currVertex.getType() == DataFlowVertexType.OPERATION) {
             return doOperation(leftVal, rightVal, currVertex.getLabel());
         }
-        if (currVertex.getType() == AddressVertexType.REGISTER) {
+        if (currVertex.getType() == DataFlowVertexType.REGISTER) {
             var reg = currVertex.getLabel();
             if (strides.containsKey(reg)) {
                 var stride = strides.get(reg);

@@ -8,9 +8,10 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexIsaInfo;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexProperty;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexIsaInfo;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexProperty;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
@@ -26,7 +27,7 @@ public class AddressGraphBuilder {
         this.startIdx = basicBlock.indexOf(inst);
     }
 
-    public Graph<AddressVertex, DefaultEdge> calculateChain() {
+    public Graph<DataFlowVertex, DefaultEdge> calculateChain() {
         if (inst.getData().getOperands().size() == 3) {
             Operand target = inst.getData().getOperands().get(0);
             Operand op1 = inst.getData().getOperands().get(1);
@@ -37,17 +38,17 @@ public class AddressGraphBuilder {
             String op2Reg = AnalysisUtils.getRegName(op2);
 
             // Build memory access node
-            var targetV = new AddressVertex(targetReg, AddressVertexType.REGISTER);
-            targetV.setIsaInfo(AddressVertexIsaInfo.RD);
-            var memAccessV = new AddressVertex(inst.isLoad() ? "Memory Access (load)" : "Memory Access (store)",
-                    AddressVertexType.MEMORY);
-            var sumV = new AddressVertex("+", AddressVertexType.OPERATION);
+            var targetV = new DataFlowVertex(targetReg, DataFlowVertexType.REGISTER);
+            targetV.setIsaInfo(DataFlowVertexIsaInfo.RD);
+            var memAccessV = new DataFlowVertex(inst.isLoad() ? "Memory Access (load)" : "Memory Access (store)",
+                    DataFlowVertexType.MEMORY);
+            var sumV = new DataFlowVertex("+", DataFlowVertexType.OPERATION);
 
             // Build rA graph
             var rABuilder = new PartialAddressGraphBuilder(op1Reg, startIdx - 1, basicBlock);
             var fullGraph = rABuilder.generateGraph();
             var rAV = rABuilder.getRoot();
-            rAV.setIsaInfo(AddressVertexIsaInfo.RA);
+            rAV.setIsaInfo(DataFlowVertexIsaInfo.RA);
 
             // Add memory access to rA graph, and connect
             fullGraph.addVertex(targetV);
@@ -59,13 +60,13 @@ public class AddressGraphBuilder {
             // Build rB graph
             if (op2.isImmediate()) {
                 String immVal = op2.getRepresentation();
-                var immV = new AddressVertex(immVal, AddressVertexType.IMMEDIATE);
+                var immV = new DataFlowVertex(immVal, DataFlowVertexType.IMMEDIATE);
 
                 // TODO: assign BASE_ADDR and OFFSET when an IMM is present
                 // Below assumption is not always true
                 // Use later transform for a more educated guess
-                rAV.setProperty(AddressVertexProperty.BASE_ADDR);
-                immV.setProperty(AddressVertexProperty.OFFSET);
+                rAV.setProperty(DataFlowVertexProperty.BASE_ADDR);
+                immV.setProperty(DataFlowVertexProperty.OFFSET);
 
                 fullGraph.addVertex(immV);
                 fullGraph.addEdge(immV, sumV);
@@ -74,21 +75,21 @@ public class AddressGraphBuilder {
                 var rBGraph = rBBuilder.generateGraph();
                 Graphs.addGraph(fullGraph, rBGraph);
                 var rBV = rBBuilder.getRoot();
-                rBV.setIsaInfo(AddressVertexIsaInfo.RB);
+                rBV.setIsaInfo(DataFlowVertexIsaInfo.RB);
 
                 // Set rA and rB using MicroBlaze GCC conventions
-                rAV.setProperty(AddressVertexProperty.OFFSET);
-                rBV.setProperty(AddressVertexProperty.BASE_ADDR);
+                rAV.setProperty(DataFlowVertexProperty.OFFSET);
+                rBV.setProperty(DataFlowVertexProperty.BASE_ADDR);
                 fullGraph.addEdge(rBV, sumV);
             }
 
             // Connect load/store destination/source register to the rest
             if (inst.isLoad()) {
                 fullGraph.addEdge(memAccessV, targetV);
-                targetV.setType(AddressVertexType.LOAD_TARGET);
+                targetV.setType(DataFlowVertexType.LOAD_TARGET);
             } else {
                 fullGraph.addEdge(targetV, memAccessV);
-                targetV.setType(AddressVertexType.STORE_TARGET);
+                targetV.setType(DataFlowVertexType.STORE_TARGET);
             }
 
             return fullGraph;

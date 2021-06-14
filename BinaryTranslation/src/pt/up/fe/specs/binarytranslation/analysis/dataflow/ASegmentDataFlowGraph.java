@@ -17,23 +17,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex.AddressVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformHexToDecimal;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformRemoveTemporaryVertices;
-import pt.up.fe.specs.binarytranslation.analysis.memory.transforms.TransformShiftsToMult;
+import pt.up.fe.specs.binarytranslation.analysis.dataflow.DataFlowVertex.DataFlowVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
-public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<AddressVertex, DefaultEdge> {
+public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<DataFlowVertex, DefaultEdge> {
     private static final long serialVersionUID = 4454283993649695154L;
-    protected Map<String, AddressVertex> vertexCache = new HashMap<String, AddressVertex>();
+    protected Map<String, DataFlowVertex> vertexCache = new HashMap<String, DataFlowVertex>();
     protected List<Instruction> segment;
 
     public ASegmentDataFlowGraph(List<Instruction> segment) {
@@ -52,9 +49,9 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<AddressV
             String rA = operandAsString(op2);
             String rB = op3 == null ? "nop" : operandAsString(op3);
 
-            var rDvert = new AddressVertex(rD, opType(op1));
-            var rAvert = new AddressVertex(rA, opType(op2));
-            var rBvert = op3 == null ? AddressVertex.nullVertex : new AddressVertex(rB, opType(op3));
+            var rDvert = new DataFlowVertex(rD, opType(op1));
+            var rAvert = new DataFlowVertex(rA, opType(op2));
+            var rBvert = op3 == null ? DataFlowVertex.nullVertex : new DataFlowVertex(rB, opType(op3));
 
             if (i.isMemory()) {
                 handleMemoryInstruction(i, rDvert, rAvert, rBvert);
@@ -78,14 +75,14 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<AddressV
             t3.applyToGraph();
     }
 
-    private void handleJumpInstruction(Instruction i, AddressVertex rDvert, AddressVertex rAvert,
-            AddressVertex rBvert) {
-        if (rBvert == AddressVertex.nullVertex) {
+    private void handleJumpInstruction(Instruction i, DataFlowVertex rDvert, DataFlowVertex rAvert,
+            DataFlowVertex rBvert) {
+        if (rBvert == DataFlowVertex.nullVertex) {
             rAvert = addVertex(rAvert, false);
             rDvert = addVertex(rDvert, false);
 
-            var jmpVertex = new AddressVertex(AnalysisUtils.mapInstructionsToSymbol("Jump"),
-                    AddressVertexType.JUMP);
+            var jmpVertex = new DataFlowVertex(AnalysisUtils.mapInstructionsToSymbol("Jump"),
+                    DataFlowVertexType.JUMP);
             addVertex(jmpVertex);
             addEdge(rAvert, jmpVertex);
             addEdge(rDvert, jmpVertex);
@@ -95,28 +92,28 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<AddressV
         }
     }
 
-    private void handleLogicalArithmeticInstruction(Instruction i, AddressVertex rDvert, AddressVertex rAvert,
-            AddressVertex rBvert) {
+    private void handleLogicalArithmeticInstruction(Instruction i, DataFlowVertex rDvert, DataFlowVertex rAvert,
+            DataFlowVertex rBvert) {
         rAvert = addVertex(rAvert, false);
         rBvert = addVertex(rBvert, false);
         rDvert = addVertex(rDvert, true);
 
         var opSymbol = i.getName();
-        var opVertex = new AddressVertex(AnalysisUtils.mapInstructionsToSymbol(opSymbol),
-                AddressVertexType.OPERATION);
+        var opVertex = new DataFlowVertex(AnalysisUtils.mapInstructionsToSymbol(opSymbol),
+                DataFlowVertexType.OPERATION);
         addVertex(opVertex);
         addEdge(rAvert, opVertex);
         addEdge(rBvert, opVertex);
         addEdge(opVertex, rDvert);
     }
 
-    private void handleMemoryInstruction(Instruction i, AddressVertex rDvert, AddressVertex rAvert,
-            AddressVertex rBvert) {
+    private void handleMemoryInstruction(Instruction i, DataFlowVertex rDvert, DataFlowVertex rAvert,
+            DataFlowVertex rBvert) {
         rAvert = addVertex(rAvert, false);
         rBvert = addVertex(rBvert, false);
         rDvert = addVertex(rDvert, i.isLoad());
 
-        var memVert = new AddressVertex(i.isLoad() ? "Load" : "Store", AddressVertexType.MEMORY);
+        var memVert = new DataFlowVertex(i.isLoad() ? "Load" : "Store", DataFlowVertexType.MEMORY);
         addVertex(memVert);
         addEdge(rAvert, memVert);
         addEdge(rBvert, memVert);
@@ -126,8 +123,8 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<AddressV
             addEdge(rDvert, memVert);
     }
 
-    private AddressVertex addVertex(AddressVertex v, boolean write) {
-        if (v.getType() == AddressVertexType.REGISTER) {
+    private DataFlowVertex addVertex(DataFlowVertex v, boolean write) {
+        if (v.getType() == DataFlowVertexType.REGISTER) {
             if (write) {
                 addVertex(v);
                 vertexCache.put(v.getLabel(), v);
@@ -147,11 +144,11 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<AddressV
         }
     }
 
-    private AddressVertexType opType(Operand op) {
+    private DataFlowVertexType opType(Operand op) {
         if (op.isImmediate())
-            return AddressVertexType.IMMEDIATE;
+            return DataFlowVertexType.IMMEDIATE;
         else
-            return AddressVertexType.REGISTER;
+            return DataFlowVertexType.REGISTER;
     }
 
     private String operandAsString(Operand op) {
