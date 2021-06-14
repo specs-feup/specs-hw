@@ -30,13 +30,8 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class MemoryAddressAnalyzer extends ATraceAnalyzer {
+public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
     private RegisterProperties isaProps;
-    private Class<?> transforms[] = {
-            TransformBaseAddress.class,
-            TransformHexToDecimal.class,
-            TransformShiftsToMult.class
-    };
 
     public MemoryAddressAnalyzer(ATraceInstructionStream stream, ELFProvider elf, RegisterProperties isaProps) {
         super(stream, elf);
@@ -82,18 +77,6 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
 
     private void cleanUpGraphs(List<Graph<BtfVertex, DefaultEdge>> graphs) {
         for (var graph : graphs) {
-            // for (var cl : transforms) {
-            // try {
-            // Constructor<?> cons = cl.getConstructor(cl);
-            // var trans = (AGraphTransform) cons.newInstance(graph);
-            // trans.applyToGraph();
-            //
-            // } catch (Exception e) {
-            // SpecsLogs.warn("Error message:\n", e);
-            // }
-            // }
-            //var t1 = new TransformBaseAddress(graph);
-            //t1.applyToGraph();
             var t2 = new TransformHexToDecimal(graph);
             t2.applyToGraph();
             var t3 = new TransformShiftsToMult(graph);
@@ -149,15 +132,6 @@ public class MemoryAddressAnalyzer extends ATraceAnalyzer {
         System.out.println("Memory address analysis for segment:");
         bb.printSegment();
         AnalysisUtils.printSeparator(40);
-    }
-
-    @Deprecated
-    private void handleMemoryDisambiguation(BasicBlockOccurrenceTracker tracker, Map<String, List<String>> prologueDeps,
-            ArrayList<Graph<BtfVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars) {
-        var memDis = new MemoryDisambiguator(graphs, indVars, isaProps, tracker, prologueDeps);
-        memDis.disambiguate();
-        // TODO
-        AnalysisUtils.printSeparator(80);
     }
 
     private Map<String, List<String>> handlePrologueDependencies(BasicBlockOccurrenceTracker tracker) {

@@ -16,7 +16,7 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.producer.detailed.DetailedRegisterInstructionProducer;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class MemoryProfilerAnalyzer extends ATraceAnalyzer {
+public class MemoryProfilerAnalyzer extends ABasicBlockAnalyzer {
 
     private DetailedRegisterInstructionProducer prod;
     private Queue<Instruction> queue = new LinkedList<>();
@@ -31,7 +31,7 @@ public class MemoryProfilerAnalyzer extends ATraceAnalyzer {
             return false;
         
         while (inst != null) {
-            if (AnalysisUtils.isLoadStore(inst)) {
+            if (inst.isMemory()) {
                 queue.add(inst);
             }
             inst = nextInstruction(useStream);
@@ -120,13 +120,13 @@ public class MemoryProfilerAnalyzer extends ATraceAnalyzer {
      */
     private Long getMemoryAddr(Instruction inst) {
         Operand op = inst.getData().getOperands().get(1);
-        long res = inst.getRegisters().getValue(AnalysisUtils.getRegName(op));
+        long res = inst.getRegisters().getValue(AnalysisUtils.getRegisterName(op));
 
         if (inst.getData().getOperands().size() == 3) {
             op = inst.getData().getOperands().get(2);
             long add = 0;
             if (op.isRegister()) {
-                add = inst.getRegisters().getValue(AnalysisUtils.getRegName(op));
+                add = inst.getRegisters().getValue(AnalysisUtils.getRegisterName(op));
             }
             if (op.isImmediate()) {
                 add = Long.parseLong(op.getStringValue(), 16);

@@ -33,9 +33,9 @@ public class AddressGraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge>{
             Operand op1 = inst.getData().getOperands().get(1);
             Operand op2 = inst.getData().getOperands().get(2);
 
-            String targetReg = AnalysisUtils.getRegName(target);
-            String op1Reg = AnalysisUtils.getRegName(op1);
-            String op2Reg = AnalysisUtils.getRegName(op2);
+            String targetReg = AnalysisUtils.getRegisterName(target);
+            String op1Reg = AnalysisUtils.getRegisterName(op1);
+            String op2Reg = AnalysisUtils.getRegisterName(op2);
 
             // Build memory access node
             var targetV = new BtfVertex(targetReg, BtfVertexType.REGISTER);

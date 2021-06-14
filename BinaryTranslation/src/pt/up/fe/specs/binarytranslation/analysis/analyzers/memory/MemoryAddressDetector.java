@@ -32,7 +32,7 @@ public class MemoryAddressDetector extends APropertyDetector {
         var out = new ArrayList<Graph<BtfVertex, DefaultEdge>>();
 
         for (var i : getTracker().getBasicBlock().getInstructions()) {
-            if (AnalysisUtils.isLoadStore(i)) {
+            if (i.isMemory()) {
                 var addrGraph = new AddressGraph(getTracker().getBasicBlock().getInstructions(), i);
                 out.add(addrGraph);
             }

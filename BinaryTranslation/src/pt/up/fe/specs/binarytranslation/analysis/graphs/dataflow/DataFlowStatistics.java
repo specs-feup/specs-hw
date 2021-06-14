@@ -35,7 +35,7 @@ public class DataFlowStatistics {
     private double ilp;
     private int pathSize = 0;
 
-    public DataFlowStatistics(Graph<BtfVertex, DefaultEdge> graph, Graph<BtfVertex, DefaultEdge> path,
+    public DataFlowStatistics(ASegmentDataFlowGraph graph, Graph<BtfVertex, DefaultEdge> path,
             List<Instruction> insts, List<String> sources, List<String> sinks) {
         this.graph = graph;
         this.path = path;
@@ -145,7 +145,6 @@ public class DataFlowStatistics {
     public List<String> getSinks() {
         return sinks;
     }
-
 
     public int getPathSize() {
         return pathSize;

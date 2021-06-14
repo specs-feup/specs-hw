@@ -93,7 +93,7 @@ public class InductionVariablesDetector extends APropertyDetector {
         StringBuilder sb = new StringBuilder();
         for (var op : inst.getData().getOperands()) {
             if (op.isRegister() && op.isRead()) {
-                String regName = AnalysisUtils.getRegName(op);
+                String regName = AnalysisUtils.getRegisterName(op);
                 long val = inst.getRegisters().getValue(regName);
                 sb.append(regName).append("{").append(val).append("} ");
             }
@@ -167,8 +167,8 @@ public class InductionVariablesDetector extends APropertyDetector {
                     var op3 = inst.getData().getOperands().get(2);
 
                     if (op0.isRegister() && op1.isRegister() && op3.isImmediate()) {
-                        var reg0 = AnalysisUtils.getRegName(op0);
-                        var reg1 = AnalysisUtils.getRegName(op1);
+                        var reg0 = AnalysisUtils.getRegisterName(op0);
+                        var reg1 = AnalysisUtils.getRegisterName(op1);
                         if (reg0.equals(reg1)) {
                             int inc = Integer.decode(op3.getRepresentation());
                             map.put(reg0, inc);
@@ -185,7 +185,7 @@ public class InductionVariablesDetector extends APropertyDetector {
             if (inst.getData().getGenericTypes().contains(InstructionType.G_CMP)) {
                 for (var op : inst.getData().getOperands()) {
                     if (op.isRegister()) {
-                        var currReg = AnalysisUtils.getRegName(op);
+                        var currReg = AnalysisUtils.getRegisterName(op);
                         if (currReg.equals(reg))
                             return true;
                     }

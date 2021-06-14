@@ -48,7 +48,7 @@ public class OutEliminationOccurrence {
             
             for (var op : next.getData().getOperands()) {
                 if (op.isRegister()) {
-                    String regName = AnalysisUtils.getRegName(op);
+                    String regName = AnalysisUtils.getRegisterName(op);
                     if (outs.contains(regName)) {
                         if (op.isRead()) {
                             //System.out.println("Out register " + regName + " is used");

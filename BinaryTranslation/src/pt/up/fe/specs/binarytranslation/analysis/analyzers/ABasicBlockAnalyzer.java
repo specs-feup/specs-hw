@@ -6,11 +6,11 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguratio
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public abstract class ATraceAnalyzer {
+public abstract class ABasicBlockAnalyzer {
     protected ATraceInstructionStream stream;
     protected ELFProvider elf;
 
-    public ATraceAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
+    public ABasicBlockAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
         this.stream = stream;
         this.elf = elf;
     }

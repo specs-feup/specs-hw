@@ -33,7 +33,7 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class StreamingAnalyzer extends ATraceAnalyzer {
+public class StreamingAnalyzer extends ABasicBlockAnalyzer {
 
     public StreamingAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
         super(stream, elf);
