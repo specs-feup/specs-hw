@@ -91,3 +91,7 @@ MicroBlaze/resources/org/specs/MicroBlaze/asm/Rosetta/3d-rendering_trace.txt
 MicroBlaze/resources/org/specs/MicroBlaze/asm/Rosetta/face-detection_trace.txt
 
 BinaryTranslation/target/generated-sources/antlr4/pt/up/fe/specs/binarytranslation/lex/generated/
+
+MicroBlaze/basicBlockFlowBenchmark.csv
+
+MicroBlaze/dataFlowBenchmark.csv

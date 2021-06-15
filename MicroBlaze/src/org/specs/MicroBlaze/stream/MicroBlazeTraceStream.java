@@ -34,13 +34,6 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         // this if-else is only here to replace the "cholesky_trace.txt" auxiliary
         // trace file with the equivalent ELF dump, so that tests can run on Jenkins without GNU tools
         File auxname = null;
-        // if (elfname.getName().equals("cholesky_trace.txt")) {
-        // auxname = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.txt");
-        // auxname.deleteOnExit();
-        // } else {
-        // auxname = elfname;
-        // }
-
         if (elfname.getName().contains("_trace.txt")) {
             String name = elfname.getPath().replace(".\\", "").replace("\\", "/").replace("_trace", "");
             auxname = SpecsIo.resourceCopy(name);
@@ -103,6 +96,10 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
                 i.setRegisters(new RegisterDump(savedRegs));
             haveStoredInst = false;
 
+            // this is called via super.nextInstruction in other cases
+            if (i != null)
+                this.counterIncreases(i);
+
         } else {
             i = super.nextInstruction();
         }
@@ -117,10 +114,8 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
                 afterbug = tmpInst.copy();
                 haveStoredInst = true;
                 savedRegs = i.getRegisters();
+                System.out.println(afterbug.getAddress());
             }
-
-            this.numcycles += i.getLatency();
-            this.numinsts++;
 
             // TODO: temporary fix for duplicated insts
             // if (i.getRegisters().isEmpty())

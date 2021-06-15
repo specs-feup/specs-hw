@@ -7,7 +7,8 @@ public class DetectorConfiguration {
     protected int maxsize = 10; // segment size that will be looked for
     protected int maxBlocks; // max forward jumping or backward jumping links in superblocks and megablocks
     protected float superblockBranchThreshold;
-    protected long prematureStopAddr = -1;
+    protected Number prematureStopAddr = -1;
+    protected Number skipToAddr = -1;
 
     private DetectorConfiguration() {
 
@@ -37,8 +38,12 @@ public class DetectorConfiguration {
         return superblockBranchThreshold;
     }
 
-    public long getPrematureStopAddr() {
+    public Number getPrematureStopAddr() {
         return prematureStopAddr;
+    }
+
+    public Number getSkipToAddr() {
+        return skipToAddr;
     }
 
     public String configString() {
@@ -84,8 +89,13 @@ public class DetectorConfiguration {
             return this;
         }
 
-        public DetectorConfigurationBuilder withPrematureStopAddr(long addr) {
+        public DetectorConfigurationBuilder withPrematureStopAddr(Number addr) {
             this.prematureStopAddr = addr;
+            return this;
+        }
+
+        public DetectorConfigurationBuilder withSkipToAddr(Number addr) {
+            this.skipToAddr = addr;
             return this;
         }
 
@@ -98,6 +108,7 @@ public class DetectorConfiguration {
             config.maxBlocks = this.maxBlocks;
             config.superblockBranchThreshold = this.superblockBranchThreshold;
             config.prematureStopAddr = this.prematureStopAddr;
+            config.skipToAddr = this.skipToAddr;
             return config;
         }
 

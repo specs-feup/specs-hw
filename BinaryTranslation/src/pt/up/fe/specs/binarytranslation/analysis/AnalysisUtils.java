@@ -133,7 +133,7 @@ public class AnalysisUtils {
     }
     
     public static String hexToDec(String hex) {
-        return "" + Integer.decode(hex);
+        return "" + Long.valueOf(hex.replace("0x", ""), 16);
     }
     
     public static String padRight(String s, int n) {

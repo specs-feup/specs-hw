@@ -29,8 +29,15 @@ public class ContinuousStatement extends SingleStatement {
     }
 
     @Override
+    public String toContentString() {
+        return "assign";
+    }
+
+    @Override
     public String getAsString() {
-        return "assign " + this.getTarget().getAsString() + " = " + this.getExpression().getAsString() + ";";
+        return this.toContentString() + " "
+                + this.getTarget().getAsString() + " = "
+                + this.getExpression().getAsString() + ";";
     }
 
     @Override

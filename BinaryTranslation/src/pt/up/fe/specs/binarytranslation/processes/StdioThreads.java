@@ -1,8 +1,10 @@
 package pt.up.fe.specs.binarytranslation.processes;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.concurrent.TimeUnit;
 
@@ -34,9 +36,27 @@ public class StdioThreads {
 
     protected static void stdoutThread(ProcessRun run) {
 
-        var lstream = StdioThreads.newLineStream(run.getProc().getInputStream(), "proc_stdout");
+        var streamReader = new InputStreamReader(run.getProc().getInputStream());
+        var br = new BufferedReader(streamReader);
         var producer = run.getStdout().createProducer();
 
+        try {
+            while (run.getProc().isAlive()) {
+                producer.put(br.readLine()); // blocking
+            }
+            br.close();
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            // e.printStackTrace();
+
+        }
+
+        /*
+        
+        var lstream = StdioThreads.newLineStream(run.getProc().getInputStream(), "proc_stdout");
+        var producer = run.getStdout().createProducer();
+        
         // this thread will block here if "nextLine" is waiting for content
         // of if main thread has not read the concurrentchannel for the
         // previous stdout line
@@ -47,8 +67,10 @@ public class StdioThreads {
                 lstream.nextLine();
             }
         }
-
+        
         lstream.close();
+        
+         */
 
         // thread end
         return;
@@ -72,7 +94,7 @@ public class StdioThreads {
         var consumer = run.getStdin().createConsumer();
         try {
             while (run.getProc().isAlive()) {
-                bw.write(consumer.take());
+                bw.write(consumer.take()); // blocking
                 bw.newLine();
                 bw.flush();
             }
@@ -91,7 +113,8 @@ public class StdioThreads {
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            // e.printStackTrace();
+
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

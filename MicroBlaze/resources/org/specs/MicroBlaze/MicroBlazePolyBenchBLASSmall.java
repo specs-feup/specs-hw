@@ -16,8 +16,7 @@ public enum MicroBlazePolyBenchBLASSmall implements ELFProvider {
     symm("org/specs/MicroBlaze/asm/PolybenchBLAS_Small/symm.elf", 0x09b0, 0x0ae4),
     syrk("org/specs/MicroBlaze/asm/PolybenchBLAS_Small/syrk.elf", 0x09b0, 0x0a90),
     syrk2("org/specs/MicroBlaze/asm/PolybenchBLAS_Small/syrk2.elf", 0x09b0, 0x0ab4),
-    trmm("org/specs/MicroBlaze/asm/PolybenchBLAS_Small/trmm.elf", 0x09b0, 0x0ab8),
-    twomm("org/specs/MicroBlaze/asm/PolybenchBLAS_Small/2mm.elf", 0x6c4, 0x8f8);
+    trmm("org/specs/MicroBlaze/asm/PolybenchBLAS_Small/trmm.elf", 0x09b0, 0x0ab8);
 
     private String fullPath;
     private Number kernelStart;

@@ -2,19 +2,15 @@ package pt.up.fe.specs.binarytranslation.stream;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
-public abstract class ATraceInstructionStream extends AInstructionStream {
+public abstract class ATraceInstructionStream extends AInstructionStream implements TraceInstructionStream {
 
     /*
-     * Output from QEMU Execution
+     * Output from GDB + QEMU Execution
      */
     protected ATraceInstructionStream(InstructionProducer traceProducer) {
         super(traceProducer);
-    }
-
-    @Override
-    public InstructionStreamType getType() {
-        return InstructionStreamType.TRACE;
     }
 
     @Override
@@ -23,13 +19,29 @@ public abstract class ATraceInstructionStream extends AInstructionStream {
     }
 
     @Override
+    public void setCycleCounterBounds(Number startAddr, Number stopAddr) {
+        this.boundStartAddr = startAddr.longValue();
+        this.boundStopAddr = stopAddr.longValue();
+    }
+
+    @Override
     public Instruction nextInstruction() {
 
+        // testing this
+        var regs = this.getCurrentRegisters();
+
         var newinst = super.nextInstruction();
-        if (this.numinsts % 10000 == 0 && !this.isSilent()) {
-            System.out.println(this.numinsts + " instructions simulated...");
+        if (this.numBoundCycles % 10000 == 0 && !this.isSilent()) {
+            System.out.println(this.numBoundCycles + " bound cycles simulated... at addr 0x"
+                    + Long.toHexString(newinst.getAddress()));
         }
 
+        newinst.setRegisters(regs);
         return newinst;
+    }
+
+    @Override
+    public RegisterDump getCurrentRegisters() {
+        return this.getProducer().getRegisters();
     }
 }

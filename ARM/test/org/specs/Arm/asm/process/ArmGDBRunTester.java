@@ -11,7 +11,8 @@ public class ArmGDBRunTester {
 
     @Test
     public void test() {
-        var fd = BinaryTranslationUtils.getFile(ArmLivermoreELFN10.innerprod);
+        var elf = ArmLivermoreELFN10.innerprod;
+        var fd = BinaryTranslationUtils.getFile(elf);
         var app = new ArmApplication(fd);
 
         try (var gdb = new GDBRun(app)) {
@@ -37,6 +38,9 @@ public class ArmGDBRunTester {
             while ((line = gdb.getGDBResponse()) != null) {
                 System.out.println(line);
             }*/
+
+            // run until kernel start
+            gdb.runUntil(elf.getKernelStart().toString());
 
             // stepi
             for (int i = 0; i < 50; i++) {

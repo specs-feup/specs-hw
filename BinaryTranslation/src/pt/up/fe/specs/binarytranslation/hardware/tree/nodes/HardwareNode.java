@@ -24,6 +24,18 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
         return this;
     }
 
+    /*
+     * Content string should just be the text associate with this node
+     */
+    @Override
+    public String toContentString() {
+        return this.getClass().getSimpleName();
+    }
+
+    /*
+     * getAsString should emit final code, from this node to all
+     * children downwards
+     */
     public String getAsString() {
 
         var builder = new StringBuilder();
@@ -31,11 +43,6 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
             builder.append(comp.getAsString() + "\n");
         }
         return builder.toString();
-    }
-
-    @Override
-    public String toContentString() {
-        return this.getAsString();
     }
 
     /*
