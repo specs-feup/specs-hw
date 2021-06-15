@@ -309,9 +309,9 @@ public class MicroBlazeTraceAnalysisTest {
 
 	@Test
 	public void findBasicBlocks() {
-		var elf = MicroBlazeLivermoreELFN10.linrec;
+		var elf = MicroBlazeLivermoreELFN10.innerprod;
 
-		int minwindow = 11;
+		int minwindow = 7;
 		int maxwindow = 13;
 
 		for (int i = minwindow; i <= maxwindow; i++) {
@@ -343,7 +343,7 @@ public class MicroBlazeTraceAnalysisTest {
 //                MicroBlazePolyBenchBLASSmall.syrk, new Integer[] { 7, 14 },
 //                MicroBlazePolyBenchBLASSmall.syrk2, new Integer[] { 7 },
 //				  MicroBlazePolyBenchBLASSmall.trmm, new Integer[] { 12 }
-				MicroBlazeLivermoreELFN10.linrec, new Integer[] { 10 });
+				MicroBlazeLivermoreELFN10.innerprod, new Integer[] { 10 });
 		var basicBlockCSV = new StringBuilder("Benchmark,Basic Block ID,#Inst,Critical Path Size,ILP Measure\n");
 		var benchCSV = new StringBuilder("Benchmark,#BasicBlocks,#Inst Mean,#Inst STD\n");
 

@@ -46,11 +46,16 @@ public class SegmentDetectTestUtils {
     public static SegmentBundle detect(File elffile, Class<?> streamClass, Class<?> detectorClass,
             DetectorConfiguration config) {
 
-        var stream = ClassBuilders.buildStream(streamClass, elffile);
-        stream.silent(false);
-        var detector = ClassBuilders.buildDetector(detectorClass, config);
-        var bundle = detector.detectSegments(stream);
-        return bundle;
+        try {
+            var stream = ClassBuilders.buildStream(streamClass, elffile);
+            stream.silent(false);
+            var detector = ClassBuilders.buildDetector(detectorClass, config);
+            var bundle = detector.detectSegments(stream);
+            return bundle;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void printBundle(SegmentBundle bundle) {

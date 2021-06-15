@@ -7,9 +7,9 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
-import pt.up.fe.specs.binarytranslation.detection.trace.InstructionWindow;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
+import pt.up.fe.specs.binarytranslation.tracer.InstructionWindow;
 
 public abstract class ASimpleSegmentDetector extends ASegmentDetector {
 
@@ -27,11 +27,6 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
      */
     protected Boolean validSequence(InstructionWindow window) {
 
-        // FIXME: Sometimes window.getLast() is null
-        // if (window.getLast() == null) {
-        // return false;
-        // }
-
         // start and end addrs
         var sAddr = window.get(0).getAddress();
         if (sAddr < this.getConfig().getStartAddr().longValue()
@@ -47,7 +42,15 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
         if (window.getLast().getDelay() > 0)
             return false;
 
-        return true;
+        // TEMPORARY HACK: cant have only LOAD or STORE (since this is usually stack operations)
+        // and including them skews the detection results
+        for (var inst : window.getWindow()) {
+            if (!inst.isLoad() && !inst.isStore())
+                return true;
+        }
+        return false;
+
+        // return true;
     }
 
     @Override
@@ -56,10 +59,18 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
 
         var window = new InstructionWindow(this.getConfig().getMaxsize());
 
+        if (this.getConfig().getSkipToAddr().longValue() != -1)
+            istream.advanceTo(this.getConfig().getSkipToAddr().longValue());
+
+        // MODIFICATION FOR IEEE MICRO DATA GATHERING
+        istream.setCycleCounterBounds(
+                this.getConfig().getStartAddr(),
+                this.getConfig().getStopAddr());
+
         // make 1st window
         while (!window.isFull()) {
             var inst = istream.nextInstruction();
-            this.processedInsts.add(inst);
+            // this.processedInsts.add(inst);
             window.add(inst);
         }
 
@@ -86,12 +97,12 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
             // shift window by 1
             else {
                 var inst = istream.nextInstruction();
-                this.processedInsts.add(inst);
+                // this.processedInsts.add(inst);
                 window.add(inst);
             }
 
             // check for premature quit condition
-            if (window.getLast().getAddress() == this.getConfig().getPrematureStopAddr())
+            if (window.getLast().getAddress().longValue() == this.getConfig().getPrematureStopAddr().longValue())
                 break;
         }
 

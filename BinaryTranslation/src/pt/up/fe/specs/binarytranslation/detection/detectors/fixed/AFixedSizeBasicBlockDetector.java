@@ -1,8 +1,8 @@
 package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
-import pt.up.fe.specs.binarytranslation.detection.trace.InstructionWindow;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.tracer.InstructionWindow;
 
 /**
  * Basic block detector which only detects blocks of a specific size
@@ -45,7 +45,12 @@ public abstract class AFixedSizeBasicBlockDetector extends ASimpleSegmentDetecto
         if (this.getCurrentStream().getApp()
                 .getCpuArchitectureName()
                 .getResource().equals("microblaze32")) // NOTE: this is a quick hack
-            last = window.getFromLast(1);
+
+            if (window.getFromLast(1).isBackwardsJump()) // still a bug here, if a branch without delay is second to
+                                                         // last
+                last = window.getFromLast(1);
+            else
+                last = window.getLast();
         else
             last = window.getLast(); // TODO: doesn't work for microblaze due to delay slots...
 
