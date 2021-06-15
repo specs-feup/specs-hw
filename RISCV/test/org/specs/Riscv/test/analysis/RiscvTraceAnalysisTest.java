@@ -9,8 +9,8 @@ import org.specs.Riscv.RiscvLivermoreELFN100iam;
 import org.specs.Riscv.stream.RiscvDetailedTraceProvider;
 import org.specs.Riscv.stream.RiscvTraceStream;
 
-import pt.up.fe.specs.binarytranslation.analysis.InOutAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.InOutAnalyzer.InOutMode;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.InOutAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.InOutAnalyzer.InOutMode;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsIo;
