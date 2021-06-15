@@ -11,37 +11,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
-import org.specs.MicroBlaze.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.MicroBlazePolyBenchBLASSmall;
-import org.specs.MicroBlaze.MicroBlazePolyBenchMedium;
-import org.specs.MicroBlaze.MicroBlazeRosetta;
-import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.asm.MicroBlazeRegisterConventions;
 import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.BasicBlockDataflowAnalysis;
-import pt.up.fe.specs.binarytranslation.analysis.BtfPerformanceAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.InOutAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.MemoryAccessTypesAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.MemoryAddressAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.MemoryProfilerAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.StreamingAnalysis;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.BasicBlockDataFlow;
-import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
-import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateFactory;
-import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateReport;
-import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateType;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.BasicBlockDataflowAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.BtfPerformanceAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.InOutAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryAccessTypesAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryAddressAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryProfilerAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.StreamingAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.GraphTemplateReport;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -62,6 +53,16 @@ public class MicroBlazeTraceAnalysisTest {
         var prod = new MicroBlazeDetailedTraceProvider(fd);
         var stream = new MicroBlazeTraceStream(prod);
         return stream;
+    }
+    
+    private void saveAsCsv(StringBuilder sb, String filename) {
+        var csv = new File(filename + ".csv");
+        try (
+                BufferedWriter writer = new BufferedWriter(new FileWriter(csv))) {
+            writer.write(sb.toString());
+        } catch (IOException e) {
+            SpecsLogs.warn("Error message:\n", e);
+        }
     }
 
     @Test
@@ -197,7 +198,7 @@ public class MicroBlazeTraceAnalysisTest {
     public void testDumpTrace() throws FileNotFoundException {
         // var elf = MicroBlazeGccOptimizationLevels.autocor2;
         // var elf = MicroBlazeGccOptimizationLevels.dotprod2;
-        var elf = MicroBlazeGccOptimizationLevels.fir3;
+        var elf = MicroBlazePolyBenchBLASSmall.twomm;
 
         // for (var elf : MicroBlazeLivermoreELFN10.values()) {
         // if (elf == MicroBlazeLivermoreELFN10.cholesky_trace || elf == MicroBlazeLivermoreELFN10.pic2d)
@@ -239,21 +240,12 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testMemoryAccessTypes() {
-        // var elfs = Map.of(
-        // MicroBlazeLivermoreELFN10.linrec, 10,
-        // MicroBlazeLivermoreELFN10.innerprod, 10,
-        // MicroBlazeLivermoreELFN10.hydro, 14,
-        // MicroBlazeLivermoreELFN10.cholesky, 18,
-        // MicroBlazeLivermoreELFN10.tri_diag, 11,
-        // MicroBlazeLivermoreELFN10.state_frag, 31);
-        // var elfs = Map.of(
-        // MicroBlazeLivermoreELFN100.matmul100, 15);
         var elfs = Map.of(
 //                MicroBlazePolyBenchBLASSmall.gemm, new Integer[] { 8, 13 },
 //                MicroBlazePolyBenchBLASSmall.gemver, new Integer[] { 8, 10, 12, 15 },
 //                MicroBlazePolyBenchBLASSmall.gesummv, new Integer[] { 16 },
-//                MicroBlazePolyBenchBLASSmall.symm, new Integer[] { 18 }
-                MicroBlazePolyBenchBLASSmall.syrk, new Integer[] { 7, 14 }
+                MicroBlazePolyBenchBLASSmall.symm, new Integer[] { 18 }
+//                MicroBlazePolyBenchBLASSmall.syrk, new Integer[] { 7, 14 }
 //                MicroBlazePolyBenchBLASSmall.syrk2, new Integer[] { 7 },
 //                MicroBlazePolyBenchBLASSmall.trmm, new Integer[] { 12 }
                 );
@@ -273,21 +265,18 @@ public class MicroBlazeTraceAnalysisTest {
                 
                 report.setName(name);
                 allReports.add(report);
- 
-                //BUG here: not contemplating multiple BBs found in the same window
                 allGraphs.put(name + "_" + id, report.getCompositeGraph());
             }
         }
 
         // Print templates
-        var templates = GraphTemplateFactory.getAllTemplates();
-        System.out.println(templates);
+        System.out.println(GraphTemplateType.getAllTemplates());
 
         // Print graph of each BB
         for (var key : allGraphs.keySet())
             System.out.println(key + ": " + allGraphs.get(key));
 
-        // Print repot
+        // Print report
         var sb = new StringBuilder();
         sb.append("Benchmark,Basic Block ID,Memory Access ID,Memory Access Type,#Occurrences\n");
         for (var r : allReports) {
@@ -298,20 +287,13 @@ public class MicroBlazeTraceAnalysisTest {
         System.out.println("--------------------------");
 
         // Save as CSV
-        var csv = new File("patterns.csv");
-        try (
-                BufferedWriter writer = new BufferedWriter(new FileWriter(csv))) {
-            writer.write(sb.toString());
-        } catch (IOException e) {
-            SpecsLogs.warn("Error message:\n", e);
-        }
+        saveAsCsv(sb, "patterns");
     }
 
     @Test
     public void testStreaming() {
         // var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        var elf = MicroBlazeLivermoreELFN10.innerprod;
-        int window = 10;
+        var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
         // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
         // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
         // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
@@ -320,14 +302,13 @@ public class MicroBlazeTraceAnalysisTest {
 
         var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
         var stream = new MicroBlazeTraceStream(fd);
-        var analyzer = new StreamingAnalysis(stream, elf);
+        var analyzer = new StreamingAnalyzer(stream, elf);
         analyzer.analyze(window, 10);
     }
 
     @Test
     public void findBasicBlocks() {
-        // var elf = MicroBlazePolyBenchMedium.adi;
-        var elf = MicroBlazePolyBenchBLASSmall.trmm;
+        var elf = MicroBlazePolyBenchBLASSmall.twomm;
 
         int minwindow = 11;
         int maxwindow = 13;
@@ -336,7 +317,6 @@ public class MicroBlazeTraceAnalysisTest {
             var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
             var istream1 = new MicroBlazeTraceStream(fd);
             istream1.silent(true);
-            // istream1.advanceTo(elf.getKernelStart().longValue());
 
             System.out.println("Looking for segments of size: " + i);
 
@@ -351,8 +331,6 @@ public class MicroBlazeTraceAnalysisTest {
             if (result1.getSegments().size() == 0)
                 continue;
 
-            // var gbundle = GraphBundle.newInstance(result1);
-            // gbundle.generateOutput();
             SegmentDetectTestUtils.printBundle(result1);
         }
     }
@@ -360,12 +338,12 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testBasicBlockDataFlow() {
         var elfs = Map.of(
-                MicroBlazePolyBenchBLASSmall.gemm, new Integer[] { 8, 13 },
-                MicroBlazePolyBenchBLASSmall.gemver, new Integer[] { 8, 10, 12, 15 },
-                MicroBlazePolyBenchBLASSmall.gesummv, new Integer[] { 16 },
-                MicroBlazePolyBenchBLASSmall.symm, new Integer[] { 18 },
-                MicroBlazePolyBenchBLASSmall.syrk, new Integer[] { 7, 14 },
-                MicroBlazePolyBenchBLASSmall.syrk2, new Integer[] { 7 },
+//                MicroBlazePolyBenchBLASSmall.gemm, new Integer[] { 8, 13 },
+//                MicroBlazePolyBenchBLASSmall.gemver, new Integer[] { 8, 10, 12, 15 },
+//                MicroBlazePolyBenchBLASSmall.gesummv, new Integer[] { 16 },
+//                MicroBlazePolyBenchBLASSmall.symm, new Integer[] { 18 },
+//                MicroBlazePolyBenchBLASSmall.syrk, new Integer[] { 7, 14 },
+//                MicroBlazePolyBenchBLASSmall.syrk2, new Integer[] { 7 },
                 MicroBlazePolyBenchBLASSmall.trmm, new Integer[] { 12 }
         );
         var basicBlockCSV = new StringBuilder("Benchmark,Basic Block ID,#Inst,Critical Path Size,ILP Measure\n");
@@ -381,7 +359,7 @@ public class MicroBlazeTraceAnalysisTest {
             for (var i : windows) {
                 var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
                 var stream = new MicroBlazeTraceStream(fd);
-                var analyzer = new BasicBlockDataflowAnalysis(stream, elf);
+                var analyzer = new BasicBlockDataflowAnalyzer(stream, elf);
                 var resList = analyzer.analyze(i);
                 for (var res : resList) {
                     System.out.println(res.toString());
@@ -412,5 +390,9 @@ public class MicroBlazeTraceAnalysisTest {
         AnalysisUtils.printSeparator(40);
         System.out.print(benchCSV.toString());
         AnalysisUtils.printSeparator(40);
+        
+        // Save as CSV
+        saveAsCsv(benchCSV, "dataFlowBenchmark");
+        saveAsCsv(basicBlockCSV, "basicBlockFlowBenchmark");
     }
 }
