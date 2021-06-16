@@ -2,7 +2,7 @@ package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.MicroBlazePolyBenchBLAS;
+import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -69,7 +69,7 @@ public class MicroBlazeDetectorsTest {
     @Test
     public void testTraceBasicBlockDetector() {
 
-        var elf = MicroBlazePolyBenchBLAS.gemm;
+        var elf = MicroBlazePolyBenchSmallFloat.gemm;
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(12)
                 .withStartAddr(elf.getKernelStart())
