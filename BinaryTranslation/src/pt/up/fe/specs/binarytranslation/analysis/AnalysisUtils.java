@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.analysis.memory.AddressVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
@@ -45,15 +45,6 @@ public class AnalysisUtils {
             return elem;
     }
 
-    public static boolean isLoadStore(Instruction inst) {
-        var types = inst.getData().getGenericTypes();
-        var loadstores = new ArrayList<>();
-        loadstores.add(InstructionType.G_LOAD);
-        loadstores.add(InstructionType.G_STORE);
-
-        return !Collections.disjoint(types, loadstores);
-    }
-
     /**
      * Prints an instruction with the values of its registers
      * 
@@ -84,25 +75,17 @@ public class AnalysisUtils {
         System.out.println(sb.toString());
     }
 
-    public static void printSegmentWithRegisters(BinarySegment seg) {
-        SegmentContext con = seg.getContexts().get(0);
-        System.out.println(con.getContextMap());
-        for (var inst : seg.getInstructions()) {
-            printInstructionWithRegisters(inst, false);
-        }
-    }
-
-    public static String printSet(BitSet set, ArrayList<String> regs) {
-        var regsToPrint = new ArrayList<String>();
+    public static String mapBitsetToRegisters(BitSet set, ArrayList<String> regs) {
+        var registerList = new ArrayList<String>();
         for (int i = 0; i < set.length(); i++) {
             if (set.get(i)) {
-                regsToPrint.add(regs.get(i));
+                registerList.add(regs.get(i));
             }
         }
-        return "{" + String.join(",", regsToPrint) + "}";
+        return "{" + String.join(",", registerList) + "}";
     }
 
-    public static String getRegName(Operand op) {
+    public static String getRegisterName(Operand op) {
         return op.getProperties().getPrefix() + op.getStringValue();
     }
 
@@ -130,7 +113,7 @@ public class AnalysisUtils {
         for (Instruction i : insts) {
             for (Operand op : i.getData().getOperands()) {
                 if (op.isRegister()) {
-                    String reg = getRegName(op);
+                    String reg = getRegisterName(op);
                     lst.add(reg);
                 }
             }
@@ -148,38 +131,9 @@ public class AnalysisUtils {
         Collections.sort(newList, regCompare);
         return newList;
     }
-
-    public static void printInstructionList(ArrayList<Instruction> insts) {
-        for (var inst : insts) {
-            System.out.println(inst.getAddress() + ": " + inst.getRepresentation());
-        }
-    }
     
     public static String hexToDec(String hex) {
-        return "" + Integer.decode(hex);
-    }
-    
-    public static List<Instruction> getCompleteTrace(ATraceInstructionStream stream, long start, long end) {
-        var ret = new ArrayList<Instruction>();
-        Instruction inst = null;
-        //stream.advanceTo(start);
-        boolean addToList = start == 0;
-        int instN = -1;
-        
-        while ((inst = stream.nextInstruction()) != null) {
-            instN++;
-            if (inst.getAddress() == start) {
-                System.out.println("Found start at pos. " + instN);
-                addToList = true;
-            }
-            if (addToList)
-                ret.add(inst);
-            if (inst.getAddress() == end) {
-                System.out.println("Found ending at pos. " + instN);
-                return ret;
-            }
-        }
-        return ret;
+        return "" + Long.valueOf(hex.replace("0x", ""), 16);
     }
     
     public static String padRight(String s, int n) {
