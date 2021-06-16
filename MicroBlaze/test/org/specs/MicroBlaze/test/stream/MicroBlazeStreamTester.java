@@ -4,8 +4,7 @@ import java.io.File;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.MicroBlazePolyBenchBLAS;
-import org.specs.MicroBlaze.MicroBlazePolyBenchBLASSmall;
+import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -25,21 +24,21 @@ public class MicroBlazeStreamTester {
     @Test
     public void testStatic() {
         InstructionStreamTestUtils.printStream(
-                MicroBlazePolyBenchBLASSmall.gemm, MicroBlazeElfStream.class);
+                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeElfStream.class);
         // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
     }
 
     @Test
     public void testStaticRaw() {
         InstructionStreamTestUtils.rawDump(
-                MicroBlazePolyBenchBLASSmall.gemm, MicroBlazeElfStream.class);
+                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeElfStream.class);
         // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
     }
 
     @Test
     public void testTrace() {
         InstructionStreamTestUtils.printStream(
-                MicroBlazePolyBenchBLAS.gemm, MicroBlazeTraceStream.class);
+                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeTraceStream.class);
         // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeTraceStream.class);
     }
 
@@ -47,7 +46,7 @@ public class MicroBlazeStreamTester {
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
-                MicroBlazePolyBenchBLAS.gemm, MicroBlazeTraceStream.class);
+                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeTraceStream.class);
         // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeTraceStream.class);
     }
 

@@ -110,7 +110,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
                 // NOTE, doing simple elfdump.getInstruction returns a reference, and we want new objects
                 // after a call to nextInstruction() ALWAYS! Therefore, copy() must be appended
-                Instruction tmpInst = elfdump.getInstruction(i.getAddress() + this.getInstructionWidth());
+                var tmpInst = elfdump.getInstruction(i.getAddress() + this.getInstructionWidth());
                 afterbug = tmpInst.copy();
                 haveStoredInst = true;
                 savedRegs = i.getRegisters();
