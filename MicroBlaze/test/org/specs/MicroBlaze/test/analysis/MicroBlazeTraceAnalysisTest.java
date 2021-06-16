@@ -15,10 +15,7 @@ import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
-import org.specs.MicroBlaze.MicroBlazePolyBenchMedium;
 import org.specs.MicroBlaze.MicroBlazeRosetta;
-import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.asm.MicroBlazeRegisterConventions;
 import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
@@ -31,7 +28,6 @@ import pt.up.fe.specs.binarytranslation.analysis.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryAddressAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.MemoryProfilerAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.StreamingAnalysis;
-import pt.up.fe.specs.binarytranslation.analysis.dataflow.BasicBlockDataFlow;
 import pt.up.fe.specs.binarytranslation.analysis.memory.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateFactory;
 import pt.up.fe.specs.binarytranslation.analysis.memory.templates.GraphTemplateReport;
@@ -232,16 +228,16 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testMemoryAccessTypes() {
-         var elfs = Map.of(
-         MicroBlazeLivermoreELFN10.linrec, 10,
-         MicroBlazeLivermoreELFN10.innerprod, 10,
-         MicroBlazeLivermoreELFN10.hydro, 14,
-         MicroBlazeLivermoreELFN10.cholesky, 18,
-         //MicroBlazeLivermoreELFN10.hydro2d, 17,
-         MicroBlazeLivermoreELFN10.tri_diag, 11,
-         MicroBlazeLivermoreELFN10.state_frag, 31);
-//        var elfs = Map.of(
-//                MicroBlazeLivermoreELFN100.matmul100, 15);
+        var elfs = Map.of(
+                MicroBlazeLivermoreELFN10.linrec, 10,
+                MicroBlazeLivermoreELFN10.innerprod, 10,
+                MicroBlazeLivermoreELFN10.hydro, 14,
+                MicroBlazeLivermoreELFN10.cholesky, 18,
+                // MicroBlazeLivermoreELFN10.hydro2d, 17,
+                MicroBlazeLivermoreELFN10.tri_diag, 11,
+                MicroBlazeLivermoreELFN10.state_frag, 31);
+        // var elfs = Map.of(
+        // MicroBlazeLivermoreELFN100.matmul100, 15);
         var reports = new ArrayList<GraphTemplateReport>();
 
         for (var elf : elfs.keySet()) {
@@ -284,7 +280,7 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void findBasicBlocks() {
-        //var elf = MicroBlazePolyBenchMedium.adi;
+        // var elf = MicroBlazePolyBenchMedium.adi;
         var elf = MicroBlazeRosetta.facedetection;
 
         int minwindow = 4;
@@ -314,13 +310,14 @@ public class MicroBlazeTraceAnalysisTest {
             SegmentDetectTestUtils.printBundle(result1);
         }
     }
-    
+
     @Test
     public void testBasicBlockDataFlow() {
-        //var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
-        //var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
-        //var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+        // var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
+        var elf = MicroBlazeLivermoreELFN10.innerprod;
+        int window = 10;
+        // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
+        // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
         // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
         // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
         // var elf = MicroBlazeLivermoreELFN10.state_frag; int window = 31;
@@ -328,6 +325,6 @@ public class MicroBlazeTraceAnalysisTest {
         var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
         var stream = new MicroBlazeTraceStream(fd);
         var analyzer = new BasicBlockDataflowAnalysis(stream, elf);
-        analyzer.analyze(Arrays.asList(new Integer[] {window}));
+        analyzer.analyze(Arrays.asList(new Integer[] { window }));
     }
 }
