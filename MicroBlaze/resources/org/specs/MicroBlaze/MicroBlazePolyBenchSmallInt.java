@@ -21,19 +21,19 @@ public enum MicroBlazePolyBenchSmallInt implements ELFProvider {
     000005ec g     F .text  00000100 kernel_syrk
     00000668 g     F .text  00000114 kernel_gemm
      */
-    floydwarshall("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x0624, 0x06c4),
-    gemm("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x0668, 0x0778),
-    gemver("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x13f4, 0x15b0),
-    jacobi1d("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x0fa4, 0x1124),
-    lu("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x0710, 0x083c),
-    ludcmp("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x1768, 0x1960),
-    mvt("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x0650, 0x0720),
-    nussinov("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x053c, 0x0698),
-    symm("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x0678, 0x07d0),
-    syr2k("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x0634, 0x074c),
-    syrk("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x05ec, 0x0610),
-    trisolv("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x053c, 0x0610),
-    trmm("org/specs/MicroBlaze/asm/PolybenchSmallFloat/2mm.elf", 0x0614, 0x0720);
+    floydwarshall("org/specs/MicroBlaze/asm/PolybenchSmallFloat/floydwarshall.elf", 0x0624L, 0x6C4L),
+    gemm("org/specs/MicroBlaze/asm/PolybenchSmallFloat/gemm.elf", 0x0668L, 0x778L),
+    gemver("org/specs/MicroBlaze/asm/PolybenchSmallFloat/gemver.elf", 0x13f4L, 0x15B0L),
+    jacobi1d("org/specs/MicroBlaze/asm/PolybenchSmallFloat/jacobi1d.elf", 0x0fa4L, 0x1124L),
+    lu("org/specs/MicroBlaze/asm/PolybenchSmallFloat/lu.elf", 0x0710L, 0x83CL),
+    ludcmp("org/specs/MicroBlaze/asm/PolybenchSmallFloat/ludcmp.elf", 0x1768L, 0x1960L),
+    mvt("org/specs/MicroBlaze/asm/PolybenchSmallFloat/mvt.elf", 0x0650L, 0x720L),
+    nussinov("org/specs/MicroBlaze/asm/PolybenchSmallFloat/nussinov.elf", 0x053cL, 0x698L),
+    symm("org/specs/MicroBlaze/asm/PolybenchSmallFloat/symm.elf", 0x0678L, 0x7D0L),
+    syr2k("org/specs/MicroBlaze/asm/PolybenchSmallFloat/syr2k.elf", 0x0634L, 0x74CL),
+    syrk("org/specs/MicroBlaze/asm/PolybenchSmallFloat/syrk.elf", 0x05ecL, 0x6E8L),
+    trisolv("org/specs/MicroBlaze/asm/PolybenchSmallFloat/trisolv.elf", 0x053cL, 0x610L),
+    trmm("org/specs/MicroBlaze/asm/PolybenchSmallFloat/trmm.elf", 0x0614L, 0x720L);
 
     private String fullPath;
     private Number kernelStart;
