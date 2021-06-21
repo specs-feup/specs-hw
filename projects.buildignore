@@ -1,9 +1,13 @@
 #Causing build to fail, maybe due to missing files
-RISCV
 ARM
 BinaryTranslation
 BinaryTranslationLauncher
 BinaryToGraph
 GearmanSpecsHw
 MicroBlaze
+MicroBlazeSimulator
 ElfSimulator
+crisp
+InstructionSimulator
+RISCV
+TraceAnalysisSw
