@@ -1,7 +1,9 @@
 #Causing build to fail, maybe due to missing files
 RISCV
-#ARM
-#BinaryTranslation
-#GearmanSpecsHw
+ARM
+BinaryTranslation
+BinaryTranslationLauncher
+BinaryToGraph
+GearmanSpecsHw
 MicroBlaze
 ElfSimulator
