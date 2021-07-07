@@ -133,7 +133,7 @@ public enum MicroBlazePseudocode implements InstructionPseudocode {
     rsubk("RD = RB + ~RA + 1;"),
     rsubkc("RD = RB + ~RA + 1 + getCarry();"),
     cmp("RD = RB + ~RA + 1; RD[31] = signed(RA) > signed(RB);"),
-    cmpu("RD = RB + ~RA + 1; RD[31] = = unsigned(RA) > unsigned(RB);"),
+    cmpu("RD = RB + ~RA + 1; RD[31] = unsigned(RA) > unsigned(RB);"),
     mul("RD = lsw(RA * RB);"),
     mulh("RD = msw(RA * RB);"),
     // TODO implement the modifiers/functions/built-ins "lsw" and "msw"
