@@ -22,4 +22,9 @@ public abstract class AHardwareInstance implements HardwareInstance {
     public void emit(OutputStream os) {
         this.tree.emit(os);
     }
+
+    @Override
+    public HardwareTree getTree() {
+        return this.tree;
+    }
 }

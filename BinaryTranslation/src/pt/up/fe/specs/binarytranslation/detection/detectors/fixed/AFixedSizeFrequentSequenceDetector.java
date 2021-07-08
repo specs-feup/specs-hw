@@ -1,8 +1,8 @@
 package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
-import pt.up.fe.specs.binarytranslation.detection.trace.InstructionWindow;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.tracer.InstructionWindow;
 
 public abstract class AFixedSizeFrequentSequenceDetector extends ASimpleSegmentDetector {
 

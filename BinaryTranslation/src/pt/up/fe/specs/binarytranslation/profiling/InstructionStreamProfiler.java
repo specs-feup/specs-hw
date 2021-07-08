@@ -3,8 +3,7 @@ package pt.up.fe.specs.binarytranslation.profiling;
 import pt.up.fe.specs.binarytranslation.profiling.data.InstructionProfileResult;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
-public interface InstructionStreamProfiler { // extends
-                                             // InstructionStreamConsumer {
+public interface InstructionStreamProfiler {
 
     /*
      * Run the profiling over the stream

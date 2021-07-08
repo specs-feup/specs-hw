@@ -35,6 +35,11 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
 
     // TODO add if operands are permutable
 
+    // TODO: IMPORTANT
+    // add the branch target calculation function here, and pass it a regdump and instruction!
+    // then i can move the branch target calculation from the AInstructionTrace (or children)
+    // and it will be contained in the spec (e.g., easier to hand rtsd and similar insts)
+
     // SPECIAL
     mts(SPECIAL, G_OTHER),
     mtse(SPECIAL, G_OTHER),
@@ -220,7 +225,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     shi(2, 0, TYPE_B, G_STORE),
     swi(2, 0, TYPE_B, G_STORE),
 
-    unknown(1, 1, UNDEFINED, G_UNKN);
+    unknown(UNDEFINED, G_UNKN);
 
     /*
      * Instruction property fields

@@ -4,11 +4,13 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public enum RiscvResource implements ResourceProvider {
 
+    // NEW: https://stackoverflow.com/questions/55189463/how-to-debug-cross-compiled-qemu-program-with-gdb
+
     RISCV_CPU_NAME("riscv"),
 
     QEMU_RISCV_GDB_TEMPLATE("org/specs/Riscv/gdb/qemutmpl.gdb"),
     QEMU_RISCV_BAREMETAL_DTB(""),
-    QEMU_RISCV_EXE("/media/nuno/HDD/work/projects/myqemus/qemu-system-riscv32"),
+    QEMU_RISCV_EXE("qemu-system-riscv32"),
     // SIVIFE: https://www.sifive.com/blog/risc-v-qemu-part-2-the-risc-v-qemu-port-is-upstream
     // The virt machine models a Generic RISC-V Virtual machine with support for the VirtIO standard networking and
     // block storage devices. It has CLINT, PLIC, 16550A UART devices in addition to VirtIO and it also uses device-tree

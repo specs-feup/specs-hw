@@ -1,13 +1,13 @@
 package pt.up.fe.specs.binarytranslation.flow.tree;
 
-import pt.up.fe.specs.binarytranslation.utils.ATreeNode;
+import pt.up.fe.specs.util.treenode.ATreeNode;
 
 public abstract class BinaryTranslationStep extends ATreeNode<BinaryTranslationStep> {
 
     protected BinaryTranslationStepType type;
 
     public BinaryTranslationStep() {
-        super();
+        super(null);
     }
 
     public BinaryTranslationStepType getType() {
@@ -17,6 +17,17 @@ public abstract class BinaryTranslationStep extends ATreeNode<BinaryTranslationS
     @Override
     public BinaryTranslationStep getThis() {
         return this;
+    }
+
+    @Override
+    public String toContentString() {
+        return this.toString();
+    }
+
+    @Override
+    protected BinaryTranslationStep copyPrivate() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /*

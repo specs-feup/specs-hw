@@ -92,4 +92,13 @@ public class TraceInstructionProducer extends AInstructionProducer {
             return super.nextInstruction();
         }
     }
+
+    @Override
+    public void close() {
+        if ((this.prun instanceof GDBRun)) {
+            var gdb = (GDBRun) this.prun;
+            gdb.quit();
+        }
+        super.close();
+    }
 }

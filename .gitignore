@@ -183,3 +183,7 @@ MicroBlaze/resources/org/specs/MicroBlaze/asm/PolybenchSmallFloat/fdtd-2d_trace.
 MicroBlaze/resources/org/specs/MicroBlaze/asm/PolybenchSmallFloat/durbin_trace.txt
 
 MicroBlaze/resources/org/specs/MicroBlaze/asm/PolybenchSmallFloat/doitgen_trace.txt
+
+MicroBlaze/org/specs/MicroBlaze/asm/PolybenchSmallFloat/
+
+MicroBlaze/resources/org/specs/MicroBlaze/asm/LivermoreN10/innerprod_trace.txt

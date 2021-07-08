@@ -32,6 +32,11 @@ public class IfStatement extends HardwareStatement {
     }
 
     @Override
+    public String toContentString() {
+        return "if(" + this.getCondition().toContentString() + ")";
+    }
+
+    @Override
     public String getAsString() {
         var builder = new StringBuilder();
 
