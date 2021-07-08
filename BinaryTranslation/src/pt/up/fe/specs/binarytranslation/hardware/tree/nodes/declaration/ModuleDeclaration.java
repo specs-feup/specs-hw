@@ -34,6 +34,11 @@ public class ModuleDeclaration extends HardwareDeclaration {
     }
 
     @Override
+    public String toContentString() {
+        return "module " + this.moduleName;
+    }
+
+    @Override
     protected HardwareNode copyPrivate() {
         return new ModuleDeclaration(this.moduleName);
     }

@@ -3,18 +3,13 @@ package pt.up.fe.specs.binarytranslation.stream;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
 
-public abstract class AStaticInstructionStream extends AInstructionStream {
+public abstract class AStaticInstructionStream extends AInstructionStream implements StaticInstructioStream {
 
     /*
      * Output from GNU based objdump
      */
     protected AStaticInstructionStream(InstructionProducer staticProducer) {
         super(staticProducer);
-    }
-
-    @Override
-    public InstructionStreamType getType() {
-        return InstructionStreamType.STATIC_ELF;
     }
 
     @Override

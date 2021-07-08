@@ -240,7 +240,7 @@ public interface Instruction {
      * Prints addr:instruction to system output
      */
     default void printInstruction() {
-        System.out.println(getString());
+        System.out.println(toString());
     }
 
     /**
@@ -248,7 +248,7 @@ public interface Instruction {
      * @return string representation of the instruction
      */
     default String getString() {
-        return null;
+        return toString();
     }
 
     /*
@@ -301,7 +301,7 @@ public interface Instruction {
     default void makeSymbolic(Integer address, Map<String, String> regremap) {
         return;
     }
-    
+
     default RegisterDump getRegisters() {
         return null;
     }

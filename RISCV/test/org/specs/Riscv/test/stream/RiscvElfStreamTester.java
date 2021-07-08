@@ -1,8 +1,8 @@
 package org.specs.Riscv.test.stream;
 
 import org.junit.Test;
-import org.specs.Riscv.RiscvLivermoreELFN100iam;
 import org.specs.Riscv.RiscvLivermoreELFN100iamf;
+import org.specs.Riscv.RiscvPolyBenchSmallInt;
 import org.specs.Riscv.stream.RiscvElfStream;
 import org.specs.Riscv.stream.RiscvTraceStream;
 
@@ -19,20 +19,22 @@ public class RiscvElfStreamTester {
     @Test
     public void testStaticRaw() {
         InstructionStreamTestUtils.rawDump(
-                RiscvLivermoreELFN100iam.innerprod100, RiscvElfStream.class);
+                RiscvLivermoreELFN100iamf.innerprod100, RiscvElfStream.class);
     }
 
     @Test
     public void testTrace() {
         InstructionStreamTestUtils.printStream(
-                RiscvLivermoreELFN100iam.innerprod100, RiscvTraceStream.class);
+                RiscvPolyBenchSmallInt.gemm, RiscvTraceStream.class);
+        // RiscvLivermoreELFN100iam.innerprod100, RiscvTraceStream.class);
         // RiscvLivermoreELFN100iamf.innerprod100.getResource(), RiscvTraceStream.class);
     }
 
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
-                RiscvLivermoreELFN100iam.innerprod100, RiscvTraceStream.class);
+                RiscvPolyBenchSmallInt.gemm, RiscvTraceStream.class);
+        // RiscvLivermoreELFN100iamf.cholesky100, RiscvTraceStream.class);
     }
 
 }

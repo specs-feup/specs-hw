@@ -13,6 +13,10 @@ public class MicroBlazeSingleInstructionModuleGeneratorTester {
         var addi = MicroBlazeInstruction.newInstance("248", "20c065e8");
         var singleUnitBuilder = new SingleInstructionModuleGenerator();
         var unit = singleUnitBuilder.generateHarware(addi);
-        unit.emit(System.out);
+        // unit.emit(System.out);
+
+        // new dotty generation test
+        // var dottygen = new DottyGenerator<HardwareNode>();
+        // dottygen.generateDotty(unit.getTree().getRoot());
     }
 }

@@ -15,6 +15,19 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
     @Expose
     protected long numcycles;
 
+    // TODO: add support for non continguous bounds (i.e., list)
+    @Expose
+    protected long boundStartAddr = -1;
+
+    @Expose
+    protected long boundStopAddr = -1;
+
+    @Expose
+    protected long numBoundCycles = 0;
+
+    @Expose
+    protected long numBoundInsts = 0;
+
     /*
      * This type of stream contains its own producer internally
      */
@@ -65,18 +78,27 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
         return this.producer.nextInstruction();
     }
 
+    protected void counterIncreases(Instruction inst) {
+
+        this.numcycles += inst.getLatency();
+        this.numinsts++;
+
+        var instaddr = inst.getAddress().longValue();
+        if (this.boundStartAddr != -1 && this.boundStopAddr != -1) {
+            if (instaddr >= this.boundStartAddr && instaddr <= this.boundStopAddr) {
+                this.numBoundCycles += inst.getLatency();
+                this.numBoundInsts++;
+            }
+        }
+    }
+
     @Override
     public Instruction nextInstruction() {
         var inst = this.next();
         if (inst == null)
             return null;
 
-        this.numcycles += inst.getLatency();
-        this.numinsts++;
-
-        // if (this.dumpStream)
-        // System.out.println(inst.getRepresentation());
-
+        this.counterIncreases(inst);
         return inst;
     }
 

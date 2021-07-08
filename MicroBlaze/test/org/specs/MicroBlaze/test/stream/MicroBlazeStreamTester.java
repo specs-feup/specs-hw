@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -23,26 +24,30 @@ public class MicroBlazeStreamTester {
     @Test
     public void testStatic() {
         InstructionStreamTestUtils.printStream(
-                MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
+                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeElfStream.class);
+        // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
     }
 
     @Test
     public void testStaticRaw() {
         InstructionStreamTestUtils.rawDump(
-                MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
+                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeElfStream.class);
+        // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
     }
 
     @Test
     public void testTrace() {
         InstructionStreamTestUtils.printStream(
-                MicroBlazeLivermoreELFN10.innerprod, MicroBlazeTraceStream.class);
+                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeTraceStream.class);
+        // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeTraceStream.class);
     }
 
     // TODO: rawDump now doesnt work if the qemu template doesnt include the loop...
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
-                MicroBlazeLivermoreELFN10.innerprod, MicroBlazeTraceStream.class);
+                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeTraceStream.class);
+        // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeTraceStream.class);
     }
 
     @Test

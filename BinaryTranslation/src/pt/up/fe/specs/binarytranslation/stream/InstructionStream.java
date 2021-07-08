@@ -28,19 +28,6 @@ public interface InstructionStream extends ObjectStream<Instruction> {
 
     /**
      * 
-     */
-    // public Instruction nextInstruction(Predicate);
-
-    /**
-     * Advance the stream to a given address, returning true if the underlying @InstructionProducer supports this
-     * feature
-     */
-    default boolean advanceTo(long addr) {
-        return false;
-    }
-
-    /**
-     * 
      * @return the next instruction of the stream, or null if there are no more instructions in the stream
      */
     public Instruction nextInstruction();
@@ -88,5 +75,24 @@ public interface InstructionStream extends ObjectStream<Instruction> {
      */
     default long getCycles() {
         return 0;
+    }
+
+    /**
+     * Advance the stream to a given address, returning true if the underlying @InstructionProducer supports this
+     * feature
+     */
+    default boolean advanceTo(long addr) {
+        return false;
+    }
+
+    /**
+     * NOTE: added on detached HEAD state at commit 6016995, for IEEE Micro 2021 data gathering (should be fast
+     * forwarded to master)
+     * 
+     * @param startAddr
+     * @param stopAddr
+     */
+    default void setCycleCounterBounds(Number startAddr, Number stopAddr) {
+        return;
     }
 }
