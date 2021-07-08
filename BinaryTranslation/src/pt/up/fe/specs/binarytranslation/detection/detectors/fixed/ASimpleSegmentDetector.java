@@ -98,8 +98,4 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
         // Remove all sequences which only happen once
         super.removeUnique(addrs, hashed);
     }
-
-    public List<Instruction> getProcessedInsts() {
-        return processedInsts;
-    }
 }

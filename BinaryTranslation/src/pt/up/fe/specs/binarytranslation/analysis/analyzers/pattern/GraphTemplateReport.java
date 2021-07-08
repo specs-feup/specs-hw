@@ -67,7 +67,7 @@ public class GraphTemplateReport {
         for (int i = 0; i < graphs.size(); i++) {
             
             sb.append(name).append(",").append(basicBlockIDs.get(i)).append(",").append(ids.get(i)).append(",").append(types.get(i))
-                    .append(",").append(occurrences.get(i))
+                    .append(",").append(occurrences.get(i)).append(",").append(GraphUtils.generateGraphURL(graphs.get(i)))
                     .append("\n");
         }
         return sb.toString();

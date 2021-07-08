@@ -15,25 +15,23 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShif
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
-public class MemoryAddressDetector extends APropertyDetector {
-    public MemoryAddressDetector(BinarySegment bb, List<Instruction> insts) {
-        super(bb, insts);
-    }
+public class MemoryAddressDetector {
+    private List<Instruction> basicBlock;
 
-    public void printOccurrenceRegisters() {
-        for (var o : getTracker().getOccurrences()) {
-            var regs = o.getRegisters();
-            regs.prettyPrint();
-            AnalysisUtils.printSeparator(40);
-        }
+    public MemoryAddressDetector(BinarySegment bb) {
+        this.basicBlock = bb.getInstructions();
+    }
+    
+    public MemoryAddressDetector(List<Instruction> bb) {
+        this.basicBlock = bb;
     }
 
     public ArrayList<Graph<BtfVertex, DefaultEdge>> detectGraphs() {
         var out = new ArrayList<Graph<BtfVertex, DefaultEdge>>();
 
-        for (var i : getTracker().getBasicBlock().getInstructions()) {
+        for (var i : basicBlock) {
             if (i.isMemory()) {
-                var addrGraph = new AddressGraph(getTracker().getBasicBlock().getInstructions(), i);
+                var addrGraph = new AddressGraph(basicBlock, i);
                 out.add(addrGraph);
             }
         }

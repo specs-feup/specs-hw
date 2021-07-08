@@ -30,15 +30,15 @@ public class InOutAnalyzer extends ABasicBlockAnalyzer {
         
         List<BinarySegment> bbs = AnalysisUtils.getSegments(stream, det);
         
-        if (mode == InOutMode.TRACE) {
-            List<Instruction> insts = det.getProcessedInsts();
-            System.out.println(insts.size() + " instructions detected");
-            TraceInOuts inouts = new TraceInOuts(insts, bbs);
-            inouts.calculateInOuts();
-            
-            inouts.printUseDefRegisters();
-            inouts.printSequenceInOuts();
-        }
+//        if (mode == InOutMode.TRACE) {
+//            List<Instruction> insts = det.getProcessedInsts();
+//            System.out.println(insts.size() + " instructions detected");
+//            TraceInOuts inouts = new TraceInOuts(insts, bbs);
+//            inouts.calculateInOuts();
+//            
+//            inouts.printUseDefRegisters();
+//            inouts.printSequenceInOuts();
+//        }
         if (mode == InOutMode.BASIC_BLOCK) {
             for (BinarySegment bb : bbs) {
                 BasicBlockInOuts inouts = new BasicBlockInOuts(bb);
@@ -62,8 +62,8 @@ public class InOutAnalyzer extends ABasicBlockAnalyzer {
                 System.out.println("Running elimination analysis for detected Basic Block");
                 bb.printSegment();
                 System.out.println("");
-                var elim = new OutElimination(bb, det.getProcessedInsts());
-                elim.eliminate(15);
+//                var elim = new OutElimination(bb, det.getProcessedInsts());
+//                elim.eliminate(15);
             }
         }
     }

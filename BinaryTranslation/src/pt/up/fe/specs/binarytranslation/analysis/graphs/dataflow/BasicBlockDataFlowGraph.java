@@ -22,17 +22,32 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 public class BasicBlockDataFlowGraph extends ASegmentDataFlowGraph {
     private static final long serialVersionUID = -4935282237892925083L;
 
-    public BasicBlockDataFlowGraph(BasicBlockOccurrenceTracker tracker) {
-        super(getTransformedBasicBlock(tracker));
+    public BasicBlockDataFlowGraph(List<Instruction> segment, int repetitions) {
+        super(getTransformedBasicBlock(segment, repetitions));
+    }
+    
+    public BasicBlockDataFlowGraph(List<Instruction> segment) {
+        this(segment, 1);
     }
 
-    private static List<Instruction> getTransformedBasicBlock(BasicBlockOccurrenceTracker tracker) {
+    private static List<Instruction> getTransformedBasicBlock(List<Instruction> oldBB, int repetitions) {
         var<Instruction> newBB = new ArrayList<Instruction>();
-        var<Instruction> oldBB = tracker.getBasicBlock().getInstructions();
         var size = oldBB.size();
 
         newBB.add(oldBB.get(size - 1));
         newBB.addAll(oldBB.subList(0, size - 1));
-        return newBB;
+        
+        var finalBB = new ArrayList<Instruction>();
+        for (int i = 0; i < repetitions; i++) {
+            finalBB.addAll(newBB);
+        }
+        
+        System.out.println("Transformed BB:");
+        for (var i : newBB)
+            System.out.println(i.getRepresentation());
+        System.out.println("-------------------");
+        
+        
+        return finalBB;
     }
 }

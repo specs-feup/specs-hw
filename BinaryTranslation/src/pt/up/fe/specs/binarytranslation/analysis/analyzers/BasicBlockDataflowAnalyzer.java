@@ -19,32 +19,47 @@ import java.util.List;
 import org.specs.BinaryTranslation.ELFProvider;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowCriticalPath;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.DataFlowCriticalPath;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
-
     public BasicBlockDataflowAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
         super(stream, elf);
     }
 
-    public List<DataFlowStatistics> analyze(int window) {
-        var res = new ArrayList<DataFlowStatistics>();
+    public List<DataFlowStatistics> analyzeWithDetector(int window, int repetitions) {
+
         var det = buildDetector(window);
         List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
-        List<Instruction> insts = det.getProcessedInsts();
-
+        List<List<Instruction>> segments = new ArrayList<>();
+        if (segs == null) {
+            System.out.println("No basic blocks found! Aborting...");
+            return new ArrayList<DataFlowStatistics>();
+        }
         for (var bb : segs) {
+            segments.add(bb.getInstructions());
+        }
+        return analyze(segments, repetitions);
+    }
 
-            var tracker = new BasicBlockOccurrenceTracker(bb, insts);
-            var dfg = new BasicBlockDataFlowGraph(tracker);
+    public List<DataFlowStatistics> analyzeWithStaticBlock(List<Instruction> segment, int repetitions) {
+        var arr = new ArrayList<List<Instruction>>();
+        arr.add(segment);
+        return analyze(arr, repetitions);
+    }
+
+    private List<DataFlowStatistics> analyze(List<List<Instruction>> segments, int repetitions) {
+        var res = new ArrayList<DataFlowStatistics>();
+        for (var bb : segments) {
+
+            var dfg = new BasicBlockDataFlowGraph(bb, repetitions);
 
             var pathfinder = new DataFlowCriticalPath(dfg);
             var path = pathfinder.calculatePath();
@@ -59,7 +74,7 @@ public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
                 if (v.getType() == BtfVertexType.REGISTER)
                     sources.add(v.getLabel());
             }
-            var stats = new DataFlowStatistics(dfg, path, bb.getInstructions(), sources, sinks);
+            var stats = new DataFlowStatistics(dfg, path, bb, repetitions, sources, sinks);
             res.add(stats);
         }
         return res;
