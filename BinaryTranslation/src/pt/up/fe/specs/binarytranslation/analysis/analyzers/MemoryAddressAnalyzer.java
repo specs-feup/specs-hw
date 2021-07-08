@@ -41,11 +41,8 @@ public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
     public void analyze(int window) {
         var det = buildDetector(window);
         List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
-        List<Instruction> insts = det.getProcessedInsts();
-
+        
         for (var bb : segs) {
-            var tracker = new BasicBlockOccurrenceTracker(bb, insts);
-
             // Print BB instructions
             handleBasicBlockSummary(bb);
 
@@ -53,19 +50,19 @@ public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
             var inouts = handleInOuts(bb);
 
             // Prologue dependencies
-            var prologueDeps = handlePrologueDependencies(tracker);
+            //var prologueDeps = handlePrologueDependencies(tracker);
 
             // Memory graphs
-            var graphs = handleMemoryGraphs(insts, bb);
+            var graphs = handleMemoryGraphs(bb);
 
             // Clean up memory graphs
             cleanUpGraphs(graphs);
 
             // Induction variables
-            var indVars = handleInductionVariables(tracker, graphs);
+            var indVars = handleInductionVariables(bb, graphs);
 
             // Check alias for every RAW dependency
-            handleMemoryComparison(prologueDeps, graphs, indVars, inouts);
+            //handleMemoryComparison(prologueDeps, graphs, indVars, inouts);
         }
     }
 
@@ -118,9 +115,9 @@ public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
         }
     }
 
-    private ArrayList<Graph<BtfVertex, DefaultEdge>> handleMemoryGraphs(List<Instruction> insts, BinarySegment bb) {
+    private ArrayList<Graph<BtfVertex, DefaultEdge>> handleMemoryGraphs(BinarySegment bb) {
         System.out.println("\nCalculating memory address graphs...");
-        var mad = new MemoryAddressDetector(bb, insts);
+        var mad = new MemoryAddressDetector(bb);
         var graphs = mad.detectGraphs();
 
         printExpressions(graphs);
@@ -143,10 +140,10 @@ public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
         return prologueDeps;
     }
 
-    private HashMap<String, Integer> handleInductionVariables(BasicBlockOccurrenceTracker tracker,
+    private HashMap<String, Integer> handleInductionVariables(BinarySegment bb,
             ArrayList<Graph<BtfVertex, DefaultEdge>> graphs) {
         System.out.println("\nCalculating induction variables...");
-        var ivd = new InductionVariablesDetector(tracker);
+        var ivd = new InductionVariablesDetector(bb);
         var indVars = ivd.detectVariables(graphs, false);
 
         System.out.println("Detected the following induction variable(s) and stride(s):");

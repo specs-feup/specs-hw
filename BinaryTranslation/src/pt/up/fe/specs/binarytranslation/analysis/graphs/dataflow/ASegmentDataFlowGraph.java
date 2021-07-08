@@ -23,16 +23,23 @@ import org.jgrapht.graph.SimpleDirectedGraph;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.pseudocode.PseudoInstructionGraph;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
+import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionASTGenerator;
+import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
 
 public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge> {
     private static final long serialVersionUID = 4454283993649695154L;
     protected Map<String, BtfVertex> vertexCache = new HashMap<String, BtfVertex>();
     protected List<Instruction> segment;
+    protected boolean hasTempValue = false;
+    protected String tempValue = "";
 
     public ASegmentDataFlowGraph(List<Instruction> segment) {
         super(DefaultEdge.class);
@@ -42,6 +49,12 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<BtfVerte
 
     private void buildDFG() {
         for (var i : segment) {
+            if (i.getData().getOperands().size() == 1) {
+                hasTempValue = true;
+                var hex = i.getData().getOperands().get(0).getRepresentation();
+                tempValue = hex.replace("0x", "");
+                continue;
+            }
             var op1 = i.getData().getOperands().get(0);
             var op2 = i.getData().getOperands().get(1);
             var op3 = i.getData().getOperands().size() == 3 ? i.getData().getOperands().get(2) : null;
@@ -102,6 +115,8 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<BtfVerte
         var opSymbol = i.getName();
         var opVertex = new BtfVertex(AnalysisUtils.mapInstructionsToSymbol(opSymbol),
                 BtfVertexType.OPERATION);
+        opVertex.setLatency(i.getLatency());
+        
         addVertex(opVertex);
         addEdge(rAvert, opVertex);
         addEdge(rBvert, opVertex);
@@ -115,6 +130,8 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<BtfVerte
         rDvert = addVertex(rDvert, i.isLoad());
 
         var memVert = new BtfVertex(i.isLoad() ? "Load" : "Store", BtfVertexType.MEMORY);
+        memVert.setLatency(i.getLatency());
+        
         addVertex(memVert);
         addEdge(rAvert, memVert);
         addEdge(rBvert, memVert);
@@ -139,10 +156,15 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<BtfVerte
                     return v;
                 }
             }
-        } else {
-            addVertex(v);
-            return v;
+        } 
+        if (v.getType() == BtfVertexType.IMMEDIATE){
+            if (hasTempValue) {
+                v.setLabel(v.getLabel() + tempValue);
+                hasTempValue = false;
+            }
         }
+        addVertex(v);
+        return v;
     }
 
     private BtfVertexType opType(Operand op) {

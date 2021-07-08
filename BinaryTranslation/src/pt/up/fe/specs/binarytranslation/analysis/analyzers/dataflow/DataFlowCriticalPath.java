@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.ASegmentDataFlowGraph;
 
 public class DataFlowCriticalPath {
     private ASegmentDataFlowGraph graph;
@@ -66,7 +67,7 @@ public class DataFlowCriticalPath {
         
         for (var v : pathList) {
             if (v.getType() == BtfVertexType.OPERATION)
-                cnt++;
+                cnt += v.getLatency();
         }
         return cnt;
     }

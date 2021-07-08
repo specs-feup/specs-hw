@@ -1,5 +1,9 @@
 package pt.up.fe.specs.binarytranslation.analysis;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
@@ -20,6 +24,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
+import pt.up.fe.specs.util.SpecsLogs;
 
 public class AnalysisUtils {
     private static HashMap<String, String> enumToSymbol;
@@ -133,10 +138,19 @@ public class AnalysisUtils {
     }
     
     public static String hexToDec(String hex) {
-        return "" + Integer.decode(hex);
+        return "" + Long.decode(hex);
     }
     
     public static String padRight(String s, int n) {
         return String.format("%-" + n + "s", s);  
    }
+    
+    public static void saveAsCsv(StringBuilder sb, String filename) {
+        var csv = new File(filename + ".csv");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(csv))) {
+            writer.write(sb.toString());
+        } catch (IOException e) {
+            SpecsLogs.warn("Error message:\n", e);
+        }
+    }
 }

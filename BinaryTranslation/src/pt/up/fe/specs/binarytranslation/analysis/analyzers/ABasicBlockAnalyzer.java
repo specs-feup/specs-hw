@@ -17,16 +17,16 @@ public abstract class ABasicBlockAnalyzer {
 
     protected TraceBasicBlockDetector buildDetector(int window) {
         stream.silent(false);
-        if (elf.getKernelStart() != null)
-            stream.advanceTo(elf.getKernelStart().longValue());
+//        if (elf.getKernelStart() != null)
+//            stream.advanceTo(elf.getKernelStart().longValue());
         
         System.out.println("Building detector for window size " + window);
 
         var detector = new TraceBasicBlockDetector(
                 elf.getKernelStart() != null ? new DetectorConfigurationBuilder()
                         .withMaxWindow(window)
-                        .withStartAddr(elf.getKernelStart())
-                        .withStopAddr(elf.getKernelStop())
+                        //.withStartAddr(elf.getKernelStart())
+                        //.withStopAddr(elf.getKernelStop())
                         .build()
                         : new DetectorConfigurationBuilder()
                                 .withMaxWindow(window)

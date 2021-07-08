@@ -44,13 +44,12 @@ public class MemoryAccessTypesAnalyzer extends ABasicBlockAnalyzer {
     public GraphTemplateReport analyzeSegment(int window) {
         var det = buildDetector(window);
         List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
-        List<Instruction> insts = det.getProcessedInsts();
         
         var title = elf.getFilename();
         var report = new GraphTemplateReport(title);
         
         for (var bb : segs) {
-            var mad = new MemoryAddressDetector(bb, insts);
+            var mad = new MemoryAddressDetector(bb);
             var graphs = mad.detectGraphs();
             var storeCnt = 0;
             var loadCnt = 0;

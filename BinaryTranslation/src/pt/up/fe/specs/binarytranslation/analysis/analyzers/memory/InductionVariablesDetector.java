@@ -16,15 +16,18 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
-public class InductionVariablesDetector extends APropertyDetector {
+public class InductionVariablesDetector {
 
-    public InductionVariablesDetector(BinarySegment bb, List<Instruction> insts) {
-        super(bb, insts);
+    private List<Instruction> basicBlock;
+
+    public InductionVariablesDetector(List<Instruction> bb) {
+        this.basicBlock = bb;
+    }
+    
+    public InductionVariablesDetector(BinarySegment bb) {
+        this.basicBlock = bb.getInstructions();
     }
 
-    public InductionVariablesDetector(BasicBlockOccurrenceTracker tracker) {
-        super(tracker);
-    }
 
     public HashMap<String, Long> registerDiff(RegisterDump r1, RegisterDump r2) {
         var diff = new HashMap<String, Long>();
@@ -37,57 +40,57 @@ public class InductionVariablesDetector extends APropertyDetector {
         return diff;
     }
 
-    public void printDifferences() {
-        var keys = getTracker().getOccurrences().get(0).getRegisters().getRegisterMap().keySet();
-        var diffs = new ArrayList<HashMap<String, Long>>();
-        for (int i = 0; i < getTracker().getOccurrences().size() - 1; i++) {
-            var b1 = getTracker().getOccurrences().get(i).getRegisters();
-            var b2 = getTracker().getOccurrences().get(i + 1).getRegisters();
-            var bd = registerDiff(b1, b2);
-            diffs.add(bd);
-        }
+//    public void printDifferences() {
+//        var keys = getTracker().getOccurrences().get(0).getRegisters().getRegisterMap().keySet();
+//        var diffs = new ArrayList<HashMap<String, Long>>();
+//        for (int i = 0; i < getTracker().getOccurrences().size() - 1; i++) {
+//            var b1 = getTracker().getOccurrences().get(i).getRegisters();
+//            var b2 = getTracker().getOccurrences().get(i + 1).getRegisters();
+//            var bd = registerDiff(b1, b2);
+//            diffs.add(bd);
+//        }
+//
+//        var sb = new StringBuilder();
+//        for (var k : keys) {
+//            boolean isZero = true;
+//            for (var diff : diffs) {
+//                if (diff.get(k) != 0)
+//                    isZero = false;
+//            }
+//            if (!isZero) {
+//                sb.append(k).append(": ");
+//                for (var diff : diffs) {
+//                    sb.append(diff.get(k)).append("| ");
+//                }
+//                sb.append("\n");
+//            }
+//
+//        }
+//        System.out.println(sb.toString());
+//    }
 
-        var sb = new StringBuilder();
-        for (var k : keys) {
-            boolean isZero = true;
-            for (var diff : diffs) {
-                if (diff.get(k) != 0)
-                    isZero = false;
-            }
-            if (!isZero) {
-                sb.append(k).append(": ");
-                for (var diff : diffs) {
-                    sb.append(diff.get(k)).append("| ");
-                }
-                sb.append("\n");
-            }
-
-        }
-        System.out.println(sb.toString());
-    }
-
-    public void printInstDifferences() {
-        var rows = getTracker().getBasicBlock().getInstructions().size();
-        var cols = getTracker().getOccurrences().size();
-        String[][] regs = new String[rows][cols];
-        for (int col = 0; col < getTracker().getOccurrences().size(); col++) {
-            var bb = getTracker().getOccurrences().get(col);
-            for (int row = 0; row < bb.getInsts().size(); row++) {
-                var inst = bb.getInsts().get(row);
-                String regInfo = getRelevantRegs(inst);
-                regs[row][col] = regInfo;
-            }
-        }
-
-        var sb = new StringBuilder();
-        for (int i = 0; i < regs.length; i++) {
-            for (int j = 0; j < regs[i].length; j++) {
-                sb.append(regs[i][j]).append("| ");
-            }
-            sb.append("\n");
-        }
-        System.out.println(sb.toString());
-    }
+//    public void printInstDifferences() {
+//        var rows = getTracker().getBasicBlock().getInstructions().size();
+//        var cols = getTracker().getOccurrences().size();
+//        String[][] regs = new String[rows][cols];
+//        for (int col = 0; col < getTracker().getOccurrences().size(); col++) {
+//            var bb = getTracker().getOccurrences().get(col);
+//            for (int row = 0; row < bb.getInsts().size(); row++) {
+//                var inst = bb.getInsts().get(row);
+//                String regInfo = getRelevantRegs(inst);
+//                regs[row][col] = regInfo;
+//            }
+//        }
+//
+//        var sb = new StringBuilder();
+//        for (int i = 0; i < regs.length; i++) {
+//            for (int j = 0; j < regs[i].length; j++) {
+//                sb.append(regs[i][j]).append("| ");
+//            }
+//            sb.append("\n");
+//        }
+//        System.out.println(sb.toString());
+//    }
 
     private String getRelevantRegs(Instruction inst) {
         StringBuilder sb = new StringBuilder();
@@ -104,7 +107,7 @@ public class InductionVariablesDetector extends APropertyDetector {
     public HashMap<String, Integer> detectVariables(ArrayList<Graph<BtfVertex, DefaultEdge>> graphs,
             boolean verbose) {
         var res = new HashMap<String, Integer>();
-        var regs = getTracker().getRegisters();
+        var regs = AnalysisUtils.findAllRegistersOfSeq(basicBlock);
         String[][] fullRes = new String[regs.size()][4];
 
         for (int i = 0; i < regs.size(); i++) {
@@ -158,7 +161,7 @@ public class InductionVariablesDetector extends APropertyDetector {
     private HashMap<String, Integer> findIncrements() {
         var map = new HashMap<String, Integer>();
 
-        for (var inst : getTracker().getBasicBlockInsts()) {
+        for (var inst : basicBlock) {
             if (inst.isAdd() || inst.isSub() || inst.isMul()) {
                 if (inst.getData().getOperands().size() == 3) {
 
@@ -181,7 +184,7 @@ public class InductionVariablesDetector extends APropertyDetector {
     }
 
     private boolean conditionIsInComparison(String reg) {
-        for (var inst : getTracker().getBasicBlockInsts()) {
+        for (var inst : basicBlock) {
             if (inst.getData().getGenericTypes().contains(InstructionType.G_CMP)) {
                 for (var op : inst.getData().getOperands()) {
                     if (op.isRegister()) {

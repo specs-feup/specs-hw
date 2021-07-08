@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +24,7 @@ import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.ASegmentDataFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class DataFlowStatistics {
@@ -34,24 +35,28 @@ public class DataFlowStatistics {
     private List<String> sinks;
     private double ilp;
     private int pathSize = 0;
+    private int repetitions;
 
     public DataFlowStatistics(ASegmentDataFlowGraph graph, Graph<BtfVertex, DefaultEdge> path,
-            List<Instruction> insts, List<String> sources, List<String> sinks) {
+            List<Instruction> insts, int repetitions, List<String> sources, List<String> sinks) {
         this.graph = graph;
         this.path = path;
         this.insts = insts;
         this.sources = sources;
         this.sinks = sinks;
+        this.repetitions = repetitions;
         
         for (var v : path.vertexSet()) {
-            if (v.getType() == BtfVertexType.OPERATION || v.getType() == BtfVertexType.MEMORY)
-                this.pathSize++;
+            //if (v.getType() == BtfVertexType.OPERATION || v.getType() == BtfVertexType.MEMORY)
+            //    this.pathSize++;
+            this.pathSize += v.getLatency();
         }
         
         double cnt = 0;
         for (var v : graph.vertexSet()) {
-            if (v.getType() == BtfVertexType.OPERATION || v.getType() == BtfVertexType.MEMORY)
-                cnt++;
+            //if (v.getType() == BtfVertexType.OPERATION || v.getType() == BtfVertexType.MEMORY)
+            //    cnt++;
+            cnt += v.getLatency();
         }
         this.ilp = cnt / (double) pathSize;
         
@@ -67,7 +72,8 @@ public class DataFlowStatistics {
                 .append(pathSize)
                 .append("\\l")
                 .append("Number of inst.: ")
-                .append(insts.size())
+                .append(insts.size() * repetitions)
+                .append(" (Basic Block with " + insts.size() + " instructions repeated " + repetitions + " times)")
                 .append("\\l")
                 .append("Sources: ")
                 .append(sources.toString())
@@ -152,5 +158,15 @@ public class DataFlowStatistics {
 
     public double getILP() {
         return ilp;
+    }
+
+
+    public int getRepetitions() {
+        return repetitions;
+    }
+
+
+    public void setRepetitions(int repetitions) {
+        this.repetitions = repetitions;
     }
 }

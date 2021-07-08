@@ -42,12 +42,11 @@ public class StreamingAnalyzer extends ABasicBlockAnalyzer {
     public void analyze(int window, int iter) {
         var det = buildDetector(window);
         List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
-        List<Instruction> insts = det.getProcessedInsts();
 
         for (var bb : segs) {
-            var mad = new MemoryAddressDetector(bb, insts);
+            var mad = new MemoryAddressDetector(bb);
             var graphs = mad.detectGraphs();
-            var ivd = new InductionVariablesDetector(mad.getTracker());
+            var ivd = new InductionVariablesDetector(bb);
             var indVars = ivd.detectVariables(graphs, false);
             
             for (var graph : graphs) {

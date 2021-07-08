@@ -31,6 +31,7 @@ public class BtfVertex {
     private BtfVertexProperty property = BtfVertexProperty.NULL;
     private BtfVertexIsaInfo isaInfo = BtfVertexIsaInfo.NULL;
     private String color = "black";
+    private int latency = 0;
     public static BtfVertex nullVertex = new BtfVertex("", BtfVertexType.NULL);
     
     public BtfVertex(String label, BtfVertexType type) {
@@ -94,5 +95,13 @@ public class BtfVertex {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public int getLatency() {
+        return latency;
+    }
+
+    public void setLatency(int latency) {
+        this.latency = latency;
     }
 }

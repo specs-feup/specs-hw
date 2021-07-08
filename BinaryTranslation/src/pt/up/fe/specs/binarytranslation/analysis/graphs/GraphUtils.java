@@ -121,7 +121,7 @@ public class GraphUtils {
             if (v.getProperty() != BtfVertexProperty.NULL)
                 label += "\n{" + v.getProperty() + "}";
 
-            map.put("label", DefaultAttribute.createAttribute(label));
+            map.put("label", DefaultAttribute.createAttribute(label + " \\[" + v.getLatency() + "\\]"));
             map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
             map.put("color", DefaultAttribute.createAttribute(v.getColor()));
             map.put("penwidth", DefaultAttribute.createAttribute("2.5"));
@@ -251,7 +251,7 @@ public class GraphUtils {
     }
 
     public static String generateGraphURL(Graph<BtfVertex, DefaultEdge> graph) {
-        return GraphUtils.generateGraphURL(graph, "Graph");
+        return GraphUtils.generateGraphURL(graph, "\"Graph\"");
     }
 
     public static void openGraphInBrowser(String dotGraph) {
