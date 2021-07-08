@@ -19,6 +19,8 @@ import org.specs.Riscv.parsing.RiscvAsmFieldData;
 import org.specs.Riscv.parsing.RiscvAsmFieldType;
 import org.specs.Riscv.parsing.RiscvIsaParser;
 
+import com.google.common.base.Enums;
+
 import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
@@ -104,7 +106,10 @@ public class RiscvInstruction extends AInstruction {
 
     @Override
     public InstructionPseudocode getPseudocode() {
-        // TODO Auto-generated method stub
-        return null;
+        var pseudocode = Enums.getIfPresent(RiscvPseudocode.class, this.props.getEnumName());
+        if (pseudocode.isPresent())
+            return pseudocode.get();
+        else
+            return RiscvPseudocode.getDefault();
     }
 }
