@@ -36,6 +36,7 @@ public class DataFlowStatistics {
     private double ilp;
     private int pathSize = 0;
     private int repetitions;
+    private String pairs = "";
 
     public DataFlowStatistics(ASegmentDataFlowGraph graph, Graph<BtfVertex, DefaultEdge> path,
             List<Instruction> insts, int repetitions, List<String> sources, List<String> sinks) {
@@ -135,6 +136,10 @@ public class DataFlowStatistics {
     public Graph<BtfVertex, DefaultEdge> getGraph() {
         return graph;
     }
+    
+    public String getGraphAsDot() {
+        return GraphUtils.generateGraphURL(graph);
+    }
 
     public Graph<BtfVertex, DefaultEdge> getPath() {
         return path;
@@ -168,5 +173,14 @@ public class DataFlowStatistics {
 
     public void setRepetitions(int repetitions) {
         this.repetitions = repetitions;
+    }
+
+
+    public void setPairs(String validPairs) {
+        this.pairs  = validPairs;
+    }
+    
+    public String getPairs() {
+        return pairs;
     }
 }

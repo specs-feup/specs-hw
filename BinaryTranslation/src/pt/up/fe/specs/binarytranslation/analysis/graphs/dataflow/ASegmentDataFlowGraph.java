@@ -37,7 +37,7 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.Ps
 public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<BtfVertex, DefaultEdge> {
     private static final long serialVersionUID = 4454283993649695154L;
     protected Map<String, BtfVertex> vertexCache = new HashMap<String, BtfVertex>();
-    protected List<Instruction> segment;
+    private List<Instruction> segment;
     protected boolean hasTempValue = false;
     protected String tempValue = "";
 
@@ -181,5 +181,9 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<BtfVerte
         if (op.isImmediate())
             return op.getRepresentation();
         return "unknown";
+    }
+
+    public List<Instruction> getSegment() {
+        return segment;
     }
 }

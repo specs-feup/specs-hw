@@ -33,13 +33,17 @@ public class DataFlowCriticalPath {
         this.graph = graph;
     }
 
-    public Graph<BtfVertex, DefaultEdge> calculatePath() {
-        var sources = findSources();
-        var sinks = findSinks();
+    public Graph<BtfVertex, DefaultEdge> calculatePath(BtfVertex source, List<BtfVertex> sinks) {
+        var list = new ArrayList<BtfVertex>();
+        list.add(source);
+        return calculatePath(list, sinks);
+    }
+    
+    public Graph<BtfVertex, DefaultEdge> calculatePath(List<BtfVertex> sources, List<BtfVertex> sinks) {
         List<BtfVertex> bestPath = new ArrayList<BtfVertex>();
 
         for (var source : sources) {
-            for (var sink : sinks) {                
+            for (var sink : sinks) {
                 var alg = new AllDirectedPaths<BtfVertex, DefaultEdge>(graph);
                 for (var path : alg.getAllPaths(source, sink, true, null)) {
                     var currPath = path.getVertexList();
@@ -49,6 +53,12 @@ public class DataFlowCriticalPath {
             }
         }
         return pathToGraph(bestPath);
+    }
+
+    public Graph<BtfVertex, DefaultEdge> calculatePath() {
+        var sources = findSources();
+        var sinks = findSinks();
+        return calculatePath(sources, sinks);
     }
 
     private Graph<BtfVertex, DefaultEdge> pathToGraph(List<BtfVertex> currPath) {
@@ -64,12 +74,16 @@ public class DataFlowCriticalPath {
 
     private int pathSize(List<BtfVertex> pathList) {
         var cnt = 0;
-        
+
         for (var v : pathList) {
             if (v.getType() == BtfVertexType.OPERATION)
                 cnt += v.getLatency();
         }
         return cnt;
+    }
+
+    public int pathSize(Graph<BtfVertex, DefaultEdge> path) {
+        return pathSize(new ArrayList<BtfVertex>(path.vertexSet()));
     }
 
     public List<BtfVertex> findSinks() {
