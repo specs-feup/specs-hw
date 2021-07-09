@@ -20,8 +20,10 @@ import org.specs.BinaryTranslation.ELFProvider;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowCriticalPath;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowLoadStoreElimination;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.ListScheduler;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
@@ -60,10 +62,23 @@ public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
         for (var bb : segments) {
 
             var dfg = new BasicBlockDataFlowGraph(bb, repetitions);
+            
+            // Load/store pairs
+//            var seg = dfg.getSegment();
+//            var del = new DataFlowLoadStoreElimination(seg);
+//            var validPairs = del.compareAllPairs();
+            
+            // Scheduling
+            var sched = new ListScheduler(dfg);
+            var s = sched.schedule(100, 100);
+            var total = sched.getScheduleLength(s);
+            System.out.println("Schedule length: " + total + " cycles");
 
+            // Critical path
             var pathfinder = new DataFlowCriticalPath(dfg);
             var path = pathfinder.calculatePath();
 
+            // Sources and sinks
             var sources = new ArrayList<String>();
             var sinks = new ArrayList<String>();
             for (var v : pathfinder.findSinks()) {
@@ -75,6 +90,7 @@ public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
                     sources.add(v.getLabel());
             }
             var stats = new DataFlowStatistics(dfg, path, bb, repetitions, sources, sinks);
+            //stats.setPairs(validPairs);
             res.add(stats);
         }
         return res;

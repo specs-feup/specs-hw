@@ -52,7 +52,7 @@ public class KernelDataFlowAnalyzer <T extends ATraceInstructionStream> {
     }
     
     public void analyze(int repetitions, List<List<Instruction>> basicBlocks, String filename) throws Exception {
-        var basicBlockCSV = new StringBuilder("Benchmark,Basic Block ID,#Inst,Critical Path Size,ILP Measure\n");
+        var basicBlockCSV = new StringBuilder("Benchmark,Basic Block ID,#Inst,Critical Path Size,ILP Measure,Pairs,Graph\n");
         var benchCSV = new StringBuilder("Benchmark,#BasicBlocks,#Inst Mean,#Inst STD\n");
 
         for (var elf : elfs.keySet()) {
@@ -76,8 +76,10 @@ public class KernelDataFlowAnalyzer <T extends ATraceInstructionStream> {
                         instNumbers.add(res.getInsts().size());
                         n++;
                         basicBlockCSV.append(elf.getResourceName()).append(",").append("BB").append(n).append(",")
-                                .append(res.getInsts().size()).append(",").append(res.getPathSize()).append(",")
-                                .append(res.getILP()).append("\n");
+                        .append(res.getInsts().size()).append(",").append(res.getPathSize()).append(",")
+                        .append(res.getILP())
+                        .append(",").append(res.getPairs())
+                        .append(",").append(res.getGraphAsDot()).append(",").append("\n");
                     }
                 }
             }
@@ -96,7 +98,9 @@ public class KernelDataFlowAnalyzer <T extends ATraceInstructionStream> {
                         n++;
                         basicBlockCSV.append(elf.getResourceName()).append(",").append("BB").append(n).append(",")
                                 .append(res.getInsts().size()).append(",").append(res.getPathSize()).append(",")
-                                .append(res.getILP()).append("\n");
+                                .append(res.getILP())
+                                .append(",").append(res.getPairs())
+                                .append(",").append(res.getGraphAsDot()).append(",").append("\n");
                     }
                 }
             }
