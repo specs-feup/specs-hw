@@ -26,13 +26,13 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.BasicBlockDataflowAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.BtfPerformanceAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.InOutAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryAddressAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryProfilerAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.StreamingAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.BasicBlockDataflowAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.GraphTemplateReport;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
