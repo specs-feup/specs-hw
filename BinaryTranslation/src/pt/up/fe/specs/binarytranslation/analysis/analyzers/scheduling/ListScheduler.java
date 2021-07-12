@@ -38,7 +38,7 @@ public class ListScheduler {
 
     public Map<BtfVertex, Integer> schedule(int alus, int memoryPorts) {
         var plist = getPriorityList();
-        int cycle = 1;
+        int cycle = 0;
         var ready = new ArrayList<BtfVertex>();
         var active = new ArrayList<BtfVertex>();
         ready.addAll(findRoots());
@@ -52,7 +52,7 @@ public class ListScheduler {
         while (ready.size() != 0 || active.size() != 0) {
             var toRemove = new ArrayList<BtfVertex>();
             for (var op : active) {
-                if (sched.get(op) + op.getLatency() < cycle) {
+                if (sched.get(op) + op.getLatency() <= cycle) {
                     toRemove.add(op);
                     if (op.getType() == BtfVertexType.MEMORY)
                         availableMemPorts++;
@@ -60,41 +60,46 @@ public class ListScheduler {
                         availableAlus++;
 
                     for (var s : Graphs.successorListOf(graph, op)) {
-                        ready.add(s);
+                        if (s.getType() == BtfVertexType.MEMORY || s.getType() == BtfVertexType.OPERATION)
+                            ready.add(s);
+                        else
+                            ready.addAll(Graphs.successorListOf(graph, s));
                     }
                 }
             }
             active.removeAll(toRemove);
-            //sort(ready);
+            sortPriorityList(active);
+            sortPriorityList(ready);
             toRemove = new ArrayList<BtfVertex>();
-
-            for (var v : ready) {
-                if (v.getLatency() == 0) {
-                    toRemove.add(v);
-                    sched.put(v, cycle);
-                    active.add(v);
+            
+            for (var op : ready) {
+                if (op.getLatency() == 0) {
+                    toRemove.add(op);
+                    sched.put(op, cycle);
+                    active.add(op);
                 }
-                if (v.getType() == BtfVertexType.MEMORY) {
+                if (op.getType() == BtfVertexType.MEMORY) {
                     if (availableMemPorts > 0) {
-                        toRemove.add(v);
-                        sched.put(v, cycle);
-                        active.add(v);
-                        memMap.put(v, availableMemPorts);
+                        toRemove.add(op);
+                        sched.put(op, cycle);
+                        active.add(op);
+                        memMap.put(op, availableMemPorts);
                         availableMemPorts--;
                     }
                 }
-                if (v.getType() == BtfVertexType.OPERATION) {
+                if (op.getType() == BtfVertexType.OPERATION) {
                     if (availableAlus > 0) {
-                        toRemove.add(v);
-                        sched.put(v, cycle);
-                        active.add(v);
-                        aluMap.put(v, availableAlus);
+                        toRemove.add(op);
+                        sched.put(op, cycle);
+                        active.add(op);
+                        aluMap.put(op, availableAlus);
                         availableAlus--;
                     }
                 }
             }
             ready.removeAll(toRemove);
-            //sort(active);
+            sortPriorityList(ready);
+            sortPriorityList(active);
             cycle++;
         }
         //printSchedule(sched, memMap, aluMap, alus, memoryPorts);
@@ -172,20 +177,22 @@ public class ListScheduler {
         }
 
         var list = new ArrayList<BtfVertex>(vx);
-        sort(list);
+        sortPriorityList(list);
         return list;
     }
 
-    private void sort(List<BtfVertex> list) {
+    private void sortPriorityList(List<BtfVertex> list) {
         Collections.sort(list, new Comparator<BtfVertex>() {
             @Override
             public int compare(BtfVertex lhs, BtfVertex rhs) {
                 var lp = lhs.getPriority();
                 var rp = rhs.getPriority();
-                if (lp >= rp)
+                if (lp > rp)
                     return -1;
-                else
+                else if (lp < rp)
                     return 1;
+                else
+                    return 0;
             }
         });
     }

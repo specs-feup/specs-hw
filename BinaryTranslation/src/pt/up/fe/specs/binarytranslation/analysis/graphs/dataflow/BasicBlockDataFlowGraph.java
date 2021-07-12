@@ -43,8 +43,12 @@ public class BasicBlockDataFlowGraph extends ASegmentDataFlowGraph {
         }
         
         System.out.println("Transformed BB:");
-        for (var i : newBB)
+        var cnt = 0;
+        for (var i : newBB) {
             System.out.println(i.getRepresentation());
+            cnt += i.getLatency();
+        }
+        System.out.println("Total BB latency: " + cnt);
         System.out.println("-------------------");
         
         return finalBB;

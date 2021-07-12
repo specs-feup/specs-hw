@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.analyzers;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +19,13 @@ import java.util.List;
 import org.specs.BinaryTranslation.ELFProvider;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowCriticalPath;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowLoadStoreElimination;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.ListScheduler;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveZeroLatencyOps;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
@@ -36,7 +35,7 @@ public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
         super(stream, elf);
     }
 
-    public List<DataFlowStatistics> analyzeWithDetector(int window, int repetitions) {
+    public List<DataFlowStatistics> analyzeWithDetector(int window, int repetitions, int alus, int memPorts) {
 
         var det = buildDetector(window);
         List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
@@ -48,16 +47,16 @@ public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
         for (var bb : segs) {
             segments.add(bb.getInstructions());
         }
-        return analyze(segments, repetitions);
+        return analyze(segments, repetitions, alus, memPorts);
     }
 
-    public List<DataFlowStatistics> analyzeWithStaticBlock(List<Instruction> segment, int repetitions) {
+    public List<DataFlowStatistics> analyzeWithStaticBlock(List<Instruction> segment, int repetitions, int alus, int memPorts) {
         var arr = new ArrayList<List<Instruction>>();
         arr.add(segment);
-        return analyze(arr, repetitions);
+        return analyze(arr, repetitions, alus, memPorts);
     }
 
-    private List<DataFlowStatistics> analyze(List<List<Instruction>> segments, int repetitions) {
+    private List<DataFlowStatistics> analyze(List<List<Instruction>> segments, int repetitions, int alus, int memPorts) {
         var res = new ArrayList<DataFlowStatistics>();
         for (var bb : segments) {
 
@@ -68,11 +67,6 @@ public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
 //            var del = new DataFlowLoadStoreElimination(seg);
 //            var validPairs = del.compareAllPairs();
             
-            // Scheduling
-            var sched = new ListScheduler(dfg);
-            var s = sched.schedule(100, 100);
-            var total = sched.getScheduleLength(s);
-            System.out.println("Schedule length: " + total + " cycles");
 
             // Critical path
             var pathfinder = new DataFlowCriticalPath(dfg);
@@ -89,8 +83,18 @@ public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
                 if (v.getType() == BtfVertexType.REGISTER)
                     sources.add(v.getLabel());
             }
+            
+            // Scheduling
+            var t = new TransformRemoveZeroLatencyOps(dfg);
+            dfg = (BasicBlockDataFlowGraph) t.applyToGraph();  
+            var sched = new ListScheduler(dfg);
+            var s = sched.schedule(alus, memPorts);
+            var total = sched.getScheduleLength(s);
+            System.out.println("Schedule length: " + total + " cycles");
+            
             var stats = new DataFlowStatistics(dfg, path, bb, repetitions, sources, sinks);
             //stats.setPairs(validPairs);
+            stats.setSched(total);
             res.add(stats);
         }
         return res;
