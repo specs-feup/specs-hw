@@ -29,7 +29,9 @@ public class MicroBlazeDataFlowTest {
 
     @Test
     public void testUnrollingBasicBlockDataFlow() {
-        int factors[] = { 1, 2, 3, 4, 5 };
+        int factors[] = { /*1, 2, */ 3/*, 4, 5*/ };
+        int alus = 4;
+        int memPorts = 2;
 
         for (var unrollFactor : factors) {
             var elfs = MicroBlazeBasicBlockInfo.getPolybenchSmallFloatKernels();
@@ -41,7 +43,7 @@ public class MicroBlazeDataFlowTest {
             }
             var analyzer = new KernelDataFlowAnalyzer(elfs, MicroBlazeTraceStream.class);
             try {
-                analyzer.analyze(unrollFactor, s);
+                analyzer.analyze(unrollFactor, s, alus, memPorts);
             } catch (Exception e) {
                 SpecsLogs.warn("Error message:\n", e);
             }
