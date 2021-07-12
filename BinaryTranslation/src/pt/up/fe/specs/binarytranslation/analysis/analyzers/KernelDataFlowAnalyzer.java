@@ -26,6 +26,7 @@ import java.util.Map;
 import org.specs.BinaryTranslation.ELFProvider;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.BasicBlockDataflowAnalyzer;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
@@ -40,18 +41,22 @@ public class KernelDataFlowAnalyzer <T extends ATraceInstructionStream> {
     }
     
     public void analyze() throws Exception {
-        analyze(1, null, "generic");
+        analyze(1, null, "generic", 4, 2);
     }
     
     public void analyze(String filename) throws Exception {
-        analyze(1, null, filename);
+        analyze(1, null, filename, 4, 2);
     }
     
     public void analyze(int repetitions, String filename) throws Exception {
-        analyze(repetitions, null, filename);
+        analyze(repetitions, null, filename, 4, 2);
     }
     
-    public void analyze(int repetitions, List<List<Instruction>> basicBlocks, String filename) throws Exception {
+    public void analyze(int repetitions, String filename, int alus, int memPorts) throws Exception {
+        analyze(repetitions, null, filename, alus, memPorts);
+    }
+    
+    public void analyze(int repetitions, List<List<Instruction>> basicBlocks, String filename, int alus, int memPorts) throws Exception {
         var basicBlockCSV = new StringBuilder("Benchmark,Basic Block ID,#Inst,Critical Path Size,ILP Measure,Pairs,Graph\n");
         var benchCSV = new StringBuilder("Benchmark,#BasicBlocks,#Inst Mean,#Inst STD\n");
 
@@ -69,7 +74,7 @@ public class KernelDataFlowAnalyzer <T extends ATraceInstructionStream> {
                     var stream = cons.newInstance(fd);
                     var analyzer = new BasicBlockDataflowAnalyzer(stream, elf);
                     
-                    var resList = analyzer.analyzeWithDetector(i, repetitions);
+                    var resList = analyzer.analyzeWithDetector(i, repetitions, alus, memPorts);
                     
                     for (var res : resList) {
                         System.out.println(res.toString());
@@ -90,7 +95,7 @@ public class KernelDataFlowAnalyzer <T extends ATraceInstructionStream> {
                     var stream = cons.newInstance(fd);
                     var analyzer = new BasicBlockDataflowAnalyzer(stream, elf);
                     
-                    var resList = analyzer.analyzeWithStaticBlock(bb, repetitions);
+                    var resList = analyzer.analyzeWithStaticBlock(bb, repetitions, alus, memPorts);
                     
                     for (var res : resList) {
                         System.out.println(res.toString());
@@ -119,11 +124,11 @@ public class KernelDataFlowAnalyzer <T extends ATraceInstructionStream> {
             benchCSV.append(elf.getResourceName()).append(",").append(n).append(",").append(mean).append(",").append(std)
                     .append("\n");
         }
-        AnalysisUtils.printSeparator(40);
-        System.out.print(basicBlockCSV.toString());
-        AnalysisUtils.printSeparator(40);
-        System.out.print(benchCSV.toString());
-        AnalysisUtils.printSeparator(40);
+//        AnalysisUtils.printSeparator(40);
+//        System.out.print(basicBlockCSV.toString());
+//        AnalysisUtils.printSeparator(40);
+//        System.out.print(benchCSV.toString());
+//        AnalysisUtils.printSeparator(40);
 
         // Save as CSV
         AnalysisUtils.saveAsCsv(benchCSV, "results/dataFlowBenchmark" + filename);

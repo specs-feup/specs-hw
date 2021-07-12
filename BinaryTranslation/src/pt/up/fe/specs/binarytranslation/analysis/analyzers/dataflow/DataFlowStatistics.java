@@ -37,6 +37,7 @@ public class DataFlowStatistics {
     private int pathSize = 0;
     private int repetitions;
     private String pairs = "";
+    private int schedule;
 
     public DataFlowStatistics(ASegmentDataFlowGraph graph, Graph<BtfVertex, DefaultEdge> path,
             List<Instruction> insts, int repetitions, List<String> sources, List<String> sinks) {
@@ -182,5 +183,14 @@ public class DataFlowStatistics {
     
     public String getPairs() {
         return pairs;
+    }
+
+
+    public void setSched(int total) {
+        this.schedule = total;
+    }
+    
+    public int getSched() {
+        return schedule;
     }
 }

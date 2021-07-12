@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.analysis.graphs.transforms;
 import java.util.ArrayList;
 
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;

@@ -76,7 +76,7 @@ public class DataFlowCriticalPath {
         var cnt = 0;
 
         for (var v : pathList) {
-            if (v.getType() == BtfVertexType.OPERATION)
+            if (v.getType() == BtfVertexType.OPERATION || v.getType() == BtfVertexType.MEMORY)
                 cnt += v.getLatency();
         }
         return cnt;
