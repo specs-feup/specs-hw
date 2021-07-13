@@ -2,16 +2,16 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class BasicBlockInOuts extends ASequenceInOuts {
 
-    private BinarySegment seg;
 
-    public BasicBlockInOuts(BinarySegment seg) {
-        super(seg.getInstructions());
-        this.seg = seg;
+    public BasicBlockInOuts(List<Instruction> insts) {
+        super(insts);
     }
 
     public BitSet calculateBBOuts(ArrayList<InstructionSets> sets) {
@@ -43,13 +43,5 @@ public class BasicBlockInOuts extends ASequenceInOuts {
       
       sb.append("\n");
       System.out.println(sb.toString());
-    }
-
-    public BinarySegment getSeg() {
-        return seg;
-    }
-
-    public void setSeg(BinarySegment seg) {
-        this.seg = seg;
     }
 }

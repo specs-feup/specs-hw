@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,8 @@ import org.specs.BinaryTranslation.ELFProvider;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowCriticalPath;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.ListScheduler;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
@@ -30,44 +32,24 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
-    public BasicBlockDataflowAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
-        super(stream, elf);
+public class BasicBlockDataFlowAnalyzer extends ABasicBlockAnalyzer {
+
+    public BasicBlockDataFlowAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+        super(stream, elf, window);
+    }
+    
+    public BasicBlockDataFlowAnalyzer(List<List<Instruction>> basicBlocks) {
+        super(basicBlocks);
     }
 
-    public List<DataFlowStatistics> analyzeWithDetector(int window, int repetitions, int alus, int memPorts) {
-
-        var det = buildDetector(window);
-        List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
-        List<List<Instruction>> segments = new ArrayList<>();
-        if (segs == null) {
-            System.out.println("No basic blocks found! Aborting...");
-            return new ArrayList<DataFlowStatistics>();
-        }
-        for (var bb : segs) {
-            segments.add(bb.getInstructions());
-        }
-        return analyze(segments, repetitions, alus, memPorts);
-    }
-
-    public List<DataFlowStatistics> analyzeWithStaticBlock(List<Instruction> segment, int repetitions, int alus, int memPorts) {
-        var arr = new ArrayList<List<Instruction>>();
-        arr.add(segment);
-        return analyze(arr, repetitions, alus, memPorts);
-    }
-
-    private List<DataFlowStatistics> analyze(List<List<Instruction>> segments, int repetitions, int alus, int memPorts) {
+    public List<DataFlowStatistics> analyze(int repetitions) {
         var res = new ArrayList<DataFlowStatistics>();
+        var segments = getBasicBlocks();
+        
         for (var bb : segments) {
 
             var dfg = new BasicBlockDataFlowGraph(bb, repetitions);
             
-            // Load/store pairs
-//            var seg = dfg.getSegment();
-//            var del = new DataFlowLoadStoreElimination(seg);
-//            var validPairs = del.compareAllPairs();
-            
-
             // Critical path
             var pathfinder = new DataFlowCriticalPath(dfg);
             var path = pathfinder.calculatePath();
@@ -84,23 +66,11 @@ public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
                     sources.add(v.getLabel());
             }
             
-            // Scheduling
-            var t = new TransformRemoveZeroLatencyOps(dfg);
-            dfg = (BasicBlockDataFlowGraph) t.applyToGraph();  
-            var sched = new ListScheduler(dfg);
-            var s = sched.schedule(alus, memPorts);
-            var total = sched.getScheduleLength(s);
-            System.out.println("Schedule length: " + total + " cycles");
-            
-            var stats = new DataFlowStatistics(dfg, path, bb, repetitions, sources, sinks);
-            //stats.setPairs(validPairs);
-            stats.setSched(total);
+            var stats = new DataFlowStatistics(dfg);
+            stats.setPath(path).setInsts(bb).setRepetitions(repetitions).setSources(sources).setSinks(sinks);
+
             res.add(stats);
         }
         return res;
-    }
-
-    public List<DataFlowStatistics> analyzeWithDetector(int window, int repetitions) {
-        return analyzeWithDetector(window, repetitions, 2, 2);
     }
 }

@@ -11,8 +11,10 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.analyzers;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 
+import java.io.File;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,19 +23,22 @@ import org.specs.BinaryTranslation.ELFProvider;
 
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.util.SpecsLogs;
 
-public abstract class AKernelAnalyzer {
+public abstract class AReporter {
     private Map<ELFProvider, Integer[]> elfWindows;
     protected Class streamClass;
     private Map<ELFProvider, List<List<Instruction>>> staticBlocks;
     private boolean isStatic = false;
 
-    public AKernelAnalyzer(Map<ELFProvider, Integer[]> elfWindows, Class streamClass) {
+    public AReporter(Map<ELFProvider, Integer[]> elfWindows, Class streamClass) {
         this.elfWindows = elfWindows;
         this.streamClass = streamClass;
     }
 
-    public AKernelAnalyzer(Map<ELFProvider, List<List<Instruction>>> staticBlocks) {
+    public AReporter(Map<ELFProvider, List<List<Instruction>>> staticBlocks) {
         this.staticBlocks = staticBlocks;
         this.isStatic = true;
     }
@@ -55,7 +60,17 @@ public abstract class AKernelAnalyzer {
         for (var elf : elfWindows.keySet()) {
             int id = 1;
             for (var window : elfWindows.get(elf)) {
-                var res = analyzeStream(repetitions, elf, window);
+                var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
+                Constructor cons;
+                ATraceInstructionStream stream = null;
+                try {
+                    cons = streamClass.getConstructor(File.class);
+                    stream = (ATraceInstructionStream) cons.newInstance(fd);
+                } catch (Exception e) {
+                    SpecsLogs.warn("Error message:\n", e);
+                }
+                
+                var res = analyzeStream(repetitions, elf, window, stream);
                 id = processResult(results, elf, id, res);
             }
         }
@@ -86,5 +101,5 @@ public abstract class AKernelAnalyzer {
 
     protected abstract List<DataFlowStatistics> analyzeStatic(int repetitions, List<Instruction> block);
 
-    protected abstract List<DataFlowStatistics> analyzeStream(int repetitions, ELFProvider elf, int window);
+    protected abstract List<DataFlowStatistics> analyzeStream(int repetitions, ELFProvider elf, int window, ATraceInstructionStream stream);
 }

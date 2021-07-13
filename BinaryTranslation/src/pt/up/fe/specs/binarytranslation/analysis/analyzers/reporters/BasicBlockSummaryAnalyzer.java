@@ -15,24 +15,25 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.analyzers;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.specs.BinaryTranslation.ELFProvider;
 
-import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.BasicBlockDataFlowAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.SpecsLogs;
 
-public class SchedulingAnalyzer {
+public class BasicBlockSummaryAnalyzer extends ABasicBlockAnalyzer {
 
+    public BasicBlockSummaryAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+        super(stream, elf, window);
+        // TODO Auto-generated constructor stub
+    }
+    
+    public BasicBlockSummaryAnalyzer(List<List<Instruction>> basicBlocks) {
+        super(basicBlocks);
+    }
 
 }

@@ -37,13 +37,12 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class MemoryAccessTypesAnalyzer extends ABasicBlockAnalyzer {
 
-    public MemoryAccessTypesAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
-        super(stream, elf);
+    public MemoryAccessTypesAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+        super(stream, elf, window);
     }
 
-    public GraphTemplateReport analyzeSegment(int window) {
-        var det = buildDetector(window);
-        List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
+    public GraphTemplateReport analyzeSegment() {
+        var segs = getBasicBlockSegments();
         
         var title = elf.getFilename();
         var report = new GraphTemplateReport(title);

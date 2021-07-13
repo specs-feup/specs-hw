@@ -33,37 +33,18 @@ public class DataFlowStatistics {
     private List<Instruction> insts;
     private List<String> sources;
     private List<String> sinks;
-    private double ilp;
+    private double ilp = 0;
     private int pathSize = 0;
     private int repetitions;
     private String pairs = "";
     private int schedule;
     private String id;
     private String elfName = "";
+    private String resources;
 
-    public DataFlowStatistics(ASegmentDataFlowGraph graph, Graph<BtfVertex, DefaultEdge> path,
-            List<Instruction> insts, int repetitions, List<String> sources, List<String> sinks) {
+    public DataFlowStatistics(ASegmentDataFlowGraph graph) {
         this.graph = graph;
-        this.path = path;
-        this.insts = insts;
-        this.sources = sources;
-        this.sinks = sinks;
-        this.repetitions = repetitions;
-        
-        for (var v : path.vertexSet()) {
-            this.pathSize += v.getLatency();
-        }
-        
-        double cnt = 0;
-        for (var v : graph.vertexSet()) {
-            cnt += v.getLatency();
-        }
-        this.ilp = cnt / (double) pathSize;
-        
-        for (var v : path.vertexSet())
-            v.setColor("red");
     }
-
 
     @Override
     public String toString() {
@@ -151,8 +132,18 @@ public class DataFlowStatistics {
         return insts;
     }
     
+    public DataFlowStatistics setSources(List<String> sources) {
+        this.sources = sources;
+        return this;
+    }
+    
     public List<String> getSources() {
         return sources;
+    }
+    
+    public DataFlowStatistics setSinks(List<String> sinks) {
+        this.sinks = sinks;
+        return this;
     }
 
     public List<String> getSinks() {
@@ -173,13 +164,15 @@ public class DataFlowStatistics {
     }
 
 
-    public void setRepetitions(int repetitions) {
+    public DataFlowStatistics setRepetitions(int repetitions) {
         this.repetitions = repetitions;
+        return this;
     }
 
 
-    public void setPairs(String validPairs) {
+    public DataFlowStatistics setPairs(String validPairs) {
         this.pairs  = validPairs;
+        return this;
     }
     
     public String getPairs() {
@@ -187,8 +180,9 @@ public class DataFlowStatistics {
     }
 
 
-    public void setSched(int total) {
+    public DataFlowStatistics setSched(int total) {
         this.schedule = total;
+        return this;
     }
     
     public int getSched() {
@@ -201,8 +195,9 @@ public class DataFlowStatistics {
     }
 
 
-    public void setId(String id) {
+    public DataFlowStatistics setId(String id) {
         this.id = id;
+        return this;
     }
 
 
@@ -211,7 +206,41 @@ public class DataFlowStatistics {
     }
 
 
-    public void setElfName(String elfName) {
+    public DataFlowStatistics setElfName(String elfName) {
         this.elfName = elfName;
+        return this;
+    }
+
+
+    public DataFlowStatistics setPath(Graph<BtfVertex, DefaultEdge> path) {
+        this.path = path;
+        for (var v : path.vertexSet()) {
+            this.pathSize += v.getLatency();
+        }
+        
+        double cnt = 0;
+        for (var v : graph.vertexSet()) {
+            cnt += v.getLatency();
+        }
+        this.ilp = cnt / (double) pathSize;
+        
+        for (var v : path.vertexSet())
+            v.setColor("red");
+        return this;
+    }
+
+
+    public DataFlowStatistics setInsts(List<Instruction> insts) {
+        this.insts = insts;
+        return this;
+    }
+    
+    public String getResources() {
+        return resources;
+    }
+
+    public DataFlowStatistics setResources(String resources) {
+        this.resources = resources;
+        return this;
     }
 }

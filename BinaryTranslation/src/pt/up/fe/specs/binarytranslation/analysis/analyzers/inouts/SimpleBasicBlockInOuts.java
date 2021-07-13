@@ -1,18 +1,15 @@
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts;
 
 import java.util.BitSet;
+import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class SimpleBasicBlockInOuts extends ASequenceInOuts {
-
-    private BinarySegment basicBlock;
     private InstructionSets inouts;
 
-    public SimpleBasicBlockInOuts(BinarySegment seg) {
-        super(seg.getInstructions());
-        this.basicBlock = seg;
+    public SimpleBasicBlockInOuts(List<Instruction> insts) {
+        super(insts);
     }
     
     @Override
@@ -50,7 +47,7 @@ public class SimpleBasicBlockInOuts extends ASequenceInOuts {
         BitSet in = inouts.getInSet();
         BitSet out = inouts.getOutSet();
         
-        for (Instruction i : basicBlock.getInstructions()) {
+        for (Instruction i : insts) {
             sb.append(i.getString()).append("\n");
         }
         
