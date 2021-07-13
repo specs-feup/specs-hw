@@ -38,6 +38,8 @@ public class DataFlowStatistics {
     private int repetitions;
     private String pairs = "";
     private int schedule;
+    private String id;
+    private String elfName = "";
 
     public DataFlowStatistics(ASegmentDataFlowGraph graph, Graph<BtfVertex, DefaultEdge> path,
             List<Instruction> insts, int repetitions, List<String> sources, List<String> sinks) {
@@ -49,15 +51,11 @@ public class DataFlowStatistics {
         this.repetitions = repetitions;
         
         for (var v : path.vertexSet()) {
-            //if (v.getType() == BtfVertexType.OPERATION || v.getType() == BtfVertexType.MEMORY)
-            //    this.pathSize++;
             this.pathSize += v.getLatency();
         }
         
         double cnt = 0;
         for (var v : graph.vertexSet()) {
-            //if (v.getType() == BtfVertexType.OPERATION || v.getType() == BtfVertexType.MEMORY)
-            //    cnt++;
             cnt += v.getLatency();
         }
         this.ilp = cnt / (double) pathSize;
@@ -70,6 +68,9 @@ public class DataFlowStatistics {
     @Override
     public String toString() {
         var label = new StringBuilder()
+                .append("Segment ID: ")
+                .append(id)
+                .append("\\l")
                 .append("Critical path size: ")
                 .append(pathSize)
                 .append("\\l")
@@ -192,5 +193,25 @@ public class DataFlowStatistics {
     
     public int getSched() {
         return schedule;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
+    public String getElfName() {
+        return elfName;
+    }
+
+
+    public void setElfName(String elfName) {
+        this.elfName = elfName;
     }
 }

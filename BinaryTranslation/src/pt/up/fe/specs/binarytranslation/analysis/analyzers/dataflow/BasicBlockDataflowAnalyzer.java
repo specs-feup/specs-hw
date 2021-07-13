@@ -99,4 +99,8 @@ public class BasicBlockDataflowAnalyzer extends ABasicBlockAnalyzer {
         }
         return res;
     }
+
+    public List<DataFlowStatistics> analyzeWithDetector(int window, int repetitions) {
+        return analyzeWithDetector(window, repetitions, 2, 2);
+    }
 }
