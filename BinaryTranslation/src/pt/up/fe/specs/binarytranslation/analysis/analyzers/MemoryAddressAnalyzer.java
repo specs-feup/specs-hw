@@ -33,14 +33,13 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
     private RegisterProperties isaProps;
 
-    public MemoryAddressAnalyzer(ATraceInstructionStream stream, ELFProvider elf, RegisterProperties isaProps) {
-        super(stream, elf);
+    public MemoryAddressAnalyzer(ATraceInstructionStream stream, ELFProvider elf, RegisterProperties isaProps, int window) {
+        super(stream, elf, window);
         this.isaProps = isaProps;
     }
 
-    public void analyze(int window) {
-        var det = buildDetector(window);
-        List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
+    public void analyze() {
+        var segs = getBasicBlockSegments();
         
         for (var bb : segs) {
             // Print BB instructions
@@ -67,7 +66,7 @@ public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
     }
 
     private InstructionSets handleInOuts(BinarySegment bb) {
-        var inoutFinder = new SimpleBasicBlockInOuts(bb);
+        var inoutFinder = new SimpleBasicBlockInOuts(bb.getInstructions());
         inoutFinder.calculateInOuts();
         return inoutFinder.getInouts();
     }

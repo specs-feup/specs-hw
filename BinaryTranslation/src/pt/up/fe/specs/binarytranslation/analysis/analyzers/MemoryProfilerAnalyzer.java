@@ -16,48 +16,49 @@ import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.producer.detailed.DetailedRegisterInstructionProducer;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
+@Deprecated
 public class MemoryProfilerAnalyzer extends ABasicBlockAnalyzer {
 
     private DetailedRegisterInstructionProducer prod;
     private Queue<Instruction> queue = new LinkedList<>();
 
-    public MemoryProfilerAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
-        super(stream, elf);
+    public MemoryProfilerAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+        super(stream, elf, window);
     }
 
-    public boolean profile(boolean useStream) {
-        Instruction inst = nextInstruction(useStream);
-        if (inst == null)
-            return false;
-        
-        while (inst != null) {
-            if (inst.isMemory()) {
-                queue.add(inst);
-            }
-            inst = nextInstruction(useStream);
-        }
-        printResolvedTrace(true);
-
-        var table = buildHistogram();
-
-        printHistogram(table, false);
-        return true;
-    }
+//    public boolean profile(boolean useStream) {
+//        Instruction inst = nextInstruction(useStream);
+//        if (inst == null)
+//            return false;
+//        
+//        while (inst != null) {
+//            if (inst.isMemory()) {
+//                queue.add(inst);
+//            }
+//            inst = nextInstruction(useStream);
+//        }
+//        printResolvedTrace(true);
+//
+//        var table = buildHistogram();
+//
+//        printHistogram(table, false);
+//        return true;
+//    }
     
-    public void printLoadStoreInstructions() {
-        Instruction inst = stream.nextInstruction();
-        while (inst != null) {
-             System.out.println(inst.getRegisters().isEmpty());
-             inst = stream.nextInstruction();
-        }
-    }
+//    public void printLoadStoreInstructions() {
+//        Instruction inst = stream.nextInstruction();
+//        while (inst != null) {
+//             System.out.println(inst.getRegisters().isEmpty());
+//             inst = stream.nextInstruction();
+//        }
+//    }
     
-    public Instruction nextInstruction(boolean useStream) {
-        if (useStream)
-            return stream.nextInstruction();
-        else
-            return prod.nextInstruction();
-    }
+//    public Instruction nextInstruction(boolean useStream) {
+//        if (useStream)
+//            return stream.nextInstruction();
+//        else
+//            return prod.nextInstruction();
+//    }
     
     private void printHistogram(HashMap<Long, Integer[]> table, boolean decimal) {
         List<Long> sortedAddr = new ArrayList<Long>(table.keySet());

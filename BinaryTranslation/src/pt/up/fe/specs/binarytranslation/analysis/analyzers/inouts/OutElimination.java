@@ -7,19 +7,18 @@ import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockO
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
+@Deprecated
 public class OutElimination {
 
-    private BinarySegment bb;
     private List<Instruction> insts;
 
     public OutElimination(BinarySegment bb, List<Instruction> insts) {
-        this.bb = bb;
         this.insts = insts;
     }
 
     public void eliminate(int windowSize) {
-        var occur = new BasicBlockOccurrenceTracker(bb, insts);
-        var sbbio = new SimpleBasicBlockInOuts(bb);
+        var occur = new BasicBlockOccurrenceTracker(null, insts);
+        var sbbio = new SimpleBasicBlockInOuts(null);
         sbbio.calculateInOuts();
         var inouts = sbbio.getInouts();
 

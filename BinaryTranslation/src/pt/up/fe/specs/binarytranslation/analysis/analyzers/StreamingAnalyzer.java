@@ -35,13 +35,12 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class StreamingAnalyzer extends ABasicBlockAnalyzer {
 
-    public StreamingAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
-        super(stream, elf);
+    public StreamingAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+        super(stream, elf, window);
     }
 
-    public void analyze(int window, int iter) {
-        var det = buildDetector(window);
-        List<BinarySegment> segs = AnalysisUtils.getSegments(stream, det);
+    public void analyze(int iter) {
+        var segs = this.getBasicBlockSegments();
 
         for (var bb : segs) {
             var mad = new MemoryAddressDetector(bb);

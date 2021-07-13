@@ -11,11 +11,8 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.analysis.analyzers;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,20 +20,17 @@ import java.util.Map;
 import org.specs.BinaryTranslation.ELFProvider;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.BasicBlockDataflowAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.SpecsLogs;
 
-public class KernelDataFlowAnalyzer extends AKernelAnalyzer {
+public class ReporterDataFlow extends AReporter {
 
-    public KernelDataFlowAnalyzer(Map<ELFProvider, Integer[]> elfWindows, Class streamClass) {
+    public ReporterDataFlow(Map<ELFProvider, Integer[]> elfWindows, Class streamClass) {
         super(elfWindows, streamClass);
     }
 
-    public KernelDataFlowAnalyzer(Map<ELFProvider, List<List<Instruction>>> staticBlocks) {
+    public ReporterDataFlow(Map<ELFProvider, List<List<Instruction>>> staticBlocks) {
         super(staticBlocks);
     }
 
@@ -81,19 +75,9 @@ public class KernelDataFlowAnalyzer extends AKernelAnalyzer {
     }
 
     @Override
-    public List<DataFlowStatistics> analyzeStream(int repetitions, ELFProvider elf, int window) {
-        var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
-        Constructor cons;
-        ATraceInstructionStream stream = null;
-        try {
-            cons = streamClass.getConstructor(File.class);
-            stream = (ATraceInstructionStream) cons.newInstance(fd);
-        } catch (Exception e) {
-            SpecsLogs.warn("Error message:\n", e);
-        }
-
-        var analyzer = new BasicBlockDataflowAnalyzer(stream, elf);
-        var resList = analyzer.analyzeWithDetector(window, repetitions);
+    public List<DataFlowStatistics> analyzeStream(int repetitions, ELFProvider elf, int window, ATraceInstructionStream stream) {
+        var analyzer = new BasicBlockDataFlowAnalyzer(stream, elf, window);
+        var resList = analyzer.analyze(repetitions);
         return resList;
     }
 }

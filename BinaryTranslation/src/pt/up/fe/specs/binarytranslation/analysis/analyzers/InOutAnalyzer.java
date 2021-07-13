@@ -21,26 +21,15 @@ public class InOutAnalyzer extends ABasicBlockAnalyzer {
         ELIMINATION
     };
 
-    public InOutAnalyzer(ATraceInstructionStream stream, ELFProvider elf) {
-        super(stream, elf);
+    public InOutAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+        super(stream, elf, window);
     }
     
-    public void analyse(InOutMode mode, int window) {
-        var det = buildDetector(window);
+    public void analyse(InOutMode mode) {
+        var bbs = this.getBasicBlocks();
         
-        List<BinarySegment> bbs = AnalysisUtils.getSegments(stream, det);
-        
-//        if (mode == InOutMode.TRACE) {
-//            List<Instruction> insts = det.getProcessedInsts();
-//            System.out.println(insts.size() + " instructions detected");
-//            TraceInOuts inouts = new TraceInOuts(insts, bbs);
-//            inouts.calculateInOuts();
-//            
-//            inouts.printUseDefRegisters();
-//            inouts.printSequenceInOuts();
-//        }
         if (mode == InOutMode.BASIC_BLOCK) {
-            for (BinarySegment bb : bbs) {
+            for (var bb : bbs) {
                 BasicBlockInOuts inouts = new BasicBlockInOuts(bb);
                 inouts.calculateInOuts();
 
@@ -50,7 +39,7 @@ public class InOutAnalyzer extends ABasicBlockAnalyzer {
             }
         }
         if (mode == InOutMode.SIMPLE_BASIC_BLOCK) {
-            for (BinarySegment bb : bbs) {
+            for (var bb : bbs) {
                 SimpleBasicBlockInOuts inouts = new SimpleBasicBlockInOuts(bb);
                 inouts.calculateInOuts();
                 inouts.printResult();
@@ -58,9 +47,8 @@ public class InOutAnalyzer extends ABasicBlockAnalyzer {
             }
         }
         if (mode == InOutMode.ELIMINATION) {
-            for (BinarySegment bb : bbs) {
+            for (var bb : bbs) {
                 System.out.println("Running elimination analysis for detected Basic Block");
-                bb.printSegment();
                 System.out.println("");
 //                var elim = new OutElimination(bb, det.getProcessedInsts());
 //                elim.eliminate(15);
