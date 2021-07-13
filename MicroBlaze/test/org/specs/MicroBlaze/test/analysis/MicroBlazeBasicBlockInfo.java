@@ -16,22 +16,23 @@ package org.specs.MicroBlaze.test.analysis;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
 
 public class MicroBlazeBasicBlockInfo {
-    public static Map<MicroBlazeLivermoreELFN10, Integer[]> getLivermoreKernels() {
-        Map<MicroBlazeLivermoreELFN10, Integer[]> elfs = Map.of(
+    public static Map<ELFProvider, Integer[]> getLivermoreKernels() {
+        Map<ELFProvider, Integer[]> elfs = Map.of(
                 MicroBlazeLivermoreELFN10.innerprod, new Integer[] { 10 });
         return elfs;
     }
 
-    public static Map<MicroBlazePolyBenchSmallFloat, Integer[]> getPolybenchSmallFloatKernels() {
-        Map<MicroBlazePolyBenchSmallFloat, Integer[]> elfs = new HashMap<>();
+    public static Map<ELFProvider, Integer[]> getPolybenchSmallFloatKernels() {
+        Map<ELFProvider, Integer[]> elfs = new HashMap<>();
 
-//        elfs.put(MicroBlazePolyBenchSmallFloat._2mm, new Integer[] { 12, 13 });
+        elfs.put(MicroBlazePolyBenchSmallFloat._2mm, new Integer[] { 12, 13 });
         elfs.put(MicroBlazePolyBenchSmallFloat._3mm, new Integer[] { 11, 12, 13 });
-//        elfs.put(MicroBlazePolyBenchSmallFloat.adi, new Integer[] { 8, 13, 25, 27 });
+        elfs.put(MicroBlazePolyBenchSmallFloat.adi, new Integer[] { 8, 13, 25, 27 });
 //        elfs.put(MicroBlazePolyBenchSmallFloat.atax, new Integer[] { 5, 9, 11 });
 //        elfs.put(MicroBlazePolyBenchSmallFloat.bicg, new Integer[] { 5, 12, 17 });
 //        elfs.put(MicroBlazePolyBenchSmallFloat.covariance, new Integer[] { 8, 9 });

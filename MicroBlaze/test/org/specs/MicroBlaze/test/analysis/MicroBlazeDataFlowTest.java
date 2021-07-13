@@ -18,7 +18,9 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.KernelDataFlowAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.AReporter;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterDataFlow;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterScheduling;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
@@ -30,9 +32,7 @@ public class MicroBlazeDataFlowTest {
     @Test
     public void testUnrollingBasicBlockDataFlow() {
         int factors[] = { /*1, 2, */ 3/*, 4, 5*/ };
-        int alus = 4;
-        int memPorts = 2;
-
+        
         for (var unrollFactor : factors) {
             var elfs = MicroBlazeBasicBlockInfo.getPolybenchSmallFloatKernels();
 
@@ -41,13 +41,37 @@ public class MicroBlazeDataFlowTest {
                 for (var k : elfs.keySet())
                     s += "_" + k.getFilename();
             }
-            var analyzer = new KernelDataFlowAnalyzer(elfs, MicroBlazeTraceStream.class);
+            var analyzer = new ReporterDataFlow(elfs, MicroBlazeTraceStream.class);
             try {
-                analyzer.analyze(unrollFactor, s, alus, memPorts);
+                analyzer.analyze(unrollFactor, s);
             } catch (Exception e) {
                 SpecsLogs.warn("Error message:\n", e);
             }
             System.out.println("\nFinished Basic Block Data Flow for Factor = " + unrollFactor + "\n");
+        }
+    }
+    
+    @Test
+    public void testScheduling() {
+        int factors[] = { 3 };
+        int alus[] = {2, 4, 6, 8, 100};
+        int memPorts[] = {2, 4, 6, 8, 100};
+
+        for (var unrollFactor : factors) {
+            var elfs = MicroBlazeBasicBlockInfo.getPolybenchSmallFloatKernels();
+
+            var s = "_Unroll" + unrollFactor + "_Scheduling";
+            if (elfs.size() == 1) {
+                for (var k : elfs.keySet())
+                    s += "_" + k.getFilename();
+            }
+            var analyzer = new ReporterScheduling(elfs, MicroBlazeTraceStream.class, alus, memPorts);
+            try {
+                analyzer.analyze(unrollFactor, s);
+            } catch (Exception e) {
+                SpecsLogs.warn("Error message:\n", e);
+            }
+            System.out.println("\nFinished Basic Block Scheduling for Factor = " + unrollFactor + "\n");
         }
     }
 
