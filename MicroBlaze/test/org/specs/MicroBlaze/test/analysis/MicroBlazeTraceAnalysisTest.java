@@ -32,8 +32,8 @@ import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryAccessTypesAnal
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryAddressAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryProfilerAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.StreamingAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.BasicBlockDataflowAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.GraphTemplateReport;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.BasicBlockDataFlowAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
@@ -57,22 +57,22 @@ public class MicroBlazeTraceAnalysisTest {
         return stream;
     }
 
-    @Test
-    public void testMemoryProfilerStream() {
-        var elf = MicroBlazeLivermoreELFN10.linrec;
-        int window = 10;
-        // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
-        // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
-        // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
-        // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
-        // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
-
-        // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
-
-        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod, false);
-        var mem = new MemoryProfilerAnalyzer(stream, elf);
-        assertTrue(mem.profile(true));
-    }
+//    @Test
+//    public void testMemoryProfilerStream() {
+//        var elf = MicroBlazeLivermoreELFN10.linrec;
+//        int window = 10;
+//        // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+//        // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
+//        // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+//        // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
+//        // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+//
+//        // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+//
+//        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod, false);
+//        var mem = new MemoryProfilerAnalyzer(stream, elf);
+//        assertTrue(mem.profile(true));
+//    }
 
     @Test
     public void testDetailedStream() {
@@ -127,8 +127,8 @@ public class MicroBlazeTraceAnalysisTest {
 
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
-        InOutAnalyzer bba = new InOutAnalyzer(stream, elf);
-        bba.analyse(InOutAnalyzer.InOutMode.BASIC_BLOCK, window);
+        InOutAnalyzer bba = new InOutAnalyzer(stream, elf, window);
+        bba.analyse(InOutAnalyzer.InOutMode.BASIC_BLOCK);
     }
 
     @Test
@@ -145,8 +145,8 @@ public class MicroBlazeTraceAnalysisTest {
 
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
-        InOutAnalyzer bba = new InOutAnalyzer(stream, elf);
-        bba.analyse(InOutAnalyzer.InOutMode.TRACE, window);
+        InOutAnalyzer bba = new InOutAnalyzer(stream, elf, window);
+        bba.analyse(InOutAnalyzer.InOutMode.TRACE);
     }
 
     @Test
@@ -163,8 +163,8 @@ public class MicroBlazeTraceAnalysisTest {
 
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
-        InOutAnalyzer bba = new InOutAnalyzer(stream, elf);
-        bba.analyse(InOutAnalyzer.InOutMode.SIMPLE_BASIC_BLOCK, window);
+        InOutAnalyzer bba = new InOutAnalyzer(stream, elf, window);
+        bba.analyse(InOutAnalyzer.InOutMode.SIMPLE_BASIC_BLOCK);
     }
 
     @Test
@@ -182,8 +182,8 @@ public class MicroBlazeTraceAnalysisTest {
 
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
-        InOutAnalyzer bba = new InOutAnalyzer(stream, elf);
-        bba.analyse(InOutAnalyzer.InOutMode.ELIMINATION, window);
+        InOutAnalyzer bba = new InOutAnalyzer(stream, elf, window);
+        bba.analyse(InOutAnalyzer.InOutMode.ELIMINATION);
     }
 
     @Test
@@ -227,7 +227,7 @@ public class MicroBlazeTraceAnalysisTest {
 
         var fd = BinaryTranslationUtils.getFile(elf);
         var stream = new MicroBlazeTraceStream(fd);
-        var maa = new MemoryAddressAnalyzer(stream, elf, new MicroBlazeRegisterConventions());
-        maa.analyze(window);
+        var maa = new MemoryAddressAnalyzer(stream, elf, new MicroBlazeRegisterConventions(), window);
+        maa.analyze();
     }
 }

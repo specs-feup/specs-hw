@@ -47,9 +47,9 @@ public class MicroBlazeMemoryPatternsTest {
             for (var window : windows) {
                 var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
                 var stream = new MicroBlazeTraceStream(fd);
-                var analyzer = new MemoryAccessTypesAnalyzer(stream, elf);
-                var name = elf.name();
-                var report = analyzer.analyzeSegment(window);
+                var analyzer = new MemoryAccessTypesAnalyzer(stream, elf, window);
+                var name = elf.getResourceName();
+                var report = analyzer.analyzeSegment();
 
                 report.setName(name);
                 allReports.add(report);
@@ -91,7 +91,7 @@ public class MicroBlazeMemoryPatternsTest {
 
         var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
         var stream = new MicroBlazeTraceStream(fd);
-        var analyzer = new StreamingAnalyzer(stream, elf);
-        analyzer.analyze(window, 10);
+        var analyzer = new StreamingAnalyzer(stream, elf, window);
+        analyzer.analyze(10);
     }
 }
