@@ -53,9 +53,9 @@ public class MicroBlazeDataFlowTest {
     
     @Test
     public void testScheduling() {
-        int factors[] = { 3 };
-        int alus[] = {2, 4, 6, 8, 100};
-        int memPorts[] = {2, 4, 6, 8, 100};
+        int factors[] = { 1, 2, 3, 4, 5 };
+        int alus[] = {1, 2, 4, 6, 8, 100};
+        int memPorts[] = {1, 2, 4, 6, 8, 100};
 
         for (var unrollFactor : factors) {
             var elfs = MicroBlazeBasicBlockInfo.getPolybenchSmallFloatKernels();
