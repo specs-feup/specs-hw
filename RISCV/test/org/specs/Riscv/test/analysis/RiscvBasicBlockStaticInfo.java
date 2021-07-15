@@ -24,28 +24,28 @@ import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.Riscv.RiscvPolyBenchSmallFloat;
 
 public class RiscvBasicBlockStaticInfo {
-    public static Map<ELFProvider, Integer[][]> getPolybenchSmallFloatKernels() {
-        Map<ELFProvider, Integer[][]> elfs = new HashMap<>();
+    public static Map<ELFProvider, Long[][]> getPolybenchSmallFloatKernels() {
+        Map<ELFProvider, Long[][]> elfs = new HashMap<>();
 
-        elfs.put(RiscvPolyBenchSmallFloat._2mm, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat._3mm, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.adi, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.atax, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.bicg, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.covariance, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.trisolv, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.mvt, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.trmm, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.doitgen, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.fdtd2d, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.gemm, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.symm, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.syrk, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.gesummv, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.symm, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.nussinov, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.syr2k, new Integer[][] { { } });
-        elfs.put(RiscvPolyBenchSmallFloat.gemver, new Integer[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat._2mm, new Long[][] { {0x80000028L, 0x80000030L } });
+        elfs.put(RiscvPolyBenchSmallFloat._3mm, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.adi, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.atax, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.bicg, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.covariance, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.trisolv, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.mvt, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.trmm, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.doitgen, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.fdtd2d, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.gemm, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.symm, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.syrk, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.gesummv, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.symm, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.nussinov, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.syr2k, new Long[][] { { } });
+        elfs.put(RiscvPolyBenchSmallFloat.gemver, new Long[][] { { } });
         
         return elfs;
     }
