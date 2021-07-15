@@ -43,18 +43,23 @@ public abstract class AReporter {
         this.isStatic = true;
     }
 
-    public void analyze(int repetitions, String prefix) {
+    public void analyze(int repetition, String prefix) {
+        analyze(new int[] { repetition }, prefix);
+    }
+
+    public void analyze(int[] repetitions, String prefix) {
         var results = new ArrayList<DataFlowStatistics>();
 
-        if (isStatic) {
-            staticHandler(repetitions, results);
-        } else {
-            streamHandler(repetitions, results);
+        for (var repetition : repetitions) {
+            if (isStatic) {
+                staticHandler(repetition, results);
+            } else {
+                streamHandler(repetition, results);
+            }
         }
 
         processResults(results, prefix);
     }
-    
 
     private void streamHandler(int repetitions, ArrayList<DataFlowStatistics> results) {
         for (var elf : elfWindows.keySet()) {
@@ -69,7 +74,7 @@ public abstract class AReporter {
                 } catch (Exception e) {
                     SpecsLogs.warn("Error message:\n", e);
                 }
-                
+
                 var res = analyzeStream(repetitions, elf, window, stream);
                 id = processResult(results, elf, id, res);
             }
@@ -101,5 +106,6 @@ public abstract class AReporter {
 
     protected abstract List<DataFlowStatistics> analyzeStatic(int repetitions, List<Instruction> block);
 
-    protected abstract List<DataFlowStatistics> analyzeStream(int repetitions, ELFProvider elf, int window, ATraceInstructionStream stream);
+    protected abstract List<DataFlowStatistics> analyzeStream(int repetitions, ELFProvider elf, int window,
+            ATraceInstructionStream stream);
 }
