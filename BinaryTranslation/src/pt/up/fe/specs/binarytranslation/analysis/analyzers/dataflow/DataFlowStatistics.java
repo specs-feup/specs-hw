@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,9 @@ public class DataFlowStatistics {
     private int schedule;
     private String id;
     private String elfName = "";
-    private String resources;
+    private int alus;
+    private int memPorts;
+    private List<Integer> schedules = new ArrayList<>();
 
     public DataFlowStatistics(ASegmentDataFlowGraph graph) {
         this.graph = graph;
@@ -235,12 +238,32 @@ public class DataFlowStatistics {
         return this;
     }
     
-    public String getResources() {
-        return resources;
+    public int getAlus() {
+        return alus;
     }
 
-    public DataFlowStatistics setResources(String resources) {
-        this.resources = resources;
+    public DataFlowStatistics setAlus(int alus) {
+        this.alus = alus;
         return this;
+    }
+
+    public int getMemPorts() {
+        return memPorts;
+    }
+
+    public void setMemPorts(int memPorts) {
+        this.memPorts = memPorts;
+    }
+
+    public List<Integer> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(List<Integer> schedules) {
+        this.schedules = schedules;
+    }
+    
+    public void addSchedule(int schedule) {
+        this.schedules.add(schedule);
     }
 }

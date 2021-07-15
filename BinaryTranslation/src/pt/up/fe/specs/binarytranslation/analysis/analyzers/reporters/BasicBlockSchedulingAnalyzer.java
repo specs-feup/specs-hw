@@ -44,6 +44,8 @@ public class BasicBlockSchedulingAnalyzer extends ABasicBlockAnalyzer {
             var dfg = new BasicBlockDataFlowGraph(bb, repetitions);
             var t = new TransformRemoveZeroLatencyOps(dfg);
             dfg = (BasicBlockDataFlowGraph) t.applyToGraph();
+            var stats = new DataFlowStatistics(dfg);
+            stats.setInsts(bb).setRepetitions(repetitions);
             
             for (var aluN : alus) {
                 for (var memPortsN : memPorts) {
@@ -51,13 +53,10 @@ public class BasicBlockSchedulingAnalyzer extends ABasicBlockAnalyzer {
                     var s = sched.schedule(aluN, memPortsN);
                     var total = sched.getScheduleLength(s);
                     System.out.println("Schedule length (ALU=" + aluN + ", MEM=" + memPortsN + "): " + total + " cycles");
-
-                    var stats = new DataFlowStatistics(dfg);
-                    stats.setInsts(bb).setRepetitions(repetitions).setSched(total)
-                            .setResources("[" + alus + " | " + memPorts + "]");
-                    res.add(stats);
+                    stats.addSchedule(total);
                 }
             }
+            res.add(stats);
 
         }
         return res;
