@@ -44,9 +44,9 @@ public class RiscvTraceAnalysisTest {
     @Test
     public void testRiscvInOuts() {
         // var elf = RiscvLivermoreELFN100iam.innerprod100;
-        var elf = RiscvGccELF.autocor;
-        var stream = getStream(elf, true);
-        var bba = new InOutAnalyzer(stream, elf);
-        bba.analyse(InOutMode.BASIC_BLOCK, 10);
+//        var elf = RiscvGccELF.autocor;
+//        var stream = getStream(elf, true);
+//        var bba = new InOutAnalyzer(stream, elf);
+//        bba.analyse(InOutMode.BASIC_BLOCK, 10);
     }
 }
