@@ -17,17 +17,28 @@
 
 package org.specs.Riscv.test.analysis;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
+import org.specs.Riscv.asm.RiscvELFDump;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class RiscvDataFlowTest {
     public List<Instruction> getBasicBlock(ELFProvider elf, long start, long end) {
-        System.out.println("here");
-        return null;
+        var fd = BinaryTranslationUtils.getFile(elf.asTxtDump());
+        var dump = new RiscvELFDump(fd);
+        System.out.println("Start: " + start + ", end: " + end);
+        var addr = new ArrayList<>(dump.getElfdump().keySet());
+        Collections.sort(addr);
+        for (var i : addr) {
+            System.out.println(dump.getElfdump().get(i));
+        }
+        return dump.getRange(start, end);
     }
     
     @Test
@@ -38,7 +49,6 @@ public class RiscvDataFlowTest {
             
             for (var bound : elfs.get(elf)) {
                 if (bound.length == 0) {
-                    getBasicBlock(elf, 0, 3);
                     continue;
                 }
                 var start = bound[0];
@@ -46,7 +56,7 @@ public class RiscvDataFlowTest {
                 var bb = getBasicBlock(elf, start, end);
                 
                 for (var i : bb)
-                    System.out.println(i.getRepresentation());
+                    System.out.println(i);
                 System.out.println("-------------------");
             }
         }
