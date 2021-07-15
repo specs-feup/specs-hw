@@ -29,7 +29,6 @@ public abstract class ELFDump {
         try {
             Instruction i = null;
             while ((i = producer.nextInstruction()) != null) {
-
                 var addr = i.getAddress().longValue();
                 if (elfdump.containsKey(addr))
                     throw new Exception();
@@ -44,7 +43,7 @@ public abstract class ELFDump {
     }
 
     public Instruction getInstruction(Long addr) {
-        return elfdump.get(addr.longValue());
+        return elfdump.get(addr/*.longValue()*/);
     }
 
     /*

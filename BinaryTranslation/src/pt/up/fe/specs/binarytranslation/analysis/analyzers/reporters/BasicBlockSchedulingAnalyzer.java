@@ -54,6 +54,7 @@ public class BasicBlockSchedulingAnalyzer extends ABasicBlockAnalyzer {
                     var total = sched.getScheduleLength(s);
                     System.out.println("Schedule length (ALU=" + aluN + ", MEM=" + memPortsN + "): " + total + " cycles");
                     stats.addSchedule(total);
+                    stats.setRepetitions(repetitions);
                 }
             }
             res.add(stats);

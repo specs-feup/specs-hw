@@ -43,7 +43,7 @@ public class ReporterScheduling extends AReporter {
 
     @Override
     protected void processResults(ArrayList<DataFlowStatistics> results, String prefix) {
-        var csv = new StringBuilder("Benchmark,BasicBlock,");
+        var csv = new StringBuilder("Benchmark,BasicBlock,Unroll,");
         var toJoin = new ArrayList<String>();
         for (var a : alus) {
             for (var m : memPorts) {
@@ -54,7 +54,8 @@ public class ReporterScheduling extends AReporter {
 
         for (var res : results) {
             csv.append(res.getElfName()).append(",")
-            .append(res.getId());
+            .append(res.getId()).append(",")
+            .append(res.getRepetitions());
             for (var s : res.getSchedules()) {
                 csv.append(",").append(s);
             }
