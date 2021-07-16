@@ -21,6 +21,7 @@ import java.util.Optional;
 import org.specs.MicroBlaze.legacy.ArgumentsProperties.ArgumentProperty;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.legacy.TraceInstruction32;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
 
@@ -29,7 +30,7 @@ import pt.up.fe.specs.util.SpecsStrings;
  * 
  * @author Joao Bispo
  */
-public class MbInstruction { // implements TraceInstruction32 {
+public class MbInstruction implements TraceInstruction32 {
 
     /**
      * INSTANCE VARIABLES
