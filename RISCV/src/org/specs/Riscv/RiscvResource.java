@@ -32,10 +32,10 @@ public enum RiscvResource implements ResourceProvider {
 
     // other resources: https://github.com/michaeljclark/riscv-probe/tree/master/libfemto
 
-    RISCV_GCC("riscv32-unknown-elf-gcc"),
-    RISCV_GDB("riscv32-unknown-elf-gdb"),
-    RISCV_READELF("riscv32-unknown-elf-readelf"),
-    RISCV_OBJDUMP("riscv32-unknown-elf-objdump"),
+    RISCV_GCC("/opt/riscv/bin/riscv64-unknown-elf-gcc"),
+    RISCV_GDB("/opt/riscv/bin/riscv64-unknown-elf-gdb"),
+    RISCV_READELF("/opt/riscv/bin/riscv64-unknown-elf-readelf"),
+    RISCV_OBJDUMP("/opt/riscv/bin/riscv64-unknown-elf-objdump"),
 
     RISC_DUMP_REGEX("([0-9a-f]+):\\s([0-9a-f]+)"),
     RISC_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
