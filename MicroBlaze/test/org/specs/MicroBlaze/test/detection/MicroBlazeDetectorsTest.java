@@ -12,7 +12,9 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStatic
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentTraceSequenceDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.v3.GenericTraceSegmentDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 /**
  * Segment detection test cases; txt files are used so that the backend tools can run on Jenkins without need for
@@ -97,5 +99,21 @@ public class MicroBlazeDetectorsTest {
         var bundle = SegmentDetectTestUtils.detect(elf,
                 MicroBlazeTraceStream.class, FixedSizeMegablockDetectorV2.class, builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
+    }
+
+    /*
+     * v3 tester
+     */
+    @Test
+    public void testGenericTraceDetector() {
+        var elf = MicroBlazeLivermoreELFN10.matmul;
+        var fd = BinaryTranslationUtils.getFile(elf);
+        try (var tstream = new MicroBlazeTraceStream(fd)) {
+            var detector = new GenericTraceSegmentDetector(tstream);
+            detector.detectSegments();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

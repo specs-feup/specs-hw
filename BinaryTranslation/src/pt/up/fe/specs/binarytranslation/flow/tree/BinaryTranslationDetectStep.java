@@ -17,6 +17,11 @@ public class BinaryTranslationDetectStep extends BinaryTranslationStep {
     }
 
     @Override
+    protected BinaryTranslationStep copyPrivate() {
+        return new BinaryTranslationDetectStep(this.detectorClass);
+    }
+
+    @Override
     public void execute() {
 
         /*

@@ -16,11 +16,23 @@ public class SlidingWindow<T> {
     public T add(T unit) {
 
         // slide
-        if (this.ulist.size() == this.windowSize)
+        if (this.isFull())
             this.ulist.remove(0);
+
+        // TODO: inefficient due to data sliding
+        // re-implement with something other than "List"
+        // or keep the list but with a "header" pointer
+        // to implement a circular insertion list
 
         this.ulist.add(unit);
         return unit;
+    }
+
+    /*
+     * 
+     */
+    boolean isFull() {
+        return (this.getCurrentSize() == this.windowSize);
     }
 
     /*
@@ -36,6 +48,10 @@ public class SlidingWindow<T> {
 
     public List<T> getWindow() {
         return ulist;
+    }
+
+    public int getCurrentSize() {
+        return this.ulist.size();
     }
 
     public int getWindowSize() {
@@ -58,6 +74,10 @@ public class SlidingWindow<T> {
         var sidx = this.ulist.indexOf(from);
         var eidx = this.ulist.indexOf(to);
         return this.ulist.subList(sidx, eidx + 1);
+    }
+
+    public List<T> getRange(int from, int to) {
+        return this.ulist.subList(from, to + 1);
     }
 
     /*
