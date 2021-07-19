@@ -2,6 +2,8 @@ package pt.up.fe.specs.binarytranslation.tracer;
 
 import java.util.ArrayList;
 
+import pt.up.fe.specs.binarytranslation.detection.detectors.v3.SlidingWindow;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
 /**
@@ -11,11 +13,11 @@ import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 public class StreamUnitGenerator {
 
     private TraceInstructionStream istream;
-    private InstructionWindow window; // useless??
+    private SlidingWindow<Instruction> window; // useless??
 
     public StreamUnitGenerator(TraceInstructionStream istream) {
         this.istream = istream;
-        this.window = new InstructionWindow(100); // TODO edit this default
+        this.window = new SlidingWindow<Instruction>(100); // TODO edit this default
     }
 
     /*

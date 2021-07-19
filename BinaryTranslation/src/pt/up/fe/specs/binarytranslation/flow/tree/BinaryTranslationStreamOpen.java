@@ -18,6 +18,11 @@ public class BinaryTranslationStreamOpen extends BinaryTranslationStep {
     }
 
     @Override
+    protected BinaryTranslationStep copyPrivate() {
+        return new BinaryTranslationStreamOpen(this.filename, this.streamClass);
+    }
+
+    @Override
     public void execute() {
         File fd = SpecsIo.resourceCopy(filename);
         fd.deleteOnExit();

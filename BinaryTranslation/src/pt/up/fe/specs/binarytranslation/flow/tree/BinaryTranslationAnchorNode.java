@@ -5,4 +5,9 @@ public class BinaryTranslationAnchorNode extends BinaryTranslationStep {
     public BinaryTranslationAnchorNode() {
         super();
     }
+
+    @Override
+    protected BinaryTranslationStep copyPrivate() {
+        return new BinaryTranslationAnchorNode();
+    }
 }
