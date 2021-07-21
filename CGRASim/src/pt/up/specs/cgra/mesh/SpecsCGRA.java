@@ -1,4 +1,4 @@
-package pt.up.specs.cgra;
+package pt.up.specs.cgra.mesh;
 
 import pt.up.specs.cgra.pes.ProcessingElement;
 
