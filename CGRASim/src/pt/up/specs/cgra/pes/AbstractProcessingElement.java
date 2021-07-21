@@ -1,17 +1,49 @@
 package pt.up.specs.cgra.pes;
 
-public class AbstractProcessingElement implements ProcessingElement {
+import java.util.ArrayList;
+import java.util.List;
 
-    final int latency = 0;
-    final boolean hasMemory = false;
+import pt.up.specs.cgra.dataypes.ProcessingElementDataType;
+
+public abstract class AbstractProcessingElement implements ProcessingElement {
+
+    /*
+     * 
+     */
+    int latency = 1;
+    boolean hasMemory = false;
+    boolean ready = true;
+    boolean executing = false;
+    int executeCount = 0;
+
+    /*
+     * register file
+     */
+    private List<ProcessingElementDataType> registerFile;
+    int memorySize = 0;
+    int writeIdx = 0;
 
     // TODO: each processing element will need a map of operations which can be validly mapped to it
     // so that the scheduler holding the CGRA object can receive success or failure states during
     // scheduling
     // the map should be in the childmost class (maybe?)
 
+    protected AbstractProcessingElement(int latency, int memorySize) {
+        this.latency = latency;
+        this.memorySize = memorySize;
+        if (this.memorySize > 0) {
+            this.hasMemory = true;
+            this.registerFile = new ArrayList<ProcessingElementDataType>(memorySize);
+        }
+    }
+
+    protected AbstractProcessingElement(int latency) {
+        this.latency = latency;
+        this.hasMemory = false;
+    }
+
     protected AbstractProcessingElement() {
-        // TODO Auto-generated constructor stub
+        this(1);
     }
 
     @Override
@@ -22,5 +54,70 @@ public class AbstractProcessingElement implements ProcessingElement {
     @Override
     public boolean hasMemory() {
         return hasMemory;
+    }
+
+    @Override
+    public boolean isExecuting() {
+        return this.executing;
+    }
+
+    @Override
+    public boolean isReady() {
+        return this.ready;
+    }
+
+    @Override
+    public int getExecuteCount() {
+        return this.executeCount;
+    }
+
+    @Override
+    public boolean setResultRegister(int regIndex) {
+        if (regIndex < this.memorySize) {
+            this.writeIdx = regIndex;
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean setOperand(int opIndex, ProcessingElementDataType op) {
+        if (opIndex < this.operands.size()) {
+            this.operands.set(opIndex, op);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * initialized by children
+     */
+    protected List<ProcessingElementDataType> operands;
+
+    /*
+     * Implemented by children
+     */
+    protected abstract ProcessingElementDataType _execute();
+
+    /*
+     * Use by children
+     */
+    protected ProcessingElementDataType getOperand(int idx) {
+        return this.operands.get(idx);
+    }
+
+    @Override
+    public ProcessingElementDataType execute() {
+
+        // TODO: implement latency! requires a counter which sets ready = false and executing = true
+
+        var result = _execute();
+        this.executeCount++;
+        if (this.writeIdx != -1)
+            this.registerFile.set(this.writeIdx, result);
+        return result;
     }
 }

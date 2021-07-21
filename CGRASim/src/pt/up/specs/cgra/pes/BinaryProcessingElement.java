@@ -1,8 +1,13 @@
 package pt.up.specs.cgra.pes;
 
+import java.util.ArrayList;
+
 import pt.up.specs.cgra.dataypes.ProcessingElementDataType;
 
-public interface BinaryProcessingElement extends ProcessingElement {
+public abstract class BinaryProcessingElement extends AbstractProcessingElement {
 
-    public ProcessingElementDataType execute(ProcessingElementDataType operandA, ProcessingElementDataType operandB);
+    public BinaryProcessingElement(int latency, int memorySize) {
+        super(latency, memorySize);
+        this.operands = new ArrayList<ProcessingElementDataType>(2);
+    }
 }
