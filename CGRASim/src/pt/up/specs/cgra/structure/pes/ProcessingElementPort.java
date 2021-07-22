@@ -28,6 +28,10 @@ public class ProcessingElementPort {
         return payload;
     }
 
+    public void setPayload(PEData payload) {
+        this.payload = payload;
+    }
+
     public PEPortDirection getDir() {
         return dir;
     }

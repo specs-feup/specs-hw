@@ -8,6 +8,11 @@ public class PEInteger implements PEData {
         this.value = value;
     }
 
+    @Override
+    public PEData copy() {
+        return new PEInteger(this.value);
+    }
+
     public int getValue() {
         return value;
     }
