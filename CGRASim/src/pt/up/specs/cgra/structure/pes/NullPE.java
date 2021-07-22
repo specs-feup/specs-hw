@@ -1,4 +1,4 @@
-package pt.up.specs.cgra.pes;
+package pt.up.specs.cgra.structure.pes;
 
 import pt.up.specs.cgra.dataypes.PEData;
 
@@ -59,6 +59,12 @@ public class NullPE implements ProcessingElement {
     public PEData execute() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public int getMemorySize() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
 }

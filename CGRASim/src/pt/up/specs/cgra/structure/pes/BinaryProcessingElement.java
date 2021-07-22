@@ -1,4 +1,4 @@
-package pt.up.specs.cgra.pes;
+package pt.up.specs.cgra.structure.pes;
 
 import java.util.ArrayList;
 

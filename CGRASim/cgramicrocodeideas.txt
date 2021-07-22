@@ -1,0 +1,13 @@
+ts 1
+cnt U1.w U2.n
+map op U1
+save ctx1 // saves current interconnection context into ram
+exec
+ts 2
+dpr U1 <br>
+
+load ctx1 // single cycle full cgra reconfig
+step // execute step?
+
+start // blocking start
+wait

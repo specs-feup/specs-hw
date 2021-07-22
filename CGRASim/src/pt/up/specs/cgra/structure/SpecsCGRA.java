@@ -1,17 +1,17 @@
-package pt.up.specs.cgra.mesh;
+package pt.up.specs.cgra.structure;
 
-import pt.up.specs.cgra.interconnect.Interconnect;
-import pt.up.specs.cgra.pes.ProcessingElement;
+import pt.up.specs.cgra.structure.interconnect.Interconnect;
+import pt.up.specs.cgra.structure.mesh.Mesh;
 
 public interface SpecsCGRA {
 
     /*
      * 
      */
-    public ProcessingElement getProcessingElement(int x, int y);
+    public Mesh getMesh();
 
     /*
-     * Interconnect at
+     * Interconnect
      */
     public Interconnect getInterconnect();
 
@@ -19,6 +19,11 @@ public interface SpecsCGRA {
      * Executes a single simulation tick (can be considered a clock cycle)
      */
     public boolean execute();
+
+    /*
+     * switch between one of X (max) available contexts
+     */
+    // public boolean switchContext();
 
     /*
      * Generate a visual representation of the current CGRA status

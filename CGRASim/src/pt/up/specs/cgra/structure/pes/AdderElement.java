@@ -1,4 +1,4 @@
-package pt.up.specs.cgra.pes;
+package pt.up.specs.cgra.structure.pes;
 
 import pt.up.specs.cgra.dataypes.PEData;
 
@@ -25,6 +25,11 @@ public class AdderElement extends BinaryProcessingElement {
 
     @Override
     public ProcessingElement copy() {
-        return new AdderElement(this.latency, this.memorySize);
+        return new AdderElement(this.getLatency(), this.getMemorySize());
+    }
+
+    @Override
+    public String toString() {
+        return "Adder";
     }
 }

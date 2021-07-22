@@ -1,4 +1,4 @@
-package pt.up.specs.cgra.pes;
+package pt.up.specs.cgra.structure.pes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +10,24 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     /*
      * 
      */
-    int latency = 1;
-    boolean hasMemory = false;
-    boolean ready = true;
-    boolean executing = false;
-    int executeCount = 0;
+    // private String peID;
+    private int latency = 1;
+    private boolean hasMemory = false;
+    private boolean ready = true;
+    private boolean executing = false;
+    private int executeCount = 0;
 
     /*
      * register file
      */
     private List<PEData> registerFile;
-    int memorySize = 0;
-    int writeIdx = 0;
+    private int memorySize = 0;
+    private int writeIdx = 0;
+
+    /*
+     * initialized by children
+     */
+    protected List<PEData> operands;
 
     // TODO: each processing element will need a map of operations which can be validly mapped to it
     // so that the scheduler holding the CGRA object can receive success or failure states during
@@ -34,12 +40,13 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         if (this.memorySize > 0) {
             this.hasMemory = true;
             this.registerFile = new ArrayList<PEData>(memorySize);
+        } else {
+            this.hasMemory = false;
         }
     }
 
     protected AbstractProcessingElement(int latency) {
-        this.latency = latency;
-        this.hasMemory = false;
+        this(latency, 0);
     }
 
     protected AbstractProcessingElement() {
@@ -54,6 +61,11 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     @Override
     public boolean hasMemory() {
         return hasMemory;
+    }
+
+    @Override
+    public int getMemorySize() {
+        return memorySize;
     }
 
     @Override
@@ -91,11 +103,6 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
             return false;
         }
     }
-
-    /*
-     * initialized by children
-     */
-    protected List<PEData> operands;
 
     /*
      * Implemented by children
