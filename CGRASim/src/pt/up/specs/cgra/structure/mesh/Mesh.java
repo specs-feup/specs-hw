@@ -19,6 +19,12 @@ public class Mesh {
         this.mesh = mesh;
         this.x = mesh.size();
         this.y = mesh.get(0).size();
+        for (int i = 0; i < this.x; i++)
+            for (int j = 0; j < this.y; j++) {
+                var pe = this.mesh.get(i).get(j);
+                pe.setX(i);
+                pe.setY(j);
+            }
     }
 
     public List<List<ProcessingElement>> getMesh() {

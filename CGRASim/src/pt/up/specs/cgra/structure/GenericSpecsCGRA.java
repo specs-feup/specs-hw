@@ -24,6 +24,12 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     private GenericSpecsCGRA(Mesh mesh, Interconnect interconnect) {
         this.mesh = mesh;
         this.interconnect = interconnect;
+        for (int i = 0; i < this.mesh.getX(); i++)
+            for (int j = 0; j < this.mesh.getY(); j++) {
+                var pe = this.mesh.getProcessingElement(i, j);
+                pe.setCGRA(this);
+            }
+
     }
 
     @Override
@@ -104,8 +110,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
         public Builder withProcessingElement(ProcessingElement pe, int x, int y) {
             this.mesh.get(x).set(y, pe);
-            pe.setX(x);
-            pe.setY(y);
             return this;
         }
 

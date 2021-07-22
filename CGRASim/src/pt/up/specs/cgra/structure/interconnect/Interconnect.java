@@ -15,7 +15,12 @@ public interface Interconnect {
     public boolean setConnection(ProcessingElementPort from, ProcessingElementPort to);
 
     /*
-     * todo: queries for valid connection
+     * 
+     */
+    public ProcessingElementPort findDriver(ProcessingElementPort to);
+
+    /*
+     * 
      */
     public boolean connectionValid(ProcessingElementPort from, ProcessingElementPort to);
 }
