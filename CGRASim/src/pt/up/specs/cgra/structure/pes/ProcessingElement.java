@@ -1,8 +1,16 @@
 package pt.up.specs.cgra.structure.pes;
 
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.structure.SpecsCGRA;
 
 public interface ProcessingElement {
+
+    /*
+     * 
+     */
+    default public boolean setCGRA(SpecsCGRA myparent) {
+        return false;
+    }
 
     /*
      * 
@@ -16,6 +24,13 @@ public interface ProcessingElement {
      */
     default public boolean setY(int y) {
         return false;
+    }
+
+    /*
+     * 
+     */
+    default public SpecsCGRA getCGRA() {
+        return null;
     }
 
     /*
@@ -102,6 +117,13 @@ public interface ProcessingElement {
      */
     default public PEData execute() {
         return null;
+    }
+
+    /*
+     * 
+     */
+    default public String statusString() {
+        return "No status";
     }
 
     // public getImplementation ??

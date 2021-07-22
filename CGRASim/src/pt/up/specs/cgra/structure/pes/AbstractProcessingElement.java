@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.structure.SpecsCGRA;
+import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
 
 public abstract class AbstractProcessingElement implements ProcessingElement {
 
@@ -11,6 +13,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
      * 
      */
     // private String peID;
+    private SpecsCGRA myparent;
     private int xPos, yPos;
     private int latency = 1;
     private boolean hasMemory = false;
@@ -52,6 +55,26 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 
     protected AbstractProcessingElement() {
         this(1);
+    }
+
+    @Override
+    public String statusString() {
+        var strbld = new StringBuilder();
+        strbld.append("PE." + this.xPos + "." + this.yPos + "(");
+        for (var iPort : this.ports) {
+            if (iPort.getDir() == PEPortDirection.input) {
+                var driver = this.getCGRA().getInterconnect().findDriver(iPort);
+                if (driver != null)
+                    strbld.append(iPort.toString() + "<-" + driver.toString());
+            }
+        }
+        return strbld.toString();
+    }
+
+    @Override
+    public boolean setCGRA(SpecsCGRA myparent) {
+        this.myparent = myparent;
+        return true;
     }
 
     @Override
@@ -124,16 +147,6 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
             return false;
         }
     }
-
-    /* @Override
-    public boolean setOperand(int opIndex, PEData op) {
-        if (opIndex < this.ports.size()) {
-            this.operands.set(opIndex, op);
-            return true;
-        } else {
-            return false;
-        }
-    }*/
 
     /*
      * Implemented by children

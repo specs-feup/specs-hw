@@ -1,5 +1,7 @@
 package pt.up.specs.cgra.structure.interconnect;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +18,23 @@ public abstract class AInterconnect implements Interconnect {
     // private final Mesh mesh;
     private Map<ProcessingElementPort, List<ProcessingElementPort>> connections;
 
+    public AInterconnect() {
+        this.connections = new HashMap<ProcessingElementPort, List<ProcessingElementPort>>();
+    }
+
     /**
      * For every connection, copy the output payload into the input ports of each @ProcessingElement
      */
     @Override
     public boolean propagate() {
-        // TODO Auto-generated method stub
-        return false;
+
+        for (var drive : this.connections.keySet()) {
+            var drivenList = this.connections.get(drive);
+            for (var drivenPort : drivenList)
+                drivenPort.setPayload(drive.getPayload().copy()); // copy the data element
+        }
+
+        return true;
     }
 
     @Override
@@ -31,7 +43,33 @@ public abstract class AInterconnect implements Interconnect {
         if (!connectionValid(from, to))
             return false;
 
-        to.setPayload(from.getPayload());
+        // get list for this driving port, i.e., "from"
+        if (this.connections.containsKey(from)) {
+            var drivenList = this.connections.get(from);
+            if (!drivenList.contains(to))
+                drivenList.add(to);
+
+        } else {
+            var newList = new ArrayList<ProcessingElementPort>();
+            newList.add(to);
+            this.connections.put(from, newList);
+        }
+
         return true;
+    }
+
+    @Override
+    public ProcessingElementPort findDriver(ProcessingElementPort to) {
+
+        ProcessingElementPort driver = null;
+        for (var drive : this.connections.keySet()) {
+            var drivenList = this.connections.get(drive);
+            if (drivenList.contains(to)) {
+                driver = drive;
+                break;
+            }
+        }
+        return driver;
+
     }
 }
