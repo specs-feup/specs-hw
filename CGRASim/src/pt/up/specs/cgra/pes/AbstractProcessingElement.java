@@ -3,7 +3,7 @@ package pt.up.specs.cgra.pes;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.specs.cgra.dataypes.ProcessingElementDataType;
+import pt.up.specs.cgra.dataypes.PEData;
 
 public abstract class AbstractProcessingElement implements ProcessingElement {
 
@@ -19,7 +19,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     /*
      * register file
      */
-    private List<ProcessingElementDataType> registerFile;
+    private List<PEData> registerFile;
     int memorySize = 0;
     int writeIdx = 0;
 
@@ -33,7 +33,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         this.memorySize = memorySize;
         if (this.memorySize > 0) {
             this.hasMemory = true;
-            this.registerFile = new ArrayList<ProcessingElementDataType>(memorySize);
+            this.registerFile = new ArrayList<PEData>(memorySize);
         }
     }
 
@@ -83,7 +83,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     }
 
     @Override
-    public boolean setOperand(int opIndex, ProcessingElementDataType op) {
+    public boolean setOperand(int opIndex, PEData op) {
         if (opIndex < this.operands.size()) {
             this.operands.set(opIndex, op);
             return true;
@@ -95,22 +95,22 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     /*
      * initialized by children
      */
-    protected List<ProcessingElementDataType> operands;
+    protected List<PEData> operands;
 
     /*
      * Implemented by children
      */
-    protected abstract ProcessingElementDataType _execute();
+    protected abstract PEData _execute();
 
     /*
      * Use by children
      */
-    protected ProcessingElementDataType getOperand(int idx) {
+    protected PEData getOperand(int idx) {
         return this.operands.get(idx);
     }
 
     @Override
-    public ProcessingElementDataType execute() {
+    public PEData execute() {
 
         // TODO: implement latency! requires a counter which sets ready = false and executing = true
 
@@ -119,5 +119,13 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         if (this.writeIdx != -1)
             this.registerFile.set(this.writeIdx, result);
         return result;
+    }
+
+    /*
+     * 
+     */
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName();
     }
 }
