@@ -1,8 +1,13 @@
 package pt.up.specs.cgra.pes;
 
-import pt.up.specs.cgra.dataypes.ProcessingElementDataType;
+import pt.up.specs.cgra.dataypes.PEData;
 
 public interface ProcessingElement {
+
+    /*
+     * Copy constructor
+     */
+    public ProcessingElement copy();
 
     /*
      * 
@@ -34,7 +39,7 @@ public interface ProcessingElement {
      * 0: lhs
      * 1: rhs
      */
-    public boolean setOperand(int opIndex, ProcessingElementDataType op);
+    public boolean setOperand(int opIndex, PEData op);
 
     /*
      * Sets result register for the next operation to execute (this setting is/should be persistent)
@@ -46,7 +51,7 @@ public interface ProcessingElement {
      * this does not guarantee that the return is valid, only when
      * isReady returns true can the result be considered valid
      */
-    public ProcessingElementDataType execute();
+    public PEData execute();
 
     /*
      * Unary operations must implement this (binary operations can override it with the binary version where opB = 0) ?
