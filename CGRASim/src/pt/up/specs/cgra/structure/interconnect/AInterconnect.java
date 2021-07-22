@@ -14,13 +14,7 @@ public abstract class AInterconnect implements Interconnect {
 
     // reference to the mesh?
     // private final Mesh mesh;
-    private final int x, y;
     private Map<ProcessingElementPort, List<ProcessingElementPort>> connections;
-
-    public AInterconnect(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
 
     /**
      * For every connection, copy the output payload into the input ports of each @ProcessingElement
@@ -37,5 +31,7 @@ public abstract class AInterconnect implements Interconnect {
         if (!connectionValid(from, to))
             return false;
 
+        to.setPayload(from.getPayload());
+        return true;
     }
 }

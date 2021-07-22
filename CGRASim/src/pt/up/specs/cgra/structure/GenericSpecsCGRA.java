@@ -89,7 +89,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
                     this.mesh.get(i).add(new NullPE());
                 }
             }
-            this.intc = new NearestNeighbour(this.meshX, this.meshY); // default
+            this.intc = new NearestNeighbour(); // default
         }
 
         /*
@@ -104,11 +104,14 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
         public Builder withProcessingElement(ProcessingElement pe, int x, int y) {
             this.mesh.get(x).set(y, pe);
+            pe.setX(x);
+            pe.setY(y);
             return this;
         }
 
         public Builder withNearestNeighbourInterconnect() {
-            this.intc = new NearestNeighbour(this.meshX, this.meshY);
+            if (!(this.intc instanceof NearestNeighbour))
+                this.intc = new NearestNeighbour();
             return this;
         }
 

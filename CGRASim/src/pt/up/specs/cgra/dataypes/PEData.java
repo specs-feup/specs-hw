@@ -21,5 +21,7 @@ public interface PEData {
 
     public PEData rshift(PEData operandB);
 
+    public PEData copy();
+
     // public PEData partSelect(PEData operandB);
 }

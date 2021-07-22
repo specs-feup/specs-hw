@@ -11,6 +11,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
      * 
      */
     // private String peID;
+    private int xPos, yPos;
     private int latency = 1;
     private boolean hasMemory = false;
     private boolean ready = true;
@@ -27,7 +28,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     /*
      * initialized by children
      */
-    protected List<PEData> operands;
+    protected List<ProcessingElementPort> ports;
 
     // TODO: each processing element will need a map of operations which can be validly mapped to it
     // so that the scheduler holding the CGRA object can receive success or failure states during
@@ -51,6 +52,36 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 
     protected AbstractProcessingElement() {
         this(1);
+    }
+
+    @Override
+    public boolean setX(int x) {
+        if (this.xPos != -1)
+            return false;
+        else {
+            this.xPos = x;
+            return true;
+        }
+    }
+
+    @Override
+    public boolean setY(int y) {
+        if (this.yPos != -1)
+            return false;
+        else {
+            this.yPos = y;
+            return true;
+        }
+    }
+
+    @Override
+    public int getX() {
+        return this.xPos;
+    }
+
+    @Override
+    public int getY() {
+        return this.yPos;
     }
 
     @Override
@@ -94,15 +125,15 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         }
     }
 
-    @Override
+    /* @Override
     public boolean setOperand(int opIndex, PEData op) {
-        if (opIndex < this.operands.size()) {
+        if (opIndex < this.ports.size()) {
             this.operands.set(opIndex, op);
             return true;
         } else {
             return false;
         }
-    }
+    }*/
 
     /*
      * Implemented by children
@@ -113,7 +144,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
      * Use by children
      */
     protected PEData getOperand(int idx) {
-        return this.operands.get(idx);
+        return this.ports.get(idx).getPayload();
     }
 
     @Override
@@ -123,6 +154,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 
         var result = _execute();
         this.executeCount++;
+        this.ports.get(this.ports.size() - 1).setPayload(result);
         if (this.writeIdx != -1)
             this.registerFile.set(this.writeIdx, result);
         return result;

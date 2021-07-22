@@ -5,58 +5,104 @@ import pt.up.specs.cgra.dataypes.PEData;
 public interface ProcessingElement {
 
     /*
+     * 
+     */
+    default public boolean setX(int x) {
+        return false;
+    }
+
+    /*
+     * 
+     */
+    default public boolean setY(int y) {
+        return false;
+    }
+
+    /*
+     * 
+     */
+    default public int getX() {
+        return -1;
+    }
+
+    /*
+     * 
+     */
+    default public int getY() {
+        return -1;
+    }
+
+    /*
      * Copy constructor
      */
-    public ProcessingElement copy();
+    default public ProcessingElement copy() {
+        return null;
+    }
 
     /*
      * 
      */
-    public int getLatency();
+    default public int getLatency() {
+        return 1;
+    }
 
     /*
      * 
      */
-    public boolean hasMemory();
+    default public boolean hasMemory() {
+        return false;
+    }
 
     /*
      * 
      */
-    public int getMemorySize();
+    default public int getMemorySize() {
+        return 0;
+    }
 
     /*
      * 
      */
-    public boolean isReady();
+    default public boolean isReady() {
+        return false;
+    }
 
     /*
      * 
      */
-    public boolean isExecuting();
+    default public boolean isExecuting() {
+        return false;
+    }
 
     /*
      * 
      */
-    public int getExecuteCount();
+    default public int getExecuteCount() {
+        return 0;
+    }
 
     /*
      * opIndex:
      * 0: lhs
      * 1: rhs
      */
-    public boolean setOperand(int opIndex, PEData op);
+    // public boolean setOperand(int opIndex, PEData op);
 
     /*
      * Sets result register for the next operation to execute (this setting is/should be persistent)
      */
-    public boolean setResultRegister(int regIndex);
+    default public boolean setResultRegister(int regIndex) {
+        return false;
+    }
 
     /*
      * Implements ONE execution tick (can be considered as a clock cycle)
      * this does not guarantee that the return is valid, only when
      * isReady returns true can the result be considered valid
      */
-    public PEData execute();
+    default public PEData execute() {
+        return null;
+    }
 
     // public getImplementation ??
 
