@@ -2,8 +2,8 @@ package pt.up.specs.cgra;
 
 import org.junit.Test;
 
-import pt.up.specs.cgra.mesh.GenericSpecsCGRA;
-import pt.up.specs.cgra.pes.AdderElement;
+import pt.up.specs.cgra.structure.GenericSpecsCGRA;
+import pt.up.specs.cgra.structure.pes.AdderElement;
 
 public class GenericSpecsGGRATest {
 

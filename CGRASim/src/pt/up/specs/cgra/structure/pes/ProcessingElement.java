@@ -1,4 +1,4 @@
-package pt.up.specs.cgra.pes;
+package pt.up.specs.cgra.structure.pes;
 
 import pt.up.specs.cgra.dataypes.PEData;
 
@@ -18,6 +18,11 @@ public interface ProcessingElement {
      * 
      */
     public boolean hasMemory();
+
+    /*
+     * 
+     */
+    public int getMemorySize();
 
     /*
      * 
@@ -52,23 +57,6 @@ public interface ProcessingElement {
      * isReady returns true can the result be considered valid
      */
     public PEData execute();
-
-    /*
-     * Unary operations must implement this (binary operations can override it with the binary version where opB = 0) ?
-    
-    public ProcessingElementDataType execute(ProcessingElementDataType opA);
-    
-    
-     * Binary operations must implement this (two external operands)
-    
-    public ProcessingElementDataType execute(ProcessingElementDataType opA, ProcessingElementDataType opB);
-    
-    
-     * Binary operations must implement this (rhs operand from internal register file index)
-     * If PE doesnt have memory, then this method throws exception?
-    
-    public ProcessingElementDataType execute(ProcessingElementDataType opA, int rfIndex);
-    */
 
     // public getImplementation ??
 
