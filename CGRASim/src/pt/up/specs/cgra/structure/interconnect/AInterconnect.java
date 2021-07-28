@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 
 public abstract class AInterconnect implements Interconnect {
@@ -16,9 +17,11 @@ public abstract class AInterconnect implements Interconnect {
 
     // reference to the mesh?
     // private final Mesh mesh;
+    private Context currentContext;
     private Map<ProcessingElementPort, List<ProcessingElementPort>> connections;
 
     public AInterconnect() {
+        this.currentContext = null;
         this.connections = new HashMap<ProcessingElementPort, List<ProcessingElementPort>>();
     }
 
@@ -56,6 +59,26 @@ public abstract class AInterconnect implements Interconnect {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean applyContext(Context ctx) {
+        var connections = ctx.getConnections();
+        for (var driver : connections.keySet()) {
+            for (var sink : connections.get(driver))
+                if (!this.setConnection(driver, sink))
+                    return false;
+            /*
+             * TODO: create exception classes to handle these errors
+             */
+        }
+        this.currentContext = ctx;
+        return true;
+    }
+
+    @Override
+    public Context getContext() {
+        return this.currentContext;
     }
 
     @Override
