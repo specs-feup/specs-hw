@@ -1,19 +1,25 @@
 # Draft of microcode spec
 
-(attempt at making a 18-bit microcode spec)
+This microcode should be executed by the CGRA microcontroler unit.
+The unit should be capable of responding to the master
+interface when instructions such as the query set are executed. 
 
-             | set | encode fmt | inst | fields?     |
-core format: | xxx | x          | xxx  | xxxxxxxxxxx |
+(attempt at making a 20-bit microcode spec)
 
-			 | set | encode fmt | inst | op1         |
-one operand: | xxx | x          | xxx  | xxxxxxxxxxx |
+             | set | encode fmt | inst | fields?       |
+core format: | xxx | x          | xxx  | xxxxxxxxxxxxx |
 
-			 | set | encode fmt | inst | op1     | op2     |
-two operand: | xxx | x          | xxx  | xxxxxxx | xxxxxxx |
+			 | set | encode fmt | inst | op1           |
+one operand: | xxx | x          | xxx  | xxxxxxxxxxxxx |
 
-			 | set | encode fmt | inst | op1     | imm     |
-one op imm:  | xxx | x          | xxx  | xxxxxxx | xxxxxxx |
+			 | set | encode fmt | inst | op1      | op2      |
+two operand: | xxx | x          | xxx  | xxxxxxxx | xxxxxxxx |
+
+			 | set | encode fmt | inst | op1      | imm      |
+one op imm:  | xxx | x          | xxx  | xxxxxxxx | xxxxxxxx |
 	- imm should be index to memory of constants
+
+encode fmt bit: differentiates between field splits
 
 -------------------------------------------------------------------------------
 
@@ -40,13 +46,33 @@ one op imm:  | xxx | x          | xxx  | xxxxxxx | xxxxxxx |
 base.fmt1: | 000 | 0      | xxx  |          |
 
 ##### Set Timestep
-"ts t",                   | 000 | 0 | 000 | <t>               |
+"ts t",                  | 000 | 1 | 000 | <t>               |
 
 ##### Set Connection
-"setcx <source>, <sink>", | 000 | 0 | 000 | <source> | <sink> |
+"setc <source>, <sink>", | 000 | 0 | 001 | <source> | <sink> |
 
-Source and sink are 4 bits each. First 3 bits are x coordinate
-navigation in mesh (see PE coordinate system file), and last bit is port index (2 ports max). 
+Source and sink are 8 bits each. First 7 bits are the PEs absolute ID,
+counted from top left, right-wards first, and down row by row, 
+and last bit is port index (2 ports max).
+
+Using 7 bits, a CGRA of max size 128 is possible (9x9).
+Note that this means that the same encoding for a PE can lead to different
+physical x,y locations depending on grid size!
+
+In a 8x8 mesh, Source and sink can be represented by mnemonics such as:
+PE14.Port0 --> 0001100.0 --> PE number 12 is at coordinate x = 1, y = 4
+PE00.Port1 --> 0000000.1
+
+##### Context Save/Load
+"svctx <slot>",          | 000 | 1 | 010 | <slot>               |
+"ldctx <slot>",          | 000 | 1 | 011 | <slot>               |
+
+Saves/loads the current connection settings into a context memory page.
+The context memory is a single cycle (?) page switch where every connection is defined.
+
+The mesh is configured based on the connection info the the "front buffer". 
+The front buffer can be entirely replaced by a ldctx, or saved into a backpage by a svctx.
+The front buffer is editable after a ldctx by using "setc".
 
 -------------------------------------------------------------------------------
 	
@@ -57,5 +83,5 @@ navigation in mesh (see PE coordinate system file), and last bit is port index (
 	- Query current driver of port
 	- Query CGRA size
 	- Query CGRA ISA features (i.e., which sets are implemented)
-	- Query contex memory?
+	- Query context memory?
 	
