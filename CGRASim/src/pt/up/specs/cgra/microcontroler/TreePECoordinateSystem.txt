@@ -1,0 +1,35 @@
+# Tree Coordinate System for Mesh in CGRA
+
+To pick any PE in a CGRA, the number of required bits is only as
+high as the max(width, height) of the mesh, rounded up to an even number.
+
+The mnemonic syntax for PE coordinates in the microcode is:
+
+"PE<Nr>.Port<N>", where Nr is up to two digits
+e.g. PE04.Port0 --> where x= 0 and y = 4, encoding is "1010.0"
+
+Encoding Example:
+For a mesh that is 4x4, PE04 can be encoded with "1010.0", where the PE field is read right to left.
+
+Each bit read chooses half of the CGRA, starting by a horizontal split, then a vertical, etc.
+Zero is left/up, 1 is right/down. A sequence of choices encodes an individual PE.
+For CGRAs with odd numbers of PEs in any dimension, the choice is made assuming a virtual (non existent) 
+row/column of PEs which cannot be addressed. 
+
+Another example:
+For a mesh that is 6x5, PE32 can be chosen by encoding: "001100"
+Meaning, starting from the mesh center: 
+left from center, 
+up (on the resulting 3x(5+1) submesh), 
+right (on the resulting 3x3(+1) submesh), 
+down (on the resulting 1x3(+1) submesh), 
+left (on the resulting 1(+1)x1(+1) submesh),
+up (on the resulting 1(+1)x1 submesh)
+
+Mesh:
+         _ _ _ _ _ _
+         |x x x x x x|
+         |x x x x x x|
+y = 2 -> |x x o x x x|
+         |x x x x x x|
+         |x x x x x x|
