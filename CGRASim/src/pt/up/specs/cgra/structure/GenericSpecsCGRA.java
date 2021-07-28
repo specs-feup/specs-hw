@@ -42,6 +42,9 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         return this.interconnect;
     }
 
+    /*
+     * executes a single simulation step (clock cycle)
+     */
     @Override
     public boolean execute() {
 

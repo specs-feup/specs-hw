@@ -1,0 +1,61 @@
+# Draft of microcode spec
+
+(attempt at making a 18-bit microcode spec)
+
+             | set | encode fmt | inst | fields?     |
+core format: | xxx | x          | xxx  | xxxxxxxxxxx |
+
+			 | set | encode fmt | inst | op1         |
+one operand: | xxx | x          | xxx  | xxxxxxxxxxx |
+
+			 | set | encode fmt | inst | op1     | op2     |
+two operand: | xxx | x          | xxx  | xxxxxxx | xxxxxxx |
+
+			 | set | encode fmt | inst | op1     | imm     |
+one op imm:  | xxx | x          | xxx  | xxxxxxx | xxxxxxx |
+	- imm should be index to memory of constants
+
+-------------------------------------------------------------------------------
+
+## ISA Families/Extensions
+- Base
+	- Register/constant manipulation
+- Query
+- Context
+- DPR
+- Streaming
+
+### Base
+
+#### Description
+- This set includes
+	- Timestep setting (setting the number of timesteps, and which timestep is active)
+	- Connection setting
+	- Context saving/loading
+	- Set iteration bound
+	- Set constant into constant memory
+	- (advanced: Set iteration exit condition based on PE result)
+
+           | set | encode | inst | fields?  |
+base.fmt1: | 000 | 0      | xxx  |          |
+
+##### Set Timestep
+"ts t",                   | 000 | 0 | 000 | <t>               |
+
+##### Set Connection
+"setcx <source>, <sink>", | 000 | 0 | 000 | <source> | <sink> |
+
+Source and sink are 4 bits each. First 3 bits are x coordinate
+navigation in mesh (see PE coordinate system file), and last bit is port index (2 ports max). 
+
+-------------------------------------------------------------------------------
+	
+### Query
+
+- This set includes
+	- Query PE type
+	- Query current driver of port
+	- Query CGRA size
+	- Query CGRA ISA features (i.e., which sets are implemented)
+	- Query contex memory?
+	
