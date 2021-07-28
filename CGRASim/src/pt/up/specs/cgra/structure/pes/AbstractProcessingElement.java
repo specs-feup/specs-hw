@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.specs.cgra.dataypes.PEData;
-import pt.up.specs.cgra.structure.SpecsCGRA;
+import pt.up.specs.cgra.structure.memory.GenericMemory;
+import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
 
 public abstract class AbstractProcessingElement implements ProcessingElement {
@@ -13,7 +14,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
      * 
      */
     // private String peID;
-    private SpecsCGRA myparent;
+    private Mesh myparent;
     private int xPos, yPos;
     private int latency = 1;
     private boolean hasMemory = false;
@@ -22,7 +23,13 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     private int executeCount = 0;
 
     /*
-     * register file
+     * local memory to hold constants (useful for using 
+     * same PE for different contexts, if that PE needs different contexts)
+     */
+    private GenericMemory constants = new GenericMemory(2);
+
+    /*
+     * register file (for values computed during operation)
      */
     private List<PEData> registerFile;
     private int memorySize = 0;
@@ -72,9 +79,14 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     }
 
     @Override
-    public boolean setCGRA(SpecsCGRA myparent) {
+    public boolean setParent(Mesh myparent) {
         this.myparent = myparent;
         return true;
+    }
+
+    @Override
+    public Mesh getParent() {
+        return this.myparent;
     }
 
     @Override

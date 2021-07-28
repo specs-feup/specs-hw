@@ -35,11 +35,14 @@ encode fmt bit: differentiates between field splits
 
 #### Description
 - This set includes
+	- (Switch between config mode and exec mode?)
 	- Timestep setting (setting the number of timesteps, and which timestep is active)
 	- Connection setting
 	- Context saving/loading
+	- Execution step
+	- Branching/Jumping into microcode memory
 	- Set iteration bound
-	- Set constant into constant memory
+	- Set constant into constant memory (should constant memory be inside each PE?)
 	- (advanced: Set iteration exit condition based on PE result)
 
            | set | encode | inst | fields?  |
