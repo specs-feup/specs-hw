@@ -5,6 +5,7 @@ import java.util.List;
 
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
 import pt.up.specs.cgra.structure.interconnect.NearestNeighbour;
+import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.NullPE;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
@@ -18,18 +19,15 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     // the switch operation can model the latency upon call
 
     // string name?
+    protected final GenericMemory liveins, liveouts;
     protected final Mesh mesh;
     protected final Interconnect interconnect;
 
     private GenericSpecsCGRA(Mesh mesh, Interconnect interconnect) {
         this.mesh = mesh;
         this.interconnect = interconnect;
-        for (int i = 0; i < this.mesh.getX(); i++)
-            for (int j = 0; j < this.mesh.getY(); j++) {
-                var pe = this.mesh.getProcessingElement(i, j);
-                pe.setCGRA(this);
-            }
-
+        this.liveins = new GenericMemory(8);
+        this.liveouts = new GenericMemory(8);
     }
 
     @Override

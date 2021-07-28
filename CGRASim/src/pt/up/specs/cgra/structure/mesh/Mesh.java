@@ -24,6 +24,7 @@ public class Mesh {
                 var pe = this.mesh.get(i).get(j);
                 pe.setX(i);
                 pe.setY(j);
+                pe.setParent(this);
             }
     }
 

@@ -1,3 +1,6 @@
+-------------------------------
+Silly drafts
+
 ts 1
 cnt U1.w U2.n
 map op U1
@@ -11,3 +14,19 @@ step // execute step?
 
 start // blocking start
 wait
+
+
+-------------------------------
+Test 1
+
+mode cfg // switch to config mode (config is recored into config buffer memory, and lost unless saved into cfg memory (?))
+...
+???
+
+-------------------------------
+Test 2 (no config mode exists, single scope)
+
+// how to load initial operands??
+
+rst
+setc PE00.0
