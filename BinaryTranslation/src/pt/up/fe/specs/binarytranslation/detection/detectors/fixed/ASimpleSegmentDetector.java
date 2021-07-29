@@ -7,9 +7,9 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
+import pt.up.fe.specs.binarytranslation.detection.detectors.v3.SlidingWindow;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.binarytranslation.tracer.InstructionWindow;
 
 public abstract class ASimpleSegmentDetector extends ASegmentDetector {
 
@@ -25,7 +25,7 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
     /*
      * Check if candidate sequence is valid
      */
-    protected Boolean validSequence(InstructionWindow window) {
+    protected Boolean validSequence(SlidingWindow<Instruction> window) {
 
         // start and end addrs
         var sAddr = window.get(0).getAddress();
@@ -57,7 +57,7 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
     public void processStream(InstructionStream istream, Map<String, HashedSequence> hashed,
             Map<Integer, List<Integer>> addrs) {
 
-        var window = new InstructionWindow(this.getConfig().getMaxsize());
+        var window = new SlidingWindow<Instruction>(this.getConfig().getMaxsize());
 
         if (this.getConfig().getSkipToAddr().longValue() != -1)
             istream.advanceTo(this.getConfig().getSkipToAddr().longValue());

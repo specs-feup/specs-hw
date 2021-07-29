@@ -60,7 +60,7 @@ public class SegmentDetectTestUtils {
 
     public static void printBundle(SegmentBundle bundle) {
 
-        for (BinarySegment bs : bundle.getSegments()) {
+        for (var bs : bundle.getSegments()) {
             bs.printSegment();
             System.out.print("\n");
         }
