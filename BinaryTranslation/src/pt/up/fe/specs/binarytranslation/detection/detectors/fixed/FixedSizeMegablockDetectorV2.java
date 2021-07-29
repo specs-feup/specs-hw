@@ -8,12 +8,12 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
+import pt.up.fe.specs.binarytranslation.detection.detectors.v3.SlidingWindow;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.MegaBlock;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.binarytranslation.tracer.InstructionWindow;
 import pt.up.fe.specs.binarytranslation.tracer.StreamUnit;
 
 /**
@@ -36,7 +36,7 @@ public class FixedSizeMegablockDetectorV2 extends ASegmentDetector {
      * Get the pair which represent the start and end of a block which
      * can contain any number of backwards or forwards branches, but ends in a backwards branch
      */
-    private StreamUnit getCandidate(InstructionStream istream, InstructionWindow window) {
+    private StreamUnit getCandidate(InstructionStream istream, SlidingWindow<Instruction> window) {
 
         if (!istream.hasNext())
             return null;
@@ -64,7 +64,7 @@ public class FixedSizeMegablockDetectorV2 extends ASegmentDetector {
     /*
      * Expands the TraceUnits into full instruction list
      */
-    private List<Instruction> expandTraceUnits(List<StreamUnit> units, InstructionWindow window) {
+    private List<Instruction> expandTraceUnits(List<StreamUnit> units, SlidingWindow<Instruction> window) {
 
         var fullList = new ArrayList<Instruction>();
         for (var unit : units)
@@ -79,7 +79,7 @@ public class FixedSizeMegablockDetectorV2 extends ASegmentDetector {
 
         // list to hold window of ALL incoming instructions;
         // list has size dictated by this.getConfig().getMaxsize()
-        var instWindow = new InstructionWindow(this.getConfig().getMaxsize());
+        var instWindow = new SlidingWindow<Instruction>(this.getConfig().getMaxsize());
 
         // desired number of basic blocks in Megablock
         // save first instruction after a jump

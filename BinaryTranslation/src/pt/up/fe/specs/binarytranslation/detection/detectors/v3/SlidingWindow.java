@@ -31,7 +31,7 @@ public class SlidingWindow<T> {
     /*
      * 
      */
-    boolean isFull() {
+    public boolean isFull() {
         return (this.getCurrentSize() == this.windowSize);
     }
 

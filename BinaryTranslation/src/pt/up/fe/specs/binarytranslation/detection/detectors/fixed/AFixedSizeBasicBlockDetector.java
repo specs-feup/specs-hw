@@ -1,8 +1,8 @@
 package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
+import pt.up.fe.specs.binarytranslation.detection.detectors.v3.SlidingWindow;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.tracer.InstructionWindow;
 
 /**
  * Basic block detector which only detects blocks of a specific size
@@ -23,7 +23,7 @@ public abstract class AFixedSizeBasicBlockDetector extends ASimpleSegmentDetecto
      * Check if candidate sequence is valid
      */
     @Override
-    protected Boolean validSequence(InstructionWindow window) {
+    protected Boolean validSequence(SlidingWindow<Instruction> window) {
 
         // check precendent requirements first!
         if (super.validSequence(window) == false)

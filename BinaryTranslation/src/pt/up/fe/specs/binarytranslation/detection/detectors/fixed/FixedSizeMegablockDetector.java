@@ -7,6 +7,7 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
+import pt.up.fe.specs.binarytranslation.detection.detectors.v3.SlidingWindow;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.MegaBlock;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
@@ -29,7 +30,7 @@ public class FixedSizeMegablockDetector extends ASegmentDetector {
     /*
      * Check if candidate sequence is valid
      */
-    private Boolean validSequence(List<StreamUnit> units, InstructionWindow window) {
+    private Boolean validSequence(List<StreamUnit> units, SlidingWindow<Instruction> window) {
 
         // all start and end instruction of trace unit must exist in the window
         for (var unit : units)
