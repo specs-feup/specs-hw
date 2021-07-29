@@ -31,7 +31,7 @@ public class RiscvBatchFrequentSequenceTest {
     public void RiscvTraceBasicBlockDetect() {
         // ELFProvider elfs[] = RiscvLivermoreELFN100iam.values();
         ELFProvider elfs[] = { RiscvLivermoreELFN100iam.pic2d100 };
-        ThreadedSegmentDetectUtils.BatchDetect(elfs, 4, 50,
+        ThreadedSegmentDetectUtils.BatchDetect(elfs, 4, 5,
                 RiscvTraceProvider.class,
                 RiscvTraceStream.class,
                 TraceBasicBlockDetector.class);

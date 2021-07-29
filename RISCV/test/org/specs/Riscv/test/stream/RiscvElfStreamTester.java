@@ -1,6 +1,7 @@
 package org.specs.Riscv.test.stream;
 
 import org.junit.Test;
+import org.specs.Riscv.RiscvLivermoreELFN100iam;
 import org.specs.Riscv.RiscvLivermoreELFN100iamf;
 import org.specs.Riscv.RiscvPolyBenchSmallInt;
 import org.specs.Riscv.stream.RiscvElfStream;
@@ -13,7 +14,7 @@ public class RiscvElfStreamTester {
     @Test
     public void testStatic() {
         InstructionStreamTestUtils.printStream(
-                RiscvLivermoreELFN100iamf.innerprod100, RiscvElfStream.class);
+                RiscvLivermoreELFN100iam.pic2d100, RiscvElfStream.class);
     }
 
     @Test

@@ -17,6 +17,8 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 
 public enum RiscvInstructionProperties implements InstructionProperties {
 
+    // https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
+
     ///////////////////////////////////////////////////////////////////////////
     // I Extension ////////////////////////////////////////////////////////////
 
