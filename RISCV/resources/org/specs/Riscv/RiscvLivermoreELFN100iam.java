@@ -20,7 +20,7 @@ public enum RiscvLivermoreELFN100iam implements ELFProvider {
     linrec100("org/specs/Riscv/asm/N100iam/linrec_N100.elf", 0x8000324cL, 0x800033c4L),
     matmul100("org/specs/Riscv/asm/N100iam/matmul_N100.elf", 0x80003584L, 0x80003774L),
     pic1d100("org/specs/Riscv/asm/N100iam/pic1d_N100.elf", 0x80001650L, 0x80001a34L),
-    pic2d100("org/specs/Riscv/asm/N100iam/pic2d_N100.elf", 0x80001388L, 0x8000164cL),
+    pic2d100("org/specs/Riscv/asm/LivermoreN100iam/pic2d_N100.elf", 0x80001388L, 0x8000164cL),
     state_frag100("org/specs/Riscv/asm/N100iam/state_frag_N100.elf", 0x80003940L, 0x80003b98L),
     tri_diag100("org/specs/Riscv/asm/N100iam/tri_diag_N100.elf", 0x800030ecL, 0x80003248L);
 
@@ -54,6 +54,7 @@ public enum RiscvLivermoreELFN100iam implements ELFProvider {
         return this.fullPath;
     }
 
+    @Override
     public String asTraceTxtDump() {
         // TODO Auto-generated method stub
         return null;
