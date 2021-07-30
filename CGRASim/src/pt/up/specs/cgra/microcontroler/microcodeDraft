@@ -66,6 +66,8 @@ In a 8x8 mesh, Source and sink can be represented by mnemonics such as:
 PE14.Port0 --> 0001100.0 --> PE number 12 is at coordinate x = 1, y = 4
 PE00.Port1 --> 0000000.1
 
+"setc" should return an error code to the master if the connection is impossible to establish.
+
 ##### Context Save/Load
 "svctx <slot>",          | 000 | 1 | 010 | <slot>               |
 "ldctx <slot>",          | 000 | 1 | 011 | <slot>               |

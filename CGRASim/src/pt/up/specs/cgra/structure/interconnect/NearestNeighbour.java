@@ -1,14 +1,18 @@
 package pt.up.specs.cgra.structure.interconnect;
 
+import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 
 public class NearestNeighbour extends AInterconnect {
+
+    public NearestNeighbour(SpecsCGRA myparent) {
+        super(myparent);
+    }
 
     @Override
     public boolean connectionValid(ProcessingElementPort from, ProcessingElementPort to) {
         var fromPE = from.getPE();
         var toPE = from.getPE();
-
         var distX = Math.abs(fromPE.getX() - toPE.getX());
         var distY = Math.abs(fromPE.getY() - toPE.getY());
 

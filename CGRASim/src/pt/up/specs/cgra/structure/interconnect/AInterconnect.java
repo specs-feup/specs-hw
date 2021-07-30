@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 
@@ -15,12 +16,12 @@ public abstract class AInterconnect implements Interconnect {
 
     // protected final RULES = ??? some kind of map of possible connections?
 
-    // reference to the mesh?
-    // private final Mesh mesh;
+    private final SpecsCGRA myparent;
     private Context currentContext;
     private Map<ProcessingElementPort, List<ProcessingElementPort>> connections;
 
-    public AInterconnect() {
+    public AInterconnect(SpecsCGRA myparent) {
+        this.myparent = myparent;
         this.currentContext = null;
         this.connections = new HashMap<ProcessingElementPort, List<ProcessingElementPort>>();
     }
@@ -79,6 +80,11 @@ public abstract class AInterconnect implements Interconnect {
     @Override
     public Context getContext() {
         return this.currentContext;
+    }
+
+    @Override
+    public SpecsCGRA getCGRA() {
+        return this.myparent;
     }
 
     @Override

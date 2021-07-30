@@ -2,6 +2,7 @@ package pt.up.specs.cgra.structure.mesh;
 
 import java.util.List;
 
+import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 /**
@@ -12,10 +13,12 @@ import pt.up.specs.cgra.structure.pes.ProcessingElement;
  */
 public class Mesh {
 
+    private final SpecsCGRA myparent;
     private final int x, y;
     private final List<List<ProcessingElement>> mesh;
 
-    public Mesh(List<List<ProcessingElement>> mesh) {
+    public Mesh(List<List<ProcessingElement>> mesh, SpecsCGRA myparent) {
+        this.myparent = myparent;
         this.mesh = mesh;
         this.x = mesh.size();
         this.y = mesh.get(0).size();
@@ -24,12 +27,15 @@ public class Mesh {
                 var pe = this.mesh.get(i).get(j);
                 pe.setX(i);
                 pe.setY(j);
-                pe.setParent(this);
+                pe.setMesh(this);
             }
     }
 
-    public List<List<ProcessingElement>> getMesh() {
-        return mesh;
+    /*
+     * 
+     */
+    public SpecsCGRA getCGRA() {
+        return this.myparent;
     }
 
     public int getX() {
@@ -44,4 +50,23 @@ public class Mesh {
         return this.mesh.get(x).get(y);
     }
 
+    public void execute() {
+        for (var line : this.mesh)
+            for (var pe : line)
+                pe.execute();
+    }
+
+    public String visualize() {
+        var sbld = new StringBuilder();
+        var str = "------------------";
+        for (var line : this.mesh) {
+            sbld.append(str.repeat(line.size()) + "\n");
+            for (var pe : line) {
+                sbld.append("|  " + pe.toString() + "  |");
+            }
+            sbld.append("\n");
+        }
+        sbld.append(str.repeat(this.x));
+        return sbld.toString();
+    }
 }

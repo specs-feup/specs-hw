@@ -30,3 +30,18 @@ Test 2 (no config mode exists, single scope)
 
 rst
 setc PE00.0
+
+
+
+
+
+
+
+---
+
+
+
+
+
+
+

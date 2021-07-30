@@ -70,7 +70,8 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         strbld.append("PE." + this.xPos + "." + this.yPos + "(");
         for (var iPort : this.ports) {
             if (iPort.getDir() == PEPortDirection.input) {
-                var driver = this.getCGRA().getInterconnect().findDriver(iPort);
+                // PE -> Mesh (parent) -> CGRA (parent) -> Interconnect (child)
+                var driver = this.getMesh().getCGRA().getInterconnect().findDriver(iPort);
                 if (driver != null)
                     strbld.append(iPort.toString() + "<-" + driver.toString());
             }
@@ -79,13 +80,13 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     }
 
     @Override
-    public boolean setParent(Mesh myparent) {
+    public boolean setMesh(Mesh myparent) {
         this.myparent = myparent;
         return true;
     }
 
     @Override
-    public Mesh getParent() {
+    public Mesh getMesh() {
         return this.myparent;
     }
 

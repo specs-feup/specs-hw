@@ -1,9 +1,15 @@
 package pt.up.specs.cgra.structure.interconnect;
 
+import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 
 public interface Interconnect {
+
+    /*
+     * 
+     */
+    public SpecsCGRA getCGRA();
 
     /**
      * Propagates data to @ProcessingElement inputs based on interconnect settings
