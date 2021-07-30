@@ -1,7 +1,6 @@
 package pt.up.specs.cgra.structure.pes;
 
 import pt.up.specs.cgra.dataypes.PEData;
-import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 
 public interface ProcessingElement {
@@ -9,14 +8,14 @@ public interface ProcessingElement {
     /*
      * 
      */
-    default public boolean setParent(Mesh mesh) {
+    default public boolean setMesh(Mesh mesh) {
         return false;
     }
 
     /*
      * 
      */
-    default public Mesh getParent() {
+    default public Mesh getMesh() {
         return null;
     }
 
@@ -32,13 +31,6 @@ public interface ProcessingElement {
      */
     default public boolean setY(int y) {
         return false;
-    }
-
-    /*
-     * 
-     */
-    default public SpecsCGRA getCGRA() {
-        return null;
     }
 
     /*

@@ -1,10 +1,15 @@
 package pt.up.specs.cgra.structure;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
 import pt.up.specs.cgra.structure.interconnect.NearestNeighbour;
+import pt.up.specs.cgra.structure.interconnect.ToroidalNNInterconnect;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.NullPE;
@@ -18,14 +23,37 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     // TODO: list of contexts is required to switch connections
     // the switch operation can model the latency upon call
 
+    /*
+     * 
+     */
+    private static final Map<Class<? extends Interconnect>, Constructor<?>> INTCCONSTRUCTORS;
+    static {
+
+        var amap = new HashMap<Class<? extends Interconnect>, Constructor<?>>();
+        try {
+            amap.put(NearestNeighbour.class, NearestNeighbour.class.getConstructor(SpecsCGRA.class));
+            amap.put(ToroidalNNInterconnect.class, ToroidalNNInterconnect.class.getConstructor(SpecsCGRA.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        INTCCONSTRUCTORS = Collections.unmodifiableMap(amap);
+    }
+
     // string name?
     protected final GenericMemory liveins, liveouts;
     protected final Mesh mesh;
     protected final Interconnect interconnect;
 
-    private GenericSpecsCGRA(Mesh mesh, Interconnect interconnect) {
-        this.mesh = mesh;
-        this.interconnect = interconnect;
+    private GenericSpecsCGRA(List<List<ProcessingElement>> mesh, Class<? extends Interconnect> intclass) {
+        this.mesh = new Mesh(mesh, this);
+
+        // in theory, should never fail
+        try {
+            this.interconnect = (Interconnect) INTCCONSTRUCTORS.get(intclass).newInstance(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         this.liveins = new GenericMemory(8);
         this.liveouts = new GenericMemory(8);
     }
@@ -50,9 +78,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         this.interconnect.propagate();
 
         // execute compute
-        for (var line : this.mesh.getMesh())
-            for (var pe : line)
-                pe.execute();
+        this.mesh.execute();
 
         return true; // eventually use this return to indicate stalling or something
     }
@@ -60,17 +86,9 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     // TODO: use a graphical representation later
     @Override
     public void visualize() {
+        // TODO:visualize register files etc
         var sbld = new StringBuilder();
-        var str = "------------------";
-        for (var line : this.mesh.getMesh()) {
-            sbld.append(str.repeat(line.size()) + "\n");
-            for (var pe : line) {
-                sbld.append("|  " + pe.toString() + "  |");
-            }
-            sbld.append("\n");
-        }
-        sbld.append(str.repeat(this.mesh.getX()));
-        System.out.println(sbld.toString());
+        System.out.println(sbld.append(this.mesh.visualize()).toString());
     }
 
     /**
@@ -80,7 +98,8 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
         private int meshX, meshY;
         private final List<List<ProcessingElement>> mesh;
-        private Interconnect intc = null;
+        private Class<? extends Interconnect> intclass = NearestNeighbour.class;
+        // default interconnect
 
         /*
          * mesh size is mandatory before any "with..." calls
@@ -96,7 +115,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
                     this.mesh.get(i).add(new NullPE());
                 }
             }
-            this.intc = new NearestNeighbour(); // default
         }
 
         /*
@@ -115,13 +133,17 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         }
 
         public Builder withNearestNeighbourInterconnect() {
-            if (!(this.intc instanceof NearestNeighbour))
-                this.intc = new NearestNeighbour();
+            this.intclass = NearestNeighbour.class;
+            return this;
+        }
+
+        public Builder withToroidalNNInterconnect() {
+            this.intclass = ToroidalNNInterconnect.class;
             return this;
         }
 
         public GenericSpecsCGRA build() {
-            return new GenericSpecsCGRA(new Mesh(this.mesh), this.intc);
+            return new GenericSpecsCGRA(this.mesh, this.intclass);
         }
     }
 }
