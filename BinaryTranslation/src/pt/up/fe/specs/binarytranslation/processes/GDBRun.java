@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
@@ -73,6 +74,12 @@ public class GDBRun extends StringProcessRun {
 
         // check if a target was opened
         this.targetOpen = this.hasTarget();
+    }
+
+    @Override
+    protected void attachStdOut() {
+        Executors.newSingleThreadExecutor()
+                .execute(() -> StdioThreads.stdoutThreadInteractive(this));
     }
 
     /*
