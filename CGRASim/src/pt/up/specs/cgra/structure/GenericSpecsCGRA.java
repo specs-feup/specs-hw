@@ -58,6 +58,16 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         this.liveouts = new GenericMemory(8);
     }
 
+    /*
+     * Only for use by builder child class
+     */
+    private GenericSpecsCGRA() {
+        this.liveins = null;
+        this.liveouts = null;
+        this.mesh = null;
+        this.interconnect = null;
+    }
+
     @Override
     public Mesh getMesh() {
         return mesh;
@@ -105,7 +115,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
          * mesh size is mandatory before any "with..." calls
          */
         public Builder(int x, int y) {
-            super(null, null);
             this.meshX = x;
             this.meshY = y;
             this.mesh = new ArrayList<List<ProcessingElement>>(x);
