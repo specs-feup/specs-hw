@@ -114,7 +114,6 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
                 afterbug = tmpInst.copy();
                 haveStoredInst = true;
                 savedRegs = i.getRegisters();
-                System.out.println(afterbug.getAddress());
             }
 
             // TODO: temporary fix for duplicated insts
