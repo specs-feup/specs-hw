@@ -34,7 +34,47 @@ public class StdioThreads {
         return insts;
     }
 
-    protected static void stdoutThread(ProcessRun run) {
+    /*
+    protected static void stdoutThread(ProcessRun run, BiFunction<ProcessRun, LineStream, Boolean> processing) {
+        
+        var lstream = StdioThreads.newLineStream(run.getProc().getInputStream(), "proc_stdout");
+        var producer = run.getStdout().createProducer();
+        while(processing.apply(run, lstream));
+        lstream.close();
+        
+    }*/
+
+    /*
+     * Appropriate for non interactive processes with single launch and full stdout consumption
+     * e.g. elfdumps, cats from files, etc
+     */
+    protected static void stdoutThreadFreeRun(ProcessRun run) {
+
+        var lstream = StdioThreads.newLineStream(run.getProc().getInputStream(), "proc_stdout");
+        var producer = run.getStdout().createProducer();
+
+        // this thread will block here if "nextLine" is waiting for content
+        // of if main thread has not read the concurrentchannel for the
+        // previous stdout line
+        while (lstream.hasNextLine()) {
+            var peek = lstream.peekNextLine();
+            if (peek != null) {
+                producer.put(peek);
+                lstream.nextLine();
+            }
+        }
+
+        lstream.close();
+
+        // thread end
+        return;
+    }
+
+    /*
+     * Appropriate for interactive processes where process death is
+     * caused by command given by BTF (e.g., GDBRun)
+     */
+    protected static void stdoutThreadProcessReponse(ProcessRun run) {
 
         var streamReader = new InputStreamReader(run.getProc().getInputStream());
         var br = new BufferedReader(streamReader);
@@ -52,11 +92,40 @@ public class StdioThreads {
 
         }
 
+        // thread end
+        return;
+    }
+
+    protected static void stdoutThread(ProcessRun run) {
+
+        // TODO: unsure which one of these two things is best...
+        // the first one seems to break elfdumps since the process ends
+        // before the stdout is consumed... it does work for interactive gdb use
+        // since gdb must wait for the kill command anyway
+        //
+        // the second one has other problems..
+
         /*
-        
-        var lstream = StdioThreads.newLineStream(run.getProc().getInputStream(), "proc_stdout");
+        var streamReader = new InputStreamReader(run.getProc().getInputStream());
+        var br = new BufferedReader(streamReader);
         var producer = run.getStdout().createProducer();
         
+        try {
+            while (run.getProc().isAlive()) {
+                producer.put(br.readLine()); // blocking
+            }
+            br.close();
+        
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            // e.printStackTrace();
+        
+        }
+        */
+
+        var lstream = StdioThreads.newLineStream(run.getProc().getInputStream(), "proc_stdout");
+        var producer = run.getStdout().createProducer();
+
         // this thread will block here if "nextLine" is waiting for content
         // of if main thread has not read the concurrentchannel for the
         // previous stdout line
@@ -67,10 +136,8 @@ public class StdioThreads {
                 lstream.nextLine();
             }
         }
-        
+
         lstream.close();
-        
-         */
 
         // thread end
         return;
