@@ -50,16 +50,16 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
         this.attachStdIn();
     }
 
-    /*
-     * 
+    /**
+     * May be override by children if necessary (e.g., @GDBRun)
      */
     protected void attachStdOut() {
         Executors.newSingleThreadExecutor()
-                .execute(() -> StdioThreads.stdoutThread(this));
+                .execute(() -> StdioThreads.stdoutThreadFreeRun(this));
     }
 
     /*
-     * 
+     * May be override by children if necessary
      */
     protected void attachStdErr() {
         Executors.newSingleThreadExecutor()
@@ -67,7 +67,7 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
     }
 
     /*
-     * 
+     * May be override by children if necessary
      */
     protected void attachStdIn() {
         Executors.newSingleThreadExecutor()
