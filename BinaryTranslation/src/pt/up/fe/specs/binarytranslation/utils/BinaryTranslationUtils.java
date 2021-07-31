@@ -109,7 +109,7 @@ public class BinaryTranslationUtils {
             proc = builder.start();
 
         } catch (IOException e) {
-            throw new RuntimeException("Could not run process bin with name: " + proc);
+            throw new RuntimeException("Could not run process: " + builder.command());
         }
 
         return proc;
