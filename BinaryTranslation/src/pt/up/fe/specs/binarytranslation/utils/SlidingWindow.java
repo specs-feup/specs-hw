@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.detection.detectors.v3;
+package pt.up.fe.specs.binarytranslation.utils;
 
 import java.util.ArrayList;
 import java.util.List;

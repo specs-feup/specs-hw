@@ -7,9 +7,9 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
-import pt.up.fe.specs.binarytranslation.detection.detectors.v3.SlidingWindow;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
+import pt.up.fe.specs.binarytranslation.utils.SlidingWindow;
 
 public abstract class ASimpleSegmentDetector extends ASegmentDetector {
 
@@ -42,6 +42,7 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
         if (window.getLast().getDelay() > 0)
             return false;
 
+        // TODO:
         // TEMPORARY HACK: cant have only LOAD or STORE (since this is usually stack operations)
         // and including them skews the detection results
         for (var inst : window.getWindow()) {
