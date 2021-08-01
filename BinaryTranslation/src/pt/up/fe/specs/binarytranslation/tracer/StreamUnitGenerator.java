@@ -2,9 +2,9 @@ package pt.up.fe.specs.binarytranslation.tracer;
 
 import java.util.ArrayList;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.v3.SlidingWindow;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.utils.SlidingWindow;
 
 /**
  * Reduces incoming instructions into different types of trace units In the simplest case, the StreamTracer is just a

@@ -10,6 +10,7 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 import pt.up.fe.specs.binarytranslation.tracer.StreamUnit;
 import pt.up.fe.specs.binarytranslation.tracer.StreamUnitGenerator;
+import pt.up.fe.specs.binarytranslation.utils.SlidingWindow;
 
 public class GenericTraceSegmentDetector implements TraceSegmentDetector {
 

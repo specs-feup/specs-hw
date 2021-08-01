@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
+package pt.up.fe.specs.binarytranslation.detection.detectors.wip;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,13 +8,13 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.detection.detectors.ASegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.HashedSequence;
-import pt.up.fe.specs.binarytranslation.detection.detectors.v3.SlidingWindow;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.MegaBlock;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.binarytranslation.tracer.StreamUnit;
+import pt.up.fe.specs.binarytranslation.utils.SlidingWindow;
 
 /**
  * 
