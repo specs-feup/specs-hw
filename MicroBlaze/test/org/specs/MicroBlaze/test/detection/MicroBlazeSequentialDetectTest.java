@@ -8,7 +8,7 @@ import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FixedSizeMegablockDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
@@ -19,7 +19,7 @@ public class MicroBlazeSequentialDetectTest {
         // file
         var fd = BinaryTranslationUtils.getFile(elf);
 
-        int minwindow = 8, maxwindow = 12;
+        int minwindow = 10, maxwindow = 10;
 
         // do all detectors sequentially
         for (int i = minwindow; i <= maxwindow; i++) {
@@ -29,7 +29,7 @@ public class MicroBlazeSequentialDetectTest {
 
             System.out.println("Looking for segments of size: " + i);
 
-            var detector1 = new TraceBasicBlockDetector(// new FrequentTraceSequenceDetector(
+            var detector1 = new FixedSizeMegablockDetector( // new TraceBasicBlockDetector(//
                     new DetectorConfigurationBuilder()
                             .withMaxWindow(i)
                             .withStartAddr(elf.getKernelStart())
@@ -49,7 +49,7 @@ public class MicroBlazeSequentialDetectTest {
     @Test
     public void testSequentialDetectors() {
         // for (var file : MicroBlazeLivermoreELFN100.values()) {
-        for (var file : Arrays.asList(MicroBlazeLivermoreELFN10.innerprod)) {
+        for (var file : Arrays.asList(MicroBlazeLivermoreELFN10.pic2d)) {
             this.testSequentialDetectors(file);
         }
     }

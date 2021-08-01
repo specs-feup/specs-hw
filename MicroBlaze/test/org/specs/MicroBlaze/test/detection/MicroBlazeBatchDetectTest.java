@@ -2,6 +2,7 @@ package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
 import org.specs.BinaryTranslation.ELFProvider;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeStaticProvider;
@@ -16,10 +17,27 @@ import pt.up.fe.specs.binarytranslation.test.detection.ThreadedSegmentDetectUtil
 public class MicroBlazeBatchDetectTest {
 
     /*
-     * Stats from static frequent sequences
+     * 
      */
     @Test
     public void MicroBlazeFrequentSequenceDetect() {
+        var elf = MicroBlazeLivermoreELFN100.innerprod100;
+        var bundles = ThreadedSegmentDetectUtils.getSegments(
+                elf, 2, 10,
+                MicroBlazeTraceProvider.class,
+                MicroBlazeTraceStream.class,
+                TraceBasicBlockDetector.class);
+
+        for (var bund : bundles)
+            for (var seg : bund.getSegments())
+                seg.printSegment();
+    }
+
+    /*
+     * Stats from static frequent sequences
+     */
+    @Test
+    public void doMicroBlazeFrequentSequenceStats() {
         // (new HeapWindow()).run();
 
         // ELFProvider elfs[] = MicroBlazeLivermoreELFN100.values();
@@ -36,7 +54,7 @@ public class MicroBlazeBatchDetectTest {
      * Stats from static basic blocks
      */
     @Test
-    public void MicroBlazeStaticBasicBlockDetect() {
+    public void doMicroBlazeStaticBasicBlockStats() {
 
         // (new HeapWindow()).run();
 
@@ -53,7 +71,7 @@ public class MicroBlazeBatchDetectTest {
      * Stats from trace basic blocks
      */
     @Test
-    public void MicroBlazeTraceBasicBlockDetect() {
+    public void doMicroBlazeTraceBasicBlockStats() {
 
         // (new HeapWindow()).run();
         // (new MemoryProfiler()).execute();
