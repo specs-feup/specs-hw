@@ -1,6 +1,6 @@
 package org.specs.Arm;
 
-import org.specs.BinaryTranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 
 public enum ArmLivermoreELFN100 implements ELFProvider {
 

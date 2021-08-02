@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.specs.Arm.ArmLivermoreELFN100;
 import org.specs.Arm.stream.ArmTraceProvider;
 import org.specs.Arm.stream.ArmTraceStream;
-import org.specs.BinaryTranslation.ELFProvider;
 
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.ThreadedSegmentDetectUtils;
 

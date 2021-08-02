@@ -13,6 +13,7 @@ public class ArmApplication extends Application {
                 ArmResource.AARCH64_OBJDUMP,
                 ArmResource.AARCH64_READELF,
                 ArmResource.QEMU_AARCH64_GDB_TEMPLATE,
+                ArmResource.QEMU_AARCH64_GDBNONINTERACTIVE_TEMPLATE,
                 ArmResource.QEMU_AARCH64_EXE,
                 ArmResource.QEMU_AARCH64_BAREMETAL_DTB);
     }
