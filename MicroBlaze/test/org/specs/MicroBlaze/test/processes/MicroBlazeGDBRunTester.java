@@ -35,7 +35,7 @@ public class MicroBlazeGDBRunTester {
         var elf = MicroBlazeLivermoreELFN100.matmul100;
         var fd = BinaryTranslationUtils.getFile(elf);
         var app = new MicroBlazeApplication(fd);
-        try (var gdb = new GDBRun(app, BinaryTranslationUtils.FillGDBScript(app))) {
+        try (var gdb = GDBRun.newInstanceInteractive(app)) {
 
             // run until kernel start
             gdb.runUntil(elf.getKernelStart().toString());
@@ -68,7 +68,7 @@ public class MicroBlazeGDBRunTester {
     public void testScript() {
         var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
         var app = new MicroBlazeApplication(fd);
-        try (var gdb = new GDBRun(app, BinaryTranslationUtils.FillGDBScript(app))) {
+        try (var gdb = GDBRun.newInstanceFreeRun(app)) {
 
             String line = null;
             while ((line = gdb.receive()) != null) {

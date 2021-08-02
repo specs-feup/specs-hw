@@ -1,47 +1,26 @@
 package org.specs.MicroBlaze.test.analysis;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
-import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
 import org.specs.MicroBlaze.asm.MicroBlazeRegisterConventions;
 import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.BtfPerformanceAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.InOutAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryAddressAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryProfilerAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.StreamingAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.GraphTemplateReport;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.BasicBlockDataFlowAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
-import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsIo;
-import pt.up.fe.specs.util.SpecsLogs;
 
 public class MicroBlazeTraceAnalysisTest {
 
@@ -57,22 +36,22 @@ public class MicroBlazeTraceAnalysisTest {
         return stream;
     }
 
-//    @Test
-//    public void testMemoryProfilerStream() {
-//        var elf = MicroBlazeLivermoreELFN10.linrec;
-//        int window = 10;
-//        // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
-//        // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
-//        // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
-//        // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
-//        // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
-//
-//        // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
-//
-//        var stream = getStream(MicroBlazeLivermoreELFN10.innerprod, false);
-//        var mem = new MemoryProfilerAnalyzer(stream, elf);
-//        assertTrue(mem.profile(true));
-//    }
+    // @Test
+    // public void testMemoryProfilerStream() {
+    // var elf = MicroBlazeLivermoreELFN10.linrec;
+    // int window = 10;
+    // // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
+    // // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
+    // // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
+    // // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
+    // // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
+    //
+    // // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
+    //
+    // var stream = getStream(MicroBlazeLivermoreELFN10.innerprod, false);
+    // var mem = new MemoryProfilerAnalyzer(stream, elf);
+    // assertTrue(mem.profile(true));
+    // }
 
     @Test
     public void testDetailedStream() {

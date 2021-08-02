@@ -16,9 +16,10 @@ package org.specs.MicroBlaze.test.analysis;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
+
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 
 public class MicroBlazeBasicBlockInfo {
     public static Map<ELFProvider, Integer[]> getLivermoreKernels() {

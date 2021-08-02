@@ -1,7 +1,6 @@
 package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
-import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
@@ -9,6 +8,7 @@ import org.specs.MicroBlaze.stream.MicroBlazeStaticProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
