@@ -15,6 +15,7 @@ public class MicroBlazeApplication extends Application {
                 MicroBlazeResource.MICROBLAZE_OBJDUMP,
                 MicroBlazeResource.MICROBLAZE_READELF,
                 MicroBlazeResource.QEMU_MICROBLAZE_GDB_TEMPLATE,
+                MicroBlazeResource.QEMU_MICROBLAZE_GDBNONINTERACTIVE_TEMPLATE,
                 MicroBlazeResource.QEMU_MICROBLAZE_EXE,
                 MicroBlazeResource.QEMU_MICROBLAZE_BAREMETAL_DTB);
     }

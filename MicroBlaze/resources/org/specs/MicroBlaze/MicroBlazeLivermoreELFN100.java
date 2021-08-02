@@ -1,6 +1,6 @@
 package org.specs.MicroBlaze;
 
-import org.specs.BinaryTranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 
 public enum MicroBlazeLivermoreELFN100 implements ELFProvider {
 
@@ -23,7 +23,6 @@ public enum MicroBlazeLivermoreELFN100 implements ELFProvider {
     state_frag100("org/specs/MicroBlaze/asm/LivermoreN100/state_frag_N100.elf", 0x4c48, 0x4d7c),
     tri_diag100("org/specs/MicroBlaze/asm/LivermoreN100/tri_diag_N100.elf", 0x5510, 0x55b0);
 
-    // private String elfname;
     private String fullPath;
     private Number kernelStart;
     private Number kernelStop;

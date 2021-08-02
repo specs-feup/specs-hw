@@ -1,6 +1,6 @@
 package org.specs.MicroBlaze;
 
-import org.specs.BinaryTranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 
 /**
  * Handy resource list of existing pre-compiled ELFs for MicroBlaze, for robust name and path getting (and other things)
@@ -28,21 +28,14 @@ public enum MicroBlazeLivermoreELFN10 implements ELFProvider {
     state_frag("org/specs/MicroBlaze/asm/LivermoreN10/state_frag.elf", 0x4c48, 0x4d7c),
     tri_diag("org/specs/MicroBlaze/asm/LivermoreN10/tri_diag.elf", 0x5510, 0x55b0);
 
-    // private String elfname;
     private String fullPath;
     private Number kernelStart;
     private Number kernelStop;
 
     private MicroBlazeLivermoreELFN10(String fullPath, Number kernelStart, Number kernelStop) {
-        // this.elfname = name();
         this.fullPath = fullPath;
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
-    }
-
-    @Override
-    public String asTxtDump() {
-        return this.fullPath.replace(".elf", ".txt");
     }
 
     @Override
@@ -58,6 +51,11 @@ public enum MicroBlazeLivermoreELFN10 implements ELFProvider {
     @Override
     public String getResource() {
         return this.fullPath;
+    }
+
+    @Override
+    public String asTxtDump() {
+        return this.fullPath.replace(".elf", "_objdump.txt");
     }
 
     @Override

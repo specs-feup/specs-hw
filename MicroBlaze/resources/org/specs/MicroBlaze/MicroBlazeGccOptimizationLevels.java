@@ -1,6 +1,6 @@
 package org.specs.MicroBlaze;
 
-import org.specs.BinaryTranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 
 public enum MicroBlazeGccOptimizationLevels implements ELFProvider {
 
