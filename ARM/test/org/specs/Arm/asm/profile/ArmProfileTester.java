@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.specs.Arm.ArmLivermoreELFN100;
-import org.specs.Arm.stream.ArmTraceProvider;
+import org.specs.Arm.stream.ArmTraceProducer;
 import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.profiling.InstructionHistogram;
@@ -21,13 +21,13 @@ public class ArmProfileTester {
      */
     private static final Map<Class<?>, Class<?>> AUXMAP = new HashMap<>();
     static {
-        AUXMAP.put(ArmTraceProvider.class, ArmTraceStream.class);
+        AUXMAP.put(ArmTraceProducer.class, ArmTraceStream.class);
     }
 
     @Test
     public void ArmProfile() {
 
-        Class<?> producers[] = { /*ArmStaticProvider.class ,*/ ArmTraceProvider.class };
+        Class<?> producers[] = { /*ArmStaticProvider.class ,*/ ArmTraceProducer.class };
 
         var profilerList = new ArrayList<Class<?>>();
         profilerList.add(InstructionTypeHistogram.class);

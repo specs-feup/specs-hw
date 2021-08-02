@@ -19,6 +19,6 @@ public class ArmTraceStream extends ATraceInstructionStream {
     }
 
     public ArmTraceStream(ArmELFProvider elfprovider) {
-        super(new ArmTraceProvider(elfprovider));
+        super(new ArmTraceProducer(elfprovider));
     }
 }
