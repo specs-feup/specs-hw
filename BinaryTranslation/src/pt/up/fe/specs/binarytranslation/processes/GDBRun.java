@@ -84,15 +84,15 @@ public class GDBRun extends StringProcessRun {
     /*
      * Newinstance
      */
-    public static GDBRun newInstanceFreeRun(Application app, File scriptFile) {
-        return new GDBRun(app, scriptFile, false);
+    public static GDBRun newInstanceFreeRun(Application app) {
+        return new GDBRun(app, app.getGDBScriptNonInteractive(), false);
     }
 
     /*
      * Newinstance
      */
-    public static GDBRun newInstanceInteractive(Application app, File scriptFile) {
-        return new GDBRun(app, scriptFile, true);
+    public static GDBRun newInstanceInteractive(Application app) {
+        return new GDBRun(app, app.getGDBScriptInteractive(), true);
     }
 
     @Override
