@@ -3,8 +3,7 @@ package pt.up.fe.specs.binarytranslation.test.detection;
 import java.io.File;
 import java.util.function.Predicate;
 
-import org.specs.BinaryTranslation.ELFProvider;
-
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;

@@ -19,8 +19,8 @@ import java.util.List;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
 import org.jgrapht.graph.DefaultEdge;
-import org.specs.BinaryTranslation.ELFProvider;
 
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressDetector;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.GraphTemplateReport;

@@ -18,9 +18,13 @@ import java.io.File;
 import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.ResourceProvider;
+import pt.up.fe.specs.util.utilities.Replacer;
 
 public abstract class Application {
+
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 
     @Expose
     private final String appName;
@@ -32,12 +36,18 @@ public abstract class Application {
     private final ResourceProvider cpuArchitectureName;
 
     @Expose
-    private final ResourceProvider gdb, gdbTmpl, objDump, readElf, qemuExe, dtbFile;
+    private final ResourceProvider gdb, gdbTmpl, gdbTmplNoninter, objDump, readElf, qemuExe, dtbFile;
 
     private final transient File elffile;
 
-    public Application(File elffile, ResourceProvider cpuArchitectureName, ResourceProvider gdb,
-            ResourceProvider objdump, ResourceProvider readelf, ResourceProvider gdbtmpl, ResourceProvider qemuexe,
+    public Application(File elffile,
+            ResourceProvider cpuArchitectureName,
+            ResourceProvider gdb,
+            ResourceProvider objdump,
+            ResourceProvider readelf,
+            ResourceProvider gdbtmpl,
+            ResourceProvider gdbTmplNoninter,
+            ResourceProvider qemuexe,
             ResourceProvider dtbfile) {
 
         this.elffile = elffile;
@@ -47,6 +57,7 @@ public abstract class Application {
         this.objDump = objdump;
         this.readElf = readelf;
         this.gdbTmpl = gdbtmpl;
+        this.gdbTmplNoninter = gdbTmplNoninter;
         this.qemuExe = qemuexe;
         this.dtbFile = dtbfile;
         this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elffile, readelf.getResource());
@@ -84,6 +95,10 @@ public abstract class Application {
         return gdbTmpl;
     }
 
+    public ResourceProvider getGdbtmplNonInteractive() {
+        return gdbTmplNoninter;
+    }
+
     public ResourceProvider getQemuexe() {
         return qemuExe;
     }
@@ -101,5 +116,53 @@ public abstract class Application {
      */
     public int getInstructionWidth() {
         return 4; // return in bytes
+    }
+
+    /*
+     * 
+     */
+    public File getGDBScriptInteractive() {
+        return Application.getGDBScript(this, this.getGdbtmpl());
+    }
+
+    /*
+     * 
+     */
+    public File getGDBScriptNonInteractive() {
+        return Application.getGDBScript(this, this.getGdbtmplNonInteractive());
+    }
+
+    /*
+     * 
+     */
+    private static File getGDBScript(Application app, ResourceProvider gdbtmpl) {
+
+        var elfpath = app.getElffile().getAbsolutePath();
+        var qemuexe = app.getQemuexe().getResource();
+        if (IS_WINDOWS) {
+            qemuexe += ".exe";
+            elfpath = elfpath.replace("\\", "/");
+        }
+
+        var gdbScript = new Replacer(gdbtmpl);
+        gdbScript.replace("<ELFNAME>", elfpath);
+        gdbScript.replace("<QEMUBIN>", qemuexe);
+
+        if (app.getDtbfile() != null) {
+            var fd = BinaryTranslationUtils.getFile(app.getDtbfile().getResource());
+            var dtbpath = fd.getAbsolutePath();
+            if (IS_WINDOWS)
+                dtbpath = dtbpath.replace("\\", "/");
+            gdbScript.replace("<DTBFILE>", dtbpath);
+        }
+
+        if (IS_WINDOWS)
+            gdbScript.replace("<KILL>", "");
+        else
+            gdbScript.replace("<KILL>", "kill");
+
+        var fd = new File("tmpscript.gdb");
+        SpecsIo.write(fd, gdbScript.toString());
+        return fd;
     }
 }

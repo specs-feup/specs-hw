@@ -1,4 +1,4 @@
-package org.specs.BinaryTranslation;
+package pt.up.fe.specs.binarytranslation;
 
 import pt.up.fe.specs.util.providers.ResourceProvider;
 

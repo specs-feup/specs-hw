@@ -3,8 +3,7 @@ package pt.up.fe.specs.binarytranslation.test.stream;
 import java.io.File;
 import java.lang.reflect.Constructor;
 
-import org.specs.BinaryTranslation.ELFProvider;
-
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
