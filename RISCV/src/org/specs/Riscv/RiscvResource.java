@@ -9,6 +9,7 @@ public enum RiscvResource implements ResourceProvider {
     RISCV_CPU_NAME("riscv"),
 
     QEMU_RISCV_GDB_TEMPLATE("org/specs/Riscv/gdb/qemutmpl.gdb"),
+    QEMU_RISCV_GDBNONINTERACTIVE_TEMPLATE("org/specs/Riscv/gdb/qemutmpl_nointeractive.gdb"),
     QEMU_RISCV_BAREMETAL_DTB(""),
     QEMU_RISCV_EXE("qemu-system-riscv32"),
     // SIVIFE: https://www.sifive.com/blog/risc-v-qemu-part-2-the-risc-v-qemu-port-is-upstream

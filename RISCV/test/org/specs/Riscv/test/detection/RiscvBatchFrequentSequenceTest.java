@@ -1,11 +1,11 @@
 package org.specs.Riscv.test.detection;
 
 import org.junit.Test;
-import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.Riscv.RiscvLivermoreELFN100iam;
 import org.specs.Riscv.stream.RiscvTraceProvider;
 import org.specs.Riscv.stream.RiscvTraceStream;
 
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.ThreadedSegmentDetectUtils;
 

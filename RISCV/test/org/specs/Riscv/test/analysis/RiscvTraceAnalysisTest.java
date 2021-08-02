@@ -3,12 +3,12 @@ package org.specs.Riscv.test.analysis;
 import java.io.File;
 
 import org.junit.Test;
-import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.Riscv.RiscvGccELF;
 import org.specs.Riscv.RiscvLivermoreELFN100iam;
 import org.specs.Riscv.stream.RiscvDetailedTraceProvider;
 import org.specs.Riscv.stream.RiscvTraceStream;
 
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.InOutAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.InOutAnalyzer.InOutMode;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;

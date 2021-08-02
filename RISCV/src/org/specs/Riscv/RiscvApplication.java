@@ -13,6 +13,7 @@ public class RiscvApplication extends Application {
                 RiscvResource.RISCV_OBJDUMP,
                 RiscvResource.RISCV_READELF,
                 RiscvResource.QEMU_RISCV_GDB_TEMPLATE,
+                RiscvResource.QEMU_RISCV_GDBNONINTERACTIVE_TEMPLATE,
                 RiscvResource.QEMU_RISCV_EXE,
                 null);
     }

@@ -20,8 +20,9 @@ package org.specs.Riscv.test.analysis;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.Riscv.RiscvPolyBenchSmallFloat;
+
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 
 public class RiscvBasicBlockStaticInfo {
     public static Map<ELFProvider, Long[][]> getPolybenchSmallFloatKernels() {

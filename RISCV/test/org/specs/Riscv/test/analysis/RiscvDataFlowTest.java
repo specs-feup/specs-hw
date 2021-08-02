@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
-import org.specs.BinaryTranslation.ELFProvider;
 import org.specs.Riscv.asm.RiscvELFDump;
 
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
