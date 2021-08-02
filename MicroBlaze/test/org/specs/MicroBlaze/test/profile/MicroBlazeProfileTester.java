@@ -8,7 +8,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.profiling.InstructionHistogram;
@@ -24,14 +24,14 @@ public class MicroBlazeProfileTester {
      */
     private static final Map<Class<?>, Class<?>> AUXMAP = new HashMap<>();
     static {
-        AUXMAP.put(MicroBlazeTraceProvider.class, MicroBlazeTraceStream.class);
+        AUXMAP.put(MicroBlazeTraceProducer.class, MicroBlazeTraceStream.class);
     }
 
     @Test
     public void MicroBlazeProfile() {
         (new HeapWindow()).run();
 
-        Class<?> producers[] = { /*MicroBlazeStaticProvider.class ,*/ MicroBlazeTraceProvider.class };
+        Class<?> producers[] = { /*MicroBlazeStaticProvider.class ,*/ MicroBlazeTraceProducer.class };
 
         var profilerList = new ArrayList<Class<?>>();
         profilerList.add(InstructionTypeHistogram.class);

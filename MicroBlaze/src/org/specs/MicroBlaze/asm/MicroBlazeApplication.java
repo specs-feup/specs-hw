@@ -1,15 +1,14 @@
 package org.specs.MicroBlaze.asm;
 
-import java.io.File;
-
+import org.specs.MicroBlaze.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.MicroBlazeResource;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 
 public class MicroBlazeApplication extends Application {
 
-    public MicroBlazeApplication(File elfName) {
-        super(elfName,
+    public MicroBlazeApplication(MicroBlazeELFProvider elfprovider) {
+        super(elfprovider,
                 MicroBlazeResource.MICROBLAZE_CPU_NAME,
                 MicroBlazeResource.MICROBLAZE_GDB,
                 MicroBlazeResource.MICROBLAZE_OBJDUMP,

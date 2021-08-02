@@ -1,8 +1,6 @@
 package org.specs.MicroBlaze;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-
-public enum MicroBlazePolyBenchSmallInt implements ELFProvider {
+public enum MicroBlazePolyBenchSmallInt implements MicroBlazeELFProvider {
 
     /*
      * output of mb-objdump -t:
@@ -46,11 +44,6 @@ public enum MicroBlazePolyBenchSmallInt implements ELFProvider {
     }
 
     @Override
-    public String asTxtDump() {
-        return this.fullPath.replace(".elf", ".txt");
-    }
-
-    @Override
     public Number getKernelStart() {
         return kernelStart;
     }
@@ -63,10 +56,5 @@ public enum MicroBlazePolyBenchSmallInt implements ELFProvider {
     @Override
     public String getResource() {
         return this.fullPath;
-    }
-
-    @Override
-    public String asTraceTxtDump() {
-        return this.fullPath.replace(".elf", "_trace.txt");
     }
 }

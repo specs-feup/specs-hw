@@ -1,29 +1,27 @@
 package org.specs.MicroBlaze.test.analysis;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.asm.MicroBlazeRegisterConventions;
-import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProvider;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
+import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProducer;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.BtfPerformanceAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.InOutAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryAddressAnalyzer;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeTraceAnalysisTest {
-
+    /*
     private MicroBlazeTraceStream getStream(ELFProvider file, boolean generate) {
         String f = file.getResource();
         if (!generate) {
@@ -31,7 +29,13 @@ public class MicroBlazeTraceAnalysisTest {
         }
         File fd = SpecsIo.resourceCopy(f);
         fd.deleteOnExit();
-        var prod = new MicroBlazeDetailedTraceProvider(fd);
+        var prod = new MicroBlazeDetailedTraceProducer(fd);
+        var stream = new MicroBlazeTraceStream(prod);
+        return stream;
+    }*/
+
+    private MicroBlazeTraceStream getStream(MicroBlazeELFProvider elfprovider, boolean generate) {
+        var prod = new MicroBlazeDetailedTraceProducer(new MicroBlazeTraceDumpProvider(elfprovider));
         var stream = new MicroBlazeTraceStream(prod);
         return stream;
     }
@@ -77,8 +81,7 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testInstPerSecondNoRegisters() {
         System.out.println("--- Without registers ---");
-        var fd1 = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
-        var prod1 = new MicroBlazeTraceProvider(fd1);
+        var prod1 = new MicroBlazeTraceProducer(MicroBlazeLivermoreELFN10.innerprod);
         var perf1 = new BtfPerformanceAnalyzer(prod1);
         perf1.calcInstructionsPerSecond();
     }
@@ -86,8 +89,7 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testInstPerSecondWithRegisters() {
         System.out.println("--- With registers ---");
-        var fd2 = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
-        var prod2 = new MicroBlazeDetailedTraceProvider(fd2);
+        var prod2 = new MicroBlazeDetailedTraceProducer(MicroBlazeLivermoreELFN10.innerprod);
         var perf2 = new BtfPerformanceAnalyzer(prod2);
         perf2.calcInstructionsPerSecond();
     }
@@ -104,8 +106,7 @@ public class MicroBlazeTraceAnalysisTest {
 
         // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
 
-        var fd = BinaryTranslationUtils.getFile(elf);
-        var stream = new MicroBlazeTraceStream(fd);
+        var stream = new MicroBlazeTraceStream(elf);
         InOutAnalyzer bba = new InOutAnalyzer(stream, elf, window);
         bba.analyse(InOutAnalyzer.InOutMode.BASIC_BLOCK);
     }
@@ -122,8 +123,7 @@ public class MicroBlazeTraceAnalysisTest {
 
         // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
 
-        var fd = BinaryTranslationUtils.getFile(elf);
-        var stream = new MicroBlazeTraceStream(fd);
+        var stream = new MicroBlazeTraceStream(elf);
         InOutAnalyzer bba = new InOutAnalyzer(stream, elf, window);
         bba.analyse(InOutAnalyzer.InOutMode.TRACE);
     }
@@ -140,8 +140,7 @@ public class MicroBlazeTraceAnalysisTest {
 
         // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
 
-        var fd = BinaryTranslationUtils.getFile(elf);
-        var stream = new MicroBlazeTraceStream(fd);
+        var stream = new MicroBlazeTraceStream(elf);
         InOutAnalyzer bba = new InOutAnalyzer(stream, elf, window);
         bba.analyse(InOutAnalyzer.InOutMode.SIMPLE_BASIC_BLOCK);
     }
@@ -159,8 +158,7 @@ public class MicroBlazeTraceAnalysisTest {
 
         // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
 
-        var fd = BinaryTranslationUtils.getFile(elf);
-        var stream = new MicroBlazeTraceStream(fd);
+        var stream = new MicroBlazeTraceStream(elf);
         InOutAnalyzer bba = new InOutAnalyzer(stream, elf, window);
         bba.analyse(InOutAnalyzer.InOutMode.ELIMINATION);
     }
@@ -204,8 +202,7 @@ public class MicroBlazeTraceAnalysisTest {
         // var elf = MicroBlazeGccOptimizationLevels.fir1; int window = 12;
         // var elf = MicroBlazeGccOptimizationLevels.firparam2; int window = 10;
 
-        var fd = BinaryTranslationUtils.getFile(elf);
-        var stream = new MicroBlazeTraceStream(fd);
+        var stream = new MicroBlazeTraceStream(elf);
         var maa = new MemoryAddressAnalyzer(stream, elf, new MicroBlazeRegisterConventions(), window);
         maa.analyze();
     }
