@@ -1,8 +1,6 @@
 package org.specs.Arm;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-
-public enum ArmLivermoreELFN10 implements ELFProvider {
+public enum ArmLivermoreELFN10 implements ArmELFProvider {
 
     cholesky("org/specs/Arm/asm/N10/cholesky_N10.elf", 0x2a20, 0x2ab4),
     diffpredict("org/specs/Arm/asm/N10/diffpredict_N10.elf", 0x1500, 0x15bc),
@@ -31,11 +29,6 @@ public enum ArmLivermoreELFN10 implements ELFProvider {
     }
 
     @Override
-    public String asTxtDump() {
-        return this.fullPath.replace(".elf", ".txt");
-    }
-
-    @Override
     public Number getKernelStart() {
         return kernelStart;
     }
@@ -49,10 +42,4 @@ public enum ArmLivermoreELFN10 implements ELFProvider {
     public String getResource() {
         return this.fullPath;
     }
-
-    @Override
-    public String asTraceTxtDump() {
-        return this.fullPath.replace(".elf", "_trace.txt");
-    }
-
 }

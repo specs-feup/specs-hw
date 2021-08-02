@@ -1,8 +1,8 @@
 package org.specs.Arm.asm;
 
-import java.io.File;
-
 import org.junit.Test;
+import org.specs.Arm.ArmELFProvider;
+import org.specs.Arm.ArmLivermoreELFN10;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
@@ -16,18 +16,11 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.util.SpecsIo;
 
 public class ArmBinarySegmentGraphTester {
 
-    private File openFile() {
-        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/matmul.elf");
-        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.elf");
-
-        File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky.txt");
-        // File fd = SpecsIo.resourceCopy("org/specs/Arm/asm/cholesky_trace.txt");
-        fd.deleteOnExit();
-        return fd;
+    private ArmELFProvider getELF() {
+        return ArmLivermoreELFN10.cholesky;
     }
 
     private BinarySegmentGraph convertSegmentToGraph(BinarySegment seg) {
@@ -59,7 +52,7 @@ public class ArmBinarySegmentGraphTester {
     @Test
     public void testStaticFrequentSequence() {
 
-        try (ArmElfStream el = new ArmElfStream(openFile())) {
+        try (ArmElfStream el = new ArmElfStream(getELF())) {
             var bbd = new FrequentStaticSequenceDetector();
             getSegments(el, bbd);
         }
@@ -68,7 +61,7 @@ public class ArmBinarySegmentGraphTester {
     @Test
     public void testStaticBasicBlock() {
 
-        try (ArmElfStream el = new ArmElfStream(openFile())) {
+        try (ArmElfStream el = new ArmElfStream(getELF())) {
             var bbd = new StaticBasicBlockDetector();
             getSegments(el, bbd);
         }
@@ -76,7 +69,7 @@ public class ArmBinarySegmentGraphTester {
 
     @Test
     public void testTraceFrequenceSequence() {
-        try (ArmTraceStream el = new ArmTraceStream(openFile())) {
+        try (ArmTraceStream el = new ArmTraceStream(getELF())) {
             var bbd = new FrequentTraceSequenceDetector();
             getSegments(el, bbd);
         }
@@ -84,7 +77,7 @@ public class ArmBinarySegmentGraphTester {
 
     @Test
     public void testTraceBasicBlock() {
-        try (ArmTraceStream el = new ArmTraceStream(openFile())) {
+        try (ArmTraceStream el = new ArmTraceStream(getELF())) {
             var bbd = new TraceBasicBlockDetector();
             getSegments(el, bbd);
         }

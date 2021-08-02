@@ -12,8 +12,7 @@ public class ArmGDBRunTester {
     @Test
     public void test() {
         var elf = ArmLivermoreELFN10.innerprod;
-        var fd = BinaryTranslationUtils.getFile(elf);
-        var app = new ArmApplication(fd);
+        var app = new ArmApplication(elf);
 
         try (var gdb = new GDBRun(app)) {
 
