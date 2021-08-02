@@ -27,6 +27,7 @@ public class GDBRun extends StringProcessRun {
      */
     private boolean targetOpen = false;
     private Application app;
+    private boolean amInteractiveRun = true;
 
     protected Application getApp() {
         return app;
@@ -50,18 +51,25 @@ public class GDBRun extends StringProcessRun {
      * 
      */
     public GDBRun(Application app) {
-        this(app, null);
+        this(app, null, true);
     }
 
     /*
      * NOTE: For windows, the run environment should have this var set SET HOME=%USERPROFILE%
      * in case gdb is called from a prompt which is not MSYS (which is what happens when running via Eclipse)
      */
-    public GDBRun(Application app, File scriptFile) {
+    private GDBRun(Application app, File scriptFile, boolean amInteractiveRun) {
         super(GDBRun.getArgs(app, scriptFile));
+        this.amInteractiveRun = amInteractiveRun;
+
         super.attachThreads();
-        this.getGDBResponse(5000);
-        this.consumeAllGDBResponse();
+        if (this.amInteractiveRun) {
+            this.getGDBResponse(5000);
+            this.consumeAllGDBResponse();
+
+            // check if a target was opened
+            this.targetOpen = this.hasTarget();
+        }
         // first line might take a long time to launch QEMU...
         // consume garbage lines produced from the start of gdb
 
@@ -71,15 +79,29 @@ public class GDBRun extends StringProcessRun {
         // all reads from stdout of the process
         // This shouldn't introduce delays in any other circumstances
         // since poll returns immediately
+    }
 
-        // check if a target was opened
-        this.targetOpen = this.hasTarget();
+    /*
+     * Newinstance
+     */
+    public static GDBRun newInstanceFreeRun(Application app, File scriptFile) {
+        return new GDBRun(app, scriptFile, false);
+    }
+
+    /*
+     * Newinstance
+     */
+    public static GDBRun newInstanceInteractive(Application app, File scriptFile) {
+        return new GDBRun(app, scriptFile, true);
     }
 
     @Override
     protected void attachStdOut() {
-        Executors.newSingleThreadExecutor()
-                .execute(() -> StdioThreads.stdoutThreadInteractive(this));
+        if (this.amInteractiveRun)
+            Executors.newSingleThreadExecutor()
+                    .execute(() -> StdioThreads.stdoutThreadInteractive(this));
+        else
+            super.attachStdOut();
     }
 
     /*

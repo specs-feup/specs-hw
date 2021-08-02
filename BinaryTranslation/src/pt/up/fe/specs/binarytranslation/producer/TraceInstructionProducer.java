@@ -8,7 +8,6 @@ import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
 import pt.up.fe.specs.binarytranslation.processes.TxtDump;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public class TraceInstructionProducer extends AInstructionProducer {
@@ -32,7 +31,7 @@ public class TraceInstructionProducer extends AInstructionProducer {
 
         // Output from GNU based objdump
         if (extension.equals("elf"))
-            return new GDBRun(app, BinaryTranslationUtils.FillGDBScript(app));
+            return GDBRun.newInstanceInteractive(app, app.getGDBScriptInteractive());
 
         // txt trace dump
         else

@@ -16,8 +16,7 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.specs.BinaryTranslation.ELFProvider;
-
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.ListScheduler;

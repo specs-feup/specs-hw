@@ -2,10 +2,12 @@ package pt.up.fe.specs.binarytranslation.utils;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
@@ -14,14 +16,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.specs.BinaryTranslation.ELFProvider;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
 import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
-import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.processes.ProcessRun;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
@@ -43,6 +44,34 @@ public class BinaryTranslationUtils {
         File fd = SpecsIo.resourceCopy(elf.getResource());
         fd.deleteOnExit();
         return fd;
+    }
+
+    /**
+     * Dumps the output of the stdio thread of any @ProcessRun to a given file
+     * 
+     * @author nuno
+     *
+     */
+    public static void dumpProcessRunStdOut(ProcessRun proc, String filename) {
+
+        try {
+            var fos = new FileWriter(filename);
+            var bw = new BufferedWriter(fos);
+
+            String line = null;
+            while ((line = proc.receive(100)) != null) {
+                bw.write(line + "\n");
+                bw.flush();
+            }
+            bw.close();
+            fos.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -225,20 +254,20 @@ public class BinaryTranslationUtils {
 
     /*
      * 
-     */
+     
     public static File FillGDBScript(Application app) {
-
+    
         var elfpath = app.getElffile().getAbsolutePath();
         var qemuexe = app.getQemuexe().getResource();
         if (IS_WINDOWS) {
             qemuexe += ".exe";
             elfpath = elfpath.replace("\\", "/");
         }
-
+    
         var gdbScript = new Replacer(app.getGdbtmpl());
         gdbScript.replace("<ELFNAME>", elfpath);
         gdbScript.replace("<QEMUBIN>", qemuexe);
-
+    
         if (app.getDtbfile() != null) {
             var fd = BinaryTranslationUtils.getFile(app.getDtbfile().getResource());
             var dtbpath = fd.getAbsolutePath();
@@ -246,16 +275,16 @@ public class BinaryTranslationUtils {
                 dtbpath = dtbpath.replace("\\", "/");
             gdbScript.replace("<DTBFILE>", dtbpath);
         }
-
+    
         if (IS_WINDOWS)
             gdbScript.replace("<KILL>", "");
         else
             gdbScript.replace("<KILL>", "kill");
-
+    
         var fd = new File("tmpscript.gdb");
         SpecsIo.write(fd, gdbScript.toString());
         return fd;
-    }
+    }*/
 
     /*
      * 

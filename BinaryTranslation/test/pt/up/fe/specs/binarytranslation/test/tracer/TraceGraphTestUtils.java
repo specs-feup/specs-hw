@@ -1,8 +1,8 @@
 package pt.up.fe.specs.binarytranslation.test.tracer;
 
 import org.junit.Test;
-import org.specs.BinaryTranslation.ELFProvider;
 
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 import pt.up.fe.specs.binarytranslation.tracer.StreamBasicBlock;
 import pt.up.fe.specs.binarytranslation.tracer.StreamUnitGenerator;

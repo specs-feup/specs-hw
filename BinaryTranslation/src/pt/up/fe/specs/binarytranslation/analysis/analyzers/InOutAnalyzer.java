@@ -2,8 +2,7 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
 import java.util.List;
 
-import org.specs.BinaryTranslation.ELFProvider;
-
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.BasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.OutElimination;
