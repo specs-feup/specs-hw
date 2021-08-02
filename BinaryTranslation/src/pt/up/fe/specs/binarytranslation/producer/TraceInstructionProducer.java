@@ -31,7 +31,7 @@ public class TraceInstructionProducer extends AInstructionProducer {
 
         // Output from GNU based objdump
         if (extension.equals("elf"))
-            return GDBRun.newInstanceInteractive(app, app.getGDBScriptInteractive());
+            return GDBRun.newInstanceInteractive(app);
 
         // txt trace dump
         else
