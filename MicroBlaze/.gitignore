@@ -1,3 +1,4 @@
 /tmpscript.gdb
 /memory_profile.csv
 *.o
+/core
