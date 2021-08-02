@@ -1,13 +1,11 @@
 package org.specs.Arm;
 
-import java.io.File;
-
 import pt.up.fe.specs.binarytranslation.asm.Application;
 
 public class ArmApplication extends Application {
 
-    public ArmApplication(File elfName) {
-        super(elfName,
+    public ArmApplication(ArmELFProvider elfprovider) {
+        super(elfprovider,
                 ArmResource.ARMv8_CPU_NAME,
                 ArmResource.AARCH64_GDB,
                 ArmResource.AARCH64_OBJDUMP,
