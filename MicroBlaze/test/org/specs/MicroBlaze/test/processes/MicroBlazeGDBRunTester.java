@@ -1,7 +1,6 @@
 package org.specs.MicroBlaze.test.processes;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 
@@ -33,8 +32,7 @@ public class MicroBlazeGDBRunTester {
     @Test
     public void testRegister() {
         var elf = MicroBlazeLivermoreELFN100.matmul100;
-        var fd = BinaryTranslationUtils.getFile(elf);
-        var app = new MicroBlazeApplication(fd);
+        var app = new MicroBlazeApplication(elf);
         try (var gdb = GDBRun.newInstanceInteractive(app)) {
 
             // run until kernel start
@@ -66,8 +64,8 @@ public class MicroBlazeGDBRunTester {
      */
     @Test
     public void testScript() {
-        var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
-        var app = new MicroBlazeApplication(fd);
+        var elf = MicroBlazeLivermoreELFN100.matmul100;
+        var app = new MicroBlazeApplication(elf);
         try (var gdb = GDBRun.newInstanceFreeRun(app)) {
 
             String line = null;
@@ -79,8 +77,8 @@ public class MicroBlazeGDBRunTester {
 
     @Test
     public void test() {
-        var fd = BinaryTranslationUtils.getFile(MicroBlazeLivermoreELFN10.innerprod);
-        var app = new MicroBlazeApplication(fd);
+        var elf = MicroBlazeLivermoreELFN100.matmul100;
+        var app = new MicroBlazeApplication(elf);
 
         try (var gdb = new GDBRun(app)) {
 
