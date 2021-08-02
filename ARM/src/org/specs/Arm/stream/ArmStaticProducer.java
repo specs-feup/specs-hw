@@ -7,9 +7,9 @@ import org.specs.Arm.instruction.ArmInstruction;
 
 import pt.up.fe.specs.binarytranslation.producer.StaticInstructionProducer;
 
-public class ArmStaticProvider extends StaticInstructionProducer {
+public class ArmStaticProducer extends StaticInstructionProducer {
 
-    public ArmStaticProvider(ArmELFProvider elfprovider) {
+    public ArmStaticProducer(ArmELFProvider elfprovider) {
         super(new ArmApplication(elfprovider),
                 ArmResource.AARCH64_DUMP_REGEX,
                 ArmInstruction::newInstance);

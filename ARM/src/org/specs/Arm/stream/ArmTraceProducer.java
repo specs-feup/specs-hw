@@ -7,9 +7,9 @@ import org.specs.Arm.instruction.ArmInstruction;
 
 import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
 
-public class ArmTraceProvider extends TraceInstructionProducer {
+public class ArmTraceProducer extends TraceInstructionProducer {
 
-    public ArmTraceProvider(ArmELFProvider elfprovide) {
+    public ArmTraceProducer(ArmELFProvider elfprovide) {
         super(new ArmApplication(elfprovide),
                 ArmResource.AARCH64_TRACE_REGEX,
                 ArmInstruction::newInstance);

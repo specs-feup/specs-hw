@@ -19,6 +19,6 @@ public class ArmElfStream extends AStaticInstructionStream {
     }
 
     public ArmElfStream(ArmELFProvider elfprovider) {
-        super(new ArmStaticProvider(elfprovider));
+        super(new ArmStaticProducer(elfprovider));
     }
 }

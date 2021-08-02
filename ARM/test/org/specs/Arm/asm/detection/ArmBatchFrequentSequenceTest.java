@@ -2,7 +2,7 @@ package org.specs.Arm.asm.detection;
 
 import org.junit.Test;
 import org.specs.Arm.ArmLivermoreELFN100;
-import org.specs.Arm.stream.ArmTraceProvider;
+import org.specs.Arm.stream.ArmTraceProducer;
 import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
@@ -35,7 +35,7 @@ public class ArmBatchFrequentSequenceTest {
         // ELFProvider elfs[] = ArmLivermoreELFN10.values();
         ELFProvider elfs[] = { ArmLivermoreELFN100.tri_diag };
         ThreadedSegmentDetectUtils.BatchDetect(elfs, 4, 50,
-                ArmTraceProvider.class,
+                ArmTraceProducer.class,
                 ArmTraceStream.class,
                 TraceBasicBlockDetector.class);
     }
