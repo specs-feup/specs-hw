@@ -1,8 +1,6 @@
 package org.specs.MicroBlaze;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-
-public enum MicroBlazeRosetta implements ELFProvider {
+public enum MicroBlazeRosetta implements MicroBlazeELFProvider {
 
     rendering3d("org/specs/MicroBlaze/asm/Rosetta/3d-rendering.elf", 0x14c4, 0x1528),
     facedetection("org/specs/MicroBlaze/asm/Rosetta/face-detection.elf", 0x1990, 0x1a00);

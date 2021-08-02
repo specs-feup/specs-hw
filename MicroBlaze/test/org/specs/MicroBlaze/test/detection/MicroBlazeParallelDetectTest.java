@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
@@ -34,7 +34,7 @@ public class MicroBlazeParallelDetectTest {
         int minwindow = 4, maxwindow = 20;
 
         // producer
-        var iproducer = new MicroBlazeTraceProvider(fd);
+        var iproducer = new MicroBlazeTraceProducer(fd);
         // var iproducer = new MicroBlazeStaticProvider(fd);
 
         // host for threads

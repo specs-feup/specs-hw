@@ -1,8 +1,6 @@
 package org.specs.MicroBlaze;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-
-public enum MicroBlazeLivermoreELFN100 implements ELFProvider {
+public enum MicroBlazeLivermoreELFN100 implements MicroBlazeELFProvider {
 
     cholesky100("org/specs/MicroBlaze/asm/LivermoreN100/cholesky_N100.elf", 0x4b54, 0x4c44),
     diffpredict100("org/specs/MicroBlaze/asm/LivermoreN100/diffpredict_N100.elf", 0x2ec8, 0x3008),
@@ -34,11 +32,6 @@ public enum MicroBlazeLivermoreELFN100 implements ELFProvider {
     }
 
     @Override
-    public String asTxtDump() {
-        return this.fullPath.replace(".elf", ".txt");
-    }
-
-    @Override
     public Number getKernelStart() {
         return kernelStart;
     }
@@ -51,10 +44,5 @@ public enum MicroBlazeLivermoreELFN100 implements ELFProvider {
     @Override
     public String getResource() {
         return this.fullPath;
-    }
-
-    @Override
-    public String asTraceTxtDump() {
-        return this.fullPath.replace(".elf", "_trace.txt");
     }
 }

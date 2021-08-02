@@ -17,6 +17,7 @@ import java.io.File;
 
 import com.google.gson.annotations.Expose;
 
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -38,9 +39,10 @@ public abstract class Application {
     @Expose
     private final ResourceProvider gdb, gdbTmpl, gdbTmplNoninter, objDump, readElf, qemuExe, dtbFile;
 
+    private final ELFProvider elf;
     private final transient File elffile;
 
-    public Application(File elffile,
+    public Application(ELFProvider elf,
             ResourceProvider cpuArchitectureName,
             ResourceProvider gdb,
             ResourceProvider objdump,
@@ -50,7 +52,8 @@ public abstract class Application {
             ResourceProvider qemuexe,
             ResourceProvider dtbfile) {
 
-        this.elffile = elffile;
+        this.elf = elf;
+        this.elffile = BinaryTranslationUtils.getFile(elf);
         this.appName = elffile.getName();
         this.cpuArchitectureName = cpuArchitectureName;
         this.gdb = gdb;
@@ -65,6 +68,10 @@ public abstract class Application {
 
     public String getAppName() {
         return appName;
+    }
+
+    public ELFProvider getELFProvider() {
+        return elf;
     }
 
     public File getElffile() {

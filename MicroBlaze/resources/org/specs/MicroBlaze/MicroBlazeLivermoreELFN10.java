@@ -1,14 +1,12 @@
 package org.specs.MicroBlaze;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-
 /**
  * Handy resource list of existing pre-compiled ELFs for MicroBlaze, for robust name and path getting (and other things)
  * 
  * @author nuno
  *
  */
-public enum MicroBlazeLivermoreELFN10 implements ELFProvider {
+public enum MicroBlazeLivermoreELFN10 implements MicroBlazeELFProvider {
 
     cholesky("org/specs/MicroBlaze/asm/LivermoreN10/cholesky.elf", 0x4b54, 0x4c44),
     // cholesky_trace("org/specs/MicroBlaze/asm/LivermoreN10/cholesky_trace.txt", null, null),
@@ -51,15 +49,5 @@ public enum MicroBlazeLivermoreELFN10 implements ELFProvider {
     @Override
     public String getResource() {
         return this.fullPath;
-    }
-
-    @Override
-    public String asTxtDump() {
-        return this.fullPath.replace(".elf", "_objdump.txt");
-    }
-
-    @Override
-    public String asTraceTxtDump() {
-        return this.fullPath.replace(".elf", "_trace.txt");
     }
 }
