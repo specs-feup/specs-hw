@@ -1,9 +1,10 @@
 package org.specs.MicroBlaze.test.stream;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeELFProvider;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeStaticProducer;
 
@@ -12,20 +13,15 @@ import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
 import pt.up.fe.specs.binarytranslation.profiling.InstructionTypeHistogram;
 import pt.up.fe.specs.binarytranslation.profiling.data.InstructionProfileResult;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.threadstream.ConsumerThread;
 import pt.up.fe.specs.util.threadstream.ProducerEngine;
 
 public class MicroBlazeMultiConsumerGenericTester {
 
-    private void testParallel(String elfname) {
-
-        // file
-        File fd = SpecsIo.resourceCopy(elfname);
-        fd.deleteOnExit();
+    private void testParallel(MicroBlazeELFProvider elfprovider) {
 
         // producer
-        var iproducer = new MicroBlazeStaticProducer(fd);
+        var iproducer = new MicroBlazeStaticProducer(elfprovider);
 
         /*
          * TODO: the return of processing an instruction stream fully (post close) should be all meta info
@@ -39,7 +35,7 @@ public class MicroBlazeMultiConsumerGenericTester {
 
         // host for threads
         var streamengine = new ProducerEngine<Instruction, InstructionProducer>(iproducer, op -> op.nextInstruction(),
-                cc -> new MicroBlazeElfStream(fd, cc));
+                cc -> new MicroBlazeElfStream(elfprovider, cc));
 
         // new consumer thread via lambda
         var threadlist = new ArrayList<ConsumerThread<Instruction, ?>>();
@@ -59,6 +55,6 @@ public class MicroBlazeMultiConsumerGenericTester {
 
     @Test
     public void testParallel() {
-        this.testParallel("org/specs/MicroBlaze/asm/N10/cholesky.elf");
+        this.testParallel((MicroBlazeLivermoreELFN10.cholesky));
     }
 }
