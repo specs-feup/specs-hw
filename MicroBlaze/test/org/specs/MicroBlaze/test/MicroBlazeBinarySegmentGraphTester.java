@@ -17,18 +17,6 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public class MicroBlazeBinarySegmentGraphTester {
 
     private MicroBlazeELFProvider getELF() {
-        /*
-        // static
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/matmul.txt");
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/innerprod.txt");
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky.txt");
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/innerprod.txt");
-        
-        // dynamic
-        // File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/cholesky_trace.txt");
-        
-        fd.deleteOnExit();*/
-
         return MicroBlazeLivermoreELFN10.cholesky;
     }
 

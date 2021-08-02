@@ -23,12 +23,6 @@ public enum MicroBlazeRosetta implements MicroBlazeELFProvider {
     }
 
     @Override
-    public String asTxtDump() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public Number getKernelStart() {
         return this.kernelStart;
     }
@@ -37,10 +31,4 @@ public enum MicroBlazeRosetta implements MicroBlazeELFProvider {
     public Number getKernelStop() {
         return this.kernelStop;
     }
-
-    @Override
-    public String asTraceTxtDump() {
-        return this.fullPath.replace(".elf", "_trace.txt");
-    }
-
 }
