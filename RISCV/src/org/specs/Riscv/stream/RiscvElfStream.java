@@ -1,8 +1,7 @@
 package org.specs.Riscv.stream;
 
-import java.io.File;
-
 import org.specs.Riscv.RiscvApplication;
+import org.specs.Riscv.RiscvELFProvider;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;
@@ -15,11 +14,11 @@ public class RiscvElfStream extends AStaticInstructionStream {
      * Auxiliary constructor so that streams can be built from the threading engine
      * with the channels created by the parent InstructionProducer
      */
-    public RiscvElfStream(File elfname, ChannelConsumer<Instruction> channel) {
-        super(new ChanneledInstructionProducer(new RiscvApplication(elfname), channel));
+    public RiscvElfStream(RiscvELFProvider elfprovider, ChannelConsumer<Instruction> channel) {
+        super(new ChanneledInstructionProducer(new RiscvApplication(elfprovider), channel));
     }
 
-    public RiscvElfStream(File elfname) {
-        super(new RiscvStaticProvider(elfname));
+    public RiscvElfStream(RiscvELFProvider elfprovider) {
+        super(new RiscvStaticProducer(elfprovider));
     }
 }

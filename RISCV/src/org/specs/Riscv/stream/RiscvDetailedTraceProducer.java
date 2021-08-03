@@ -1,16 +1,16 @@
 package org.specs.Riscv.stream;
 
-import java.io.File;
 import org.specs.Riscv.RiscvApplication;
+import org.specs.Riscv.RiscvELFProvider;
 import org.specs.Riscv.RiscvResource;
 import org.specs.Riscv.instruction.RiscvInstruction;
 
 import pt.up.fe.specs.binarytranslation.producer.detailed.DetailedRegisterInstructionProducer;
 
-public class RiscvDetailedTraceProvider extends DetailedRegisterInstructionProducer {
+public class RiscvDetailedTraceProducer extends DetailedRegisterInstructionProducer {
 
-    public RiscvDetailedTraceProvider(File elfname) {
-        super(new RiscvApplication(elfname),
+    public RiscvDetailedTraceProducer(RiscvELFProvider elfprovider) {
+        super(new RiscvApplication(elfprovider),
                 RiscvResource.RISC_TRACE_REGEX,
                 RiscvInstruction::newInstance);
     }

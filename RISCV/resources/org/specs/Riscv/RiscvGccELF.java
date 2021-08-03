@@ -1,11 +1,9 @@
 package org.specs.Riscv;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-
-public enum RiscvGccELF implements ELFProvider {
+public enum RiscvGccELF implements RiscvELFProvider {
 
     autocor("org/specs/Riscv/asm/GCC/autocor.elf", null, null);
-    
+
     private String fullPath;
     private Number kernelStart;
     private Number kernelStop;
@@ -15,7 +13,7 @@ public enum RiscvGccELF implements ELFProvider {
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
     }
-    
+
     @Override
     public String asTxtDump() {
         return this.fullPath.replace(".elf", ".txt");
