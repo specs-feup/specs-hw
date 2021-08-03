@@ -21,11 +21,6 @@ public class ATraceDumpProvider implements ELFProvider {
     }
 
     @Override
-    public String getPackagePath() {
-        return original.getPackagePath();
-    }
-
-    @Override
     public Number getKernelStart() {
         return this.original.getKernelStart();
     }
