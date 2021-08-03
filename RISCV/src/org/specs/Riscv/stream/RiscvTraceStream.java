@@ -1,7 +1,7 @@
 package org.specs.Riscv.stream;
 
 import org.specs.Riscv.RiscvApplication;
-import org.specs.Riscv.RiscvELFProvider;
+import org.specs.Riscv.provider.RiscvELFProvider;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;

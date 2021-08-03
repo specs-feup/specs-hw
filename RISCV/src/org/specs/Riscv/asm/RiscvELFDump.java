@@ -13,7 +13,7 @@
 
 package org.specs.Riscv.asm;
 
-import org.specs.Riscv.RiscvELFProvider;
+import org.specs.Riscv.provider.RiscvELFProvider;
 import org.specs.Riscv.stream.RiscvStaticProducer;
 
 import pt.up.fe.specs.binarytranslation.asm.ELFDump;

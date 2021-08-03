@@ -1,4 +1,4 @@
-package org.specs.Riscv;
+package org.specs.Riscv.provider;
 
 public enum RiscvLivermoreELFN100iamf implements RiscvELFProvider {
 

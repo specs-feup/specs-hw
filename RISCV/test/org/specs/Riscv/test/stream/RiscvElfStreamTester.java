@@ -1,9 +1,9 @@
 package org.specs.Riscv.test.stream;
 
 import org.junit.Test;
-import org.specs.Riscv.RiscvLivermoreELFN100iam;
-import org.specs.Riscv.RiscvLivermoreELFN100iamf;
-import org.specs.Riscv.RiscvPolyBenchSmallInt;
+import org.specs.Riscv.provider.RiscvLivermoreELFN100iam;
+import org.specs.Riscv.provider.RiscvLivermoreELFN100iamf;
+import org.specs.Riscv.provider.RiscvPolyBenchSmallInt;
 import org.specs.Riscv.stream.RiscvElfStream;
 import org.specs.Riscv.stream.RiscvTraceStream;
 

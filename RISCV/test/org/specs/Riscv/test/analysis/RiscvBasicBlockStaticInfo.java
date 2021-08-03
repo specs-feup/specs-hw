@@ -20,7 +20,7 @@ package org.specs.Riscv.test.analysis;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specs.Riscv.RiscvPolyBenchSmallFloat;
+import org.specs.Riscv.provider.RiscvPolyBenchSmallFloat;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
 

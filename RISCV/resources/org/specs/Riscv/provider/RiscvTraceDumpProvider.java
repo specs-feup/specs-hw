@@ -1,4 +1,4 @@
-package org.specs.Riscv;
+package org.specs.Riscv.provider;
 
 import pt.up.fe.specs.binarytranslation.ATraceDumpProvider;
 
