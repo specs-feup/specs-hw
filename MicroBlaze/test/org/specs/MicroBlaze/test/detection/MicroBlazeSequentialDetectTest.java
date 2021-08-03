@@ -3,8 +3,8 @@ package org.specs.MicroBlaze.test.detection;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazeELFProvider;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;

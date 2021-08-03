@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 

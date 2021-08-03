@@ -1,10 +1,10 @@
 package org.specs.MicroBlaze.test.asm;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazeELFProvider;
-import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
-import org.specs.MicroBlaze.MicroBlazePolyBenchSmallInt;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
+import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallFloat;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallInt;
 
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.processes.ObjDump;

@@ -16,8 +16,8 @@ package org.specs.MicroBlaze.test.analysis;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallFloat;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
 

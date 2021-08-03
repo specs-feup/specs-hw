@@ -1,8 +1,8 @@
 package org.specs.MicroBlaze.test.processes;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
 
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;

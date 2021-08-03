@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazeELFProvider;
-import org.specs.MicroBlaze.MicroBlazeTraceDumpProvider;
+import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
+import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterDataFlow;
