@@ -1,25 +1,78 @@
 package pt.up.fe.specs.binarytranslation;
 
+import java.io.File;
+import java.util.function.Function;
+
 import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public interface ELFProvider extends ResourceProvider {
 
     default public String asTxtDump() {
-        return this.getResource().replace(".elf", "_objdump.txt");
+        var name = this.getELFName().replace(".elf", "_objdump.txt");
+        return name;
     }
 
     default public String asTraceTxtDump() {
-        return this.getResource().replace(".elf", "_trace.txt");
+        var name = this.getELFName().replace(".elf", "_trace.txt");
+        return name;
     }
 
     default public Application toApplication() {
-        return null;
+        throw new NotImplementedException("toApplication()");
     }
+
+    /*
+     * Gets file out of zip by resource name, when getResource is called
+     */
+    // default public boolean unzip(String filename) {
+    // var zipFile = SpecsIo.resourceCopy(filename, SpecsIo.getTempFolder());
+    // return BinaryTranslationUtils.unzip(
+    // zipFile, filename, this.getPackagePath());
+    // }
+
+    public String getPackagePath();
+
+    public String getELFName();
 
     public Number getKernelStart();
 
     public Number getKernelStop();
 
     public ResourceProvider getCPUName();
+
+    default File getFile() {
+        return this.write();
+    }
+
+    @Override
+    default File write(File folder, boolean overwrite, Function<String, String> nameMapper) {
+
+        var unzipFolder = SpecsIo.getTempFolder("unzip_" + SpecsIo.removeExtension(getResourceName()));
+
+        // copy of zip on disk (outside jar/bin)
+        var zipFile = SpecsIo.resourceCopy(this.getResource(), unzipFolder);
+        BinaryTranslationUtils.unzip(zipFile, getELFName(), unzipFolder);
+
+        var unzippedFile = new File(unzipFolder, getELFName());
+
+        var finalFile = new File(folder, unzippedFile.getName());
+
+        if (finalFile.isFile() && !overwrite) {
+            return finalFile;
+        }
+
+        SpecsIo.copy(unzippedFile, finalFile);
+        finalFile.deleteOnExit();
+        return finalFile;
+    }
+
+    @Override
+    default String read() {
+        var file = write(SpecsIo.getTempFolder());
+        return SpecsIo.read(file);
+    }
 }
