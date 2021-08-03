@@ -31,7 +31,7 @@ public class MicroBlazeGDBRunTester {
      */
     @Test
     public void testRegister() {
-        var elf = MicroBlazeLivermoreELFN100.matmul100;
+        var elf = MicroBlazeLivermoreELFN100.matmul_N100;
         var app = new MicroBlazeApplication(elf);
         try (var gdb = GDBRun.newInstanceInteractive(app)) {
 
@@ -64,7 +64,7 @@ public class MicroBlazeGDBRunTester {
      */
     @Test
     public void testScript() {
-        var elf = MicroBlazeLivermoreELFN100.matmul100;
+        var elf = MicroBlazeLivermoreELFN100.matmul_N100;
         var app = new MicroBlazeApplication(elf);
         try (var gdb = GDBRun.newInstanceFreeRun(app)) {
 
@@ -77,7 +77,7 @@ public class MicroBlazeGDBRunTester {
 
     @Test
     public void test() {
-        var elf = MicroBlazeLivermoreELFN100.matmul100;
+        var elf = MicroBlazeLivermoreELFN100.matmul_N100;
         var app = new MicroBlazeApplication(elf);
 
         try (var gdb = new GDBRun(app)) {

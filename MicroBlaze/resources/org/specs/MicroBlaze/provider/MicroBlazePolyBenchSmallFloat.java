@@ -36,43 +36,43 @@ public enum MicroBlazePolyBenchSmallFloat implements MicroBlazeELFProvider {
         000005f4 g     F .text  00000290 kernel_heat_3d
         00000694 g     F .text  00000114 kernel_gemm
      */
-    _2mm("org/specs/MicroBlaze/asm/PolybenchSmallFloat/_2mm.elf", 0x070cL, 0x890L),
-    _3mm("org/specs/MicroBlaze/asm/PolybenchSmallFloat/_3mm.elf", 0x071cL, 0x930L),
-    adi("org/specs/MicroBlaze/asm/PolybenchSmallFloat/adi.elf", 0x053cL, 0x8E0L),
-    atax("org/specs/MicroBlaze/asm/PolybenchSmallFloat/atax.elf", 0x05e8L, 0x6CCL),
-    bicg("org/specs/MicroBlaze/asm/PolybenchSmallFloat/bicg.elf", 0x0600L, 0x6ECL),
-    cholesky("org/specs/MicroBlaze/asm/PolybenchSmallFloat/cholesky.elf", 0x140cL, 0x1588L),
-    correlation("org/specs/MicroBlaze/asm/PolybenchSmallFloat/correlation.elf", 0x1228L, 0x1590L),
-    covariance("org/specs/MicroBlaze/asm/PolybenchSmallFloat/covariance.elf", 0x053cL, 0x704L),
-    deriche("org/specs/MicroBlaze/asm/PolybenchSmallFloat/deriche.elf", 0x2fe4L, 0x344CL),
-    doitgen("org/specs/MicroBlaze/asm/PolybenchSmallFloat/doitgen.elf", null, null),
-    durbin("org/specs/MicroBlaze/asm/PolybenchSmallFloat/durbin.elf", 0x053cL, 0x684L),
-    fdtd2d("org/specs/MicroBlaze/asm/PolybenchSmallFloat/fdtd-2d.elf", 0x0640L, 0x858L),
-    floydwarshall("org/specs/MicroBlaze/asm/PolybenchSmallFloat/floyd-warshall.elf", 0x062cL, 0x6CCL),
-    gemm("org/specs/MicroBlaze/asm/PolybenchSmallFloat/gemm.elf", 0x0694L, 0x7A4L),
-    gemver("org/specs/MicroBlaze/asm/PolybenchSmallFloat/gemver.elf", 0x06b4L, 0x870L),
-    gesummv("org/specs/MicroBlaze/asm/PolybenchSmallFloat/gesummv.elf", 0x0624L, 0x724L),
-    gramschmidt("org/specs/MicroBlaze/asm/PolybenchSmallFloat/gramschmidt.elf", 0x131cL, 0x1514L),
-    heat3d("org/specs/MicroBlaze/asm/PolybenchSmallFloat/heat-3d.elf", 0x05f4L, 0x880L),
-    jacobi1d("org/specs/MicroBlaze/asm/PolybenchSmallFloat/jacobi-1d.elf", 0x1120L, 0x12A0L),
-    jacobi2d("org/specs/MicroBlaze/asm/PolybenchSmallFloat/jacobi-2d.elf", 0x05f4L, 0x770L),
-    lu("org/specs/MicroBlaze/asm/PolybenchSmallFloat/lu.elf", 0x0720L, 0x84CL),
-    ludcmp("org/specs/MicroBlaze/asm/PolybenchSmallFloat/ludcmp.elf", 0x1900L, 0x1AF8L),
-    mvt("org/specs/MicroBlaze/asm/PolybenchSmallFloat/mvt.elf", 0x066cL, 0x73CL),
-    nussinov("org/specs/MicroBlaze/asm/PolybenchSmallFloat/nussinov.elf", 0x053cL, 0x6A4L),
-    seidel2d("org/specs/MicroBlaze/asm/PolybenchSmallFloat/seidel-2d.elf", 0x053cL, 0x65CL),
-    symm("org/specs/MicroBlaze/asm/PolybenchSmallFloat/symm.elf", 0x06a0L, 0x7ECL),
-    syr2k("org/specs/MicroBlaze/asm/PolybenchSmallFloat/syr2k.elf", null, null),
-    syrk("org/specs/MicroBlaze/asm/PolybenchSmallFloat/syrk.elf", 0x0620L, 0x714L),
-    trisolv("org/specs/MicroBlaze/asm/PolybenchSmallFloat/trisolv.elf", 0x05ccL, 0x6A0L),
-    trmm("org/specs/MicroBlaze/asm/PolybenchSmallFloat/trmm.elf", null, null);
+    _2mm(0x070cL, 0x890L),
+    _3mm(0x071cL, 0x930L),
+    adi(0x053cL, 0x8E0L),
+    atax(0x05e8L, 0x6CCL),
+    bicg(0x0600L, 0x6ECL),
+    cholesky(0x140cL, 0x1588L),
+    correlation(0x1228L, 0x1590L),
+    covariance(0x053cL, 0x704L),
+    deriche(0x2fe4L, 0x344CL),
+    doitgen(null, null),
+    durbin(0x053cL, 0x684L),
+    fdtd2d(0x0640L, 0x858L),
+    floydwarshall(0x062cL, 0x6CCL),
+    gemm(0x0694L, 0x7A4L),
+    gemver(0x06b4L, 0x870L),
+    gesummv(0x0624L, 0x724L),
+    gramschmidt(0x131cL, 0x1514L),
+    heat3d(0x05f4L, 0x880L),
+    jacobi1d(0x1120L, 0x12A0L),
+    jacobi2d(0x05f4L, 0x770L),
+    lu(0x0720L, 0x84CL),
+    ludcmp(0x1900L, 0x1AF8L),
+    mvt(0x066cL, 0x73CL),
+    nussinov(0x053cL, 0x6A4L),
+    seidel2d(0x053cL, 0x65CL),
+    symm(0x06a0L, 0x7ECL),
+    syr2k(null, null),
+    syrk(0x0620L, 0x714L),
+    trisolv(0x05ccL, 0x6A0L),
+    trmm(null, null);
 
-    private String fullPath;
+    private String elfName;
     private Number kernelStart;
     private Number kernelStop;
 
-    private MicroBlazePolyBenchSmallFloat(String fullPath, Number kernelStart, Number kernelStop) {
-        this.fullPath = fullPath;
+    private MicroBlazePolyBenchSmallFloat(Number kernelStart, Number kernelStop) {
+        this.elfName = name() + ".elf";
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
     }
@@ -88,7 +88,7 @@ public enum MicroBlazePolyBenchSmallFloat implements MicroBlazeELFProvider {
     }
 
     @Override
-    public String getResource() {
-        return this.fullPath;
+    public String getELFName() {
+        return this.elfName;
     }
 }

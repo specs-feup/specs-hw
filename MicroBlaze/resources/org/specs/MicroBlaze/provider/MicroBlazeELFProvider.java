@@ -9,6 +9,8 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public interface MicroBlazeELFProvider extends ELFProvider {
 
+    final static String PREFIX = "org/specs/MicroBlaze/asm/";
+
     @Override
     default public ResourceProvider getCPUName() {
         return MicroBlazeResource.MICROBLAZE_CPU_NAME;
@@ -17,5 +19,10 @@ public interface MicroBlazeELFProvider extends ELFProvider {
     @Override
     default Application toApplication() {
         return new MicroBlazeApplication(this);
+    }
+
+    @Override
+    default public String getResource() {
+        return this.getClass().getSimpleName() + ".7z";
     }
 }
