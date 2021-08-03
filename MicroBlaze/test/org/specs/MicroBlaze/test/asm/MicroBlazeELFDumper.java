@@ -1,7 +1,8 @@
 package org.specs.MicroBlaze.test.asm;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
+import org.specs.MicroBlaze.MicroBlazePolyBenchSmallInt;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
@@ -27,8 +28,13 @@ public class MicroBlazeELFDumper {
     @Test
     public void dumpELFstoFiles() {
         // for (var elf : Arrays.asList(MicroBlazeLivermoreELFN10.cholesky)) {
-        for (var elf : MicroBlazeLivermoreELFN10.values()) {
-            // dumpELFStatic(elf);
+        for (var elf : MicroBlazePolyBenchSmallInt.values()) {
+            dumpELFStatic(elf);
+            dumpELFTrace(elf);
+        }
+
+        for (var elf : MicroBlazePolyBenchSmallFloat.values()) {
+            dumpELFStatic(elf);
             dumpELFTrace(elf);
         }
     }
