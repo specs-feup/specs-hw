@@ -100,8 +100,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="org.specs.Arm.stream.ArmStaticProvider" project="ARM" 
-    file="/ARM/src/org/specs/Arm/stream/ArmStaticProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="10" language="java" name="org.specs.Arm.stream.ArmStaticProducer" project="ARM" 
+    file="/ARM/src/org/specs/Arm/stream/ArmStaticProducer.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="81" width="137" x="437" y="675"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -119,8 +119,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="org.specs.Riscv.stream.RiscvStaticProvider" project="RISCV" 
-    file="/RISCV/src/org/specs/Riscv/stream/RiscvStaticProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="12" language="java" name="org.specs.Riscv.stream.RiscvStaticProducer" project="RISCV" 
+    file="/RISCV/src/org/specs/Riscv/stream/RiscvStaticProducer.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="81" width="144" x="253" y="675"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -128,8 +128,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="org.specs.Arm.stream.ArmTraceProvider" project="ARM" 
-    file="/ARM/src/org/specs/Arm/stream/ArmTraceProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="13" language="java" name="org.specs.Arm.stream.ArmTraceProducer" project="ARM" 
+    file="/ARM/src/org/specs/Arm/stream/ArmTraceProducer.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="81" width="138" x="799" y="675"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -146,8 +146,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="15" language="java" name="org.specs.Riscv.stream.RiscvTraceProvider" project="RISCV" 
-    file="/RISCV/src/org/specs/Riscv/stream/RiscvTraceProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="15" language="java" name="org.specs.Riscv.stream.RiscvTraceProducer" project="RISCV" 
+    file="/RISCV/src/org/specs/Riscv/stream/RiscvTraceProducer.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="81" width="145" x="614" y="675"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
