@@ -14,35 +14,26 @@
 package pt.up.fe.specs.elfsimulator.test;
 
 import org.junit.jupiter.api.Test;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.MicroBlazeObjDumpProvider;
+import org.specs.MicroBlaze.MicroBlazeTiny;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
-import org.specs.Riscv.RiscvLivermoreELFN100iam;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.compiledsimulator.ExecGenerator;
 import pt.up.fe.specs.compiledsimulator.InstructionSetSpecifications;
 import pt.up.fe.specs.compiledsimulator.LibGenerator;
 
 public class TestSimulator {
 
-    private ELFProvider openMBFile() {
-
-        /*File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/microblaze/tiny.txt");
-        System.out.print(fd.exists() + "\n");
-        fd.deleteOnExit();*/
-
-        return MicroBlazeLivermoreELFN10.cholesky;
-    }
-
-    private ELFProvider openRISCVFile() {
-
+    /*
+    private File openRISCVFile() {
+    
         // static
-        /*File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/riscv/test64.txt");
+        File fd = SpecsIo.resourceCopy("org/specs/elfsimulator/riscv/test64.txt");
         System.out.print(fd.exists() + "\n");
-        fd.deleteOnExit();*/
-
-        return RiscvLivermoreELFN100iam.cholesky100;
-    }
+        fd.deleteOnExit();
+    
+        return fd;
+    }*/
 
     /*
     @Test
@@ -115,8 +106,9 @@ public class TestSimulator {
     */
     @Test
     void ElfSimulatorTest() {
-        MicroBlazeElfStream stream = new MicroBlazeElfStream(MicroBlazeLivermoreELFN10.cholesky);
-        MicroBlazeElfStream stream2 = new MicroBlazeElfStream(MicroBlazeLivermoreELFN10.cholesky);
+        var elf = new MicroBlazeObjDumpProvider(MicroBlazeTiny.tiny);
+        MicroBlazeElfStream stream = new MicroBlazeElfStream(elf);
+        MicroBlazeElfStream stream2 = new MicroBlazeElfStream(elf);
         // RiscvElfStream stream = new RiscvElfStream(openRISCVFile());
         LibGenerator sim = new LibGenerator(stream, new InstructionSetSpecifications());
         sim.generateLib();
