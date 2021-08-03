@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -24,6 +25,7 @@ import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
 import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.processes.ProcessRun;
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
 
@@ -40,10 +42,31 @@ public class BinaryTranslationUtils {
 
     // file
     public static File getFile(ELFProvider elf) {
-        // File fd = SpecsIo.resourceCopy(elf.asTxtDump()); // NOTE: useful for runs at home
         File fd = SpecsIo.resourceCopy(elf.getResource());
         fd.deleteOnExit();
         return fd;
+    }
+
+    /*
+     * Gets file out of zip by resource name, when getResource is called
+     */
+    public static void unzip(File zipFile, String filename, File outputFolder) {
+        var args = new ArrayList<String>();
+        args.add("7z");
+        args.add("e");
+        args.add(zipFile.getAbsolutePath());
+        args.add("-o" + outputFolder.getAbsolutePath());
+        args.add(filename);
+        var unzipResult = SpecsSystem.runProcess(args, true, true);
+        // var unzipOutput = unzipResult.getOutput();
+        // System.out.println(BinaryTranslationUtils.getAllOutput(new ProcessBuilder(args)));
+
+        if (unzipResult.isError()) {
+            throw new RuntimeException("Error while unzipping file '" + zipFile.getAbsolutePath() + "' to folder '"
+                    + outputFolder.getAbsolutePath() + "':\n" + unzipResult.getOutput());
+        }
+
+        // return !unzipResult.isError();
     }
 
     /**
@@ -251,40 +274,6 @@ public class BinaryTranslationUtils {
         else
             return "Could not retrieve build information!";
     }
-
-    /*
-     * 
-     
-    public static File FillGDBScript(Application app) {
-    
-        var elfpath = app.getElffile().getAbsolutePath();
-        var qemuexe = app.getQemuexe().getResource();
-        if (IS_WINDOWS) {
-            qemuexe += ".exe";
-            elfpath = elfpath.replace("\\", "/");
-        }
-    
-        var gdbScript = new Replacer(app.getGdbtmpl());
-        gdbScript.replace("<ELFNAME>", elfpath);
-        gdbScript.replace("<QEMUBIN>", qemuexe);
-    
-        if (app.getDtbfile() != null) {
-            var fd = BinaryTranslationUtils.getFile(app.getDtbfile().getResource());
-            var dtbpath = fd.getAbsolutePath();
-            if (IS_WINDOWS)
-                dtbpath = dtbpath.replace("\\", "/");
-            gdbScript.replace("<DTBFILE>", dtbpath);
-        }
-    
-        if (IS_WINDOWS)
-            gdbScript.replace("<KILL>", "");
-        else
-            gdbScript.replace("<KILL>", "kill");
-    
-        var fd = new File("tmpscript.gdb");
-        SpecsIo.write(fd, gdbScript.toString());
-        return fd;
-    }*/
 
     /*
      * 

@@ -53,7 +53,7 @@ public abstract class Application {
             ResourceProvider dtbfile) {
 
         this.elf = elf;
-        this.elffile = BinaryTranslationUtils.getFile(elf);
+        this.elffile = elf.getFile();
         this.appName = elffile.getName();
         this.cpuArchitectureName = cpuArchitectureName;
         this.gdb = gdb;

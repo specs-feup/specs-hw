@@ -4,30 +4,25 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public abstract class AObjDumpProvider implements ELFProvider {
 
-    // this should be a type of obejcst which is also an ELFProvider but which
-    // overrides getRousource!
     private final ELFProvider original;
 
     public AObjDumpProvider(ELFProvider elfprovider) {
         this.original = elfprovider;
     }
 
-    /*
-     * Override resource with its objdump
-     */
     @Override
-    public String getResource() {
-        var filename = this.original.asTxtDump();
-        // TODO check file exist?
-        return filename;
+    public String getELFName() {
+        return this.original.asTxtDump();
     }
 
-    /*
-     * Not valid for this class
-     */
     @Override
-    public String asTraceTxtDump() {
-        return null;
+    public String getResource() {
+        return original.getResource();
+    }
+
+    @Override
+    public String getPackagePath() {
+        return original.getPackagePath();
     }
 
     @Override
