@@ -1,9 +1,9 @@
 package org.specs.Riscv.test.analysis;
 
 import org.junit.Test;
-import org.specs.Riscv.RiscvELFProvider;
-import org.specs.Riscv.RiscvGccELF;
-import org.specs.Riscv.RiscvTraceDumpProvider;
+import org.specs.Riscv.provider.RiscvELFProvider;
+import org.specs.Riscv.provider.RiscvGccELF;
+import org.specs.Riscv.provider.RiscvTraceDumpProvider;
 import org.specs.Riscv.stream.RiscvDetailedTraceProducer;
 import org.specs.Riscv.stream.RiscvTraceStream;
 

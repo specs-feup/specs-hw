@@ -1,7 +1,7 @@
 package org.specs.Riscv.test.detection;
 
 import org.junit.Test;
-import org.specs.Riscv.RiscvLivermoreELFN100iam;
+import org.specs.Riscv.provider.RiscvLivermoreELFN100iam;
 import org.specs.Riscv.stream.RiscvTraceProducer;
 import org.specs.Riscv.stream.RiscvTraceStream;
 

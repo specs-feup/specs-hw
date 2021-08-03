@@ -1,8 +1,8 @@
 package org.specs.Riscv.test;
 
 import org.junit.Test;
-import org.specs.Riscv.RiscvELFProvider;
-import org.specs.Riscv.RiscvLivermoreELFN100iam;
+import org.specs.Riscv.provider.RiscvELFProvider;
+import org.specs.Riscv.provider.RiscvLivermoreELFN100iam;
 import org.specs.Riscv.stream.RiscvElfStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;

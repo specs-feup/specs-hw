@@ -1,5 +1,7 @@
 package org.specs.Riscv;
 
+import org.specs.Riscv.provider.RiscvELFProvider;
+
 import pt.up.fe.specs.binarytranslation.asm.Application;
 
 public class RiscvApplication extends Application {

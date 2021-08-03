@@ -1,4 +1,7 @@
-package org.specs.Riscv;
+package org.specs.Riscv.provider;
+
+import org.specs.Riscv.RiscvApplication;
+import org.specs.Riscv.RiscvResource;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.asm.Application;

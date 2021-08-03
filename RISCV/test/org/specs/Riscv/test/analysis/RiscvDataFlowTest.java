@@ -18,9 +18,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
-import org.specs.Riscv.RiscvELFProvider;
-import org.specs.Riscv.RiscvObjDumpProvider;
 import org.specs.Riscv.asm.RiscvELFDump;
+import org.specs.Riscv.provider.RiscvELFProvider;
+import org.specs.Riscv.provider.RiscvObjDumpProvider;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
