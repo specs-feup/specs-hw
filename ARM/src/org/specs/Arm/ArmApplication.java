@@ -1,5 +1,7 @@
 package org.specs.Arm;
 
+import org.specs.Arm.provider.ArmELFProvider;
+
 import pt.up.fe.specs.binarytranslation.asm.Application;
 
 public class ArmApplication extends Application {

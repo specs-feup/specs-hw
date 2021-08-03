@@ -1,7 +1,7 @@
 package org.specs.Arm.asm.generators;
 
 import org.junit.Test;
-import org.specs.Arm.ArmLivermoreELFN100;
+import org.specs.Arm.provider.ArmLivermoreELFN100;
 import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;

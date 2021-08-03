@@ -1,4 +1,4 @@
-package org.specs.Arm;
+package org.specs.Arm.provider;
 
 public enum ArmLivermoreELFN100 implements ArmELFProvider {
 

@@ -1,7 +1,7 @@
 package org.specs.Arm.stream;
 
 import org.specs.Arm.ArmApplication;
-import org.specs.Arm.ArmELFProvider;
+import org.specs.Arm.provider.ArmELFProvider;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;

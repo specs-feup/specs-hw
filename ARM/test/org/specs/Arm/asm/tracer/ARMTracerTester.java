@@ -1,8 +1,8 @@
 package org.specs.Arm.asm.tracer;
 
 import org.junit.Test;
-import org.specs.Arm.ArmLivermoreELFN10;
-import org.specs.Arm.ArmLivermoreELFN100;
+import org.specs.Arm.provider.ArmLivermoreELFN10;
+import org.specs.Arm.provider.ArmLivermoreELFN100;
 import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.test.tracer.TraceGraphTestUtils;

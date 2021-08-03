@@ -1,7 +1,7 @@
 package org.specs.Arm.asm.detection;
 
 import org.junit.Test;
-import org.specs.Arm.ArmLivermoreELFN10;
+import org.specs.Arm.provider.ArmLivermoreELFN10;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 

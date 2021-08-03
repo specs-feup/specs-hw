@@ -1,7 +1,7 @@
 package org.specs.Arm.asm;
 
 import org.junit.Test;
-import org.specs.Arm.ArmLivermoreELFN10;
+import org.specs.Arm.provider.ArmLivermoreELFN10;
 import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;

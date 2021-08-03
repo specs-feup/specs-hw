@@ -2,7 +2,7 @@ package org.specs.Arm.asm.process;
 
 import org.junit.Test;
 import org.specs.Arm.ArmApplication;
-import org.specs.Arm.ArmLivermoreELFN10;
+import org.specs.Arm.provider.ArmLivermoreELFN10;
 
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
