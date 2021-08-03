@@ -1,7 +1,9 @@
 package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallFloat;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeObjDumpProvider;
+import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -19,28 +21,36 @@ public class MicroBlazeStreamTester {
     @Test
     public void testStatic() {
         InstructionStreamTestUtils.printStream(
-                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeElfStream.class);
-        // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
+                new MicroBlazeElfStream(MicroBlazeLivermoreELFN10.innerprod));
     }
 
     @Test
     public void testStaticRaw() {
         InstructionStreamTestUtils.rawDump(
-                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeElfStream.class);
-        // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeElfStream.class);
+                new MicroBlazeElfStream(MicroBlazeLivermoreELFN10.innerprod));
+    }
+
+    @Test
+    public void testStaticRawFromTxtDump() {
+        InstructionStreamTestUtils.rawDump(
+                new MicroBlazeElfStream(new MicroBlazeObjDumpProvider(MicroBlazeLivermoreELFN10.innerprod)));
     }
 
     @Test
     public void testTrace() {
         InstructionStreamTestUtils.printStream(
-                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeTraceStream.class);
-        // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeTraceStream.class);
+                new MicroBlazeTraceStream(MicroBlazeLivermoreELFN10.innerprod));
     }
 
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
-                MicroBlazePolyBenchSmallFloat.gemm, MicroBlazeTraceStream.class);
-        // MicroBlazeLivermoreELFN10.innerprod, MicroBlazeTraceStream.class);
+                new MicroBlazeTraceStream(MicroBlazeLivermoreELFN10.innerprod));
+    }
+
+    @Test
+    public void testTraceRawFromTxtDump() {
+        InstructionStreamTestUtils.rawDump(
+                new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider(MicroBlazeLivermoreELFN10.innerprod)));
     }
 }

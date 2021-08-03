@@ -2,33 +2,31 @@ package org.specs.MicroBlaze.provider;
 
 public enum MicroBlazeRosetta implements MicroBlazeELFProvider {
 
-    rendering3d("org/specs/MicroBlaze/asm/Rosetta/3d-rendering.elf", 0x14c4, 0x1528),
-    facedetection("org/specs/MicroBlaze/asm/Rosetta/face-detection.elf", 0x1990, 0x1a00);
+    rendering3d(0x14c4, 0x1528),
+    facedetection(0x1990, 0x1a00);
 
-    // private String elfname;
-    private String fullPath;
+    private String elfName;
     private Number kernelStart;
     private Number kernelStop;
 
-    private MicroBlazeRosetta(String fullPath, Number kernelStart, Number kernelStop) {
-        // this.elfname = name();
-        this.fullPath = fullPath;
+    private MicroBlazeRosetta(Number kernelStart, Number kernelStop) {
+        this.elfName = name() + ".elf";
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
     }
 
     @Override
-    public String getResource() {
-        return this.fullPath;
-    }
-
-    @Override
     public Number getKernelStart() {
-        return this.kernelStart;
+        return kernelStart;
     }
 
     @Override
     public Number getKernelStop() {
-        return this.kernelStop;
+        return kernelStop;
+    }
+
+    @Override
+    public String getELFName() {
+        return this.elfName;
     }
 }

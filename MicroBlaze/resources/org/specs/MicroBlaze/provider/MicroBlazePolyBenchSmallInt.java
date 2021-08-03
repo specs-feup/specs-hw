@@ -19,26 +19,26 @@ public enum MicroBlazePolyBenchSmallInt implements MicroBlazeELFProvider {
     000005ec g     F .text  00000100 kernel_syrk
     00000668 g     F .text  00000114 kernel_gemm
      */
-    floydwarshall("org/specs/MicroBlaze/asm/PolybenchSmallInt/floyd-warshall.elf", 0x0624L, 0x6C4L),
-    gemm("org/specs/MicroBlaze/asm/PolybenchSmallInt/gemm.elf", 0x0668L, 0x778L),
-    gemver("org/specs/MicroBlaze/asm/PolybenchSmallInt/gemver.elf", 0x13f4L, 0x15B0L),
-    jacobi1d("org/specs/MicroBlaze/asm/PolybenchSmallInt/jacobi1d.elf", 0x0fa4L, 0x1124L),
-    lu("org/specs/MicroBlaze/asm/PolybenchSmallInt/lu.elf", 0x0710L, 0x83CL),
-    ludcmp("org/specs/MicroBlaze/asm/PolybenchSmallInt/ludcmp.elf", 0x1768L, 0x1960L),
-    mvt("org/specs/MicroBlaze/asm/PolybenchSmallInt/mvt.elf", 0x0650L, 0x720L),
-    nussinov("org/specs/MicroBlaze/asm/PolybenchSmallInt/nussinov.elf", 0x053cL, 0x698L),
-    symm("org/specs/MicroBlaze/asm/PolybenchSmallInt/symm.elf", 0x0678L, 0x7D0L),
-    syr2k("org/specs/MicroBlaze/asm/PolybenchSmallInt/syr2k.elf", 0x0634L, 0x74CL),
-    syrk("org/specs/MicroBlaze/asm/PolybenchSmallInt/syrk.elf", 0x05ecL, 0x6E8L),
-    trisolv("org/specs/MicroBlaze/asm/PolybenchSmallInt/trisolv.elf", 0x053cL, 0x610L),
-    trmm("org/specs/MicroBlaze/asm/PolybenchSmallInt/trmm.elf", 0x0614L, 0x720L);
+    floydwarshall(0x0624L, 0x6C4L),
+    gemm(0x0668L, 0x778L),
+    gemver(0x13f4L, 0x15B0L),
+    jacobi1d(0x0fa4L, 0x1124L),
+    lu(0x0710L, 0x83CL),
+    ludcmp(0x1768L, 0x1960L),
+    mvt(0x0650L, 0x720L),
+    nussinov(0x053cL, 0x698L),
+    symm(0x0678L, 0x7D0L),
+    syr2k(0x0634L, 0x74CL),
+    syrk(0x05ecL, 0x6E8L),
+    trisolv(0x053cL, 0x610L),
+    trmm(0x0614L, 0x720L);
 
-    private String fullPath;
+    private String elfName;
     private Number kernelStart;
     private Number kernelStop;
 
-    private MicroBlazePolyBenchSmallInt(String fullPath, Number kernelStart, Number kernelStop) {
-        this.fullPath = fullPath;
+    private MicroBlazePolyBenchSmallInt(Number kernelStart, Number kernelStop) {
+        this.elfName = name() + ".elf";
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
     }
@@ -54,7 +54,7 @@ public enum MicroBlazePolyBenchSmallInt implements MicroBlazeELFProvider {
     }
 
     @Override
-    public String getResource() {
-        return this.fullPath;
+    public String getELFName() {
+        return this.elfName;
     }
 }

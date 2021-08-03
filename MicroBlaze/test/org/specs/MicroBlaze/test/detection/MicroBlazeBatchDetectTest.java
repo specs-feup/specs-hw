@@ -21,7 +21,7 @@ public class MicroBlazeBatchDetectTest {
      */
     @Test
     public void MicroBlazeFrequentSequenceDetect() {
-        var elf = MicroBlazeLivermoreELFN100.innerprod100;
+        var elf = MicroBlazeLivermoreELFN100.innerprod_N100;
         var bundles = ThreadedSegmentDetectUtils.getSegments(
                 elf, 2, 10,
                 MicroBlazeTraceProducer.class,
