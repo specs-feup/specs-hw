@@ -21,11 +21,6 @@ public abstract class AObjDumpProvider implements ELFProvider {
     }
 
     @Override
-    public String getPackagePath() {
-        return original.getPackagePath();
-    }
-
-    @Override
     public Number getKernelStart() {
         return this.original.getKernelStart();
     }

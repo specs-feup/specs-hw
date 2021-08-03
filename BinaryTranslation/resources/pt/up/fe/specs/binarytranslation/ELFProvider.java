@@ -25,17 +25,6 @@ public interface ELFProvider extends ResourceProvider {
         throw new NotImplementedException("toApplication()");
     }
 
-    /*
-     * Gets file out of zip by resource name, when getResource is called
-     */
-    // default public boolean unzip(String filename) {
-    // var zipFile = SpecsIo.resourceCopy(filename, SpecsIo.getTempFolder());
-    // return BinaryTranslationUtils.unzip(
-    // zipFile, filename, this.getPackagePath());
-    // }
-
-    public String getPackagePath();
-
     public String getELFName();
 
     public Number getKernelStart();
