@@ -14,8 +14,8 @@
 package pt.up.fe.specs.elfsimulator.test;
 
 import org.junit.jupiter.api.Test;
-import org.specs.MicroBlaze.MicroBlazeObjDumpProvider;
-import org.specs.MicroBlaze.MicroBlazeTiny;
+import org.specs.MicroBlaze.provider.MicroBlazeObjDumpProvider;
+import org.specs.MicroBlaze.provider.MicroBlazeTiny;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.compiledsimulator.ExecGenerator;
