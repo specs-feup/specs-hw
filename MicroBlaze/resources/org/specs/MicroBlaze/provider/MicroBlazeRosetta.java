@@ -1,15 +1,16 @@
-package org.specs.MicroBlaze;
+package org.specs.MicroBlaze.provider;
 
-public enum MicroBlazeTiny implements MicroBlazeELFProvider {
+public enum MicroBlazeRosetta implements MicroBlazeELFProvider {
 
-    tiny("org/specs/MicroBlaze/asm/tiny.txt", null, null);
+    rendering3d("org/specs/MicroBlaze/asm/Rosetta/3d-rendering.elf", 0x14c4, 0x1528),
+    facedetection("org/specs/MicroBlaze/asm/Rosetta/face-detection.elf", 0x1990, 0x1a00);
 
     // private String elfname;
     private String fullPath;
     private Number kernelStart;
     private Number kernelStop;
 
-    private MicroBlazeTiny(String fullPath, Number kernelStart, Number kernelStop) {
+    private MicroBlazeRosetta(String fullPath, Number kernelStart, Number kernelStop) {
         // this.elfname = name();
         this.fullPath = fullPath;
         this.kernelStart = kernelStart;

@@ -1,4 +1,4 @@
-package org.specs.MicroBlaze;
+package org.specs.MicroBlaze.provider;
 
 public enum MicroBlazePolyBenchSmallInt implements MicroBlazeELFProvider {
 

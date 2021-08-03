@@ -1,5 +1,6 @@
-package org.specs.MicroBlaze;
+package org.specs.MicroBlaze.provider;
 
+import org.specs.MicroBlaze.MicroBlazeResource;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
