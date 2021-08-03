@@ -1,16 +1,14 @@
 package org.specs.MicroBlaze.stream;
 
-import java.io.File;
-
+import org.specs.MicroBlaze.MicroBlazeELFProvider;
+import org.specs.MicroBlaze.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;
-import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
 public class MicroBlazeTraceStream extends ATraceInstructionStream {
@@ -29,39 +27,29 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
      *  an IMM always executes, and therefore we can go fetch it. For branches, there is 
      *  no way to know which instruction to fetch...
      */
-    private static MicroBlazeELFDump GDBbugHandle(File elfname) {
+    private static MicroBlazeELFDump GDBbugHandle(MicroBlazeELFProvider elfprovider) {
 
-        // this if-else is only here to replace the "cholesky_trace.txt" auxiliary
-        // trace file with the equivalent ELF dump, so that tests can run on Jenkins without GNU tools
-        File auxname = null;
-        if (elfname.getName().contains("_trace.txt")) {
-            String name = elfname.getPath().replace(".\\", "").replace("\\", "/").replace("_trace", "");
-            auxname = SpecsIo.resourceCopy(name);
-            auxname.deleteOnExit();
+        // if trace dump fetch original name, to then produce an objdump in memory
+        if (elfprovider instanceof MicroBlazeTraceDumpProvider) {
+            var original = ((MicroBlazeTraceDumpProvider) elfprovider).getOriginal();
+            return new MicroBlazeELFDump(original);
         } else {
-            auxname = elfname;
+            return new MicroBlazeELFDump(elfprovider);
         }
-
-        // Workaround for mb-gdb bug of stepping over
-        // two instructions at once when it hits an "imm"
-        // NOTE: it also doesn't output the instructions in delay slots!!
-        // 1. open the ELF
-        // 2. dump all the ELF into a local list
-        return new MicroBlazeELFDump(auxname);
     }
 
     /*
      * Auxiliary constructor so that streams can be built from the threading engine
      * with the channels created by the parent InstructionProducer
      */
-    public MicroBlazeTraceStream(File elfname, ChannelConsumer<Instruction> channel) {
-        super(new ChanneledInstructionProducer(new MicroBlazeApplication(elfname), channel));
-        this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfname);
+    public MicroBlazeTraceStream(MicroBlazeELFProvider elfprovider, ChannelConsumer<Instruction> channel) {
+        super(new ChanneledInstructionProducer(new MicroBlazeApplication(elfprovider), channel));
+        this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfprovider);
     }
 
-    public MicroBlazeTraceStream(File elfname) {
-        super(new MicroBlazeTraceProvider(elfname));
-        this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfname);
+    public MicroBlazeTraceStream(MicroBlazeELFProvider elfprovider) {
+        super(new MicroBlazeTraceProducer(elfprovider));
+        this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfprovider);
     }
 
     /**
@@ -70,8 +58,10 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
      * @param prod
      *            an initialized custom trace provider
      */
-    public MicroBlazeTraceStream(TraceInstructionProducer prod) {
-        this(prod.getApp().getElffile());
+    public MicroBlazeTraceStream(MicroBlazeDetailedTraceProducer prod) {
+        super(prod);
+        var mprovid = (MicroBlazeELFProvider) prod.getApp().getELFProvider();
+        this.elfdump = new MicroBlazeELFDump(mprovid);
     }
 
     @Override

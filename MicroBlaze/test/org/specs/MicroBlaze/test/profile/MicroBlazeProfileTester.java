@@ -1,6 +1,5 @@
 package org.specs.MicroBlaze.test.profile;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,13 +7,12 @@ import java.util.Map;
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.profiling.InstructionHistogram;
 import pt.up.fe.specs.binarytranslation.profiling.InstructionTypeHistogram;
 import pt.up.fe.specs.binarytranslation.test.profile.InstructionStreamProfilingUtils;
-import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.utilities.heapwindow.HeapWindow;
 
 public class MicroBlazeProfileTester {
@@ -24,14 +22,14 @@ public class MicroBlazeProfileTester {
      */
     private static final Map<Class<?>, Class<?>> AUXMAP = new HashMap<>();
     static {
-        AUXMAP.put(MicroBlazeTraceProvider.class, MicroBlazeTraceStream.class);
+        AUXMAP.put(MicroBlazeTraceProducer.class, MicroBlazeTraceStream.class);
     }
 
     @Test
     public void MicroBlazeProfile() {
         (new HeapWindow()).run();
 
-        Class<?> producers[] = { /*MicroBlazeStaticProvider.class ,*/ MicroBlazeTraceProvider.class };
+        Class<?> producers[] = { /*MicroBlazeStaticProvider.class ,*/ MicroBlazeTraceProducer.class };
 
         var profilerList = new ArrayList<Class<?>>();
         profilerList.add(InstructionTypeHistogram.class);
@@ -60,18 +58,16 @@ public class MicroBlazeProfileTester {
     @Test
     public void MicroBlazeSimulate() {
 
-        for (var file : MicroBlazeLivermoreELFN100.values()) {
+        for (var elf : MicroBlazeLivermoreELFN100.values()) {
 
-            File fd = SpecsIo.resourceCopy(file.getResource());
-            fd.deleteOnExit();
-            try (var istream = new MicroBlazeTraceStream(fd)) {
+            try (var istream = new MicroBlazeTraceStream(elf)) {
 
                 // sim
                 istream.silent(true);
                 while ((istream.nextInstruction()) != null)
                     ;
 
-                System.out.println(file.getFilename() + ": " + istream.getNumInstructions());
+                System.out.println(elf.getFilename() + ": " + istream.getNumInstructions());
             }
         }
     }

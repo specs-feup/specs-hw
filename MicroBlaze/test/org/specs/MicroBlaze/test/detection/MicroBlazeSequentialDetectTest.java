@@ -3,27 +3,24 @@ package org.specs.MicroBlaze.test.detection;
 import java.util.Arrays;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FixedSizeMegablockDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class MicroBlazeSequentialDetectTest {
 
-    private void testSequentialDetectors(ELFProvider elf) {
+    private void testSequentialDetectors(MicroBlazeELFProvider elf) {
 
         // file
-        var fd = BinaryTranslationUtils.getFile(elf);
-
         int minwindow = 10, maxwindow = 10;
 
         // do all detectors sequentially
         for (int i = minwindow; i <= maxwindow; i++) {
-            var istream1 = new MicroBlazeTraceStream(fd);
+            var istream1 = new MicroBlazeTraceStream(elf);
             istream1.silent(false);
             istream1.advanceTo(elf.getKernelStart().longValue());
 

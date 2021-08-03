@@ -1,26 +1,24 @@
 package org.specs.MicroBlaze.test.asm;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
 import org.specs.MicroBlaze.MicroBlazePolyBenchSmallInt;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.processes.ObjDump;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class MicroBlazeELFDumper {
 
-    private void dumpELFStatic(ELFProvider elf) {
-        var fd = BinaryTranslationUtils.getFile(elf);
-        var objdump = new ObjDump(new MicroBlazeApplication(fd));
+    private void dumpELFStatic(MicroBlazeELFProvider elf) {
+        var objdump = new ObjDump(new MicroBlazeApplication(elf));
         BinaryTranslationUtils.dumpProcessRunStdOut(objdump, elf.getResource().replace(".elf", "_objdump.txt"));
     }
 
-    private void dumpELFTrace(ELFProvider elf) {
-        var fd = BinaryTranslationUtils.getFile(elf);
-        var app = new MicroBlazeApplication(fd);
+    private void dumpELFTrace(MicroBlazeELFProvider elf) {
+        var app = new MicroBlazeApplication(elf);
         var gdb = GDBRun.newInstanceFreeRun(app);
         BinaryTranslationUtils.dumpProcessRunStdOut(gdb, elf.getResource().replace(".elf", "_trace.txt"));
     }

@@ -15,16 +15,17 @@ package org.specs.MicroBlaze.test.analysis;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeELFProvider;
+import org.specs.MicroBlaze.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.AReporter;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterDataFlow;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterScheduling;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class MicroBlazeDataFlowTest {
@@ -32,7 +33,7 @@ public class MicroBlazeDataFlowTest {
     @Test
     public void testUnrollingBasicBlockDataFlow() {
         int factors[] = { /*1, 2, */ 3/*, 4, 5*/ };
-        
+
         for (var unrollFactor : factors) {
             var elfs = MicroBlazeBasicBlockInfo.getPolybenchSmallFloatKernels();
 
@@ -50,12 +51,12 @@ public class MicroBlazeDataFlowTest {
             System.out.println("\nFinished Basic Block Data Flow for Factor = " + unrollFactor + "\n");
         }
     }
-    
+
     @Test
     public void testScheduling() {
         int factors[] = { 1, 2, 3, 4, 5 };
-        int alus[] = {1, 2, 4, 6, 8, 100};
-        int memPorts[] = {1, 2, 4, 6, 8, 100};
+        int alus[] = { 1, 2, 4, 6, 8, 100 };
+        int memPorts[] = { 1, 2, 4, 6, 8, 100 };
 
         for (var unrollFactor : factors) {
             var elfs = MicroBlazeBasicBlockInfo.getPolybenchSmallFloatKernels();
@@ -89,8 +90,7 @@ public class MicroBlazeDataFlowTest {
             }
 
             for (var window : windows) {
-                var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
-                var istream1 = new MicroBlazeTraceStream(fd);
+                var istream1 = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
                 istream1.silent(true);
 
                 System.out.println("Looking for segments of size: " + window);

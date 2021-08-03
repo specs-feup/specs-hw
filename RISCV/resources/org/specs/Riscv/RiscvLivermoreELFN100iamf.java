@@ -1,8 +1,6 @@
 package org.specs.Riscv;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-
-public enum RiscvLivermoreELFN100iamf implements ELFProvider {
+public enum RiscvLivermoreELFN100iamf implements RiscvELFProvider {
 
     cholesky100("org/specs/Riscv/asm/N100iamf/cholesky_N100iamf.elf", 0x80003060L, 0x80003148L),
     diffpredict100("org/specs/Riscv/asm/N100iamf/diffpredict_N100iamf.elf", 0x8000119cL, 0x80001260L),
