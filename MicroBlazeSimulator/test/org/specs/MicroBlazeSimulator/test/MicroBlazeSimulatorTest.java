@@ -22,8 +22,8 @@ import java.util.Map;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazeObjDumpProvider;
-import org.specs.MicroBlaze.MicroBlazeTiny;
+import org.specs.MicroBlaze.provider.MicroBlazeObjDumpProvider;
+import org.specs.MicroBlaze.provider.MicroBlazeTiny;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlazeSimulator.microcode.MbMicroCodeUtils;
 import org.specs.MicroBlazeSimulator.simulator.MbInstsConverter;
