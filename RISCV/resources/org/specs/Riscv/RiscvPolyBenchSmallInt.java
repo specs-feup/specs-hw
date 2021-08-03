@@ -1,8 +1,6 @@
 package org.specs.Riscv;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-
-public enum RiscvPolyBenchSmallInt implements ELFProvider {
+public enum RiscvPolyBenchSmallInt implements RiscvELFProvider {
 
     /*
      * output of riscv32-unknown-elf-objdump -t:

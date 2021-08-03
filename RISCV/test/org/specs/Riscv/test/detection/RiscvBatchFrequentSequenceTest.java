@@ -2,7 +2,7 @@ package org.specs.Riscv.test.detection;
 
 import org.junit.Test;
 import org.specs.Riscv.RiscvLivermoreELFN100iam;
-import org.specs.Riscv.stream.RiscvTraceProvider;
+import org.specs.Riscv.stream.RiscvTraceProducer;
 import org.specs.Riscv.stream.RiscvTraceStream;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
@@ -32,7 +32,7 @@ public class RiscvBatchFrequentSequenceTest {
         // ELFProvider elfs[] = RiscvLivermoreELFN100iam.values();
         ELFProvider elfs[] = { RiscvLivermoreELFN100iam.pic2d100 };
         ThreadedSegmentDetectUtils.BatchDetect(elfs, 4, 5,
-                RiscvTraceProvider.class,
+                RiscvTraceProducer.class,
                 RiscvTraceStream.class,
                 TraceBasicBlockDetector.class);
     }

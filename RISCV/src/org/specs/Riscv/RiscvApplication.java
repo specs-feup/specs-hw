@@ -1,13 +1,11 @@
 package org.specs.Riscv;
 
-import java.io.File;
-
 import pt.up.fe.specs.binarytranslation.asm.Application;
 
 public class RiscvApplication extends Application {
 
-    public RiscvApplication(File elfName) {
-        super(elfName,
+    public RiscvApplication(RiscvELFProvider elfprovider) {
+        super(elfprovider,
                 RiscvResource.RISCV_CPU_NAME,
                 RiscvResource.RISCV_GDB,
                 RiscvResource.RISCV_OBJDUMP,
