@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
-import org.specs.MicroBlaze.stream.MicroBlazeStaticProvider;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
+import org.specs.MicroBlaze.stream.MicroBlazeStaticProducer;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
@@ -24,7 +24,7 @@ public class MicroBlazeBatchDetectTest {
         var elf = MicroBlazeLivermoreELFN100.innerprod100;
         var bundles = ThreadedSegmentDetectUtils.getSegments(
                 elf, 2, 10,
-                MicroBlazeTraceProvider.class,
+                MicroBlazeTraceProducer.class,
                 MicroBlazeTraceStream.class,
                 TraceBasicBlockDetector.class);
 
@@ -45,7 +45,7 @@ public class MicroBlazeBatchDetectTest {
         // ELFProvider elfs[] = { MicroBlazeLivermoreELFN100.innerprod100 };
         ELFProvider elfs[] = MicroBlazePolyBenchSmallFloat.values();
         ThreadedSegmentDetectUtils.BatchDetect(elfs, 2, 20,
-                MicroBlazeStaticProvider.class,
+                MicroBlazeStaticProducer.class,
                 MicroBlazeElfStream.class,
                 FrequentStaticSequenceDetector.class);
     }
@@ -62,7 +62,7 @@ public class MicroBlazeBatchDetectTest {
         // ELFProvider elfs[] = { MicroBlazeLivermoreELFN100.innerprod100 };
         ELFProvider elfs[] = MicroBlazePolyBenchSmallFloat.values();
         ThreadedSegmentDetectUtils.BatchDetect(elfs, 2, 50,
-                MicroBlazeStaticProvider.class,
+                MicroBlazeStaticProducer.class,
                 MicroBlazeElfStream.class,
                 StaticBasicBlockDetector.class);
     }
@@ -83,7 +83,7 @@ public class MicroBlazeBatchDetectTest {
 
         ELFProvider elfs[] = MicroBlazePolyBenchSmallFloat.values();
         ThreadedSegmentDetectUtils.BatchDetect(elfs, 7, 20,
-                MicroBlazeTraceProvider.class,
+                MicroBlazeTraceProducer.class,
                 MicroBlazeTraceStream.class,
                 TraceBasicBlockDetector.class);
     }

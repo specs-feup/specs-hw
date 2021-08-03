@@ -16,7 +16,7 @@ package org.specs.MicroBlaze.test.generators;
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
@@ -36,7 +36,7 @@ public class MicroBlazeCustomInstructionUnitGeneratorTester {
         // get static frequent sequence bundle
         var bunds = ThreadedSegmentDetectUtils.getSegments(
                 MicroBlazeLivermoreELFN100.innerprod100, 2, 4,
-                MicroBlazeTraceProvider.class,
+                MicroBlazeTraceProducer.class,
                 MicroBlazeTraceStream.class,
                 FrequentTraceSequenceDetector.class);
 

@@ -1,8 +1,6 @@
 package org.specs.Arm;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-
-public enum ArmPolyBenchSmallFloat implements ELFProvider {
+public enum ArmPolyBenchSmallFloat implements ArmELFProvider {
 
     /*
      * output of aarch64-none-elf-objdump -t:
@@ -80,11 +78,6 @@ public enum ArmPolyBenchSmallFloat implements ELFProvider {
     }
 
     @Override
-    public String asTxtDump() {
-        return this.fullPath.replace(".elf", ".txt");
-    }
-
-    @Override
     public Number getKernelStart() {
         return kernelStart;
     }
@@ -97,10 +90,5 @@ public enum ArmPolyBenchSmallFloat implements ELFProvider {
     @Override
     public String getResource() {
         return this.fullPath;
-    }
-
-    @Override
-    public String asTraceTxtDump() {
-        return this.fullPath.replace(".elf", "_trace.txt");
     }
 }

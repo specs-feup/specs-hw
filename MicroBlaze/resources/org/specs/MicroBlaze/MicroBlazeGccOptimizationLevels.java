@@ -1,8 +1,6 @@
 package org.specs.MicroBlaze;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-
-public enum MicroBlazeGccOptimizationLevels implements ELFProvider {
+public enum MicroBlazeGccOptimizationLevels implements MicroBlazeELFProvider {
 
     autocor0("org/specs/MicroBlaze/asm/GCC/autocor-O0.elf", null, null),
     autocor1("org/specs/MicroBlaze/asm/GCC/autocor-O1.elf", null, null),
@@ -43,12 +41,6 @@ public enum MicroBlazeGccOptimizationLevels implements ELFProvider {
     }
 
     @Override
-    public String asTxtDump() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public Number getKernelStart() {
         return this.kernelStart;
     }
@@ -57,10 +49,4 @@ public enum MicroBlazeGccOptimizationLevels implements ELFProvider {
     public Number getKernelStop() {
         return this.kernelStop;
     }
-
-    @Override
-    public String asTraceTxtDump() {
-        return this.fullPath.replace(".elf", "_trace.txt");
-    }
-
 }

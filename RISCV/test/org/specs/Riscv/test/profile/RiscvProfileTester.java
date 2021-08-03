@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.specs.Riscv.RiscvLivermoreELFN100iam;
-import org.specs.Riscv.stream.RiscvTraceProvider;
+import org.specs.Riscv.stream.RiscvTraceProducer;
 import org.specs.Riscv.stream.RiscvTraceStream;
 
 import pt.up.fe.specs.binarytranslation.profiling.InstructionHistogram;
@@ -20,13 +20,13 @@ public class RiscvProfileTester {
      */
     private static final Map<Class<?>, Class<?>> AUXMAP = new HashMap<>();
     static {
-        AUXMAP.put(RiscvTraceProvider.class, RiscvTraceStream.class);
+        AUXMAP.put(RiscvTraceProducer.class, RiscvTraceStream.class);
     }
 
     @Test
     public void RiscvProfile() {
 
-        Class<?> producers[] = { /*RiscvStaticProvider.class ,*/ RiscvTraceProvider.class };
+        Class<?> producers[] = { /*RiscvStaticProvider.class ,*/ RiscvTraceProducer.class };
 
         var profilerList = new ArrayList<Class<?>>();
         profilerList.add(InstructionTypeHistogram.class);

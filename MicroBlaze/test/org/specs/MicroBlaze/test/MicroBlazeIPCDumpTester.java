@@ -1,25 +1,15 @@
 package org.specs.MicroBlaze.test;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
-import pt.up.fe.specs.util.SpecsIo;
 
 public class MicroBlazeIPCDumpTester {
-
-    private File openFile(String filename) {
-        File fd = SpecsIo.resourceCopy(filename);
-        fd.deleteOnExit();
-        return fd;
-    }
 
     /*
      * Dump out the IPC for all detected segments
@@ -37,29 +27,18 @@ public class MicroBlazeIPCDumpTester {
     @Test
     public void dumpIPCAllFiles() {
 
-        List<String> filenames = new ArrayList<String>();
-        filenames.add("org/specs/MicroBlaze/asm/cholesky.elf");
-        /* filenames.add("org/specs/MicroBlaze/asm/diffpredict.elf");
-        filenames.add("org/specs/MicroBlaze/asm/glinearrec.elf");
-        filenames.add("org/specs/MicroBlaze/asm/hydro.elf");
-        filenames.add("org/specs/MicroBlaze/asm/hydro2d.elf");
-        filenames.add("org/specs/MicroBlaze/asm/innerprod.elf");
-        filenames.add("org/specs/MicroBlaze/asm/matmul.elf");*/
-
-        for (String file : filenames) {
-
-            File fd = openFile(file);
+        for (var elf : MicroBlazeLivermoreELFN10.values()) {
 
             // try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
             // var bbd = new FrequentStaticSequenceDetector(el);
             // var bbd = new StaticBasicBlockDetector(el);
 
-            try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(fd)) {
+            try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(elf)) {
 
                 // var bbd = new FrequentTraceSequenceDetector(el);
                 var bbd = new TraceBasicBlockDetector();
                 var bundle = bbd.detectSegments(el);
-                System.out.println(file);
+                System.out.println(elf.getFilename());
                 dumpIPC(bundle);
             }
         }

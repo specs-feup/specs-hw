@@ -1,19 +1,16 @@
 package org.specs.MicroBlaze.test.detection;
 
-import java.io.File;
-
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceProvider;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
-import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.threadstream.ProducerEngine;
 
 /**
@@ -25,22 +22,18 @@ import pt.up.fe.specs.util.threadstream.ProducerEngine;
  */
 public class MicroBlazeParallelDetectTest {
 
-    private void testParallelDetectors(ELFProvider elf) {
-
-        // file
-        File fd = SpecsIo.resourceCopy(elf.getResource());
-        fd.deleteOnExit();
+    private void testParallelDetectors(MicroBlazeELFProvider elf) {
 
         int minwindow = 4, maxwindow = 20;
 
         // producer
-        var iproducer = new MicroBlazeTraceProvider(fd);
+        var iproducer = new MicroBlazeTraceProducer(elf);
         // var iproducer = new MicroBlazeStaticProvider(fd);
 
         // host for threads
         var streamengine = new ProducerEngine<>(iproducer, op -> op.nextInstruction(),
                 // cc -> new MicroBlazeElfStream(fd, cc));
-                cc -> new MicroBlazeTraceStream(fd, cc));
+                cc -> new MicroBlazeTraceStream(elf, cc));
 
         // for all window sizes
         for (int i = minwindow; i <= maxwindow; i++) {
