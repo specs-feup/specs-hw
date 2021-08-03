@@ -1,4 +1,4 @@
-package org.specs.Arm;
+package org.specs.Arm.provider;
 
 import pt.up.fe.specs.binarytranslation.AObjDumpProvider;
 

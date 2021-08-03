@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.specs.Arm.ArmLivermoreELFN100;
+import org.specs.Arm.provider.ArmLivermoreELFN100;
 import org.specs.Arm.stream.ArmTraceProducer;
 import org.specs.Arm.stream.ArmTraceStream;
 

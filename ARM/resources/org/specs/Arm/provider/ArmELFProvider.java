@@ -1,4 +1,7 @@
-package org.specs.Arm;
+package org.specs.Arm.provider;
+
+import org.specs.Arm.ArmApplication;
+import org.specs.Arm.ArmResource;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.asm.Application;
