@@ -1,8 +1,8 @@
 package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazeELFProvider;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN100;
+import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 

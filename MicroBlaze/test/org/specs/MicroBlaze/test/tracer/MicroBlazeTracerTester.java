@@ -1,7 +1,7 @@
 package org.specs.MicroBlaze.test.tracer;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.test.tracer.TraceGraphTestUtils;

@@ -1,7 +1,7 @@
 package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.MicroBlazePolyBenchSmallFloat;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallFloat;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 

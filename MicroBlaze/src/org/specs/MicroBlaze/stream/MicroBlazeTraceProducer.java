@@ -1,9 +1,9 @@
 package org.specs.MicroBlaze.stream;
 
-import org.specs.MicroBlaze.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.MicroBlazeResource;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
+import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
 
 import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
 

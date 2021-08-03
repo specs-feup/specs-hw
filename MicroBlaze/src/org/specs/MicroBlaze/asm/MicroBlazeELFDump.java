@@ -1,6 +1,6 @@
 package org.specs.MicroBlaze.asm;
 
-import org.specs.MicroBlaze.MicroBlazeELFProvider;
+import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeStaticProducer;
 
 import pt.up.fe.specs.binarytranslation.asm.ELFDump;
