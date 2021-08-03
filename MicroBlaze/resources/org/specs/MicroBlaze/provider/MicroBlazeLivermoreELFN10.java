@@ -1,4 +1,4 @@
-package org.specs.MicroBlaze;
+package org.specs.MicroBlaze.provider;
 
 /**
  * Handy resource list of existing pre-compiled ELFs for MicroBlaze, for robust name and path getting (and other things)
