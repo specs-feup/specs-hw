@@ -15,7 +15,6 @@ package org.specs.MicroBlazeSimulator.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +22,8 @@ import java.util.Map;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeObjDumpProvider;
+import org.specs.MicroBlaze.MicroBlazeTiny;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlazeSimulator.microcode.MbMicroCodeUtils;
 import org.specs.MicroBlazeSimulator.simulator.MbInstsConverter;
@@ -33,7 +34,6 @@ import pt.up.fe.specs.simulator.Addr;
 import pt.up.fe.specs.simulator.SimInstruction;
 import pt.up.fe.specs.simulator.SimulatorV2;
 import pt.up.fe.specs.simulator.microcodemachine.MicroCodeMachine;
-import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsSystem;
 
 public class MicroBlazeSimulatorTest {
@@ -46,17 +46,14 @@ public class MicroBlazeSimulatorTest {
     @Test
     public void testTinyMicroblazeSimulator() {
 
-        // Get instructions
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/tiny.txt");
-        fd.deleteOnExit();
-
         // Instructions converter
         var machine = new MicroBlazeMachine32();
         MbInstsConverter converter = new MbInstsConverter(machine);
 
         List<SimInstruction> simInsts = new ArrayList<>();
 
-        try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
+        var elf = new MicroBlazeObjDumpProvider(MicroBlazeTiny.tiny);
+        try (MicroBlazeElfStream el = new MicroBlazeElfStream(elf)) {
             while (el.hasNext()) {
                 var inst = el.nextInstruction();
 
@@ -85,13 +82,10 @@ public class MicroBlazeSimulatorTest {
         // Create machine
         MicroCodeMachine microBlaze32 = MbMicroCodeUtils.newMicroBlaze32();
 
-        // Get instructions
-        File fd = SpecsIo.resourceCopy("org/specs/MicroBlaze/asm/tiny.txt");
-        fd.deleteOnExit();
-
         Map<Addr, Instruction> program = new HashMap<>();
 
-        try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
+        var elf = new MicroBlazeObjDumpProvider(MicroBlazeTiny.tiny);
+        try (MicroBlazeElfStream el = new MicroBlazeElfStream(elf)) {
             while (el.hasNext()) {
                 var inst = el.nextInstruction();
 
