@@ -9,6 +9,10 @@ import pt.up.fe.specs.util.threadstream.AObjectStream;
 
 public abstract class AInstructionStream extends AObjectStream<Instruction> implements InstructionStream {
 
+    enum NullInstruction implements Instruction {
+        NullInstance;
+    }
+
     @Expose
     protected long numinsts;
 
@@ -39,7 +43,7 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
     private boolean silent = true;
 
     public AInstructionStream(InstructionProducer producer) {
-        super(producer.getPoison());
+        super(NullInstruction.NullInstance);
         this.producer = producer;
         this.numinsts = 0;
         this.numcycles = 0;
@@ -75,7 +79,11 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
 
     @Override
     protected Instruction consumeFromProvider() {
-        return this.producer.nextInstruction();
+        var next = this.producer.nextInstruction();
+        if (next == null)
+            return NullInstruction.NullInstance;
+        else
+            return next;
     }
 
     protected void counterIncreases(Instruction inst) {
@@ -113,13 +121,7 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
     }
 
     @Override
-    public void close() {
-        try {
-            this.producer.close();
-            super.close();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    public void close() throws Exception {
+        this.producer.close();
     }
 }

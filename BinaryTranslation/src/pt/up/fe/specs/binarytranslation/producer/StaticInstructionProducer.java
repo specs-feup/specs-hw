@@ -1,22 +1,24 @@
 package pt.up.fe.specs.binarytranslation.producer;
 
 import java.util.function.BiFunction;
+import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.processes.ObjDump;
 import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
 import pt.up.fe.specs.binarytranslation.processes.TxtDump;
-import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public class StaticInstructionProducer extends AInstructionProducer {
+
+    private final static Pattern REGEX = Pattern.compile("([0-9a-f]+):\\s([0-9a-f]+)");
 
     /*
      * Output from GNU based objdump
      */
-    public StaticInstructionProducer(Application app, ResourceProvider regex,
+    public StaticInstructionProducer(Application app,
             BiFunction<String, String, Instruction> produceMethod) {
-        super(app, getProperProcess(app), regex, produceMethod);
+        super(app, getProperProcess(app), REGEX, produceMethod);
     }
 
     private static StringProcessRun getProperProcess(Application app) {

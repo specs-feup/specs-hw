@@ -27,15 +27,15 @@ public class TraceSnipper {
     public static void snipTrace(ELFProvider elf, Long nrInsts) {
 
         var app = elf.toApplication();
-        var gdb = GDBRun.newInstanceInteractive(app);
-        var from = elf.getKernelStart().longValue();
-        gdb.runUntil(from);
 
-        var filename = app.getAppName().replace(".elf", "_0x"
-                + Long.toHexString(from) + "to0x"
-                + Long.toHexString(from + nrInsts * app.getInstructionWidth()));
+        try (var gdb = GDBRun.newInstanceInteractive(app)) {
+            var from = elf.getKernelStart().longValue();
+            gdb.runUntil(from);
 
-        try {
+            var filename = app.getAppName().replace(".elf", "_0x"
+                    + Long.toHexString(from) + "to0x"
+                    + Long.toHexString(from + nrInsts * app.getInstructionWidth()));
+
             var fos = new FileWriter(filename);
             var bw = new BufferedWriter(fos);
 
@@ -52,15 +52,14 @@ public class TraceSnipper {
             bw.close();
             fos.close();
 
-        } catch (
-
-        FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
 
-        gdb.close();
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        }
     }
 }

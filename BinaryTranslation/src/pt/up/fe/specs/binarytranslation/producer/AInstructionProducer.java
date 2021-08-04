@@ -9,7 +9,6 @@ import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
 import pt.up.fe.specs.util.SpecsStrings;
-import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public abstract class AInstructionProducer implements InstructionProducer {
 
@@ -30,11 +29,11 @@ public abstract class AInstructionProducer implements InstructionProducer {
     private final Pattern regex;
     private final BiFunction<String, String, Instruction> produceMethod;
 
-    public AInstructionProducer(Application app, StringProcessRun prun, ResourceProvider regex,
+    public AInstructionProducer(Application app, StringProcessRun prun, Pattern regex,
             BiFunction<String, String, Instruction> produceMethod) {
         this.app = app;
         this.prun = prun;
-        this.regex = Pattern.compile(regex.getResource());
+        this.regex = regex;
         this.produceMethod = produceMethod;
     }
 
@@ -63,23 +62,16 @@ public abstract class AInstructionProducer implements InstructionProducer {
         return this.produceMethod.apply(address, instruction);
     }
 
-    /*
-     * Initialized by non-abstract children methods
-     */
-    private Pattern getRegex() {
-        return this.regex;
-    }
-
     @Override
     public Instruction nextInstruction() {
         String line = null;
         while (((line = this.prun.receive(100)) != null)
-                && !SpecsStrings.matches(line, getRegex()))
+                && !SpecsStrings.matches(line, this.regex))
             ;
         if (line == null)
             return null;
 
-        var addressAndInst = SpecsStrings.getRegex(line, getRegex());
+        var addressAndInst = SpecsStrings.getRegex(line, this.regex);
         var addr = addressAndInst.get(0).trim();
         var inst = addressAndInst.get(1).trim();
         var newinst = this.newInstance(addr, inst);
@@ -87,12 +79,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
     }
 
     @Override
-    public void close() {
-        try {
-            this.prun.close();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    public void close() throws InterruptedException {
+        this.prun.close();
     }
 }

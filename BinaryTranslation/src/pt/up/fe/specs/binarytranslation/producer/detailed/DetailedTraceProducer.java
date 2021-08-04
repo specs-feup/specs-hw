@@ -10,14 +10,13 @@ import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBFilter;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBNullFilter;
 import pt.up.fe.specs.util.SpecsLogs;
-import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 public class DetailedTraceProducer extends TraceInstructionProducer {
 
-    protected DetailedTraceProducer(Application app, ResourceProvider regex,
+    protected DetailedTraceProducer(Application app,
             BiFunction<String, String, Instruction> produceMethod) {
-        super(app, regex, produceMethod);
+        super(app, produceMethod);
     }
 
     public GDBFilter nextElement(Class<? extends GDBFilter> gdbFilter) {

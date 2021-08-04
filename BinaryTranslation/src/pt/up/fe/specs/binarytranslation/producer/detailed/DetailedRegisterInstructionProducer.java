@@ -6,16 +6,14 @@ import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBFilter;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBRegisterFilter;
-import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public class DetailedRegisterInstructionProducer extends DetailedTraceProducer {
     protected int count = 0;
     protected boolean showStillAlive = true;
 
-    protected DetailedRegisterInstructionProducer(Application app, ResourceProvider regex,
+    protected DetailedRegisterInstructionProducer(Application app,
             BiFunction<String, String, Instruction> produceMethod) {
-        super(app, regex, produceMethod);
-        // TODO Auto-generated constructor stub
+        super(app, produceMethod);
     }
 
     public RegisterDump nextRegister() {

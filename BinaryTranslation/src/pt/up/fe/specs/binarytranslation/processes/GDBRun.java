@@ -141,6 +141,8 @@ public class GDBRun extends StringProcessRun {
      * 
      */
     public String killTarget() {
+        this.sendGDBCommand("\\x03"); // send CTRL-C to kill whatever was idling
+        this.consumeAllGDBResponse();
         this.sendGDBCommand("kill");
         this.targetOpen = false;
         return this.consumeAllGDBResponse();
@@ -153,7 +155,6 @@ public class GDBRun extends StringProcessRun {
         if (targetOpen == true)
             this.killTarget();
         this.sendGDBCommand("quit");
-        this.close();
     }
 
     /*
@@ -292,8 +293,8 @@ public class GDBRun extends StringProcessRun {
         this.sendGDBCommand("info registers");
 
         var dump = new RegisterDump();
-        String line = this.getGDBResponse(-1); // first line endless wait
-        do {
+        String line = null;
+        while ((line = this.getGDBResponse(5)) != null) {
             if (!SpecsStrings.matches(line, REGPATTERN))
                 continue;
 
@@ -301,7 +302,7 @@ public class GDBRun extends StringProcessRun {
             var reg = regAndValue.get(0).trim();
             var value = Long.valueOf(regAndValue.get(1).trim(), 16);
             dump.add(reg, value);
-        } while ((line = this.getGDBResponse(5)) != null);
+        }
 
         return dump;
     }
@@ -343,7 +344,7 @@ public class GDBRun extends StringProcessRun {
      * 
      */
     private String consumeAllGDBResponse() {
-        return this.consumeAllGDBResponse(2);
+        return this.consumeAllGDBResponse(2000);
     }
 
     /*
