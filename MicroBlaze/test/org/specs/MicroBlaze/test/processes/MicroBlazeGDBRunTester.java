@@ -1,11 +1,13 @@
 package org.specs.MicroBlaze.test.processes;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.MicroBlazeQEMU;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
+import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
 
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class MicroBlazeGDBRunTester {
 
@@ -35,6 +37,9 @@ public class MicroBlazeGDBRunTester {
         var app = new MicroBlazeApplication(elf);
         try (var gdb = GDBRun.newInstanceInteractive(app)) {
 
+            // launch QEMU, then GDB (on localhost:1234)
+            gdb.start();
+
             // run until kernel start
             gdb.runUntil(elf.getKernelStart().toString());
 
@@ -42,21 +47,6 @@ public class MicroBlazeGDBRunTester {
                 gdb.stepi();
                 System.out.println(gdb.getAddrAndInstruction());
             }
-
-            /*
-            var dump = gdb.getRegisters();
-            dump.prettyPrint();
-            
-            gdb.stepi();
-            dump = gdb.getRegisters();
-            dump.prettyPrint();
-            */
-
-            // check for outstanding output?
-            // var output = gdb.getG
-            System.out.println(gdb.killTarget());
-            gdb.quit();
-
         }
     }
 
@@ -86,10 +76,9 @@ public class MicroBlazeGDBRunTester {
             System.out.println(gdb.loadFile(app));
 
             // copy dtb to local folder
-            var dtb = BinaryTranslationUtils.getFile(app.getDtbfile().getResource());
-            dtb.deleteOnExit();
+            var dtb = app.get(Application.BAREMETAL_DTB).write();
 
-            var remoteCommand = app.getQemuexe().getResource()
+            var remoteCommand = app.get(Application.QEMUEXE)
                     + " -nographic -M microblaze-fdt-plnx -m 64 -display none"
                     + " -kernel " + app.getElffile().getAbsolutePath().replace("\\", "/")
                     + " -dtb " + dtb.getAbsolutePath().replace("\\", "/")
@@ -122,5 +111,20 @@ public class MicroBlazeGDBRunTester {
             // var variables = gdb.getVariableList();
             // System.out.println(variables);
         }
+    }
+
+    @Test
+    public void testQEMU() {
+
+        try (var qemu = new MicroBlazeQEMU(new MicroBlazeApplication(MicroBlazeLivermoreELFN100.matmul_N100))) {
+            qemu.start();
+            System.out.println("waiting...");
+        }
+    }
+
+    @Test
+    public void testELFDump() {
+        var dump = new MicroBlazeELFDump(MicroBlazeLivermoreELFN100.matmul_N100);
+        System.out.println(dump.getInstruction(Long.valueOf("80", 16)));
     }
 }

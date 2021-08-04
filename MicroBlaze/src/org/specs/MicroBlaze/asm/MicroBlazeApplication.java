@@ -8,14 +8,16 @@ import pt.up.fe.specs.binarytranslation.asm.Application;
 public class MicroBlazeApplication extends Application {
 
     public MicroBlazeApplication(MicroBlazeELFProvider elfprovider) {
-        super(elfprovider,
-                MicroBlazeResource.MICROBLAZE_CPU_NAME,
-                MicroBlazeResource.MICROBLAZE_GDB,
-                MicroBlazeResource.MICROBLAZE_OBJDUMP,
-                MicroBlazeResource.MICROBLAZE_READELF,
-                MicroBlazeResource.QEMU_MICROBLAZE_GDB_TEMPLATE,
-                MicroBlazeResource.QEMU_MICROBLAZE_GDBNONINTERACTIVE_TEMPLATE,
-                MicroBlazeResource.QEMU_MICROBLAZE_EXE,
-                MicroBlazeResource.QEMU_MICROBLAZE_BAREMETAL_DTB);
+        super(elfprovider);
+        set(CPUNAME, "microblaze32");
+        set(QEMUEXE, "qemu-system-microblazeel");
+        set(GCC, "mb-gcc");
+        set(GDB, "mb-gdb");
+        set(READELF, "mb-readelf");
+        set(OBJDUMP, "mb-objdump");
+        set(GDBTMPLINTER, MicroBlazeResource.GDBINTERACTIVE_TEMPLATE);
+        set(GDBTMPLNONINTER, MicroBlazeResource.GDBNONINTERACTIVE_TEMPLATE);
+        set(BAREMETAL_DTB, MicroBlazeResource.BAREMETAL_DTB);
+        set(QEMU_ARGS_TEMPLATE, MicroBlazeResource.QEMU_ARGS_TEMPLATE);
     }
 }

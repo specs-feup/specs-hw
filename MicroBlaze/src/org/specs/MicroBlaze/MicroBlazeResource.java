@@ -17,19 +17,10 @@ public enum MicroBlazeResource implements ResourceProvider {
     // 4. remove the entry from /etc/apt/sources.list
     // 5. sudo apt-get update
 
-    MICROBLAZE_CPU_NAME("microblaze32"),
-
-    QEMU_MICROBLAZE_GDB_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl.gdb"),
-    QEMU_MICROBLAZE_GDBNONINTERACTIVE_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl_noninteractive.gdb"),
-    QEMU_MICROBLAZE_BAREMETAL_DTB("org/specs/MicroBlaze/qemu/system.dtb"),
-    QEMU_MICROBLAZE_ARGS("org/specs/MicroBlaze/qemu/QEMUArgsMicroBlaze"),
-
-    QEMU_MICROBLAZE_EXE("qemu-system-microblazeel"),
-
-    MICROBLAZE_GCC("mb-gcc"),
-    MICROBLAZE_GDB("mb-gdb"),
-    MICROBLAZE_READELF("mb-readelf"),
-    MICROBLAZE_OBJDUMP("mb-objdump");
+    GDBINTERACTIVE_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl.gdb"),
+    GDBNONINTERACTIVE_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl_noninteractive.gdb"),
+    BAREMETAL_DTB("org/specs/MicroBlaze/qemu/system.dtb"),
+    QEMU_ARGS_TEMPLATE("org/specs/MicroBlaze/qemu/QEMUArgsMicroBlaze");
 
     private final String resource;
 
