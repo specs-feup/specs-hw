@@ -15,6 +15,10 @@ package pt.up.fe.specs.binarytranslation.asm;
 
 import java.io.File;
 
+import org.suikasoft.jOptions.DataStore.ADataClass;
+import org.suikasoft.jOptions.Datakey.DataKey;
+import org.suikasoft.jOptions.Datakey.KeyFactory;
+
 import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
@@ -23,7 +27,22 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
 
-public abstract class Application {
+public abstract class Application extends ADataClass<Application> {
+
+    public static final DataKey<String> CPUNAME = KeyFactory.string("CPUNAME");
+    public static final DataKey<String> QEMUEXE = KeyFactory.string("QEMUEXE");
+    public static final DataKey<String> GCC = KeyFactory.string("GCC");
+    public static final DataKey<String> GDB = KeyFactory.string("GDB");
+    public static final DataKey<String> READELF = KeyFactory.string("READELF");
+    public static final DataKey<String> OBJDUMP = KeyFactory.string("OBJDUMP");
+    public static final DataKey<ResourceProvider> GDBTMPLINTER = KeyFactory.object("GDBTMPLINTER",
+            ResourceProvider.class);
+    public static final DataKey<ResourceProvider> GDBTMPLNONINTER = KeyFactory.object("GDBTMPLNONINTER",
+            ResourceProvider.class);
+    public static final DataKey<ResourceProvider> BAREMETAL_DTB = KeyFactory.object("BAREMETAL_DTB",
+            ResourceProvider.class);
+    public static final DataKey<ResourceProvider> QEMU_ARGS_TEMPLATE = KeyFactory.object("QEMU_ARGS_TEMPLATE",
+            ResourceProvider.class);
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 
@@ -33,37 +52,14 @@ public abstract class Application {
     @Expose
     private final String compilationInfo;
 
-    @Expose
-    private final ResourceProvider cpuArchitectureName;
-
-    @Expose
-    private final ResourceProvider gdb, gdbTmpl, gdbTmplNoninter, objDump, readElf, qemuExe, dtbFile;
-
     private final ELFProvider elf;
     private final transient File elffile;
 
-    public Application(ELFProvider elf,
-            ResourceProvider cpuArchitectureName,
-            ResourceProvider gdb,
-            ResourceProvider objdump,
-            ResourceProvider readelf,
-            ResourceProvider gdbtmpl,
-            ResourceProvider gdbTmplNoninter,
-            ResourceProvider qemuexe,
-            ResourceProvider dtbfile) {
-
+    public Application(ELFProvider elf) {
         this.elf = elf;
         this.elffile = elf.getFile();
         this.appName = elffile.getName();
-        this.cpuArchitectureName = cpuArchitectureName;
-        this.gdb = gdb;
-        this.objDump = objdump;
-        this.readElf = readelf;
-        this.gdbTmpl = gdbtmpl;
-        this.gdbTmplNoninter = gdbTmplNoninter;
-        this.qemuExe = qemuexe;
-        this.dtbFile = dtbfile;
-        this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elffile, readelf.getResource());
+        this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elffile, get(READELF));
     }
 
     public String getAppName() {
@@ -82,38 +78,6 @@ public abstract class Application {
         return compilationInfo;
     }
 
-    public ResourceProvider getCpuArchitectureName() {
-        return cpuArchitectureName;
-    }
-
-    public ResourceProvider getGdb() {
-        return gdb;
-    }
-
-    public ResourceProvider getObjdump() {
-        return objDump;
-    }
-
-    public ResourceProvider getReadelf() {
-        return readElf;
-    }
-
-    public ResourceProvider getGdbtmpl() {
-        return gdbTmpl;
-    }
-
-    public ResourceProvider getGdbtmplNonInteractive() {
-        return gdbTmplNoninter;
-    }
-
-    public ResourceProvider getQemuexe() {
-        return qemuExe;
-    }
-
-    public ResourceProvider getDtbfile() {
-        return dtbFile;
-    }
-
     /*
      * TODO: implement this based on reading the elf file once, the storing the inst width
      * 
@@ -129,14 +93,14 @@ public abstract class Application {
      * 
      */
     public File getGDBScriptInteractive() {
-        return Application.getGDBScript(this, this.getGdbtmpl());
+        return Application.getGDBScript(this, get(GDBTMPLNONINTER));
     }
 
     /*
      * 
      */
     public File getGDBScriptNonInteractive() {
-        return Application.getGDBScript(this, this.getGdbtmplNonInteractive());
+        return Application.getGDBScript(this, get(GDBTMPLINTER));
     }
 
     /*
@@ -145,23 +109,8 @@ public abstract class Application {
     private static File getGDBScript(Application app, ResourceProvider gdbtmpl) {
 
         var elfpath = app.getElffile().getAbsolutePath();
-        var qemuexe = app.getQemuexe().getResource();
-        if (IS_WINDOWS) {
-            qemuexe += ".exe";
-            elfpath = elfpath.replace("\\", "/");
-        }
-
         var gdbScript = new Replacer(gdbtmpl);
         gdbScript.replace("<ELFNAME>", elfpath);
-        gdbScript.replace("<QEMUBIN>", qemuexe);
-
-        if (app.getDtbfile() != null) {
-            var fd = BinaryTranslationUtils.getFile(app.getDtbfile().getResource());
-            var dtbpath = fd.getAbsolutePath();
-            if (IS_WINDOWS)
-                dtbpath = dtbpath.replace("\\", "/");
-            gdbScript.replace("<DTBFILE>", dtbpath);
-        }
 
         if (IS_WINDOWS)
             gdbScript.replace("<KILL>", "");

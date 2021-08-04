@@ -14,15 +14,13 @@ public class ObjDump extends StringProcessRun {
      */
     private static List<String> getArgs(Application app) {
         var args = new ArrayList<String>();
-        var elfname = app.getElffile();
-        var objdumpexe = app.getObjdump();
-        var objdumppath = objdumpexe.getResource();
+        var elfname = app.getElffile().getAbsolutePath();
+        var objdumpexe = app.get(Application.OBJDUMP);
         if (IS_WINDOWS)
-            objdumppath += ".exe";
-
-        args.add(objdumppath);
+            objdumpexe += ".exe";
+        args.add(objdumpexe);
         args.add("-d");
-        args.add(elfname.getAbsolutePath());
+        args.add(elfname);
         return args;
     }
 

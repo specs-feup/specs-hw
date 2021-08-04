@@ -2,7 +2,6 @@ package pt.up.fe.specs.binarytranslation.producer;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.util.threadstream.ObjectProducer;
 
 public interface InstructionProducer extends ObjectProducer<Instruction> {
@@ -23,10 +22,9 @@ public interface InstructionProducer extends ObjectProducer<Instruction> {
 
     /**
      * Only implementable by a @TraceInstructionProducer which is executing a simulator @ProcessRun
+     * 
+     * default public RegisterDump getRegisters() { return null; }
      */
-    default public RegisterDump getRegisters() {
-        return null;
-    }
 
     /**
      * 

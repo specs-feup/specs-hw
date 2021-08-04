@@ -12,13 +12,20 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
     /*
      * 
      */
+    private final List<String> args;
     protected Process proc;
     protected final ConcurrentChannel<String> stdout, stdin;
 
     public AProcessRun(List<String> args) {
         this.stdout = new ConcurrentChannel<String>(100);
         this.stdin = new ConcurrentChannel<String>(100);
+        this.args = args;
+    }
+
+    @Override
+    public Process start() {
         this.proc = BinaryTranslationUtils.newProcess(new ProcessBuilder(args));
+        return this.proc;
     }
 
     @Override
@@ -78,8 +85,13 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
      * 
      */
     @Override
-    public void close() throws InterruptedException {
-        if (!proc.waitFor(2, TimeUnit.SECONDS))
-            proc.destroy();
+    public void close() {
+        try {
+            if (!proc.waitFor(2, TimeUnit.SECONDS))
+                proc.destroy();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

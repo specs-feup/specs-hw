@@ -31,8 +31,6 @@ public interface ELFProvider extends ResourceProvider {
 
     public Number getKernelStop();
 
-    public ResourceProvider getCPUName();
-
     default File getFile() {
         return this.write();
     }

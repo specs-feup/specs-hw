@@ -25,6 +25,9 @@ public class GDBRun extends StringProcessRun {
     /*
      * Internal status
      */
+    private QEMU qemurun;
+    private int exitAddr;
+    private boolean exitReached = false;
     private boolean targetOpen = false;
     private Application app;
     private boolean amInteractiveRun = true;
@@ -38,9 +41,9 @@ public class GDBRun extends StringProcessRun {
      */
     private static List<String> getArgs(Application app, File scriptFile) {
         var args = new ArrayList<String>();
-        args.add(app.getGdb().getResource());
+        args.add(app.get(Application.GDB));
+        args.add("-q"); // supresses intro and copywright text at start!
         if (scriptFile != null) {
-            args.add("-q"); // supresses intro and copywright text at start!
             args.add("-x");
             args.add(scriptFile.getAbsolutePath());
         }
@@ -59,15 +62,20 @@ public class GDBRun extends StringProcessRun {
      * in case gdb is called from a prompt which is not MSYS (which is what happens when running via Eclipse)
      */
     private GDBRun(Application app, File scriptFile, boolean amInteractiveRun) {
-        super(GDBRun.getArgs(app, scriptFile));
-        this.amInteractiveRun = amInteractiveRun;
 
+        super(GDBRun.getArgs(app, scriptFile));
         super.attachThreads();
-        if (this.amInteractiveRun) {
+
+        /*
+         * QEMU waiting on localhost:1234 
+         */
+        this.qemurun = new QEMU(app);
+
+        this.amInteractiveRun = amInteractiveRun;
+        if (this.amInteractiveRun && scriptFile != null) {
             this.getGDBResponse(5000);
             this.consumeAllGDBResponse();
-
-            // check if a target was opened
+            this.exitAddr = this.getExitAddr();
             this.targetOpen = this.hasTarget();
         }
         // first line might take a long time to launch QEMU...
@@ -96,6 +104,12 @@ public class GDBRun extends StringProcessRun {
     }
 
     @Override
+    public Process start() {
+        this.qemurun.start();
+        return super.start();
+    }
+
+    @Override
     protected void attachStdOut() {
         if (this.amInteractiveRun)
             Executors.newSingleThreadExecutor()
@@ -112,6 +126,24 @@ public class GDBRun extends StringProcessRun {
         this.sendGDBCommand("undisplay");
         this.sendGDBCommand("set print address off");
         this.sendGDBCommand("set height 0");
+
+    }
+
+    /*
+     * check this before issuing commands that imply continuation of execution
+     */
+    public boolean isExitReached() {
+        return exitReached;
+    }
+
+    /*
+     * 
+     */
+    public int getExitAddr() {
+        this.sendGDBCommand("x _exit");
+        var line = this.getAddrAndInstruction();
+        var splits = line.split(":");
+        return Integer.valueOf(splits[0], 16);
     }
 
     /*
@@ -141,8 +173,6 @@ public class GDBRun extends StringProcessRun {
      * 
      */
     public String killTarget() {
-        this.sendGDBCommand("\\x03"); // send CTRL-C to kill whatever was idling
-        this.consumeAllGDBResponse();
         this.sendGDBCommand("kill");
         this.targetOpen = false;
         return this.consumeAllGDBResponse();
@@ -187,21 +217,6 @@ public class GDBRun extends StringProcessRun {
             this.sendGDBCommand("c"); // continue
             while (!this.waitForGDB().contains("Breakpoint"))
                 ;
-
-            /*
-             * 
-            String ret = null;
-            do {
-                ret = this.waitForGDB();
-                System.out.println(ret);
-            } while (!ret.contains("Breakpoint"));
-            */
-
-            /*
-            System.out.println(this.getGDBResponse()); // consume "Continuing."
-            System.out.println(this.getGDBResponse()); // consume ""
-            System.out.println(this.waitForGDB());
-            */
         }
     }
 
@@ -270,18 +285,20 @@ public class GDBRun extends StringProcessRun {
 
     public String getAddrAndInstruction() {
         this.sendGDBCommand("x/x $pc");
-        String line = null, ret = null;
-        while ((line = this.getGDBResponse(1000)) != null) {
-            if (!SpecsStrings.matches(line, INSTPATTERN))
-                continue;
 
+        // find matching line
+        String line = null;
+        while ((line = this.getGDBResponse(1000)) != null && (!SpecsStrings.matches(line, INSTPATTERN)))
+            ;
+
+        if (line != null) {
             var addrandinst = SpecsStrings.getRegex(line, INSTPATTERN);
-            ret = addrandinst.get(0) + ":" + addrandinst.get(1);
-            break;
-        }
-        // if (ret == null)
-        // System.out.println("OPS");
-        return ret;
+            var addr = Integer.valueOf(addrandinst.get(0), 16);
+            if (addr == this.exitAddr)
+                this.exitReached = true; // prevents sending of additional commands
+            return addrandinst.get(0) + ":" + addrandinst.get(1);
+        } else
+            return line;
     }
 
     /*
@@ -386,5 +403,15 @@ public class GDBRun extends StringProcessRun {
      */
     private String getGDBResponse(int mseconds) {
         return super.receive(mseconds);
+    }
+
+    /*
+     * 
+     */
+    @Override
+    public void close() {
+        this.quit();
+        this.qemurun.close();
+        super.close();
     }
 }

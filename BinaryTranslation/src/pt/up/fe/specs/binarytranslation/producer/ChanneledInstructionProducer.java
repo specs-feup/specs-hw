@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.NullInstruction;
+import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 import pt.up.fe.specs.util.threadstream.GenericObjectStream;
 
@@ -17,7 +17,7 @@ public class ChanneledInstructionProducer extends GenericObjectStream<Instructio
     private final Application app;
 
     public ChanneledInstructionProducer(Application app, ChannelConsumer<Instruction> consumer) {
-        super(consumer, NullInstruction.NullInstance);
+        super(consumer, InstructionStream.NullInstruction.NullInstance);
         this.app = app;
     }
 
