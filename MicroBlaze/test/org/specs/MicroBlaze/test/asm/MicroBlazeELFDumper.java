@@ -37,6 +37,7 @@ public class MicroBlazeELFDumper {
         try (var gdb = GDBRun.newInstanceInteractive(app)) {
 
             // run until kernel start
+            gdb.start();
             gdb.runUntil(elf.getKernelStart().toString());
 
             var fos = new FileWriter(outputname);
@@ -64,7 +65,7 @@ public class MicroBlazeELFDumper {
     @Test
     public void dumpELFstoFiles() {
 
-        var elfs = Arrays.asList(MicroBlazeLivermoreELFN10.cholesky);
+        var elfs = Arrays.asList(MicroBlazeLivermoreELFN10.values());
         // var elfs MicroBlazePolyBenchSmallFloat.values();
         // var elfs = MicroBlazePolyBenchSmallInt.values();
 
