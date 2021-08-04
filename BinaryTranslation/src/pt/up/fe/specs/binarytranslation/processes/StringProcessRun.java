@@ -34,6 +34,7 @@ public class StringProcessRun extends AProcessRun {
     /*
      * 
      */
+    @Override
     public String receive(int mseconds) {
         String ret = null;
         try {

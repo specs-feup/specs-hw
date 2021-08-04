@@ -93,14 +93,14 @@ public abstract class Application extends ADataClass<Application> {
      * 
      */
     public File getGDBScriptInteractive() {
-        return Application.getGDBScript(this, get(GDBTMPLNONINTER));
+        return Application.getGDBScript(this, get(GDBTMPLINTER));
     }
 
     /*
      * 
      */
     public File getGDBScriptNonInteractive() {
-        return Application.getGDBScript(this, get(GDBTMPLINTER));
+        return Application.getGDBScript(this, get(GDBTMPLNONINTER));
     }
 
     /*

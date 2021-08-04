@@ -29,12 +29,7 @@ public class GDBRun extends StringProcessRun {
     private int exitAddr;
     private boolean exitReached = false;
     private boolean targetOpen = false;
-    private Application app;
     private boolean amInteractiveRun = true;
-
-    protected Application getApp() {
-        return app;
-    }
 
     /*
      * 
@@ -64,29 +59,13 @@ public class GDBRun extends StringProcessRun {
     private GDBRun(Application app, File scriptFile, boolean amInteractiveRun) {
 
         super(GDBRun.getArgs(app, scriptFile));
-        super.attachThreads();
+        this.amInteractiveRun = amInteractiveRun;
 
         /*
-         * QEMU waiting on localhost:1234 
+         * QEMU will wait on localhost:1234 
+         * See: https://qemu-project.gitlab.io/qemu/system/gdb.html
          */
         this.qemurun = new QEMU(app);
-
-        this.amInteractiveRun = amInteractiveRun;
-        if (this.amInteractiveRun && scriptFile != null) {
-            this.getGDBResponse(5000);
-            this.consumeAllGDBResponse();
-            this.exitAddr = this.getExitAddr();
-            this.targetOpen = this.hasTarget();
-        }
-        // first line might take a long time to launch QEMU...
-        // consume garbage lines produced from the start of gdb
-
-        // Note:
-        // when launching QEMU under GDB, the "target remote" command
-        // takes longer than 10ms to complete, hence the 5s timeout for
-        // all reads from stdout of the process
-        // This shouldn't introduce delays in any other circumstances
-        // since poll returns immediately
     }
 
     /*
@@ -106,7 +85,26 @@ public class GDBRun extends StringProcessRun {
     @Override
     public Process start() {
         this.qemurun.start();
-        return super.start();
+        while (!this.qemurun.isAlive())
+            ;
+
+        var proc = super.start();
+        if (this.amInteractiveRun) {
+            // this.getGDBResponse(5000);
+            // this.consumeAllGDBResponse();
+            this.exitAddr = this.getExitAddr();
+            this.targetOpen = this.hasTarget();
+        }
+        // first line might take a long time to launch QEMU...
+        // consume garbage lines produced from the start of gdb
+
+        // Note:
+        // when launching QEMU under GDB, the "target remote" command
+        // takes longer than 10ms to complete, hence the 5s timeout for
+        // all reads from stdout of the process
+        // This shouldn't introduce delays in any other circumstances
+        // since poll returns immediately
+        return proc;
     }
 
     @Override
@@ -141,7 +139,7 @@ public class GDBRun extends StringProcessRun {
      */
     public int getExitAddr() {
         this.sendGDBCommand("x _exit");
-        var line = this.getAddrAndInstruction();
+        var line = this.readPairedResponse();
         var splits = line.split(":");
         return Integer.valueOf(splits[0], 16);
     }
@@ -285,6 +283,13 @@ public class GDBRun extends StringProcessRun {
 
     public String getAddrAndInstruction() {
         this.sendGDBCommand("x/x $pc");
+        return this.readPairedResponse();
+    }
+
+    /*
+     * Called by getAddrAndInstruction and getExitAddr
+     */
+    private String readPairedResponse() {
 
         // find matching line
         String line = null;

@@ -64,8 +64,8 @@ public class SegmentBundle implements BinaryTranslationOutput {
      */
     public String getSummary() {
         return "Bundle Summary: \n" +
-                "Application: " + this.getApplicationInformation().getAppName() + "\n" +
-                "Architecture: " + this.getApplicationInformation().getCpuArchitectureName() + "\n" +
+                "Application: " + this.getApplication().getAppName() + "\n" +
+                "Architecture: " + this.getApplication().get(Application.CPUNAME) + "\n" +
                 "Stream type: " + this.istream.getType() + "\n" +
                 "Segment Type:" + this.segments.get(0).getSegmentType() + "\n" +
                 "Num segments: " + this.segments.size() + "\n";
@@ -91,7 +91,7 @@ public class SegmentBundle implements BinaryTranslationOutput {
         return list;
     }
 
-    public Application getApplicationInformation() {
+    public Application getApplication() {
         return this.istream.getApp();
     }
 

@@ -25,6 +25,7 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
     @Override
     public Process start() {
         this.proc = BinaryTranslationUtils.newProcess(new ProcessBuilder(args));
+        this.attachThreads();
         return this.proc;
     }
 
@@ -87,7 +88,7 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
     @Override
     public void close() {
         try {
-            if (!proc.waitFor(2, TimeUnit.SECONDS))
+            if (!proc.waitFor(200, TimeUnit.MILLISECONDS))
                 proc.destroy();
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
