@@ -1,14 +1,14 @@
 package pt.up.fe.specs.binarytranslation.stream;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
+import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
 
 public abstract class ATraceInstructionStream extends AInstructionStream implements TraceInstructionStream {
 
     /*
      * Output from GDB + QEMU Execution
      */
-    protected ATraceInstructionStream(TraceInstructionProducer traceProducer) {
+    protected ATraceInstructionStream(InstructionProducer traceProducer) {
         super(traceProducer);
     }
 

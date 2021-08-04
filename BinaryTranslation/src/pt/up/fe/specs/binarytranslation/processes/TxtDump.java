@@ -23,7 +23,11 @@ public class TxtDump extends StringProcessRun {
 
     public TxtDump(File txtfile) {
         super(TxtDump.getArgs(txtfile));
-        super.attachStdOut();
+    }
+
+    @Override
+    protected void attachThreads() {
+        this.attachStdOut();
     }
 
     public String getLine() {

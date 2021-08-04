@@ -1,6 +1,5 @@
 package pt.up.fe.specs.binarytranslation.processes;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,14 +23,9 @@ public class QEMU implements AutoCloseable {
 
     public QEMU(Application app) {
         this.args = QEMU.getArgsList(app);
-        // this.app = app;
-        // this.qemuProcessBld = new ProcessBuilder(QEMU.getArgsList(app));
     }
 
-    public void start() throws IOException {
-        // var output = SpecsSystem.runProcess(args, true, true);
-        // System.out.println(output);
-        // this.proc = ().start();
+    public void start() {
         this.proc = BinaryTranslationUtils.newProcess(new ProcessBuilder(args));
     }
 
@@ -41,7 +35,7 @@ public class QEMU implements AutoCloseable {
     @Override
     public void close() {
         try {
-            if (!this.proc.waitFor(2, TimeUnit.SECONDS))
+            if (!this.proc.waitFor(200, TimeUnit.MILLISECONDS))
                 proc.destroy();
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
@@ -84,5 +78,9 @@ public class QEMU implements AutoCloseable {
             qemuArgs.replace("<KILL>", "kill");
 
         return Arrays.asList(qemuArgs.toString().split(" "));
+    }
+
+    public boolean isAlive() {
+        return this.proc.isAlive();
     }
 }

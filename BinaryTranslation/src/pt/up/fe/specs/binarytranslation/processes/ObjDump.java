@@ -26,7 +26,11 @@ public class ObjDump extends StringProcessRun {
 
     public ObjDump(Application app) {
         super(ObjDump.getArgs(app));
-        super.attachStdOut();
+    }
+
+    @Override
+    protected void attachThreads() {
+        this.attachStdOut();
     }
 
     public String getLine() {

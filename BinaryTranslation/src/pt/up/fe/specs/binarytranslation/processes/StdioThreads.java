@@ -82,7 +82,12 @@ public class StdioThreads {
 
         try {
             while (run.getProc().isAlive()) {
-                producer.put(br.readLine()); // blocking
+                var nextLine = br.readLine(); // blocking
+                if (nextLine == null)
+                    break; // process has died after last check of isAlive (?)
+                           // or I tried to send null to the process?? (this is the outgoing thread)
+
+                producer.put(nextLine);
             }
             br.close();
 
@@ -114,7 +119,11 @@ public class StdioThreads {
         var consumer = run.getStdin().createConsumer();
         try {
             while (run.getProc().isAlive()) {
-                bw.write(consumer.take()); // blocking
+                var sendToProc = consumer.poll(5, TimeUnit.SECONDS);
+                if (sendToProc == null)
+                    continue;
+
+                bw.write(sendToProc); // blocking
                 bw.newLine();
                 bw.flush();
             }

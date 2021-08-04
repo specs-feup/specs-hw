@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.detection.detectors.fixed;
 
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.utils.SlidingWindow;
@@ -43,8 +44,8 @@ public abstract class AFixedSizeBasicBlockDetector extends ASimpleSegmentDetecto
         // check jump to start
         Instruction last = null;
         if (this.getCurrentStream().getApp()
-                .getCpuArchitectureName()
-                .getResource().equals("microblaze32")) // NOTE: this is a quick hack
+                .get(Application.CPUNAME)
+                .equals("microblaze32")) // NOTE: this is a quick hack
 
             if (window.getFromLast(1).isBackwardsJump()) // still a bug here, if a branch without delay is second to
                                                          // last
