@@ -17,6 +17,11 @@ public interface ProcessRun {
     /*
      * 
      */
+    public Process start();
+
+    /*
+     * 
+     */
     public Process getProc();
 
     /*

@@ -9,10 +9,6 @@ import pt.up.fe.specs.util.threadstream.AObjectStream;
 
 public abstract class AInstructionStream extends AObjectStream<Instruction> implements InstructionStream {
 
-    enum NullInstruction implements Instruction {
-        NullInstance;
-    }
-
     @Expose
     protected long numinsts;
 
@@ -121,7 +117,12 @@ public abstract class AInstructionStream extends AObjectStream<Instruction> impl
     }
 
     @Override
-    public void close() throws Exception {
-        this.producer.close();
+    public void close() {
+        try {
+            this.producer.close();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

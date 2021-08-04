@@ -1,7 +1,5 @@
 package pt.up.fe.specs.binarytranslation.stream;
 
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
-
 public interface TraceInstructionStream extends InstructionStream {
 
     /**
@@ -16,5 +14,5 @@ public interface TraceInstructionStream extends InstructionStream {
         return InstructionStreamType.TRACE;
     }
 
-    public RegisterDump getCurrentRegisters();
+    // public RegisterDump getCurrentRegisters();
 }

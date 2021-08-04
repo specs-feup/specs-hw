@@ -8,7 +8,6 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
 import pt.up.fe.specs.binarytranslation.processes.TxtDump;
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 public class TraceInstructionProducer extends AInstructionProducer {
 
@@ -63,25 +62,30 @@ public class TraceInstructionProducer extends AInstructionProducer {
 
     /*
      * 
-     */
+     
     @Override
     public RegisterDump getRegisters() {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;
             return gdb.getRegisters();
-
+    
         } else {
             return super.getRegisters();
         }
-    }
+    }*/
 
     @Override
     public Instruction nextInstruction() {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;
 
+            // gdb will hang if any run commads are issued
+            // (until i find away top send a CTRLC-C)
+            if (gdb.isExitReached())
+                return null;
+
             // registers first
-            var regs = getRegisters();
+            var regs = gdb.getRegisters();
 
             // then inst
             gdb.stepi();
@@ -100,7 +104,7 @@ public class TraceInstructionProducer extends AInstructionProducer {
     }
 
     @Override
-    public void close() throws InterruptedException {
+    public void close() {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;
             gdb.quit();

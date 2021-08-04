@@ -26,6 +26,10 @@ import pt.up.fe.specs.util.threadstream.ObjectStream;
  */
 public interface InstructionStream extends ObjectStream<Instruction> {
 
+    enum NullInstruction implements Instruction {
+        NullInstance;
+    }
+
     /**
      * 
      * @return the next instruction of the stream, or null if there are no more instructions in the stream

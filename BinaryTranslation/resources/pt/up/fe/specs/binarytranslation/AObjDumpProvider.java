@@ -1,7 +1,5 @@
 package pt.up.fe.specs.binarytranslation;
 
-import pt.up.fe.specs.util.providers.ResourceProvider;
-
 public abstract class AObjDumpProvider implements ELFProvider {
 
     private final ELFProvider original;
@@ -28,10 +26,5 @@ public abstract class AObjDumpProvider implements ELFProvider {
     @Override
     public Number getKernelStop() {
         return this.original.getKernelStop();
-    }
-
-    @Override
-    public ResourceProvider getCPUName() {
-        return this.original.getCPUName();
     }
 }

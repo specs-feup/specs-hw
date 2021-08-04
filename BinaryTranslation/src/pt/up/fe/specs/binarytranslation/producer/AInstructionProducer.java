@@ -35,6 +35,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
         this.prun = prun;
         this.regex = regex;
         this.produceMethod = produceMethod;
+        this.prun.start();
     }
 
     @Override
@@ -79,7 +80,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
     }
 
     @Override
-    public void close() throws InterruptedException {
+    public void close() {
         this.prun.close();
     }
 }
