@@ -54,10 +54,11 @@ public class BinaryTranslationUtils {
         var args = new ArrayList<String>();
         args.add("7z");
         args.add("e");
+        args.add("-aos");
         args.add(zipFile.getAbsolutePath());
         args.add("-o" + outputFolder.getAbsolutePath());
         args.add(filename);
-        var unzipResult = SpecsSystem.runProcess(args, true, true);
+        var unzipResult = SpecsSystem.runProcess(args, true, false);
         // var unzipOutput = unzipResult.getOutput();
         // System.out.println(BinaryTranslationUtils.getAllOutput(new ProcessBuilder(args)));
 

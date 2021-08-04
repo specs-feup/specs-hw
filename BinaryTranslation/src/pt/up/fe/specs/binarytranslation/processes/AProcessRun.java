@@ -78,15 +78,8 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
      * 
      */
     @Override
-    public void close() {
-
-        try {
-            if (!proc.waitFor(2, TimeUnit.SECONDS))
-                proc.destroy();
-
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    public void close() throws InterruptedException {
+        if (!proc.waitFor(2, TimeUnit.SECONDS))
+            proc.destroy();
     }
 }

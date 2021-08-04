@@ -6,9 +6,16 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public class InstructionStreamTestUtils {
 
     public static void printStream(InstructionStream el) {
-        Instruction inst = null;
-        while ((inst = el.nextInstruction()) != null) {
-            inst.printInstruction();
+        el.advanceTo(0x1604);
+        try {
+            Instruction inst = null;
+            while ((inst = el.nextInstruction()) != null) {
+                inst.printInstruction();
+            }
+            el.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

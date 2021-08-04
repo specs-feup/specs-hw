@@ -27,13 +27,6 @@ import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
  */
 public interface Instruction {
 
-    /**
-     * 
-     */
-    default boolean isNull() {
-        return this == NullInstruction.NullInstance;
-    }
-
     // Get Fundamental properties /////////////////////////////////////////////
     /*
      * Position of instruction in program memory
@@ -78,7 +71,7 @@ public interface Instruction {
     default InstructionPseudocode getPseudocode() {
         return null;
     }
-    
+
     /*
      * Gets the jGraphT version of the pseudocode
      */

@@ -2,16 +2,10 @@ package pt.up.fe.specs.binarytranslation.producer;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.NullInstruction;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.util.threadstream.ObjectProducer;
 
 public interface InstructionProducer extends ObjectProducer<Instruction> {
-
-    @Override
-    default Instruction getPoison() {
-        return NullInstruction.NullInstance;
-    }
 
     /**
      * Advance to a given address (basically used to set a gdb breakpoint and run), returns false if the producer does

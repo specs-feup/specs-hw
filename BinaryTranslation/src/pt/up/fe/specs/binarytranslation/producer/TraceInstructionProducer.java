@@ -1,6 +1,7 @@
 package pt.up.fe.specs.binarytranslation.producer;
 
 import java.util.function.BiFunction;
+import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -8,16 +9,17 @@ import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
 import pt.up.fe.specs.binarytranslation.processes.TxtDump;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
-import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public class TraceInstructionProducer extends AInstructionProducer {
+
+    private final static Pattern REGEX = Pattern.compile("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
 
     /*
      * Output from QEMU Execution
      */
-    protected TraceInstructionProducer(Application app, ResourceProvider regex,
+    protected TraceInstructionProducer(Application app,
             BiFunction<String, String, Instruction> produceMethod) {
-        super(app, TraceInstructionProducer.getProperProcess(app), regex, produceMethod);
+        super(app, TraceInstructionProducer.getProperProcess(app), REGEX, produceMethod);
     }
 
     /*
@@ -25,8 +27,7 @@ public class TraceInstructionProducer extends AInstructionProducer {
      */
     private static StringProcessRun getProperProcess(Application app) {
 
-        var elfname = app.getElffile();
-        var name = elfname.getName();
+        var name = app.getElffile().getName();
         var extension = name.subSequence(name.length() - 3, name.length());
 
         // Output from GNU based objdump
@@ -74,18 +75,24 @@ public class TraceInstructionProducer extends AInstructionProducer {
         }
     }
 
-    // TODO: add an indicator flag for interactive or non interactive mode?
     @Override
     public Instruction nextInstruction() {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;
+
+            // registers first
+            var regs = getRegisters();
+
+            // then inst
             gdb.stepi();
             var line = gdb.getAddrAndInstruction();
             if (line == null)
                 return null;
 
             var splits = line.split(":");
-            return this.newInstance(splits[0], splits[1]);
+            var newinst = this.newInstance(splits[0], splits[1]);
+            newinst.setRegisters(regs);
+            return newinst;
 
         } else {
             return super.nextInstruction();
@@ -93,7 +100,7 @@ public class TraceInstructionProducer extends AInstructionProducer {
     }
 
     @Override
-    public void close() {
+    public void close() throws InterruptedException {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;
             gdb.quit();
