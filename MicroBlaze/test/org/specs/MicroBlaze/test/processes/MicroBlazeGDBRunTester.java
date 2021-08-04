@@ -56,6 +56,7 @@ public class MicroBlazeGDBRunTester {
             // var output = gdb.getG
             System.out.println(gdb.killTarget());
             gdb.quit();
+
         }
     }
 
@@ -88,7 +89,7 @@ public class MicroBlazeGDBRunTester {
             var dtb = BinaryTranslationUtils.getFile(app.getDtbfile().getResource());
             dtb.deleteOnExit();
 
-            var remoteCommand = app.getQemuexe().getResource() + ".exe"
+            var remoteCommand = app.getQemuexe().getResource()
                     + " -nographic -M microblaze-fdt-plnx -m 64 -display none"
                     + " -kernel " + app.getElffile().getAbsolutePath().replace("\\", "/")
                     + " -dtb " + dtb.getAbsolutePath().replace("\\", "/")
@@ -120,9 +121,6 @@ public class MicroBlazeGDBRunTester {
 
             // var variables = gdb.getVariableList();
             // System.out.println(variables);
-
-            // kill target and quit gdb
-            gdb.quit();
         }
     }
 }

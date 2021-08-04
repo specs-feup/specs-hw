@@ -22,16 +22,14 @@ public enum MicroBlazeResource implements ResourceProvider {
     QEMU_MICROBLAZE_GDB_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl.gdb"),
     QEMU_MICROBLAZE_GDBNONINTERACTIVE_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl_noninteractive.gdb"),
     QEMU_MICROBLAZE_BAREMETAL_DTB("org/specs/MicroBlaze/qemu/system.dtb"),
+    QEMU_MICROBLAZE_ARGS("org/specs/MicroBlaze/qemu/QEMUArgsMicroBlaze"),
+
     QEMU_MICROBLAZE_EXE("qemu-system-microblazeel"),
-    // QEMU_MICROBLAZE_EXE("/media/nuno/HDD/work/projects/myqemus/qemu-system-microblazeel"),
 
     MICROBLAZE_GCC("mb-gcc"),
     MICROBLAZE_GDB("mb-gdb"),
     MICROBLAZE_READELF("mb-readelf"),
-    MICROBLAZE_OBJDUMP("mb-objdump"),
-
-    MICROBLAZE_INSTRUCTION_DUMP_REGEX("([0-9a-f]+):\\s([0-9a-f]+)"),
-    MICROBLAZE_INSTRUCTION_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
+    MICROBLAZE_OBJDUMP("mb-objdump");
 
     private final String resource;
 

@@ -1,6 +1,5 @@
 package org.specs.MicroBlaze.stream;
 
-import org.specs.MicroBlaze.MicroBlazeResource;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
@@ -11,7 +10,6 @@ public class MicroBlazeDetailedTraceProducer extends DetailedRegisterInstruction
 
     public MicroBlazeDetailedTraceProducer(MicroBlazeELFProvider elfprovider) {
         super(new MicroBlazeApplication(elfprovider),
-                MicroBlazeResource.MICROBLAZE_INSTRUCTION_TRACE_REGEX,
                 MicroBlazeInstruction::newInstance);
     }
 }
