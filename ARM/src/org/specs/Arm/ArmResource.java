@@ -18,21 +18,14 @@ public enum ArmResource implements ResourceProvider {
     // 3. Use the "qemutmpl.dtb" template, which relies on the arm-generic-fdt ONLY SUPPORTED BY THE XILINX BUILD OF
     // QEMU!
 
-    ARMv8_CPU_NAME("aarch64"),
-
-    QEMU_AARCH64_GDB_TEMPLATE("org/specs/Arm/gdb/qemutmpl.gdb"),
-    QEMU_AARCH64_GDBNONINTERACTIVE_TEMPLATE("org/specs/Arm/gdb/qemutmpl_noninteractive.gdb"),
-    QEMU_AARCH64_BAREMETAL_DTB("org/specs/Arm/qemu/zcu102-arm.dtb"),
-    QEMU_AARCH64_EXE("qemu-system-aarch64"),
     // https://www.xilinx.com/video/soc/running-bare-metal-application-using-qemu-command-line.html
 
-    AARCH64_GCC("aarch64-none-elf-gcc"),
-    AARCH64_GDB("aarch64-none-elf-gdb"),
-    AARCH64_READELF("aarch64-none-elf-readelf"),
-    AARCH64_OBJDUMP("aarch64-none-elf-objdump"),
-
-    AARCH64_DUMP_REGEX("([0-9a-f]+):\\s([0-9a-f]+)"),
-    AARCH64_TRACE_REGEX("0x([0-9a-f]+)\\s<.*>:\\s0x([0-9a-f]+)");
+    GDBINTERACTIVE_TEMPLATE("org/specs/Arm/gdb/qemutmpl.gdb"),
+    GDBNONINTERACTIVE_TEMPLATE("org/specs/Arm/gdb/qemutmpl_noninteractive.gdb"),
+    QEMU_AARCH64_BAREMETAL_DTB("org/specs/Arm/qemu/zcu102-arm.dtb"),
+    QEMU_ARGS_TEMPLATE("org/specs/Arm/qemu/QEMUArgsArm");
+    // <QEMUBIN> -nographic -M arm-generic-fdt -dtb <DTBFILE> -device loader,file=<ELFNAME>,cpu-num=0
+    // -device loader,addr=0xfd1a0104,data=0x8000000e,data-len=4 -s -S
 
     private final String resource;
 
