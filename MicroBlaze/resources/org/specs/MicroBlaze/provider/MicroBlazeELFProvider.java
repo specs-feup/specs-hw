@@ -23,6 +23,6 @@ public interface MicroBlazeELFProvider extends ELFProvider {
 
     @Override
     default public String getResource() {
-        return this.getClass().getSimpleName() + ".7z";
+        return PREFIX + this.getClass().getSimpleName() + ".7z";
     }
 }
