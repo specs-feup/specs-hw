@@ -200,6 +200,9 @@ public class GDBRun extends StringProcessRun {
         if (this.targetOpen) {
             this.sendGDBCommand("while $pc != _exit");
             this.sendGDBCommand("stepi 1");
+            this.discardAllGDBResponse(); // stepi might produce strings such as
+            // /usr/src/debug/libmblebspmfpd-libgloss/3.1.0-r0/newlib-3.1.0/libgloss/microblaze/crt0.S: No such file or
+            // directory.
             this.sendGDBCommand("x/x $pc");
             this.sendGDBCommand("end");
         }
@@ -366,7 +369,7 @@ public class GDBRun extends StringProcessRun {
      * 
      */
     private String consumeAllGDBResponse() {
-        return this.consumeAllGDBResponse(2000);
+        return this.consumeAllGDBResponse(200);
     }
 
     /*
@@ -393,7 +396,10 @@ public class GDBRun extends StringProcessRun {
      * Wait for continue run
      */
     private String waitForGDB() {
-        return super.receive(-1);
+        var ret = super.receive(-1);
+        // System.out.println(ret);
+        return ret;
+        // return super.receive(-1);
     }
 
     /*

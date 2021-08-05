@@ -10,7 +10,7 @@ public abstract class AObjDumpProvider implements ELFProvider {
 
     @Override
     public String getELFName() {
-        return this.original.asTxtDump();
+        return this.original.getELFName().replace(".elf", "_objdump.txt");
     }
 
     @Override

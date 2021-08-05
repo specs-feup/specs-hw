@@ -10,7 +10,7 @@ public class ATraceDumpProvider implements ELFProvider {
 
     @Override
     public String getELFName() {
-        return this.original.asTraceTxtDump();
+        return this.original.getELFName().replace(".elf", "_trace.txt");
     }
 
     @Override

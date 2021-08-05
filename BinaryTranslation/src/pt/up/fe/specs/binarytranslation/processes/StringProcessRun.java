@@ -47,6 +47,7 @@ public class StringProcessRun extends AProcessRun {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        // System.out.println(ret);
         return ret;
     }
 }
