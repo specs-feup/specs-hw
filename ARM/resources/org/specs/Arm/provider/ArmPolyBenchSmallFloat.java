@@ -36,43 +36,43 @@ public enum ArmPolyBenchSmallFloat implements ArmELFProvider {
     0000000000000c90 g     F .text  00000000000001e0 kernel_heat_3d
     0000000000000d34 g     F .text  00000000000000c4 kernel_gemm
      */
-    _2mm("org/specs/ARM/asm/PolybenchSmallFloat/_2mm.elf", 0x00000da0L, 0x0EDCL),
-    _3mm("org/specs/ARM/asm/PolybenchSmallFloat/_3mm.elf", 0x00000db0L, 0x0F84L),
-    adi("org/specs/ARM/asm/PolybenchSmallFloat/adi.elf", 0x00000c50L, 0x0F20L),
-    atax("org/specs/ARM/asm/PolybenchSmallFloat/atax.elf", 0x00000ca0L, 0x0D74L),
-    bicg("org/specs/ARM/asm/PolybenchSmallFloat/bicg.elf", 0x00000cb0L, 0x0D6CL),
-    cholesky("org/specs/ARM/asm/PolybenchSmallFloat/cholesky.elf", 0x00000de0L, 0x0EF8L),
-    correlation("org/specs/ARM/asm/PolybenchSmallFloat/correlation.elf", 0x00000c70L, 0x0F18L),
-    covariance("org/specs/ARM/asm/PolybenchSmallFloat/covariance.elf", 0x00000c50L, 0x0DD8L),
-    deriche("org/specs/ARM/asm/PolybenchSmallFloat/deriche.elf", 0x00000c80L, 0x01030L),
-    doitgen("org/specs/ARM/asm/PolybenchSmallFloat/doitgen.elf", 0x00000cf0L, 0x0DCCL),
-    durbin("org/specs/ARM/asm/PolybenchSmallFloat/durbin.elf", 0x00000c30L, 0x0D64L),
-    fdtd2d("org/specs/ARM/asm/PolybenchSmallFloat/fdtd2d.elf", 0x00000cc0L, 0x0E74L),
-    floydwarshall("org/specs/ARM/asm/PolybenchSmallFloat/floydwarshall .elf", 0x00000cf4L, 0x0D74L),
-    gemm("org/specs/ARM/asm/PolybenchSmallFloat/gemm.elf", 0x00000d34L, 0x0DF4L),
-    gemver("org/specs/ARM/asm/PolybenchSmallFloat/gemver.elf", 0x00000cd0L, 0x0DD8L),
-    gesummv("org/specs/ARM/asm/PolybenchSmallFloat/gesummv.elf", 0x00000ca4L, 0x0D18L),
-    gramschmidt("org/specs/ARM/asm/PolybenchSmallFloat/gramschmidt.elf", 0x00000ce0L, 0x0E88L),
-    heat3d("org/specs/ARM/asm/PolybenchSmallFloat/heat3d .elf", 0x00000c90L, 0x0E6CL),
-    jacobi1d("org/specs/ARM/asm/PolybenchSmallFloat/jacobi1d .elf", 0x00000c44L, 0x0CF4L),
-    jacobi2d("org/specs/ARM/asm/PolybenchSmallFloat/jacobi2d .elf", 0x00000c74L, 0x0DA0L),
-    lu("org/specs/ARM/asm/PolybenchSmallFloat/lu.elf", 0x00000de0L, 0x0EE8L),
-    ludcmp("org/specs/ARM/asm/PolybenchSmallFloat/ludcmp.elf", 0x00000e10L, 0x0FD0L),
-    mvt("org/specs/ARM/asm/PolybenchSmallFloat/mvt.elf", 0x00000cc0L, 0x0D4CL),
-    nussinov("org/specs/ARM/asm/PolybenchSmallFloat/nussinov.elf", 0x00000c80L, 0x0E04L),
-    seidel2d("org/specs/ARM/asm/PolybenchSmallFloat/seidel2d .elf", 0x00000c54L, 0x0D34L),
-    symm("org/specs/ARM/asm/PolybenchSmallFloat/symm.elf", 0x00000d40L, 0x0E1CL),
-    syr2k("org/specs/ARM/asm/PolybenchSmallFloat/syr2k.elf", 0x00000cf4L, 0x0DCCL),
-    syrk("org/specs/ARM/asm/PolybenchSmallFloat/syrk.elf", 0x00000cd0L, 0x0D80L),
-    trisolv("org/specs/ARM/asm/PolybenchSmallFloat/trisolv.elf", 0x00000c84L, 0x0D04L),
-    trmm("org/specs/ARM/asm/PolybenchSmallFloat/trmm.elf", 0x00000cc4L, 0x0DC4L);
+    _2mm(0x00000da0L, 0x0EDCL),
+    _3mm(0x00000db0L, 0x0F84L),
+    adi(0x00000c50L, 0x0F20L),
+    atax(0x00000ca0L, 0x0D74L),
+    bicg(0x00000cb0L, 0x0D6CL),
+    cholesky(0x00000de0L, 0x0EF8L),
+    correlation(0x00000c70L, 0x0F18L),
+    covariance(0x00000c50L, 0x0DD8L),
+    deriche(0x00000c80L, 0x01030L),
+    doitgen(0x00000cf0L, 0x0DCCL),
+    durbin(0x00000c30L, 0x0D64L),
+    fdtd2d(0x00000cc0L, 0x0E74L),
+    floydwarshall(0x00000cf4L, 0x0D74L),
+    gemm(0x00000d34L, 0x0DF4L),
+    gemver(0x00000cd0L, 0x0DD8L),
+    gesummv(0x00000ca4L, 0x0D18L),
+    gramschmidt(0x00000ce0L, 0x0E88L),
+    heat3d(0x00000c90L, 0x0E6CL),
+    jacobi1d(0x00000c44L, 0x0CF4L),
+    jacobi2d(0x00000c74L, 0x0DA0L),
+    lu(0x00000de0L, 0x0EE8L),
+    ludcmp(0x00000e10L, 0x0FD0L),
+    mvt(0x00000cc0L, 0x0D4CL),
+    nussinov(0x00000c80L, 0x0E04L),
+    seidel2d(0x00000c54L, 0x0D34L),
+    symm(0x00000d40L, 0x0E1CL),
+    syr2k(0x00000cf4L, 0x0DCCL),
+    syrk(0x00000cd0L, 0x0D80L),
+    trisolv(0x00000c84L, 0x0D04L),
+    trmm(0x00000cc4L, 0x0DC4L);
 
-    private String fullPath;
+    private String elfName;
     private Number kernelStart;
     private Number kernelStop;
 
-    private ArmPolyBenchSmallFloat(String fullPath, Number kernelStart, Number kernelStop) {
-        this.fullPath = fullPath;
+    private ArmPolyBenchSmallFloat(Number kernelStart, Number kernelStop) {
+        this.elfName = name() + ".elf";
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
     }
@@ -88,7 +88,7 @@ public enum ArmPolyBenchSmallFloat implements ArmELFProvider {
     }
 
     @Override
-    public String getResource() {
-        return this.fullPath;
+    public String getELFName() {
+        return this.elfName;
     }
 }

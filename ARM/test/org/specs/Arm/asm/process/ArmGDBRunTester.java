@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.specs.Arm.ArmApplication;
 import org.specs.Arm.provider.ArmLivermoreELFN10;
 
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class ArmGDBRunTester {
 
@@ -19,10 +19,9 @@ public class ArmGDBRunTester {
             gdb.loadFile(app);
 
             // copy dtb to local folder
-            var dtb = BinaryTranslationUtils.getFile(app.getDtbfile().getResource());
-            dtb.deleteOnExit();
+            var dtb = app.get(Application.BAREMETAL_DTB).write();
 
-            var remoteCommand = app.getQemuexe().getResource()
+            var remoteCommand = app.get(Application.QEMUEXE)
                     + " --nographic -M arm-generic-fdt"
                     + " -dtb " + dtb.getAbsolutePath()
                     + " -device loader,file=" + app.getElffile().getAbsolutePath()
