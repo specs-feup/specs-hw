@@ -19,26 +19,26 @@ public enum ArmPolyBenchSmallInt implements ArmELFProvider {
     0000000000000cb0 g     F .text  00000000000000b4 kernel_syrk
     0000000000000d00 g     F .text  00000000000000c8 kernel_gemm
      */
-    floydwarshall("org/specs/ARM/asm/PolybenchSmallInt/floydwarshall.elf", 0x00000ce4L, 0x0D64L),
-    gemm("org/specs/ARM/asm/PolybenchSmallInt/gemm.elf", 0x00000d00L, 0x0DC4L),
-    gemver("org/specs/ARM/asm/PolybenchSmallInt/gemver.elf", 0x00000cd0L, 0x0DF8L),
-    jacobi1d("org/specs/ARM/asm/PolybenchSmallInt/jacobi1d.elf", 0x00000c40L, 0x0CECL),
-    lu("org/specs/ARM/asm/PolybenchSmallInt/lu.elf", 0x00000dd0L, 0x0ED8L),
-    ludcmp("org/specs/ARM/asm/PolybenchSmallInt/ludcmp.elf", 0x00000e00L, 0x0FC0L),
-    mvt("org/specs/ARM/asm/PolybenchSmallInt/mvt.elf", 0x00000cb0L, 0x0D3CL),
-    nussinov("org/specs/ARM/asm/PolybenchSmallInt/nussinov.elf", 0x00000c80L, 0x0DE4L),
-    symm("org/specs/ARM/asm/PolybenchSmallInt/symm.elf", 0x00000d20L, 0x0E00L),
-    syr2k("org/specs/ARM/asm/PolybenchSmallInt/syr2k.elf", 0x00000cd0L, 0x0DA4L),
-    syrk("org/specs/ARM/asm/PolybenchSmallInt/syrk.elf", 0x00000cb0L, 0x0D60L),
-    trisolv("org/specs/ARM/asm/PolybenchSmallInt/trisolv.elf", 0x00000c70L, 0x0D08L),
-    trmm("org/specs/ARM/asm/PolybenchSmallInt/trmm.elf", 0x00000cc0L, 0x0DC4L);
+    floydwarshall(0x00000ce4L, 0x0D64L),
+    gemm(0x00000d00L, 0x0DC4L),
+    gemver(0x00000cd0L, 0x0DF8L),
+    jacobi1d(0x00000c40L, 0x0CECL),
+    lu(0x00000dd0L, 0x0ED8L),
+    ludcmp(0x00000e00L, 0x0FC0L),
+    mvt(0x00000cb0L, 0x0D3CL),
+    nussinov(0x00000c80L, 0x0DE4L),
+    symm(0x00000d20L, 0x0E00L),
+    syr2k(0x00000cd0L, 0x0DA4L),
+    syrk(0x00000cb0L, 0x0D60L),
+    trisolv(0x00000c70L, 0x0D08L),
+    trmm(0x00000cc0L, 0x0DC4L);
 
-    private String fullPath;
+    private String elfName;
     private Number kernelStart;
     private Number kernelStop;
 
-    private ArmPolyBenchSmallInt(String fullPath, Number kernelStart, Number kernelStop) {
-        this.fullPath = fullPath;
+    private ArmPolyBenchSmallInt(Number kernelStart, Number kernelStop) {
+        this.elfName = name() + ".elf";
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
     }
@@ -54,7 +54,7 @@ public enum ArmPolyBenchSmallInt implements ArmELFProvider {
     }
 
     @Override
-    public String getResource() {
-        return this.fullPath;
+    public String getELFName() {
+        return this.elfName;
     }
 }
