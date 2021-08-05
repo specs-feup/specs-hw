@@ -4,12 +4,11 @@ import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallInt;
 
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.processes.ObjDump;
@@ -21,6 +20,7 @@ public class MicroBlazeELFDumper {
         var app = new MicroBlazeApplication(elf);
         var objdump = new ObjDump(app);
         var outputname = elf.getELFName().replace(".elf", "_objdump.txt");
+        objdump.start();
         BinaryTranslationUtils.dumpProcessRunStdOut(objdump, outputname);
     }
 
@@ -65,9 +65,9 @@ public class MicroBlazeELFDumper {
     @Test
     public void dumpELFstoFiles() {
 
-        var elfs = Arrays.asList(MicroBlazeLivermoreELFN10.values());
+        // var elfs = Arrays.asList(MicroBlazeLivermoreELFN10.values());
         // var elfs MicroBlazePolyBenchSmallFloat.values();
-        // var elfs = MicroBlazePolyBenchSmallInt.values();
+        var elfs = MicroBlazePolyBenchSmallInt.values();
 
         for (var elf : elfs) {
             // dumpELFStatic(elf);
