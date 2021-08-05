@@ -19,14 +19,14 @@ public enum MicroBlazePolyBenchSmallInt implements MicroBlazeELFProvider {
     000005ec g     F .text  00000100 kernel_syrk
     00000668 g     F .text  00000114 kernel_gemm
      */
-    floydwarshall(0x0624L, 0x6C4L),
+    // floydwarshall("floyd-warshall", 0x0624L, 0x6C4L),
     gemm(0x0668L, 0x778L),
     gemver(0x13f4L, 0x15B0L),
-    jacobi1d(0x0fa4L, 0x1124L),
+    jacobi1d("jacobi-1d", 0x0fa4L, 0x1124L),
     lu(0x0710L, 0x83CL),
-    ludcmp(0x1768L, 0x1960L),
+    // ludcmp(0x1768L, 0x1960L),
     mvt(0x0650L, 0x720L),
-    nussinov(0x053cL, 0x698L),
+    // nussinov(0x053cL, 0x698L),
     symm(0x0678L, 0x7D0L),
     syr2k(0x0634L, 0x74CL),
     syrk(0x05ecL, 0x6E8L),
@@ -36,6 +36,12 @@ public enum MicroBlazePolyBenchSmallInt implements MicroBlazeELFProvider {
     private String elfName;
     private Number kernelStart;
     private Number kernelStop;
+
+    private MicroBlazePolyBenchSmallInt(String name, Number kernelStart, Number kernelStop) {
+        this.elfName = name + ".elf";
+        this.kernelStart = kernelStart;
+        this.kernelStop = kernelStop;
+    }
 
     private MicroBlazePolyBenchSmallInt(Number kernelStart, Number kernelStop) {
         this.elfName = name() + ".elf";

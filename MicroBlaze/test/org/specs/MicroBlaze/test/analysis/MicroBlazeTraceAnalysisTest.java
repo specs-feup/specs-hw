@@ -173,7 +173,7 @@ public class MicroBlazeTraceAnalysisTest {
         // if (elf == MicroBlazeLivermoreELFN10.cholesky_trace || elf ==
         // MicroBlazeLivermoreELFN10.pic2d)
         // continue;
-        var f = elf.asTraceTxtDump();
+        var f = elf.asTraceTxtDump().write();
         System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream(f))));
         var stream = getStream(elf, true);
         stream.rawDump();

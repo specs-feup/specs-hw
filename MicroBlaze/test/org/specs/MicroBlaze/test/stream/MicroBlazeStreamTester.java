@@ -2,8 +2,6 @@ package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.provider.MicroBlazeObjDumpProvider;
-import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -33,7 +31,7 @@ public class MicroBlazeStreamTester {
     @Test
     public void testStaticRawFromTxtDump() {
         InstructionStreamTestUtils.rawDump(
-                new MicroBlazeElfStream(new MicroBlazeObjDumpProvider(MicroBlazeLivermoreELFN10.innerprod)));
+                new MicroBlazeElfStream(MicroBlazeLivermoreELFN10.innerprod.asTxtDump()));
     }
 
     @Test
@@ -51,6 +49,6 @@ public class MicroBlazeStreamTester {
     @Test
     public void testTraceRawFromTxtDump() {
         InstructionStreamTestUtils.rawDump(
-                new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider(MicroBlazeLivermoreELFN10.innerprod)));
+                new MicroBlazeTraceStream(MicroBlazeLivermoreELFN10.innerprod.asTraceTxtDump()));
     }
 }

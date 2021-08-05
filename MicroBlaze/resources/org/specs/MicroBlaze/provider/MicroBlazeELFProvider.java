@@ -10,6 +10,16 @@ public interface MicroBlazeELFProvider extends ELFProvider {
     final static String PREFIX = "org/specs/MicroBlaze/asm/";
 
     @Override
+    default MicroBlazeELFProvider asTraceTxtDump() {
+        return new MicroBlazeTraceDumpProvider(this);
+    }
+
+    @Override
+    default MicroBlazeELFProvider asTxtDump() {
+        return new MicroBlazeObjDumpProvider(this);
+    }
+
+    @Override
     default Application toApplication() {
         return new MicroBlazeApplication(this);
     }

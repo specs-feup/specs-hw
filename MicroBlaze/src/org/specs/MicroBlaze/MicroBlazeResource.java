@@ -19,7 +19,7 @@ public enum MicroBlazeResource implements ResourceProvider {
 
     GDBINTERACTIVE_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl.gdb"),
     GDBNONINTERACTIVE_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl_noninteractive.gdb"),
-    BAREMETAL_DTB("org/specs/MicroBlaze/qemu/system.dtb"),
+    BAREMETAL_DTB("org/specs/MicroBlaze/qemu/2021.1/system.dtb"),
     QEMU_ARGS_TEMPLATE("org/specs/MicroBlaze/qemu/QEMUArgsMicroBlaze");
 
     private final String resource;

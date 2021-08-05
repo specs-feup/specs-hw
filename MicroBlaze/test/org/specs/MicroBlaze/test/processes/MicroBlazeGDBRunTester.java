@@ -5,6 +5,7 @@ import org.specs.MicroBlaze.MicroBlazeQEMU;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallInt;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
@@ -33,7 +34,8 @@ public class MicroBlazeGDBRunTester {
      */
     @Test
     public void testRegister() {
-        var elf = MicroBlazeLivermoreELFN100.matmul_N100;
+        var elf = MicroBlazePolyBenchSmallInt.lu;
+        // var elf = MicroBlazeLivermoreELFN100.matmul_N100;
         var app = new MicroBlazeApplication(elf);
         try (var gdb = GDBRun.newInstanceInteractive(app)) {
 
@@ -45,7 +47,11 @@ public class MicroBlazeGDBRunTester {
 
             for (int i = 0; i < 200; i++) {
                 gdb.stepi();
-                System.out.println(gdb.getAddrAndInstruction());
+                var ret = gdb.getAddrAndInstruction();
+                if (ret == null)
+                    break;
+
+                System.out.println(ret);
             }
         }
     }
@@ -116,7 +122,8 @@ public class MicroBlazeGDBRunTester {
     @Test
     public void testQEMU() {
 
-        try (var qemu = new MicroBlazeQEMU(new MicroBlazeApplication(MicroBlazeLivermoreELFN100.matmul_N100))) {
+        // try (var qemu = new MicroBlazeQEMU(new MicroBlazeApplication(MicroBlazeLivermoreELFN100.matmul_N100))) {
+        try (var qemu = new MicroBlazeQEMU(new MicroBlazeApplication(MicroBlazePolyBenchSmallInt.gemm))) {
             qemu.start();
             System.out.println("waiting...");
         }
