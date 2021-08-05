@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
@@ -43,7 +44,8 @@ public class MicroBlazeELFDumper {
             var fos = new FileWriter(outputname);
             var bw = new BufferedWriter(fos);
 
-            for (int i = 0; i < 200000; i++) {
+            for (int i = 0; i < 10; i++) {
+                // for (int i = 0; i < 100000; i++) {
                 gdb.stepi();
                 var instlline = gdb.getAddrAndInstruction();
                 if (instlline == null)
@@ -54,7 +56,9 @@ public class MicroBlazeELFDumper {
             bw.close();
             fos.close();
 
-        } catch (FileNotFoundException e) {
+        } catch (
+
+        FileNotFoundException e) {
             e.printStackTrace();
 
         } catch (IOException e) {
@@ -65,12 +69,13 @@ public class MicroBlazeELFDumper {
     @Test
     public void dumpELFstoFiles() {
 
-        // var elfs = Arrays.asList(MicroBlazeLivermoreELFN10.values());
-        // var elfs MicroBlazePolyBenchSmallFloat.values();
-        var elfs = MicroBlazePolyBenchSmallInt.values();
+        // var elfs = Arrays.asList(MicroBlazeLivermoreELFN100.values());
+        var elfs = Arrays.asList(MicroBlazePolyBenchSmallInt.values());
+        // var elfs = Arrays.asList(MicroBlazePolyBenchSmallInt.lu);
 
         for (var elf : elfs) {
-            // dumpELFStatic(elf);
+            System.out.println("Dumping " + elf.getELFName());
+            dumpELFStatic(elf);
             dumpELFTrace(elf);
         }
     }
