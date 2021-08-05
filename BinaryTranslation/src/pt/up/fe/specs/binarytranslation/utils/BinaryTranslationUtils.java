@@ -54,7 +54,8 @@ public class BinaryTranslationUtils {
         var args = new ArrayList<String>();
         args.add("7z");
         args.add("e");
-        args.add("-aos");
+        args.add("-aoa"); // add "aoa" overrides without prompt
+        // args.add("-aos"); // add "aos" to avoid overwrite
         args.add(zipFile.getAbsolutePath());
         args.add("-o" + outputFolder.getAbsolutePath());
         args.add(filename);

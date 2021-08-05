@@ -11,14 +11,12 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public interface ELFProvider extends ResourceProvider {
 
-    default public String asTxtDump() {
-        var name = this.getELFName().replace(".elf", "_objdump.txt");
-        return name;
+    default public ELFProvider asTxtDump() {
+        throw new NotImplementedException("asTxtDump()");
     }
 
-    default public String asTraceTxtDump() {
-        var name = this.getELFName().replace(".elf", "_trace.txt");
-        return name;
+    default public ELFProvider asTraceTxtDump() {
+        throw new NotImplementedException("asTraceTxtDump()");
     }
 
     default public Application toApplication() {

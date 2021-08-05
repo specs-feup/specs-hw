@@ -22,6 +22,7 @@ public class InstructionStreamTestUtils {
 
     public static void rawDump(InstructionStream el) {
         try {
+            // el.advanceTo(el.getApp().getELFProvider().getKernelStart().longValue());
             el.rawDump();
             el.close();
 

@@ -1,8 +1,10 @@
 package pt.up.fe.specs.binarytranslation.processes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
@@ -26,7 +28,12 @@ public class QEMU implements AutoCloseable {
     }
 
     public void start() {
-        this.proc = BinaryTranslationUtils.newProcess(new ProcessBuilder(args));
+        var newArgs = new ArrayList<String>();
+        newArgs.add("bash");
+        newArgs.add("-l");
+        newArgs.add("-c");
+        newArgs.add(args.stream().collect(Collectors.joining(" ")));
+        this.proc = BinaryTranslationUtils.newProcess(new ProcessBuilder(newArgs));
     }
 
     /*
