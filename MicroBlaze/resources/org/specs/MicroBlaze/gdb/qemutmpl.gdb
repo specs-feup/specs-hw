@@ -3,4 +3,4 @@ undisplay
 set print address off
 set height 0
 file <ELFNAME>
-target remote localhost:1234
+target remote localhost:<PORT>
