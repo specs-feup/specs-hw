@@ -20,6 +20,9 @@ public interface InstructionProducer extends ObjectProducer<Instruction> {
      */
     public Instruction nextInstruction();
 
+    // TODO
+    // nextInstrucionWithRegisters()
+
     /**
      * Only implementable by a @TraceInstructionProducer which is executing a simulator @ProcessRun
      * 
