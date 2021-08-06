@@ -1,23 +1,20 @@
 package org.specs.MicroBlaze.stream;
 
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
-import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
-import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
 public class MicroBlazeTraceStream extends ATraceInstructionStream {
 
     // three auxiliary vars to help with mb-gdb bug
-    private final MicroBlazeELFDump elfdump;
-    private Instruction afterbug = null;
-    private RegisterDump savedRegs = null;
-    private boolean haveStoredInst = false;
+    // private final MicroBlazeELFDump elfdump;
+    // private Instruction afterbug = null;
+    // private RegisterDump savedRegs = null;
+    // private boolean haveStoredInst = false;
 
     /*
      * IMPORTANT: this bug occurs using the mb-gdb binary bundled with vivado 2018.3; 
@@ -26,9 +23,9 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
      *  its best to use the 2018 version, since at least we know that the instruction after 
      *  an IMM always executes, and therefore we can go fetch it. For branches, there is 
      *  no way to know which instruction to fetch...
-     */
+     
     private static MicroBlazeELFDump GDBbugHandle(MicroBlazeELFProvider elfprovider) {
-
+    
         // if trace dump fetch original name, to then produce an objdump in memory
         if (elfprovider instanceof MicroBlazeTraceDumpProvider) {
             var original = ((MicroBlazeTraceDumpProvider) elfprovider).getOriginal();
@@ -36,7 +33,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
         } else {
             return new MicroBlazeELFDump(elfprovider);
         }
-    }
+    }*/
 
     /*
      * Auxiliary constructor so that streams can be built from the threading engine
@@ -44,12 +41,12 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
      */
     public MicroBlazeTraceStream(MicroBlazeELFProvider elfprovider, ChannelConsumer<Instruction> channel) {
         super(new ChanneledInstructionProducer(new MicroBlazeApplication(elfprovider), channel));
-        this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfprovider);
+        // this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfprovider);
     }
 
     public MicroBlazeTraceStream(MicroBlazeELFProvider elfprovider) {
         super(new MicroBlazeTraceProducer(elfprovider));
-        this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfprovider);
+        // this.elfdump = MicroBlazeTraceStream.GDBbugHandle(elfprovider);
     }
 
     /**
@@ -60,17 +57,17 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
      */
     public MicroBlazeTraceStream(MicroBlazeDetailedTraceProducer prod) {
         super(prod);
-        var mprovid = (MicroBlazeELFProvider) prod.getApp().getELFProvider();
-        this.elfdump = new MicroBlazeELFDump(mprovid);
+        // var mprovid = (MicroBlazeELFProvider) prod.getApp().getELFProvider();
+        // this.elfdump = new MicroBlazeELFDump(mprovid);
     }
 
-    @Override
+    /*@Override
     public Instruction peekNext() {
         if (this.haveStoredInst)
             return this.afterbug;
         else
             return super.peekNext();
-    }
+    }*/
 
     /*
      * NOTE: this override will no longer be necessary once mg-gdb is bug free...

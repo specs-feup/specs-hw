@@ -1,13 +1,15 @@
 package org.specs.MicroBlaze.test.processes;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeQEMU;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniInt;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallInt;
 
-import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 
 public class MicroBlazeGDBRunTester {
@@ -34,24 +36,32 @@ public class MicroBlazeGDBRunTester {
      */
     @Test
     public void testRegister() {
-        var elf = MicroBlazePolyBenchSmallInt.lu;
-        // var elf = MicroBlazeLivermoreELFN100.matmul_N100;
-        var app = new MicroBlazeApplication(elf);
-        try (var gdb = GDBRun.newInstanceInteractive(app)) {
 
-            // launch QEMU, then GDB (on localhost:1234)
-            gdb.start();
+        var elfs = Arrays.asList(MicroBlazePolyBenchMiniInt.values());
+        // var elfs = Arrays.asList(MicroBlazePolyBenchSmallInt.lu);
 
-            // run until kernel start
-            gdb.runUntil(elf.getKernelStart().toString());
+        for (var elf : elfs) {
+            System.out.println("Testing run to end of " + elf.getELFName());
+            // var elf = MicroBlazePolyBenchSmallInt.lu;
+            // var elf = MicroBlazeLivermoreELFN100.matmul_N100;
+            var app = new MicroBlazeApplication(elf);
+            try (var gdb = GDBRun.newInstanceInteractive(app)) {
 
-            for (int i = 0; i < 200; i++) {
-                gdb.stepi();
-                var ret = gdb.getAddrAndInstruction();
-                if (ret == null)
-                    break;
+                // launch QEMU, then GDB (on localhost:1234)
+                gdb.start();
 
-                System.out.println(ret);
+                // run until kernel start
+                gdb.runUntil(elf.getKernelStart());
+                // gdb.runUntil("_exit");
+
+                for (int i = 0; i < 10; i++) {
+                    gdb.stepi();
+                    var ret = gdb.getAddrAndInstruction();
+                    if (ret == null)
+                        break;
+
+                    System.out.println(ret);
+                }
             }
         }
     }
@@ -77,21 +87,7 @@ public class MicroBlazeGDBRunTester {
         var elf = MicroBlazeLivermoreELFN100.matmul_N100;
         var app = new MicroBlazeApplication(elf);
 
-        try (var gdb = new GDBRun(app)) {
-
-            System.out.println(gdb.loadFile(app));
-
-            // copy dtb to local folder
-            var dtb = app.get(Application.BAREMETAL_DTB).write();
-
-            var remoteCommand = app.get(Application.QEMUEXE)
-                    + " -nographic -M microblaze-fdt-plnx -m 64 -display none"
-                    + " -kernel " + app.getElffile().getAbsolutePath().replace("\\", "/")
-                    + " -dtb " + dtb.getAbsolutePath().replace("\\", "/")
-                    + " -chardev stdio,mux=on,id=char0"
-                    + " -mon chardev=char0,mode=readline -serial chardev:char0 -gdb chardev:char0 -S";
-
-            System.out.println(gdb.launchTarget(remoteCommand));
+        try (var gdb = GDBRun.newInstanceInteractive(app)) {
 
             /* gdb.sendGDBCommand("while $pc != 0x80\nstepi 1\nx/x $pc\nend");
             

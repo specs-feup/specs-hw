@@ -39,7 +39,7 @@ public class MicroBlazeELFDumper {
 
             // run until kernel start
             gdb.start();
-            gdb.runUntil(elf.getKernelStart().toString());
+            gdb.runUntil(elf.getKernelStart());
 
             var fos = new FileWriter(outputname);
             var bw = new BufferedWriter(fos);
