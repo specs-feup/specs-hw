@@ -13,20 +13,26 @@ The framework uses a combination of QEMU and GBD to retrieve instruction traces.
 
 We target implementations on Xilinx development boards (mostly for R&D and testing purposes), so we must rely on Xilinx's [fork of QEMU](https://github.com/Xilinx/qemu.git), since the QEMU builds for MicroBlaze and ARM builds in this fork support additional machine types (e.g. *microblaze-fdt*, to support a baremetal device tree). To build the most recent version of QEMU for both targets, follow the next steps. 
 
-> git clone https://github.com/Xilinx/qemu.git
-> git checkout xilinx-v2021.1
+```
+git clone https://github.com/Xilinx/qemu.git
+git checkout xilinx-v2021.1
+```
 
 For Microblaze, configure with:
 
-> ./configure --target-list="microblazeel-softmmu" --prefix=<install dir>
-> make -i -j4
-> make install
+```
+./configure --target-list="microblazeel-softmmu" --prefix=<install dir>
+make -i -j4
+make install
+```
 
 For ARM (aarch64), configure with:
 
-> ./configure --target-list="aarch64-softmmu" --prefix=<install dir>
-> make -i -j4
-> make install
+```
+./configure --target-list="aarch64-softmmu" --prefix=<install dir>
+make -i -j4
+make install
+```
 
 Add the install paths to your PATH.
 
@@ -37,18 +43,28 @@ For binutils, its possible to use the builds packaged with Xilinx's tools (e.g.,
 Download and unzip everything. In folder *binutils-2_35*, do the following:
 
 For Microblaze, configure with:
->./configure -target="microblaze-xilinx-elf" --program-prefix=mb- --prefix=<install dir> --disable-werror
->
-> make -i -j4
->
-> make install
+
+```
+/configure -target="microblaze-xilinx-elf" --program-prefix=mb- --prefix=<install dir> --disable-werror
+make -i -j4
+make install
+```
 
 For ARM (aarch64), configure with:
->./configure -target="aarch64-xilinx-elf" --program-prefix=aarch64- --prefix=<install dir> --disable-werror
->
-> make -i -j4
->
-> make install
+
+```
+./configure -target="aarch64-xilinx-elf" --program-prefix=aarch64- --prefix=<install dir> --disable-werror
+make -i -j4
+make install
+```
+
+Note that between each configure and make, you must run:
+
+```
+make clean distclean
+```
+
+And you might also need to delete all *config.cache* files in subdirs.
 
 Add the install paths to your PATH.
 
@@ -56,17 +72,18 @@ Add the install paths to your PATH.
 
 The repository already has the DTBs that QEMU requires to execute, but here is how we generated them: we created an example Vivado 2021.1 project for the ZCU102 board, instantiated only a MicroBlaze with block rams and necessary components. Then we exported the XSA (hardware description file) via File->Export->Export Hardware. (The XSA file for the MicroBlaze is also included in the repo.) Then, we ran *xsct* and performed the following commands:
 
-> hsi open_hw_design mb_baremetal.xsa
->
-> hsi set_repo_path <path to device-tree-xnlx>
->
-> hsi create_sw_design device-tree -os device_tree -proc microblaze_0
->
-> hsi generate_target -dir .
+```
+hsi open_hw_design mb_baremetal.xsa
+hsi set_repo_path <path to device-tree-xnlx>
+hsi create_sw_design device-tree -os device_tree -proc microblaze_0
+hsi generate_target -dir .
+```
 
 This generates the a pl.dtsi file and a system-top.dts file. The system-top.dts file has a **SYNTAX ERROR**. The "#include" line should be "/include/". Change that. Then run:
 
-> dtc -I dts -O dtb -o system.dtb system-top.dts
+```
+dtc -I dts -O dtb -o system.dtb system-top.dts
+```
 
 All the ELF files for the MicroBlaze that are bundled with the repo were compiled for this hardware description.
 
