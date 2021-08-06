@@ -19,6 +19,8 @@ import pt.up.fe.specs.util.utilities.Replacer;
 public class QEMU implements AutoCloseable {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
+    private static int portInUse = 1234; // TODO: change the working port to allow for multiple qemus in separate
+                                         // threads
 
     private Process proc;
     private final List<String> args;

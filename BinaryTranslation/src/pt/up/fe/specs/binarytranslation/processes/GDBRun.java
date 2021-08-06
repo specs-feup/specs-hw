@@ -211,14 +211,23 @@ public class GDBRun extends StringProcessRun {
     /*
      * 
      */
-    public void runUntil(String hexaddr) {
+    public void runUntil(String namedtarget) {
         if (this.targetOpen) {
-            this.sendGDBCommand("break *" + hexaddr);
+            this.sendGDBCommand("break " + namedtarget);
             this.consumeAllGDBResponse(); // consume ack
             this.sendGDBCommand("c"); // continue
             while (!this.waitForGDB().contains("Breakpoint"))
                 ;
         }
+    }
+
+    public void runUntil(Long hexaddr) {
+        this.runUntil("*0x" + Long.toHexString(hexaddr));
+    }
+
+    public void runUntil(Number hexaddr) {
+        var val = hexaddr.longValue();
+        this.runUntil("*0x" + Long.toHexString(val));
     }
 
     /*
@@ -325,7 +334,7 @@ public class GDBRun extends StringProcessRun {
 
             var regAndValue = SpecsStrings.getRegex(line, REGPATTERN);
             var reg = regAndValue.get(0).trim();
-            var value = Long.valueOf(regAndValue.get(1).trim(), 16);
+            var value = Long.parseUnsignedLong(regAndValue.get(1).trim(), 16);
             dump.add(reg, value);
         }
 
