@@ -19,14 +19,15 @@ import pt.up.fe.specs.util.utilities.Replacer;
 public class QEMU implements AutoCloseable {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
-    private static int portInUse = 1234; // TODO: change the working port to allow for multiple qemus in separate
-                                         // threads
+    private static int portInUse = 1234;
 
+    private int port = 0;
     private Process proc;
     private final List<String> args;
 
     public QEMU(Application app) {
-        this.args = QEMU.getArgsList(app);
+        this.port = QEMU.portInUse++;
+        this.args = QEMU.getArgsList(app, this.port);
     }
 
     public void start() {
@@ -36,6 +37,10 @@ public class QEMU implements AutoCloseable {
         newArgs.add("-c");
         newArgs.add(args.stream().collect(Collectors.joining(" ")));
         this.proc = BinaryTranslationUtils.newProcess(new ProcessBuilder(newArgs));
+    }
+
+    public int getPort() {
+        return port;
     }
 
     /*
@@ -55,7 +60,7 @@ public class QEMU implements AutoCloseable {
     /*
      * 
      */
-    private static List<String> getArgsList(Application app) {
+    private static List<String> getArgsList(Application app, int port) {
 
         // template as string
         var qemutmpl = app.get(Application.QEMU_ARGS_TEMPLATE).read();
@@ -70,6 +75,7 @@ public class QEMU implements AutoCloseable {
         var qemuArgs = new Replacer(qemutmpl);
         qemuArgs.replace("<ELFNAME>", elfpath);
         qemuArgs.replace("<QEMUBIN>", qemuexe);
+        qemuArgs.replace("<PORT>", port);
 
         var dtbResourceProvider = app.get(Application.BAREMETAL_DTB);
         if (dtbResourceProvider != null) {

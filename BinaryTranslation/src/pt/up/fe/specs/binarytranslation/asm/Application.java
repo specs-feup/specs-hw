@@ -23,9 +23,7 @@ import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.ResourceProvider;
-import pt.up.fe.specs.util.utilities.Replacer;
 
 public abstract class Application extends ADataClass<Application> {
 
@@ -87,38 +85,5 @@ public abstract class Application extends ADataClass<Application> {
      */
     public int getInstructionWidth() {
         return 4; // return in bytes
-    }
-
-    /*
-     * 
-     */
-    public File getGDBScriptInteractive() {
-        return Application.getGDBScript(this, get(GDBTMPLINTER));
-    }
-
-    /*
-     * 
-     */
-    public File getGDBScriptNonInteractive() {
-        return Application.getGDBScript(this, get(GDBTMPLNONINTER));
-    }
-
-    /*
-     * 
-     */
-    private static File getGDBScript(Application app, ResourceProvider gdbtmpl) {
-
-        var elfpath = app.getElffile().getAbsolutePath();
-        var gdbScript = new Replacer(gdbtmpl);
-        gdbScript.replace("<ELFNAME>", elfpath);
-
-        if (IS_WINDOWS)
-            gdbScript.replace("<KILL>", "");
-        else
-            gdbScript.replace("<KILL>", "kill");
-
-        var fd = new File("tmpscript.gdb");
-        SpecsIo.write(fd, gdbScript.toString());
-        return fd;
     }
 }

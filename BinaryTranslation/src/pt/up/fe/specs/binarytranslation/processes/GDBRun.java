@@ -9,7 +9,10 @@ import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
+import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
+import pt.up.fe.specs.util.providers.ResourceProvider;
+import pt.up.fe.specs.util.utilities.Replacer;
 
 /**
  * Represents an interactive underlying GDB + QEMU process
@@ -49,14 +52,14 @@ public class GDBRun extends StringProcessRun {
      * 
      */
     public GDBRun(Application app) {
-        this(app, null, true);
+        this(app, null, null, true);
     }
 
     /*
      * NOTE: For windows, the run environment should have this var set SET HOME=%USERPROFILE%
      * in case gdb is called from a prompt which is not MSYS (which is what happens when running via Eclipse)
      */
-    private GDBRun(Application app, File scriptFile, boolean amInteractiveRun) {
+    private GDBRun(Application app, File scriptFile, QEMU qemu, boolean amInteractiveRun) {
 
         super(GDBRun.getArgs(app, scriptFile));
         this.amInteractiveRun = amInteractiveRun;
@@ -65,21 +68,55 @@ public class GDBRun extends StringProcessRun {
          * QEMU will wait on localhost:1234 
          * See: https://qemu-project.gitlab.io/qemu/system/gdb.html
          */
-        this.qemurun = new QEMU(app);
+        if (qemu == null)
+            this.qemurun = new QEMU(app);
+        else
+            this.qemurun = qemu;
+    }
+
+    /*
+     * Newinstance
+     */
+    private static GDBRun newInstance(Application app,
+            ResourceProvider gdbtmpl, boolean amInteractiveRun) {
+        var qemurun = new QEMU(app);
+        var elfname = app.getElffile().getAbsolutePath();
+        return new GDBRun(app,
+                GDBRun.getGDBScript(gdbtmpl, elfname, qemurun.getPort()),
+                qemurun, amInteractiveRun);
     }
 
     /*
      * Newinstance
      */
     public static GDBRun newInstanceFreeRun(Application app) {
-        return new GDBRun(app, app.getGDBScriptNonInteractive(), false);
+        return GDBRun.newInstance(app, app.get(Application.GDBTMPLNONINTER), false);
     }
 
     /*
      * Newinstance
      */
     public static GDBRun newInstanceInteractive(Application app) {
-        return new GDBRun(app, app.getGDBScriptInteractive(), true);
+        return GDBRun.newInstance(app, app.get(Application.GDBTMPLINTER), true);
+    }
+
+    /*
+     * 
+     */
+    private static File getGDBScript(ResourceProvider gdbtmpl, String elfpath, int qemuport) {
+
+        var gdbScript = new Replacer(gdbtmpl);
+        gdbScript.replace("<ELFNAME>", elfpath);
+        gdbScript.replace("<PORT>", qemuport);
+
+        if (IS_WINDOWS)
+            gdbScript.replace("<KILL>", "");
+        else
+            gdbScript.replace("<KILL>", "kill");
+
+        var fd = new File("tmpscript.gdb");
+        SpecsIo.write(fd, gdbScript.toString());
+        return fd;
     }
 
     @Override
