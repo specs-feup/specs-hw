@@ -2,6 +2,7 @@ package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallInt;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -43,7 +44,7 @@ public class MicroBlazeStreamTester {
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
-                new MicroBlazeTraceStream(MicroBlazeLivermoreELFN10.innerprod));
+                new MicroBlazeTraceStream(MicroBlazePolyBenchSmallInt.floydwarshall));
     }
 
     @Test

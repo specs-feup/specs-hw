@@ -29,7 +29,9 @@
 			i-cache-line-size = <0x10>;
 			i-cache-size = <0x2000>;
 			interrupt-handle = <&axi_intc_0>;
+			memory = <&microblaze_0_local_memory>;			
 			model = "microblaze,11.0";
+			version = "11.0";
 			reg = <0>;
 			timebase-frequency = <100000000>;
 			xlnx,addr-size = <0x20>;
@@ -152,6 +154,14 @@
 			xlnx,use-stack-protection = <0x0>;
 		};
 	};
+	
+	microblaze_0_local_memory: memory@0 {
+		device_type = "memory";
+		reg = <0x00 0x1FFFF>;
+		linux,phandle = <0x04>;
+		phandle = <0x04>;
+	};	
+	
 	clocks {
 		#address-cells = <1>;
 		#size-cells = <0>;

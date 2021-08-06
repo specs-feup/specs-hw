@@ -1,1 +1,1 @@
-<QEMUBIN> -nographic -M microblaze-fdt-plnx -m 64 -display none -kernel <ELFNAME> -dtb <DTBFILE> -s -S
+<QEMUBIN> -nographic -M microblaze-fdt-plnx -m 128 -display none -kernel <ELFNAME> -dtb <DTBFILE> -s -S
