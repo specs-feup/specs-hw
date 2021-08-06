@@ -38,7 +38,7 @@ public class ArmGDBRunTester {
             }*/
 
             // run until kernel start
-            gdb.runUntil(elf.getKernelStart().toString());
+            gdb.runUntil(elf.getKernelStart());
 
             // stepi
             for (int i = 0; i < 50; i++) {
