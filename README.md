@@ -38,12 +38,16 @@ Download and unzip everything. In folder *binutils-2_35*, do the following:
 
 For Microblaze, configure with:
 >./configure -target="microblaze-xilinx-elf" --program-prefix=mb- --prefix=<install dir> --disable-werror
+>
 > make -i -j4
+>
 > make install
 
 For ARM (aarch64), configure with:
 >./configure -target="aarch64-xilinx-elf" --program-prefix=aarch64- --prefix=<install dir> --disable-werror
+>
 > make -i -j4
+>
 > make install
 
 Add the install paths to your PATH.
@@ -53,8 +57,11 @@ Add the install paths to your PATH.
 The repository already has the DTBs that QEMU requires to execute, but here is how we generated them: we created an example Vivado 2021.1 project for the ZCU102 board, instantiated only a MicroBlaze with block rams and necessary components. Then we exported the XSA (hardware description file) via File->Export->Export Hardware. (The XSA file for the MicroBlaze is also included in the repo.) Then, we ran *xsct* and performed the following commands:
 
 > hsi open_hw_design mb_baremetal.xsa
+>
 > hsi set_repo_path <path to device-tree-xnlx>
+>
 > hsi create_sw_design device-tree -os device_tree -proc microblaze_0
+>
 > hsi generate_target -dir .
 
 This generates the a pl.dtsi file and a system-top.dts file. The system-top.dts file has a **SYNTAX ERROR**. The "#include" line should be "/include/". Change that. Then run:
