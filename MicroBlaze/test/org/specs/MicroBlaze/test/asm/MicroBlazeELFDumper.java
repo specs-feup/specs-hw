@@ -5,11 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
-import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallInt;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniInt;
 
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.processes.ObjDump;
@@ -44,8 +46,8 @@ public class MicroBlazeELFDumper {
             var fos = new FileWriter(outputname);
             var bw = new BufferedWriter(fos);
 
-            for (int i = 0; i < 10; i++) {
-                // for (int i = 0; i < 100000; i++) {
+            // for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 100000; i++) {
                 gdb.stepi();
                 var instlline = gdb.getAddrAndInstruction();
                 if (instlline == null)
@@ -70,13 +72,40 @@ public class MicroBlazeELFDumper {
     public void dumpELFstoFiles() {
 
         // var elfs = Arrays.asList(MicroBlazeLivermoreELFN100.values());
-        var elfs = Arrays.asList(MicroBlazePolyBenchSmallInt.values());
+        var elfs = Arrays.asList(MicroBlazePolyBenchMiniInt.values());
         // var elfs = Arrays.asList(MicroBlazePolyBenchSmallInt.lu);
 
         for (var elf : elfs) {
             System.out.println("Dumping " + elf.getELFName());
             dumpELFStatic(elf);
             dumpELFTrace(elf);
+        }
+    }
+
+    @Test
+    public void parallelDump() {
+
+        var elfs = Arrays.asList(MicroBlazePolyBenchMiniInt.values());
+        var exec = Executors.newFixedThreadPool(elfs.size());
+
+        for (var elf : elfs) {
+
+            try {
+                exec.execute(() -> this.dumpELFTrace(elf));
+                TimeUnit.SECONDS.sleep(2);
+
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            exec.awaitTermination(1, TimeUnit.HOURS);
+
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 }
