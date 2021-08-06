@@ -11,7 +11,7 @@ public enum ArmResource implements ResourceProvider {
     // One thing to remember is that the libusb libs that come with Vivado are probably meant to be used with
     // the QEMU versions found in https://github.com/Xilinx/qemu
     // That is, if you checkout a new QEMU build, you may need to install the lastest vivado, or at least
-    // force QEMU to rely on system libs!
+    // 624force QEMU to rely on system libs!
     // Regardless, in order to make the trace stream for aarch64 work currently:
     // 1. Source Vivado settings script
     // 2. run "unset LD_LIBRARY_PATH"

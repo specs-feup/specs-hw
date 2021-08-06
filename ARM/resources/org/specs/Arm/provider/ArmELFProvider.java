@@ -10,6 +10,16 @@ public interface ArmELFProvider extends ELFProvider {
     final static String PREFIX = "org/specs/Arm/asm/";
 
     @Override
+    default ArmELFProvider asTraceTxtDump() {
+        return new ArmObjDumpProvider(this);
+    }
+
+    @Override
+    default ArmELFProvider asTxtDump() {
+        return new ArmObjDumpProvider(this);
+    }
+
+    @Override
     default Application toApplication() {
         return new ArmApplication(this);
     }
