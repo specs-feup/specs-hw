@@ -13,9 +13,6 @@ import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -246,13 +243,13 @@ public class BinaryTranslationUtils {
 
     /*.
      * Output compilation flags for a given elf, using a given variant of a GNU based "readelf"
-     */
+     
     public static String getCompilationInfo(File elfname, String readelbinary) {
-
+    
         // assume that windows doesnt have tools
         // if (BinaryTranslationUtils.IS_WINDOWS)
         // return "GNU tools unavailable to extract compilation information!";
-
+    
         // call readelf
         List<String> arguments = null;
         if (IS_WINDOWS) {
@@ -260,13 +257,13 @@ public class BinaryTranslationUtils {
             var internalcmd = readelbinary + " -wi "
                     + elfname.getAbsolutePath() + "| findstr /irc:DW_AT_producer";
             arguments = Arrays.asList("cmd.exe", "/C", internalcmd);
-
+    
         } else {
             var internalcmd = readelbinary + " -wi "
                     + elfname.getAbsolutePath() + " | grep -i compilation -A6";
             arguments = Arrays.asList("/bin/bash", "-c", internalcmd);
         }
-
+    
         ProcessBuilder pb = new ProcessBuilder(arguments);
         var output = BinaryTranslationUtils.getAllOutput(pb);
         Pattern pat = Pattern.compile("GNU.*");
@@ -275,7 +272,7 @@ public class BinaryTranslationUtils {
             return mat.group(0);
         else
             return "Could not retrieve build information!";
-    }
+    }*/
 
     /*
      * 

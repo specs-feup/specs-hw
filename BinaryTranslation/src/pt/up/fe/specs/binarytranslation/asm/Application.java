@@ -14,18 +14,25 @@
 package pt.up.fe.specs.binarytranslation.asm;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import org.suikasoft.jOptions.DataStore.ADataClass;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
+import org.suikasoft.jOptions.Interfaces.DataStore;
 
 import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.util.SpecsStrings;
+import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public abstract class Application extends ADataClass<Application> {
+
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 
     public static final DataKey<String> CPUNAME = KeyFactory.string("CPUNAME");
     public static final DataKey<String> QEMUEXE = KeyFactory.string("QEMUEXE");
@@ -42,22 +49,100 @@ public abstract class Application extends ADataClass<Application> {
     public static final DataKey<ResourceProvider> QEMU_ARGS_TEMPLATE = KeyFactory.object("QEMU_ARGS_TEMPLATE",
             ResourceProvider.class);
 
-    private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
-
     @Expose
     private final String appName;
 
     @Expose
-    private final String compilationInfo;
+    protected String compilationInfo;
 
     private final ELFProvider elf;
     private final transient File elffile;
+    private final int kernelStart, kernelStop;
 
-    public Application(ELFProvider elf) {
+    public Application(ELFProvider elf, DataStore data) {
         this.elf = elf;
         this.elffile = elf.getFile();
         this.appName = elffile.getName();
-        this.compilationInfo = BinaryTranslationUtils.getCompilationInfo(elffile, get(READELF));
+        this.getDataStore().addAll(data);
+        this.compilationInfo = Application.getCompilationInfo(this, elf);
+        var startStop = Application.getKernelBounds(this, elf);
+        this.kernelStart = startStop.get(0);
+        this.kernelStop = startStop.get(1);
+    }
+
+    /*
+     * 
+     */
+    private static final String SYMBOLPATTERN = "([0-9a-f]+)[ a-zA-Z]*\\.text\\s([0-9a-f]+)\\s";
+
+    /*.
+     * get kernel bounds based on kernel name in enum, using "objdump -t <elfname> | grep <kernelname>"
+     */
+    protected static List<Integer> getKernelBounds(Application app, ELFProvider elf) {
+
+        // call objdump
+        var arguments = new ArrayList<String>();
+        var objdump = app.get(Application.OBJDUMP);
+        var elfpath = app.getElffile().getAbsolutePath();
+
+        if (IS_WINDOWS)
+            objdump = objdump + ".exe";
+
+        arguments.add(objdump);
+        arguments.add("-t");
+        arguments.add(elfpath);
+        arguments.add("|");
+
+        var nameNoExt = elf.getFunctionName(); // SpecsIo.removeExtension(elf.getELFName());
+        if (IS_WINDOWS)
+            arguments.add("findstr " + nameNoExt);
+        else
+            arguments.add("grep -w " + nameNoExt);
+
+        var output = SpecsSystem.runProcess(arguments, true, false);
+
+        var pat = Pattern.compile(SYMBOLPATTERN + nameNoExt);
+        var mat = pat.matcher(output.toString());
+
+        var startStop = new ArrayList<Integer>();
+        if (mat.find()) {
+            var startStopList = SpecsStrings.getRegex(mat.group(0), pat);
+            startStop.add(Integer.valueOf(startStopList.get(0), 16));
+            startStop.add(startStop.get(0) + Integer.valueOf(startStopList.get(1), 16) - 4);
+        }
+
+        return startStop;
+    }
+
+    /*.
+     * Output compilation flags for a given elf, using a given variant of a GNU based "readelf"
+     */
+    protected static String getCompilationInfo(Application app, ELFProvider elf) {
+
+        // call readelf
+        var arguments = new ArrayList<String>();
+        var readelf = app.get(Application.READELF);
+        var elfpath = app.getElffile().getAbsolutePath();
+        if (IS_WINDOWS)
+            readelf = readelf + ".exe";
+
+        arguments.add(readelf);
+        arguments.add("-wi");
+        arguments.add(elfpath);
+        arguments.add("|");
+
+        if (IS_WINDOWS)
+            arguments.add("findstr /irc:DW_AT_producer");
+        else
+            arguments.add("grep -i compilation -A6");
+
+        var output = SpecsSystem.runProcess(arguments, true, false);
+        var pat = Pattern.compile("GNU.*");
+        var mat = pat.matcher(output.toString());
+        if (mat.find())
+            return mat.group(0);
+        else
+            return "Could not retrieve build information!";
     }
 
     public String getAppName() {
@@ -74,6 +159,14 @@ public abstract class Application extends ADataClass<Application> {
 
     public String getCompilationInfo() {
         return compilationInfo;
+    }
+
+    public int getKernelStart() {
+        return kernelStart;
+    }
+
+    public int getKernelStop() {
+        return kernelStop;
     }
 
     /*

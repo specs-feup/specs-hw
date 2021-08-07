@@ -23,6 +23,10 @@ public interface ELFProvider extends ResourceProvider {
         throw new NotImplementedException("toApplication()");
     }
 
+    default public String getFunctionName() {
+        return SpecsIo.removeExtension(this.getELFName());
+    }
+
     public String getELFName();
 
     public Number getKernelStart();
