@@ -22,7 +22,7 @@ public enum ArmResource implements ResourceProvider {
 
     GDBINTERACTIVE_TEMPLATE("org/specs/Arm/gdb/qemutmpl.gdb"),
     GDBNONINTERACTIVE_TEMPLATE("org/specs/Arm/gdb/qemutmpl_noninteractive.gdb"),
-    QEMU_AARCH64_BAREMETAL_DTB("org/specs/Arm/qemu/zcu102-arm.dtb"),
+    BAREMETAL_DTB("org/specs/Arm/qemu/zcu102-arm.dtb"),
     QEMU_ARGS_TEMPLATE("org/specs/Arm/qemu/QEMUArgsArm");
     // <QEMUBIN> -nographic -M arm-generic-fdt -dtb <DTBFILE> -device loader,file=<ELFNAME>,cpu-num=0
     // -device loader,addr=0xfd1a0104,data=0x8000000e,data-len=4 -s -S
