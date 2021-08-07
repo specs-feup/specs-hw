@@ -9,7 +9,7 @@ package org.specs.MicroBlaze.provider;
 public enum MicroBlazeLivermoreELFN10 implements MicroBlazeELFProvider {
 
     cholesky(0x4b54, 0x4c44),
-    diffpredict(0x2ec8, 0x3008),
+    diffpredict("difference_predictors", 0x2ec8, 0x3008),
     // glinearrec("glinearrec.elf", 0x2dac, 0x5698), // linrecurrence? (there are
     // 2 linear
     // recurrence kernels)
@@ -25,11 +25,20 @@ public enum MicroBlazeLivermoreELFN10 implements MicroBlazeELFProvider {
     state_frag(0x4c48, 0x4d7c),
     tri_diag(0x5510, 0x55b0);
 
+    private String functionName;
     private String elfName;
     private Number kernelStart;
     private Number kernelStop;
 
+    private MicroBlazeLivermoreELFN10(String functionName, Number kernelStart, Number kernelStop) {
+        this.functionName = functionName;
+        this.elfName = name() + ".elf";
+        this.kernelStart = kernelStart;
+        this.kernelStop = kernelStop;
+    }
+
     private MicroBlazeLivermoreELFN10(Number kernelStart, Number kernelStop) {
+        this.functionName = name();
         this.elfName = name() + ".elf";
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
@@ -48,5 +57,10 @@ public enum MicroBlazeLivermoreELFN10 implements MicroBlazeELFProvider {
     @Override
     public String getELFName() {
         return this.elfName;
+    }
+
+    @Override
+    public String getFunctionName() {
+        return this.functionName;
     }
 }

@@ -35,7 +35,7 @@ public class MicroBlazeCustomInstructionUnitGeneratorTester {
 
         // get static frequent sequence bundle
         var bunds = ThreadedSegmentDetectUtils.getSegments(
-                MicroBlazeLivermoreELFN100.innerprod_N100, 2, 4,
+                MicroBlazeLivermoreELFN100.innerprod, 2, 4,
                 MicroBlazeTraceProducer.class,
                 MicroBlazeTraceStream.class,
                 FrequentTraceSequenceDetector.class);
@@ -71,12 +71,12 @@ public class MicroBlazeCustomInstructionUnitGeneratorTester {
     public void testCustomUnitGenerate() {
 
         // get static frequent sequence bundle
-        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN100.cholesky_N100,
+        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN100.cholesky,
                 MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class,
                 (new DetectorConfigurationBuilder()
                         .withMaxWindow(5)
-                        .withStartAddr(MicroBlazeLivermoreELFN100.cholesky_N100.getKernelStart())
-                        .withStopAddr(MicroBlazeLivermoreELFN100.cholesky_N100.getKernelStop()))
+                        .withStartAddr(MicroBlazeLivermoreELFN100.cholesky.getKernelStart())
+                        .withStopAddr(MicroBlazeLivermoreELFN100.cholesky.getKernelStop()))
                                 .build());
 
         // transform into graph bundle

@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.specs.MicroBlaze.MicroBlazeQEMU;
 import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniInt;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallInt;
@@ -71,7 +72,7 @@ public class MicroBlazeGDBRunTester {
      */
     @Test
     public void testScript() {
-        var elf = MicroBlazeLivermoreELFN100.matmul_N100;
+        var elf = MicroBlazeLivermoreELFN100.matmul;
         var app = new MicroBlazeApplication(elf);
         try (var gdb = GDBRun.newInstanceFreeRun(app)) {
 
@@ -84,7 +85,7 @@ public class MicroBlazeGDBRunTester {
 
     @Test
     public void test() {
-        var elf = MicroBlazeLivermoreELFN100.matmul_N100;
+        var elf = MicroBlazeLivermoreELFN100.matmul;
         var app = new MicroBlazeApplication(elf);
 
         try (var gdb = GDBRun.newInstanceInteractive(app)) {
@@ -116,6 +117,18 @@ public class MicroBlazeGDBRunTester {
     }
 
     @Test
+    public void testStartStopAddrReading() {
+        var elfs = MicroBlazeLivermoreELFN10.values();
+
+        for (var elf : elfs) {
+            var app = new MicroBlazeApplication(elf);
+            // System.out.println(app.getCompilationInfo());
+            System.out.print("0x" + Integer.toHexString(app.getKernelStart()) + " - ");
+            System.out.println("0x" + Integer.toHexString(app.getKernelStop()));
+        }
+    }
+
+    @Test
     public void testQEMU() {
 
         // try (var qemu = new MicroBlazeQEMU(new MicroBlazeApplication(MicroBlazeLivermoreELFN100.matmul_N100))) {
@@ -127,7 +140,7 @@ public class MicroBlazeGDBRunTester {
 
     @Test
     public void testELFDump() {
-        var dump = new MicroBlazeELFDump(MicroBlazeLivermoreELFN100.matmul_N100);
+        var dump = new MicroBlazeELFDump(MicroBlazeLivermoreELFN100.matmul);
         System.out.println(dump.getInstruction(Long.valueOf("80", 16)));
     }
 }
