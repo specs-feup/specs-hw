@@ -33,19 +33,14 @@ public enum RiscvPolyBenchSmallInt implements RiscvELFProvider {
     trisolv("org/specs/RISCV/asm/PolybenchSmallInt/trisolv.elf", 0x8000013cL, 0x800001C8L),
     trmm("org/specs/RISCV/asm/PolybenchSmallInt/trmm.elf", 0x80000194L, 0x8000025CL);
 
-    private String fullPath;
+    private String elfName;
     private Number kernelStart;
     private Number kernelStop;
 
-    private RiscvPolyBenchSmallInt(String fullPath, Number kernelStart, Number kernelStop) {
-        this.fullPath = fullPath;
+    private RiscvPolyBenchSmallInt(String elfName, Number kernelStart, Number kernelStop) {
+        this.elfName = elfName;
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
-    }
-
-    @Override
-    public String asTxtDump() {
-        return this.fullPath.replace(".elf", ".txt");
     }
 
     @Override
@@ -59,12 +54,7 @@ public enum RiscvPolyBenchSmallInt implements RiscvELFProvider {
     }
 
     @Override
-    public String getResource() {
-        return this.fullPath;
-    }
-
-    @Override
-    public String asTraceTxtDump() {
-        return this.fullPath.replace(".elf", "_trace.txt");
+    public String getELFName() {
+        return this.elfName;
     }
 }
