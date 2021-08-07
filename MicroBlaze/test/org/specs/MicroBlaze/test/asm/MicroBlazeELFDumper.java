@@ -47,7 +47,7 @@ public class MicroBlazeELFDumper {
             var bw = new BufferedWriter(fos);
 
             // for (int i = 0; i < 10; i++) {
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < 100; i++) {
                 gdb.stepi();
                 var instlline = gdb.getAddrAndInstruction();
                 if (instlline == null)
@@ -69,7 +69,7 @@ public class MicroBlazeELFDumper {
     }
 
     @Test
-    public void dumpELFstoFiles() {
+    public void sequentialDump() {
 
         // var elfs = Arrays.asList(MicroBlazeLivermoreELFN100.values());
         var elfs = Arrays.asList(MicroBlazePolyBenchMiniInt.values());
@@ -77,7 +77,7 @@ public class MicroBlazeELFDumper {
 
         for (var elf : elfs) {
             System.out.println("Dumping " + elf.getELFName());
-            dumpELFStatic(elf);
+            // dumpELFStatic(elf);
             dumpELFTrace(elf);
         }
     }
@@ -92,7 +92,7 @@ public class MicroBlazeELFDumper {
 
             try {
                 exec.execute(() -> this.dumpELFTrace(elf));
-                TimeUnit.SECONDS.sleep(2);
+                TimeUnit.SECONDS.sleep(1);
 
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
@@ -101,6 +101,7 @@ public class MicroBlazeELFDumper {
         }
 
         try {
+            exec.shutdown();
             exec.awaitTermination(1, TimeUnit.HOURS);
 
         } catch (InterruptedException e) {
