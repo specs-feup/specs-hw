@@ -80,9 +80,8 @@ public class GDBRun extends StringProcessRun {
     private static GDBRun newInstance(Application app,
             ResourceProvider gdbtmpl, boolean amInteractiveRun) {
         var qemurun = new QEMU(app);
-        var elfname = app.getElffile().getAbsolutePath();
         return new GDBRun(app,
-                GDBRun.getGDBScript(gdbtmpl, elfname, qemurun.getPort()),
+                GDBRun.getGDBScript(gdbtmpl, app, qemurun.getPort()),
                 qemurun, amInteractiveRun);
     }
 
@@ -103,8 +102,9 @@ public class GDBRun extends StringProcessRun {
     /*
      * 
      */
-    private static File getGDBScript(ResourceProvider gdbtmpl, String elfpath, int qemuport) {
+    private static File getGDBScript(ResourceProvider gdbtmpl, Application app, int qemuport) {
 
+        var elfpath = app.getElffile().getAbsolutePath();
         var gdbScript = new Replacer(gdbtmpl);
         gdbScript.replace("<ELFNAME>", elfpath);
         gdbScript.replace("<PORT>", qemuport);
@@ -114,8 +114,11 @@ public class GDBRun extends StringProcessRun {
         else
             gdbScript.replace("<KILL>", "kill");
 
-        var fd = new File("tmpscript.gdb");
+        var appname = app.getELFProvider().getELFName().replace(".elf", "");
+        var cpuname = app.get(Application.CPUNAME);
+        var fd = new File("tmpscript_" + cpuname + "_" + appname + "port" + qemuport + ".gdb");
         SpecsIo.write(fd, gdbScript.toString());
+        fd.deleteOnExit();
         return fd;
     }
 
