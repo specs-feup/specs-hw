@@ -2,7 +2,9 @@ package pt.up.fe.specs.binarytranslation.processes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -19,14 +21,21 @@ import pt.up.fe.specs.util.utilities.Replacer;
 public class QEMU implements AutoCloseable {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
-    private static int portInUse = 1234;
+    private static Set<Integer> portsInUse = new HashSet<Integer>();
 
-    private int port = 0;
+    private Integer port = 0;
     private Process proc;
     private final List<String> args;
 
     public QEMU(Application app) {
-        this.port = QEMU.portInUse++;
+        // find lowest available port starting from 1234
+        var tryport = Integer.valueOf(1234);
+        while (portsInUse.contains(tryport)) {
+            tryport = Integer.valueOf(tryport.intValue() + 1);
+        }
+        portsInUse.add(tryport);
+
+        this.port = tryport;
         this.args = QEMU.getArgsList(app, this.port);
     }
 
@@ -40,7 +49,7 @@ public class QEMU implements AutoCloseable {
     }
 
     public int getPort() {
-        return port;
+        return port.intValue();
     }
 
     /*
@@ -49,6 +58,7 @@ public class QEMU implements AutoCloseable {
     @Override
     public void close() {
         try {
+            portsInUse.remove(this.port);
             if (!this.proc.waitFor(200, TimeUnit.MILLISECONDS))
                 proc.destroy();
         } catch (InterruptedException e) {
