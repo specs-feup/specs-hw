@@ -2,8 +2,6 @@ package org.specs.Riscv.test.stream;
 
 import org.junit.Test;
 import org.specs.Riscv.provider.RiscvLivermoreELFN100iam;
-import org.specs.Riscv.provider.RiscvLivermoreELFN100iamf;
-import org.specs.Riscv.provider.RiscvPolyBenchSmallInt;
 import org.specs.Riscv.stream.RiscvElfStream;
 import org.specs.Riscv.stream.RiscvTraceStream;
 
@@ -14,28 +12,36 @@ public class RiscvElfStreamTester {
     @Test
     public void testStatic() {
         InstructionStreamTestUtils.printStream(
-                RiscvLivermoreELFN100iam.pic2d100, RiscvElfStream.class);
+                new RiscvElfStream(RiscvLivermoreELFN100iam.innerprod100));
     }
 
     @Test
     public void testStaticRaw() {
         InstructionStreamTestUtils.rawDump(
-                RiscvLivermoreELFN100iamf.innerprod100, RiscvElfStream.class);
+                new RiscvElfStream(RiscvLivermoreELFN100iam.innerprod100));
+    }
+
+    @Test
+    public void testStaticRawFromTxtDump() {
+        InstructionStreamTestUtils.rawDump(
+                new RiscvElfStream(RiscvLivermoreELFN100iam.innerprod100.asTxtDump()));
     }
 
     @Test
     public void testTrace() {
         InstructionStreamTestUtils.printStream(
-                RiscvPolyBenchSmallInt.gemm, RiscvTraceStream.class);
-        // RiscvLivermoreELFN100iam.innerprod100, RiscvTraceStream.class);
-        // RiscvLivermoreELFN100iamf.innerprod100.getResource(), RiscvTraceStream.class);
+                new RiscvTraceStream(RiscvLivermoreELFN100iam.innerprod100));
     }
 
     @Test
     public void testTraceRaw() {
         InstructionStreamTestUtils.rawDump(
-                RiscvPolyBenchSmallInt.gemm, RiscvTraceStream.class);
-        // RiscvLivermoreELFN100iamf.cholesky100, RiscvTraceStream.class);
+                new RiscvTraceStream(RiscvLivermoreELFN100iam.innerprod100));
     }
 
+    @Test
+    public void testTraceRawFromTxtDump() {
+        InstructionStreamTestUtils.rawDump(
+                new RiscvTraceStream(RiscvLivermoreELFN100iam.innerprod100.asTraceTxtDump()));
+    }
 }

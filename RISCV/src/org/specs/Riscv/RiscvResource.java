@@ -6,12 +6,9 @@ public enum RiscvResource implements ResourceProvider {
 
     // NEW: https://stackoverflow.com/questions/55189463/how-to-debug-cross-compiled-qemu-program-with-gdb
 
-    RISCV_CPU_NAME("riscv"),
-
-    QEMU_RISCV_GDB_TEMPLATE("org/specs/Riscv/gdb/qemutmpl.gdb"),
-    QEMU_RISCV_GDBNONINTERACTIVE_TEMPLATE("org/specs/Riscv/gdb/qemutmpl_nointeractive.gdb"),
-    QEMU_RISCV_BAREMETAL_DTB(""),
-    QEMU_RISCV_EXE("qemu-system-riscv32"),
+    GDBINTERACTIVE_TEMPLATE("org/specs/Riscv/gdb/qemutmpl.gdb"),
+    GDBNONINTERACTIVE_TEMPLATE("org/specs/Riscv/gdb/qemutmpl_nointeractive.gdb"),
+    QEMU_ARGS_TEMPLATE("org/specs/Riscv/qemu/QEMUArgsRiscv");
     // SIVIFE: https://www.sifive.com/blog/risc-v-qemu-part-2-the-risc-v-qemu-port-is-upstream
     // The virt machine models a Generic RISC-V Virtual machine with support for the VirtIO standard networking and
     // block storage devices. It has CLINT, PLIC, 16550A UART devices in addition to VirtIO and it also uses device-tree
@@ -32,11 +29,6 @@ public enum RiscvResource implements ResourceProvider {
     // https://twilco.github.io/riscv-from-scratch/2019/04/27/riscv-from-scratch-2.html#link-it-up
 
     // other resources: https://github.com/michaeljclark/riscv-probe/tree/master/libfemto
-
-    RISCV_GCC("riscv32-unknown-elf-gcc"),
-    RISCV_GDB("riscv32-unknown-elf-gdb"),
-    RISCV_READELF("riscv32-unknown-elf-readelf"),
-    RISCV_OBJDUMP("riscv32-unknown-elf-objdump");
 
     private final String resource;
 

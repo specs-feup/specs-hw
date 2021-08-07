@@ -23,19 +23,14 @@ public enum RiscvLivermoreELFN100iamf implements RiscvELFProvider {
     state_frag100("org/specs/Riscv/asm/N100iamf/state_frag_N100iamf.elf", 0x8000314cL, 0x80003264L),
     tri_diag100("org/specs/Riscv/asm/N100iamf/tri_diag_N100iamf.elf", 0x80002c6cL, 0x80002d34L);
 
-    private String fullPath;
+    private String elfName;
     private Number kernelStart;
     private Number kernelStop;
 
-    private RiscvLivermoreELFN100iamf(String fullPath, Number kernelStart, Number kernelStop) {
-        this.fullPath = fullPath;
+    private RiscvLivermoreELFN100iamf(String elfName, Number kernelStart, Number kernelStop) {
+        this.elfName = elfName;
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
-    }
-
-    @Override
-    public String asTxtDump() {
-        return this.fullPath.replace(".elf", ".txt");
     }
 
     @Override
@@ -49,12 +44,7 @@ public enum RiscvLivermoreELFN100iamf implements RiscvELFProvider {
     }
 
     @Override
-    public String getResource() {
-        return this.fullPath;
-    }
-
-    @Override
-    public String asTraceTxtDump() {
-        return this.fullPath.replace(".elf", "_trace.txt");
+    public String getELFName() {
+        return this.elfName;
     }
 }

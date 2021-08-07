@@ -4,19 +4,14 @@ public enum RiscvGccELF implements RiscvELFProvider {
 
     autocor("org/specs/Riscv/asm/GCC/autocor.elf", null, null);
 
-    private String fullPath;
+    private String elfName;
     private Number kernelStart;
     private Number kernelStop;
 
-    private RiscvGccELF(String fullPath, Number kernelStart, Number kernelStop) {
-        this.fullPath = fullPath;
+    private RiscvGccELF(String elfName, Number kernelStart, Number kernelStop) {
+        this.elfName = elfName;
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
-    }
-
-    @Override
-    public String asTxtDump() {
-        return this.fullPath.replace(".elf", ".txt");
     }
 
     @Override
@@ -30,12 +25,7 @@ public enum RiscvGccELF implements RiscvELFProvider {
     }
 
     @Override
-    public String getResource() {
-        return this.fullPath;
-    }
-
-    @Override
-    public String asTraceTxtDump() {
-        return this.fullPath.replace(".elf", "_trace.txt");
+    public String getELFName() {
+        return this.elfName;
     }
 }
