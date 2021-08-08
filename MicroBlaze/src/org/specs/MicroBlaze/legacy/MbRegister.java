@@ -180,7 +180,7 @@ public enum MbRegister implements RegisterId {
     public static MbRegister getRegFromAddr(int addr) {
         MbRegister reg = MbRegister.ADDRESS_TO_REG.get(addr);
         if (reg == null) {
-            SpecsLogs.msgWarn("There is not register mapped to address " + SpecsStrings.toHexString(addr, 8));
+            SpecsLogs.warn("There is not register mapped to address " + SpecsStrings.toHexString(addr, 8));
         }
 
         return reg;

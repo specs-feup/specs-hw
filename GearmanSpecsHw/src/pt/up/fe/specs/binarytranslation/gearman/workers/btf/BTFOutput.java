@@ -142,7 +142,7 @@ public class BTFOutput implements IBTFOutput {
         try {
             output = Files.readString(fileName).substring(0, 3000);
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            SpecsLogs.warn("Error message:\n", e);
         }
 
         return output;

@@ -41,7 +41,7 @@ public class ControlUnit {
         try {
             new ResolveAST(registers, ast.getRootnode());
         } catch (Exception e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            SpecsLogs.warn("Error message:\n", e);
         }
     }
 }
