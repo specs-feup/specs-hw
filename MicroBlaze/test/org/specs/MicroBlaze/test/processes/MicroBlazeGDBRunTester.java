@@ -8,7 +8,6 @@ import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
-import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniInt;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallInt;
 
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
@@ -38,7 +37,7 @@ public class MicroBlazeGDBRunTester {
     @Test
     public void testRegister() {
 
-        var elfs = Arrays.asList(MicroBlazePolyBenchMiniInt.values());
+        var elfs = Arrays.asList(MicroBlazeLivermoreELFN10.values());
         // var elfs = Arrays.asList(MicroBlazePolyBenchSmallInt.lu);
 
         for (var elf : elfs) {
@@ -52,8 +51,9 @@ public class MicroBlazeGDBRunTester {
                 gdb.start();
 
                 // run until kernel start
-                gdb.runUntil(elf.getKernelStart());
+                // gdb.runUntil(elf.getKernelStart());
                 // gdb.runUntil("_exit");
+                gdb.runUntil(elf.getFunctionName());
 
                 for (int i = 0; i < 10; i++) {
                     gdb.stepi();
@@ -118,13 +118,18 @@ public class MicroBlazeGDBRunTester {
 
     @Test
     public void testStartStopAddrReading() {
-        var elfs = MicroBlazeLivermoreELFN10.values();
 
-        for (var elf : elfs) {
-            var app = new MicroBlazeApplication(elf);
-            // System.out.println(app.getCompilationInfo());
-            System.out.print("0x" + Integer.toHexString(app.getKernelStart()) + " - ");
-            System.out.println("0x" + Integer.toHexString(app.getKernelStop()));
+        var elfsets = Arrays.asList(MicroBlazeLivermoreELFN10.class, MicroBlazeLivermoreELFN100.class);
+        for (var elfset : elfsets) {
+
+            var elfs = elfset.getEnumConstants();
+            System.out.println(elfset.getSimpleName());
+            for (var elf : elfs) {
+                var app = new MicroBlazeApplication(elf);
+                System.out.print(elf.getELFName() + ": ");
+                System.out.print("0x" + Integer.toHexString(app.getKernelStart()) + " - ");
+                System.out.println("0x" + Integer.toHexString(app.getKernelStop()));
+            }
         }
     }
 
