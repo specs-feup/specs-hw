@@ -29,9 +29,13 @@ public interface ELFProvider extends ResourceProvider {
 
     public String getELFName();
 
-    public Number getKernelStart();
+    default public Number getKernelStart() {
+        return 0;
+    }
 
-    public Number getKernelStop();
+    default public Number getKernelStop() {
+        return 0;
+    }
 
     default File getFile() {
         return this.write();
