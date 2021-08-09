@@ -40,7 +40,7 @@ public class FieldRule implements BinaryAsmRule {
         // Add field value
         var previousValue = fields.put(field, fieldValue);
         if (previousValue != null) {
-            SpecsLogs.msgWarn("Duplicated value for field '" + field + "': " + previousValue);
+            SpecsLogs.warn("Duplicated value for field '" + field + "': " + previousValue);
         }
 
         return true;
