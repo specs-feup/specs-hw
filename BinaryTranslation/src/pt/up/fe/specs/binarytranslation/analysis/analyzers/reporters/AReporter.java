@@ -23,7 +23,6 @@ import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public abstract class AReporter {
@@ -64,7 +63,8 @@ public abstract class AReporter {
         for (var elf : elfWindows.keySet()) {
             int id = 1;
             for (var window : elfWindows.get(elf)) {
-                var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
+                // var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
+                var fd = elf.getFile();
                 Constructor cons;
                 ATraceInstructionStream stream = null;
                 try {
