@@ -1,4 +1,4 @@
-package org.specs.Arm.asm.detection;
+package org.specs.Arm.test.detection;
 
 import org.junit.Test;
 import org.specs.Arm.provider.ArmLivermoreELFN100;

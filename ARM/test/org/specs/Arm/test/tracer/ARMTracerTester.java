@@ -1,4 +1,4 @@
-package org.specs.Arm.asm.tracer;
+package org.specs.Arm.test.tracer;
 
 import org.junit.Test;
 import org.specs.Arm.provider.ArmLivermoreELFN10;

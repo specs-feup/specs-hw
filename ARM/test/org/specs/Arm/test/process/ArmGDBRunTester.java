@@ -1,4 +1,4 @@
-package org.specs.Arm.asm.process;
+package org.specs.Arm.test.process;
 
 import org.junit.Test;
 import org.specs.Arm.ArmApplication;
