@@ -1,6 +1,9 @@
 package pt.up.fe.specs.binarytranslation.utils;
 
+import java.io.File;
+
 import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 
@@ -15,7 +18,13 @@ public class BinaryTranslationFrontEndUtils {
 
     public static GraphBundle doBackend(ELFProvider elf, Class<?> streamClass, Class<?> detectorClass) {
 
-        var fd = elf.asTxtDump().write(); // write dump to disk from resource (in jar)
+        File fd = null;
+        if (elf instanceof ZippedELFProvider) {
+            var zpd = (ZippedELFProvider) elf;
+            fd = zpd.asTxtDump().write(); // write dump to disk from resource (in jar)
+        } else {
+            fd = elf.getFile();
+        }
 
         // get segment bundle
         var bundle = SegmentDetectTestUtils.detect(fd, streamClass, detectorClass);

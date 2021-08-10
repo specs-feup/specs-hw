@@ -3,9 +3,9 @@ package pt.up.fe.specs.binarytranslation.test.stream;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
-public class InstructionStreamTestUtils {
+public class InstructionStreamTester {
 
-    public static void printStream(InstructionStream el) {
+    protected static void printStream(InstructionStream el) {
         // el.advanceTo(el.getApp().getELFProvider().getKernelStart().longValue());
         // el.advanceTo(0x1600);
         try {
@@ -20,7 +20,7 @@ public class InstructionStreamTestUtils {
         }
     }
 
-    public static void rawDump(InstructionStream el) {
+    protected static void rawDump(InstructionStream el) {
         try {
             // el.advanceTo(el.getApp().getELFProvider().getKernelStart().longValue());
             el.rawDump();
