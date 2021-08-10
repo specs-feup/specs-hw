@@ -16,7 +16,7 @@ public class RiscVDetectorsTest {
     @Test
     public void testFrequentStaticSequenceDetector() {
 
-        var elf = RiscvLivermoreELFN100iam.pic2d100;
+        var elf = RiscvLivermoreELFN100iam.pic2d;
 
         var builder = new DetectorConfigurationBuilder();
         // builder.withMaxWindow(4).withStartAddr(elf.getKernelStart()).withStopAddr(elf.getKernelStop());

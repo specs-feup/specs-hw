@@ -1,11 +1,15 @@
 package org.specs.Riscv.provider;
 
 import org.specs.Riscv.RiscvApplication;
+import org.specs.Riscv.stream.RiscvElfStream;
+import org.specs.Riscv.stream.RiscvTraceStream;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.binarytranslation.stream.StaticInstructioStream;
+import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
-public interface RiscvELFProvider extends ELFProvider {
+public interface RiscvELFProvider extends ZippedELFProvider {
 
     final static String PREFIX = "org/specs/Riscv/asm/";
 
@@ -22,6 +26,16 @@ public interface RiscvELFProvider extends ELFProvider {
     @Override
     default Application toApplication() {
         return new RiscvApplication(this);
+    }
+
+    @Override
+    default StaticInstructioStream toStaticStream() {
+        return new RiscvElfStream(this);
+    }
+
+    @Override
+    default TraceInstructionStream toTraceStream() {
+        return new RiscvTraceStream(this);
     }
 
     @Override
