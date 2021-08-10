@@ -2,46 +2,38 @@ package org.specs.Riscv.test.stream;
 
 import org.junit.Test;
 import org.specs.Riscv.provider.RiscvLivermoreELFN100iam;
-import org.specs.Riscv.stream.RiscvElfStream;
-import org.specs.Riscv.stream.RiscvTraceStream;
 
-import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTestUtils;
+import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
 
-public class RiscvElfStreamTester {
+public class RiscvElfStreamTester extends InstructionStreamTester {
 
     @Test
     public void testStatic() {
-        InstructionStreamTestUtils.printStream(
-                new RiscvElfStream(RiscvLivermoreELFN100iam.innerprod100));
+        printStream(RiscvLivermoreELFN100iam.innerprod.toStaticStream());
     }
 
     @Test
     public void testStaticRaw() {
-        InstructionStreamTestUtils.rawDump(
-                new RiscvElfStream(RiscvLivermoreELFN100iam.innerprod100));
+        rawDump(RiscvLivermoreELFN100iam.innerprod.toStaticStream());
     }
 
     @Test
     public void testStaticRawFromTxtDump() {
-        InstructionStreamTestUtils.rawDump(
-                new RiscvElfStream(RiscvLivermoreELFN100iam.innerprod100.asTxtDump()));
+        rawDump(RiscvLivermoreELFN100iam.innerprod.asTxtDump().toStaticStream());
     }
 
     @Test
     public void testTrace() {
-        InstructionStreamTestUtils.printStream(
-                new RiscvTraceStream(RiscvLivermoreELFN100iam.innerprod100));
+        printStream(RiscvLivermoreELFN100iam.innerprod.toTraceStream());
     }
 
     @Test
     public void testTraceRaw() {
-        InstructionStreamTestUtils.rawDump(
-                new RiscvTraceStream(RiscvLivermoreELFN100iam.innerprod100));
+        rawDump(RiscvLivermoreELFN100iam.innerprod.toTraceStream());
     }
 
     @Test
     public void testTraceRawFromTxtDump() {
-        InstructionStreamTestUtils.rawDump(
-                new RiscvTraceStream(RiscvLivermoreELFN100iam.innerprod100.asTraceTxtDump()));
+        rawDump(RiscvLivermoreELFN100iam.innerprod.asTraceTxtDump().toTraceStream());
     }
 }

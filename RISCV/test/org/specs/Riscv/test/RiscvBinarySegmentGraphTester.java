@@ -15,7 +15,7 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public class RiscvBinarySegmentGraphTester {
 
     private RiscvELFProvider openFile() {
-        return RiscvLivermoreELFN100iam.cholesky100;
+        return RiscvLivermoreELFN100iam.cholesky;
     }
 
     private void getSegments(InstructionStream el, SegmentDetector bbd) {
