@@ -1,4 +1,4 @@
-package org.specs.Arm.asm.instruction;
+package org.specs.Arm.test.instruction;
 
 import org.junit.Test;
 

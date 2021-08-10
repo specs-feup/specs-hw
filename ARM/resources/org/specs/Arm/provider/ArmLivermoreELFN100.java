@@ -2,44 +2,43 @@ package org.specs.Arm.provider;
 
 public enum ArmLivermoreELFN100 implements ArmELFProvider {
 
-    cholesky(0x2a20, 0x2ab4),
-    diffpredict(0x1500, 0x15bc),
-    // glinearrec(0x3100, 0x31dc),
-    // linrecurrence? (there are 2 linear recurrence kernels); this one doesnt work?
-    hydro(0x2990, 0x2a14), // 0x2a1c),
-    hydro2d(0x2b90, 0x2e9c),
-    hydro2dimpl(0x2f68, 0x3074),
-    innerprod(0x1488, 0x14f4), // 0x14fc),
-    intpredict(0x1e30, 0x1f7c),
-    linrec(0x18f0, 0x19a4),
-    matmul(0x2ea0, 0x2f64),
-    pic1d(0x1730, 0x18ec),
-    pic2d(0x15c0, 0x172c),
-    state_frag(0x2ab8, 0x2b8c),
-    tri_diag(0x3078, 0x30fc);
+    cholesky(),
+    diffpredict("difference_predictors"),
+    // glinearrec("glinearrec.elf", 0x2dac, 0x5698), // linrecurrence? (there are
+    // 2 linear
+    // recurrence kernels)
+    hydro("hydro_fragment"),
+    hydro2d("hydro_2d"),
+    hydro2dimpl("hydro_2d_implicit"),
+    innerprod("inner_product"),
+    intpredict("integrate_predictors"),
+    linrec("lin_recurrence"),
+    matmul(),
+    pic1d("pic_1d"),
+    pic2d("pic_2d"),
+    state_frag("state_fragment"),
+    tri_diag("tri_diagonal");
 
+    private String functionName;
     private String elfName;
-    private Number kernelStart;
-    private Number kernelStop;
 
-    private ArmLivermoreELFN100(Number kernelStart, Number kernelStop) {
+    private ArmLivermoreELFN100(String functionName) {
+        this.functionName = functionName;
         this.elfName = name() + ".elf";
-        this.kernelStart = kernelStart;
-        this.kernelStop = kernelStop;
     }
 
-    @Override
-    public Number getKernelStart() {
-        return kernelStart;
-    }
-
-    @Override
-    public Number getKernelStop() {
-        return kernelStop;
+    private ArmLivermoreELFN100() {
+        this.functionName = name();
+        this.elfName = name() + ".elf";
     }
 
     @Override
     public String getELFName() {
         return this.elfName;
+    }
+
+    @Override
+    public String getFunctionName() {
+        return this.functionName;
     }
 }

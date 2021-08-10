@@ -2,10 +2,10 @@ package org.specs.Arm.provider;
 
 import org.specs.Arm.ArmApplication;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.asm.Application;
 
-public interface ArmELFProvider extends ELFProvider {
+public interface ArmELFProvider extends ZippedELFProvider {
 
     final static String PREFIX = "org/specs/Arm/asm/";
 

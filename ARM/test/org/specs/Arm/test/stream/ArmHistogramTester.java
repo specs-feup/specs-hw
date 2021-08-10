@@ -1,4 +1,4 @@
-package org.specs.Arm.asm.stream;
+package org.specs.Arm.test.stream;
 
 import org.junit.Test;
 import org.specs.Arm.provider.ArmELFProvider;

@@ -1,4 +1,4 @@
-package org.specs.Arm.asm.generators;
+package org.specs.Arm.test.generators;
 
 import org.junit.Test;
 import org.specs.Arm.provider.ArmLivermoreELFN100;

@@ -1,4 +1,4 @@
-package org.specs.Arm.asm.profile;
+package org.specs.Arm.test.profile;
 
 import java.util.ArrayList;
 import java.util.Arrays;

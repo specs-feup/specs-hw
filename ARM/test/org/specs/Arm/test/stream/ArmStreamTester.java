@@ -1,4 +1,4 @@
-package org.specs.Arm.asm.stream;
+package org.specs.Arm.test.stream;
 
 import org.junit.Test;
 import org.specs.Arm.provider.ArmLivermoreELFN10;
@@ -7,43 +7,43 @@ import org.specs.Arm.provider.ArmTraceDumpProvider;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
-import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTestUtils;
+import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
 
 public class ArmStreamTester {
 
     @Test
     public void testStatic() {
-        InstructionStreamTestUtils.printStream(
+        InstructionStreamTester.printStream(
                 new ArmElfStream(ArmLivermoreELFN10.innerprod));
     }
 
     @Test
     public void testStaticRaw() {
-        InstructionStreamTestUtils.rawDump(
+        InstructionStreamTester.rawDump(
                 new ArmElfStream(ArmLivermoreELFN10.innerprod));
     }
 
     @Test
     public void testStaticRawFromTxtDump() {
-        InstructionStreamTestUtils.rawDump(
+        InstructionStreamTester.rawDump(
                 new ArmElfStream(new ArmObjDumpProvider(ArmLivermoreELFN10.innerprod)));
     }
 
     @Test
     public void testTrace() {
-        InstructionStreamTestUtils.printStream(
+        InstructionStreamTester.printStream(
                 new ArmTraceStream(ArmLivermoreELFN10.innerprod));
     }
 
     @Test
     public void testTraceRaw() {
-        InstructionStreamTestUtils.rawDump(
+        InstructionStreamTester.rawDump(
                 new ArmTraceStream(ArmLivermoreELFN10.innerprod));
     }
 
     @Test
     public void testTraceRawFromTxtDump() {
-        InstructionStreamTestUtils.rawDump(
+        InstructionStreamTester.rawDump(
                 new ArmTraceStream(new ArmTraceDumpProvider(ArmLivermoreELFN10.innerprod)));
     }
 }

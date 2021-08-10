@@ -1,4 +1,4 @@
-package org.specs.Arm.asm;
+package org.specs.Arm.test;
 
 import org.junit.Test;
 import org.specs.Arm.provider.ArmLivermoreELFN10;

@@ -1,4 +1,4 @@
-package org.specs.Arm.asm.instruction;
+package org.specs.Arm.test.instruction;
 
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
