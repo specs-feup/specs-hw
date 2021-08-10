@@ -2,11 +2,8 @@ package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallInt;
-import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTestUtils;
+import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
 
 /**
  * Trace printing test cases; txt files are used so that the backend tools can run on Jenkins without need for
@@ -15,41 +12,35 @@ import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTestUtils;
  * @author nuno
  *
  */
-public class MicroBlazeStreamTester {
+public class MicroBlazeStreamTester extends InstructionStreamTester {
 
     @Test
     public void testStatic() {
-        InstructionStreamTestUtils.printStream(
-                new MicroBlazeElfStream(MicroBlazeLivermoreELFN10.innerprod));
+        printStream(MicroBlazeLivermoreELFN10.matmul.toStaticStream());
     }
 
     @Test
     public void testStaticRaw() {
-        InstructionStreamTestUtils.rawDump(
-                new MicroBlazeElfStream(MicroBlazeLivermoreELFN10.innerprod));
+        rawDump(MicroBlazeLivermoreELFN10.innerprod.toStaticStream());
     }
 
     @Test
     public void testStaticRawFromTxtDump() {
-        InstructionStreamTestUtils.rawDump(
-                new MicroBlazeElfStream(MicroBlazeLivermoreELFN10.innerprod.asTxtDump()));
+        rawDump(MicroBlazeLivermoreELFN10.innerprod.asTxtDump().toStaticStream());
     }
 
     @Test
     public void testTrace() {
-        InstructionStreamTestUtils.printStream(
-                new MicroBlazeTraceStream(MicroBlazeLivermoreELFN10.innerprod));
+        printStream(MicroBlazeLivermoreELFN10.innerprod.toTraceStream());
     }
 
     @Test
     public void testTraceRaw() {
-        InstructionStreamTestUtils.rawDump(
-                new MicroBlazeTraceStream(MicroBlazePolyBenchSmallInt.floydwarshall));
+        rawDump(MicroBlazeLivermoreELFN10.innerprod.toTraceStream());
     }
 
     @Test
     public void testTraceRawFromTxtDump() {
-        InstructionStreamTestUtils.rawDump(
-                new MicroBlazeTraceStream(MicroBlazeLivermoreELFN10.innerprod.asTraceTxtDump()));
+        rawDump(MicroBlazeLivermoreELFN10.innerprod.asTraceTxtDump().toTraceStream());
     }
 }
