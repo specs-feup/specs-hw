@@ -10,9 +10,9 @@ import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallInt;
 
-import pt.up.fe.specs.binarytranslation.processes.GDBRun;
+import pt.up.fe.specs.binarytranslation.test.processes.GDBRunTester;
 
-public class MicroBlazeGDBRunTester {
+public class MicroBlazeGDBRunTester extends GDBRunTester {
 
     /*
      * set confirm off
@@ -32,105 +32,30 @@ public class MicroBlazeGDBRunTester {
      */
 
     /**
-     * Test register gathering
-     */
-    @Test
-    public void testRegister() {
-
-        var elfs = Arrays.asList(MicroBlazeLivermoreELFN10.values());
-        // var elfs = Arrays.asList(MicroBlazePolyBenchSmallInt.lu);
-
-        for (var elf : elfs) {
-            System.out.println("Testing run to end of " + elf.getELFName());
-            // var elf = MicroBlazePolyBenchSmallInt.lu;
-            // var elf = MicroBlazeLivermoreELFN100.matmul_N100;
-            var app = new MicroBlazeApplication(elf);
-            try (var gdb = GDBRun.newInstanceInteractive(app)) {
-
-                // launch QEMU, then GDB (on localhost:1234)
-                gdb.start();
-
-                // run until kernel start
-                // gdb.runUntil(elf.getKernelStart());
-                // gdb.runUntil("_exit");
-                gdb.runUntil(elf.getFunctionName());
-
-                for (int i = 0; i < 10; i++) {
-                    gdb.stepi();
-                    var ret = gdb.getAddrAndInstruction();
-                    if (ret == null)
-                        break;
-
-                    System.out.println(ret);
-                }
-            }
-        }
-    }
-
-    /**
      * Test the GDBRun class by giving it a script and consuming all output
      */
     @Test
     public void testScript() {
         var elf = MicroBlazeLivermoreELFN100.matmul;
-        var app = new MicroBlazeApplication(elf);
-        try (var gdb = GDBRun.newInstanceFreeRun(app)) {
-
-            String line = null;
-            while ((line = gdb.receive()) != null) {
-                System.out.println(line);
-            }
-        }
+        testScript(Arrays.asList(elf));
     }
 
+    /**
+     * Test runUntil function start
+     */
     @Test
-    public void test() {
+    public void testRunToKernelStart() {
+        var elfs = MicroBlazeLivermoreELFN10.values();
+        testRunToKernelStart(Arrays.asList(elfs));
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testGDBFeatures() {
         var elf = MicroBlazeLivermoreELFN100.matmul;
-        var app = new MicroBlazeApplication(elf);
-
-        try (var gdb = GDBRun.newInstanceInteractive(app)) {
-
-            /* gdb.sendGDBCommand("while $pc != 0x80\nstepi 1\nx/x $pc\nend");
-            
-            String line = null;
-            while ((line = gdb.getGDBResponse()) != null) {
-                System.out.println(line);
-            }*/
-
-            // stepi
-            for (int i = 0; i < 50; i++) {
-                gdb.stepi();
-                System.out.println(gdb.getAddrAndInstruction());
-            }
-
-            System.out.println(gdb.getVariableList());
-
-            // memory dump
-            for (int i = 0; i < 5; i++) {
-                System.out.println(gdb.readWord(1000 + i * 4));
-            }
-            System.out.println(gdb.readWord(1000, 50));
-
-            // var variables = gdb.getVariableList();
-            // System.out.println(variables);
-        }
-    }
-
-    @Test
-    public void testStartStopAddrReading() {
-
-        var elfsets = Arrays.asList(MicroBlazeLivermoreELFN10.class, MicroBlazeLivermoreELFN100.class);
-        for (var elfset : elfsets) {
-
-            var elfs = elfset.getEnumConstants();
-            System.out.println(elfset.getSimpleName());
-            for (var elf : elfs) {
-                var app = new MicroBlazeApplication(elf);
-                System.out.print(elf.getELFName() + ": ");
-                System.out.print("0x" + Integer.toHexString(app.getKernelStart()) + " - ");
-                System.out.println("0x" + Integer.toHexString(app.getKernelStop()));
-            }
-        }
+        testGDBFeatures(Arrays.asList(elf));
     }
 
     @Test
