@@ -1,9 +1,13 @@
 package org.specs.Arm.provider;
 
 import org.specs.Arm.ArmApplication;
+import org.specs.Arm.stream.ArmElfStream;
+import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.binarytranslation.stream.StaticInstructioStream;
+import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
 public interface ArmELFProvider extends ZippedELFProvider {
 
@@ -22,6 +26,16 @@ public interface ArmELFProvider extends ZippedELFProvider {
     @Override
     default Application toApplication() {
         return new ArmApplication(this);
+    }
+
+    @Override
+    default StaticInstructioStream toStaticStream() {
+        return new ArmElfStream(this);
+    }
+
+    @Override
+    default TraceInstructionStream toTraceStream() {
+        return new ArmTraceStream(this);
     }
 
     @Override
