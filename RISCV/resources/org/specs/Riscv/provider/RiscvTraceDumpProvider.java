@@ -1,8 +1,8 @@
 package org.specs.Riscv.provider;
 
-import pt.up.fe.specs.binarytranslation.ATraceDumpProvider;
+import pt.up.fe.specs.binarytranslation.TraceDumpProvider;
 
-public class RiscvTraceDumpProvider extends ATraceDumpProvider implements RiscvELFProvider {
+public class RiscvTraceDumpProvider extends TraceDumpProvider implements RiscvELFProvider {
 
     public RiscvTraceDumpProvider(RiscvELFProvider elfprovider) {
         super(elfprovider);
