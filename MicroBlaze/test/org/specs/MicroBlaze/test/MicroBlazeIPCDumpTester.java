@@ -33,7 +33,7 @@ public class MicroBlazeIPCDumpTester {
             // var bbd = new FrequentStaticSequenceDetector(el);
             // var bbd = new StaticBasicBlockDetector(el);
 
-            try (MicroBlazeTraceStream el = new MicroBlazeTraceStream(elf)) {
+            try (var el = new MicroBlazeTraceStream(elf)) {
 
                 // var bbd = new FrequentTraceSequenceDetector(el);
                 var bbd = new TraceBasicBlockDetector();
