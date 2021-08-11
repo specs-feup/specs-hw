@@ -1,6 +1,6 @@
 package org.specs.Arm.provider;
 
-public enum ArmLivermoreELFN100 implements ArmELFProvider {
+public enum ArmLivermoreELFN100 implements ArmZippedELFProvider {
 
     cholesky(),
     diffpredict("difference_predictors"),
