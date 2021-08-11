@@ -26,14 +26,16 @@ public class MicroBlazeParallelDetectTest {
 
         int minwindow = 4, maxwindow = 20;
 
+        var app = elf.toApplication();
+
         // producer
-        var iproducer = new MicroBlazeTraceProducer(elf);
-        // var iproducer = new MicroBlazeStaticProvider(fd);
+        var iproducer = new MicroBlazeTraceProducer(app);
+        // var iproducer = new MicroBlazeStaticProvider(app);
 
         // host for threads
         var streamengine = new ProducerEngine<>(iproducer, op -> op.nextInstruction(),
                 // cc -> new MicroBlazeElfStream(fd, cc));
-                cc -> new MicroBlazeTraceStream(elf, cc));
+                cc -> new MicroBlazeTraceStream(app, cc));
 
         // for all window sizes
         for (int i = minwindow; i <= maxwindow; i++) {
@@ -43,8 +45,8 @@ public class MicroBlazeParallelDetectTest {
             var detector1 = new TraceBasicBlockDetector(
                     new DetectorConfigurationBuilder()
                             .withMaxWindow(i)
-                            .withStartAddr(elf.getKernelStart())
-                            .withStopAddr(elf.getKernelStop())
+                            .withStartAddr(app.getKernelStart())
+                            .withStopAddr(app.getKernelStop())
                             .build());
             streamengine.subscribe(istream -> detector1.detectSegments((InstructionStream) istream));
         }

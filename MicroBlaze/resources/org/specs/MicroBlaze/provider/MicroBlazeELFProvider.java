@@ -4,38 +4,27 @@ import org.specs.MicroBlaze.asm.MicroBlazeApplication;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
-import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.stream.StaticInstructioStream;
 import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
-public interface MicroBlazeELFProvider extends ZippedELFProvider {
+public interface MicroBlazeELFProvider extends ELFProvider {
 
     final static String PREFIX = "org/specs/MicroBlaze/asm/";
 
     @Override
-    default MicroBlazeELFProvider asTraceTxtDump() {
-        return new MicroBlazeTraceDumpProvider(this);
-    }
-
-    @Override
-    default MicroBlazeELFProvider asTxtDump() {
-        return new MicroBlazeObjDumpProvider(this);
-    }
-
-    @Override
-    default Application toApplication() {
+    default MicroBlazeApplication toApplication() {
         return new MicroBlazeApplication(this);
     }
 
     @Override
     default StaticInstructioStream toStaticStream() {
-        return new MicroBlazeElfStream(this);
+        return new MicroBlazeElfStream(this.toApplication());
     }
 
     @Override
     default TraceInstructionStream toTraceStream() {
-        return new MicroBlazeTraceStream(this);
+        return new MicroBlazeTraceStream(this.toApplication());
     }
 
     @Override

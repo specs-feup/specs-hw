@@ -1,6 +1,6 @@
 package org.specs.MicroBlaze.provider;
 
-public enum MicroBlazeLivermoreELFN100 implements MicroBlazeELFProvider {
+public enum MicroBlazeLivermoreELFN100 implements MicroBlazeZippedELFProvider {
 
     cholesky(),
     diffpredict("difference_predictors"),

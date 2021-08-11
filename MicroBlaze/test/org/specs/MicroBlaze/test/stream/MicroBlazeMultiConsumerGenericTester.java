@@ -21,7 +21,8 @@ public class MicroBlazeMultiConsumerGenericTester {
     private void testParallel(MicroBlazeELFProvider elfprovider) {
 
         // producer
-        var iproducer = new MicroBlazeStaticProducer(elfprovider);
+        var app = elfprovider.toApplication();
+        var iproducer = new MicroBlazeStaticProducer(app);
 
         /*
          * TODO: the return of processing an instruction stream fully (post close) should be all meta info
@@ -35,7 +36,7 @@ public class MicroBlazeMultiConsumerGenericTester {
 
         // host for threads
         var streamengine = new ProducerEngine<Instruction, InstructionProducer>(iproducer, op -> op.nextInstruction(),
-                cc -> new MicroBlazeElfStream(elfprovider, cc));
+                cc -> new MicroBlazeElfStream(app, cc));
 
         // new consumer thread via lambda
         var threadlist = new ArrayList<ConsumerThread<Instruction, ?>>();

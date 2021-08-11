@@ -7,9 +7,9 @@ import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
-import pt.up.fe.specs.binarytranslation.test.asm.ELFProviderTestTester;
+import pt.up.fe.specs.binarytranslation.test.asm.ELFProviderTester;
 
-public class MicroBlazeELFProviderTester extends ELFProviderTestTester {
+public class MicroBlazeELFProviderTester extends ELFProviderTester {
 
     @Test
     public void testStartStopAddrReading() {

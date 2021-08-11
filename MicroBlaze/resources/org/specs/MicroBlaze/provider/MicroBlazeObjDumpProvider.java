@@ -1,8 +1,8 @@
 package org.specs.MicroBlaze.provider;
 
-import pt.up.fe.specs.binarytranslation.AObjDumpProvider;
+import pt.up.fe.specs.binarytranslation.ObjDumpProvider;
 
-public class MicroBlazeObjDumpProvider extends AObjDumpProvider implements MicroBlazeELFProvider {
+public class MicroBlazeObjDumpProvider extends ObjDumpProvider implements MicroBlazeELFProvider {
 
     public MicroBlazeObjDumpProvider(MicroBlazeELFProvider elfprovider) {
         super(elfprovider);

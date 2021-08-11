@@ -71,13 +71,14 @@ public class MicroBlazeCustomInstructionUnitGeneratorTester {
     public void testCustomUnitGenerate() {
 
         // get static frequent sequence bundle
-        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN100.cholesky,
-                MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class,
+        var app = MicroBlazeLivermoreELFN100.cholesky.toApplication();
+        var bundle = SegmentDetectTestUtils.detect(app,
+                MicroBlazeElfStream.class,
+                FrequentStaticSequenceDetector.class,
                 (new DetectorConfigurationBuilder()
                         .withMaxWindow(5)
-                        .withStartAddr(MicroBlazeLivermoreELFN100.cholesky.getKernelStart())
-                        .withStopAddr(MicroBlazeLivermoreELFN100.cholesky.getKernelStop()))
-                                .build());
+                        .withStartAddr(app.getKernelStart())
+                        .withStopAddr(app.getKernelStop())).build());
 
         // transform into graph bundle
         var graphs = GraphBundle.newInstance(bundle);

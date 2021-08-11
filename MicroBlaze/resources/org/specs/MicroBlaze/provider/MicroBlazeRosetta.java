@@ -1,32 +1,25 @@
 package org.specs.MicroBlaze.provider;
 
-public enum MicroBlazeRosetta implements MicroBlazeELFProvider {
+public enum MicroBlazeRosetta implements MicroBlazeZippedELFProvider {
 
-    rendering3d(0x14c4, 0x1528),
-    facedetection(0x1990, 0x1a00);
+    rendering3d("_Z12rendering_swP11Triangle_3DPA256_h", "3d-rendering"),
+    facedetection("_Z14face_detect_swPA320_hPiS1_S1_S1_S1_", "face-detection");
 
+    private String functionName;
     private String elfName;
-    private Number kernelStart;
-    private Number kernelStop;
 
-    private MicroBlazeRosetta(Number kernelStart, Number kernelStop) {
-        this.elfName = name() + ".elf";
-        this.kernelStart = kernelStart;
-        this.kernelStop = kernelStop;
-    }
-
-    @Override
-    public Number getKernelStart() {
-        return kernelStart;
-    }
-
-    @Override
-    public Number getKernelStop() {
-        return kernelStop;
+    private MicroBlazeRosetta(String functionName, String elfname) {
+        this.functionName = functionName;
+        this.elfName = elfname + ".elf";
     }
 
     @Override
     public String getELFName() {
         return this.elfName;
+    }
+
+    @Override
+    public String getFunctionName() {
+        return this.functionName;
     }
 }

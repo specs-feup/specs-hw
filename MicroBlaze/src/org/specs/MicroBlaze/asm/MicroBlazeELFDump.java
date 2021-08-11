@@ -13,7 +13,11 @@ import pt.up.fe.specs.binarytranslation.asm.ELFDump;
  */
 public class MicroBlazeELFDump extends ELFDump {
 
+    public MicroBlazeELFDump(MicroBlazeApplication app) {
+        super(new MicroBlazeStaticProducer(app));
+    }
+
     public MicroBlazeELFDump(MicroBlazeELFProvider elfprovider) {
-        super(new MicroBlazeStaticProducer(elfprovider));
+        this(elfprovider.toApplication());
     }
 }

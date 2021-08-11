@@ -8,8 +8,11 @@ import pt.up.fe.specs.binarytranslation.producer.StaticInstructionProducer;
 
 public class MicroBlazeStaticProducer extends StaticInstructionProducer {
 
+    public MicroBlazeStaticProducer(MicroBlazeApplication app) {
+        super(app, MicroBlazeInstruction::newInstance);
+    }
+
     public MicroBlazeStaticProducer(MicroBlazeELFProvider elfprovider) {
-        super(new MicroBlazeApplication(elfprovider),
-                MicroBlazeInstruction::newInstance);
+        this(elfprovider.toApplication());
     }
 }

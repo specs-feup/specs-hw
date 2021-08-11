@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallFloat;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
 
@@ -31,25 +31,25 @@ public class MicroBlazeBasicBlockInfo {
     public static Map<ELFProvider, Integer[]> getPolybenchSmallFloatKernels() {
         Map<ELFProvider, Integer[]> elfs = new HashMap<>();
 
-        elfs.put(MicroBlazePolyBenchSmallFloat._2mm, new Integer[] { 12, 13 });
-        elfs.put(MicroBlazePolyBenchSmallFloat._3mm, new Integer[] { 11, 12, 13 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.adi, new Integer[] { 8, 13, 25, 27 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.atax, new Integer[] { 5, 9, 11 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.bicg, new Integer[] { 5, 12, 17 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.covariance, new Integer[] { 8, 9 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.trisolv, new Integer[] { 10, 11 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.mvt, new Integer[] { 9, 11, 12 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.trmm, new Integer[] { 12 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.doitgen, new Integer[] { 12 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.fdtd2d, new Integer[] { 19 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.gemm, new Integer[] { 8, 13 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.symm, new Integer[] { 18 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.syrk, new Integer[] { 7, 14 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.gesummv, new Integer[] { 16 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.symm, new Integer[] { 18 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.nussinov, new Integer[] { 6, 8 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.syr2k, new Integer[] { 7, 20 });
-        elfs.put(MicroBlazePolyBenchSmallFloat.gemver, new Integer[] { 8, 10, 12, 15 });
+        elfs.put(MicroBlazePolyBenchMiniFloat._2mm, new Integer[] { 12, 13 });
+        elfs.put(MicroBlazePolyBenchMiniFloat._3mm, new Integer[] { 11, 12, 13 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.adi, new Integer[] { 8, 13, 25, 27 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.atax, new Integer[] { 5, 9, 11 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.bicg, new Integer[] { 5, 12, 17 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.covariance, new Integer[] { 8, 9 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.trisolv, new Integer[] { 10, 11 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.mvt, new Integer[] { 9, 11, 12 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.trmm, new Integer[] { 12 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.doitgen, new Integer[] { 12 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.fdtd2d, new Integer[] { 19 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.gemm, new Integer[] { 8, 13 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.symm, new Integer[] { 18 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.syrk, new Integer[] { 7, 14 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.gesummv, new Integer[] { 16 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.symm, new Integer[] { 18 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.nussinov, new Integer[] { 6, 8 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.syr2k, new Integer[] { 7, 20 });
+        elfs.put(MicroBlazePolyBenchMiniFloat.gemver, new Integer[] { 8, 10, 12, 15 });
 
 
 //      elfs.put(MicroBlazePolyBenchSmallFloat.durbin, new Integer[] { 6, 10, 13, 14 }); // Needs bug fix enabled
