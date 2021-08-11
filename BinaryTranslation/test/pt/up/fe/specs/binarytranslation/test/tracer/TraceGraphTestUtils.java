@@ -8,23 +8,22 @@ import pt.up.fe.specs.binarytranslation.tracer.StreamBasicBlock;
 import pt.up.fe.specs.binarytranslation.tracer.StreamUnitGenerator;
 import pt.up.fe.specs.binarytranslation.tracer.StreamUnitGraphGenerator;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.binarytranslation.utils.ClassBuilders;
 
 public class TraceGraphTestUtils {
 
     /*
      * test graphing a trace
      */
-    public static void testTraceStreamGraph(ELFProvider elf,
+    public static void testTraceStreamGraph(ELFProvider elfprovider,
             Class<? extends TraceInstructionStream> streamClass) {
 
-        var fd = BinaryTranslationUtils.getFile(elf);
-        try (var istream = ClassBuilders.buildStream(streamClass, fd)) {
+        try (var istream = elfprovider.toTraceStream()) {
 
             // Using JGraphT
-            var graphGenerator = new StreamUnitGraphGenerator((TraceInstructionStream) istream);
-            var graph = graphGenerator.generateInstructionGraph(elf.getKernelStart(), elf.getKernelStop());
-            var pngName = "./output/" + elf.getFilename().replace(".elf", "_inst.png");
+            var app = istream.getApp();
+            var graphGenerator = new StreamUnitGraphGenerator(istream);
+            var graph = graphGenerator.generateInstructionGraph(app.getKernelStart(), app.getKernelStop());
+            var pngName = "./output/" + app.getAppName().replace(".elf", "_inst.png");
             BinaryTranslationUtils.renderDotty(pngName, graph.toDotty());
 
         } catch (Exception e) {
@@ -37,15 +36,14 @@ public class TraceGraphTestUtils {
      * Get BasicBlockTraceUnit's from trace stream and print
      */
     @Test
-    public static void testBasicBlockTraceUnit(ELFProvider elf,
+    public static void testBasicBlockTraceUnit(ELFProvider elfprovider,
             Class<? extends TraceInstructionStream> streamClass) {
 
         int i = 5;
-        var fd = BinaryTranslationUtils.getFile(elf);
-        try (var istream = ClassBuilders.buildStream(streamClass, fd)) {
+        try (var istream = elfprovider.toTraceStream()) {
 
             // basic blocks
-            var tracer = new StreamUnitGenerator((TraceInstructionStream) istream);
+            var tracer = new StreamUnitGenerator(istream);
             StreamBasicBlock tbb = null;
             while ((tbb = tracer.nextBasicBlock()) != null && i > 0) {
                 System.out.println(tbb.toString());

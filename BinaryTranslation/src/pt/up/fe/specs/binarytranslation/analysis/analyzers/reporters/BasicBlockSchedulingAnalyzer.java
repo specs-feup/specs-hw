@@ -23,11 +23,11 @@ import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.ListSchedu
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveZeroLatencyOps;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
 public class BasicBlockSchedulingAnalyzer extends ABasicBlockAnalyzer {
 
-    public BasicBlockSchedulingAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+    public BasicBlockSchedulingAnalyzer(TraceInstructionStream stream, ELFProvider elf, int window) {
         super(stream, elf, window);
     }
 
@@ -45,13 +45,14 @@ public class BasicBlockSchedulingAnalyzer extends ABasicBlockAnalyzer {
             dfg = (BasicBlockDataFlowGraph) t.applyToGraph();
             var stats = new DataFlowStatistics(dfg);
             stats.setInsts(bb).setRepetitions(repetitions);
-            
+
             for (var aluN : alus) {
                 for (var memPortsN : memPorts) {
                     var sched = new ListScheduler(dfg);
                     var s = sched.schedule(aluN, memPortsN);
                     var total = sched.getScheduleLength(s);
-                    System.out.println("Schedule length (ALU=" + aluN + ", MEM=" + memPortsN + "): " + total + " cycles");
+                    System.out
+                            .println("Schedule length (ALU=" + aluN + ", MEM=" + memPortsN + "): " + total + " cycles");
                     stats.addSchedule(total);
                     stats.setRepetitions(repetitions);
                 }

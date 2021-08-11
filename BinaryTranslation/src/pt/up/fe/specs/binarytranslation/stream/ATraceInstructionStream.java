@@ -23,11 +23,6 @@ public abstract class ATraceInstructionStream extends AInstructionStream impleme
         this.boundStopAddr = stopAddr.longValue();
     }
 
-    /*@Override
-    public Instruction next() {
-        return this.getNext(); // doesn't look ahead for object (useful for GDBRuns)
-    }*/
-
     @Override
     public Instruction nextInstruction() {
 
@@ -38,10 +33,4 @@ public abstract class ATraceInstructionStream extends AInstructionStream impleme
         }
         return newinst;
     }
-
-    /*
-    @Override
-    public RegisterDump getCurrentRegisters() {
-        return this.getProducer().getRegisters();
-    }*/
 }

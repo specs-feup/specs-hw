@@ -21,7 +21,7 @@ import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
 public class ReporterScheduling extends AReporter {
 
@@ -53,14 +53,14 @@ public class ReporterScheduling extends AReporter {
 
         for (var res : results) {
             csv.append(res.getElfName()).append(",")
-            .append(res.getId()).append(",")
-            .append(res.getRepetitions());
+                    .append(res.getId()).append(",")
+                    .append(res.getRepetitions());
             for (var s : res.getSchedules()) {
                 csv.append(",").append(s);
             }
             csv.append("\n");
         }
-        
+
         AnalysisUtils.saveAsCsv(csv, "results/scheduling" + prefix);
     }
 
@@ -72,7 +72,7 @@ public class ReporterScheduling extends AReporter {
 
     @Override
     public List<DataFlowStatistics> analyzeStream(int repetitions, ELFProvider elf, int window,
-            ATraceInstructionStream stream) {
+            TraceInstructionStream stream) {
         var analyzer = new BasicBlockSchedulingAnalyzer(stream, elf, window);
         var resList = analyzer.analyze(repetitions, alus, memPorts);
         return resList;

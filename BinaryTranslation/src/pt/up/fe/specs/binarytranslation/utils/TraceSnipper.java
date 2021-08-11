@@ -27,7 +27,7 @@ public class TraceSnipper {
     public static void snipTrace(ELFProvider elf, Long nrInsts) {
 
         var app = elf.toApplication();
-        var from = elf.getKernelStart().longValue();
+        var from = app.getKernelStart();
         var filename = app.getAppName().replace(".elf", "_0x"
                 + Long.toHexString(from) + "to0x"
                 + Long.toHexString(from + nrInsts * app.getInstructionWidth()));

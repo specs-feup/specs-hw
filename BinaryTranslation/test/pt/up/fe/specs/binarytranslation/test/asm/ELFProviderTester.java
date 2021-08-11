@@ -4,9 +4,12 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
 
-public class ELFProviderTestTester {
+public class ELFProviderTester {
 
-    public static void testStartStopAddrReading(List<Class<? extends ELFProvider>> listOfELFProviders) {
+    /*
+     * 
+     */
+    protected static void testStartStopAddrReading(List<Class<? extends ELFProvider>> listOfELFProviders) {
 
         for (var elfset : listOfELFProviders) {
             var elfs = elfset.getEnumConstants();

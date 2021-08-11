@@ -12,18 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultEdge;
-
-import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
-import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class AnalysisUtils {
@@ -34,7 +28,7 @@ public class AnalysisUtils {
         enumToSymbol.put("addk", "+");
         enumToSymbol.put("addik", "+");
         enumToSymbol.put("muli", "*");
-        enumToSymbol.put("rsubk","-");
+        enumToSymbol.put("rsubk", "-");
         enumToSymbol.put("fmul", "*");
         enumToSymbol.put("fadd", "+");
         enumToSymbol.put("fsub", "-");
@@ -101,7 +95,7 @@ public class AnalysisUtils {
         System.out.println(s);
     }
 
-    public static List<BinarySegment> getSegments(ATraceInstructionStream stream, TraceBasicBlockDetector det) {
+    public static List<BinarySegment> getSegments(TraceInstructionStream stream, TraceBasicBlockDetector det) {
         SegmentBundle bun = det.detectSegments(stream);
         if (bun.getSegments().size() == 0) {
             System.out.println("No basic blocks were detected");
@@ -136,15 +130,15 @@ public class AnalysisUtils {
         Collections.sort(newList, regCompare);
         return newList;
     }
-    
+
     public static String hexToDec(String hex) {
         return "" + Long.decode(hex);
     }
-    
+
     public static String padRight(String s, int n) {
-        return String.format("%-" + n + "s", s);  
-   }
-    
+        return String.format("%-" + n + "s", s);
+    }
+
     public static void saveAsCsv(StringBuilder sb, String filename) {
         var csv = new File(filename + ".csv");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csv))) {

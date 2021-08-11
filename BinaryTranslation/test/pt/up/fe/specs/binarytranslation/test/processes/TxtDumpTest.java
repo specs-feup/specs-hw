@@ -7,6 +7,9 @@ import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class TxtDumpTest {
 
+    /**
+     * 
+     */
     @Test
     public void test() {
         var txtfile = BinaryTranslationUtils.getFile("org/specs/BinaryTranslation/specs_cr_text.txt");
