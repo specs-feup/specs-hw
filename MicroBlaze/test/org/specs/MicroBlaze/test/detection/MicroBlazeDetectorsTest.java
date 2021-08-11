@@ -2,7 +2,6 @@ package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallFloat;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -29,11 +28,14 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testFrequentStaticSequenceDetector() {
+        var app = MicroBlazeLivermoreELFN10.cholesky.toApplication();
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(3);
 
-        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.cholesky,
-                MicroBlazeElfStream.class, FrequentStaticSequenceDetector.class, builder.build());
+        var bundle = SegmentDetectTestUtils.detect(app,
+                MicroBlazeElfStream.class,
+                FrequentStaticSequenceDetector.class,
+                builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
 
@@ -42,15 +44,17 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testFrequentTraceSequenceDetector() {
-        var elf = MicroBlazeLivermoreELFN10.cholesky;
+        var app = MicroBlazeLivermoreELFN10.cholesky.toApplication();
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(10);
-        builder.withSkipToAddr(elf.getKernelStart());
-        builder.withPrematureStopAddr(elf.getKernelStop());
+        builder.withSkipToAddr(app.getKernelStart());
+        builder.withPrematureStopAddr(app.getKernelStop());
 
         // TODO ensure trace is called here
-        var bundle = SegmentDetectTestUtils.detect(elf,
-                MicroBlazeTraceStream.class, FrequentTraceSequenceDetector.class, builder.build());
+        var bundle = SegmentDetectTestUtils.detect(app,
+                MicroBlazeTraceStream.class,
+                FrequentTraceSequenceDetector.class,
+                builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
 
@@ -59,11 +63,14 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testStaticBasicBlockDetector() {
+        var app = MicroBlazeLivermoreELFN10.cholesky.toApplication();
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(6);
 
-        var bundle = SegmentDetectTestUtils.detect(MicroBlazeLivermoreELFN10.cholesky,
-                MicroBlazeElfStream.class, StaticBasicBlockDetector.class, builder.build());
+        var bundle = SegmentDetectTestUtils.detect(app,
+                MicroBlazeElfStream.class,
+                StaticBasicBlockDetector.class,
+                builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
 
@@ -73,17 +80,19 @@ public class MicroBlazeDetectorsTest {
     @Test
     public void testTraceBasicBlockDetector() {
 
-        var elf = MicroBlazePolyBenchSmallFloat.gemm;
+        var app = MicroBlazeLivermoreELFN10.cholesky.toApplication();
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(12)
-                .withStartAddr(elf.getKernelStart())
-                .withStopAddr(elf.getKernelStop())
-                .withPrematureStopAddr(elf.getKernelStop())
-                .withSkipToAddr(elf.getKernelStart());
+                .withStartAddr(app.getKernelStart())
+                .withStopAddr(app.getKernelStop())
+                .withPrematureStopAddr(app.getKernelStop())
+                .withSkipToAddr(app.getKernelStart());
 
         // TODO ensure trace is called here
-        var bundle = SegmentDetectTestUtils.detect(
-                elf, MicroBlazeTraceStream.class, TraceBasicBlockDetector.class, builder.build());
+        var bundle = SegmentDetectTestUtils.detect(app,
+                MicroBlazeTraceStream.class,
+                TraceBasicBlockDetector.class,
+                builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
 
@@ -92,14 +101,17 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testMegablock() {
+        var app = MicroBlazeLivermoreELFN10.matmul.toApplication();
         var builder = new DetectorConfigurationBuilder();
+        builder.withMaxBlocks(10)
+                .withMaxWindow(1000)
+                .withStartAddr(app.getKernelStart())
+                .withStopAddr(app.getKernelStop());
 
-        var elf = MicroBlazeLivermoreELFN10.matmul;
-        builder.withMaxBlocks(10).withMaxWindow(1000).withStartAddr(elf.getKernelStart())
-                .withStopAddr(elf.getKernelStop());
-
-        var bundle = SegmentDetectTestUtils.detect(elf,
-                MicroBlazeTraceStream.class, FixedSizeMegablockDetector.class, builder.build());
+        var bundle = SegmentDetectTestUtils.detect(app,
+                MicroBlazeTraceStream.class,
+                FixedSizeMegablockDetector.class,
+                builder.build());
         SegmentDetectTestUtils.printBundle(bundle);
     }
 

@@ -1,15 +1,32 @@
 package org.specs.MicroBlaze.provider;
 
-public enum MicroBlazePolyBenchMiniInt implements MicroBlazeZippedELFProvider {
+public enum MicroBlazePolyBenchMiniFloat implements MicroBlazeZippedELFProvider {
 
+    _2mm("2mm"),
+    _3mm("3mm"),
+    adi,
+    atax,
+    bicg,
+    cholesky,
+    correlation,
+    covariance,
+    deriche,
+    doitgen,
+    durbin,
+    fdtd2d,
     floydwarshall("floyd-warshall"),
     gemm,
     gemver,
+    gesummv,
+    gramschmidt,
+    heat3d,
     jacobi1d("jacobi-1d"),
+    jacobi2d("jacobi-2d"),
     lu,
     ludcmp,
     mvt,
     nussinov,
+    seidel2d,
     symm,
     syr2k,
     syrk,
@@ -19,12 +36,12 @@ public enum MicroBlazePolyBenchMiniInt implements MicroBlazeZippedELFProvider {
     private String functionName;
     private String elfName;
 
-    private MicroBlazePolyBenchMiniInt(String elfname) {
+    private MicroBlazePolyBenchMiniFloat(String elfname) {
         this.functionName = "kernel_" + name();
         this.elfName = elfname + ".elf";
     }
 
-    private MicroBlazePolyBenchMiniInt() {
+    private MicroBlazePolyBenchMiniFloat() {
         this.functionName = "kernel_" + name();
         this.elfName = name() + ".elf";
     }

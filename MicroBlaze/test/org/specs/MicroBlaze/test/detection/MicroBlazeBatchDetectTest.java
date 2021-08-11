@@ -2,7 +2,7 @@ package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
-import org.specs.MicroBlaze.provider.MicroBlazePolyBenchSmallFloat;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeStaticProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
@@ -43,7 +43,7 @@ public class MicroBlazeBatchDetectTest {
         // ELFProvider elfs[] = MicroBlazeLivermoreELFN100.values();
         // ELFProvider elfs[] = MicroBlazeLivermoreELFN100.values();
         // ELFProvider elfs[] = { MicroBlazeLivermoreELFN100.innerprod100 };
-        ELFProvider elfs[] = MicroBlazePolyBenchSmallFloat.values();
+        ELFProvider elfs[] = MicroBlazePolyBenchMiniFloat.values();
         ThreadedSegmentDetectUtils.BatchDetect(elfs, 2, 20,
                 MicroBlazeStaticProducer.class,
                 MicroBlazeElfStream.class,
@@ -60,7 +60,7 @@ public class MicroBlazeBatchDetectTest {
 
         // ELFProvider elfs[] = MicroBlazeLivermoreELFN100.values();
         // ELFProvider elfs[] = { MicroBlazeLivermoreELFN100.innerprod100 };
-        ELFProvider elfs[] = MicroBlazePolyBenchSmallFloat.values();
+        ELFProvider elfs[] = MicroBlazePolyBenchMiniFloat.values();
         ThreadedSegmentDetectUtils.BatchDetect(elfs, 2, 50,
                 MicroBlazeStaticProducer.class,
                 MicroBlazeElfStream.class,
@@ -81,7 +81,7 @@ public class MicroBlazeBatchDetectTest {
 
         // ELFProvider elfs[] = MicroBlazePolyBenchBLASLarge.values();
 
-        ELFProvider elfs[] = MicroBlazePolyBenchSmallFloat.values();
+        ELFProvider elfs[] = MicroBlazePolyBenchMiniFloat.values();
         ThreadedSegmentDetectUtils.BatchDetect(elfs, 7, 20,
                 MicroBlazeTraceProducer.class,
                 MicroBlazeTraceStream.class,
