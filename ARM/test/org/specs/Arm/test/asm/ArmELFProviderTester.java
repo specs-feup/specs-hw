@@ -7,9 +7,9 @@ import org.specs.Arm.provider.ArmLivermoreELFN10;
 import org.specs.Arm.provider.ArmLivermoreELFN100;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
-import pt.up.fe.specs.binarytranslation.test.asm.ELFProviderTestTester;
+import pt.up.fe.specs.binarytranslation.test.asm.ELFProviderTester;
 
-public class ArmELFProviderTester extends ELFProviderTestTester {
+public class ArmELFProviderTester extends ELFProviderTester {
 
     @Test
     public void testStartStopAddrReading() {

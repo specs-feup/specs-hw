@@ -28,7 +28,7 @@ public class ArmIPCDumpTester {
     public void dumpIPCAllFiles() {
 
         for (var elf : ArmLivermoreELFN10.values()) {
-            try (var el = new ArmTraceStream(elf)) {
+            try (var el = new ArmTraceStream(elf.toApplication())) {
 
                 // var bbd = new FrequentTraceSequenceDetector(el);
                 var bbd = new TraceBasicBlockDetector();
