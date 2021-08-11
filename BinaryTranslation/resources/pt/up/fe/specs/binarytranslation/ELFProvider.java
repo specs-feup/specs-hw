@@ -19,17 +19,10 @@ public interface ELFProvider extends ResourceProvider {
         return SpecsIo.removeExtension(this.getELFName());
     }
 
-    // TODO
-    /*
-     * toStaticStream()
-     */
     default public StaticInstructioStream toStaticStream() {
         throw new NotImplementedException("toStaticStream()");
     }
 
-    /*
-     * toTraceStream()
-     */
     default public TraceInstructionStream toTraceStream() {
         throw new NotImplementedException("toTraceStream()");
     }
@@ -38,13 +31,5 @@ public interface ELFProvider extends ResourceProvider {
 
     default File getFile() {
         return this.write();
-    }
-
-    default public Number getKernelStart() {
-        return 0;
-    }
-
-    default public Number getKernelStop() {
-        return 0;
     }
 }

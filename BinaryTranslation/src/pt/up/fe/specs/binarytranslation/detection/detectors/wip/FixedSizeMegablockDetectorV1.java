@@ -12,7 +12,7 @@ import pt.up.fe.specs.binarytranslation.detection.segments.MegaBlock;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
-import pt.up.fe.specs.binarytranslation.tracer.InstructionWindow;
+import pt.up.fe.specs.binarytranslation.tracer.StreamBasicBlock;
 import pt.up.fe.specs.binarytranslation.tracer.StreamUnit;
 import pt.up.fe.specs.binarytranslation.utils.SlidingWindow;
 
@@ -65,7 +65,7 @@ public class FixedSizeMegablockDetectorV1 extends ASegmentDetector {
     /*
      * Get the pair which represent the start and end of sequential block!
      */
-    private StreamUnit getTraceUnit(InstructionStream istream, InstructionWindow window) {
+    private StreamUnit getTraceUnit(InstructionStream istream, SlidingWindow<Instruction> window) {
 
         if (!istream.hasNext())
             return null;
@@ -79,7 +79,7 @@ public class FixedSizeMegablockDetectorV1 extends ASegmentDetector {
 
             // target of a taken branch
             if ((addr2 - addr1) != istream.getInstructionWidth())
-                return new StreamUnit(startInst, previs);
+                return new StreamBasicBlock(startInst, previs);
 
             // advance
             previs = window.add(istream.nextInstruction());
@@ -91,7 +91,7 @@ public class FixedSizeMegablockDetectorV1 extends ASegmentDetector {
     /*
      * Expands the TraceUnits into full instruction list
      */
-    private List<Instruction> expandTraceUnits(List<StreamUnit> units, InstructionWindow window) {
+    private List<Instruction> expandTraceUnits(List<StreamUnit> units, SlidingWindow<Instruction> window) {
 
         var fullList = new ArrayList<Instruction>();
         for (var unit : units)

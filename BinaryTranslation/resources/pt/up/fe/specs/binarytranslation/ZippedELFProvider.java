@@ -17,8 +17,15 @@ public interface ZippedELFProvider extends ELFProvider {
         throw new NotImplementedException("asTraceTxtDump()");
     }
 
+    @Override
     default File getFile() {
         return this.write();
+    }
+
+    @Override
+    default String read() {
+        var file = write(SpecsIo.getTempFolder());
+        return SpecsIo.read(file);
     }
 
     @Override
@@ -41,11 +48,5 @@ public interface ZippedELFProvider extends ELFProvider {
         SpecsIo.copy(unzippedFile, finalFile);
         finalFile.deleteOnExit();
         return finalFile;
-    }
-
-    @Override
-    default String read() {
-        var file = write(SpecsIo.getTempFolder());
-        return SpecsIo.read(file);
     }
 }

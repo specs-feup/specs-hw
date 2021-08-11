@@ -1,10 +1,10 @@
 package pt.up.fe.specs.binarytranslation;
 
-public class ATraceDumpProvider implements ELFProvider {
+public class TraceDumpProvider implements ELFProvider {
 
     protected final ELFProvider original;
 
-    public ATraceDumpProvider(ELFProvider elfprovider) {
+    public TraceDumpProvider(ELFProvider elfprovider) {
         this.original = elfprovider;
     }
 
@@ -16,15 +16,5 @@ public class ATraceDumpProvider implements ELFProvider {
     @Override
     public String getResource() {
         return original.getResource();
-    }
-
-    @Override
-    public Number getKernelStart() {
-        return this.original.getKernelStart();
-    }
-
-    @Override
-    public Number getKernelStop() {
-        return this.original.getKernelStop();
     }
 }

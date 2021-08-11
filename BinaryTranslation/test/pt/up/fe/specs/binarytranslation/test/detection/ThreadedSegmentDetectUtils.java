@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
@@ -20,10 +20,8 @@ public class ThreadedSegmentDetectUtils {
             Class<?> producerClass, Class<?> streamClass, Class<?> detectorClass) {
 
         try {
-            /*
-             * 
-             */
-            var iproducer = ClassBuilders.buildProducer(producerClass, elf);
+            var app = elf.toApplication();
+            var iproducer = ClassBuilders.buildProducer(producerClass, app);
 
             /*
              * Stream constructor
@@ -53,10 +51,10 @@ public class ThreadedSegmentDetectUtils {
                 var detector = ClassBuilders.buildDetector(detectorClass,
                         new DetectorConfigurationBuilder()
                                 .withMaxWindow(i)
-                                .withStartAddr(elf.getKernelStart())
-                                .withStopAddr(elf.getKernelStop())
-                                .withSkipToAddr(elf.getKernelStart())
-                                .withPrematureStopAddr(elf.getKernelStop())
+                                .withStartAddr(app.getKernelStart())
+                                .withStopAddr(app.getKernelStop())
+                                .withSkipToAddr(app.getKernelStart())
+                                .withPrematureStopAddr(app.getKernelStop())
                                 .build());
 
                 streamengine.subscribe(istream -> detector.detectSegments((InstructionStream) istream));

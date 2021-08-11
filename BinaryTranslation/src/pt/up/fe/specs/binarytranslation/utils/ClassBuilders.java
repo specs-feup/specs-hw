@@ -4,7 +4,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
 import pt.up.fe.specs.binarytranslation.producer.InstructionProducer;
@@ -57,13 +57,7 @@ public class ClassBuilders {
     /*
      * Defaults to elf file in ELFProvider
      */
-    public static InstructionStream buildStream(Class<?> streamClass, ELFProvider elf)
-            throws InstantiationException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
-        return ClassBuilders.buildStream(streamClass, BinaryTranslationUtils.getFile(elf));
-    }
-
-    public static InstructionProducer buildProducer(Class<?> producerClass, ELFProvider elf)
+    public static InstructionProducer buildProducer(Class<?> producerClass, Application app)
             throws InstantiationException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException {
 
@@ -72,12 +66,12 @@ public class ClassBuilders {
          */
         Constructor<?> cons;
         try {
-            cons = producerClass.getConstructor(File.class);
+            cons = producerClass.getConstructor(Application.class);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        return (InstructionProducer) cons.newInstance(BinaryTranslationUtils.getFile(elf));
+        return (InstructionProducer) cons.newInstance(app);
     }
 }

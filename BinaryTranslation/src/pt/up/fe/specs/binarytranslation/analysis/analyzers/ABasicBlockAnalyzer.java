@@ -9,16 +9,16 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguratio
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
 public abstract class ABasicBlockAnalyzer {
-    private ATraceInstructionStream stream;
+    private TraceInstructionStream stream;
     protected ELFProvider elf;
     private List<List<Instruction>> basicBlocks = new ArrayList<>();
     private List<BinarySegment> basicBlockSegments = new ArrayList<>();
     private int window = 0;
 
-    public ABasicBlockAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+    public ABasicBlockAnalyzer(TraceInstructionStream stream, ELFProvider elf, int window) {
         this.stream = stream;
         this.elf = elf;
         this.window = window;
@@ -32,13 +32,21 @@ public abstract class ABasicBlockAnalyzer {
         if (this.basicBlocks.size() == 0) {
             System.out.println("Building detector for window size " + window);
 
-            var detector = new TraceBasicBlockDetector(
-                    elf.getKernelStart() != null ? new DetectorConfigurationBuilder()
+            var bld = new DetectorConfigurationBuilder();
+            bld.withMaxWindow(window);
+            // if(this.stream.getApp().getKernelStart() != null) ???
+
+            var detector = new TraceBasicBlockDetector(bld.build());
+            /*
+                    elf.getKernelStart() != null ? 
+                            new DetectorConfigurationBuilder()
                             .withMaxWindow(window)
                             .build()
-                            : new DetectorConfigurationBuilder()
-                                    .withMaxWindow(window)
-                                    .build());
+                            : 
+                                new DetectorConfigurationBuilder()
+                                .withMaxWindow(window)
+                                .build());*/
+
             basicBlockSegments = AnalysisUtils.getSegments(stream, detector);
         }
         return basicBlockSegments;

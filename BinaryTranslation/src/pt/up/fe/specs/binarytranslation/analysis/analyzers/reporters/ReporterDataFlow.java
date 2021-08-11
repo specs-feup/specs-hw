@@ -21,7 +21,7 @@ import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
 public class ReporterDataFlow extends AReporter {
 
@@ -37,7 +37,7 @@ public class ReporterDataFlow extends AReporter {
     public void processResults(ArrayList<DataFlowStatistics> results, String prefix) {
         var basicBlockCSV = new StringBuilder(
                 "Benchmark,Basic Block ID,#Inst,Critical Path Size,ILP Measure,Pairs,Graph\n");
-        //var benchCSV = new StringBuilder("Benchmark,#BasicBlocks,#Inst Mean,#Inst STD\n");
+        // var benchCSV = new StringBuilder("Benchmark,#BasicBlocks,#Inst Mean,#Inst STD\n");
 
         for (var res : results) {
             basicBlockCSV.append(res.getElfName()).append(",").append(res.getId()).append(",")
@@ -62,7 +62,7 @@ public class ReporterDataFlow extends AReporter {
         // .append("\n");
 
         // Save as CSV
-        //AnalysisUtils.saveAsCsv(benchCSV, "results/dataFlowBenchmark" + filename);
+        // AnalysisUtils.saveAsCsv(benchCSV, "results/dataFlowBenchmark" + filename);
         AnalysisUtils.saveAsCsv(basicBlockCSV, "results/basicBlockFlowBenchmark" + prefix);
 
     }
@@ -74,7 +74,8 @@ public class ReporterDataFlow extends AReporter {
     }
 
     @Override
-    public List<DataFlowStatistics> analyzeStream(int repetitions, ELFProvider elf, int window, ATraceInstructionStream stream) {
+    public List<DataFlowStatistics> analyzeStream(int repetitions, ELFProvider elf, int window,
+            TraceInstructionStream stream) {
         var analyzer = new BasicBlockDataFlowAnalyzer(stream, elf, window);
         var resList = analyzer.analyze(repetitions);
         return resList;

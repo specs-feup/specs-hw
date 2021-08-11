@@ -13,8 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 
-import java.io.File;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +20,7 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
 public abstract class AReporter {
     private Map<ELFProvider, Integer[]> elfWindows;
@@ -63,6 +60,8 @@ public abstract class AReporter {
         for (var elf : elfWindows.keySet()) {
             int id = 1;
             for (var window : elfWindows.get(elf)) {
+
+                /*
                 // var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
                 var fd = elf.getFile();
                 Constructor cons;
@@ -72,9 +71,9 @@ public abstract class AReporter {
                     stream = (ATraceInstructionStream) cons.newInstance(fd);
                 } catch (Exception e) {
                     SpecsLogs.warn("Error message:\n", e);
-                }
+                }*/
 
-                var res = analyzeStream(repetitions, elf, window, stream);
+                var res = analyzeStream(repetitions, elf, window, elf.toTraceStream());
                 id = processResult(results, elf, id, res);
             }
         }
@@ -106,5 +105,5 @@ public abstract class AReporter {
     protected abstract List<DataFlowStatistics> analyzeStatic(int repetitions, List<Instruction> block);
 
     protected abstract List<DataFlowStatistics> analyzeStream(int repetitions, ELFProvider elf, int window,
-            ATraceInstructionStream stream);
+            TraceInstructionStream stream);
 }
