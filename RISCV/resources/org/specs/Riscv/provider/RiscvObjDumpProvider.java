@@ -1,8 +1,8 @@
 package org.specs.Riscv.provider;
 
-import pt.up.fe.specs.binarytranslation.AObjDumpProvider;
+import pt.up.fe.specs.binarytranslation.ObjDumpProvider;
 
-public class RiscvObjDumpProvider extends AObjDumpProvider implements RiscvELFProvider {
+public class RiscvObjDumpProvider extends ObjDumpProvider implements RiscvELFProvider {
 
     public RiscvObjDumpProvider(RiscvELFProvider elfprovider) {
         super(elfprovider);
