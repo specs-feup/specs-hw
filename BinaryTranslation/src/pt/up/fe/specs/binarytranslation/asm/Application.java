@@ -107,7 +107,7 @@ public abstract class Application extends ADataClass<Application> {
         var startStop = new ArrayList<Integer>();
         if (mat.find()) {
             var startStopList = SpecsStrings.getRegex(mat.group(0), pat);
-            startStop.add(Integer.valueOf(startStopList.get(0), 16));
+            startStop.add(Integer.parseUnsignedInt(startStopList.get(0), 16));
             startStop.add(startStop.get(0) + Integer.valueOf(startStopList.get(1), 16) - 4);
         }
 
