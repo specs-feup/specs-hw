@@ -22,7 +22,7 @@ For Microblaze, configure with:
 
 ```
 ./configure --target-list="microblazeel-softmmu" --prefix=<install dir>
-make -i -j4
+make
 make install
 ```
 
@@ -30,47 +30,25 @@ For ARM (aarch64), configure with:
 
 ```
 ./configure --target-list="aarch64-softmmu" --prefix=<install dir>
-make -i -j4
+make
 make install
 ```
 
 Add the install paths to your PATH.
 
-## binutils (e.g., objdump and gdb) For MicroBlaze and ARM (aarch64)
+## QEMU For RISCV-V
 
-For binutils, its possible to use the builds packaged with Xilinx's tools (e.g., Vitis 2021.1). However, you can also fetch [this zip](https://www.xilinx.com/bin/public/openDownload?filename=mb-gnu-2021-0623.tar.gz), from [this page](https://www.xilinx.com/products/design-tools/guest-resources.html#2021). (Note: if anyone can point to a direction where Xilinx's stores these forks of binutils, we would be grateful. We can only find stale and deprecated repos...).
+Coming soon!
 
-Download and unzip everything. In folder *binutils-2_35*, do the following:
+## Compiling binutils and the cross-compilers for MicroBlaze, aarch64, and RISC-V
 
-For Microblaze, configure with:
+We currently rely on generating ELF files by cross-compilation for the architecture's we wish to target/explore. Generating the required binutils (especially objdump and gdb) for each target is lenghty. Some auxiliary resources about cross-compilation in general can be found [here](https://www6.software.ibm.com/developerworks/education/l-cross/l-cross-ltr.pdf), [here](https://wiki.osdev.org/GCC_Cross-Compiler), and [here](http://www.ifp.illinois.edu/~nakazato/tips/xgcc.html).
 
-```
-/configure -target="microblaze-xilinx-elf" --program-prefix=mb- --prefix=<install dir> --disable-werror
-make -i -j4
-make install
-```
-
-For ARM (aarch64), configure with:
-
-```
-./configure -target="aarch64-xilinx-elf" --program-prefix=aarch64- --prefix=<install dir> --disable-werror
-make -i -j4
-make install
-```
-
-Note that between each configure and make, you must run:
-
-```
-make clean distclean
-```
-
-And you might also need to delete all *config.cache* files in subdirs.
-
-Add the install paths to your PATH.
+For the build flow we follow, see [this](doc/README.md) README for more details.
 
 ### Generating the DTBs for MicroBlaze Baremetal Runs
 
-The repository already has the DTBs that QEMU requires to execute, but here is how we generated them: we created an example Vivado 2021.1 project for the ZCU102 board, instantiated only a MicroBlaze with block rams and necessary components. Then we exported the XSA (hardware description file) via File->Export->Export Hardware. (The XSA file for the MicroBlaze is also included in the repo.) Then, we ran *xsct* and performed the following commands:
+The repository already has the DTBs that QEMU (qemu-system-microblazeel) requires to execute, but here is how we generated them: we created an example Vivado 2021.1 project for the ZCU102 board, instantiated only a MicroBlaze with block rams and necessary components. Then we exported the XSA (hardware description file) via File->Export->Export Hardware. (The XSA file for the MicroBlaze is also included in the repo.) Then, we ran *xsct* and performed the following commands:
 
 ```
 hsi open_hw_design mb_baremetal.xsa
@@ -85,11 +63,9 @@ This generates the a pl.dtsi file and a system-top.dts file. The system-top.dts 
 dtc -I dts -O dtb -o system.dtb system-top.dts
 ```
 
+The resulting DTB file is passed to *qemu-system-microblazeel* along with the kernel to execute and other options.
+
 All the ELF files for the MicroBlaze that are bundled with the repo were compiled for this hardware description.
-
-## QEMU and binutils For RISC-V (iam and iamf)
-
-*TODO* (check back later)
 
 # Publications
 
