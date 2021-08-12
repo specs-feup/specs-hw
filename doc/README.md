@@ -37,7 +37,7 @@ export CONFIGUREFLAGS=" --disable-multiarch --with-arch=armv8-a "
 (This is relatively untested!). For building under mingw64 add the flags: 
 
 ```
--host=x86_64-w64-mingw32 --enable-mingw-wildcard --enable-leading-mingw64-underscores --enable-large-address-aware*
+-host=x86_64-w64-mingw32 --enable-mingw-wildcard --enable-leading-mingw64-underscores --enable-large-address-aware
 ```
 
 to all *configure* calls. This was tested with a MSYS2 installation found [here](https://www.msys2.org/). Follow the instruction to install the native build tools on the same page. In summary, in the mingw64 shell:
