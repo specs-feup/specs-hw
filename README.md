@@ -34,11 +34,17 @@ make
 make install
 ```
 
-Add the install paths to your PATH.
+Add the install paths to your PATH. Both targets can be compiled at once and installed in the same install path.
 
 ## QEMU For RISCV-V
 
-Coming soon!
+For RISC-V we employ the latest [official](https://github.com/qemu/qemu) QEMU release. Since this is a different repo entirely from the Xilinx fork, use a different install path for this target.
+
+```
+./configure --target-list="riscv32-softmmu" --prefix=<install dir>
+make 
+make install
+```
 
 ## Compiling binutils and the cross-compilers for MicroBlaze, aarch64, and RISC-V
 
