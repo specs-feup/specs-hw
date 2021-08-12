@@ -1,6 +1,6 @@
 package org.specs.Riscv.provider;
 
-public enum RiscvPolyBenchSmallInt implements RiscvELFProvider {
+public enum RiscvPolyBenchSmallInt implements RiscvZippedELFProvider {
 
     /*
      * output of riscv32-unknown-elf-objdump -t:
@@ -41,16 +41,6 @@ public enum RiscvPolyBenchSmallInt implements RiscvELFProvider {
         this.elfName = elfName;
         this.kernelStart = kernelStart;
         this.kernelStop = kernelStop;
-    }
-
-    @Override
-    public Number getKernelStart() {
-        return kernelStart;
-    }
-
-    @Override
-    public Number getKernelStop() {
-        return kernelStop;
     }
 
     @Override
