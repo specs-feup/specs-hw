@@ -6,6 +6,8 @@ Do not try to use the mainline binutils, gcc, and newlib repos (mirror [here](ht
 
 If you do not wish to use the script, or require the individual steps per architecture, untar the *binutils-2_35.tar.gz*, *gcc-10_2.tar.gz*, and *newlib-3_3_0.tar.gz*, and follow the next sections. As with typical gcc builds, the process involves building binutils, a first stage bootstrap gcc, newlib (alternatively glibc), and the final gcc suite.
 
+Our most tested build enviroment was Ubuntu 20.4.
+
 ## Build Flow for MicroBlaze and aarch64
 
 ### Setup for MicroBlaze
@@ -28,6 +30,22 @@ export TARGET=aarch64-xilinx-elf
 export PREFIX=<installation dir>
 export PROGRAM_PREFIX="aarch64-xilinx-elf-"
 export CONFIGUREFLAGS=" --disable-multiarch --with-arch=armv8-a "
+```
+
+### Extra: Setup for builds under mingw64
+
+(This is relatively untested!). For building under mingw64 add the flags: 
+
+```
+-host=x86_64-w64-mingw32 --enable-mingw-wildcard --enable-leading-mingw64-underscores --enable-large-address-aware*
+```
+
+to all *configure* calls. This was tested with a MSYS2 installation found [here](https://www.msys2.org/). Follow the instruction to install the native build tools on the same page. In summary, in the mingw64 shell:
+
+```
+$ pacman -Syu
+$ pacman -Su
+$ pacman -S --needed base-devel mingw-w64-x86_64-toolchain
 ```
 
 ### Common Build Flow
