@@ -32,13 +32,14 @@ public class RiscvProfileTester {
         profilerList.add(InstructionTypeHistogram.class);
         profilerList.add(InstructionHistogram.class);
 
-        for (var file : RiscvLivermoreELFN100iam.values()) {
+        for (var elf : RiscvLivermoreELFN100iam.values()) {
             // for (var file : Arrays.asList(RiscvLivermoreELFN100iamf.innerprod100)) {
             for (var producer : producers) {
 
+                var app = elf.toApplication();
                 var result = InstructionStreamProfilingUtils.profile(
-                        file.getResource(), producer, AUXMAP.get(producer),
-                        profilerList, file.getKernelStart(), file.getKernelStop());
+                        app, producer, AUXMAP.get(producer),
+                        profilerList, app.getKernelStart(), app.getKernelStop());
 
                 for (var r : result) {
                     r.toJSON();
