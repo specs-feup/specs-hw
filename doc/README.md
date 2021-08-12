@@ -114,38 +114,6 @@ make install
 
 Add the install paths to your PATH.
 
-## binutils (e.g., objdump and gdb) For MicroBlaze and ARM (aarch64)
-
-For binutils, its possible to use the builds packaged with Xilinx's tools (e.g., Vitis 2021.1)
-
-Download and unzip everything. In folder *binutils-2_35*, do the following:
-
-For Microblaze, configure with:
-
-```
-/configure -target="microblaze-xilinx-elf" --program-prefix=mb- --prefix=<install dir> --disable-werror
-make
-make install
-```
-
-For ARM (aarch64), configure with:
-
-```
-./configure -target="aarch64-xilinx-elf" --program-prefix=aarch64- --prefix=<install dir> --disable-werror
-make
-make install
-```
-
-Note that between each configure and make, you must run:
-
-```
-make clean distclean
-```
-
-And you might also need to delete all *config.cache* files in subdirs.
-
-Add the install paths to your PATH.
-
 ## Build Flow for RISC-V (iam and iamf)
 
 *TODO* (check back later)
