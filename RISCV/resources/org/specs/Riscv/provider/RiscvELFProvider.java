@@ -14,16 +14,6 @@ public interface RiscvELFProvider extends ZippedELFProvider {
     final static String PREFIX = "org/specs/Riscv/asm/";
 
     @Override
-    default RiscvELFProvider asTraceTxtDump() {
-        return new RiscvTraceDumpProvider(this);
-    }
-
-    @Override
-    default RiscvELFProvider asTxtDump() {
-        return new RiscvObjDumpProvider(this);
-    }
-
-    @Override
     default Application toApplication() {
         return new RiscvApplication(this);
     }
