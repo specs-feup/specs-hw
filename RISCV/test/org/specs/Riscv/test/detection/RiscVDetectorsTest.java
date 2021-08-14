@@ -21,7 +21,7 @@ public class RiscVDetectorsTest {
         var builder = new DetectorConfigurationBuilder();
         // builder.withMaxWindow(4).withStartAddr(elf.getKernelStart()).withStopAddr(elf.getKernelStop());
 
-        var bundle = SegmentDetectTestUtils.detect(elf,
+        var bundle = SegmentDetectTestUtils.detect(elf.toApplication(),
                 RiscvElfStream.class,
                 FrequentStaticSequenceDetector.class,
                 builder.build());
