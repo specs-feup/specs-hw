@@ -1,23 +1,22 @@
 ################################################################################
-# Makefile for Polybench adapted for MicroBlaze baremetal
+# Makefile for Livermore adapted for MicroBlaze baremetal
 ################################################################################
 
-export KERNEL_OPTIONS=-DDATA_TYPE_IS_INT -DMINI_DATASET
 export ROOT=$(shell pwd)
-SETS=datamining linear-algebra medley stencils
+KERNELS=CHOLESKY DIFFERENCE_PREDICT G_LINEAR_RECURRENCE HYDRO HYDRO_2D HYDRO_2D_IMPLICIT INNER_PROD INTEGRATE_PREDICT LIN_REC MATMUL PIC_1D PIC_2D STATE_FRAG TRI_DIAG
 
 .PHONY: all clean $(SETS)
-all:  libs $(SETS)
+all:  libs $(KERNELS)
 
 libs:
 	$(MAKE) -C ./lib/standalone_microblaze_0/bsp/ all
 
-$(SETS):
-	$(MAKE) -C ../polybenchKernels/$@ all
+$(KERNELS):
+	$(MAKE) -C ../livermoreKernels/$@ all
 
 clean:
 	for s in $ $(SETS) ; do \
-		$(MAKE) -C ../polybenchKernels/$$s clean && wait ; \
+		$(MAKE) -C ../livermoreKernels/$$s clean && wait ; \
 	done
 	$(MAKE) -C ./lib/standalone_microblaze_0/bsp/ clean
 	-$(RM) ./build/*.elf
