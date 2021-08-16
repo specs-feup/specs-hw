@@ -1,6 +1,6 @@
 package org.specs.Arm.provider;
 
-public enum ArmLivermoreELFN10 implements ArmZippedELFProvider {
+public enum ArmLivermoreN100 implements ArmZippedELFProvider {
 
     cholesky(),
     diffpredict("difference_predictors"),
@@ -22,12 +22,12 @@ public enum ArmLivermoreELFN10 implements ArmZippedELFProvider {
     private String functionName;
     private String elfName;
 
-    private ArmLivermoreELFN10(String functionName) {
+    private ArmLivermoreN100(String functionName) {
         this.functionName = functionName;
         this.elfName = name() + ".elf";
     }
 
-    private ArmLivermoreELFN10() {
+    private ArmLivermoreN100() {
         this.functionName = name();
         this.elfName = name() + ".elf";
     }

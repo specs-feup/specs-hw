@@ -1,7 +1,7 @@
 package org.specs.Arm.test;
 
 import org.junit.Test;
-import org.specs.Arm.provider.ArmLivermoreELFN10;
+import org.specs.Arm.provider.ArmLivermoreN10;
 import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
@@ -27,7 +27,7 @@ public class ArmIPCDumpTester {
     @Test
     public void dumpIPCAllFiles() {
 
-        for (var elf : ArmLivermoreELFN10.values()) {
+        for (var elf : ArmLivermoreN10.values()) {
             try (var el = new ArmTraceStream(elf.toApplication())) {
 
                 // var bbd = new FrequentTraceSequenceDetector(el);

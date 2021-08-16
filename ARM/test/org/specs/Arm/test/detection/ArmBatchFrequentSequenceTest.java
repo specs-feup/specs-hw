@@ -1,7 +1,7 @@
 package org.specs.Arm.test.detection;
 
 import org.junit.Test;
-import org.specs.Arm.provider.ArmLivermoreELFN100;
+import org.specs.Arm.provider.ArmLivermoreN100;
 import org.specs.Arm.stream.ArmTraceProducer;
 import org.specs.Arm.stream.ArmTraceStream;
 
@@ -33,7 +33,7 @@ public class ArmBatchFrequentSequenceTest {
         // using the N10 version is fine, if we use the kernel start and stop bounds
 
         // ELFProvider elfs[] = ArmLivermoreELFN10.values();
-        ELFProvider elfs[] = { ArmLivermoreELFN100.tri_diag };
+        ELFProvider elfs[] = { ArmLivermoreN100.tri_diag };
         ThreadedSegmentDetectUtils.BatchDetect(elfs, 4, 50,
                 ArmTraceProducer.class,
                 ArmTraceStream.class,

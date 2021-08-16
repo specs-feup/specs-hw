@@ -1,7 +1,7 @@
 package org.specs.Arm.test.generators;
 
 import org.junit.Test;
-import org.specs.Arm.provider.ArmLivermoreELFN100;
+import org.specs.Arm.provider.ArmLivermoreN100;
 import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
@@ -16,7 +16,7 @@ public class ArmCustomInstructionUnitGeneratorTester {
     public void testCustomUnitGenerate() {
 
         // get static frequent sequence bundle
-        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreELFN100.innerprod,
+        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreN100.innerprod,
                 ArmTraceStream.class, TraceBasicBlockDetector.class,
                 (new DetectorConfigurationBuilder().withMaxWindow(6)).build());
 

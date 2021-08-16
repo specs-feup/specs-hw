@@ -1,8 +1,8 @@
 package org.specs.Arm.test.tracer;
 
 import org.junit.Test;
-import org.specs.Arm.provider.ArmLivermoreELFN10;
-import org.specs.Arm.provider.ArmLivermoreELFN100;
+import org.specs.Arm.provider.ArmLivermoreN10;
+import org.specs.Arm.provider.ArmLivermoreN100;
 import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.test.tracer.TraceGraphTestUtils;
@@ -15,7 +15,7 @@ public class ARMTracerTester {
             TraceGraphTestUtils.testTraceStreamGraph(file, ArmTraceStream.class);
         }*/
         TraceGraphTestUtils.testTraceStreamGraph(
-                ArmLivermoreELFN100.hydro, ArmTraceStream.class);
+                ArmLivermoreN100.hydro, ArmTraceStream.class);
     }
 
     /*
@@ -24,6 +24,6 @@ public class ARMTracerTester {
     @Test
     public void testBasicBlockTraceUnit() {
         TraceGraphTestUtils.testBasicBlockTraceUnit(
-                ArmLivermoreELFN10.innerprod, ArmTraceStream.class);
+                ArmLivermoreN10.innerprod, ArmTraceStream.class);
     }
 }

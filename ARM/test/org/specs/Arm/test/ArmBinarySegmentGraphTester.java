@@ -2,7 +2,7 @@ package org.specs.Arm.test;
 
 import org.junit.Test;
 import org.specs.Arm.provider.ArmELFProvider;
-import org.specs.Arm.provider.ArmLivermoreELFN10;
+import org.specs.Arm.provider.ArmLivermoreN10;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
@@ -20,7 +20,7 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public class ArmBinarySegmentGraphTester {
 
     private ArmELFProvider getELF() {
-        return ArmLivermoreELFN10.cholesky;
+        return ArmLivermoreN10.cholesky;
     }
 
     private BinarySegmentGraph convertSegmentToGraph(BinarySegment seg) {
