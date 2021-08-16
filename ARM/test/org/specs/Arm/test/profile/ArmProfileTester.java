@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.specs.Arm.provider.ArmLivermoreELFN100;
+import org.specs.Arm.provider.ArmLivermoreN100;
 import org.specs.Arm.stream.ArmTraceProducer;
 import org.specs.Arm.stream.ArmTraceStream;
 
@@ -34,12 +34,13 @@ public class ArmProfileTester {
         profilerList.add(InstructionHistogram.class);
 
         // for (var file : ArmLivermoreELFN100.values()) {
-        for (var file : Arrays.asList(ArmLivermoreELFN100.tri_diag)) {
+        for (var elf : Arrays.asList(ArmLivermoreN100.tri_diag)) {
             for (var producer : producers) {
 
+                var app = elf.toApplication();
                 var result = InstructionStreamProfilingUtils.profile(
-                        file.getResource(), producer, AUXMAP.get(producer),
-                        profilerList, file.getKernelStart(), file.getKernelStop());
+                        app, producer, AUXMAP.get(producer),
+                        profilerList, app.getKernelStart(), app.getKernelStop());
 
                 for (var r : result) {
                     r.toJSON();
