@@ -1,4 +1,4 @@
-package org.specs.MicroBlaze.test;
+package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
