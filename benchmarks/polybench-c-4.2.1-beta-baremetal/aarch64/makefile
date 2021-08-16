@@ -1,5 +1,5 @@
 ################################################################################
-# Makefile for Polybench adapted for Aarch64 baremetal
+# Makefile for Polybench adapted for aarch64 baremetal
 ################################################################################
 
 export KERNEL_OPTIONS=-DDATA_TYPE_IS_FLOAT -DMINI_DATASET
@@ -7,7 +7,10 @@ export ROOT=$(shell pwd)
 SETS=datamining linear-algebra medley stencils
 
 .PHONY: all clean $(SETS)
-all: $(SETS)
+all: libs $(SETS)
+
+libs:
+	$(MAKE) -C ./lib/standalone_bsp_0/ all
 
 $(SETS):
 	$(MAKE) -C ../polybenchKernels/$@ all

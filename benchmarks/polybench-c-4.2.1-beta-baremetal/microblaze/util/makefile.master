@@ -39,8 +39,7 @@ $(OBJDIR)/%.o : %.c
 
 ###############################################################################
 # Add inputs and outputs from these tool invocations to the build variables 
-ELFSIZE += \
-$(KERNEL).elf.size \
+ELFSIZE = $(KERNEL).elf.size
 
 # All Target
 all: $(OBJDIR)/$(KERNEL).elf $(OBJDIR)/$(KERNEL).elf.size
@@ -52,7 +51,7 @@ $(OBJDIR):
 $(OBJDIR)/$(KERNEL).elf: $(OBJDIR) $(OBJS) $(LD_SRCS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MicroBlaze gcc linker'
-	$(CC) -Wl,-T -Wl,$(LD_SRCS) -L$(LIBDIR)/lib $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -Wl,--gc-sections -o "$(OBJDIR)/$(KERNEL).elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	$(CC) -Wl,-T -Wl,$(LD_SRCS) -L$(LIBDIR)/lib $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -Wl,--gc-sections -o "$(OBJDIR)/$(KERNEL).elf" $(OBJS) $(LIBS)
 	rm $(OBJS) $(C_DEPS)
 	@echo 'Finished building target: $@'
 	@echo ' '
