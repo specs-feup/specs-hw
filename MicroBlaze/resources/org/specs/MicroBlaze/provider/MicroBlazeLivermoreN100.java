@@ -1,6 +1,6 @@
 package org.specs.MicroBlaze.provider;
 
-public enum MicroBlazeLivermoreELFN100 implements MicroBlazeZippedELFProvider {
+public enum MicroBlazeLivermoreN100 implements MicroBlazeZippedELFProvider {
 
     cholesky(),
     diffpredict("difference_predictors"),
@@ -18,18 +18,18 @@ public enum MicroBlazeLivermoreELFN100 implements MicroBlazeZippedELFProvider {
     matmul(),
     pic1d("pic_1d"),
     pic2d("pic_2d"),
-    state_frag("state_fragment"),
-    tri_diag("tri_diagonal");
+    statefrag("state_fragment"),
+    tridiag("tri_diagonal");
 
     private String functionName;
     private String elfName;
 
-    private MicroBlazeLivermoreELFN100(String functionName) {
+    private MicroBlazeLivermoreN100(String functionName) {
         this.functionName = functionName;
         this.elfName = name() + ".elf";
     }
 
-    private MicroBlazeLivermoreELFN100() {
+    private MicroBlazeLivermoreN100() {
         this.functionName = name();
         this.elfName = name() + ".elf";
     }
