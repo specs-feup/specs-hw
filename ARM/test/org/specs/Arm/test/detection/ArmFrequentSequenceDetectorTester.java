@@ -13,14 +13,14 @@ public class ArmFrequentSequenceDetectorTester {
 
     @Test
     public void testStatic() {
-        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreN10.cholesky,
+        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreN10.cholesky.toApplication(),
                 ArmElfStream.class, FrequentStaticSequenceDetector.class);
         SegmentDetectTestUtils.printBundle(bundle);
     }
 
     @Test
     public void testTrace() {
-        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreN10.cholesky,
+        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreN10.cholesky.toApplication(),
                 ArmTraceStream.class, FrequentTraceSequenceDetector.class);
         SegmentDetectTestUtils.printBundle(bundle);
     }
