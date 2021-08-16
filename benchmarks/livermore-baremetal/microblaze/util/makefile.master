@@ -23,6 +23,7 @@ EXTRAFLAGS := -fstack-check -Werror -Wstack-usage=128000 -Wno-error=unused-funct
 
 LIVERMORE:=$(ROOT)/../livermoreKernels/common
 SOURCEDIRS:=$(LIVERMORE)
+BUILDDIR:=$(ROOT)/build/$(KERNEL)
 
 ###############################################################################
 # Add inputs and outputs from these tool invocations to the build variables 

@@ -15,7 +15,7 @@ $(KERNELS):
 	$(MAKE) -C ../livermoreKernels/$@ all
 
 clean:
-	for s in $ $(SETS) ; do \
+	for s in $ $(KERNELS) ; do \
 		$(MAKE) -C ../livermoreKernels/$$s clean && wait ; \
 	done
 	$(MAKE) -C ./lib/standalone_microblaze_0/bsp/ clean
