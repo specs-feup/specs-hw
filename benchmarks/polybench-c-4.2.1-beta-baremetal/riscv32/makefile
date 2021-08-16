@@ -2,7 +2,7 @@
 # Makefile for Polybench adapted for RISC-V 32 baremetal
 ################################################################################
 
-export KERNEL_OPTIONS=-DDATA_TYPE_IS_INT -DMINI_DATASET
+export KERNEL_OPTIONS=-DDATA_TYPE_IS_FLOAT -DMINI_DATASET
 export ROOT=$(shell pwd)
 SETS=datamining linear-algebra medley stencils
 

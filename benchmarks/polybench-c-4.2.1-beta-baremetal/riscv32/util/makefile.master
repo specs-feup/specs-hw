@@ -13,7 +13,7 @@ ifneq ($(strip $(C_DEPS)),)
 endif
 endif
 
-CROSS_PREFIX=riscv32-unknown-elf-
+CC=riscv32-unknown-elf-
 
 LIBS := -lm
 LIBDIR := 
@@ -34,7 +34,7 @@ C_DEPS = $(OBJDIR)/$(KERNEL).d
 $(OBJDIR)/%.o : %.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: $(CROSS_PREFIX)gcc'
-	$(CROSS_PREFIX)gcc $(KERNEL_OPTIONS) -I$(RELATIVE)/lib -c -fmessage-length=0 -MT"$@" $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -ffunction-sections -fdata-sections -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	$(CC)gcc $(KERNEL_OPTIONS) -I$(RELATIVE)/lib -c -fmessage-length=0 -MT"$@" $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -ffunction-sections -fdata-sections -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
@@ -43,7 +43,9 @@ $(OBJDIR)/%.o : %.c
 ELFSIZE = $(KERNEL).elf.size
 
 # All Target
-all: $(OBJDIR)/$(KERNEL).elf $(OBJDIR)/$(KERNEL).elf.size
+all: $(OBJDIR)/$(KERNEL).elf 
+
+#$(OBJDIR)/$(KERNEL).elf.size
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -52,20 +54,20 @@ USER_OBJS := $(OBJDIR)/crt0.o
 
 # _start
 $(OBJDIR)/crt0.o: $(ROOT)/lib/crt0.s $(OBJDIR)
-	$(CROSS_PREFIX)gcc $(KERNEL_OPTIONS) -I$(RELATIVE)/lib -c $(CFLAGS) -o "$@" "$<"
+	$(CC)gcc $(KERNEL_OPTIONS) -I$(RELATIVE)/lib -c $(CFLAGS) -o "$@" "$<"
 
 # Tool invocations
 $(OBJDIR)/$(KERNEL).elf: $(OBJDIR) $(OBJS) $(USER_OBJS) $(LD_SRCS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: $(CROSS_PREFIX)ld'
-	$(CROSS_PREFIX)gcc -Wl,-T -Wl,$(LD_SRCS) $(CFLAGS) $(EXTRAFLAGS) -nostartfiles -o "$(OBJDIR)/$(KERNEL).elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	$(CC)gcc -Wl,-T -Wl,$(LD_SRCS) $(CFLAGS) $(EXTRAFLAGS) -nostartfiles -o "$(OBJDIR)/$(KERNEL).elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	rm $(OBJS) $(C_DEPS) $(USER_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 $(OBJDIR)/$(KERNEL).elf.size: $(OBJDIR)/$(KERNEL).elf
 	@echo 'Invoking: $(CROSS_PREFIX)size'
-	$(CROSS_PREFIX)size $(KERNEL).elf  |tee "$(OBJDIR)/$(KERNEL).elf.size"
+	$(CC)size $(KERNEL).elf  |tee "$(OBJDIR)/$(KERNEL).elf.size"
 	@echo 'Finished building: $@'
 	@echo ' '
 
