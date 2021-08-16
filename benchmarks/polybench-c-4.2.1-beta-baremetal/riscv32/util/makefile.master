@@ -18,7 +18,7 @@ CROSS_PREFIX=riscv32-unknown-elf-
 LIBS := -lm
 LIBDIR := 
 #CFLAGS := -mcmodel=medlow -mtune=rocket -march=rv32imaf -mabi=ilp32f -g -O2 -fbuilding-libgcc -fno-stack-protector -fvisibility=hidden -Wl,--no-relax  -Wl,--gc-sections -ffunction-sections -fdata-sections -ffreestanding -specs=nosys.specs
-CFLAGS := -march=rv32imaf -mabi=ilp32f -g -O2 -Wl,--gc-sections -ffunction-sections -fdata-sections
+CFLAGS := -march=rv32imaf -mabi=ilp32f -g3 -O2 -Wl,--gc-sections -ffunction-sections -fdata-sections
 EXTRAFLAGS := -fstack-check -Werror -Wstack-usage=128000 -Wno-error=unused-function -Wno-error=unknown-pragmas -Wno-error=misleading-indentation -Wno-error=unused-variable
 
 OBJDIR=$(ROOT)/build/$(KERNEL)
@@ -34,7 +34,7 @@ C_DEPS = $(OBJDIR)/$(KERNEL).d
 $(OBJDIR)/%.o : %.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: $(CROSS_PREFIX)gcc'
-	$(CROSS_PREFIX)gcc $(KERNEL_OPTIONS) -Wall -O2 -g3 -I$(RELATIVE)/lib -c -fmessage-length=0 -MT"$@" $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -ffunction-sections -fdata-sections -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	$(CROSS_PREFIX)gcc $(KERNEL_OPTIONS) -I$(RELATIVE)/lib -c -fmessage-length=0 -MT"$@" $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -ffunction-sections -fdata-sections -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
@@ -71,7 +71,7 @@ $(OBJDIR)/$(KERNEL).elf.size: $(OBJDIR)/$(KERNEL).elf
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS) $(USER_OBJS) $(OBJDIR)/$(C_DEPS) $(OBJDIR)/$(KERNEL).elf $(OBJDIR)/$(KERNEL).elf.size $(OBJDIR) crt0.o
+	-$(RM) $(OBJS) $(USER_OBJS) $(OBJDIR)/$(C_DEPS) $(OBJDIR)/$(KERNEL).elf $(OBJDIR)/$(KERNEL).elf.size $(OBJDIR) $(OBJDIR)/crt0.o
 	-@echo ' '
 
 # print rule

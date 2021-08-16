@@ -13,7 +13,6 @@ ifneq ($(strip $(C_DEPS)),)
 endif
 endif
 
-#CC := microblaze-xilinx-elf-gcc
 CC := mb-gcc
 
 LIBS := -Wl,--start-group,-lxil,-lgcc,-lc,--end-group
@@ -23,29 +22,26 @@ EXTRAFLAGS := -fstack-check -Werror -Wstack-usage=128000 -Wno-error=unused-funct
 
 LIVERMORE:=$(ROOT)/../livermoreKernels/common
 SOURCEDIRS:=$(LIVERMORE)
-BUILDDIR:=$(ROOT)/build/$(KERNEL)
+OBJDIR=$(ROOT)/build/$(KERNEL)
 
 ###############################################################################
 # Add inputs and outputs from these tool invocations to the build variables 
-LD_SRCS += \
-$(ROOT)/lib/lscript.ld 
+LD_SRCS = $(ROOT)/lib/lscript.ld 
 
 # Create a list of *.c sources in DIRS
 SOURCES = $(foreach dir,$(SOURCEDIRS),$(wildcard $(dir)/*.c)) $(REFERENCE)
 C_SRCS = $(notdir $(SOURCES))
 
 # Define objects for all sources
-OBJS += \
-$(C_SRCS:%.c=%.o)
+OBJS = $(addprefix $(OBJDIR)/, $(C_SRCS:%.c=%.o))
 
-C_DEPS += \
-$(C_SRCS:%.c=%.d)
+C_DEPS = $(addprefix $(OBJDIR)/, $(C_SRCS:%.c=%.d))
 
 # Add this list to VPATH, the place make will look for the source files
 VPATH = $(SOURCEDIRS) $(dir $(REFERENCE))
 
 # Each subdirectory must supply rules for building sources it contributes
-./%.o: ./%.c
+$(OBJDIR)/%.o : %.c $(OBJDIR)
 	@echo 'Building file: $<'
 	@echo 'Invoking: MicroBlaze gcc compiler'
 	$(CC) $(KERNEL_OPTIONS) -Wall -O2 -g3 -I$(LIVERMORE) -c -fmessage-length=0 -MT"$@" -I$(LIBDIR)/include $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -ffunction-sections -fdata-sections -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
@@ -54,37 +50,33 @@ VPATH = $(SOURCEDIRS) $(dir $(REFERENCE))
 
 ###############################################################################
 # Add inputs and outputs from these tool invocations to the build variables 
-ELFSIZE += \
-$(KERNEL).elf.size \
+ELFSIZE = $(OBJDIR)/$(KERNEL).elf.size
 
 # All Target
-all: $(KERNEL).elf secondary-outputs $(ROOT)/build/$(KERNEL).elf
+all: $(OBJDIR)/$(KERNEL).elf $(OBJDIR)/$(KERNEL).elf.size
 
-$(ROOT)/build/$(KERNEL).elf: $(KERNEL).elf
-	mkdir -p $(ROOT)/build/
-	cp $(KERNEL).elf $(ROOT)/build/$(KERNEL).elf
-	cp $(KERNEL).elf.size $(ROOT)/build/$(KERNEL).elf.size
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
 
 # Tool invocations
-$(KERNEL).elf: $(OBJS) $(LD_SRCS)
+$(OBJDIR)/$(KERNEL).elf: $(OBJDIR) $(OBJS) $(LD_SRCS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MicroBlaze gcc linker'
-	$(CC) -Wl,-T -Wl,$(LD_SRCS) -L$(LIBDIR)/lib $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -Wl,--gc-sections -o "$(KERNEL).elf" $(OBJS) $(LIBS)
+	$(CC) -Wl,-T -Wl,$(LD_SRCS) -L$(LIBDIR)/lib $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -Wl,--gc-sections -o "$(OBJDIR)/$(KERNEL).elf" $(OBJS) $(LIBS)
+	rm $(OBJS) $(C_DEPS)	
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-$(KERNEL).elf.size: $(KERNEL).elf
+$(OBJDIR)/$(KERNEL).elf.size: $(OBJDIR)/$(KERNEL).elf
 	@echo 'Invoking: MicroBlaze Print Size'
-	mb-size $(KERNEL).elf  |tee "$(KERNEL).elf.size"
+	mb-size $(OBJDIR)/$(KERNEL).elf  |tee "$(OBJDIR)/$(KERNEL).elf.size"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(EXECUTABLES) $(OBJS) $(S_UPPER_DEPS) $(C_DEPS) $(ELFSIZE) $(KERNEL).elf $(KERNEL).elf.size 
+	-$(RM) $(OBJS) $(OBJDIR)/$(C_DEPS) $(OBJDIR)/$(KERNEL).elf $(OBJDIR)/$(KERNEL).elf.size $(OBJDIR)
 	-@echo ' '
-
-secondary-outputs: $(ELFSIZE)
 
 # print rule
 print-%: ; @echo $*=$($*)
