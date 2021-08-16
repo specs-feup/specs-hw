@@ -26,7 +26,14 @@ public enum RiscvResource implements ResourceProvider {
     // https://theintobooks.wordpress.com/2019/12/28/hello-world-on-risc-v-with-qemu/
     // https://github.com/noteed/riscv-hello-c
     // https://matrix89.github.io/writes/writes/experiments-in-riscv/
+
+    // CRITICAL RESOURCE FOR GETTING RISC-V LD
     // https://twilco.github.io/riscv-from-scratch/2019/04/27/riscv-from-scratch-2.html#link-it-up
+
+    // to get DTB from QEMU:
+    // qemu-system-riscv32 -machine virt,dumpdtb=./virt.dtb
+    // and if you want it in DTS
+    // dtc -I dtb -O dts virt.dtb -o virt.dts
 
     // other resources: https://github.com/michaeljclark/riscv-probe/tree/master/libfemto
 
