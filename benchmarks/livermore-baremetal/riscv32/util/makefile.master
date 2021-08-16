@@ -15,11 +15,10 @@ ifneq ($(strip $(C_DEPS)),)
 endif
 endif
 
-CROSS_PREFIX=riscv32-unknown-elf-
+CC=riscv32-unknown-elf-
 
 LIBS := -lm
 LIBDIR := 
-#CFLAGS := -mcmodel=medlow -mtune=rocket -march=rv32imaf -mabi=ilp32f -g -O2 -fbuilding-libgcc -fno-stack-protector -fvisibility=hidden -Wl,--no-relax  -Wl,--gc-sections -ffunction-sections -fdata-sections -ffreestanding -specs=nosys.specs
 CFLAGS := -march=rv32imaf -mabi=ilp32f -g3 -O2 -Wl,--gc-sections -ffunction-sections -fdata-sections
 EXTRAFLAGS := -fstack-check -Werror -Wstack-usage=128000 -Wno-error=unused-function -Wno-error=unknown-pragmas -Wno-error=misleading-indentation -Wno-error=unused-variable
 
@@ -56,7 +55,9 @@ $(OBJDIR)/%.o : %.c $(OBJDIR)
 ELFSIZE = $(OBJDIR)/$(KERNEL).elf.size
 
 # All Target
-all: $(OBJDIR)/$(KERNEL).elf $(OBJDIR)/$(KERNEL).elf.size
+all: $(OBJDIR)/$(KERNEL).elf
+
+#$(OBJDIR)/$(KERNEL).elf.size
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -65,20 +66,20 @@ USER_OBJS := $(OBJDIR)/crt0.o
 
 # _start
 $(OBJDIR)/crt0.o: $(ROOT)/lib/crt0.s $(OBJDIR)
-	$(CROSS_PREFIX)gcc $(KERNEL_OPTIONS) -c $(CFLAGS) -o "$@" "$<"
+	$(CC)gcc $(KERNEL_OPTIONS) -c $(CFLAGS) -o "$@" "$<"
 
 # Tool invocations
 $(OBJDIR)/$(KERNEL).elf: $(OBJDIR) $(OBJS) $(USER_OBJS) $(LD_SRCS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: $(CROSS_PREFIX)ld'
-	$(CROSS_PREFIX)gcc -Wl,-T -Wl,$(LD_SRCS) $(CFLAGS) -nostartfiles -o "$(OBJDIR)/$(KERNEL).elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	$(CC)gcc -Wl,-T -Wl,$(LD_SRCS) $(CFLAGS) -nostartfiles -o "$(OBJDIR)/$(KERNEL).elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	rm $(OBJS) $(C_DEPS) $(USER_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 $(OBJDIR)/$(KERNEL).elf.size: $(OBJDIR)/$(KERNEL).elf
 	@echo 'Invoking: $(CROSS_PREFIX)size'
-	$(CROSS_PREFIX)size $(KERNEL).elf  |tee "$(OBJDIR)/$(KERNEL).elf.size"
+	$(CC)size $(KERNEL).elf  |tee "$(OBJDIR)/$(KERNEL).elf.size"
 	@echo 'Finished building: $@'
 	@echo ' '
 

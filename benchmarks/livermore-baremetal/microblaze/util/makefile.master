@@ -13,7 +13,7 @@ ifneq ($(strip $(C_DEPS)),)
 endif
 endif
 
-CC := mb-gcc
+CC := mb-
 
 LIBS := -Wl,--start-group,-lxil,-lgcc,-lc,--end-group
 LIBDIR := $(ROOT)/lib/standalone_microblaze_0/bsp/microblaze_0
@@ -44,7 +44,7 @@ VPATH = $(SOURCEDIRS) $(dir $(REFERENCE))
 $(OBJDIR)/%.o : %.c $(OBJDIR)
 	@echo 'Building file: $<'
 	@echo 'Invoking: MicroBlaze gcc compiler'
-	$(CC) $(KERNEL_OPTIONS) -Wall -O2 -g3 -I$(LIVERMORE) -c -fmessage-length=0 -MT"$@" -I$(LIBDIR)/include $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -ffunction-sections -fdata-sections -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	$(CC)gcc $(KERNEL_OPTIONS) -Wall -O2 -g3 -I$(LIVERMORE) -c -fmessage-length=0 -MT"$@" -I$(LIBDIR)/include $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -ffunction-sections -fdata-sections -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
@@ -62,14 +62,14 @@ $(OBJDIR):
 $(OBJDIR)/$(KERNEL).elf: $(OBJDIR) $(OBJS) $(LD_SRCS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MicroBlaze gcc linker'
-	$(CC) -Wl,-T -Wl,$(LD_SRCS) -L$(LIBDIR)/lib $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -Wl,--gc-sections -o "$(OBJDIR)/$(KERNEL).elf" $(OBJS) $(LIBS)
+	$(CC)gcc -Wl,-T -Wl,$(LD_SRCS) -L$(LIBDIR)/lib $(CFLAGS) $(EXTRAFLAGS) -Wl,--no-relax -Wl,--gc-sections -o "$(OBJDIR)/$(KERNEL).elf" $(OBJS) $(LIBS)
 	rm $(OBJS) $(C_DEPS)	
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 $(OBJDIR)/$(KERNEL).elf.size: $(OBJDIR)/$(KERNEL).elf
 	@echo 'Invoking: MicroBlaze Print Size'
-	mb-size $(OBJDIR)/$(KERNEL).elf  |tee "$(OBJDIR)/$(KERNEL).elf.size"
+	$(CC)size $(OBJDIR)/$(KERNEL).elf  |tee "$(OBJDIR)/$(KERNEL).elf.size"
 	@echo 'Finished building: $@'
 	@echo ' '
 
