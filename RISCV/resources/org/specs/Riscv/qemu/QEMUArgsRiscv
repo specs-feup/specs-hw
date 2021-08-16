@@ -1,1 +1,1 @@
-<QEMUBIN> -machine virt -nographic  -m 256M -kernel <ELFNAME> -gdb tcp::<PORT> -S
+<QEMUBIN> -machine virt -nographic  -m 256M -kernel <ELFNAME> -bios none -gdb tcp::<PORT> -S
