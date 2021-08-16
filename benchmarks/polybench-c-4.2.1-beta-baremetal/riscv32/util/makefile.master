@@ -1,0 +1,90 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+CROSS_PREFIX=riscv32-unknown-elf-
+LDPATH=/opt/riscv/lib/gcc/riscv32-unknown-elf/10.1.0/
+RM := rm -rf
+
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(strip $(S_UPPER_DEPS)),)
+-include $(S_UPPER_DEPS)
+endif
+ifneq ($(strip $(C_DEPS)),)
+-include $(C_DEPS)
+endif
+endif
+
+LIBS := -lm
+LIBDIR := 
+#CFLAGS := -mcmodel=medlow -mtune=rocket -march=rv32imaf -mabi=ilp32f -g -O2 -fbuilding-libgcc -fno-stack-protector -fvisibility=hidden -Wl,--no-relax  -Wl,--gc-sections -ffunction-sections -fdata-sections -ffreestanding -specs=nosys.specs
+
+CFLAGS := -march=rv32imaf -mabi=ilp32f -g -O2 -Wl,--gc-sections -ffunction-sections -fdata-sections
+
+###############################################################################
+# Add inputs and outputs from these tool invocations to the build variables 
+LD_SRCS += \
+$(ROOT)/lib/riscv32-virt.ld 
+
+C_SRCS += \
+./$(KERNEL).c 
+
+OBJS += \
+./$(KERNEL).o 
+
+C_DEPS += \
+./$(KERNEL).d 
+
+# Each subdirectory must supply rules for building sources it contributes
+./%.o: ./%.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: $(CROSS_PREFIX)gcc'
+	$(CROSS_PREFIX)gcc $(KERNEL_OPTIONS) -I$(RELATIVE)/lib -c $(CFLAGS) -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+USER_OBJS := crt0.o
+
+# _start
+crt0.o: $(ROOT)/lib/crt0.s
+	$(CROSS_PREFIX)gcc $(KERNEL_OPTIONS) -I$(RELATIVE)/lib -c $(CFLAGS) -o "$@" "$<"
+
+###############################################################################
+# Add inputs and outputs from these tool invocations to the build variables 
+ELFSIZE += \
+$(KERNEL).elf.size \
+
+# All Target
+all: $(KERNEL).elf secondary-outputs $(ROOT)/build/$(KERNEL).elf
+
+$(ROOT)/build/$(KERNEL).elf: $(KERNEL).elf
+	mkdir -p $(ROOT)/build/
+	cp $(KERNEL).elf $(ROOT)/build/$(KERNEL).elf
+
+# Tool invocations
+$(KERNEL).elf: $(OBJS) $(LD_SRCS) $(USER_OBJS)
+	@echo 'Building target: $@'
+	@echo 'Invoking: $(CROSS_PREFIX)ld'
+	$(CROSS_PREFIX)gcc -Wl,-T -Wl,$(LD_SRCS) $(CFLAGS) -nostartfiles -o "$(KERNEL).elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	@echo 'Finished building target: $@'
+	@echo ' '
+
+$(KERNEL).elf.size: $(KERNEL).elf
+	@echo 'Invoking: $(CROSS_PREFIX)size'
+	$(CROSS_PREFIX)size $(KERNEL).elf  |tee "$(KERNEL).elf.size"
+	@echo 'Finished building: $@'
+	@echo ' '
+
+# Other Targets
+clean:
+	-$(RM) $(EXECUTABLES)$(OBJS)$(S_UPPER_DEPS)$(C_DEPS)$(ELFSIZE) $(KERNEL).elf crt0.o
+	-@echo ' '
+
+secondary-outputs: $(ELFSIZE)
+
+# print rule
+print-%: ; @echo $*=$($*)
+
+.PHONY: all clean dependents
+.SECONDARY:
+

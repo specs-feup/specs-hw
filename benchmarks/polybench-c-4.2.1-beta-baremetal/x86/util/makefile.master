@@ -1,0 +1,81 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+RM := rm -rf
+
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(strip $(S_UPPER_DEPS)),)
+-include $(S_UPPER_DEPS)
+endif
+ifneq ($(strip $(C_DEPS)),)
+-include $(C_DEPS)
+endif
+endif
+
+LIBS := 
+LIBDIR := 
+CFLAGS := 
+
+###############################################################################
+# Add inputs and outputs from these tool invocations to the build variables 
+#LD_SRCS += \
+#$(ROOT)/lib/lscript.ld 
+
+C_SRCS += \
+./$(KERNEL).c 
+
+OBJS += \
+./$(KERNEL).o 
+
+C_DEPS += \
+./$(KERNEL).d 
+
+# Each subdirectory must supply rules for building sources it contributes
+./%.o: ./%.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: MicroBlaze gcc compiler'
+	gcc $(KERNEL_OPTIONS) -Wall -O2 -I$(RELATIVE)/lib -c -fmessage-length=0 -MT"$@" $(CFLAGS) -Wl,--no-relax -ffunction-sections -fdata-sections -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+###############################################################################
+# Add inputs and outputs from these tool invocations to the build variables 
+ELFSIZE += \
+$(KERNEL).size \
+
+# All Target
+all: $(KERNEL) secondary-outputs $(ROOT)/build/$(KERNEL)
+
+$(ROOT)/build/$(KERNEL): $(KERNEL)
+	mkdir -p $(ROOT)/build/
+	cp $(KERNEL) $(ROOT)/build/$(KERNEL)
+	cp $(KERNEL).size $(ROOT)/build/$(KERNEL).size
+
+# Tool invocations
+$(KERNEL): $(OBJS) $(USER_OBJS)
+	@echo 'Building target: $@'
+	@echo 'Invoking: MicroBlaze gcc linker'
+	gcc $(CFLAGS) -Wl,--no-relax -Wl,--gc-sections -o "$(KERNEL)" $(OBJS) $(USER_OBJS) $(LIBS)
+	@echo 'Finished building target: $@'
+	@echo ' '
+
+$(KERNEL).size: $(KERNEL)
+	@echo 'Invoking: MicroBlaze Print Size'
+	size $(KERNEL)  |tee "$(KERNEL).size"
+	@echo 'Finished building: $@'
+	@echo ' '
+
+# Other Targets
+clean:
+	-$(RM) $(EXECUTABLES)$(OBJS)$(S_UPPER_DEPS)$(C_DEPS)$(ELFSIZE) $(KERNEL)
+	-@echo ' '
+
+secondary-outputs: $(ELFSIZE)
+
+# print rule
+print-%: ; @echo $*=$($*)
+
+.PHONY: all clean dependents
+.SECONDARY:
+
