@@ -1,7 +1,7 @@
 package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeStaticProducer;
@@ -21,7 +21,7 @@ public class MicroBlazeBatchDetectTest {
      */
     @Test
     public void MicroBlazeFrequentSequenceDetect() {
-        var elf = MicroBlazeLivermoreELFN100.innerprod;
+        var elf = MicroBlazeLivermoreN100.innerprod;
         var bundles = ThreadedSegmentDetectUtils.getSegments(
                 elf, 2, 10,
                 MicroBlazeTraceProducer.class,

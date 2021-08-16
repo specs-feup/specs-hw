@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -34,7 +34,7 @@ public class MicroBlazeProfileTester {
         profilerList.add(InstructionTypeHistogram.class);
         profilerList.add(InstructionHistogram.class);
 
-        for (var elf : MicroBlazeLivermoreELFN100.values()) {
+        for (var elf : MicroBlazeLivermoreN100.values()) {
             // for (var file : Arrays.asList(MicroBlazeLivermoreELFN100.linrec100)) {
 
             for (var producer : producers) {
@@ -58,7 +58,7 @@ public class MicroBlazeProfileTester {
     @Test
     public void MicroBlazeSimulate() {
 
-        for (var elf : MicroBlazeLivermoreELFN100.values()) {
+        for (var elf : MicroBlazeLivermoreN100.values()) {
 
             try (var istream = new MicroBlazeTraceStream(elf)) {
 

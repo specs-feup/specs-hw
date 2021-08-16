@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN100;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 
 import pt.up.fe.specs.binarytranslation.test.processes.GDBRunTester;
 
@@ -33,7 +33,7 @@ public class MicroBlazeGDBRunTester extends GDBRunTester {
      */
     @Test
     public void testScript() {
-        var elf = MicroBlazeLivermoreELFN100.matmul;
+        var elf = MicroBlazeLivermoreN100.matmul;
         testScript(Arrays.asList(elf));
     }
 
@@ -51,13 +51,13 @@ public class MicroBlazeGDBRunTester extends GDBRunTester {
      */
     @Test
     public void testGDBFeatures() {
-        var elf = MicroBlazeLivermoreELFN100.matmul;
+        var elf = MicroBlazeLivermoreN100.matmul;
         testGDBFeatures(Arrays.asList(elf));
     }
 
     @Test
     public void testELFDump() {
-        var dump = new MicroBlazeELFDump(MicroBlazeLivermoreELFN100.matmul);
+        var dump = new MicroBlazeELFDump(MicroBlazeLivermoreN100.matmul);
         System.out.println(dump.getInstruction(Long.valueOf("80", 16)));
     }
 }

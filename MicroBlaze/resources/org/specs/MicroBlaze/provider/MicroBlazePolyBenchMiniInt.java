@@ -2,10 +2,10 @@ package org.specs.MicroBlaze.provider;
 
 public enum MicroBlazePolyBenchMiniInt implements MicroBlazeZippedELFProvider {
 
-    floydwarshall("floyd-warshall"),
+    // floydwarshall("floyd-warshall"),
     gemm,
     gemver,
-    jacobi1d("jacobi-1d"),
+    // jacobi1d("jacobi-1d"),
     lu,
     ludcmp,
     mvt,
