@@ -13,30 +13,39 @@ ifneq ($(strip $(C_DEPS)),)
 endif
 endif
 
+CC := aarch64-xilinx-elf-gcc
+
 LIBS := -Wl,--start-group,-lxil,-lgcc,-lc,-lm,--end-group
 LIBDIR := $(ROOT)/lib/standalone_bsp_0/psu_cortexa53_0
 EXTRAFLAGS := -fstack-check -Werror -Wstack-usage=128000 -Wno-error=unused-function -Wno-error=unknown-pragmas -Wno-error=misleading-indentation -Wno-error=unused-variable
 
+LIVERMORE:=$(ROOT)/../livermoreKernels/common
+SOURCEDIRS:=$(LIVERMORE)
 
 ###############################################################################
 # Add inputs and outputs from these tool invocations to the build variables 
 LD_SRCS += \
 $(ROOT)/lib/lscript.ld 
 
-C_SRCS += \
-./$(KERNEL).c 
+# Create a list of *.c sources in DIRS
+SOURCES = $(foreach dir,$(SOURCEDIRS),$(wildcard $(dir)/*.c)) $(REFERENCE)
+C_SRCS = $(notdir $(SOURCES))
 
+# Define objects for all sources
 OBJS += \
-./$(KERNEL).o 
+$(C_SRCS:%.c=%.o)
 
 C_DEPS += \
-./$(KERNEL).d 
+$(C_SRCS:%.c=%.d)
+
+# Add this list to VPATH, the place make will look for the source files
+VPATH = $(SOURCEDIRS) $(dir $(REFERENCE))
 
 # Each subdirectory must supply rules for building sources it contributes
 ./%.o: ./%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: ARM v8 gcc compiler'
-	aarch64-none-elf-gcc $(KERNEL_OPTIONS) -Wall -O2 -I$(RELATIVE)/lib -c -fmessage-length=0 -MT"$@" $(EXTRAFLAGS) -I$(LIBDIR)/include -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	$(CC) $(KERNEL_OPTIONS) -Wall -O2 -I$(LIVERMORE) -c -fmessage-length=0 -MT"$@" $(EXTRAFLAGS) -I$(LIBDIR)/include -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
@@ -56,19 +65,19 @@ $(ROOT)/build/$(KERNEL).elf: $(KERNEL).elf
 $(KERNEL).elf: $(OBJS) $(LD_SRCS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: ARM v8 gcc linker'
-	aarch64-none-elf-gcc -Wl,-T -Wl,$(LD_SRCS) -L$(LIBDIR)/lib $(EXTRAFLAGS) -o "$(KERNEL).elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	$(CC) -Wl,-T -Wl,$(LD_SRCS) -L$(LIBDIR)/lib $(EXTRAFLAGS) -o "$(KERNEL).elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 $(KERNEL).elf.size: $(KERNEL).elf
 	@echo 'Invoking: ARM v8 Print Size'
-	aarch64-none-elf-size $(KERNEL).elf  |tee "$(KERNEL).elf.size"
+	aarch64-xilinx-elf-size $(KERNEL).elf  |tee "$(KERNEL).elf.size"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(EXECUTABLES)$(OBJS)$(S_UPPER_DEPS)$(C_DEPS)$(ELFSIZE) $(KERNEL).elf
+	-$(RM) $(EXECUTABLES) $(OBJS) $(S_UPPER_DEPS) $(C_DEPS) $(ELFSIZE) $(KERNEL).elf $(KERNEL).elf.size 
 	-@echo ' '
 
 secondary-outputs: $(ELFSIZE)
