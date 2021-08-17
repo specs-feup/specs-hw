@@ -15,16 +15,20 @@ public class RIscvELFDumper extends ELFDumperTester {
     @Test
     public void sequentialDump() {
         var test = new ArrayList<ELFProvider>();
-        // test.addAll((Arrays.asList(RiscvLivermoreN100im.values())));
+        test.addAll((Arrays.asList(RiscvLivermoreN100im.values())));
+        // test.addAll((Arrays.asList(RiscvLivermoreN100imaf.values())));
         // test.addAll((Arrays.asList(RiscvPolyBenchMiniInt.values())));
-        test.addAll((Arrays.asList(RiscvPolyBenchMiniFloat.values())));
+        // test.addAll((Arrays.asList(RiscvPolyBenchMiniFloat.values())));
         sequentialDump(test);
     }
 
     @Test
     public void parallelDump() {
         var test = new ArrayList<ELFProvider>();
-        test.addAll((Arrays.asList(RiscvLivermoreN100im.values())));
+        // test.addAll((Arrays.asList(RiscvLivermoreN100im.values())));
+        // test.addAll((Arrays.asList(RiscvLivermoreN100imaf.values())));
+        // test.addAll((Arrays.asList(RiscvPolyBenchMiniInt.values())));
+        test.addAll((Arrays.asList(RiscvPolyBenchMiniFloat.values())));
         parallelDump(test);
     }
 }
