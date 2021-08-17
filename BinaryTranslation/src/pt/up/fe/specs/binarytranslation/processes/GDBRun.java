@@ -131,7 +131,7 @@ public class GDBRun extends StringProcessRun {
 
         // testing a wait fo aarch64
         try {
-            TimeUnit.SECONDS.sleep(3);
+            TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
