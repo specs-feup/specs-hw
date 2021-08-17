@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -64,7 +64,7 @@ public class BTFInput {
      */
     private ELFProvider getELF(String name) {
 
-        for (var elf : MicroBlazeLivermoreELFN10.values()) {
+        for (var elf : MicroBlazeLivermoreN10.values()) {
             if (elf.asTxtDump().equals(name)) {
                 return elf;
             }
