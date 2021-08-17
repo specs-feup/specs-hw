@@ -45,7 +45,7 @@ public abstract class Application extends ADataClass<Application> {
     public static final DataKey<ResourceProvider> GDBTMPLNONINTER = KeyFactory.object("GDBTMPLNONINTER",
             ResourceProvider.class);
     public static final DataKey<ResourceProvider> BAREMETAL_DTB = KeyFactory.object("BAREMETAL_DTB",
-            ResourceProvider.class);
+            ResourceProvider.class).setDefault(null);
     public static final DataKey<ResourceProvider> QEMU_ARGS_TEMPLATE = KeyFactory.object("QEMU_ARGS_TEMPLATE",
             ResourceProvider.class);
 
