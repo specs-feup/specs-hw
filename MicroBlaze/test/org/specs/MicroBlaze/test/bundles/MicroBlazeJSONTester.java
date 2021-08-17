@@ -1,7 +1,7 @@
 package org.specs.MicroBlaze.test.bundles;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
@@ -10,7 +10,7 @@ public class MicroBlazeJSONTester {
 
     @Test
     public void bundleStaticSegmentBundle() {
-        try (MicroBlazeElfStream el = new MicroBlazeElfStream(MicroBlazeLivermoreELFN10.cholesky)) {
+        try (MicroBlazeElfStream el = new MicroBlazeElfStream(MicroBlazeLivermoreN10.cholesky)) {
             var bbd = new FrequentStaticSequenceDetector();
             var bundle = bbd.detectSegments(el);
 

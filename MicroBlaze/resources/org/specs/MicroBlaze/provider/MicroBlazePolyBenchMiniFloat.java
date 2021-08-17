@@ -37,7 +37,7 @@ public enum MicroBlazePolyBenchMiniFloat implements MicroBlazeZippedELFProvider 
     private String elfName;
 
     private MicroBlazePolyBenchMiniFloat(String elfname) {
-        this.functionName = "kernel_" + elfname;
+        this.functionName = "kernel_" + elfname.replace("-", "_");
         this.elfName = elfname + ".elf";
     }
 

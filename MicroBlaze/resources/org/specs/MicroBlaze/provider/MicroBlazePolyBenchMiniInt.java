@@ -2,10 +2,10 @@ package org.specs.MicroBlaze.provider;
 
 public enum MicroBlazePolyBenchMiniInt implements MicroBlazeZippedELFProvider {
 
-    // floydwarshall("floyd-warshall"),
+    floydwarshall("floyd-warshall"),
     gemm,
     gemver,
-    // jacobi1d("jacobi-1d"),
+    jacobi1d("jacobi-1d"),
     lu,
     ludcmp,
     mvt,
@@ -20,7 +20,7 @@ public enum MicroBlazePolyBenchMiniInt implements MicroBlazeZippedELFProvider {
     private String elfName;
 
     private MicroBlazePolyBenchMiniInt(String elfname) {
-        this.functionName = "kernel_" + name();
+        this.functionName = "kernel_" + elfname.replace("-", "_");
         this.elfName = elfname + ".elf";
     }
 

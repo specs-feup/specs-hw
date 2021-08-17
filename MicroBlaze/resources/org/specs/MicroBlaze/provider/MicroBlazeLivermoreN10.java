@@ -6,7 +6,7 @@ package org.specs.MicroBlaze.provider;
  * @author nuno
  *
  */
-public enum MicroBlazeLivermoreELFN10 implements MicroBlazeZippedELFProvider {
+public enum MicroBlazeLivermoreN10 implements MicroBlazeZippedELFProvider {
 
     cholesky(),
     diffpredict("difference_predictors"),
@@ -28,12 +28,12 @@ public enum MicroBlazeLivermoreELFN10 implements MicroBlazeZippedELFProvider {
     private String functionName;
     private String elfName;
 
-    private MicroBlazeLivermoreELFN10(String functionName) {
+    private MicroBlazeLivermoreN10(String functionName) {
         this.functionName = functionName;
         this.elfName = name() + ".elf";
     }
 
-    private MicroBlazeLivermoreELFN10() {
+    private MicroBlazeLivermoreN10() {
         this.functionName = name();
         this.elfName = name() + ".elf";
     }
