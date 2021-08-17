@@ -2,6 +2,10 @@ package org.specs.Riscv.provider;
 
 public enum RiscvLivermoreN100imaf implements RiscvZippedELFProvider {
 
+    /**
+     * This set uses floating point numbers, and is compiled WITH FPU
+     */
+
     cholesky(),
     diffpredict("difference_predictors"),
     // glinearrec("glinearrec.elf", 0x2dac, 0x5698), // linrecurrence? (there are

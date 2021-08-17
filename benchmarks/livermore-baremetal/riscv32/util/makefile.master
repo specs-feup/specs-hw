@@ -2,8 +2,6 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-CROSS_PREFIX=riscv32-unknown-elf-
-LDPATH=/opt/riscv/lib/gcc/riscv32-unknown-elf/10.1.0/
 RM := rm -rf
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -19,7 +17,12 @@ CC=riscv32-unknown-elf-
 
 LIBS := -lm
 LIBDIR := 
-CFLAGS := -march=rv32imaf -mabi=ilp32f -g3 -O2 -Wl,--gc-sections -ffunction-sections -fdata-sections
+
+#CFLAGS := -march=rv32imaf -mabi=ilp32f -g3 -O2 -Wl,--gc-sections -ffunction-sections -fdata-sections -ffreestanding -nostartfiles -specs=nosys.specs -Wl,--no-relax -Wl,--gc-sections
+
+CFLAGS := -mcmodel=medlow -mtune=rocket -march=rv32imaf -mabi=ilp32f -g -O2 -specs=nosys.specs
+# THESE ARE THE FLAGS REQUIRED FOR MALLOC TO WORK, FOR SOME REASON (I think its because of the nosys specs which prevents calls to ecall and ebreak etc)
+
 EXTRAFLAGS := -fstack-check -Werror -Wstack-usage=128000 -Wno-error=unused-function -Wno-error=unknown-pragmas -Wno-error=misleading-indentation -Wno-error=unused-variable
 
 LIVERMORE:=$(ROOT)/../livermoreKernels/common
