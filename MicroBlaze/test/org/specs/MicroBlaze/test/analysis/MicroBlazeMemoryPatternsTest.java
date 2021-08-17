@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -76,7 +76,7 @@ public class MicroBlazeMemoryPatternsTest {
     @Test
     public void testStreaming() {
         // var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;
-        var elf = MicroBlazeLivermoreELFN10.innerprod;
+        var elf = MicroBlazeLivermoreN10.innerprod;
         int window = 10;
         // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
         // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;

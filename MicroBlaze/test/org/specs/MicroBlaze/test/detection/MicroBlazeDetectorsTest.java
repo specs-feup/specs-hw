@@ -1,7 +1,7 @@
 package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -28,7 +28,7 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testFrequentStaticSequenceDetector() {
-        var app = MicroBlazeLivermoreELFN10.cholesky.toApplication();
+        var app = MicroBlazeLivermoreN10.cholesky.toApplication();
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(3);
 
@@ -44,7 +44,7 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testFrequentTraceSequenceDetector() {
-        var app = MicroBlazeLivermoreELFN10.cholesky.toApplication();
+        var app = MicroBlazeLivermoreN10.cholesky.toApplication();
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(10);
         builder.withSkipToAddr(app.getKernelStart());
@@ -63,7 +63,7 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testStaticBasicBlockDetector() {
-        var app = MicroBlazeLivermoreELFN10.cholesky.toApplication();
+        var app = MicroBlazeLivermoreN10.cholesky.toApplication();
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(6);
 
@@ -80,7 +80,7 @@ public class MicroBlazeDetectorsTest {
     @Test
     public void testTraceBasicBlockDetector() {
 
-        var app = MicroBlazeLivermoreELFN10.cholesky.toApplication();
+        var app = MicroBlazeLivermoreN10.cholesky.toApplication();
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxWindow(12)
                 .withStartAddr(app.getKernelStart())
@@ -101,7 +101,7 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testMegablock() {
-        var app = MicroBlazeLivermoreELFN10.matmul.toApplication();
+        var app = MicroBlazeLivermoreN10.matmul.toApplication();
         var builder = new DetectorConfigurationBuilder();
         builder.withMaxBlocks(10)
                 .withMaxWindow(1000)
@@ -120,7 +120,7 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testGenericTraceDetector() {
-        var elf = MicroBlazeLivermoreELFN10.matmul;
+        var elf = MicroBlazeLivermoreN10.matmul;
         try (var tstream = new MicroBlazeTraceStream(elf)) {
             var detector = new GenericTraceSegmentDetector(tstream);
             detector.detectSegments();

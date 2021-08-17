@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.specs.MicroBlaze.asm.MicroBlazeRegisterConventions;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.provider.MicroBlazeGccOptimizationLevels;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
@@ -59,7 +59,7 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testDetailedStream() {
-        var stream = getStream(MicroBlazeLivermoreELFN10.pic2d, false);
+        var stream = getStream(MicroBlazeLivermoreN10.pic2d, false);
 
         System.out.println("Testing detailed stream");
         Instruction inst = stream.nextInstruction();
@@ -81,7 +81,7 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testInstPerSecondNoRegisters() {
         System.out.println("--- Without registers ---");
-        var prod1 = new MicroBlazeTraceProducer(MicroBlazeLivermoreELFN10.innerprod);
+        var prod1 = new MicroBlazeTraceProducer(MicroBlazeLivermoreN10.innerprod);
         var perf1 = new BtfPerformanceAnalyzer(prod1);
         perf1.calcInstructionsPerSecond();
     }
@@ -89,14 +89,14 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testInstPerSecondWithRegisters() {
         System.out.println("--- With registers ---");
-        var prod2 = new MicroBlazeDetailedTraceProducer(MicroBlazeLivermoreELFN10.innerprod);
+        var prod2 = new MicroBlazeDetailedTraceProducer(MicroBlazeLivermoreN10.innerprod);
         var perf2 = new BtfPerformanceAnalyzer(prod2);
         perf2.calcInstructionsPerSecond();
     }
 
     @Test
     public void testBasicBlockInOuts() {
-        var elf = MicroBlazeLivermoreELFN10.linrec;
+        var elf = MicroBlazeLivermoreN10.linrec;
         int window = 10;
         // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
         // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
@@ -113,7 +113,7 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testTraceInOuts() {
-        var elf = MicroBlazeLivermoreELFN10.linrec;
+        var elf = MicroBlazeLivermoreN10.linrec;
         int window = 10;
         // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
         // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
@@ -130,7 +130,7 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testSimpleBasicBlockInOuts() {
-        var elf = MicroBlazeLivermoreELFN10.linrec;
+        var elf = MicroBlazeLivermoreN10.linrec;
         int window = 10;
         // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
         // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
@@ -153,7 +153,7 @@ public class MicroBlazeTraceAnalysisTest {
         // var elf = MicroBlazeLivermoreELFN10.cholesky; int window = 18;
         // var elf = MicroBlazeLivermoreELFN10.hydro2d; int window = 17;
         // var elf = MicroBlazeLivermoreELFN10.tri_diag; int window = 11;
-        var elf = MicroBlazeLivermoreELFN10.state_frag;
+        var elf = MicroBlazeLivermoreN10.state_frag;
         int window = 31;
 
         // var elf = MicroBlazeLivermoreELFN100.matmul100; int window = 15;
@@ -185,7 +185,7 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testAddresses() {
         // Livermore N10
-        var elf = MicroBlazeLivermoreELFN10.linrec;
+        var elf = MicroBlazeLivermoreN10.linrec;
         int window = 10;
         // var elf = MicroBlazeLivermoreELFN10.innerprod; int window = 10;
         // var elf = MicroBlazeLivermoreELFN10.hydro; int window = 14;
