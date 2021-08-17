@@ -20,7 +20,7 @@ public enum ArmPolyBenchMiniInt implements ArmZippedELFProvider {
     private String elfName;
 
     private ArmPolyBenchMiniInt(String elfname) {
-        this.functionName = "kernel_" + name();
+        this.functionName = "kernel_" + elfname.replace("-", "_");
         this.elfName = elfname + ".elf";
     }
 

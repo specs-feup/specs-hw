@@ -34,7 +34,7 @@ public class ArmProfileTester {
         profilerList.add(InstructionHistogram.class);
 
         // for (var file : ArmLivermoreELFN100.values()) {
-        for (var elf : Arrays.asList(ArmLivermoreN100.tri_diag)) {
+        for (var elf : Arrays.asList(ArmLivermoreN100.tridiag)) {
             for (var producer : producers) {
 
                 var app = elf.toApplication();

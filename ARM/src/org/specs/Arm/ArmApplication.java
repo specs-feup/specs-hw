@@ -8,7 +8,7 @@ import pt.up.fe.specs.binarytranslation.asm.Application;
 
 public class ArmApplication extends Application {
 
-    private static final String ARCHPREFIX = "aarch64-none-elf-";
+    private static final String ARCHPREFIX = "aarch64-xilinx-elf-";
     private static final DataStore data;
     static {
         data = new SimpleDataStore("ArmApplicationDataStore");
