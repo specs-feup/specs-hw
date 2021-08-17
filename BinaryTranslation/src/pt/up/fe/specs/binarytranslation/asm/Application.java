@@ -66,8 +66,17 @@ public abstract class Application extends ADataClass<Application> {
         this.getDataStore().addAll(data);
         this.compilationInfo = Application.getCompilationInfo(this, elf);
         var startStop = Application.getKernelBounds(this, elf);
-        this.kernelStart = startStop.get(0);
-        this.kernelStop = startStop.get(1);
+
+        /*
+         * Quick fix for when working from a txt dump...
+         */
+        if (!startStop.isEmpty()) {
+            this.kernelStart = startStop.get(0);
+            this.kernelStop = startStop.get(1);
+        } else {
+            this.kernelStart = 0x0;
+            this.kernelStop = 0x0;
+        }
     }
 
     /*
