@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeStaticProducer;
 
@@ -56,6 +56,6 @@ public class MicroBlazeMultiConsumerGenericTester {
 
     @Test
     public void testParallel() {
-        this.testParallel((MicroBlazeLivermoreELFN10.cholesky));
+        this.testParallel((MicroBlazeLivermoreN10.cholesky));
     }
 }

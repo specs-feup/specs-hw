@@ -1,7 +1,8 @@
 package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 
 import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
 
@@ -16,31 +17,31 @@ public class MicroBlazeStreamTester extends InstructionStreamTester {
 
     @Test
     public void testStatic() {
-        printStream(MicroBlazeLivermoreELFN10.matmul.toStaticStream());
+        printStream(MicroBlazeLivermoreN100.matmul.toStaticStream());
     }
 
     @Test
     public void testStaticRaw() {
-        rawDump(MicroBlazeLivermoreELFN10.innerprod.toStaticStream());
+        rawDump(MicroBlazeLivermoreN100.innerprod.toStaticStream());
     }
 
     @Test
     public void testStaticRawFromTxtDump() {
-        rawDump(MicroBlazeLivermoreELFN10.innerprod.asTxtDump().toStaticStream());
+        rawDump(MicroBlazeLivermoreN100.innerprod.asTxtDump().toStaticStream());
     }
 
     @Test
     public void testTrace() {
-        printStream(MicroBlazeLivermoreELFN10.innerprod.toTraceStream());
+        printStream(MicroBlazeLivermoreN100.innerprod.toTraceStream());
     }
 
     @Test
     public void testTraceRaw() {
-        rawDump(MicroBlazeLivermoreELFN10.innerprod.toTraceStream());
+        rawDump(MicroBlazeLivermoreN100.innerprod.toTraceStream());
     }
 
     @Test
     public void testTraceRawFromTxtDump() {
-        rawDump(MicroBlazeLivermoreELFN10.innerprod.asTraceTxtDump().toTraceStream());
+        rawDump(MicroBlazeLivermoreN10.innerprod.asTraceTxtDump().toTraceStream());
     }
 }

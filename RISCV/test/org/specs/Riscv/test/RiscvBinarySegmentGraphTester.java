@@ -2,7 +2,7 @@ package org.specs.Riscv.test;
 
 import org.junit.Test;
 import org.specs.Riscv.provider.RiscvELFProvider;
-import org.specs.Riscv.provider.RiscvLivermoreELFN100iam;
+import org.specs.Riscv.provider.RiscvLivermoreN100im;
 import org.specs.Riscv.stream.RiscvElfStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
@@ -15,7 +15,7 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public class RiscvBinarySegmentGraphTester {
 
     private RiscvELFProvider openFile() {
-        return RiscvLivermoreELFN100iam.cholesky;
+        return RiscvLivermoreN100im.cholesky;
     }
 
     private void getSegments(InstructionStream el, SegmentDetector bbd) {

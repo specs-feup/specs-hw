@@ -1,7 +1,7 @@
 package org.specs.MicroBlaze.test;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
@@ -27,7 +27,7 @@ public class MicroBlazeIPCDumpTester {
     @Test
     public void dumpIPCAllFiles() {
 
-        for (var elf : MicroBlazeLivermoreELFN10.values()) {
+        for (var elf : MicroBlazeLivermoreN10.values()) {
 
             // try (MicroBlazeElfStream el = new MicroBlazeElfStream(fd)) {
             // var bbd = new FrequentStaticSequenceDetector(el);

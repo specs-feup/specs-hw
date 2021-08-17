@@ -1,6 +1,7 @@
 package org.specs.Arm.stream;
 
 import org.specs.Arm.ArmApplication;
+import org.specs.Arm.provider.ArmELFProvider;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.producer.ChanneledInstructionProducer;
@@ -19,5 +20,9 @@ public class ArmTraceStream extends ATraceInstructionStream {
 
     public ArmTraceStream(ArmApplication app) {
         super(new ArmTraceProducer(app));
+    }
+
+    public ArmTraceStream(ArmELFProvider elfprovider) {
+        super(new ArmTraceProducer(elfprovider.toApplication()));
     }
 }

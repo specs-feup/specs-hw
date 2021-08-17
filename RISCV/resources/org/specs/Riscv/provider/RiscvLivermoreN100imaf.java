@@ -1,6 +1,10 @@
 package org.specs.Riscv.provider;
 
-public enum RiscvLivermoreELFN100iamf implements RiscvZippedELFProvider {
+public enum RiscvLivermoreN100imaf implements RiscvZippedELFProvider {
+
+    /**
+     * This set uses floating point numbers, and is compiled WITH FPU
+     */
 
     cholesky(),
     diffpredict("difference_predictors"),
@@ -16,18 +20,18 @@ public enum RiscvLivermoreELFN100iamf implements RiscvZippedELFProvider {
     matmul(),
     pic1d("pic_1d"),
     pic2d("pic_2d"),
-    state_frag("state_fragment"),
-    tri_diag("tri_diagonal");
+    statefrag("state_fragment"),
+    tridiag("tri_diagonal");
 
     private String functionName;
     private String elfName;
 
-    private RiscvLivermoreELFN100iamf(String functionName) {
+    private RiscvLivermoreN100imaf(String functionName) {
         this.functionName = functionName;
         this.elfName = name() + ".elf";
     }
 
-    private RiscvLivermoreELFN100iamf() {
+    private RiscvLivermoreN100imaf() {
         this.functionName = name();
         this.elfName = name() + ".elf";
     }

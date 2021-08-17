@@ -1,6 +1,6 @@
-package org.specs.MicroBlaze.provider;
+package org.specs.Riscv.provider;
 
-public enum MicroBlazePolyBenchMiniFloat implements MicroBlazeZippedELFProvider {
+public enum RiscvPolyBenchMiniFloat implements RiscvZippedELFProvider {
 
     _2mm("2mm"),
     _3mm("3mm"),
@@ -36,12 +36,12 @@ public enum MicroBlazePolyBenchMiniFloat implements MicroBlazeZippedELFProvider 
     private String functionName;
     private String elfName;
 
-    private MicroBlazePolyBenchMiniFloat(String elfname) {
+    private RiscvPolyBenchMiniFloat(String elfname) {
         this.functionName = "kernel_" + elfname.replace("-", "_");
         this.elfName = elfname + ".elf";
     }
 
-    private MicroBlazePolyBenchMiniFloat() {
+    private RiscvPolyBenchMiniFloat() {
         this.functionName = "kernel_" + name();
         this.elfName = name() + ".elf";
     }

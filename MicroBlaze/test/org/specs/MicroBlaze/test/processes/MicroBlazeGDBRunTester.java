@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 
 import pt.up.fe.specs.binarytranslation.test.processes.GDBRunTester;
@@ -42,7 +42,7 @@ public class MicroBlazeGDBRunTester extends GDBRunTester {
      */
     @Test
     public void testRunToKernelStart() {
-        var elfs = MicroBlazeLivermoreELFN10.values();
+        var elfs = MicroBlazeLivermoreN10.values();
         testRunToKernelStart(Arrays.asList(elfs));
     }
 

@@ -1,6 +1,12 @@
-package org.specs.Riscv.provider;
+package org.specs.MicroBlaze.provider;
 
-public enum RiscvLivermoreELFN100iam implements RiscvZippedELFProvider {
+/**
+ * Handy resource list of existing pre-compiled ELFs for MicroBlaze, for robust name and path getting (and other things)
+ * 
+ * @author nuno
+ *
+ */
+public enum MicroBlazeLivermoreN10 implements MicroBlazeZippedELFProvider {
 
     cholesky(),
     diffpredict("difference_predictors"),
@@ -22,12 +28,12 @@ public enum RiscvLivermoreELFN100iam implements RiscvZippedELFProvider {
     private String functionName;
     private String elfName;
 
-    private RiscvLivermoreELFN100iam(String functionName) {
+    private MicroBlazeLivermoreN10(String functionName) {
         this.functionName = functionName;
         this.elfName = name() + ".elf";
     }
 
-    private RiscvLivermoreELFN100iam() {
+    private MicroBlazeLivermoreN10() {
         this.functionName = name();
         this.elfName = name() + ".elf";
     }

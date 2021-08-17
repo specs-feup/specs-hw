@@ -46,7 +46,7 @@ public class ELFDumperTester {
             var bw = new BufferedWriter(fos);
 
             // for (int i = 0; i < 10; i++) {
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 1000; i++) {
                 gdb.stepi();
                 var instlline = gdb.getAddrAndInstruction();
                 if (instlline == null)

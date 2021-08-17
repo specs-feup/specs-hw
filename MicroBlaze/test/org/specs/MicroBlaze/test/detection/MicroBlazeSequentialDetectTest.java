@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreELFN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FixedSizeMegablockDetector;
@@ -47,7 +47,7 @@ public class MicroBlazeSequentialDetectTest {
 
     @Test
     public void testSequentialDetectors() {
-        for (var file : Arrays.asList(MicroBlazeLivermoreELFN10.pic2d)) {
+        for (var file : Arrays.asList(MicroBlazeLivermoreN10.pic2d)) {
             this.testSequentialDetectors(file);
         }
     }

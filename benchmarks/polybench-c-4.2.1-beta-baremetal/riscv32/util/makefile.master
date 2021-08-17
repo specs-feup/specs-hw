@@ -18,7 +18,12 @@ CC=riscv32-unknown-elf-
 LIBS := -lm
 LIBDIR := 
 #CFLAGS := -mcmodel=medlow -mtune=rocket -march=rv32imaf -mabi=ilp32f -g -O2 -fbuilding-libgcc -fno-stack-protector -fvisibility=hidden -Wl,--no-relax  -Wl,--gc-sections -ffunction-sections -fdata-sections -ffreestanding -specs=nosys.specs
-CFLAGS := -march=rv32imaf -mabi=ilp32f -g3 -O2 -Wl,--gc-sections -ffunction-sections -fdata-sections
+#CFLAGS := -march=rv32imaf -mabi=ilp32f -g3 -O2 -Wl,--gc-sections -ffunction-sections -fdata-sections
+#EXTRAFLAGS := -fstack-check -Werror -Wstack-usage=128000 -Wno-error=unused-function -Wno-error=unknown-pragmas -Wno-error=misleading-indentation -Wno-error=unused-variable
+
+
+CFLAGS := -mcmodel=medlow -mtune=rocket -march=rv32imaf -mabi=ilp32f -g -O2 -specs=nosys.specs
+# THESE ARE THE FLAGS REQUIRED FOR MALLOC TO WORK, FOR SOME REASON (I think its because of the nosys specs which prevents calls to ecall and ebreak etc)
 EXTRAFLAGS := -fstack-check -Werror -Wstack-usage=128000 -Wno-error=unused-function -Wno-error=unknown-pragmas -Wno-error=misleading-indentation -Wno-error=unused-variable
 
 OBJDIR=$(ROOT)/build/$(KERNEL)
