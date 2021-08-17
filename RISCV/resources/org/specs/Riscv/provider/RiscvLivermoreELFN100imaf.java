@@ -1,6 +1,6 @@
 package org.specs.Riscv.provider;
 
-public enum RiscvLivermoreELFN100iam implements RiscvZippedELFProvider {
+public enum RiscvLivermoreELFN100imaf implements RiscvZippedELFProvider {
 
     cholesky(),
     diffpredict("difference_predictors"),
@@ -22,12 +22,12 @@ public enum RiscvLivermoreELFN100iam implements RiscvZippedELFProvider {
     private String functionName;
     private String elfName;
 
-    private RiscvLivermoreELFN100iam(String functionName) {
+    private RiscvLivermoreELFN100imaf(String functionName) {
         this.functionName = functionName;
         this.elfName = name() + ".elf";
     }
 
-    private RiscvLivermoreELFN100iam() {
+    private RiscvLivermoreELFN100imaf() {
         this.functionName = name();
         this.elfName = name() + ".elf";
     }
