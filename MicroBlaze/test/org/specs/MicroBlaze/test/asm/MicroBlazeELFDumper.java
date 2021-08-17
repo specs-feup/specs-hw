@@ -25,6 +25,8 @@ public class MicroBlazeELFDumper extends ELFDumperTester {
     public void parallelDump() {
         var test = new ArrayList<ELFProvider>();
         test.addAll((Arrays.asList(MicroBlazeLivermoreN100.values())));
+        // test.addAll((Arrays.asList(MicroBlazePolyBenchMiniInt.values())));
+        // test.addAll((Arrays.asList(MicroBlazePolyBenchMiniFloat.values())));
         parallelDump(test);
     }
 }

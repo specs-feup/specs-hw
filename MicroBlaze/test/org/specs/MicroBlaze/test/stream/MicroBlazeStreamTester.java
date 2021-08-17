@@ -2,6 +2,7 @@ package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 
 import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
 
@@ -16,27 +17,27 @@ public class MicroBlazeStreamTester extends InstructionStreamTester {
 
     @Test
     public void testStatic() {
-        printStream(MicroBlazeLivermoreN10.matmul.toStaticStream());
+        printStream(MicroBlazeLivermoreN100.matmul.toStaticStream());
     }
 
     @Test
     public void testStaticRaw() {
-        rawDump(MicroBlazeLivermoreN10.innerprod.toStaticStream());
+        rawDump(MicroBlazeLivermoreN100.innerprod.toStaticStream());
     }
 
     @Test
     public void testStaticRawFromTxtDump() {
-        rawDump(MicroBlazeLivermoreN10.innerprod.asTxtDump().toStaticStream());
+        rawDump(MicroBlazeLivermoreN100.innerprod.asTxtDump().toStaticStream());
     }
 
     @Test
     public void testTrace() {
-        printStream(MicroBlazeLivermoreN10.innerprod.toTraceStream());
+        printStream(MicroBlazeLivermoreN100.innerprod.toTraceStream());
     }
 
     @Test
     public void testTraceRaw() {
-        rawDump(MicroBlazeLivermoreN10.innerprod.toTraceStream());
+        rawDump(MicroBlazeLivermoreN100.innerprod.toTraceStream());
     }
 
     @Test
