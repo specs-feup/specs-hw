@@ -13,20 +13,20 @@ public enum ArmPolyBenchMiniFloat implements ArmZippedELFProvider {
     deriche,
     doitgen,
     durbin,
-    fdtd2d,
+    fdtd2d("fdtd-2d"),
     floydwarshall("floyd-warshall"),
     gemm,
     gemver,
     gesummv,
     gramschmidt,
-    heat3d,
+    heat3d("heat-3d"),
     jacobi1d("jacobi-1d"),
     jacobi2d("jacobi-2d"),
     lu,
     ludcmp,
     mvt,
     nussinov,
-    seidel2d,
+    seidel2d("seidel-2d"),
     symm,
     syr2k,
     syrk,
@@ -37,7 +37,7 @@ public enum ArmPolyBenchMiniFloat implements ArmZippedELFProvider {
     private String elfName;
 
     private ArmPolyBenchMiniFloat(String elfname) {
-        this.functionName = "kernel_" + name();
+        this.functionName = "kernel_" + elfname.replace("-", "_");
         this.elfName = elfname + ".elf";
     }
 

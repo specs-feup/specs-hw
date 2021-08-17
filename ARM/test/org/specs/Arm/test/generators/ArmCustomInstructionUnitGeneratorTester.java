@@ -16,7 +16,7 @@ public class ArmCustomInstructionUnitGeneratorTester {
     public void testCustomUnitGenerate() {
 
         // get static frequent sequence bundle
-        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreN100.innerprod,
+        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreN100.innerprod.toApplication(),
                 ArmTraceStream.class, TraceBasicBlockDetector.class,
                 (new DetectorConfigurationBuilder().withMaxWindow(6)).build());
 

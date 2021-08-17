@@ -4,6 +4,7 @@ import org.specs.Riscv.provider.RiscvELFProvider;
 import org.suikasoft.jOptions.DataStore.SimpleDataStore;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
+import pt.up.fe.specs.binarytranslation.NullResource;
 import pt.up.fe.specs.binarytranslation.asm.Application;
 
 public class RiscvApplication extends Application {
@@ -20,6 +21,7 @@ public class RiscvApplication extends Application {
         data.set(OBJDUMP, ARCHPREFIX + "objdump");
         data.set(GDBTMPLINTER, RiscvResource.GDBINTERACTIVE_TEMPLATE);
         data.set(GDBTMPLNONINTER, RiscvResource.GDBNONINTERACTIVE_TEMPLATE);
+        data.set(BAREMETAL_DTB, NullResource.nullResource);
         data.set(QEMU_ARGS_TEMPLATE, RiscvResource.QEMU_ARGS_TEMPLATE);
     }
 

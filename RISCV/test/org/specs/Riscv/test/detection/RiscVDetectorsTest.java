@@ -1,7 +1,7 @@
 package org.specs.Riscv.test.detection;
 
 import org.junit.Test;
-import org.specs.Riscv.provider.RiscvLivermoreELFN100iam;
+import org.specs.Riscv.provider.RiscvLivermoreN100im;
 import org.specs.Riscv.stream.RiscvElfStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
@@ -16,7 +16,7 @@ public class RiscVDetectorsTest {
     @Test
     public void testFrequentStaticSequenceDetector() {
 
-        var elf = RiscvLivermoreELFN100iam.pic2d;
+        var elf = RiscvLivermoreN100im.pic2d;
 
         var builder = new DetectorConfigurationBuilder();
         // builder.withMaxWindow(4).withStartAddr(elf.getKernelStart()).withStopAddr(elf.getKernelStop());

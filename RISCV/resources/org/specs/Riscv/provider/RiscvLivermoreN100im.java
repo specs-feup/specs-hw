@@ -1,12 +1,10 @@
-package org.specs.MicroBlaze.provider;
+package org.specs.Riscv.provider;
 
-/**
- * Handy resource list of existing pre-compiled ELFs for MicroBlaze, for robust name and path getting (and other things)
- * 
- * @author nuno
- *
- */
-public enum MicroBlazeLivermoreELFN10 implements MicroBlazeZippedELFProvider {
+public enum RiscvLivermoreN100im implements RiscvZippedELFProvider {
+
+    /**
+     * This set uses floating point numbers, but is compiled without FPU
+     */
 
     cholesky(),
     diffpredict("difference_predictors"),
@@ -22,18 +20,18 @@ public enum MicroBlazeLivermoreELFN10 implements MicroBlazeZippedELFProvider {
     matmul(),
     pic1d("pic_1d"),
     pic2d("pic_2d"),
-    state_frag("state_fragment"),
-    tri_diag("tri_diagonal");
+    statefrag("state_fragment"),
+    tridiag("tri_diagonal");
 
     private String functionName;
     private String elfName;
 
-    private MicroBlazeLivermoreELFN10(String functionName) {
+    private RiscvLivermoreN100im(String functionName) {
         this.functionName = functionName;
         this.elfName = name() + ".elf";
     }
 
-    private MicroBlazeLivermoreELFN10() {
+    private RiscvLivermoreN100im() {
         this.functionName = name();
         this.elfName = name() + ".elf";
     }

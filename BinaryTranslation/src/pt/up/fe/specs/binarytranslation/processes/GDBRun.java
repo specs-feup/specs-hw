@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
@@ -128,6 +129,14 @@ public class GDBRun extends StringProcessRun {
         while (!this.qemurun.isAlive())
             ;
 
+        // testing a wait fo aarch64
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         var proc = super.start();
         if (this.amInteractiveRun) {
             // this.getGDBResponse(5000);
@@ -181,7 +190,7 @@ public class GDBRun extends StringProcessRun {
         this.sendGDBCommand("x _exit");
         var line = this.readPairedResponse();
         var splits = line.split(":");
-        return Integer.valueOf(splits[0], 16);
+        return Integer.parseUnsignedInt(splits[0], 16);
     }
 
     /*
@@ -350,7 +359,7 @@ public class GDBRun extends StringProcessRun {
 
         if (line != null) {
             var addrandinst = SpecsStrings.getRegex(line, INSTPATTERN);
-            var addr = Integer.valueOf(addrandinst.get(0), 16);
+            var addr = Integer.parseUnsignedInt(addrandinst.get(0), 16);
             if (addr == this.exitAddr)
                 this.exitReached = true; // prevents sending of additional commands
             return addrandinst.get(0) + ":" + addrandinst.get(1);
