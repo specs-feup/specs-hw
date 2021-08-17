@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.specs.Riscv.provider.RiscvLivermoreELFN100iam;
+import org.specs.Riscv.provider.RiscvLivermoreELFN100im;
 import org.specs.Riscv.stream.RiscvTraceProducer;
 import org.specs.Riscv.stream.RiscvTraceStream;
 
@@ -32,7 +32,7 @@ public class RiscvProfileTester {
         profilerList.add(InstructionTypeHistogram.class);
         profilerList.add(InstructionHistogram.class);
 
-        for (var elf : RiscvLivermoreELFN100iam.values()) {
+        for (var elf : RiscvLivermoreELFN100im.values()) {
             // for (var file : Arrays.asList(RiscvLivermoreELFN100iamf.innerprod100)) {
             for (var producer : producers) {
 
