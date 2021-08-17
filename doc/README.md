@@ -116,5 +116,21 @@ Add the install paths to your PATH.
 
 ## Build Flow for RISC-V (iam and iamf)
 
-*TODO* (check back later)
+Clone the [official Risc-V toolchain repository](https://github.com/riscv/riscv-gnu-toolchain). Simply run:
+
+```
+./configure --prefix=<installdir> --with-newlib --with-abi=ilp32f --with-arch=rv32imaf --enable-multilib
+make
+```
+
+This will install the Risc-V toolchain (GDB included) for a barmetal target. Additionally, to compile for a baremetal target a custom *crt* routine is required. See the [examples](https://github.com/specs-feup/specs-hw/tree/master/RISCV/resources/org/specs/Riscv/examples) folder. The [Risc-V Probe](https://github.com/michaeljclark/riscv-probe) repository can also be used as additional support, as well as (riscv-tests)[https://github.com/riscv/riscv-tests].
+
+Note however that the *crt* examples in this repository do not enable the FPU (by setting the fssr register). The QEMU build for Risc-V is very faithful to the hardware behaviour that the Risc-V specification enforces. Any Risc-V ELF emulated on QEMU must perform include following code in its *crt* routine, regardless of the *march* and *mabi* compilation options, in order to avoid *Illegal Instruction* exceptions at runtime, when executing fp-instructions:
+
+```
+li t0, 0x6000 ; a macro for MSTATUS_FS can be defined with this value if desired
+csrs mstatus, t0 ; sets the status bits of the FPU to "enabled", and 
+fssr x0 ; sets the FPU operating and rounding mode
+```
+
 
