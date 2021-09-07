@@ -25,7 +25,6 @@ import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterDat
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterScheduling;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class MicroBlazeDataFlowTest {
@@ -101,7 +100,7 @@ public class MicroBlazeDataFlowTest {
                 if (result1.getSegments().size() == 0)
                     continue;
                 else {
-                    SegmentDetectTestUtils.printBundle(result1);
+                    result1.printBundle();
                     System.out.println(result1.getSummary());
 
                 }

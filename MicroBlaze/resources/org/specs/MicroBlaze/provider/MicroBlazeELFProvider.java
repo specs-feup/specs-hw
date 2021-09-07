@@ -5,7 +5,7 @@ import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
-import pt.up.fe.specs.binarytranslation.stream.StaticInstructioStream;
+import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
 public interface MicroBlazeELFProvider extends ELFProvider {
@@ -18,7 +18,7 @@ public interface MicroBlazeELFProvider extends ELFProvider {
     }
 
     @Override
-    default StaticInstructioStream toStaticStream() {
+    default StaticInstructionStream toStaticStream() {
         return new MicroBlazeElfStream(this.toApplication());
     }
 

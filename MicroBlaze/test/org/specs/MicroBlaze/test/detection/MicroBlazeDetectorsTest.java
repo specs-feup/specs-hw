@@ -1,18 +1,12 @@
 package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
-import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FixedSizeMegablockDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentTraceSequenceDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.v3.GenericTraceSegmentDetector;
-import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
+import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTester;
 
 /**
  * Segment detection test cases; txt files are used so that the backend tools can run on Jenkins without need for
@@ -21,22 +15,14 @@ import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
  * @author nuno
  *
  */
-public class MicroBlazeDetectorsTest {
+public class MicroBlazeDetectorsTest extends SegmentDetectTester {
 
     /*
      * Static Frequent Sequence
      */
     @Test
     public void testFrequentStaticSequenceDetector() {
-        var app = MicroBlazeLivermoreN10.cholesky.toApplication();
-        var builder = new DetectorConfigurationBuilder();
-        builder.withMaxWindow(3);
-
-        var bundle = SegmentDetectTestUtils.detect(app,
-                MicroBlazeElfStream.class,
-                FrequentStaticSequenceDetector.class,
-                builder.build());
-        SegmentDetectTestUtils.printBundle(bundle);
+        testFrequentStaticSequenceDetector(MicroBlazeLivermoreN100.cholesky.toStaticStream());
     }
 
     /*
@@ -44,18 +30,7 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testFrequentTraceSequenceDetector() {
-        var app = MicroBlazeLivermoreN10.cholesky.toApplication();
-        var builder = new DetectorConfigurationBuilder();
-        builder.withMaxWindow(10);
-        builder.withSkipToAddr(app.getKernelStart());
-        builder.withPrematureStopAddr(app.getKernelStop());
-
-        // TODO ensure trace is called here
-        var bundle = SegmentDetectTestUtils.detect(app,
-                MicroBlazeTraceStream.class,
-                FrequentTraceSequenceDetector.class,
-                builder.build());
-        SegmentDetectTestUtils.printBundle(bundle);
+        testFrequentTraceSequenceDetector(MicroBlazeLivermoreN100.cholesky.toTraceStream());
     }
 
     /*
@@ -63,15 +38,7 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testStaticBasicBlockDetector() {
-        var app = MicroBlazeLivermoreN10.cholesky.toApplication();
-        var builder = new DetectorConfigurationBuilder();
-        builder.withMaxWindow(6);
-
-        var bundle = SegmentDetectTestUtils.detect(app,
-                MicroBlazeElfStream.class,
-                StaticBasicBlockDetector.class,
-                builder.build());
-        SegmentDetectTestUtils.printBundle(bundle);
+        testStaticBasicBlockDetector(MicroBlazeLivermoreN100.cholesky.toStaticStream());
     }
 
     /*
@@ -79,26 +46,12 @@ public class MicroBlazeDetectorsTest {
      */
     @Test
     public void testTraceBasicBlockDetector() {
-
-        var app = MicroBlazeLivermoreN10.cholesky.toApplication();
-        var builder = new DetectorConfigurationBuilder();
-        builder.withMaxWindow(12)
-                .withStartAddr(app.getKernelStart())
-                .withStopAddr(app.getKernelStop())
-                .withPrematureStopAddr(app.getKernelStop())
-                .withSkipToAddr(app.getKernelStart());
-
-        // TODO ensure trace is called here
-        var bundle = SegmentDetectTestUtils.detect(app,
-                MicroBlazeTraceStream.class,
-                TraceBasicBlockDetector.class,
-                builder.build());
-        SegmentDetectTestUtils.printBundle(bundle);
+        testTraceBasicBlockDetector(MicroBlazeLivermoreN100.cholesky.toTraceStream());
     }
 
     /*
      * Megablock
-     */
+     
     @Test
     public void testMegablock() {
         var app = MicroBlazeLivermoreN10.matmul.toApplication();
@@ -107,23 +60,38 @@ public class MicroBlazeDetectorsTest {
                 .withMaxWindow(1000)
                 .withStartAddr(app.getKernelStart())
                 .withStopAddr(app.getKernelStop());
-
-        var bundle = SegmentDetectTestUtils.detect(app,
+    nordicsemi.com/
+        var bundle = SegmentDetectTester.detect(app,
                 MicroBlazeTraceStream.class,
                 FixedSizeMegablockDetector.class,
                 builder.build());
-        SegmentDetectTestUtils.printBundle(bundle);
-    }
+        SegmentDetectTester.printBundle(bundle);
+    }*/
 
     /*
      * v3 tester
      */
     @Test
     public void testGenericTraceDetector() {
-        var elf = MicroBlazeLivermoreN10.matmul;
-        try (var tstream = new MicroBlazeTraceStream(elf)) {
-            var detector = new GenericTraceSegmentDetector(tstream);
-            detector.detectSegments();
+        // var app = MicroBlazePolyBenchMiniInt.floydwarshall.toApplication();
+        // var app = MicroBlazePolyBenchMiniInt.floydwarshall.asTraceTxtDump().toApplication();
+        // var app = MicroBlazePolyBenchMiniInt.gemm.asTraceTxtDump().toApplication();
+        var app = MicroBlazeLivermoreN100.innerprod.asTraceTxtDump().toApplication();
+
+        var builder = new DetectorConfigurationBuilder();
+        builder.withSkipToAddr(app.getKernelStart());
+        builder.withPrematureStopAddr(app.getKernelStop());
+        builder.withStartAddr(app.getKernelStart());
+        builder.withStopAddr(app.getKernelStop());
+        builder.withMaxWindow(20);
+
+        try (var tstream = new MicroBlazeTraceStream(app)) {
+            var detector = new GenericTraceSegmentDetector(tstream, builder.build());
+            var list = detector.detectSegments();
+
+            for (var el : list) {
+                System.out.println(el.toString());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

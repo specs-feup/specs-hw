@@ -1,7 +1,6 @@
 package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 
 import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
@@ -42,6 +41,6 @@ public class MicroBlazeStreamTester extends InstructionStreamTester {
 
     @Test
     public void testTraceRawFromTxtDump() {
-        rawDump(MicroBlazeLivermoreN10.innerprod.asTraceTxtDump().toTraceStream());
+        rawDump(MicroBlazeLivermoreN100.innerprod.asTraceTxtDump().toTraceStream());
     }
 }
