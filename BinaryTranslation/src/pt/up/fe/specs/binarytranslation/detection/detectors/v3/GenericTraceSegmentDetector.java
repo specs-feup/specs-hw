@@ -37,8 +37,8 @@ public class GenericTraceSegmentDetector implements TraceSegmentDetector {
     }
 
     private StreamUnit nextUnit() {
-        // return this.tracer.nextBasicBlock();
-        return this.tracer.nextInstruction();
+        return this.tracer.nextBasicBlock();
+        // return this.tracer.nextInstruction();
     }
 
     @Override
@@ -73,13 +73,17 @@ public class GenericTraceSegmentDetector implements TraceSegmentDetector {
                 var idx = patdetect.getCurrentPatternSize() - 1;
                 var list = fetchWindow.getRange(idx, 2 * idx);
 
+                // reverse order
+                Collections.reverse(list);
+
                 // sort by lowest start addr
-                // list.sort((a, b) -> a.getStart().getAddress().compareTo(b.getStart().getAddress()));
                 var lowest = list.stream()
-                        .min((a, b) -> a.getStart().getAddress().compareTo(b.getStart().getAddress()));
+                        .min((a, b) -> a.getStart().getAddress()
+                                .compareTo(b.getStart().getAddress()));
                 var minidx = list.indexOf(lowest.get());
                 Collections.rotate(list, minidx);
 
+                // candidate pattern
                 currentPattern = new StreamUnitPattern(list);
 
                 // see if equivalent pattern already stored
@@ -87,8 +91,10 @@ public class GenericTraceSegmentDetector implements TraceSegmentDetector {
                 if (pidx != -1) {
                     currentPattern = detectedPatterns.get(pidx);
                     currentPattern.incrementOccurenceCounter();
+                    currentPattern.incrementOccurenceCounter();
                 } else {
                     detectedPatterns.add(currentPattern);
+                    currentPattern.incrementOccurenceCounter();
                 }
             }
 

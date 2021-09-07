@@ -23,6 +23,15 @@ public class SlidingWindow<T> {
     /*
      * 
      */
+    public void reset(T val) {
+        this.clear();
+        for (int i = 0; i < windowSize; i++)
+            this.ulist.add(val);
+    }
+
+    /*
+     * 
+     */
     public T add(T unit) {
 
         // slide

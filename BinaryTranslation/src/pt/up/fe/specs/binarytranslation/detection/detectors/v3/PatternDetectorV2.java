@@ -29,7 +29,7 @@ public class PatternDetectorV2 {
         this.fifos = new ArrayList<SlidingWindow<Boolean>>(maxsize - 1);
         for (int i = 0; i < maxsize - 1; i++) {
             fifos.add(new SlidingWindow<Boolean>(i + 1));
-            fifos.get(i).addHead(false);
+            fifos.get(i).reset(false);
         }
 
         this.matchBits = new ArrayList<Boolean>(maxsize);
@@ -45,7 +45,7 @@ public class PatternDetectorV2 {
         this.currentPatternSize = 0;
         this.matchBits.clear();
         for (var fifo : this.fifos)
-            fifo.clear();
+            fifo.reset(false);
         this.elementHash.clear();
         this.elementHash.add(0);
     }
@@ -100,10 +100,10 @@ public class PatternDetectorV2 {
             // "i" consecutive comparisons for a pattern of size "i" have to be
             // true for a pattern of that size to have been found
             matchBits.set(i, currentCompare && fifos.get(i - 1).getLast());
-            if (currentCompare)
-                fifos.get(i - 1).clear();
-
-            fifos.get(i - 1).addHead(currentCompare);
+            if (!currentCompare)
+                fifos.get(i - 1).reset(false);
+            else
+                fifos.get(i - 1).addHead(currentCompare);
         }
 
         // look for smallest pattern match (TODO: how to change priority)
