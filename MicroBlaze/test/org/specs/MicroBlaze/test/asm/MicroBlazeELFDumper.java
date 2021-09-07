@@ -8,9 +8,9 @@ import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
-import pt.up.fe.specs.binarytranslation.test.asm.ELFDumperTester;
+import pt.up.fe.specs.binarytranslation.asm.ELFDumper;
 
-public class MicroBlazeELFDumper extends ELFDumperTester {
+public class MicroBlazeELFDumper extends ELFDumper {
 
     @Test
     public void sequentialDump() {

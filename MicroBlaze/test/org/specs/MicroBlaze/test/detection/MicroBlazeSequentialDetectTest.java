@@ -8,7 +8,6 @@ import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FixedSizeMegablockDetector;
-import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 
 public class MicroBlazeSequentialDetectTest {
 
@@ -41,7 +40,7 @@ public class MicroBlazeSequentialDetectTest {
             if (result1.getSegments().size() == 0)
                 continue;
 
-            SegmentDetectTestUtils.printBundle(result1);
+            result1.printBundle();
         }
     }
 
