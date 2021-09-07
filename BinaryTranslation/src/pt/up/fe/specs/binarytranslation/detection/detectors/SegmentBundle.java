@@ -120,6 +120,20 @@ public class SegmentBundle implements BinaryTranslationOutput {
         }
     }
 
+    public void printBundle() {
+        for (var bs : this.getSegments()) {
+            bs.printSegment();
+            System.out.print("\n");
+        }
+    }
+
+    public void printBundle(Predicate<BinarySegment> predicate) {
+        for (var bs : this.getSegments(predicate)) {
+            bs.printSegment();
+            System.out.print("\n");
+        }
+    }
+
     // TODO methods that can compute the coverage and/or acceleration only for a filtered set of this bundle
     // look up what kind of java trickery can be used to do this
 

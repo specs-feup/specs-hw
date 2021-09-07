@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.test.asm;
+package pt.up.fe.specs.binarytranslation.asm;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.processes.ObjDump;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
-public class ELFDumperTester {
+public class ELFDumper {
 
     /*
      * 

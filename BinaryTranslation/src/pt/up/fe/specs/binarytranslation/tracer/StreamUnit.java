@@ -5,6 +5,11 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 public interface StreamUnit {
 
     /*
+     * Deep copy
+     */
+    public StreamUnit deepCopy();
+
+    /*
      * 
      */
     public StreamUnitType getType();

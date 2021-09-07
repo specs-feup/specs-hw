@@ -6,6 +6,19 @@ public class StreamInstruction extends AStreamUnit {
 
     private final Instruction inst;
 
+    /*
+     * Copy
+     */
+    public StreamInstruction(StreamInstruction other) {
+        super(other);
+        this.inst = other.getActual().copy();
+    }
+
+    @Override
+    public StreamInstruction deepCopy() {
+        return new StreamInstruction(this);
+    }
+
     public StreamInstruction(Instruction inst) {
         super(StreamUnitType.StreamInstruction,
                 StreamInstruction.getBranchTarget(inst));
@@ -30,7 +43,7 @@ public class StreamInstruction extends AStreamUnit {
 
     @Override
     public String toString() {
-        return this.inst.toString();
+        return this.inst.toString() + "\n";
     }
 
     @Override

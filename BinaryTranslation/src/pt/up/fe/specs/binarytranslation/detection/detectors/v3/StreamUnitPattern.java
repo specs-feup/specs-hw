@@ -8,7 +8,7 @@ import pt.up.fe.specs.binarytranslation.tracer.StreamUnit;
 public class StreamUnitPattern {
 
     // TODO: starting context
-    private List<StreamUnit> list;
+    private final List<StreamUnit> list;
     private int occurenceCounter = 1;
 
     public StreamUnitPattern(List<StreamUnit> list) {
@@ -16,6 +16,10 @@ public class StreamUnitPattern {
         for (var el : list)
             // this.list.add(el.deepCopy());
             this.list.add(el);
+    }
+
+    public int getPatternSize() {
+        return this.list.size();
     }
 
     public void incrementOccurenceCounter() {

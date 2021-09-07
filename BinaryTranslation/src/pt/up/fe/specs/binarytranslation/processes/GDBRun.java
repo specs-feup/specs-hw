@@ -235,14 +235,6 @@ public class GDBRun extends StringProcessRun {
     }
 
     /*
-     * 
-     */
-    public void runUntil(long addr) {
-        var hexaddr = Long.toHexString(addr);
-        this.runUntil("0x" + hexaddr);
-    }
-
-    /*
      *
      */
     public void runToEnd() {

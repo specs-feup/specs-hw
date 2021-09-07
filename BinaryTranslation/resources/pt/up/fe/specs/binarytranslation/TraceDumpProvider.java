@@ -1,8 +1,8 @@
 package pt.up.fe.specs.binarytranslation;
 
-public class TraceDumpProvider implements ELFProvider {
+public class TraceDumpProvider implements ZippedELFProvider {
 
-    protected final ELFProvider original;
+    private final ELFProvider original;
 
     public TraceDumpProvider(ELFProvider elfprovider) {
         this.original = elfprovider;

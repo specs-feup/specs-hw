@@ -1,5 +1,6 @@
 package pt.up.fe.specs.binarytranslation.tracer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -7,6 +8,31 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 public class StreamSuperBlock extends AStreamUnit {
 
     private List<StreamBasicBlock> tbblist;
+
+    /*
+     * Deep Copy
+     */
+    public StreamSuperBlock(StreamSuperBlock other) {
+        super(other);
+        this.tbblist = new ArrayList<StreamBasicBlock>();
+        for (var el : other.getList())
+            this.tbblist.add(new StreamBasicBlock(el));
+    }
+
+    /*
+     * Deep copy
+     */
+    @Override
+    public StreamSuperBlock deepCopy() {
+        return new StreamSuperBlock(this);
+    }
+
+    /*
+     * User by copy constructor
+     */
+    protected List<StreamBasicBlock> getList() {
+        return this.tbblist;
+    }
 
     public StreamSuperBlock(List<StreamBasicBlock> tbblist) {
         super(StreamUnitType.StreamSuperBlock,

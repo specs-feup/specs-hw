@@ -13,6 +13,16 @@ public class SlidingWindow<T> {
         this.ulist = new ArrayList<T>(this.windowSize);
     }
 
+    /*
+     * 
+     */
+    public void clear() {
+        this.ulist.clear();
+    }
+
+    /*
+     * 
+     */
     public T add(T unit) {
 
         // slide
@@ -25,6 +35,24 @@ public class SlidingWindow<T> {
         // to implement a circular insertion list
 
         this.ulist.add(unit);
+        return unit;
+    }
+
+    /*
+     * Insert into head, like a push queue
+     */
+    public T addHead(T unit) {
+
+        // slide
+        if (this.isFull())
+            this.ulist.remove(this.ulist.size() - 1);
+
+        // TODO: inefficient due to data sliding
+        // re-implement with something other than "List"
+        // or keep the list but with a "header" pointer
+        // to implement a circular insertion list
+
+        this.ulist.add(0, unit);
         return unit;
     }
 

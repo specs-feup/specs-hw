@@ -16,7 +16,6 @@ package pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class BasicBlockDataFlowGraph extends ASegmentDataFlowGraph {
@@ -25,7 +24,7 @@ public class BasicBlockDataFlowGraph extends ASegmentDataFlowGraph {
     public BasicBlockDataFlowGraph(List<Instruction> segment, int repetitions) {
         super(getTransformedBasicBlock(segment, repetitions));
     }
-    
+
     public BasicBlockDataFlowGraph(List<Instruction> segment) {
         this(segment, 1);
     }
@@ -36,12 +35,12 @@ public class BasicBlockDataFlowGraph extends ASegmentDataFlowGraph {
 
         newBB.add(oldBB.get(size - 1));
         newBB.addAll(oldBB.subList(0, size - 1));
-        
+
         var finalBB = new ArrayList<Instruction>();
         for (int i = 0; i < repetitions; i++) {
             finalBB.addAll(newBB);
         }
-        
+
         System.out.println("Transformed BB:");
         var cnt = 0;
         for (var i : newBB) {
@@ -50,7 +49,7 @@ public class BasicBlockDataFlowGraph extends ASegmentDataFlowGraph {
         }
         System.out.println("Total BB latency: " + cnt);
         System.out.println("-------------------");
-        
+
         return finalBB;
     }
 }
