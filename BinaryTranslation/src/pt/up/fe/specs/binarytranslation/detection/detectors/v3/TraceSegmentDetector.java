@@ -1,6 +1,6 @@
 package pt.up.fe.specs.binarytranslation.detection.detectors.v3;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
+import java.util.ArrayList;
 
 /**
  * 
@@ -9,5 +9,5 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
  */
 public interface TraceSegmentDetector {
 
-    SegmentBundle detectSegments();
+    ArrayList<StreamUnitPattern> detectSegments();
 }
