@@ -3,7 +3,7 @@ package pt.up.fe.specs.binarytranslation;
 import java.io.File;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
-import pt.up.fe.specs.binarytranslation.stream.StaticInstructioStream;
+import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
@@ -19,7 +19,7 @@ public interface ELFProvider extends ResourceProvider {
         return SpecsIo.removeExtension(this.getELFName());
     }
 
-    default public StaticInstructioStream toStaticStream() {
+    default public StaticInstructionStream toStaticStream() {
         throw new NotImplementedException("toStaticStream()");
     }
 

@@ -60,6 +60,7 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
 
         var window = new SlidingWindow<Instruction>(this.getConfig().getMaxsize());
 
+        // TODO: the advanceTo method doesnt work as intended since the "istream" is passed as the "abstract-most" class
         if (this.getConfig().getSkipToAddr().longValue() != -1)
             istream.advanceTo(this.getConfig().getSkipToAddr().longValue());
 

@@ -1,6 +1,6 @@
 package pt.up.fe.specs.binarytranslation;
 
-public class ObjDumpProvider implements ELFProvider {
+public class ObjDumpProvider implements ZippedELFProvider {
 
     private final ELFProvider original;
 
@@ -17,4 +17,9 @@ public class ObjDumpProvider implements ELFProvider {
     public String getResource() {
         return original.getResource();
     }
+    /*
+    @Override
+    public File write() {
+        return original.write();
+    }*/
 }

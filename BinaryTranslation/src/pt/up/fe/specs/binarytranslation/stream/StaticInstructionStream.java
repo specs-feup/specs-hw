@@ -1,6 +1,6 @@
 package pt.up.fe.specs.binarytranslation.stream;
 
-public interface StaticInstructioStream extends InstructionStream {
+public interface StaticInstructionStream extends InstructionStream {
 
     @Override
     default InstructionStreamType getType() {

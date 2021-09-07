@@ -7,7 +7,15 @@ public abstract class AStreamUnit implements StreamUnit {
     private final Long targetAddr;
     private final StreamUnitType type;
 
-    public AStreamUnit(StreamUnitType type, Long targetAddr) {
+    /*
+     * Copy Constructor 
+     */
+    protected AStreamUnit(AStreamUnit other) {
+        this.targetAddr = other.getTargetAddr();
+        this.type = other.getType();
+    }
+
+    protected AStreamUnit(StreamUnitType type, Long targetAddr) {
         this.type = type;
         this.targetAddr = targetAddr;
     }
