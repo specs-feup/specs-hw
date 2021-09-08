@@ -38,9 +38,14 @@ public class RiscvAsmBranchTargetGetter {
 
     private static Number jalr(RiscvAsmFieldData fielddata) {
         var map = fielddata.getMap();
-        return BinaryTranslationUtils.signExtend32(map.get(IMMTWELVE), 12);
-        // TODO: how to get target of relative jumps??
-        // this jump IMM is added to the value of rs1...
+        var imm12 = map.get(IMMTWELVE);
+        var target = BinaryTranslationUtils.signExtend32(imm12, 12);
+        var rs1 = map.get(RS1);
+
+        // var rs1Value = ??? inst.getRegister... etc ??
+
+        return Long.valueOf(rs1 + target);
+        // TODO: correct?? no, I need the VALUE of rs1, not the register name
     }
 
     private static Number uj(RiscvAsmFieldData fielddata) {
@@ -51,8 +56,15 @@ public class RiscvAsmBranchTargetGetter {
         var imm10 = map.get(IMMTEN);
         var bit11 = map.get(BIT11);
         var imm8 = map.get(IMMEIGHT);
-        return BinaryTranslationUtils.signExtend32(
+
+        // final addr is this instructions own addr + sign extended fulimm
+        var target = BinaryTranslationUtils.signExtend32(
                 (bit20 << 20) | (imm8 << 12) | (bit11 << 11) | (imm10 << 1), 21);
+
+        return Long.valueOf(fielddata.getAddr().longValue() + target);
+        /*
+        return BinaryTranslationUtils.signExtend32(
+                (bit20 << 20) | (imm8 << 12) | (bit11 << 11) | (imm10 << 1), 21);*/
     }
 
     private static Number sb(RiscvAsmFieldData fielddata) {
@@ -63,8 +75,10 @@ public class RiscvAsmBranchTargetGetter {
         var bit11 = map.get(BIT11);
         var imm6 = map.get(IMMSIX);
         var imm4 = map.get(IMMFOUR);
-        return BinaryTranslationUtils.signExtend32(
+        var target = BinaryTranslationUtils.signExtend32(
                 (bit12 << 12) | (bit11 << 11) | (imm6 << 5) | (imm4 << 1), 12);
+
+        return Long.valueOf(target);
     }
 
     private static Number undefined(RiscvAsmFieldData fielddata) {

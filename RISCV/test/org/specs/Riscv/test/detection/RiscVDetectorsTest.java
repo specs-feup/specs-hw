@@ -2,30 +2,52 @@ package org.specs.Riscv.test.detection;
 
 import org.junit.Test;
 import org.specs.Riscv.provider.RiscvLivermoreN100im;
-import org.specs.Riscv.stream.RiscvElfStream;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
-import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
+import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTester;
 
-public class RiscVDetectorsTest {
+public class RiscVDetectorsTest extends SegmentDetectTester {
 
     /*
      * Static Frequent Sequence
      */
     @Test
     public void testFrequentStaticSequenceDetector() {
+        testFrequentStaticSequenceDetector(RiscvLivermoreN100im.cholesky.toStaticStream());
+    }
 
-        var elf = RiscvLivermoreN100im.pic2d;
+    /*
+     * Trace Frequent Sequence
+     */
+    @Test
+    public void testFrequentTraceSequenceDetector() {
+        testFrequentTraceSequenceDetector(RiscvLivermoreN100im.cholesky.toTraceStream());
+    }
 
-        var builder = new DetectorConfigurationBuilder();
-        // builder.withMaxWindow(4).withStartAddr(elf.getKernelStart()).withStopAddr(elf.getKernelStop());
+    /*
+     * Static Basic Block
+     */
+    @Test
+    public void testStaticBasicBlockDetector() {
+        testStaticBasicBlockDetector(RiscvLivermoreN100im.cholesky.toStaticStream());
+    }
 
-        var bundle = SegmentDetectTestUtils.detect(elf.toApplication(),
-                RiscvElfStream.class,
-                FrequentStaticSequenceDetector.class,
-                builder.build());
+    /*
+     * Trace Basic Block
+     */
+    @Test
+    public void testTraceBasicBlockDetector() {
+        testTraceBasicBlockDetector(RiscvLivermoreN100im.cholesky.toTraceStream());
+    }
 
-        SegmentDetectTestUtils.printBundle(bundle);
+    /*
+     * GenericTraceSegment (v3 detector WIP)
+     */
+    @Test
+    public void testGenericTraceDetector() {
+        // var istream = MicroBlazePolyBenchMiniInt.floydwarshall.toTraceStream();
+        // var istream = MicroBlazePolyBenchMiniInt.floydwarshall.asTraceTxtDump().toTraceStream();
+        // var istream = MicroBlazePolyBenchMiniInt.gemm.asTraceTxtDump().toTraceStream();
+        var istream = RiscvLivermoreN100im.innerprod.toTraceStream();
+        testGenericTraceDetector(istream);
     }
 }

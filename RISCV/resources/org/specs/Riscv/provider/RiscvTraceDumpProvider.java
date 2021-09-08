@@ -7,8 +7,4 @@ public class RiscvTraceDumpProvider extends TraceDumpProvider implements RiscvEL
     public RiscvTraceDumpProvider(RiscvELFProvider elfprovider) {
         super(elfprovider);
     }
-
-    public RiscvELFProvider getOriginal() {
-        return (RiscvELFProvider) this.original;
-    }
 }
