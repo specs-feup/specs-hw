@@ -8,18 +8,11 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 public class RiscvInstructionData extends InstructionData {
 
     /*
-     * Fields only relevant for RISC-V instructions
-     */
-    private final Number branchTarget;
-
-    /*
      * Only public constructor
      */
     public RiscvInstructionData(InstructionProperties props, RiscvAsmFieldData fieldData) {
-        super(props);
-        this.operands = fieldData.getOperands();
-        this.branchTarget = fieldData.getBranchTarget();
-        // TODO: some of the code in getOperands and getBranchTarget is repeated
+        super(props, fieldData);
+        // TODO: some of the code in getOperands and getBranchTarget for RISCV is repeated
         // and could easily break :(
     }
 
@@ -28,20 +21,13 @@ public class RiscvInstructionData extends InstructionData {
      */
     private RiscvInstructionData(RiscvInstructionData other) {
         super(other);
-        this.branchTarget = other.getBranchTarget();
     }
 
     /*
      * Copy "constructor"
      */
+    @Override
     public RiscvInstructionData copy() {
         return new RiscvInstructionData(this);
-    }
-
-    /*
-    * Get target of branch if instruction is branch
-    */
-    public Number getBranchTarget() {
-        return branchTarget;
     }
 }
