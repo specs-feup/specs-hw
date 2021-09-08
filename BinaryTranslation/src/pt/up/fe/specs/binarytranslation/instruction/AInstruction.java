@@ -45,12 +45,29 @@ public abstract class AInstruction implements Instruction {
     // the enum which represents the ISA properties of this instruction
     protected final InstructionProperties props;
 
-    public AInstruction(Long address, String instruction,
+    /*
+     * Main constructor
+     */
+    protected AInstruction(Long address, String instruction,
             InstructionData idata, InstructionProperties props) {
         this.address = address;
         this.instruction = instruction.strip();
         this.idata = idata;
         this.props = props;
+    }
+
+    /*
+     * Copy constructor
+     */
+    protected AInstruction(AInstruction other) {
+        this.address = other.getAddress();
+        this.instruction = new String(other.getInstruction());
+        this.idata = other.getData().copy();
+        this.props = other.getProperties(); // is an enum (i.e. final constant)
+
+        if (other.getRegisters() != null) {
+            this.registers = new RegisterDump(other.getRegisters());
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////

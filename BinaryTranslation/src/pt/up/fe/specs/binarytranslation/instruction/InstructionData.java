@@ -47,18 +47,6 @@ public abstract class InstructionData {
 
     /*
      * Private helper copy
-     
-    protected InstructionData(String plainname,
-            int latency, int delay, List<InstructionType> genericType, List<Operand> ops) {
-        this.plainname = plainname;
-        this.latency = latency;
-        this.delay = delay;
-        this.genericType = genericType;
-        this.operands = ops;
-    }*/
-
-    /*
-     * Private helper copy
      */
     protected InstructionData(InstructionData other) {
 
@@ -74,6 +62,11 @@ public abstract class InstructionData {
         this.genericType = copytype;
         this.operands = copyops;
     }
+
+    /*
+     * Must be implemented by children  
+     */
+    public abstract InstructionData copy();
 
     /*
      * Get plain name
