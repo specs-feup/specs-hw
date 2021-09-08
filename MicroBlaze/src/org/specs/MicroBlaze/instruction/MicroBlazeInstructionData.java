@@ -17,14 +17,6 @@ public class MicroBlazeInstructionData extends InstructionData {
 
     /*
      * Helper constructor for copy, calls super copy
-     
-    private MicroBlazeInstructionData(String plainname,
-            int latency, int delay, List<InstructionType> genericType, List<Operand> ops) {
-        super(plainname, latency, delay, genericType, ops);
-    }*/
-
-    /*
-     * Helper constructor for copy, calls super copy
      */
     private MicroBlazeInstructionData(MicroBlazeInstructionData other) {
         super(other);
@@ -35,15 +27,5 @@ public class MicroBlazeInstructionData extends InstructionData {
      */
     public MicroBlazeInstructionData copy() {
         return new MicroBlazeInstructionData(this);
-        /*String copyname = new String(this.plainname);
-        List<InstructionType> copytype = new ArrayList<InstructionType>(this.genericType);
-        
-        List<Operand> copyops = new ArrayList<Operand>();
-        for (Operand op : this.operands)
-            copyops.add(op.copy());
-        
-        return new MicroBlazeInstructionData(copyname, this.latency, this.delay, copytype, copyops);
-        */
-
     }
 }
