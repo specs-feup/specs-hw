@@ -17,8 +17,8 @@ public class ELFProviderTester {
             for (var elf : elfs) {
                 var app = elf.toApplication();
                 System.out.print(elf.getELFName() + ": ");
-                System.out.print("0x" + Integer.toHexString(app.getKernelStart()) + " - ");
-                System.out.println("0x" + Integer.toHexString(app.getKernelStop()));
+                System.out.print("0x" + Long.toHexString(app.getKernelStart()) + " - ");
+                System.out.println("0x" + Long.toHexString(app.getKernelStop()));
             }
         }
     }
