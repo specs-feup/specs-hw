@@ -1,10 +1,13 @@
-package org.specs.Riscv.parsing;
+package org.specs.Riscv.parsing.getters;
 
 import static org.specs.Riscv.parsing.RiscvAsmField.*;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.specs.Riscv.parsing.RiscvAsmFieldData;
+import org.specs.Riscv.parsing.RiscvAsmFieldType;
 
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
@@ -19,7 +22,7 @@ public class RiscvAsmBranchTargetGetter {
 
     private static final Map<RiscvAsmFieldType, RiscvAsmBranchParse> TARGETGET;
     static {
-        Map<RiscvAsmFieldType, RiscvAsmBranchParse> amap = new HashMap<RiscvAsmFieldType, RiscvAsmBranchParse>();
+        var amap = new HashMap<RiscvAsmFieldType, RiscvAsmBranchParse>();
         amap.put(RiscvAsmFieldType.JALR, RiscvAsmBranchTargetGetter::jalr);
         amap.put(RiscvAsmFieldType.BRANCH, RiscvAsmBranchTargetGetter::sb);
         amap.put(RiscvAsmFieldType.JAL, RiscvAsmBranchTargetGetter::uj);

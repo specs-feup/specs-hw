@@ -26,7 +26,6 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 
 public class RiscvInstruction extends AInstruction {
 
@@ -80,40 +79,28 @@ public class RiscvInstruction extends AInstruction {
         return new RiscvInstruction(this);
     }
 
-    /*
-     * Copy "constructor"
-     
-    @Override
-    public RiscvInstruction copy() {
-    
-        String copyaddr = new String(Integer.toHexString(this.getAddress().intValue()));
-        String copyinst = new String(this.getInstruction());
-        RiscvInstructionData copyData = this.getData().copy();
-        RiscvAsmFieldData copyFieldData = this.getFieldData().copy();
-        return new RiscvInstruction(copyaddr, copyinst, copyData, copyFieldData, this.getProperties());
-    }*/
-
     @Override
     public RiscvInstructionData getData() {
         // idata is guaranteed to be an (RiscvInstructionData)
         return (RiscvInstructionData) super.getData();
     }
 
+    /*
     @Override
     public Number getBranchTarget() {
         if (this.isJump()) {
             long branchTarget = (this.getData().getBranchTarget()).longValue();
-
+    
             if (this.getData().getGenericTypes().contains(InstructionType.G_RJUMP)) {
                 var v = this.getAddress().longValue();
                 return branchTarget = v + branchTarget;
             }
-
+    
             else if (this.getData().getGenericTypes().contains(InstructionType.G_AJUMP))
                 return branchTarget;
         }
         return null;
-    }
+    }*/
 
     @Override
     public RiscvAsmFieldData getFieldData() {
