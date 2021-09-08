@@ -25,16 +25,6 @@ public class RiscvInstructionData extends InstructionData {
 
     /*
      * Helper constructor for copy, calls super copy
-     
-    private RiscvInstructionData(String plainname,
-            int latency, int delay, List<InstructionType> genericType,
-            List<Operand> ops, Number branchTarget) {
-        super(plainname, latency, delay, genericType, ops);
-        this.branchTarget = branchTarget;
-    }*/
-
-    /*
-     * Helper constructor for copy, calls super copy
      */
     private RiscvInstructionData(RiscvInstructionData other) {
         super(other);
@@ -46,15 +36,6 @@ public class RiscvInstructionData extends InstructionData {
      */
     public RiscvInstructionData copy() {
         return new RiscvInstructionData(this);
-        /*String copyname = new String(this.plainname);
-        List<InstructionType> copytype = new ArrayList<InstructionType>(this.genericType);
-        
-        List<Operand> copyops = new ArrayList<Operand>();
-        for (Operand op : this.operands)
-            copyops.add(op.copy());
-        
-        return new RiscvInstructionData(copyname, this.latency,
-                this.delay, copytype, copyops, this.branchTarget);*/
     }
 
     /*
