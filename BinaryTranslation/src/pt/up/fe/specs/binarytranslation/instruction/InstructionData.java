@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.instruction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
@@ -45,8 +46,8 @@ public abstract class InstructionData {
     }
 
     /*
-     * Private helper
-     */
+     * Private helper copy
+     
     protected InstructionData(String plainname,
             int latency, int delay, List<InstructionType> genericType, List<Operand> ops) {
         this.plainname = plainname;
@@ -54,6 +55,24 @@ public abstract class InstructionData {
         this.delay = delay;
         this.genericType = genericType;
         this.operands = ops;
+    }*/
+
+    /*
+     * Private helper copy
+     */
+    protected InstructionData(InstructionData other) {
+
+        var copyname = new String(other.getPlainName());
+        var copytype = new ArrayList<InstructionType>(other.getGenericTypes());
+        var copyops = new ArrayList<Operand>();
+        for (Operand op : this.operands)
+            copyops.add(op.copy());
+
+        this.plainname = copyname;
+        this.latency = other.getLatency();
+        this.delay = other.getDelay();
+        this.genericType = copytype;
+        this.operands = copyops;
     }
 
     /*

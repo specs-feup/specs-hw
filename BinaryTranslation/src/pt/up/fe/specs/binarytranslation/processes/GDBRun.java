@@ -1,6 +1,7 @@
 package pt.up.fe.specs.binarytranslation.processes;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -263,12 +264,12 @@ public class GDBRun extends StringProcessRun {
     }
 
     public void runUntil(Long hexaddr) {
-        this.runUntil("*0x" + Long.toHexString(hexaddr));
+        var val = BigInteger.valueOf(hexaddr);
+        this.runUntil("*0x" + val.toString(16));
     }
 
     public void runUntil(Number hexaddr) {
-        var val = hexaddr.longValue();
-        this.runUntil("*0x" + Long.toHexString(val));
+        this.runUntil(hexaddr.longValue());
     }
 
     /*

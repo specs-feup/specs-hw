@@ -1,6 +1,5 @@
 package pt.up.fe.specs.binarytranslation.tracer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -11,18 +10,18 @@ public class StreamBasicBlock extends AStreamUnit {
 
     /*
      * Deep Copy
-     */
+     
     public StreamBasicBlock(StreamBasicBlock other) {
         super(other);
         this.tilist = new ArrayList<StreamInstruction>();
         for (var el : other.getList())
             this.tilist.add(new StreamInstruction(el));
     }
-
+    
     @Override
     public StreamBasicBlock deepCopy() {
         return new StreamBasicBlock(this);
-    }
+    }*/
 
     /*
      * User by copy constructor

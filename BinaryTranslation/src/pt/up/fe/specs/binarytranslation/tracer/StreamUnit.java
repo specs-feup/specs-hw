@@ -6,8 +6,8 @@ public interface StreamUnit {
 
     /*
      * Deep copy
-     */
-    public StreamUnit deepCopy();
+     
+    public StreamUnit deepCopy();*/
 
     /*
      * 

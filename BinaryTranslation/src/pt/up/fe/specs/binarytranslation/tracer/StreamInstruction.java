@@ -8,16 +8,16 @@ public class StreamInstruction extends AStreamUnit {
 
     /*
      * Copy
-     */
+     
     public StreamInstruction(StreamInstruction other) {
         super(other);
         this.inst = other.getActual().copy();
     }
-
+    
     @Override
     public StreamInstruction deepCopy() {
         return new StreamInstruction(this);
-    }
+    }*/
 
     public StreamInstruction(Instruction inst) {
         super(StreamUnitType.StreamInstruction,

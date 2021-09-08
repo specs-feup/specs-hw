@@ -16,7 +16,6 @@ package pt.up.fe.specs.binarytranslation.instruction;
 import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.pseudocode.PseudoInstructionGraph;
-import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 /**
@@ -89,7 +88,7 @@ public abstract class AInstruction implements Instruction {
     public final int getDelay() {
         return idata.getDelay();
     }
-    
+
     @Override
     public final PseudoInstructionGraph getPseudocodeGraph() {
         var g = new PseudoInstructionGraph(this);

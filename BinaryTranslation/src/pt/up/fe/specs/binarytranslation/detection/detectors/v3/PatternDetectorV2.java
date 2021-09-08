@@ -17,14 +17,14 @@ public class PatternDetectorV2 {
 
     private PatternState state;
     private int currentPatternSize = 0;
-    private int maxsize;
+    private int maxPatternSize;
     private List<SlidingWindow<Boolean>> fifos;
     private List<Boolean> matchBits;
     private SlidingWindow<Integer> elementHash;
 
     public PatternDetectorV2(int maxsize) {
         this.state = PatternState.NO_PATTERN;
-        this.maxsize = maxsize;
+        this.maxPatternSize = maxsize;
 
         this.fifos = new ArrayList<SlidingWindow<Boolean>>(maxsize - 1);
         for (int i = 0; i < maxsize - 1; i++) {
@@ -52,6 +52,10 @@ public class PatternDetectorV2 {
 
     public int getCurrentPatternSize() {
         return currentPatternSize;
+    }
+
+    public int getMaxPatternSize() {
+        return maxPatternSize;
     }
 
     private void setState(int patsize) {

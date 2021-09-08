@@ -57,7 +57,7 @@ public abstract class Application extends ADataClass<Application> {
 
     private final ELFProvider elf;
     private final transient File elffile;
-    private final int kernelStart, kernelStop;
+    private final long kernelStart, kernelStop;
 
     public Application(ELFProvider elf, DataStore data) {
         this.elf = elf;
@@ -87,7 +87,7 @@ public abstract class Application extends ADataClass<Application> {
     /*.
      * get kernel bounds based on kernel name in enum, using "objdump -t <elfname> | grep <kernelname>"
      */
-    protected static List<Integer> getKernelBounds(Application app, ELFProvider elf) {
+    protected static List<Long> getKernelBounds(Application app, ELFProvider elf) {
 
         // call objdump
         var arguments = new ArrayList<String>();
@@ -113,11 +113,11 @@ public abstract class Application extends ADataClass<Application> {
         var pat = Pattern.compile(SYMBOLPATTERN + nameNoExt);
         var mat = pat.matcher(output.toString());
 
-        var startStop = new ArrayList<Integer>();
+        var startStop = new ArrayList<Long>();
         if (mat.find()) {
             var startStopList = SpecsStrings.getRegex(mat.group(0), pat);
-            startStop.add(Integer.parseUnsignedInt(startStopList.get(0), 16));
-            startStop.add(startStop.get(0) + Integer.valueOf(startStopList.get(1), 16) - 4);
+            startStop.add(Long.parseUnsignedLong(startStopList.get(0), 16));
+            startStop.add(startStop.get(0) + Long.parseUnsignedLong(startStopList.get(1), 16) - 4);
         }
 
         return startStop;
@@ -170,11 +170,11 @@ public abstract class Application extends ADataClass<Application> {
         return compilationInfo;
     }
 
-    public int getKernelStart() {
+    public long getKernelStart() {
         return kernelStart;
     }
 
-    public int getKernelStop() {
+    public long getKernelStop() {
         return kernelStop;
     }
 

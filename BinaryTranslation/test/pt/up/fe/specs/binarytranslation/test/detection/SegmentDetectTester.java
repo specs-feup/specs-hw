@@ -5,6 +5,7 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStatic
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentTraceSequenceDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.v3.GenericTraceSegmentDetector;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
@@ -57,5 +58,17 @@ public class SegmentDetectTester {
         var detector = new TraceBasicBlockDetector(getConfig(istream).withMaxWindow(12).build());
         var bundle = detector.detectSegments(istream);
         bundle.printBundle();
+    }
+
+    /*
+     * GenericTraceSegment (v3 detector WIP)
+     */
+    public static void testGenericTraceDetector(TraceInstructionStream istream) {
+        var config = getConfig(istream).withMaxWindow(20).build();
+        var detector = new GenericTraceSegmentDetector(istream, config);
+        var list = detector.detectSegments();
+        for (var el : list) {
+            System.out.println(el.toString());
+        }
     }
 }
