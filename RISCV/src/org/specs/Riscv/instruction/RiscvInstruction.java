@@ -65,17 +65,33 @@ public class RiscvInstruction extends AInstruction {
     }
 
     /*
+     * Helper constructor for copy, calls super copy
+     */
+    private RiscvInstruction(RiscvInstruction other) {
+        super(other);
+        this.fieldData = this.getFieldData().copy();
+    }
+
+    /*
      * Copy "constructor"
      */
     @Override
     public RiscvInstruction copy() {
+        return new RiscvInstruction(this);
+    }
 
+    /*
+     * Copy "constructor"
+     
+    @Override
+    public RiscvInstruction copy() {
+    
         String copyaddr = new String(Integer.toHexString(this.getAddress().intValue()));
         String copyinst = new String(this.getInstruction());
         RiscvInstructionData copyData = this.getData().copy();
         RiscvAsmFieldData copyFieldData = this.getFieldData().copy();
         return new RiscvInstruction(copyaddr, copyinst, copyData, copyFieldData, this.getProperties());
-    }
+    }*/
 
     @Override
     public RiscvInstructionData getData() {
