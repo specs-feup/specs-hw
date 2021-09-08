@@ -11,6 +11,7 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class RiscvAsmFieldData extends AsmFieldData {
 
@@ -137,6 +138,10 @@ public class RiscvAsmFieldData extends AsmFieldData {
             bit11 = Integer.valueOf(operandmap.get(BIT11));
             imm8 = Integer.valueOf(operandmap.get(IMMEIGHT));
             fullimm = (bit20 << 20) | (imm8 << 12) | (bit11 << 11) | (imm10 << 1);
+            fullimm = BinaryTranslationUtils.signExtend32(fullimm, 21);
+
+            // final addr is this instructions own addr + sign extended fulimm
+            fullimm = this.get(ADDR).intValue() + fullimm;
             operands.add(newImmediate(IMM, fullimm));
             break;
 

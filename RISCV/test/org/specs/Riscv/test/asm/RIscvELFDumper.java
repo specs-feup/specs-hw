@@ -8,9 +8,9 @@ import org.specs.Riscv.provider.RiscvLivermoreN100im;
 import org.specs.Riscv.provider.RiscvPolyBenchMiniFloat;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
-import pt.up.fe.specs.binarytranslation.test.asm.ELFDumperTester;
+import pt.up.fe.specs.binarytranslation.asm.ELFDumper;
 
-public class RIscvELFDumper extends ELFDumperTester {
+public class RIscvELFDumper extends ELFDumper {
 
     @Test
     public void sequentialDump() {
