@@ -80,15 +80,6 @@ public class MicroBlazeCustomInstructionUnitGeneratorTester {
         var detector = new FrequentStaticSequenceDetector(config);
         var bundle = detector.detectSegments(new MicroBlazeElfStream(app));
 
-        /*
-        var bundle = SegmentDetectTester.detect(app,
-                MicroBlazeElfStream.class,
-                FrequentStaticSequenceDetector.class,
-                (new DetectorConfigurationBuilder()
-                        .withMaxWindow(5)
-                        .withStartAddr(app.getKernelStart())
-                        .withStopAddr(app.getKernelStop())).build());*/
-
         // transform into graph bundle
         var graphs = GraphBundle.newInstance(bundle);
 

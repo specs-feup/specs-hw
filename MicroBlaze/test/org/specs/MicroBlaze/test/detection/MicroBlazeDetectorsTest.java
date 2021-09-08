@@ -2,10 +2,7 @@ package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
-import pt.up.fe.specs.binarytranslation.detection.detectors.v3.GenericTraceSegmentDetector;
 import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTester;
 
 /**
@@ -69,32 +66,14 @@ public class MicroBlazeDetectorsTest extends SegmentDetectTester {
     }*/
 
     /*
-     * v3 tester
+     * GenericTraceSegment (v3 detector WIP)
      */
     @Test
     public void testGenericTraceDetector() {
-        // var app = MicroBlazePolyBenchMiniInt.floydwarshall.toApplication();
-        // var app = MicroBlazePolyBenchMiniInt.floydwarshall.asTraceTxtDump().toApplication();
-        // var app = MicroBlazePolyBenchMiniInt.gemm.asTraceTxtDump().toApplication();
-        var app = MicroBlazeLivermoreN100.innerprod.asTraceTxtDump().toApplication();
-
-        var builder = new DetectorConfigurationBuilder();
-        builder.withSkipToAddr(app.getKernelStart());
-        builder.withPrematureStopAddr(app.getKernelStop());
-        builder.withStartAddr(app.getKernelStart());
-        builder.withStopAddr(app.getKernelStop());
-        builder.withMaxWindow(20);
-
-        try (var tstream = new MicroBlazeTraceStream(app)) {
-            var detector = new GenericTraceSegmentDetector(tstream, builder.build());
-            var list = detector.detectSegments();
-
-            for (var el : list) {
-                System.out.println(el.toString());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // var istream = MicroBlazePolyBenchMiniInt.floydwarshall.toTraceStream();
+        // var istream = MicroBlazePolyBenchMiniInt.floydwarshall.asTraceTxtDump().toTraceStream();
+        // var istream = MicroBlazePolyBenchMiniInt.gemm.asTraceTxtDump().toTraceStream();
+        var istream = MicroBlazeLivermoreN100.innerprod.asTraceTxtDump().toTraceStream();
+        testGenericTraceDetector(istream);
     }
 }
