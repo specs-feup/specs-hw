@@ -26,7 +26,6 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 public class MicroBlazeInstruction extends AInstruction {
 
@@ -66,23 +65,32 @@ public class MicroBlazeInstruction extends AInstruction {
     }
 
     /*
+     * Helper constructor for copy, calls super copy
+     */
+    private MicroBlazeInstruction(MicroBlazeInstruction other) {
+        super(other);
+        this.fieldData = this.getFieldData().copy();
+    }
+
+    /*
      * Copy "constructor"
      */
     @Override
     public MicroBlazeInstruction copy() {
-
+        return new MicroBlazeInstruction(this);
+        /*
         var copyaddr = new String(Long.toHexString(this.getAddress().intValue()));
         var copyinst = new String(this.getInstruction());
         var copyData = this.getData().copy();
         var copyFieldData = this.getFieldData().copy();
         var cpy = new MicroBlazeInstruction(copyaddr,
                 copyinst, copyData, copyFieldData, this.getProperties());
-
+        
         if (this.getRegisters() != null) {
             var copyDump = new RegisterDump(this.getRegisters());
             cpy.setRegisters(copyDump);
         }
-        return cpy;
+        return cpy;*/
     }
 
     @Override
