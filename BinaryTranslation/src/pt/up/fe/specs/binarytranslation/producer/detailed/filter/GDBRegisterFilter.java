@@ -3,8 +3,10 @@ package pt.up.fe.specs.binarytranslation.producer.detailed.filter;
 import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 import pt.up.fe.specs.util.utilities.LineStream;
 
+@Deprecated
 public class GDBRegisterFilter extends GDBFilter {
     private RegisterDump dump = new RegisterDump();
+
     public GDBRegisterFilter(LineStream lines) {
         super(lines);
     }
