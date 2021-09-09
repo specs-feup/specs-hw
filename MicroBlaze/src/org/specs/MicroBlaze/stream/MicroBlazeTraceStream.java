@@ -32,6 +32,7 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
      * @param prod
      *            an initialized custom trace provider
      */
+    @Deprecated
     public MicroBlazeTraceStream(MicroBlazeDetailedTraceProducer prod) {
         super(prod);
     }

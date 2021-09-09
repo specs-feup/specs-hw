@@ -4,7 +4,6 @@ import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
-import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 
 public class MicroBlazeInstructionData extends InstructionData {
 
@@ -14,7 +13,7 @@ public class MicroBlazeInstructionData extends InstructionData {
     public MicroBlazeInstructionData(
             InstructionProperties props,
             MicroBlazeAsmFieldData fieldData,
-            RegisterDump registers) {
+            MicroBlazeRegisterDump registers) {
         super(props, fieldData, registers);
     }
 

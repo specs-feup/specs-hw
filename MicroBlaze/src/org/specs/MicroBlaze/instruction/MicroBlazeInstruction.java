@@ -26,15 +26,8 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
-import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 
 public class MicroBlazeInstruction extends AInstruction {
-
-    // raw field data
-    // private final MicroBlazeAsmFieldData fieldData;
-
-    // shared by all instructions, so they can go parse themselves
-    // private static MicroBlazeIsaParser parser;
 
     /*
      * Parser and "decoder" Shared by all
@@ -55,11 +48,13 @@ public class MicroBlazeInstruction extends AInstruction {
     /*
      * Static "constructor"
      */
-    public static MicroBlazeInstruction newInstance(String address, String instruction, RegisterDump registers) {
+    public static MicroBlazeInstruction newInstance(String address, String instruction, String rawRegisterDump) {
         var fieldData = (MicroBlazeAsmFieldData) parser.parse(address, instruction);
         var props = instSet.process(fieldData);
-        var idata = new MicroBlazeInstructionData(props, fieldData, registers);
-        // var inst = new MicroBlazeInstruction(address, instruction, idata, fieldData, props);
+        /*var regdump = (rawRegisterDump == null) ? RegisterDumpNull.NullInstance
+                : new MicroBlazeRegisterDump(rawRegisterDump);
+        var idata = new MicroBlazeInstructionData(props, fieldData, regdump);*/ // TODO
+        var idata = new MicroBlazeInstructionData(props, fieldData, new MicroBlazeRegisterDump(rawRegisterDump));
         var inst = new MicroBlazeInstruction(address, instruction, idata, props);
         return inst;
     }
@@ -67,11 +62,11 @@ public class MicroBlazeInstruction extends AInstruction {
     /*
      * Create the instruction
      */
-    private MicroBlazeInstruction(String address, String instruction, InstructionData idata,
-            // MicroBlazeAsmFieldData fieldData,
+    private MicroBlazeInstruction(String address,
+            String instruction,
+            InstructionData idata,
             InstructionProperties props) {
         super(Long.parseLong(address, 16), instruction, idata, props);
-        // this.fieldData = fieldData;
     }
 
     /*
@@ -79,7 +74,6 @@ public class MicroBlazeInstruction extends AInstruction {
      */
     private MicroBlazeInstruction(MicroBlazeInstruction other) {
         super(other);
-        // this.fieldData = this.getFieldData().copy();
     }
 
     /*

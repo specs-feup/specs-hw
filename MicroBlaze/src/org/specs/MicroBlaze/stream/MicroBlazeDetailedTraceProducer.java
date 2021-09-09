@@ -6,6 +6,7 @@ import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
 
 import pt.up.fe.specs.binarytranslation.producer.detailed.DetailedRegisterInstructionProducer;
 
+@Deprecated
 public class MicroBlazeDetailedTraceProducer extends DetailedRegisterInstructionProducer {
 
     public MicroBlazeDetailedTraceProducer(MicroBlazeELFProvider elfprovider) {
