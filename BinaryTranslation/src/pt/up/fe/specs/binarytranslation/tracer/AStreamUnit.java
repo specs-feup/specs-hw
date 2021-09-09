@@ -23,7 +23,7 @@ public abstract class AStreamUnit implements StreamUnit {
     protected static Long getBranchTarget(List<StreamInstruction> tilist) {
         for (var inst : tilist)
             if (inst.getActual().isJump())
-                return (Long) inst.getActual().getBranchTarget();
+                return (Long) inst.getActual().getData().getBranchTarget();
 
         return 0L;
     }

@@ -2,20 +2,19 @@ package pt.up.fe.specs.binarytranslation.producer.detailed;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.function.BiFunction;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionInstantiator;
 import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBFilter;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBNullFilter;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.LineStream;
 
+@Deprecated
 public class DetailedTraceProducer extends TraceInstructionProducer {
 
-    protected DetailedTraceProducer(Application app,
-            BiFunction<String, String, Instruction> produceMethod) {
+    protected DetailedTraceProducer(Application app, InstructionInstantiator produceMethod) {
         super(app, produceMethod);
     }
 
