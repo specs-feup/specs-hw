@@ -27,30 +27,43 @@ public abstract class AOperand implements Operand {
     /*
      * members
      */
-    protected Number value;
-    protected String svalue;
+    protected Number registerIDasNumber; // "value" is the numeric identifier of the register, NOT its contents
+    protected String registerIDasString; // this is the string representation of the register
     protected OperandProperties props;
+    protected Number dataValue;
 
     /*
      * Constructor
      */
-    public AOperand(OperandProperties props, Number value) {
+    public AOperand(OperandProperties props, Number value, Number dataValue) {
         this.props = props;
-        this.value = value;
+        this.registerIDasNumber = value;
         this.setStringValue(value);
+    }
+
+    /*
+     * Copy constructors
+     */
+    protected AOperand(Operand other) {
+        this(other.getProperties().copy(), other.getNumberValue(), other.getDataValue());
+    }
+
+    @Override
+    public Number getDataValue() {
+        return dataValue;
     }
 
     @Override
     public void setNumberValue(Number value) {
-        this.value = value;
+        this.registerIDasNumber = value;
     }
 
     @Override
     public void setStringValue(String svalue) {
-        this.svalue = svalue;
+        this.registerIDasString = svalue;
 
         // assume integer radix...
-        this.value = Integer.valueOf(svalue);
+        this.registerIDasNumber = Integer.valueOf(svalue);
     }
 
     @Override
@@ -58,16 +71,16 @@ public abstract class AOperand implements Operand {
 
         // registers are decimals
         if (this.isRegister()) {
-            this.svalue = Integer.toString(value.intValue());
+            this.registerIDasString = Integer.toString(value.intValue());
         }
 
         // immediates are hexes (automatically chooses byte width from bit width)
         else {
             if (value instanceof Long || value instanceof Integer)
-                this.svalue = String.format("%x", value);
+                this.registerIDasString = String.format("%x", value);
 
             else if (value instanceof Float)
-                this.svalue = String.format("%f", value);
+                this.registerIDasString = String.format("%f", value);
         }
     }
 
@@ -77,18 +90,18 @@ public abstract class AOperand implements Operand {
      */
     public AOperand(OperandProperties props, String value) {
         this.props = props;
-        this.svalue = value;
+        this.registerIDasString = value;
         // this.value = -1L;
     }
 
     @Override
     public Number getNumberValue() {
-        return this.value;
+        return this.registerIDasNumber;
     }
 
     @Override
     public String getStringValue() {
-        return this.svalue;
+        return this.registerIDasString;
     }
 
     ///////////////////////////////////////////////////////////// Properties //

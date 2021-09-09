@@ -24,7 +24,7 @@ import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
 public interface Operand {
 
     /*
-     * (Messy) setters
+     * (Messy) setters; TODO: remove the need for these setters, an operands value SHOULD BE FINAL 
      */
     public void setNumberValue(Number value);
 
@@ -43,6 +43,11 @@ public interface Operand {
      * As string (good for symbolic values)
      */
     public String getStringValue();
+
+    /*
+     * Value held in register
+     */
+    public Number getDataValue();
 
     /*
      * Get properties of operand (can query for 

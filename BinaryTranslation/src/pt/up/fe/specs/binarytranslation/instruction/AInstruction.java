@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.instruction;
 import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.pseudocode.PseudoInstructionGraph;
+import pt.up.fe.specs.binarytranslation.asm.parsing.IsaParser;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 /**
@@ -27,20 +28,17 @@ import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 public abstract class AInstruction implements Instruction {
 
     @Expose
-    private Long address;
+    private final Long address;
 
     @Expose
-    private String instruction;
-
-    @Expose
-    private RegisterDump registers = null; // RegisterDump.nullDump;
-    // TODO fix later
+    private final String instruction;
 
     // decoded field data (abstract class)
     private final InstructionData idata;
 
     // shared by all instructions, so they can go decode themselves
     protected static InstructionSet instSet;
+    protected static IsaParser parser;
 
     // the enum which represents the ISA properties of this instruction
     protected final InstructionProperties props;
@@ -65,9 +63,10 @@ public abstract class AInstruction implements Instruction {
         this.idata = other.getData().copy();
         this.props = other.getProperties(); // is an enum (i.e. final constant)
 
+        /*
         if (other.getRegisters() != null) {
             this.registers = new RegisterDump(other.getRegisters());
-        }
+        }*/
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -111,11 +110,6 @@ public abstract class AInstruction implements Instruction {
         var g = new PseudoInstructionGraph(this);
         return g;
     }
-
-    /*@Override
-    public String toString() {
-        return SpecsStrings.toHexString(address.longValue(), 8) + ": " + instruction;
-    }*/
 
     // Check for instruction type /////////////////////////////////////////////
     @Override
@@ -208,7 +202,7 @@ public abstract class AInstruction implements Instruction {
     ///////////////////////////////////////////// Additional non basic types:
     @Override
     public boolean isBackwardsJump() {
-        Number branchTarget = this.getBranchTarget();
+        Number branchTarget = this.getData().getBranchTarget();
         if (branchTarget == null)
             return false;
 
@@ -221,7 +215,7 @@ public abstract class AInstruction implements Instruction {
 
     @Override
     public boolean isForwardsJump() {
-        Number branchTarget = this.getBranchTarget();
+        Number branchTarget = this.getData().getBranchTarget();
         if (branchTarget == null)
             return false;
 
@@ -251,10 +245,10 @@ public abstract class AInstruction implements Instruction {
         // target if branch
         if (this.isJump())
             str.append("\t// target: 0x" +
-                    Long.toHexString(this.getBranchTarget().longValue()));
+                    Long.toHexString(this.getData().getBranchTarget().longValue()));
 
         // register values
-        if (this.registers != null) {
+        if (this.getData().getRegisters() != null) {
             str.append("\tregs: (");
             var it2 = this.getData().getOperands().iterator();
             while (it2.hasNext()) {
@@ -281,11 +275,11 @@ public abstract class AInstruction implements Instruction {
 
     @Override
     public RegisterDump getRegisters() {
-        return registers;
+        return this.getData().getRegisters();
     }
 
-    @Override
+    /*@Override
     public void setRegisters(RegisterDump registers) {
         this.registers = registers;
-    }
+    }*/
 }
