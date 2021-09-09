@@ -85,7 +85,7 @@ public class MbOperand {
      * Creates a new register operand.
      * 
      * @param flow
-     * @param value
+     * @param registerIDasNumber
      * @param id
      * @param register
      * @return

@@ -26,14 +26,15 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 public class MicroBlazeInstruction extends AInstruction {
 
     // raw field data
-    private final MicroBlazeAsmFieldData fieldData;
+    // private final MicroBlazeAsmFieldData fieldData;
 
     // shared by all instructions, so they can go parse themselves
-    private static MicroBlazeIsaParser parser;
+    // private static MicroBlazeIsaParser parser;
 
     /*
      * Parser and "decoder" Shared by all
@@ -47,11 +48,12 @@ public class MicroBlazeInstruction extends AInstruction {
     /*
      * Static "constructor"
      */
-    public static MicroBlazeInstruction newInstance(String address, String instruction) {
-        var fieldData = parser.parse(address, instruction);
+    public static MicroBlazeInstruction newInstance(String address, String instruction, RegisterDump registers) {
+        var fieldData = (MicroBlazeAsmFieldData) parser.parse(address, instruction);
         var props = instSet.process(fieldData);
-        var idata = new MicroBlazeInstructionData(props, fieldData);
-        var inst = new MicroBlazeInstruction(address, instruction, idata, fieldData, props);
+        var idata = new MicroBlazeInstructionData(props, fieldData, registers);
+        // var inst = new MicroBlazeInstruction(address, instruction, idata, fieldData, props);
+        var inst = new MicroBlazeInstruction(address, instruction, idata, props);
         return inst;
     }
 
@@ -59,9 +61,10 @@ public class MicroBlazeInstruction extends AInstruction {
      * Create the instruction
      */
     private MicroBlazeInstruction(String address, String instruction, InstructionData idata,
-            MicroBlazeAsmFieldData fieldData, InstructionProperties props) {
+            // MicroBlazeAsmFieldData fieldData,
+            InstructionProperties props) {
         super(Long.parseLong(address, 16), instruction, idata, props);
-        this.fieldData = fieldData;
+        // this.fieldData = fieldData;
     }
 
     /*
@@ -69,7 +72,7 @@ public class MicroBlazeInstruction extends AInstruction {
      */
     private MicroBlazeInstruction(MicroBlazeInstruction other) {
         super(other);
-        this.fieldData = this.getFieldData().copy();
+        // this.fieldData = this.getFieldData().copy();
     }
 
     /*
@@ -78,19 +81,6 @@ public class MicroBlazeInstruction extends AInstruction {
     @Override
     public MicroBlazeInstruction copy() {
         return new MicroBlazeInstruction(this);
-        /*
-        var copyaddr = new String(Long.toHexString(this.getAddress().intValue()));
-        var copyinst = new String(this.getInstruction());
-        var copyData = this.getData().copy();
-        var copyFieldData = this.getFieldData().copy();
-        var cpy = new MicroBlazeInstruction(copyaddr,
-                copyinst, copyData, copyFieldData, this.getProperties());
-        
-        if (this.getRegisters() != null) {
-            var copyDump = new RegisterDump(this.getRegisters());
-            cpy.setRegisters(copyDump);
-        }
-        return cpy;*/
     }
 
     @Override
@@ -99,31 +89,10 @@ public class MicroBlazeInstruction extends AInstruction {
         return (MicroBlazeInstructionData) super.getData();
     }
 
-    @Override
-    public Number getBranchTarget() {
-        if (this.isJump()) {
-            var numops = this.getData().getOperands().size();
-            var jmpval = this.getData().getOperands().get(numops - 1).getNumberValue();
-
-            long finalvalue = 0;
-            if (this.isRelativeJump())
-                finalvalue = (this.getAddress().longValue() + jmpval.longValue());
-            else
-                finalvalue = jmpval.longValue();
-
-            return finalvalue;
-
-            // TODO replace mask with mask built based on elf instruction width
-            // or info about instruction set
-        }
-
-        return null;
-    }
-
-    @Override
+    /*    @Override
     public MicroBlazeAsmFieldData getFieldData() {
         return this.fieldData;
-    }
+    }*/
 
     @Override
     public InstructionPseudocode getPseudocode() {
