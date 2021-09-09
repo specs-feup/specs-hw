@@ -4,15 +4,18 @@ import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
 
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 public class MicroBlazeInstructionData extends InstructionData {
 
     /*
      * Only public constructor
      */
-    public MicroBlazeInstructionData(InstructionProperties props, MicroBlazeAsmFieldData fieldData) {
-        super(props);
-        this.operands = fieldData.getOperands(props);
+    public MicroBlazeInstructionData(
+            InstructionProperties props,
+            MicroBlazeAsmFieldData fieldData,
+            RegisterDump registers) {
+        super(props, fieldData, registers);
     }
 
     /*
@@ -25,6 +28,7 @@ public class MicroBlazeInstructionData extends InstructionData {
     /*
      * Copy "constructor"
      */
+    @Override
     public MicroBlazeInstructionData copy() {
         return new MicroBlazeInstructionData(this);
     }

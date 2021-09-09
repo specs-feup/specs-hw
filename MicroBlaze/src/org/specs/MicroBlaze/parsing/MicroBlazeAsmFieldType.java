@@ -33,6 +33,8 @@ public enum MicroBlazeAsmFieldType implements AsmFieldType {
     DSTREAM,
     IMM,
     TYPE_A,
+    TYPE_A_STORE,
     TYPE_B,
+    TYPE_B_STORE,
     UNDEFINED
 }

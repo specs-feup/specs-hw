@@ -1,7 +1,6 @@
 package org.specs.MicroBlaze.parsing;
 
 import pt.up.fe.specs.binarytranslation.asm.parsing.AIsaParser;
-import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 
 public class MicroBlazeIsaParser extends AIsaParser {
 
@@ -12,7 +11,7 @@ public class MicroBlazeIsaParser extends AIsaParser {
     @Override
     public MicroBlazeAsmFieldData parse(String addr, String instruction) {
 
-        AsmFieldData fieldData = doparse(addr, instruction);
-        return new MicroBlazeAsmFieldData(fieldData);
+        // TODO: find out a way to make "AsmFieldData" class abstract!
+        return new MicroBlazeAsmFieldData(doparse(addr, instruction));
     }
 }

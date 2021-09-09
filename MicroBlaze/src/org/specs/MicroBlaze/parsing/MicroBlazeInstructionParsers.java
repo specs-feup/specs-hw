@@ -39,19 +39,34 @@ public interface MicroBlazeInstructionParsers {
     List<AsmParser> PARSERS = Arrays.asList(
             newInstance(SPECIAL, "100101_opcodea(5)_opcodeb(5)_opcodec(2)_opcoded(14)"),
             newInstance(MBAR, "101110_imm(5)_00010_0(13)_100"),
+
             newInstance(UBRANCH, "100110_0(5)_opcodea(2)_000_registerb(5)_0(11)"),
             newInstance(ULBRANCH, "100110_registerd(5)_opcodea(2)_100_registerb(5)_0(11)"),
             newInstance(UIBRANCH, "101110_0(5)_opcodea(2)_000_imm(16)"),
             newInstance(UILBRANCH, "101110_registerd(5)_opcodea(2)_100_imm(16)"),
+            // only these 4 types are capable of absolute jumps (via opcodea)
+
             newInstance(CBRANCH, "100111_opcodea(5)_registera(5)_registerb(5)_0(11)"),
             newInstance(CIBRANCH, "101111_opcodea(5)_registera(5)_imm(16)"),
+
             newInstance(RETURN, "101101_opcodea(5)_registera(5)_imm(16)"),
             newInstance(IBARREL_FMT1, "011001_registerd(5)_registera(5)_00000_opcodeb(2)_0000_imm(5)"),
             newInstance(IBARREL_FMT2, "011001_registerd(5)_registera(5)_opcodea(2)_000_immw(5)_0_imm(5)"),
             newInstance(STREAM, "011011_registerd(5)_registera(5)_opcodea(1)_0(15)"),
             newInstance(DSTREAM, "010011_registerd(5)_registera(5)_registerb(5)_opcodea(1)_0(10)"),
             newInstance(IMM, "101100_00000_00000_imm(16)"),
+
+            newInstance(TYPE_A_STORE, "opcodea(2)_0_opcodeb(3)_registerd(5)_registera(5)_registerb(5)_opcodec(11)",
+                    data -> (data.get("opcodea").equals("11") && data.get("opcodeb").charAt(0) == '1')),
+
             newInstance(TYPE_A, "opcodea(2)_0_opcodeb(3)_registerd(5)_registera(5)_registerb(5)_opcodec(11)"),
+
+            newInstance(TYPE_A_STORE, "opcodea(2)_1_opcodeb(3)_registerd(5)_registera(5)_imm(16)",
+                    data -> (data.get("opcodea").equals("11") && data.get("opcodeb").charAt(0) == '1')),
+
             newInstance(TYPE_B, "opcodea(2)_1_opcodeb(3)_registerd(5)_registera(5)_imm(16)"),
+
             newInstance(UNDEFINED, "x(32)")); // note: invented code
+
+    // TODO typeA and typeB subtyupes for store instructions where the operand r/w types are different
 }
