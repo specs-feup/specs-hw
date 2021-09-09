@@ -1,6 +1,6 @@
 package pt.up.fe.specs.binarytranslation.producer.detailed.filter;
 
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
+import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 public class GDBRegisterFilter extends GDBFilter {

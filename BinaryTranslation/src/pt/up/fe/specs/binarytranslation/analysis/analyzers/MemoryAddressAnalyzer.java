@@ -15,32 +15,30 @@ import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.SimpleBasicBlo
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.InductionVariablesDetector;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressComparator;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressDetector;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryDisambiguator;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.PrologueDetector;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformBaseAddress;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
     private RegisterProperties isaProps;
 
-    public MemoryAddressAnalyzer(ATraceInstructionStream stream, ELFProvider elf, RegisterProperties isaProps, int window) {
+    public MemoryAddressAnalyzer(ATraceInstructionStream stream, ELFProvider elf, RegisterProperties isaProps,
+            int window) {
         super(stream, elf, window);
         this.isaProps = isaProps;
     }
 
     public void analyze() {
         var segs = getBasicBlockSegments();
-        
+
         for (var bb : segs) {
             // Print BB instructions
             handleBasicBlockSummary(bb);
@@ -49,7 +47,7 @@ public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
             var inouts = handleInOuts(bb);
 
             // Prologue dependencies
-            //var prologueDeps = handlePrologueDependencies(tracker);
+            // var prologueDeps = handlePrologueDependencies(tracker);
 
             // Memory graphs
             var graphs = handleMemoryGraphs(bb);
@@ -61,7 +59,7 @@ public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
             var indVars = handleInductionVariables(bb, graphs);
 
             // Check alias for every RAW dependency
-            //handleMemoryComparison(prologueDeps, graphs, indVars, inouts);
+            // handleMemoryComparison(prologueDeps, graphs, indVars, inouts);
         }
     }
 

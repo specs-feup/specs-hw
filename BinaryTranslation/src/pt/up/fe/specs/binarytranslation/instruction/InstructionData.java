@@ -18,7 +18,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
+import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 
 /**
  * Holds data taken from an executed or static instruction, after decoding its raw parsed fields

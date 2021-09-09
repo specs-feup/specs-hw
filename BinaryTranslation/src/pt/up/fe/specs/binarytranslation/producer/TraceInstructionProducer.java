@@ -79,7 +79,9 @@ public class TraceInstructionProducer extends AInstructionProducer {
                 return null;
 
             var splits = line.split(":");
-            var newinst = this.newInstance(splits[0], splits[1], regs);
+            var newinst = this.newInstance(splits[0], splits[1], regs); // TODO: turn this "regs" into a HashMap ? so
+                                                                        // that the specialized class can come up later?
+                                                                        // .e.g MicroBlazeRegisterDump
             // newinst.setRegisters(regs);
             return newinst;
 

@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
+import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -364,6 +364,8 @@ public class GDBRun extends StringProcessRun {
      * 
      */
     private static final Pattern REGPATTERN = Pattern.compile("([0-9a-z]+)\\s*0x([0-9a-f]+)\\s.*");
+
+    // TODO: change this return to HashMap<String, Number> ??
 
     public RegisterDump getRegisters() {
         this.sendGDBCommand("info registers");
