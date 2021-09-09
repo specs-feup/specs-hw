@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.specs.MicroBlaze.asm.MicroBlazeRegisterConventions;
 import org.specs.MicroBlaze.provider.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
-import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -92,7 +91,8 @@ public class MicroBlazeTraceAnalysisTest {
     @Test
     public void testInstPerSecondWithRegisters() {
         System.out.println("--- With registers ---");
-        var prod2 = new MicroBlazeDetailedTraceProducer(MicroBlazeLivermoreN10.innerprod);
+        // var prod2 = new MicroBlazeDetailedTraceProducer(MicroBlazeLivermoreN10.innerprod);
+        var prod2 = new MicroBlazeTraceProducer(MicroBlazeLivermoreN10.innerprod);
         var perf2 = new BtfPerformanceAnalyzer(prod2);
         perf2.calcInstructionsPerSecond();
     }

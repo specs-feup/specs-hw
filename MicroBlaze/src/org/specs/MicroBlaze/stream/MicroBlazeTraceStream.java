@@ -25,15 +25,4 @@ public class MicroBlazeTraceStream extends ATraceInstructionStream {
     public MicroBlazeTraceStream(MicroBlazeELFProvider elfprovider) {
         super(new MicroBlazeTraceProducer(elfprovider.toApplication()));
     }
-
-    /**
-     * Use a custom trace provider instead of the default
-     * 
-     * @param prod
-     *            an initialized custom trace provider
-     */
-    @Deprecated
-    public MicroBlazeTraceStream(MicroBlazeDetailedTraceProducer prod) {
-        super(prod);
-    }
 }
