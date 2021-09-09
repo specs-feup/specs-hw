@@ -1,13 +1,14 @@
 package pt.up.fe.specs.binarytranslation.producer;
 
-import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
 import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionInstantiator;
 import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.util.SpecsStrings;
 
 public abstract class AInstructionProducer implements InstructionProducer {
@@ -27,10 +28,11 @@ public abstract class AInstructionProducer implements InstructionProducer {
      * Init by children
      */
     private final Pattern regex;
-    private final BiFunction<String, String, Instruction> produceMethod;
+    private final InstructionInstantiator produceMethod;
 
-    public AInstructionProducer(Application app, StringProcessRun prun, Pattern regex,
-            BiFunction<String, String, Instruction> produceMethod) {
+    public AInstructionProducer(Application app,
+            StringProcessRun prun, Pattern regex,
+            InstructionInstantiator produceMethod) {
         this.app = app;
         this.prun = prun;
         this.regex = regex;
@@ -59,8 +61,15 @@ public abstract class AInstructionProducer implements InstructionProducer {
     /*
      * Initialized by non-abstract children methods
      */
+    protected Instruction newInstance(String address, String instruction, RegisterDump registers) {
+        return this.produceMethod.apply(address, instruction, registers);
+    }
+
+    /*
+     * Initialized by non-abstract children methods
+     */
     protected Instruction newInstance(String address, String instruction) {
-        return this.produceMethod.apply(address, instruction);
+        return this.produceMethod.apply(address, instruction, null);
     }
 
     @Override

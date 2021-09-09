@@ -1,10 +1,10 @@
 package pt.up.fe.specs.binarytranslation.producer;
 
-import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionInstantiator;
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
 import pt.up.fe.specs.binarytranslation.processes.TxtDump;
@@ -16,8 +16,7 @@ public class TraceInstructionProducer extends AInstructionProducer {
     /*
      * Output from QEMU Execution
      */
-    protected TraceInstructionProducer(Application app,
-            BiFunction<String, String, Instruction> produceMethod) {
+    protected TraceInstructionProducer(Application app, InstructionInstantiator produceMethod) {
         super(app, TraceInstructionProducer.getProperProcess(app), REGEX, produceMethod);
     }
 
@@ -60,20 +59,6 @@ public class TraceInstructionProducer extends AInstructionProducer {
             super.rawDump();
     }
 
-    /*
-     * 
-     
-    @Override
-    public RegisterDump getRegisters() {
-        if ((this.prun instanceof GDBRun)) {
-            var gdb = (GDBRun) this.prun;
-            return gdb.getRegisters();
-    
-        } else {
-            return super.getRegisters();
-        }
-    }*/
-
     @Override
     public Instruction nextInstruction() {
         if ((this.prun instanceof GDBRun)) {
@@ -94,8 +79,8 @@ public class TraceInstructionProducer extends AInstructionProducer {
                 return null;
 
             var splits = line.split(":");
-            var newinst = this.newInstance(splits[0], splits[1]);
-            newinst.setRegisters(regs);
+            var newinst = this.newInstance(splits[0], splits[1], regs);
+            // newinst.setRegisters(regs);
             return newinst;
 
         } else {

@@ -10,6 +10,8 @@ import pt.up.fe.specs.util.utilities.LineStream;
 
 public class RegisterDump {
 
+    // TODO: replace "String" by AsmFieldName!
+
     private Map<String, Long> regs;
     // public static RegisterDump nullDump = new RegisterDumpNull();
 
@@ -17,6 +19,9 @@ public class RegisterDump {
         this.regs = new HashMap<>();
     }
 
+    /*
+     * Deep copy TODO: does this deep copy??
+     */
     public RegisterDump(RegisterDump that) {
         this();
         for (var key : that.regs.keySet()) {

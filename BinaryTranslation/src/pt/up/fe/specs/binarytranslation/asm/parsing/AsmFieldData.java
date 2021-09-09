@@ -14,13 +14,17 @@
 package pt.up.fe.specs.binarytranslation.asm.parsing;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.suikasoft.jOptions.DataStore.ADataClass;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
 
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 import pt.up.fe.specs.util.SpecsCheck;
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
  * Raw field data as extracted by an {@link IsaParser}
@@ -101,4 +105,31 @@ public class AsmFieldData extends ADataClass<AsmFieldData> {
         SpecsCheck.checkNotNull(valueString, () -> "No value found for field " + fieldName);
         return Integer.parseInt(valueString, 2);
     }
+
+    /*
+    * Gets a list of integers which represent the operands in the fields
+    * This manner of field parsing, maintains the operand order as parsed
+    * in the AsmFields
+    * 
+    * (Must be implemented by children)
+    */
+    public List<Operand> getOperands(RegisterDump registers) { // TODO: pass RegisterDump here, so that the
+                                                               // List<Operand> in the Instruction
+        // class has the value of the register
+        throw new NotImplementedException("getOperands()");
+    }
+    // TODO: find out a way to make this class abstract!
+
+    /*
+    * Get target of branch if instruction is branch
+    * 
+    * (Must be implemented by children)
+    */
+    public Number getBranchTarget(RegisterDump registers) {
+        // public Number getBranchTarget(List<Operand> operands) { // TODO: and then this list of operands can be used
+        // to get
+        // the branch target, since we know register values
+        throw new NotImplementedException("getBranchTarget()");
+    }
+    // TODO: find out a way to make this class abstract!
 }

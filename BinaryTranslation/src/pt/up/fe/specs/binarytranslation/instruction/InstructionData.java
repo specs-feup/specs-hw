@@ -16,7 +16,9 @@ package pt.up.fe.specs.binarytranslation.instruction;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 /**
  * Holds data taken from an executed or static instruction, after decoding its raw parsed fields
@@ -32,35 +34,70 @@ public abstract class InstructionData {
     protected final int delay;
     protected final List<InstructionType> genericType;
 
+    //
+    private final RegisterDump registers; // RegisterDump.nullDump;
+    // TODO fix later
+
     // from asm fields
-    protected List<Operand> operands;
+    protected final List<Operand> operands;
+
+    // compute from operands during parsing
+    private final Number branchTarget;
+
+    /*
+     * Helper Constructor
+     */
+    private InstructionData(String name,
+            int latency, int delay,
+            List<InstructionType> genericType,
+            List<Operand> operands,
+            Number branchTarget,
+            RegisterDump registers) {
+        this.plainname = name;
+        this.latency = latency;
+        this.delay = delay;
+        this.genericType = genericType;
+        this.operands = operands;
+        this.branchTarget = branchTarget;
+        this.registers = registers;
+    }
 
     /*
      * Constructor
      */
-    public InstructionData(InstructionProperties props) {
-        this.plainname = props.getName();
-        this.latency = props.getLatency();
-        this.delay = props.getDelay();
-        this.genericType = props.getGenericType();
+    public InstructionData(InstructionProperties props,
+            AsmFieldData fieldData,
+            RegisterDump registers) {
+        this(props.getName(),
+                props.getLatency(),
+                props.getDelay(),
+                props.getGenericType(),
+                fieldData.getOperands(registers),
+                fieldData.getBranchTarget(registers),
+                registers);
+    }
+
+    /*
+     * 
+     */
+    private static List<Operand> cloneOperands(InstructionData other) {
+        var copyops = new ArrayList<Operand>();
+        for (Operand op : other.getOperands())
+            copyops.add(op.copy());
+        return copyops;
     }
 
     /*
      * Private helper copy
      */
     protected InstructionData(InstructionData other) {
-
-        var copyname = new String(other.getPlainName());
-        var copytype = new ArrayList<InstructionType>(other.getGenericTypes());
-        var copyops = new ArrayList<Operand>();
-        for (Operand op : this.operands)
-            copyops.add(op.copy());
-
-        this.plainname = copyname;
-        this.latency = other.getLatency();
-        this.delay = other.getDelay();
-        this.genericType = copytype;
-        this.operands = copyops;
+        this(new String(other.getPlainName()),
+                other.getLatency(),
+                other.getDelay(),
+                new ArrayList<InstructionType>(other.getGenericTypes()), // TODO: does this deep copy??
+                InstructionData.cloneOperands(other),
+                other.getBranchTarget(),
+                new RegisterDump(other.getRegisters())); // TODO: does this deep copy??
     }
 
     /*
@@ -97,10 +134,24 @@ public abstract class InstructionData {
     }
 
     /*
+     * Get register values
+     */
+    public RegisterDump getRegisters() {
+        return registers;
+    }
+
+    /*
      * Get Operands
      */
     public List<Operand> getOperands() {
         return this.operands;
+    }
+
+    /*
+    * Get target of branch if instruction is branch
+    */
+    public Number getBranchTarget() {
+        return branchTarget;
     }
 
     ///////////////////////////////////////////////////////////////////////////

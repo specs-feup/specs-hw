@@ -195,7 +195,8 @@ public class BinaryAsmInstructionParser implements AsmParser {
             return Optional.empty();
         }
 
-        return Optional.of(new AsmFieldData(Long.parseLong(addr, 16), type, fields));
+        return Optional.of(new AsmFieldData(Long.parseLong(addr, 16), type, fields)); // TODO: return "fields" as
+                                                                                      // optional??
     }
 
 }

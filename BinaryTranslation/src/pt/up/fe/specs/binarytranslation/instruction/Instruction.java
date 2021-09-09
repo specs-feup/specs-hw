@@ -16,7 +16,6 @@ package pt.up.fe.specs.binarytranslation.instruction;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.pseudocode.PseudoInstructionGraph;
-import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
 
 /**
@@ -223,10 +222,10 @@ public interface Instruction {
      * instruction is a branch, else return
      * this instruction addr + the instruction 
      * set's instruction width 
-     */
+     
     default Number getBranchTarget() {
         return null;
-    }
+    }*/
 
     ///////////////////////////////////////////////////////////////////// Utils
     /*
@@ -269,9 +268,9 @@ public interface Instruction {
      * Returns Raw instruction fields as produced 
      * by respective parser (AsmInstructionParser)
      */
-    default AsmFieldData getFieldData() {
+    /*default AsmFieldData getFieldData() {
         return null;
-    }
+    }*/
 
     /*makeSymbolic
      * Returns an asm string representation of instruction (includes operands) 
