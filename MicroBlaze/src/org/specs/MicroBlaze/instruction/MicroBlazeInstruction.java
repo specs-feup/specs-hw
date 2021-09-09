@@ -48,6 +48,13 @@ public class MicroBlazeInstruction extends AInstruction {
     /*
      * Static "constructor"
      */
+    public static MicroBlazeInstruction newInstance(String address, String instruction) {
+        return MicroBlazeInstruction.newInstance(address, instruction, null);
+    }
+
+    /*
+     * Static "constructor"
+     */
     public static MicroBlazeInstruction newInstance(String address, String instruction, RegisterDump registers) {
         var fieldData = (MicroBlazeAsmFieldData) parser.parse(address, instruction);
         var props = instSet.process(fieldData);

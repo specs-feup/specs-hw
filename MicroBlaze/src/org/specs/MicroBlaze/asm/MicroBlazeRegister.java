@@ -44,6 +44,17 @@ public enum MicroBlazeRegister implements Register {
     R31("r31", GENERALPURPOSE),
     RPC("rpc", PROGRAMCOUNTER);
 
+    /*
+     * Reverse lookup aux map: registername -> definition
+     
+    private static final Map<String, MicroBlazeRegister> map;
+    static {
+        map = new HashMap<String, MicroBlazeRegister>();
+        for (var v : MicroBlazeRegister.values()) {
+            map.put(v.getName(), v);
+        }
+    }*/
+
     private final String name;
     private final List<RegisterType> regTypes;
 
@@ -61,4 +72,10 @@ public enum MicroBlazeRegister implements Register {
     public List<RegisterType> getRegTypes() {
         return regTypes;
     }
+
+    /*
+    @Override
+    public static Register getDefinitionByName(String registerName) {
+        return MicroBlazeRegister.map.get(registerName);
+    }*/
 }
