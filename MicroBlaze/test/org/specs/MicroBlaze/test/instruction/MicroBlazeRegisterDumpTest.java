@@ -2,6 +2,9 @@ package org.specs.MicroBlaze.test.instruction;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.instruction.MicroBlazeRegisterDump;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
+
+import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 
 public class MicroBlazeRegisterDumpTest {
 
@@ -23,5 +26,20 @@ public class MicroBlazeRegisterDumpTest {
         var map = mbdump.getRegisterMap();
         for (var regdef : map.keySet())
             System.out.println(regdef.getName() + " = " + map.get(regdef));
+    }
+
+    @Test
+    public void auxGetGDBResponse() {
+        var app = MicroBlazeLivermoreN100.innerprod.toApplication();
+        try (var gdb = GDBRun.newInstanceInteractive(app)) {
+
+            // launch QEMU, then GDB (on localhost:1234)
+            gdb.start();
+
+            // run until kernel start
+            gdb.runUntil(app.getELFProvider().getFunctionName());
+
+            System.out.println(gdb.getRegisters());
+        }
     }
 }

@@ -7,10 +7,8 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.asm.MicroBlazeRegisterConventions;
-import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.provider.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
-import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeDetailedTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
@@ -34,11 +32,11 @@ public class MicroBlazeTraceAnalysisTest {
         return stream;
     }*/
 
-    private MicroBlazeTraceStream getStream(MicroBlazeELFProvider elfprovider, boolean generate) {
-        var prod = new MicroBlazeDetailedTraceProducer(new MicroBlazeTraceDumpProvider(elfprovider));
-        var stream = new MicroBlazeTraceStream(prod);
-        return stream;
-    }
+    // private MicroBlazeTraceStream getStream(MicroBlazeELFProvider elfprovider, boolean generate) {
+    // var prod = new MicroBlazeDetailedTraceProducer(new MicroBlazeTraceDumpProvider(elfprovider));
+    // var stream = new MicroBlazeTraceStream(prod);
+    // return stream;
+    // }
 
     // @Test
     // public void testMemoryProfilerStream() {
@@ -59,23 +57,28 @@ public class MicroBlazeTraceAnalysisTest {
 
     @Test
     public void testDetailedStream() {
-        var stream = getStream(MicroBlazeLivermoreN10.pic2d, false);
+        // var stream = getStream(MicroBlazeLivermoreN10.pic2d, false);
+        try (var stream = MicroBlazeLivermoreN10.pic2d.toTraceStream()) {
 
-        System.out.println("Testing detailed stream");
-        Instruction inst = stream.nextInstruction();
-        int regYes = 0;
-        int regNo = 0;
+            System.out.println("Testing detailed stream");
+            Instruction inst = stream.nextInstruction();
+            int regYes = 0;
+            int regNo = 0;
 
-        while (inst != null) {
-            if (inst.getRegisters().isEmpty())
-                regNo++;
-            else
-                regYes++;
-            inst = stream.nextInstruction();
+            while (inst != null) {
+                if (inst.getRegisters().isEmpty())
+                    regNo++;
+                else
+                    regYes++;
+                inst = stream.nextInstruction();
+            }
+            System.out.println("End");
+            System.out.println("With regs: " + regYes + ", no regs: " + regNo);
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        System.out.println("End");
-        System.out.println("With regs: " + regYes + ", no regs: " + regNo);
-        stream.close();
     }
 
     @Test
@@ -175,9 +178,18 @@ public class MicroBlazeTraceAnalysisTest {
         // continue;
         var f = elf.asTraceTxtDump().write();
         System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream(f))));
-        var stream = getStream(elf, true);
-        stream.rawDump();
-        stream.close();
+
+        // var stream = getStream(elf, true);
+        // stream.rawDump();
+        // stream.close();
+
+        try (var stream = MicroBlazeGccOptimizationLevels.dotprod2.toTraceStream()) {
+            stream.rawDump();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         System.err.println("Saved trace of " + elf.getFilename());
         // }
     }
