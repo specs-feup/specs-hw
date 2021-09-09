@@ -97,7 +97,7 @@ public abstract class InstructionData {
                 new ArrayList<InstructionType>(other.getGenericTypes()), // TODO: does this deep copy??
                 InstructionData.cloneOperands(other),
                 other.getBranchTarget(),
-                new RegisterDump(other.getRegisters())); // TODO: does this deep copy??
+                other.getRegisters().copy()); // TODO: does this deep copy??
     }
 
     /*

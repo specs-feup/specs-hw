@@ -32,6 +32,10 @@ public abstract class AOperand implements Operand {
     protected OperandProperties props;
     protected Number dataValue;
 
+    // TODO:
+    // protected final Register containeRegister;
+    // the methods to generate the register representation should be contained in the "Register" class!
+
     /*
      * Constructor
      */
