@@ -2,14 +2,12 @@ package pt.up.fe.specs.binarytranslation.instruction.register;
 
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
-
 public interface RegisterDump {
 
     /*
      * 
      */
-    public Number getValue(AsmField fieldName);
+    public Number getValue(Register registerName);
 
     /*
      * 
@@ -24,5 +22,10 @@ public interface RegisterDump {
     /*
      * 
      */
-    public Map<AsmField, Number> getRegisterMap();
+    public Map<Register, Number> getRegisterMap();
+
+    /*
+     * 
+     */
+    public RegisterDump copy();
 }
