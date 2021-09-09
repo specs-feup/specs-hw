@@ -1,35 +1,34 @@
-package pt.up.fe.specs.binarytranslation.producer.detailed;
+package pt.up.fe.specs.binarytranslation.instruction.register;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public class RegisterDump {
+public class ARegisterDump implements RegisterDump {
 
-    // TODO: replace "String" by AsmFieldName!
+    // private final Map<String, AsmField> regnames;
+    private final Map<AsmField, Number> regvalues;
 
-    private Map<String, Long> regs;
-    // public static RegisterDump nullDump = new RegisterDumpNull();
-
-    public RegisterDump() {
-        this.regs = new HashMap<>();
+    public ARegisterDump(Map<String, AsmField> regnames, Map<AsmField, Number> regvalues) {
+        this.regnames = regnames;
+        this.regvalues = regvalues;
     }
 
     /*
      * Deep copy TODO: does this deep copy??
-     */
-    public RegisterDump(RegisterDump that) {
-        this();
-        for (var key : that.regs.keySet()) {
+     
+    public ARegisterDump(ARegisterDump that) {
+        for (var key : that.regs.keySet())
             this.regs.put(key, that.regs.get(key));
-        }
-    }
+    }*/
 
-    // TODO pass thing function to GDB method getRegisters?
+    // TODO: pass a rawRegisterDump here, together with a HashMap
+    // that links fieldnames to register string names
+
     public static RegisterDump newInstance(String rawRegisterDump, Pattern matchpat) {
 
         var dump = new RegisterDump();
@@ -57,8 +56,9 @@ public class RegisterDump {
         }
     }
 
-    public Long getValue(String register) {
-        return regs.get(register);
+    @Override
+    public Number getValue(AsmField registerName) {
+        return regs.get(registerName);
     }
 
     @Override
@@ -79,15 +79,19 @@ public class RegisterDump {
         return sBuilder.toString();
     }
 
+    @Override
     public void prettyPrint() {
         System.out.println(this.toString());
     }
 
+    @Override
     public boolean isEmpty() {
-        return regs.size() == 0;
+        return regvalues.size() == 0;
     }
 
-    public Map<String, Long> getRegisterMap() {
-        return regs;
+    @Override
+    public Map<AsmField, Number> getRegisterMap() {
+        return regvalues;
     }
+
 }

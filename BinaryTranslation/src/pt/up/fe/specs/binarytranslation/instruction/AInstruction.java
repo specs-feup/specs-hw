@@ -17,7 +17,7 @@ import com.google.gson.annotations.Expose;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.pseudocode.PseudoInstructionGraph;
 import pt.up.fe.specs.binarytranslation.asm.parsing.IsaParser;
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
+import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 
 /**
  * Generic implementation of interface instruction.

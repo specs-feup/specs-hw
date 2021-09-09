@@ -16,7 +16,7 @@ package pt.up.fe.specs.binarytranslation.instruction;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.pseudocode.PseudoInstructionGraph;
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
+import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 
 /**
  * Represents a generic assembly instruction.

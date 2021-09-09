@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.producer.detailed;
+package pt.up.fe.specs.binarytranslation.instruction.register;
 
 public class RegisterDumpNull extends RegisterDump {
     

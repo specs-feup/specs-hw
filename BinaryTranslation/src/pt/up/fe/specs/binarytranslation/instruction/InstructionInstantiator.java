@@ -1,6 +1,6 @@
 package pt.up.fe.specs.binarytranslation.instruction;
 
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
+import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 
 /*
  * Init this with one of the "newInstance" methods
