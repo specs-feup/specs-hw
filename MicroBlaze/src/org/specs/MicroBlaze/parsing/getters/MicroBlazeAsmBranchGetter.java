@@ -11,7 +11,7 @@ import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
 
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
+import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 
 public class MicroBlazeAsmBranchGetter {
 
@@ -19,7 +19,7 @@ public class MicroBlazeAsmBranchGetter {
      * map TYPE to a specific private branch target getter func
      */
     interface MicroBlazeAsmBranchParse {
-        Number apply(MicroBlazeAsmFieldData fielddata, List<Operand> operands);
+        Number apply(MicroBlazeAsmFieldData fielddata, RegisterDump registers);
     }
 
     /*
@@ -85,17 +85,17 @@ public class MicroBlazeAsmBranchGetter {
         return fullimm;
     }
 
-    public static Number getFrom(MicroBlazeAsmFieldData fielddata, List<Operand> operands) {
+    public static Number getFrom(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
 
         var func = TARGETGET.get(fielddata.get(MicroBlazeAsmFieldData.TYPE));
         if (func == null)
             func = MicroBlazeAsmBranchGetter::undefined;
 
-        return func.apply(fielddata);
+        return func.apply(fielddata, registers);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    private static Number cbranch(MicroBlazeAsmFieldData fielddata, List<Operand> operands) {
+    private static Number cbranch(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
 
         // TODO: target is sum of PC + rb
 
@@ -103,13 +103,13 @@ public class MicroBlazeAsmBranchGetter {
     }
 
     ///////////////////////////////////////////////////////////////////////
-    private static Number cibranch(MicroBlazeAsmFieldData fielddata, List<Operand> operands) {
+    private static Number cibranch(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
         var target = MicroBlazeAsmBranchGetter.getFullIMM(fielddata);
         return Long.valueOf(fielddata.getAddr().longValue() + target);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    private static Number rabranch(MicroBlazeAsmFieldData fielddata, List<Operand> operands) {
+    private static Number rabranch(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
         var target = MicroBlazeAsmBranchGetter.getFullIMM(fielddata);
         var map = fielddata.getMap();
         if (map.containsKey(OPCODEA)) {
@@ -125,13 +125,13 @@ public class MicroBlazeAsmBranchGetter {
 
     // TODO: returns are relative and use the contents of register Ra
     ///////////////////////////////////////////////////////////////////////
-    private static Number rets(MicroBlazeAsmFieldData fielddata, List<Operand> operands) {
+    private static Number rets(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
 
         return 0;
     }
 
     ///////////////////////////////////////////////////////////////////////
-    private static Number undefined(MicroBlazeAsmFieldData fielddata, List<Operand> operands) {
+    private static Number undefined(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
         return null;
     }
 }
