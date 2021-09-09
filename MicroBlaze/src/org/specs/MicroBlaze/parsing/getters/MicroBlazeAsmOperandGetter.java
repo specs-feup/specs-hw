@@ -13,7 +13,7 @@ import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
 
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
-import pt.up.fe.specs.binarytranslation.producer.detailed.RegisterDump;
+import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 
 public class MicroBlazeAsmOperandGetter {
 
