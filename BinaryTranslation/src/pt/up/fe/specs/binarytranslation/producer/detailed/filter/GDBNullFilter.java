@@ -2,6 +2,7 @@ package pt.up.fe.specs.binarytranslation.producer.detailed.filter;
 
 import pt.up.fe.specs.util.utilities.LineStream;
 
+@Deprecated
 public class GDBNullFilter extends GDBFilter {
 
     public GDBNullFilter(LineStream lines) {
