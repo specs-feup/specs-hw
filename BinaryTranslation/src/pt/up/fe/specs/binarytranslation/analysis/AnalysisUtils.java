@@ -53,21 +53,25 @@ public class AnalysisUtils {
      *            true to print values in decimal; false to print in hexadecimal
      */
     public static void printInstructionWithRegisters(Instruction inst, boolean decimal) {
-        StringBuilder sb = new StringBuilder();
-        String space = "  ";
+        var sb = new StringBuilder();
+        var space = "  ";
 
         sb.append(String.format("%-4s", inst.getName())).append(space);
 
         for (Operand op : inst.getData().getOperands()) {
             if (op.isRegister()) {
-                String reg = op.getProperties().getPrefix() + op.getStringValue();
-                Long val = inst.getRegisters().getValue(reg);
-                String strVal = val == null ? "??" : (decimal ? String.valueOf(val) : String.format("0x%X", val));
+
+                var reg = op.getProperties().getPrefix() + op.getStringValue();
+                // var val = inst.getRegisters().getValue(reg);
+
+                var val = op.getDataValue(); // TODO: sill needs to be implemented
+
+                var strVal = val == null ? "??" : (decimal ? String.valueOf(val) : String.format("0x%X", val));
                 sb.append(String.format("%-16s", reg + "{" + strVal + "}")).append(space);
             }
             if (op.isImmediate()) {
                 long imm = Long.parseLong(op.getStringValue(), 16);
-                String strImm = decimal ? String.valueOf(imm) : String.format("0x%X", imm);
+                var strImm = decimal ? String.valueOf(imm) : String.format("0x%X", imm);
                 sb.append(String.format("%-10s", strImm)).append(space);
             }
         }

@@ -1,19 +1,18 @@
 package pt.up.fe.specs.binarytranslation.producer.detailed;
 
-import java.util.function.BiFunction;
-
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionInstantiator;
 import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBFilter;
 import pt.up.fe.specs.binarytranslation.producer.detailed.filter.GDBRegisterFilter;
 
+@Deprecated
 public class DetailedRegisterInstructionProducer extends DetailedTraceProducer {
     protected int count = 0;
     protected boolean showStillAlive = true;
 
-    protected DetailedRegisterInstructionProducer(Application app,
-            BiFunction<String, String, Instruction> produceMethod) {
+    protected DetailedRegisterInstructionProducer(Application app, InstructionInstantiator produceMethod) {
         super(app, produceMethod);
     }
 

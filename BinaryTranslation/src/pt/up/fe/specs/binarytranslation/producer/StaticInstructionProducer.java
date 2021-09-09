@@ -1,10 +1,9 @@
 package pt.up.fe.specs.binarytranslation.producer;
 
-import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionInstantiator;
 import pt.up.fe.specs.binarytranslation.processes.ObjDump;
 import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
 import pt.up.fe.specs.binarytranslation.processes.TxtDump;
@@ -16,8 +15,7 @@ public class StaticInstructionProducer extends AInstructionProducer {
     /*
      * Output from GNU based objdump
      */
-    public StaticInstructionProducer(Application app,
-            BiFunction<String, String, Instruction> produceMethod) {
+    public StaticInstructionProducer(Application app, InstructionInstantiator produceMethod) {
         super(app, getProperProcess(app), REGEX, produceMethod);
     }
 

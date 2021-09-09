@@ -49,7 +49,10 @@ public class BinaryTranslationUtils {
      */
     public static void unzip(File zipFile, String filename, File outputFolder) {
         var args = new ArrayList<String>();
-        args.add("7z");
+        var progname = "7z";
+        if (IS_WINDOWS)
+            progname += ".exe";
+        args.add(progname);
         args.add("e");
         args.add("-aoa"); // add "aoa" overrides without prompt
         // args.add("-aos"); // add "aos" to avoid overwrite

@@ -62,11 +62,6 @@ public abstract class AInstruction implements Instruction {
         this.instruction = new String(other.getInstruction());
         this.idata = other.getData().copy();
         this.props = other.getProperties(); // is an enum (i.e. final constant)
-
-        /*
-        if (other.getRegisters() != null) {
-            this.registers = new RegisterDump(other.getRegisters());
-        }*/
     }
 
     ///////////////////////////////////////////////////////////////////////////

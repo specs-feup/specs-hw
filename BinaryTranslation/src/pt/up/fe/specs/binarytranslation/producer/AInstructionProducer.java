@@ -7,7 +7,6 @@ import com.google.gson.annotations.Expose;
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionInstantiator;
-import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
 import pt.up.fe.specs.util.SpecsStrings;
 
@@ -61,8 +60,8 @@ public abstract class AInstructionProducer implements InstructionProducer {
     /*
      * Initialized by non-abstract children methods
      */
-    protected Instruction newInstance(String address, String instruction, RegisterDump registers) {
-        return this.produceMethod.apply(address, instruction, registers);
+    protected Instruction newInstance(String address, String instruction, String rawRegisterDump) {
+        return this.produceMethod.apply(address, instruction, rawRegisterDump);
     }
 
     /*

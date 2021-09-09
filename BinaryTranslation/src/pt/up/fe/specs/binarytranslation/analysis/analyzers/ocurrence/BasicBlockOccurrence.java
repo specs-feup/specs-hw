@@ -4,7 +4,6 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 
 public class BasicBlockOccurrence {
 
@@ -55,13 +54,14 @@ public class BasicBlockOccurrence {
         return sb.toString();
     }
 
+    /*
     public RegisterDump getRegisters() {
         var dump = new RegisterDump();
         for (var i : insts) {
             dump.add(i.getRegisters());
         }
         return dump;
-    }
+    }*/
 
     public List<Instruction> getInsts() {
         return insts;

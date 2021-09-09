@@ -15,7 +15,6 @@ package pt.up.fe.specs.binarytranslation.legacy;
 
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
@@ -34,12 +33,6 @@ public interface SimpleInstruction32 extends Instruction {
     @Override
     default InstructionData getData() {
         throw new NotImplementedException(this);
-    }
-
-    @Override
-    default Number getBranchTarget() {
-        return 4;
-        // TODO fix
     }
 
     @Override
@@ -167,11 +160,6 @@ public interface SimpleInstruction32 extends Instruction {
     @Override
     default String getString() {
         return toString();
-    }
-
-    @Override
-    default AsmFieldData getFieldData() {
-        throw new NotImplementedException(this);
     }
 
     @Override

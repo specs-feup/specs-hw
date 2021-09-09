@@ -27,7 +27,7 @@ public class StreamInstruction extends AStreamUnit {
 
     protected static Long getBranchTarget(Instruction inst) {
         if (inst.isJump())
-            return (Long) inst.getBranchTarget();
+            return (Long) inst.getData().getBranchTarget();
         else
             return inst.getAddress() + 4;
     }
