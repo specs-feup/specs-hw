@@ -10,7 +10,7 @@ import pt.up.fe.specs.binarytranslation.instruction.register.RegisterType;
 
 public enum MicroBlazeRegister implements Register {
 
-    RO("r0", HARDZERO),
+    R0("r0", HARDZERO),
     R1("r1", STACKPOINTER),
     R2("r2", GENERALPURPOSE),
     R3("r3", GENERALPURPOSE, TEMPORARY, RETURN),

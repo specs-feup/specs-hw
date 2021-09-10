@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.specs.MicroBlaze.instruction.MicroBlazeRegisterDump;
 import org.specs.MicroBlaze.parsing.getters.MicroBlazeAsmBranchGetter;
 import org.specs.MicroBlaze.parsing.getters.MicroBlazeAsmOperandGetter;
 
@@ -230,7 +231,8 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
     */
     @Override
     public List<Operand> getOperands(RegisterDump registers) {
-        return MicroBlazeAsmOperandGetter.getFrom(this, registers);
+        var mbreg = (MicroBlazeRegisterDump) registers;
+        return MicroBlazeAsmOperandGetter.getFrom(this, mbreg);
     }
 
     /*
@@ -239,6 +241,6 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
     @Override
     public Number getBranchTarget(RegisterDump registers) { // (List<Operand> operands) { //TODO: replace by list of
                                                             // operands
-        return MicroBlazeAsmBranchGetter.getFrom(this, registers);
+        return MicroBlazeAsmBranchGetter.getFrom(this, mbreg);
     }
 }
