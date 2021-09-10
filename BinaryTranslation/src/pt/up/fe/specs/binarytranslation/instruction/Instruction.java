@@ -253,7 +253,7 @@ public interface Instruction {
     /*
      * Returns decoded instruction data
      */
-    default InstructionData getData() {
+    default AInstructionData getData() {
         return null;
     }
 

@@ -16,7 +16,7 @@ package pt.up.fe.specs.binarytranslation.legacy;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
+import pt.up.fe.specs.binarytranslation.instruction.AInstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
@@ -31,7 +31,7 @@ public interface SimpleInstruction32 extends Instruction {
     int getAddress32();
 
     @Override
-    default InstructionData getData() {
+    default AInstructionData getData() {
         throw new NotImplementedException(this);
     }
 
