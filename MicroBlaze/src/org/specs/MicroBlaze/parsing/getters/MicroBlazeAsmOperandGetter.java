@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.specs.MicroBlaze.instruction.MicroBlazeRegisterDump;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
+import org.specs.MicroBlaze.parsing.MicroBlazeRegisterResolver;
 
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
-import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
+import pt.up.fe.specs.binarytranslation.instruction.register.ExecutedImmediate;
 
 public class MicroBlazeAsmOperandGetter {
 
@@ -27,7 +29,8 @@ public class MicroBlazeAsmOperandGetter {
      * map TYPE to a specific private branch target getter func
      */
     interface MicroBlazeAsmOperandParse {
-        List<Operand> apply(MicroBlazeAsmFieldData fielddata);
+        // List<Operand> apply(MicroBlazeAsmFieldData fielddata, RegisterDump registers);
+        List<Operand> apply(MicroBlazeRegisterResolver resolver);
     }
 
     private static final Map<MicroBlazeAsmFieldType, MicroBlazeAsmOperandParse> TARGETGET;
@@ -54,82 +57,101 @@ public class MicroBlazeAsmOperandGetter {
         TARGETGET = Collections.unmodifiableMap(amap);
     }
 
-    public static List<Operand> getFrom(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
+    public static List<Operand> getFrom(MicroBlazeAsmFieldData fielddata, MicroBlazeRegisterDump registers) {
 
         var func = TARGETGET.get(fielddata.get(MicroBlazeAsmFieldData.TYPE));
         if (func == null)
             func = MicroBlazeAsmOperandGetter::undefined;
 
-        return func.apply(fielddata);
+        var resolver = new MicroBlazeRegisterResolver(fielddata, registers, postedImm, upper16Imm);
+        return func.apply(resolver);
     }
 
+    /*
     private static int getFullIMM(MicroBlazeAsmFieldData fielddata) {
-
+    
         var map = fielddata.getMap();
-
+    
         // resolve IMM value first, operation has any
         int fullimm = 0;
         if (map.containsKey(IMM)) {
             var lower16 = map.get(IMM);
-
+    
             // sign extend if no posted IMM
             if (postedImm == false) {
                 fullimm = (lower16 << (16)) >> (16);
             }
-
+    
             // else combine (assume upper16Imm already shifted up 16 bits)
             else {
                 postedImm = false;
                 fullimm = upper16Imm | lower16;
             }
         }
-
+    
         return fullimm;
-    }
+    }*/
 
-    public static boolean isPostedImm() {
+    /*
+    private static boolean isPostedImm() {
         return postedImm;
     }
-
-    public static int getUpper16Imm() {
+    
+    private static int getUpper16Imm() {
         return upper16Imm;
-    }
+    }*/
 
     ///////////////////////////////////////////////////////////////////////
     // MBAR
-    private static List<Operand> mbar(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> mbar(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newImmediate(IMM, map.get(IMM)));
+        ops.add(newImmediate(resolver.resolveIMM()));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // ULBRANCH
-    private static List<Operand> ulbranch(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> ulbranch(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
+
+        /*
         var map = fielddata.getMap();
-        ops.add(newWriteRegister(RD, map.get(RD)));
-        ops.add(newReadRegister(RB, map.get(RB)));
+        
+        // problem: i need to associate an integer to a register name (String) to a registedef...
+        
+        var RDRegister = map.get(RD);
+        var RDRegisterDefFromAsm = intstoRegDefs.get(RDRegister);
+        var RDRegisterValue = registers.getValue(RDRegisterDefFromAsm);
+        // TODO: RegisterResolver static class to solve this for all ISAs?
+        // and instead of 3 arguments to the newWriteRegister, pass a new class
+        // like "Register" and rename de current register to RegisterDefinition
+        
+        */
+
+        ops.add(newWriteRegister(resolver.resolve(RD)));
+        ops.add(newReadRegister(resolver.resolve(RB)));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // UBRANCH
-    private static List<Operand> ubranch(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> ubranch(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newReadRegister(RB, map.get(RB)));
+        ops.add(newReadRegister(resolver.resolve(RB)));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // UILBRANCH
-    private static List<Operand> uilbranch(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> uilbranch(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newWriteRegister(RD, map.get(RD)));
-        ops.add(newImmediate(IMM, getFullIMM(fielddata)));
+
+        // var map = fielddata.getMap();
+        // ops.add(newWriteRegister(RD, map.get(RD)));
+        // ops.add(newImmediate(IMM, getFullIMM(fielddata)));
+
+        ops.add(newWriteRegister(resolver.resolve(RD)));
+        ops.add(newImmediate(resolver.resolveFullIMM()));
 
         // TODO: correct? what if branch is relative/absolute?
         // bri brai etc
@@ -139,132 +161,126 @@ public class MicroBlazeAsmOperandGetter {
 
     ///////////////////////////////////////////////////////////////////////
     // UIBRANCH
-    private static List<Operand> uibranch(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> uibranch(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        ops.add(newImmediate(IMM, getFullIMM(fielddata)));
+        ops.add(newImmediate(resolver.resolveFullIMM()));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // CIBRANCH:
     // RETURN:
-    private static List<Operand> cibranchAndRet(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> cibranchAndRet(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newReadRegister(RA, map.get(RA)));
-        ops.add(newImmediate(IMM, getFullIMM(fielddata)));
+        ops.add(newWriteRegister(resolver.resolve(RA)));
+        ops.add(newImmediate(resolver.resolveFullIMM()));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // CBRANCH:
-    private static List<Operand> cbranch(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> cbranch(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newReadRegister(RA, map.get(RA)));
-        ops.add(newReadRegister(RB, map.get(RB)));
+        ops.add(newWriteRegister(resolver.resolve(RA)));
+        ops.add(newWriteRegister(resolver.resolve(RB)));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // IBARREL_FMT1:
-    private static List<Operand> ibarrel1(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> ibarrel1(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newWriteRegister(RD, map.get(RD)));
-        ops.add(newReadRegister(RA, map.get(RA)));
-        ops.add(newImmediate(IMM, getFullIMM(fielddata)));
+        ops.add(newWriteRegister(resolver.resolve(RD)));
+        ops.add(newWriteRegister(resolver.resolve(RA)));
+        ops.add(newImmediate(resolver.resolveFullIMM()));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // IBARREL_FMT2:
-    private static List<Operand> ibarrel2(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> ibarrel2(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newWriteRegister(RD, map.get(RD)));
-        ops.add(newReadRegister(RA, map.get(RA)));
-        ops.add(newImmediate(IMM, map.get(IMM))); // TODO: needs full IMM?
-        ops.add(newImmediate(IMMW, map.get(IMMW)));
+
+        ops.add(newWriteRegister(resolver.resolve(RD)));
+        ops.add(newReadRegister(resolver.resolve(RA)));
+        ops.add(newImmediate(resolver.resolveIMM())); // TODO: needs full IMM?
+
+        // unique case...
+        var val = resolver.getFielddata().getMap().get(IMMW);
+        ops.add(newImmediate(new ExecutedImmediate(IMMW, val)));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // STREAM:
-    private static List<Operand> stream(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> stream(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newWriteRegister(RD, map.get(RD)));
-        ops.add(newReadRegister(RA, map.get(RA)));
+        ops.add(newWriteRegister(resolver.resolve(RD)));
+        ops.add(newReadRegister(resolver.resolve(RA)));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // DSTREAM:
-    private static List<Operand> dstream(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> dstream(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newReadRegister(RA, map.get(RA)));
+        ops.add(newReadRegister(resolver.resolve(RA)));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // IMM:
-    private static List<Operand> imm(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> imm(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newImmediate(IMM, map.get(IMM)));
-        upper16Imm = (map.get(IMM) << 16);
+        var imm = resolver.resolveIMM();
+        ops.add(newImmediate(imm));
+        upper16Imm = (imm.getDataValue().intValue()) << 16;
         postedImm = true;
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // TYPE_A_STORE:
-    private static List<Operand> typeAStore(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> typeAStore(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newReadRegister(RD, map.get(RD)));
-        ops.add(newReadRegister(RA, map.get(RA)));
-        ops.add(newReadRegister(RB, map.get(RB)));
+        ops.add(newReadRegister(resolver.resolve(RD)));
+        ops.add(newReadRegister(resolver.resolve(RA)));
+        ops.add(newReadRegister(resolver.resolve(RB)));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // TYPE_A:
-    private static List<Operand> typeA(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> typeA(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newWriteRegister(RD, map.get(RD)));
-        ops.add(newReadRegister(RA, map.get(RA)));
-        ops.add(newReadRegister(RB, map.get(RB)));
+        ops.add(newWriteRegister(resolver.resolve(RD)));
+        ops.add(newReadRegister(resolver.resolve(RA)));
+        ops.add(newReadRegister(resolver.resolve(RB)));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // TYPE_B_STORE:
-    private static List<Operand> typeBStore(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> typeBStore(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newReadRegister(RD, map.get(RD)));
-        ops.add(newReadRegister(RA, map.get(RA)));
-        ops.add(newImmediate(IMM, getFullIMM(fielddata)));
+        ops.add(newReadRegister(resolver.resolve(RD)));
+        ops.add(newReadRegister(resolver.resolve(RA)));
+        ops.add(newImmediate(resolver.resolveFullIMM()));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // TYPE_B:
-    private static List<Operand> typeB(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> typeB(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-        var map = fielddata.getMap();
-        ops.add(newWriteRegister(RD, map.get(RD)));
-        ops.add(newReadRegister(RA, map.get(RA)));
-        ops.add(newImmediate(IMM, getFullIMM(fielddata)));
+        ops.add(newWriteRegister(resolver.resolve(RD)));
+        ops.add(newReadRegister(resolver.resolve(RA)));
+        ops.add(newImmediate(resolver.resolveFullIMM()));
         return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////
-    private static List<Operand> undefined(MicroBlazeAsmFieldData fielddata) {
+    private static List<Operand> undefined(MicroBlazeRegisterResolver resolver) {
         return null;
     }
 }

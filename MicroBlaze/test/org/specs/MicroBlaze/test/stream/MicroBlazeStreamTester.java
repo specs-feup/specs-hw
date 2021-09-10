@@ -16,6 +16,17 @@ public class MicroBlazeStreamTester extends InstructionStreamTester {
 
     @Test
     public void testStatic() {
+
+        /*
+        var elf = MicroBlazeLivermoreN100.matmul;
+        
+        var app = elf.toApplication();
+        var istream = elf.toTraceStream();
+        
+        var s = app.get(Application.GCC);
+        
+        istream.getApp().*/
+
         printStream(MicroBlazeLivermoreN100.matmul.toStaticStream());
     }
 
@@ -41,6 +52,15 @@ public class MicroBlazeStreamTester extends InstructionStreamTester {
 
     @Test
     public void testTraceRawFromTxtDump() {
+
+        /*
+        var elf = MicroBlazeLivermoreN100.matmul.asTraceTxtDump();
+        
+        var app = elf.toApplication();
+        var istream = elf.toTraceStream();
+        
+        var s = app.get(Application.GCC);*/
+
         rawDump(MicroBlazeLivermoreN100.innerprod.asTraceTxtDump().toTraceStream());
     }
 }
