@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.instruction.operand;
 
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
+import pt.up.fe.specs.binarytranslation.instruction.register.ExecutedRegister;
 
 /**
  * An instruction operand implementation that can be used by all ISAs, in theory This class can be promoted to an
@@ -27,86 +28,105 @@ public abstract class AOperand implements Operand {
     /*
      * members
      */
-    protected Number registerIDasNumber; // "value" is the numeric identifier of the register, NOT its contents
-    protected String registerIDasString; // this is the string representation of the register
-    protected OperandProperties props;
-    protected Number dataValue;
-
-    // TODO:
-    // protected final Register containeRegister;
+    // protected Number registerIDasNumber; // "value" is the numeric identifier of the register, NOT its contents
+    // protected String registerIDasString; // this is the string representation of the register
+    protected final OperandProperties props;
+    // protected finalNumber dataValue;
+    protected final ExecutedRegister containerRegister;
     // the methods to generate the register representation should be contained in the "Register" class!
 
     /*
      * Constructor
      */
-    public AOperand(OperandProperties props, Number value, Number dataValue) {
+    public AOperand(OperandProperties props, ExecutedRegister containerRegister) {
         this.props = props;
-        this.registerIDasNumber = value;
-        this.setStringValue(value);
+        this.containerRegister = containerRegister;
+        /*        this.registerIDasNumber = value;
+        this.setStringValue(value);*/
     }
 
     /*
      * Copy constructors
      */
-    protected AOperand(Operand other) {
-        this(other.getProperties().copy(), other.getNumberValue(), other.getDataValue());
+    protected AOperand(AOperand other) {
+        // this(other.getProperties().copy(), other.getNumberValue(), other.getDataValue());
+        this(other.props, other.containerRegister);
     }
 
     @Override
-    public Number getDataValue() {
-        return dataValue;
+    public ExecutedRegister getContainerRegister() {
+        return containerRegister;
     }
 
+    @Override
+    public AsmField getAsmField() {
+        return this.containerRegister.getAsmField();
+    }
+
+    /*
+    @Override
+    public OperandProperties getProperties() {
+        return this.props;
+    }*/
+
+    @Override
+    public Number getDataValue() {
+        return this.containerRegister.getDataValue();
+    }
+
+    /*
+    @Override
+    public Number getNumberValue() {
+        return this.containerRegister.getRegisterDefinition()
+    }*/
+
+    @Override
+    public String getStringValue() {
+        return this.containerRegister.getRegisterDefinition().getName();
+    }
+
+    /*
     @Override
     public void setNumberValue(Number value) {
         this.registerIDasNumber = value;
     }
-
+    
     @Override
     public void setStringValue(String svalue) {
         this.registerIDasString = svalue;
-
+    
         // assume integer radix...
         this.registerIDasNumber = Integer.valueOf(svalue);
     }
-
+    
     @Override
     public void setStringValue(Number value) {
-
+    
         // registers are decimals
         if (this.isRegister()) {
             this.registerIDasString = Integer.toString(value.intValue());
         }
-
+    
         // immediates are hexes (automatically chooses byte width from bit width)
         else {
             if (value instanceof Long || value instanceof Integer)
                 this.registerIDasString = String.format("%x", value);
-
+    
             else if (value instanceof Float)
                 this.registerIDasString = String.format("%f", value);
         }
     }
+    */
 
     /*
      * necessary because some registers cannot be represented with numbers
      * (e.g., "SF" for ARM)
-     */
+     
     public AOperand(OperandProperties props, String value) {
         this.props = props;
         this.registerIDasString = value;
         // this.value = -1L;
-    }
-
-    @Override
-    public Number getNumberValue() {
-        return this.registerIDasNumber;
-    }
-
-    @Override
-    public String getStringValue() {
-        return this.registerIDasString;
-    }
+    }*/
 
     ///////////////////////////////////////////////////////////// Properties //
     @Override
@@ -147,16 +167,6 @@ public abstract class AOperand implements Operand {
     @Override
     public Boolean isSpecial() {
         return (this.props.getType() == OperandType.SPECIAL);
-    }
-
-    @Override
-    public AsmField getAsmField() {
-        return this.props.getAsmField();
-    }
-
-    @Override
-    public OperandProperties getProperties() {
-        return this.props;
     }
 
     /*

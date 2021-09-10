@@ -11,25 +11,39 @@ import pt.up.fe.specs.util.utilities.LineStream;
 
 public abstract class ARegisterDump implements RegisterDump {
 
+    // map of register definitions to values
     private final Map<Register, Number> regvalues;
+
+    // helps look up by register string name
+    private final Map<String, Register> helperMap;
 
     protected ARegisterDump(Map<Register, Number> regvalues) {
         this.regvalues = regvalues;
+        this.helperMap = new HashMap<String, Register>();
+        for (var v : this.regvalues.keySet()) {
+            helperMap.put(v.getName(), v);
+        }
     }
 
     /*
-     * Deep copy
+     * copy
      */
     protected ARegisterDump(ARegisterDump that) {
-        this.regvalues = new HashMap<Register, Number>();
+        this.regvalues = that.regvalues;
+        this.helperMap = that.helperMap;
+        // NOTE: shallow copy should suffice since regvalues and helperMap
+        // should never change
+
+        /*this.regvalues = new HashMap<Register, Number>();
         var otherMap = that.getRegisterMap();
         for (var key : otherMap.keySet())
-            this.regvalues.put(key, otherMap.get(key));
+            this.regvalues.put(key, otherMap.get(key));*/
     }
 
     /*
      * (Must be implemented by children to preserver copied object type)
      */
+    @Override
     public abstract RegisterDump copy();
 
     /*
@@ -45,6 +59,8 @@ public abstract class ARegisterDump implements RegisterDump {
             helperMap.put(v.getName(), v);
         }
 
+        // TODO: find a way to avoid this repetition... (also in constructor)
+
         var dump = new HashMap<Register, Number>();
         var lstream = LineStream.newInstance(rawRegisterDump);
         while (lstream.peekNextLine() != null) {
@@ -54,28 +70,24 @@ public abstract class ARegisterDump implements RegisterDump {
 
             var regAndValue = SpecsStrings.getRegex(line, REGPATTERN);
             var reg = regAndValue.get(0).trim();
-            var value = Long.valueOf(regAndValue.get(1).trim(), 16);
-            dump.put(helperMap.get(reg), value);
+            var value = Long.parseUnsignedLong(regAndValue.get(1).trim(), 16);
+            var key = helperMap.get(reg);
+            if (key != null)
+                dump.put(key, value);
         }
         return dump;
     }
 
-    /*
-    public void add(String register, long value) {
-        regs.put(register, value);
-    }
-    
-    public void add(RegisterDump mergeRegs) {
-        for (var m : mergeRegs.getRegisterMap().keySet()) {
-            regs.put(m, mergeRegs.getValue(m));
-        }
-    }
-    */
-
     @Override
-    public Number getValue(Register registerName) {
-        return this.regvalues.get(registerName);
+    public Number getValue(Register registerDef) {
+        return this.regvalues.get(registerDef);
     }
+
+    /*
+    @Override
+    public Number getValue(String registerName) {
+        return this.regvalues.get(this.helperMap.get(registerName));
+    }*/
 
     @Override
     public String toString() {

@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.instruction.operand;
 
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
+import pt.up.fe.specs.binarytranslation.instruction.register.ExecutedRegister;
 
 /**
  * A generic instruction operand, composed of type, and value
@@ -26,18 +27,23 @@ public interface Operand {
     /*
      * (Messy) setters; TODO: remove the need for these setters, an operands value SHOULD BE FINAL 
      */
-    public void setNumberValue(Number value);
+    // public void setNumberValue(Number value);
 
-    public void setStringValue(String svalue);
+    // public void setStringValue(String svalue);
 
-    public void setStringValue(Number value);
+    // public void setStringValue(Number value);
+
+    /*
+     * 
+     */
+    public ExecutedRegister getContainerRegister();
 
     /*
      * Get value as Number (good for non symbilic cases)
      * If operand isnt symbolic, getStringValue returns the
      * integer value as a String
      */
-    public Number getNumberValue();
+    // public Number getNumberValue();
 
     /*
      * As string (good for symbolic values)
@@ -53,7 +59,7 @@ public interface Operand {
      * Get properties of operand (can query for 
      * type, e.g., register or immediate, and other things)
      */
-    public OperandProperties getProperties();
+    // public OperandProperties getProperties();
 
     /*
      * True if is register

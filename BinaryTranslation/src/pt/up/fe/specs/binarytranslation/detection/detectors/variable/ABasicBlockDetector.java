@@ -50,7 +50,7 @@ public abstract class ABasicBlockDetector extends ASegmentDetector {
         // try to find start of basic block in window, and its index
         int sidx = window.size() - 1;
         Instruction target = null;
-        int startAddr = backbranch.getBranchTarget().intValue();
+        int startAddr = backbranch.getData().getBranchTarget().intValue();
 
         try {
             while (sidx >= 0 && target == null) {
