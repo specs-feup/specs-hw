@@ -65,25 +65,26 @@ public class MicroBlazeAsmBranchGetter {
         TARGETGET = Collections.unmodifiableMap(amap);
     }
 
+    /*
     private static int getFullIMM(MicroBlazeAsmFieldData fielddata) {
-
+    
         var map = fielddata.getMap();
         int fullimm = 0;
         var lower16 = map.get(IMM);
         var isUpperImm = MicroBlazeAsmOperandGetter.isPostedImm();
-
+    
         // sign extend if no posted IMM
         if (isUpperImm == false) {
             fullimm = (lower16 << (16)) >> (16);
         }
-
+    
         // else combine (assume upper16Imm already shifted up 16 bits)
         else {
             fullimm = MicroBlazeAsmOperandGetter.getUpper16Imm() | lower16;
         }
-
+    
         return fullimm;
-    }
+    }*/
 
     public static Number getFrom(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
 

@@ -329,7 +329,7 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
      * helper method too look up type in the list
      */
     @Override
-    public List<InstructionType> getGenericType() {
+    public List<InstructionType> getGenericTypes() {
         return this.genericType;
     }
 
