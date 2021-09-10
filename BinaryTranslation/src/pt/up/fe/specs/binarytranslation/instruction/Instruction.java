@@ -108,6 +108,13 @@ public interface Instruction {
     }
 
     /*
+     * Check if instruction is comparison
+     */
+    default boolean isComparison() {
+        return false;
+    }
+
+    /*
      * Check if instruction is unary
      */
     default boolean isUnary() {

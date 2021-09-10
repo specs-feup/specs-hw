@@ -90,7 +90,7 @@ public class InstructionSet {
 
         // find the type labeled as generic unknown otherwise
         for (InstructionProperties inst : instList) {
-            if (inst.getGenericType().contains(InstructionType.G_UNKN)) {
+            if (inst.getGenericTypes().contains(InstructionType.G_UNKN)) {
                 return inst;
             }
         }

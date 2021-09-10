@@ -63,11 +63,10 @@ public abstract class AOperand implements Operand {
         return this.containerRegister.getAsmField();
     }
 
-    /*
     @Override
     public OperandProperties getProperties() {
         return this.props;
-    }*/
+    }
 
     @Override
     public Number getDataValue() {

@@ -61,7 +61,7 @@ public interface InstructionProperties {
     /*
      * helper method too look up type in the list
      */
-    public List<InstructionType> getGenericType();
+    public List<InstructionType> getGenericTypes();
 
     /*
      * helper method too look up name the list
