@@ -2,10 +2,10 @@ package org.specs.MicroBlaze.instruction;
 
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
 
-import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
+import pt.up.fe.specs.binarytranslation.instruction.AInstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 
-public class MicroBlazeInstructionData extends InstructionData {
+public class MicroBlazeInstructionData extends AInstructionData {
 
     /*
      * Only public constructor

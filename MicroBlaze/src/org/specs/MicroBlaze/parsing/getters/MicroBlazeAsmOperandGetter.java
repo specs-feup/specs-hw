@@ -29,7 +29,6 @@ public class MicroBlazeAsmOperandGetter {
      * map TYPE to a specific private branch target getter func
      */
     interface MicroBlazeAsmOperandParse {
-        // List<Operand> apply(MicroBlazeAsmFieldData fielddata, RegisterDump registers);
         List<Operand> apply(MicroBlazeRegisterResolver resolver);
     }
 
@@ -67,40 +66,6 @@ public class MicroBlazeAsmOperandGetter {
         return func.apply(resolver);
     }
 
-    /*
-    private static int getFullIMM(MicroBlazeAsmFieldData fielddata) {
-    
-        var map = fielddata.getMap();
-    
-        // resolve IMM value first, operation has any
-        int fullimm = 0;
-        if (map.containsKey(IMM)) {
-            var lower16 = map.get(IMM);
-    
-            // sign extend if no posted IMM
-            if (postedImm == false) {
-                fullimm = (lower16 << (16)) >> (16);
-            }
-    
-            // else combine (assume upper16Imm already shifted up 16 bits)
-            else {
-                postedImm = false;
-                fullimm = upper16Imm | lower16;
-            }
-        }
-    
-        return fullimm;
-    }*/
-
-    /*
-    private static boolean isPostedImm() {
-        return postedImm;
-    }
-    
-    private static int getUpper16Imm() {
-        return upper16Imm;
-    }*/
-
     ///////////////////////////////////////////////////////////////////////
     // MBAR
     private static List<Operand> mbar(MicroBlazeRegisterResolver resolver) {
@@ -113,21 +78,6 @@ public class MicroBlazeAsmOperandGetter {
     // ULBRANCH
     private static List<Operand> ulbranch(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-
-        /*
-        var map = fielddata.getMap();
-        
-        // problem: i need to associate an integer to a register name (String) to a registedef...
-        
-        var RDRegister = map.get(RD);
-        var RDRegisterDefFromAsm = intstoRegDefs.get(RDRegister);
-        var RDRegisterValue = registers.getValue(RDRegisterDefFromAsm);
-        // TODO: RegisterResolver static class to solve this for all ISAs?
-        // and instead of 3 arguments to the newWriteRegister, pass a new class
-        // like "Register" and rename de current register to RegisterDefinition
-        
-        */
-
         ops.add(newWriteRegister(resolver.resolve(RD)));
         ops.add(newReadRegister(resolver.resolve(RB)));
         return ops;
@@ -145,11 +95,6 @@ public class MicroBlazeAsmOperandGetter {
     // UILBRANCH
     private static List<Operand> uilbranch(MicroBlazeRegisterResolver resolver) {
         var ops = new ArrayList<Operand>();
-
-        // var map = fielddata.getMap();
-        // ops.add(newWriteRegister(RD, map.get(RD)));
-        // ops.add(newImmediate(IMM, getFullIMM(fielddata)));
-
         ops.add(newWriteRegister(resolver.resolve(RD)));
         ops.add(newImmediate(resolver.resolveFullIMM()));
 

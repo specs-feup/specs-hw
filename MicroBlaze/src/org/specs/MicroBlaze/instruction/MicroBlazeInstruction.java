@@ -22,8 +22,7 @@ import org.specs.MicroBlaze.parsing.MicroBlazeIsaParser;
 import com.google.common.base.Enums;
 
 import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.AInstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
 
@@ -55,18 +54,15 @@ public class MicroBlazeInstruction extends AInstruction {
                 : new MicroBlazeRegisterDump(rawRegisterDump);
         var idata = new MicroBlazeInstructionData(props, fieldData, regdump);*/ // TODO
         var idata = new MicroBlazeInstructionData(props, fieldData, new MicroBlazeRegisterDump(rawRegisterDump));
-        var inst = new MicroBlazeInstruction(address, instruction, idata, props);
+        var inst = new MicroBlazeInstruction(address, instruction, idata);
         return inst;
     }
 
     /*
      * Create the instruction
      */
-    private MicroBlazeInstruction(String address,
-            String instruction,
-            InstructionData idata,
-            InstructionProperties props) {
-        super(Long.parseLong(address, 16), instruction, idata, props);
+    private MicroBlazeInstruction(String address, String instruction, AInstructionData idata) {
+        super(Long.parseLong(address, 16), instruction, idata);
     }
 
     /*
@@ -97,7 +93,7 @@ public class MicroBlazeInstruction extends AInstruction {
 
     @Override
     public InstructionPseudocode getPseudocode() {
-        var pseudocode = Enums.getIfPresent(MicroBlazePseudocode.class, this.props.getEnumName());
+        var pseudocode = Enums.getIfPresent(MicroBlazePseudocode.class, this.getData().getProperties().getEnumName());
         if (pseudocode.isPresent())
             return pseudocode.get();
         else
