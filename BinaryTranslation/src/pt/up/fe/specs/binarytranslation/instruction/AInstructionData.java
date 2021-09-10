@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.instruction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
@@ -26,15 +25,17 @@ import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
  * @author NunoPaulino
  *
  */
-public abstract class InstructionData {
+public abstract class AInstructionData {
 
     // from enum properties
-    protected final String plainname;
+    protected final InstructionProperties props;
+
+    /*protected final String plainname;
     protected final int latency;
     protected final int delay;
-    protected final List<InstructionType> genericType;
+    protected final List<InstructionType> genericType;*/
 
-    //
+    // from GDB
     private final RegisterDump registers; // RegisterDump.nullDump;
     // TODO fix later
 
@@ -46,92 +47,101 @@ public abstract class InstructionData {
 
     /*
      * Helper Constructor
-     */
-    private InstructionData(String name,
-            int latency, int delay,
-            List<InstructionType> genericType,
+     
+    private AInstructionData(
+            InstructionProperties props,
             List<Operand> operands,
             Number branchTarget,
             RegisterDump registers) {
-        this.plainname = name;
-        this.latency = latency;
-        this.delay = delay;
-        this.genericType = genericType;
+        this.props = props;
         this.operands = operands;
         this.branchTarget = branchTarget;
         this.registers = registers;
-    }
+    }*/
 
     /*
      * Constructor
      */
-    public InstructionData(InstructionProperties props,
+    protected AInstructionData(InstructionProperties props,
             AsmFieldData fieldData,
             RegisterDump registers) {
-        this(props.getName(),
-                props.getLatency(),
-                props.getDelay(),
-                props.getGenericType(),
-                fieldData.getOperands(registers),
-                fieldData.getBranchTarget(registers),
-                registers);
+        this.props = props;
+        this.operands = fieldData.getOperands(registers);
+        this.branchTarget = fieldData.getBranchTarget(this.operands);
+        this.registers = registers;
     }
 
     /*
      * 
-     */
-    private static List<Operand> cloneOperands(InstructionData other) {
+     
+    private static List<Operand> cloneOperands(AInstructionData other) {
         var copyops = new ArrayList<Operand>();
         for (Operand op : other.getOperands())
             copyops.add(op.copy());
         return copyops;
-    }
+    }*/
 
     /*
      * Private helper copy
      */
-    protected InstructionData(InstructionData other) {
+    protected AInstructionData(AInstructionData other) {
+        this.props = other.props;
+        this.operands = other.operands;
+        this.branchTarget = other.branchTarget;
+        this.registers = other.registers;
+
+        // NOTE: assume that operands, branchtarget, and registers are IMMUTABLE
+
+        /*
         this(new String(other.getPlainName()),
                 other.getLatency(),
                 other.getDelay(),
                 new ArrayList<InstructionType>(other.getGenericTypes()), // TODO: does this deep copy??
-                InstructionData.cloneOperands(other),
+                AInstructionData.cloneOperands(other),
                 other.getBranchTarget(),
-                other.getRegisters().copy()); // TODO: does this deep copy??
+                other.getRegisters().copy()); // TODO: does this deep copy??*/
     }
 
     /*
      * Must be implemented by children  
      */
-    public abstract InstructionData copy();
+    public abstract AInstructionData copy();
+
+    /*
+     * 
+     */
+
+    public InstructionProperties getProperties() {
+        return props;
+    }
 
     /*
      * Get plain name
-     */
+     
     public String getPlainName() {
-        return this.plainname;
+        return this.props.getName();
     }
-
-    /*
+    
+    
      * Get latency
-     */
+     
     public int getLatency() {
-        return this.latency;
+        return this.props.getLatency()
     }
-
-    /*
+    
+    
      * get delay
-     */
+     
     public int getDelay() {
         return this.delay;
     }
-
-    /*
+    
+    
      * Get all generic types of this instruction
-     */
+     
     public List<InstructionType> getGenericTypes() {
         return this.genericType;
-    }
+    }*/
 
     /*
      * Get register values

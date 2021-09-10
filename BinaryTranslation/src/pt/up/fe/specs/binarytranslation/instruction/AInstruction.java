@@ -34,24 +34,22 @@ public abstract class AInstruction implements Instruction {
     private final String instruction;
 
     // decoded field data (abstract class)
-    private final InstructionData idata;
+    private final AInstructionData idata;
 
     // shared by all instructions, so they can go decode themselves
     protected static InstructionSet instSet;
     protected static IsaParser parser;
 
     // the enum which represents the ISA properties of this instruction
-    protected final InstructionProperties props;
+    // protected final InstructionProperties props;
 
     /*
      * Main constructor
      */
-    protected AInstruction(Long address, String instruction,
-            InstructionData idata, InstructionProperties props) {
+    protected AInstruction(Long address, String instruction, AInstructionData idata) {
         this.address = address;
         this.instruction = instruction.strip();
         this.idata = idata;
-        this.props = props;
     }
 
     /*
@@ -61,24 +59,26 @@ public abstract class AInstruction implements Instruction {
         this.address = other.getAddress();
         this.instruction = new String(other.getInstruction());
         this.idata = other.getData().copy();
-        this.props = other.getProperties(); // is an enum (i.e. final constant)
+        // this.props = other.getProperties(); // is an enum (i.e. final constant)
     }
 
     ///////////////////////////////////////////////////////////////////////////
     @Override
-    public InstructionData getData() {
+    public AInstructionData getData() {
         return idata;
     }
 
     @Override
     public InstructionProperties getProperties() {
-        return props;
+        return this.idata.props;
     }
 
+    /*
     @Override
     public final String getName() {
         return idata.getPlainName();
     }
+    */
 
     @Override
     public final Long getAddress() {
@@ -90,15 +90,17 @@ public abstract class AInstruction implements Instruction {
         return instruction;
     }
 
+    /*
     @Override
     public final int getLatency() {
         return idata.getLatency();
     }
-
+    
     @Override
     public final int getDelay() {
         return idata.getDelay();
     }
+    */
 
     @Override
     public final PseudoInstructionGraph getPseudocodeGraph() {
@@ -109,89 +111,89 @@ public abstract class AInstruction implements Instruction {
     // Check for instruction type /////////////////////////////////////////////
     @Override
     public final boolean isAdd() {
-        return idata.getGenericTypes().contains(InstructionType.G_ADD);
+        return getProperties().getGenericType().contains(InstructionType.G_ADD);
     }
 
     @Override
     public final boolean isSub() {
-        return idata.getGenericTypes().contains(InstructionType.G_SUB);
+        return getProperties().getGenericType().contains(InstructionType.G_SUB);
     }
 
     @Override
     public final boolean isMul() {
-        return idata.getGenericTypes().contains(InstructionType.G_MUL);
+        return getProperties().getGenericType().contains(InstructionType.G_MUL);
     }
 
     @Override
     public final boolean isLogical() {
-        return idata.getGenericTypes().contains(InstructionType.G_LOGICAL);
+        return getProperties().getGenericType().contains(InstructionType.G_LOGICAL);
     }
 
     @Override
     public final boolean isUnary() {
-        return idata.getGenericTypes().contains(InstructionType.G_UNARY);
+        return getProperties().getGenericType().contains(InstructionType.G_UNARY);
     }
 
     @Override
     public final boolean isJump() {
-        return (idata.getGenericTypes().contains(InstructionType.G_JUMP)
+        return (getProperties().getGenericType().contains(InstructionType.G_JUMP)
                 || this.isConditionalJump() || this.isUnconditionalJump()
                 || this.isAbsoluteJump() || this.isRelativeJump() || this.isImmediateJump());
     }
 
     @Override
     public final boolean isConditionalJump() {
-        return idata.getGenericTypes().contains(InstructionType.G_CJUMP);
+        return getProperties().getGenericType().contains(InstructionType.G_CJUMP);
     }
 
     @Override
     public final boolean isUnconditionalJump() {
-        return idata.getGenericTypes().contains(InstructionType.G_UJUMP);
+        return getProperties().getGenericType().contains(InstructionType.G_UJUMP);
     }
 
     @Override
     public final boolean isRelativeJump() {
-        return idata.getGenericTypes().contains(InstructionType.G_RJUMP);
+        return getProperties().getGenericType().contains(InstructionType.G_RJUMP);
     }
 
     @Override
     public final boolean isAbsoluteJump() {
-        return idata.getGenericTypes().contains(InstructionType.G_AJUMP);
+        return getProperties().getGenericType().contains(InstructionType.G_AJUMP);
     }
 
     @Override
     public final boolean isImmediateJump() {
-        return idata.getGenericTypes().contains(InstructionType.G_IJUMP);
+        return getProperties().getGenericType().contains(InstructionType.G_IJUMP);
     }
 
     @Override
     public final boolean isImmediateValue() {
-        return idata.getGenericTypes().contains(InstructionType.G_IMMV);
+        return getProperties().getGenericType().contains(InstructionType.G_IMMV);
     }
 
     @Override
     public final boolean isStore() {
-        return idata.getGenericTypes().contains(InstructionType.G_STORE);
+        return getProperties().getGenericType().contains(InstructionType.G_STORE);
     }
 
     @Override
     public final boolean isLoad() {
-        return idata.getGenericTypes().contains(InstructionType.G_LOAD);
+        return getProperties().getGenericType().contains(InstructionType.G_LOAD);
     }
 
     @Override
     public final boolean isMemory() {
-        return idata.getGenericTypes().contains(InstructionType.G_MEMORY) || this.isLoad() || this.isStore();
+        return getProperties().getGenericType().contains(InstructionType.G_MEMORY) || this.isLoad() || this.isStore();
     }
 
     @Override
     public final boolean isFloat() {
-        return idata.getGenericTypes().contains(InstructionType.G_FLOAT);
+        return getProperties().getGenericType().contains(InstructionType.G_FLOAT);
     }
 
     @Override
     public final boolean isUnknown() {
-        return idata.getGenericTypes().contains(InstructionType.G_UNKN);
+        return getProperties().getGenericType().contains(InstructionType.G_UNKN);
     }
 
     ///////////////////////////////////////////// Additional non basic types:

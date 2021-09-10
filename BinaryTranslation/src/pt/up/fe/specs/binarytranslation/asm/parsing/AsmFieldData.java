@@ -125,7 +125,8 @@ public class AsmFieldData extends ADataClass<AsmFieldData> {
     * 
     * (Must be implemented by children)
     */
-    public Number getBranchTarget(RegisterDump registers) {
+    public Number getBranchTarget(List<Operand> operands) {
+        // public Number getBranchTarget(RegisterDump registers) {
         // public Number getBranchTarget(List<Operand> operands) { // TODO: and then this list of operands can be used
         // to get
         // the branch target, since we know register values

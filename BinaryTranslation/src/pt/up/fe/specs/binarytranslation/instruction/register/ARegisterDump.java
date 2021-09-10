@@ -31,13 +31,6 @@ public abstract class ARegisterDump implements RegisterDump {
     protected ARegisterDump(ARegisterDump that) {
         this.regvalues = that.regvalues;
         this.helperMap = that.helperMap;
-        // NOTE: shallow copy should suffice since regvalues and helperMap
-        // should never change
-
-        /*this.regvalues = new HashMap<Register, Number>();
-        var otherMap = that.getRegisterMap();
-        for (var key : otherMap.keySet())
-            this.regvalues.put(key, otherMap.get(key));*/
     }
 
     /*
