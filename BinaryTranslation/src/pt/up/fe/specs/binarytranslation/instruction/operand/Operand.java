@@ -59,7 +59,7 @@ public interface Operand {
      * Get properties of operand (can query for 
      * type, e.g., register or immediate, and other things)
      */
-    // public OperandProperties getProperties();
+    public OperandProperties getProperties();
 
     /*
      * True if is register

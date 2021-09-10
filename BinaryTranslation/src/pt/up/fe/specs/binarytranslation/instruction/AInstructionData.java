@@ -27,13 +27,8 @@ import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
  */
 public abstract class AInstructionData {
 
-    // from enum properties
+    // the enum which represents the ISA properties of this instruction
     protected final InstructionProperties props;
-
-    /*protected final String plainname;
-    protected final int latency;
-    protected final int delay;
-    protected final List<InstructionType> genericType;*/
 
     // from GDB
     private final RegisterDump registers; // RegisterDump.nullDump;
@@ -44,20 +39,6 @@ public abstract class AInstructionData {
 
     // compute from operands during parsing
     private final Number branchTarget;
-
-    /*
-     * Helper Constructor
-     
-    private AInstructionData(
-            InstructionProperties props,
-            List<Operand> operands,
-            Number branchTarget,
-            RegisterDump registers) {
-        this.props = props;
-        this.operands = operands;
-        this.branchTarget = branchTarget;
-        this.registers = registers;
-    }*/
 
     /*
      * Constructor
@@ -72,16 +53,6 @@ public abstract class AInstructionData {
     }
 
     /*
-     * 
-     
-    private static List<Operand> cloneOperands(AInstructionData other) {
-        var copyops = new ArrayList<Operand>();
-        for (Operand op : other.getOperands())
-            copyops.add(op.copy());
-        return copyops;
-    }*/
-
-    /*
      * Private helper copy
      */
     protected AInstructionData(AInstructionData other) {
@@ -89,17 +60,6 @@ public abstract class AInstructionData {
         this.operands = other.operands;
         this.branchTarget = other.branchTarget;
         this.registers = other.registers;
-
-        // NOTE: assume that operands, branchtarget, and registers are IMMUTABLE
-
-        /*
-        this(new String(other.getPlainName()),
-                other.getLatency(),
-                other.getDelay(),
-                new ArrayList<InstructionType>(other.getGenericTypes()), // TODO: does this deep copy??
-                AInstructionData.cloneOperands(other),
-                other.getBranchTarget(),
-                other.getRegisters().copy()); // TODO: does this deep copy??*/
     }
 
     /*
@@ -114,34 +74,6 @@ public abstract class AInstructionData {
     public InstructionProperties getProperties() {
         return props;
     }
-
-    /*
-     * Get plain name
-     
-    public String getPlainName() {
-        return this.props.getName();
-    }
-    
-    
-     * Get latency
-     
-    public int getLatency() {
-        return this.props.getLatency()
-    }
-    
-    
-     * get delay
-     
-    public int getDelay() {
-        return this.delay;
-    }
-    
-    
-     * Get all generic types of this instruction
-     
-    public List<InstructionType> getGenericTypes() {
-        return this.genericType;
-    }*/
 
     /*
      * Get register values

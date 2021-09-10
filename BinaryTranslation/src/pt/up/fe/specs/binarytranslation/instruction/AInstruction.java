@@ -40,9 +40,6 @@ public abstract class AInstruction implements Instruction {
     protected static InstructionSet instSet;
     protected static IsaParser parser;
 
-    // the enum which represents the ISA properties of this instruction
-    // protected final InstructionProperties props;
-
     /*
      * Main constructor
      */
@@ -59,7 +56,6 @@ public abstract class AInstruction implements Instruction {
         this.address = other.getAddress();
         this.instruction = new String(other.getInstruction());
         this.idata = other.getData().copy();
-        // this.props = other.getProperties(); // is an enum (i.e. final constant)
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -73,13 +69,6 @@ public abstract class AInstruction implements Instruction {
         return this.idata.props;
     }
 
-    /*
-    @Override
-    public final String getName() {
-        return idata.getPlainName();
-    }
-    */
-
     @Override
     public final Long getAddress() {
         return address;
@@ -90,18 +79,6 @@ public abstract class AInstruction implements Instruction {
         return instruction;
     }
 
-    /*
-    @Override
-    public final int getLatency() {
-        return idata.getLatency();
-    }
-    
-    @Override
-    public final int getDelay() {
-        return idata.getDelay();
-    }
-    */
-
     @Override
     public final PseudoInstructionGraph getPseudocodeGraph() {
         var g = new PseudoInstructionGraph(this);
@@ -111,89 +88,89 @@ public abstract class AInstruction implements Instruction {
     // Check for instruction type /////////////////////////////////////////////
     @Override
     public final boolean isAdd() {
-        return getProperties().getGenericType().contains(InstructionType.G_ADD);
+        return getProperties().getGenericTypes().contains(InstructionType.G_ADD);
     }
 
     @Override
     public final boolean isSub() {
-        return getProperties().getGenericType().contains(InstructionType.G_SUB);
+        return getProperties().getGenericTypes().contains(InstructionType.G_SUB);
     }
 
     @Override
     public final boolean isMul() {
-        return getProperties().getGenericType().contains(InstructionType.G_MUL);
+        return getProperties().getGenericTypes().contains(InstructionType.G_MUL);
     }
 
     @Override
     public final boolean isLogical() {
-        return getProperties().getGenericType().contains(InstructionType.G_LOGICAL);
+        return getProperties().getGenericTypes().contains(InstructionType.G_LOGICAL);
     }
 
     @Override
     public final boolean isUnary() {
-        return getProperties().getGenericType().contains(InstructionType.G_UNARY);
+        return getProperties().getGenericTypes().contains(InstructionType.G_UNARY);
     }
 
     @Override
     public final boolean isJump() {
-        return (getProperties().getGenericType().contains(InstructionType.G_JUMP)
+        return (getProperties().getGenericTypes().contains(InstructionType.G_JUMP)
                 || this.isConditionalJump() || this.isUnconditionalJump()
                 || this.isAbsoluteJump() || this.isRelativeJump() || this.isImmediateJump());
     }
 
     @Override
     public final boolean isConditionalJump() {
-        return getProperties().getGenericType().contains(InstructionType.G_CJUMP);
+        return getProperties().getGenericTypes().contains(InstructionType.G_CJUMP);
     }
 
     @Override
     public final boolean isUnconditionalJump() {
-        return getProperties().getGenericType().contains(InstructionType.G_UJUMP);
+        return getProperties().getGenericTypes().contains(InstructionType.G_UJUMP);
     }
 
     @Override
     public final boolean isRelativeJump() {
-        return getProperties().getGenericType().contains(InstructionType.G_RJUMP);
+        return getProperties().getGenericTypes().contains(InstructionType.G_RJUMP);
     }
 
     @Override
     public final boolean isAbsoluteJump() {
-        return getProperties().getGenericType().contains(InstructionType.G_AJUMP);
+        return getProperties().getGenericTypes().contains(InstructionType.G_AJUMP);
     }
 
     @Override
     public final boolean isImmediateJump() {
-        return getProperties().getGenericType().contains(InstructionType.G_IJUMP);
+        return getProperties().getGenericTypes().contains(InstructionType.G_IJUMP);
     }
 
     @Override
     public final boolean isImmediateValue() {
-        return getProperties().getGenericType().contains(InstructionType.G_IMMV);
+        return getProperties().getGenericTypes().contains(InstructionType.G_IMMV);
     }
 
     @Override
     public final boolean isStore() {
-        return getProperties().getGenericType().contains(InstructionType.G_STORE);
+        return getProperties().getGenericTypes().contains(InstructionType.G_STORE);
     }
 
     @Override
     public final boolean isLoad() {
-        return getProperties().getGenericType().contains(InstructionType.G_LOAD);
+        return getProperties().getGenericTypes().contains(InstructionType.G_LOAD);
     }
 
     @Override
     public final boolean isMemory() {
-        return getProperties().getGenericType().contains(InstructionType.G_MEMORY) || this.isLoad() || this.isStore();
+        return getProperties().getGenericTypes().contains(InstructionType.G_MEMORY) || this.isLoad() || this.isStore();
     }
 
     @Override
     public final boolean isFloat() {
-        return getProperties().getGenericType().contains(InstructionType.G_FLOAT);
+        return getProperties().getGenericTypes().contains(InstructionType.G_FLOAT);
     }
 
     @Override
     public final boolean isUnknown() {
-        return getProperties().getGenericType().contains(InstructionType.G_UNKN);
+        return getProperties().getGenericTypes().contains(InstructionType.G_UNKN);
     }
 
     ///////////////////////////////////////////// Additional non basic types:
@@ -251,8 +228,12 @@ public abstract class AInstruction implements Instruction {
             while (it2.hasNext()) {
                 var curr = it2.next();
                 if (curr.isRegister() && curr.isRead()) {
-                    str.append(curr.getRepresentation() + " = ");
-                    str.append(this.getRegisters().getValue(curr.getRepresentation()) + "  ");
+
+                    str.append(curr.getContainerRegister().getRegisterDefinition().getName() + " = ");
+                    str.append(curr.getContainerRegister().getDataValue());
+
+                    // str.append(curr.getRepresentation() + " = ");
+                    // str.append(this.getRegisters().getValue(curr.getRepresentation()) + " ");
                 }
             }
             str.append(")");

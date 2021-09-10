@@ -58,11 +58,14 @@ public class AnalysisUtils {
 
         sb.append(String.format("%-4s", inst.getName())).append(space);
 
-        for (Operand op : inst.getData().getOperands()) {
+        for (var op : inst.getData().getOperands()) {
             if (op.isRegister()) {
 
-                var reg = op.getProperties().getPrefix() + op.getStringValue();
+                // var reg = op.getProperties().getPrefix() + op.getStringValue();
                 // var val = inst.getRegisters().getValue(reg);
+
+                // var reg = op.getContainerRegister().getRegisterDefinition().getName(); // TODO: correct?
+                var reg = op.getStringValue();
 
                 var val = op.getDataValue(); // TODO: sill needs to be implemented
 
@@ -89,7 +92,7 @@ public class AnalysisUtils {
     }
 
     public static String getRegisterName(Operand op) {
-        return op.getProperties().getPrefix() + op.getStringValue();
+        return op.getStringValue(); // op.getProperties().getPrefix() + op.getStringValue();
     }
 
     public static void printSeparator(int size) {
@@ -116,8 +119,8 @@ public class AnalysisUtils {
         for (Instruction i : insts) {
             for (Operand op : i.getData().getOperands()) {
                 if (op.isRegister()) {
-                    String reg = getRegisterName(op);
-                    lst.add(reg);
+                    // String reg = getRegisterName(op);
+                    lst.add(op.getStringValue());
                 }
             }
         }
