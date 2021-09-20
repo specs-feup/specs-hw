@@ -41,12 +41,12 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     // and it will be contained in the spec (e.g., easier to hand rtsd and similar insts)
 
     // SPECIAL
-    mts(SPECIAL, G_OTHER),
-    mtse(SPECIAL, G_OTHER),
-    mfs(SPECIAL, G_OTHER),
-    mfse(SPECIAL, G_OTHER),
-    msrclr(SPECIAL, G_OTHER),
-    msrset(SPECIAL, G_OTHER),
+    mts(MTS, G_OTHER),
+    mtse(MTS, G_OTHER),
+    mfs(MFS, G_OTHER),
+    mfse(MFS, G_OTHER),
+    msrclr(MSR, G_OTHER),
+    msrset(MSR, G_OTHER),
 
     // MBAR
     mbar(MBAR, G_OTHER),
@@ -203,16 +203,16 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     lwr(2, 0, TYPE_A, G_LOAD),
     lwx(2, 0, TYPE_A, G_LOAD),
     lwea(2, 0, TYPE_A, G_LOAD),
-    sb(2, 0, TYPE_A, G_STORE),
-    sbr(2, 0, TYPE_A, G_STORE),
-    sbea(2, 0, TYPE_A, G_STORE),
-    sh(2, 0, TYPE_A, G_STORE),
-    shr(2, 0, TYPE_A, G_STORE),
-    shea(2, 0, TYPE_A, G_STORE),
-    sw(2, 0, TYPE_A, G_STORE),
-    swr(2, 0, TYPE_A, G_STORE),
-    swx(2, 0, TYPE_A, G_STORE),
-    swea(2, 0, TYPE_A, G_STORE),
+    sb(2, 0, TYPE_A_STORE, G_STORE),
+    sbr(2, 0, TYPE_A_STORE, G_STORE),
+    sbea(2, 0, TYPE_A_STORE, G_STORE),
+    sh(2, 0, TYPE_A_STORE, G_STORE),
+    shr(2, 0, TYPE_A_STORE, G_STORE),
+    shea(2, 0, TYPE_A_STORE, G_STORE),
+    sw(2, 0, TYPE_A_STORE, G_STORE),
+    swr(2, 0, TYPE_A_STORE, G_STORE),
+    swx(2, 0, TYPE_A_STORE, G_STORE),
+    swea(2, 0, TYPE_A_STORE, G_STORE),
 
     // TYPE B
     addi(TYPE_B, G_ADD),
@@ -231,9 +231,9 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     lbui(2, 0, TYPE_B, G_LOAD),
     lhui(2, 0, TYPE_B, G_LOAD),
     lwi(2, 0, TYPE_B, G_LOAD),
-    sbi(2, 0, TYPE_B, G_STORE),
-    shi(2, 0, TYPE_B, G_STORE),
-    swi(2, 0, TYPE_B, G_STORE),
+    sbi(2, 0, TYPE_B_STORE, G_STORE),
+    shi(2, 0, TYPE_B_STORE, G_STORE),
+    swi(2, 0, TYPE_B_STORE, G_STORE),
 
     unknown(UNDEFINED, G_UNKN);
 

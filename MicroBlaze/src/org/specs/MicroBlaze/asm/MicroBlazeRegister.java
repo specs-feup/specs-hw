@@ -10,6 +10,7 @@ import pt.up.fe.specs.binarytranslation.instruction.register.RegisterType;
 
 public enum MicroBlazeRegister implements Register {
 
+    // GP bank
     R0("r0", HARDZERO),
     R1("r1", STACKPOINTER),
     R2("r2", GENERALPURPOSE),
@@ -42,7 +43,27 @@ public enum MicroBlazeRegister implements Register {
     R29("r29", GENERALPURPOSE),
     R30("r30", GENERALPURPOSE),
     R31("r31", GENERALPURPOSE),
-    RPC("rpc", PROGRAMCOUNTER);
+
+    // SPECIALS
+    RPC("pc", PROGRAMCOUNTER, SPECIAL),
+    RMSR("msr", SPECIAL),
+    REAR("ear", SPECIAL),
+    RESR("esr", SPECIAL),
+    RFSR("fsr", SPECIAL),
+    RBTR("btr", SPECIAL),
+    REDR("edr", SPECIAL),
+    RSLR("slr", SPECIAL),
+    RSHR("shr", SPECIAL),
+    RPID("pid", SPECIAL),
+    RZPR("zpr", SPECIAL),
+    RTLBLO("tlblo", SPECIAL),
+    RTLBHI("tlblh", SPECIAL),
+    RTLBX("tlbx", SPECIAL);
+    // RPVRO-12("rtlbx", SPECIAL), // TODO
+
+    // IMM("imm"); // pseudo-register
+
+    // TODO: add special registers
 
     /*
      * Reverse lookup aux map: registername -> definition

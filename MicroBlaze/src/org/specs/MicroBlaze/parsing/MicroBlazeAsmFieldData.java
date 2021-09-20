@@ -38,7 +38,7 @@ public class MicroBlazeAsmFieldData extends AsmFieldData {
      * Create from parent class
      */
     public MicroBlazeAsmFieldData(AsmFieldData fieldData) {
-        super(fieldData.get(ADDR), fieldData.get(TYPE), fieldData.get(FIELDS));
+        this(fieldData.get(ADDR), fieldData.get(TYPE), fieldData.get(FIELDS));
     }
 
     /*

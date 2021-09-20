@@ -37,7 +37,13 @@ public interface MicroBlazeInstructionParsers {
     }
 
     List<AsmParser> PARSERS = Arrays.asList(
-            newInstance(SPECIAL, "100101_opcodea(5)_opcodeb(5)_opcodec(2)_opcoded(14)"),
+
+            newInstance(MSR, "100101_registerd(5)_1000_opcodea(1)_0_imm(15)"),
+            newInstance(MFS, "100101_registerd(5)_0_opcodea(1)_00010_registers(14)"),
+            newInstance(MTS, "100101_0_opcodea(1)_000_registera(5)_11_registers(14)"),
+
+            // newInstance(SPECIAL, "100101_opcodea(5)_opcodeb(5)_opcodec(2)_opcoded(14)"),
+
             newInstance(MBAR, "101110_imm(5)_00010_0(13)_100"),
 
             newInstance(UBRANCH, "100110_0(5)_opcodea(2)_000_registerb(5)_0(11)"),
@@ -61,7 +67,7 @@ public interface MicroBlazeInstructionParsers {
 
             newInstance(TYPE_A, "opcodea(2)_0_opcodeb(3)_registerd(5)_registera(5)_registerb(5)_opcodec(11)"),
 
-            newInstance(TYPE_A_STORE, "opcodea(2)_1_opcodeb(3)_registerd(5)_registera(5)_imm(16)",
+            newInstance(TYPE_B_STORE, "opcodea(2)_1_opcodeb(3)_registerd(5)_registera(5)_imm(16)",
                     data -> (data.get("opcodea").equals("11") && data.get("opcodeb").charAt(0) == '1')),
 
             newInstance(TYPE_B, "opcodea(2)_1_opcodeb(3)_registerd(5)_registera(5)_imm(16)"),
