@@ -4,14 +4,12 @@ import static org.specs.MicroBlaze.parsing.MicroBlazeAsmField.*;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.specs.MicroBlaze.instruction.MicroBlazeRegisterDump;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldData;
 import org.specs.MicroBlaze.parsing.MicroBlazeAsmFieldType;
-
-import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
-import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
+import org.specs.MicroBlaze.parsing.MicroBlazeRegisterResolver;
 
 public class MicroBlazeAsmBranchGetter {
 
@@ -19,120 +17,92 @@ public class MicroBlazeAsmBranchGetter {
      * map TYPE to a specific private branch target getter func
      */
     interface MicroBlazeAsmBranchParse {
-        Number apply(MicroBlazeAsmFieldData fielddata, RegisterDump registers);
+        Number apply(MicroBlazeRegisterResolver resolver);;
     }
-
-    /*
-    @Override
-    public Number getBranchTarget() {
-        if (this.isJump()) {
-            var numops = this.getData().getOperands().size();
-            var jmpval = this.getData().getOperands().get(numops - 1).getNumberValue();
-    
-            long finalvalue = 0;
-            if (this.isRelativeJump())
-                finalvalue = (this.getAddress().longValue() + jmpval.longValue());
-            else
-                finalvalue = jmpval.longValue();
-    
-            return finalvalue;
-    
-            // TODO replace mask with mask built based on elf instruction width
-            // or info about instruction set
-        }
-    
-        return null;
-    }*/
 
     private static final Map<MicroBlazeAsmFieldType, MicroBlazeAsmBranchParse> TARGETGET;
     static {
         var amap = new HashMap<MicroBlazeAsmFieldType, MicroBlazeAsmBranchParse>();
         amap.put(MicroBlazeAsmFieldType.ULBRANCH, MicroBlazeAsmBranchGetter::rabranch);
         amap.put(MicroBlazeAsmFieldType.UBRANCH, MicroBlazeAsmBranchGetter::rabranch);
-
-        amap.put(MicroBlazeAsmFieldType.UILBRANCH, MicroBlazeAsmBranchGetter::rabranch);
-        amap.put(MicroBlazeAsmFieldType.UIBRANCH, MicroBlazeAsmBranchGetter::rabranch);
-        // NOTE: only UIBRANCH and UILBRANCH types are capable of relative OR absolute jumps
-        // all other branches are relative
-        // WRONG, see next comment
+        amap.put(MicroBlazeAsmFieldType.UILBRANCH, MicroBlazeAsmBranchGetter::raibranch);
+        amap.put(MicroBlazeAsmFieldType.UIBRANCH, MicroBlazeAsmBranchGetter::raibranch);
+        // all of these can be absolute or relative (pc = register / imm, OR, pc = pc + register / imm)
 
         amap.put(MicroBlazeAsmFieldType.CBRANCH, MicroBlazeAsmBranchGetter::cbranch);
         amap.put(MicroBlazeAsmFieldType.CIBRANCH, MicroBlazeAsmBranchGetter::cibranch);
-        // Only conditionals can be relative
+        // conditionals are alwayas relative (pc = pc + register/imm)
 
         amap.put(MicroBlazeAsmFieldType.RETURN, MicroBlazeAsmBranchGetter::rets);
 
         TARGETGET = Collections.unmodifiableMap(amap);
     }
 
-    /*
-    private static int getFullIMM(MicroBlazeAsmFieldData fielddata) {
-    
-        var map = fielddata.getMap();
-        int fullimm = 0;
-        var lower16 = map.get(IMM);
-        var isUpperImm = MicroBlazeAsmOperandGetter.isPostedImm();
-    
-        // sign extend if no posted IMM
-        if (isUpperImm == false) {
-            fullimm = (lower16 << (16)) >> (16);
-        }
-    
-        // else combine (assume upper16Imm already shifted up 16 bits)
-        else {
-            fullimm = MicroBlazeAsmOperandGetter.getUpper16Imm() | lower16;
-        }
-    
-        return fullimm;
-    }*/
-
-    public static Number getFrom(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
+    public static Number getFrom(MicroBlazeAsmFieldData fielddata, MicroBlazeRegisterDump registers) {
 
         var func = TARGETGET.get(fielddata.get(MicroBlazeAsmFieldData.TYPE));
         if (func == null)
             func = MicroBlazeAsmBranchGetter::undefined;
 
-        return func.apply(fielddata, registers);
+        var postedImm = MicroBlazeAsmOperandGetter.getPostedIMM();
+        var upper16Imm = MicroBlazeAsmOperandGetter.getUpper16IMM();
+        var resolver = new MicroBlazeRegisterResolver(fielddata, registers, postedImm, upper16Imm);
+        return func.apply(resolver);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    private static Number cbranch(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
+    private static Number rabranch(MicroBlazeRegisterResolver resolver) {
+        var rvalue = resolver.resolve(RB).getDataValue().intValue();
+        var map = resolver.getFielddata().getMap();
+        var absolute = (map.get(OPCODEA) & 0b01) != 0; // A bit in all unconditional jumps
+        int target = 0;
+        if (absolute) {
+            target = rvalue;
+        }
 
-        // TODO: target is sum of PC + rb
-
-        return 0;
+        else {
+            target = resolver.getFielddata().getAddr().intValue() + rvalue;
+        }
+        return target;
     }
 
     ///////////////////////////////////////////////////////////////////////
-    private static Number cibranch(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
-        var target = MicroBlazeAsmBranchGetter.getFullIMM(fielddata);
-        return Long.valueOf(fielddata.getAddr().longValue() + target);
+    private static Number raibranch(MicroBlazeRegisterResolver resolver) {
+        var immtarget = resolver.resolveFullIMM().getDataValue().intValue();
+        var map = resolver.getFielddata().getMap();
+        var absolute = (map.get(OPCODEA) & 0b01) != 0; // A bit in all unconditional jumps
+        int target = 0;
+        if (absolute) {
+            target = immtarget;
+        }
+
+        else {
+            target = resolver.getFielddata().getAddr().intValue() + immtarget;
+        }
+        return target;
     }
 
     ///////////////////////////////////////////////////////////////////////
-    private static Number rabranch(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
-        var target = MicroBlazeAsmBranchGetter.getFullIMM(fielddata);
-        var map = fielddata.getMap();
-        if (map.containsKey(OPCODEA)) {
-            var absolute = map.get(OPCODEA) & 0b01; // A bit in all unconditional jumps
-            
-        } else
-            //return Long.valueOf(fielddata.getAddr().longValue() + target);
-            
-            //TODO: wrong, "brad" is also absolute and is format UBRANCH 
-            
-            // but the A bit seems to be in the same place for all families?? except "brk" which doesnt have OPCODEA field
+    private static Number cbranch(MicroBlazeRegisterResolver resolver) {
+        var rvalue = resolver.resolve(RB).getDataValue().intValue();
+        return Long.valueOf(resolver.getFielddata().getAddr().intValue() + rvalue);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    private static Number cibranch(MicroBlazeRegisterResolver resolver) {
+        var immtarget = resolver.resolveFullIMM().getDataValue().intValue();
+        return Long.valueOf(resolver.getFielddata().getAddr().intValue() + immtarget);
     }
 
     // TODO: returns are relative and use the contents of register Ra
     ///////////////////////////////////////////////////////////////////////
-    private static Number rets(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
-
-        return 0;
+    private static Number rets(MicroBlazeRegisterResolver resolver) {
+        var immtarget = resolver.resolveFullIMM().getDataValue().intValue();
+        return Long.valueOf(resolver.getFielddata().getAddr().intValue() + immtarget);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    private static Number undefined(MicroBlazeAsmFieldData fielddata, RegisterDump registers) {
+    private static Number undefined(MicroBlazeRegisterResolver resolver) {
         return null;
     }
 }

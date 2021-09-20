@@ -11,6 +11,11 @@ import org.specs.MicroBlaze.instruction.MicroBlazeRegisterDump;
 import pt.up.fe.specs.binarytranslation.instruction.register.ExecutedImmediate;
 import pt.up.fe.specs.binarytranslation.instruction.register.ExecutedRegister;
 
+/**
+ * 
+ * @author nuno
+ *
+ */
 public class MicroBlazeRegisterResolver {
 
     private final boolean postedImm;
@@ -65,18 +70,27 @@ public class MicroBlazeRegisterResolver {
         return fullImm;
     }
 
+    private int getFullIMMValue() {
+        var lower16 = this.getFielddata().getMap().get(IMM);
+        var fullImm = this.getFullIMM(lower16);
+        return fullImm;
+    }
+
     public ExecutedRegister resolve(MicroBlazeAsmField fieldName) {
         var map = fielddata.getMap();
-        var fieldIntvalue = map.get(fieldName);
-        var regDef = intsToRegDefs.get(fieldIntvalue);
+        var fieldIntvalue = map.get(fieldName); // e.g. "RA("registera") -> 00010", I look up the binary number value in
+                                                // the instruction via the fieldname in the parser, i.e, "registera",
+                                                // which is encoded in the MicroBlazeAsmField enum
+        var regDef = intsToRegDefs.get(fieldIntvalue); // I turn the number, 00010, into a register definition, as
+                                                       // defined in MicroBlazeRegister, e.g., for 00010 --> R2("r2");
         var dataValue = registers.getValue(regDef);
         return new ExecutedRegister(fieldName, regDef, dataValue);
     }
 
     public ExecutedImmediate resolveFullIMM() {
-        var lower16 = this.getFielddata().getMap().get(IMM);
-        var fullImm = this.getFullIMM(lower16);
-        return new ExecutedImmediate(MicroBlazeAsmField.IMM, fullImm);
+        // var lower16 = this.getFielddata().getMap().get(IMM);
+        // var fullImm = this.getFullIMM(lower16);
+        return new ExecutedImmediate(MicroBlazeAsmField.IMM, getFullIMMValue());
     }
 
     public ExecutedImmediate resolveIMM() {

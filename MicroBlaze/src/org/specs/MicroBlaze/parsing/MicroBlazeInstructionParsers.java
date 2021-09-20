@@ -44,7 +44,7 @@ public interface MicroBlazeInstructionParsers {
             newInstance(ULBRANCH, "100110_registerd(5)_opcodea(2)_100_registerb(5)_0(11)"),
             newInstance(UIBRANCH, "101110_0(5)_opcodea(2)_000_imm(16)"),
             newInstance(UILBRANCH, "101110_registerd(5)_opcodea(2)_100_imm(16)"),
-            // only these 4 types are capable of absolute jumps (via opcodea)
+            // only these 4 types are capable of absolute OR relative jumps (via opcodea)
 
             newInstance(CBRANCH, "100111_opcodea(5)_registera(5)_registerb(5)_0(11)"),
             newInstance(CIBRANCH, "101111_opcodea(5)_registera(5)_imm(16)"),
