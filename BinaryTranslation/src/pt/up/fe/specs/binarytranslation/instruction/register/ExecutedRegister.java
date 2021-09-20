@@ -18,6 +18,10 @@ public class ExecutedRegister {
         return asmField;
     }
 
+    public String getName() {
+        return this.registerDefinition.getName();
+    }
+
     public Number getDataValue() {
         return dataValue;
     }

@@ -1,7 +1,5 @@
 package pt.up.fe.specs.binarytranslation.instruction.operand;
 
-import pt.up.fe.specs.binarytranslation.asm.parsing.AsmField;
-
 /**
  * Each operand in an ISA is defined by properties. This class is to be implemented by an enum per ISA, which lists all
  * the operand types in the set, and implements the methods to retrieve properties about each operand type.
@@ -42,26 +40,9 @@ public interface OperandProperties {
     public String getSuffix();
 
     /*
-     * 
-     
-    public String getSymbolicPrefix();
-    
-    
-    public String getSymbolicSuffix();
-    
-         
-    public void setSymbolic();
-    */
-
-    /*
      * Width of register or immediate operand
      */
     public int getWidth();
-
-    /*
-     * 
-     */
-    public AsmField getAsmField();
 
     /*
      * Copy method

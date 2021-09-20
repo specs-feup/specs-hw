@@ -12,4 +12,9 @@ public class ExecutedImmediate extends ExecutedRegister {
     public Register getRegisterDefinition() {
         return null;
     }
+
+    @Override
+    public String getName() {
+        return "imm";
+    }
 }

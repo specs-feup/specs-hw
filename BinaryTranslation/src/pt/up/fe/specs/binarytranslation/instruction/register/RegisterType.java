@@ -8,5 +8,6 @@ public enum RegisterType {
     STACKPOINTER,
     RETURN,
     PARAMETER,
-    HARDZERO
+    HARDZERO,
+    SPECIAL
 }

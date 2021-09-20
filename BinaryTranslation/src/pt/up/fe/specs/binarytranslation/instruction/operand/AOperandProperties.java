@@ -13,28 +13,6 @@ public class AOperandProperties implements OperandProperties {
     private final AsmField asmfield;
 
     /*
-     * Set additional type field based on operand bitwidth
-     */
-    public static OperandDataSize resolveWidth(int width) {
-        switch (width) {
-        case 4:
-            return OperandDataSize.NIBBLE;
-        case 8:
-            return OperandDataSize.BYTE;
-        case 16:
-            return OperandDataSize.HALFWORD;
-        case 32:
-            return OperandDataSize.WORD;
-        case 64:
-            return OperandDataSize.DWORD;
-        case 128:
-            return OperandDataSize.QWORD;
-        default:
-            return OperandDataSize.WORD;
-        }
-    }
-
-    /*
      * Base constructor (called by implementations of AOperand)
      */
     public AOperandProperties(AsmField asmfield, String prefix, String suffix,
@@ -97,43 +75,7 @@ public class AOperandProperties implements OperandProperties {
     }
 
     @Override
-    public AsmField getAsmField() {
-        return this.asmfield;
-    }
-
-    @Override
     public int getWidth() {
         return this.opDataSize.getValue();
     }
-
-    /*
-    @Override
-    public String getSymbolicPrefix() {
-    
-        // if already symbolic, return currently set prefix
-        if (this.opType == OperandType.SYMBOLIC)
-            return this.prefix;
-    
-        if (this.opType == OperandType.REGISTER)
-            return this.prefix + "<";
-    
-        else
-            return this.asmfield.toString() + "<";
-    }
-    
-    @Override
-    public String getSymbolicSuffix() {
-        return ">";
-    }
-    
-    /*
-     * Setters
-     
-    @Override
-    public void setSymbolic() {
-        this.prefix = this.getSymbolicPrefix();
-        this.suffix = this.getSymbolicSuffix();
-        this.opType.add(OperandType.SYMBOLIC);
-        return;
-    }*/
 }

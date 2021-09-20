@@ -61,11 +61,11 @@ public class InstructionSet {
         var ret = new HashMap<AsmFieldType, List<InstructionProperties>>();
 
         // For each instruction format
-        for (AsmFieldType codetype : codeTypes) {
+        for (var codetype : codeTypes) {
             var nlist = new ArrayList<InstructionProperties>();
 
             // For each instruction in the set, which fits that format, make the list
-            for (InstructionProperties inst : instList) {
+            for (var inst : instList) {
                 if (inst.getCodeType().equals(codetype)) {
                     nlist.add(inst);
                 }
@@ -80,7 +80,7 @@ public class InstructionSet {
      */
     private InstructionProperties getProperties(AsmFieldData asmData) {
         InstructionProperties props = null;
-        for (InstructionProperties inst : getTypeList(asmData.getType())) {
+        for (var inst : getTypeList(asmData.getType())) {
             if (inst.getReducedOpCode() == asmData.getReducedOpcode()) {
                 return inst;
             }
@@ -89,7 +89,7 @@ public class InstructionSet {
         // System.out.print(Integer.toBinaryString(asmData.getReducedOpcode()) + "\n");
 
         // find the type labeled as generic unknown otherwise
-        for (InstructionProperties inst : instList) {
+        for (var inst : instList) {
             if (inst.getGenericTypes().contains(InstructionType.G_UNKN)) {
                 return inst;
             }
@@ -104,7 +104,6 @@ public class InstructionSet {
     public InstructionProperties process(AsmFieldData fieldData) {
 
         // uses opcode fields to determine properties
-        InstructionProperties props = getProperties(fieldData);
-        return props;
+        return getProperties(fieldData);
     }
 }

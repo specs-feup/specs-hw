@@ -64,8 +64,9 @@ public class InstructionTestUtils {
 
         for (var inst : encodeList) {
             try {
-                Instruction testinst = (Instruction) newInstMethod.invoke(null, "0", inst.getCode());
+                var testinst = (Instruction) newInstMethod.invoke(null, "0", inst.getCode());
                 assertEquals(inst.getName(), testinst.getName());
+                System.out.println("decoded: " + testinst.getRepresentation());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

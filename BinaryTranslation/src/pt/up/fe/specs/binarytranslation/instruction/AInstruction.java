@@ -79,6 +79,22 @@ public abstract class AInstruction implements Instruction {
         return instruction;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    @Override
+    public int getDelay() {
+        return this.getData().getProperties().getDelay();
+    }
+
+    @Override
+    public int getLatency() {
+        return this.getData().getProperties().getLatency();
+    }
+
+    @Override
+    public String getName() {
+        return this.getData().getProperties().getName();
+    }
+
     @Override
     public final PseudoInstructionGraph getPseudocodeGraph() {
         var g = new PseudoInstructionGraph(this);
@@ -228,12 +244,7 @@ public abstract class AInstruction implements Instruction {
             while (it2.hasNext()) {
                 var curr = it2.next();
                 if (curr.isRegister() && curr.isRead()) {
-
-                    str.append(curr.getContainerRegister().getRegisterDefinition().getName() + " = ");
-                    str.append(curr.getContainerRegister().getDataValue());
-
-                    // str.append(curr.getRepresentation() + " = ");
-                    // str.append(this.getRegisters().getValue(curr.getRepresentation()) + " ");
+                    str.append(curr.getName() + " = " + curr.getDataValue());
                 }
             }
             str.append(")");
@@ -255,9 +266,4 @@ public abstract class AInstruction implements Instruction {
     public RegisterDump getRegisters() {
         return this.getData().getRegisters();
     }
-
-    /*@Override
-    public void setRegisters(RegisterDump registers) {
-        this.registers = registers;
-    }*/
 }

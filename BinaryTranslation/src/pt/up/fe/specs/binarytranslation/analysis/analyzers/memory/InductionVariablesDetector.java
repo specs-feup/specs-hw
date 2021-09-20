@@ -29,10 +29,10 @@ public class InductionVariablesDetector {
     public HashMap<String, Long> registerDiff(RegisterDump r1, RegisterDump r2) {
         var diff = new HashMap<String, Long>();
         for (var k : r1.getRegisterMap().keySet()) {
-            long i1 = r1.getRegisterMap().get(k);
-            long i2 = r2.getRegisterMap().get(k);
+            long i1 = r1.getRegisterMap().get(k).longValue();
+            long i2 = r2.getRegisterMap().get(k).longValue();
             long id = i2 - i1;
-            diff.put(k, id);
+            diff.put(k.getName(), id);
         }
         return diff;
     }
@@ -93,9 +93,11 @@ public class InductionVariablesDetector {
         StringBuilder sb = new StringBuilder();
         for (var op : inst.getData().getOperands()) {
             if (op.isRegister() && op.isRead()) {
-                String regName = AnalysisUtils.getRegisterName(op);
-                long val = inst.getRegisters().getValue(regName);
-                sb.append(regName).append("{").append(val).append("} ");
+                // String regName = AnalysisUtils.getRegisterName(op);
+                // long val = inst.getRegisters().getValue(regName);
+                // sb.append(regName).append("{").append(val).append("} ");
+                sb.append(op.getAsmField()).append("{").append(op.getDataValue()).append("} ");
+                // TODO: Tiago check if correct
             }
         }
         return sb.toString();
