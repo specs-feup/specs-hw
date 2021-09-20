@@ -48,7 +48,7 @@ public interface Operand {
     /*
      * As string (good for symbolic values)
      */
-    public String getStringValue();
+    public String getName();
 
     /*
      * Value held in register

@@ -17,6 +17,7 @@ import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.pseudocode.PseudoInstructionGraph;
 import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
  * Represents a generic assembly instruction.
@@ -31,14 +32,14 @@ public interface Instruction {
      * Position of instruction in program memory
      */
     default Long getAddress() {
-        return null;
+        throw new NotImplementedException("getAddress() not implemented");
     };
 
     /*
      * Binary code of instruction as string
      */
     default String getInstruction() {
-        return null;
+        throw new NotImplementedException("getInstruction() not implemented");
     }
 
     /*
@@ -46,7 +47,7 @@ public interface Instruction {
      * Retrieved from specific ISA implementation.
      */
     default int getLatency() {
-        return 0;
+        throw new NotImplementedException("getLatency() not implemented");
     };
 
     /*
@@ -54,28 +55,28 @@ public interface Instruction {
      * Retrieved from specific ISA implementation.
      */
     default int getDelay() {
-        return 0;
+        throw new NotImplementedException("getDelay() not implemented");
     };
 
     /*
      * Gets the plain (isa mnemonic) name of the instruction
      */
     default String getName() {
-        return null;
+        throw new NotImplementedException("getName() not implemented");
     };
 
     /*
      * 
      */
     default InstructionPseudocode getPseudocode() {
-        return null;
+        throw new NotImplementedException("getPseudocode() not implemented");
     }
 
     /*
      * Gets the jGraphT version of the pseudocode
      */
     default PseudoInstructionGraph getPseudocodeGraph() {
-        return null;
+        throw new NotImplementedException("getPseudocodeGraph() not implemented");
     }
 
     // Check for instruction type /////////////////////////////////////////////

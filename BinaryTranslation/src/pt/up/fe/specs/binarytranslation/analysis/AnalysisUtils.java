@@ -65,7 +65,7 @@ public class AnalysisUtils {
                 // var val = inst.getRegisters().getValue(reg);
 
                 // var reg = op.getContainerRegister().getRegisterDefinition().getName(); // TODO: correct?
-                var reg = op.getStringValue();
+                var reg = op.getName();
 
                 var val = op.getDataValue(); // TODO: sill needs to be implemented
 
@@ -73,7 +73,7 @@ public class AnalysisUtils {
                 sb.append(String.format("%-16s", reg + "{" + strVal + "}")).append(space);
             }
             if (op.isImmediate()) {
-                long imm = Long.parseLong(op.getStringValue(), 16);
+                long imm = Long.parseLong(op.getName(), 16);
                 var strImm = decimal ? String.valueOf(imm) : String.format("0x%X", imm);
                 sb.append(String.format("%-10s", strImm)).append(space);
             }
@@ -92,7 +92,7 @@ public class AnalysisUtils {
     }
 
     public static String getRegisterName(Operand op) {
-        return op.getStringValue(); // op.getProperties().getPrefix() + op.getStringValue();
+        return op.getName(); // op.getProperties().getPrefix() + op.getStringValue();
     }
 
     public static void printSeparator(int size) {
@@ -120,7 +120,7 @@ public class AnalysisUtils {
             for (Operand op : i.getData().getOperands()) {
                 if (op.isRegister()) {
                     // String reg = getRegisterName(op);
-                    lst.add(op.getStringValue());
+                    lst.add(op.getName());
                 }
             }
         }

@@ -14,15 +14,8 @@ public abstract class ARegisterDump implements RegisterDump {
     // map of register definitions to values
     private final Map<Register, Number> regvalues;
 
-    // helps look up by register string name
-    // private final Map<String, Register> helperMap;
-
     protected ARegisterDump(Map<Register, Number> regvalues) {
         this.regvalues = regvalues;
-        /*this.helperMap = new HashMap<String, Register>();
-        for (var v : this.regvalues.keySet()) {
-            helperMap.put(v.getName(), v);
-        }*/
     }
 
     /*
@@ -30,7 +23,6 @@ public abstract class ARegisterDump implements RegisterDump {
      */
     protected ARegisterDump(ARegisterDump that) {
         this.regvalues = that.regvalues;
-        // this.helperMap = that.helperMap;
     }
 
     /*
@@ -46,6 +38,18 @@ public abstract class ARegisterDump implements RegisterDump {
 
     protected static Map<Register, Number> parseRegisters(List<Register> registerDefinitions, String rawRegisterDump) {
 
+        // TODO: temporary solution for null dumps
+        if (rawRegisterDump == null) {
+            var dump = new HashMap<Register, Number>();
+            return dump; // empty dump
+        } else {
+            var lstream = LineStream.newInstance(rawRegisterDump);
+            return ARegisterDump.parseRegisters(registerDefinitions, lstream);
+        }
+    }
+
+    protected static Map<Register, Number> parseRegisters(List<Register> registerDefinitions, LineStream lstream) {
+
         // helps look up
         var helperMap = new HashMap<String, Register>();
         for (var v : registerDefinitions) {
@@ -55,7 +59,7 @@ public abstract class ARegisterDump implements RegisterDump {
         // TODO: find a way to avoid this repetition... (also in constructor)
 
         var dump = new HashMap<Register, Number>();
-        var lstream = LineStream.newInstance(rawRegisterDump);
+        // var lstream = LineStream.newInstance(rawRegisterDump);
         while (lstream.peekNextLine() != null) {
             var line = lstream.nextLine();
             if (!SpecsStrings.matches(line, REGPATTERN))
@@ -73,17 +77,17 @@ public abstract class ARegisterDump implements RegisterDump {
 
     @Override
     public Number getValue(Register registerDef) {
-        return this.regvalues.get(registerDef);
+        if (this.regvalues.isEmpty())
+            return 0;
+        else
+            return this.regvalues.get(registerDef);
     }
-
-    /*
-    @Override
-    public Number getValue(String registerName) {
-        return this.regvalues.get(this.helperMap.get(registerName));
-    }*/
 
     @Override
     public String toString() {
+        if (this.regvalues.isEmpty())
+            return "Register dump is empty";
+
         var sBuilder = new StringBuilder();
 
         var sortedMap = new TreeMap<Register, Number>();
