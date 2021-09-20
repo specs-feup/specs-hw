@@ -56,22 +56,32 @@ public enum MicroBlazeInstructionProperties implements InstructionProperties {
     bra(UBRANCH, G_UJUMP, G_AJUMP),
     brd(1, 1, UBRANCH, G_UJUMP, G_RJUMP),
     brad(1, 1, UBRANCH, G_UJUMP, G_AJUMP),
+    // from "br" family: all unconditionals, can be relative or absolute
 
     // ULBRANCH
     brld(1, 1, ULBRANCH, G_UJUMP, G_RJUMP),
     brald(1, 1, ULBRANCH, G_UJUMP, G_AJUMP),
+    // from "br" family: all unconditionals, can be relative or absolute
+
     brk(ULBRANCH, G_UJUMP, G_RJUMP),
+    // exception case: always absolute and unconditional
+    // (Same instruction format as "br" family)
 
     // UIBRANCH
     bri(UIBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
     brai(UIBRANCH, G_UJUMP, G_AJUMP, G_IJUMP),
     brid(1, 1, UIBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
     braid(1, 1, UIBRANCH, G_UJUMP, G_AJUMP, G_IJUMP),
+    // from "bri" family: all unconditionals, can be relative or absolute
 
     // UILBRANCH
     brlid(1, 1, UILBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
     bralid(1, 1, UILBRANCH, G_UJUMP, G_AJUMP, G_IJUMP),
+    // from "bri" family: all unconditionals, can be relative or absolute
+
     brki(UILBRANCH, G_UJUMP, G_RJUMP, G_IJUMP),
+    // exception case: always absolute and unconditional
+    // (Same instruction format as "bri" family)
 
     // CBRANCH
     beq(CBRANCH, G_CJUMP, G_RJUMP),

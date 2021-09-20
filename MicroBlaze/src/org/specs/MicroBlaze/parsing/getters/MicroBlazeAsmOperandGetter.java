@@ -228,4 +228,18 @@ public class MicroBlazeAsmOperandGetter {
     private static List<Operand> undefined(MicroBlazeRegisterResolver resolver) {
         return null;
     }
+
+    /*
+     * Fetch the last posted IMM boolean in this static class
+     */
+    public static boolean getPostedIMM() {
+        return MicroBlazeAsmOperandGetter.postedImm;
+    }
+
+    /*
+     * Fetch the last posted IMM upper 16 bits value in this static class
+     */
+    public static int getUpper16IMM() {
+        return MicroBlazeAsmOperandGetter.upper16Imm;
+    }
 }
