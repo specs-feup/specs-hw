@@ -2,13 +2,14 @@ package pt.up.fe.specs.binarytranslation.instruction.register;
 
 import java.util.Map;
 
-enum RegisterDumpNull implements RegisterDump {
+public class RegisterDumpNull implements RegisterDump {
 
-    NullInstance;
+    public RegisterDumpNull() {
+    }
 
     @Override
     public Number getValue(Register registerName) {
-        return null;
+        return 0;
     }
 
     @Override
