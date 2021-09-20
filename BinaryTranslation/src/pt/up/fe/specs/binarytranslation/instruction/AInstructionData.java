@@ -18,6 +18,7 @@ import java.util.List;
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
+import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDumpNull;
 
 /**
  * Holds data taken from an executed or static instruction, after decoding its raw parsed fields
@@ -30,9 +31,8 @@ public abstract class AInstructionData {
     // the enum which represents the ISA properties of this instruction
     protected final InstructionProperties props;
 
-    // from GDB
-    private final RegisterDump registers; // RegisterDump.nullDump;
-    // TODO fix later
+    // from GDB (or null)
+    private final RegisterDump registers;
 
     // from asm fields
     protected final List<Operand> operands;
@@ -47,9 +47,12 @@ public abstract class AInstructionData {
             AsmFieldData fieldData,
             RegisterDump registers) {
         this.props = props;
-        this.operands = fieldData.getOperands(registers);
-        this.branchTarget = fieldData.getBranchTarget(this.operands);
-        this.registers = registers;
+        this.registers = (registers == null) ? (new RegisterDumpNull()) : registers;
+        this.operands = fieldData.getOperands(this.registers);
+        this.branchTarget = fieldData.getBranchTarget(this.registers);
+        // NOTE: if registers are RegisterDumpNull, then all the
+        // operand and branch resolvers should still work by returning 0 for all register values
+        // (needed for static instruction analysis)
     }
 
     /*

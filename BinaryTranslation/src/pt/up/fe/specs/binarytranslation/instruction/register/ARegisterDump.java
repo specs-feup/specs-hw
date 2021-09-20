@@ -15,14 +15,14 @@ public abstract class ARegisterDump implements RegisterDump {
     private final Map<Register, Number> regvalues;
 
     // helps look up by register string name
-    private final Map<String, Register> helperMap;
+    // private final Map<String, Register> helperMap;
 
     protected ARegisterDump(Map<Register, Number> regvalues) {
         this.regvalues = regvalues;
-        this.helperMap = new HashMap<String, Register>();
+        /*this.helperMap = new HashMap<String, Register>();
         for (var v : this.regvalues.keySet()) {
             helperMap.put(v.getName(), v);
-        }
+        }*/
     }
 
     /*
@@ -30,7 +30,7 @@ public abstract class ARegisterDump implements RegisterDump {
      */
     protected ARegisterDump(ARegisterDump that) {
         this.regvalues = that.regvalues;
-        this.helperMap = that.helperMap;
+        // this.helperMap = that.helperMap;
     }
 
     /*

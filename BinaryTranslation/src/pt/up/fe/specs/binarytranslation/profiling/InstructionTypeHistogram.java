@@ -6,11 +6,11 @@ public class InstructionTypeHistogram extends AHistogramProfile {
 
     public InstructionTypeHistogram() {
         super(data -> {
-            var type = data.getData().getGenericTypes().get(0).toString();
+            var type = data.getProperties().getGenericTypes().get(0).toString();
 
             // fix for arm
             if (type.equals(InstructionType.G_MEMORY.toString())) {
-                type = data.getData().getGenericTypes().get(1).toString();
+                type = data.getProperties().getGenericTypes().get(1).toString();
             }
             return type;
         });

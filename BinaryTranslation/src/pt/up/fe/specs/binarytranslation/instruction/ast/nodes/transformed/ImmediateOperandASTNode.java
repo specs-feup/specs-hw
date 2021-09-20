@@ -16,7 +16,7 @@ public class ImmediateOperandASTNode extends ConcreteOperandASTNode {
     }
 
     public Number getValue() {
-        return this.op.getNumberValue();
+        return this.op.getContainerRegister().getDataValue();
     }
 
     @Override
