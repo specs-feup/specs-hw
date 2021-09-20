@@ -27,25 +27,27 @@ public enum MicroBlazeAsmField implements AsmField {
     RD("registerd"),
     RA("registera"),
     RB("registerb"),
+    RS("registers"),
     IMM("imm"),
     IMMW("immw");
-    
+
     private String fieldName;
-    
+
     private MicroBlazeAsmField(String fieldname) {
         this.fieldName = fieldname;
     }
-    
+
+    @Override
     public String getFieldName() {
         return fieldName;
     }
 
     public static Set<String> getFields() {
         Set<String> sset = new HashSet<String>();
-        for(MicroBlazeAsmField val : MicroBlazeAsmField.values()) {
+        for (MicroBlazeAsmField val : MicroBlazeAsmField.values()) {
             sset.add(val.getFieldName());
         }
-        
+
         return sset;
     }
 }

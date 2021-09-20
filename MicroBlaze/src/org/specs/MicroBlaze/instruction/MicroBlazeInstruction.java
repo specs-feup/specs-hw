@@ -50,11 +50,7 @@ public class MicroBlazeInstruction extends AInstruction {
     public static MicroBlazeInstruction newInstance(String address, String instruction, String rawRegisterDump) {
         var fieldData = (MicroBlazeAsmFieldData) parser.parse(address, instruction);
         var props = instSet.process(fieldData);
-
-        var regdump = (rawRegisterDump == null) ? null : new MicroBlazeRegisterDump(rawRegisterDump);
-        var idata = new MicroBlazeInstructionData(props, fieldData, regdump);
-
-        // var idata = new MicroBlazeInstructionData(props, fieldData, new MicroBlazeRegisterDump(rawRegisterDump));
+        var idata = new MicroBlazeInstructionData(props, fieldData, new MicroBlazeRegisterDump(rawRegisterDump));
         var inst = new MicroBlazeInstruction(address, instruction, idata);
         return inst;
     }

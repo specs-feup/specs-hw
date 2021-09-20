@@ -35,6 +35,10 @@ public class MicroBlazeAsmOperandGetter {
     private static final Map<MicroBlazeAsmFieldType, MicroBlazeAsmOperandParse> TARGETGET;
     static {
         var amap = new HashMap<MicroBlazeAsmFieldType, MicroBlazeAsmOperandParse>();
+        amap.put(MicroBlazeAsmFieldType.MFS, MicroBlazeAsmOperandGetter::mfs);
+        amap.put(MicroBlazeAsmFieldType.MTS, MicroBlazeAsmOperandGetter::mts);
+        amap.put(MicroBlazeAsmFieldType.MSR, MicroBlazeAsmOperandGetter::msr);
+
         amap.put(MicroBlazeAsmFieldType.MBAR, MicroBlazeAsmOperandGetter::mbar);
         amap.put(MicroBlazeAsmFieldType.ULBRANCH, MicroBlazeAsmOperandGetter::ulbranch);
         amap.put(MicroBlazeAsmFieldType.UBRANCH, MicroBlazeAsmOperandGetter::ubranch);
@@ -64,6 +68,37 @@ public class MicroBlazeAsmOperandGetter {
 
         var resolver = new MicroBlazeRegisterResolver(fielddata, registers, postedImm, upper16Imm);
         return func.apply(resolver);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // MFS
+    private static List<Operand> mfs(MicroBlazeRegisterResolver resolver) {
+        var ops = new ArrayList<Operand>();
+        ops.add(newWriteRegister(resolver.resolve(RD)));
+        ops.add(newReadRegister(resolver.resolveSpecial(RS)));
+        return ops;
+
+        // TODO: solve for case where E = 1
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // MTS
+    private static List<Operand> mts(MicroBlazeRegisterResolver resolver) {
+        var ops = new ArrayList<Operand>();
+        ops.add(newWriteRegister(resolver.resolve(RA)));
+        ops.add(newReadRegister(resolver.resolveSpecial(RS)));
+        return ops;
+
+        // TODO: solve for case where E = 1
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // MSR
+    private static List<Operand> msr(MicroBlazeRegisterResolver resolver) {
+        var ops = new ArrayList<Operand>();
+        ops.add(newWriteRegister(resolver.resolve(RD)));
+        ops.add(newImmediate(resolver.resolveIMM()));
+        return ops;
     }
 
     ///////////////////////////////////////////////////////////////////////

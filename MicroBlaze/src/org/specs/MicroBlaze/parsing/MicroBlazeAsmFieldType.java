@@ -17,7 +17,10 @@ import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
 
 public enum MicroBlazeAsmFieldType implements AsmFieldType {
 
-    SPECIAL,
+    // SPECIAL,
+    MTS,
+    MFS,
+    MSR,
     MBAR,
     UBRANCH,
     ULBRANCH,
