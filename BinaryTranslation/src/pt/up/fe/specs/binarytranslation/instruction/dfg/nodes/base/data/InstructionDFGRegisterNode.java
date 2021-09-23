@@ -17,18 +17,22 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.data;
 
-import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.InstructionDFGNode;
-import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.InstructionDFGNodeType;
+public class InstructionDFGRegisterNode extends InstructionDFGNodeData{
 
-public abstract class InstructionDFGNodeData extends InstructionDFGNode{
-
-    
-    protected InstructionDFGNodeDataType data_type;
-    
-    protected InstructionDFGNodeData(Object reference, InstructionDFGNodeDataType type) {
-        super(InstructionDFGNodeType.DataNode);
-        this.reference = reference;
-        this.data_type = type;
+    public InstructionDFGRegisterNode(String name) {
+        super(name, InstructionDFGNodeDataType.Register);
     }
  
+    public String getAsString() {
+        return ((String)this.reference);
+    }
+    
+    public void setRefence(String name) {
+        this.reference = name;
+    }
+    
+    @Override
+    public String toString() {
+        return this.getAsString();
+    }
 }

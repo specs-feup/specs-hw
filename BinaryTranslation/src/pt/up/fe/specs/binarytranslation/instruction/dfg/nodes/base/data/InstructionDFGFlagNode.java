@@ -17,18 +17,10 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.data;
 
-import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.InstructionDFGNode;
-import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.InstructionDFGNodeType;
+public class InstructionDFGFlagNode extends InstructionDFGNodeData{
 
-public abstract class InstructionDFGNodeData extends InstructionDFGNode{
-
-    
-    protected InstructionDFGNodeDataType data_type;
-    
-    protected InstructionDFGNodeData(Object reference, InstructionDFGNodeDataType type) {
-        super(InstructionDFGNodeType.DataNode);
-        this.reference = reference;
-        this.data_type = type;
+    public InstructionDFGFlagNode(String name) {
+        super(name, InstructionDFGNodeDataType.Flag);
     }
- 
+    
 }

@@ -26,9 +26,11 @@ public enum InstructionDFGMathOperationNodeType {
     OR,
     XOR,
     AND,
+    NOT,
     ShiftLeftLogical,
     ShiftRightLogical,
-    ShiftRightArithmetic;
+    ShiftRightArithmetic,
+    Assign;
     
     @Override
     public String toString() {
@@ -47,6 +49,10 @@ public enum InstructionDFGMathOperationNodeType {
                 return "^";
             case AND:
                 return "&";
+            case NOT:
+                return "~";
+            case Assign:
+                return "=";
             default:
                 return "";
         }
@@ -72,16 +78,24 @@ public enum InstructionDFGMathOperationNodeType {
                 return InstructionDFGMathOperationNodeType.XOR;
             case "|":
                 return InstructionDFGMathOperationNodeType.OR;
+            case "~":
+                return InstructionDFGMathOperationNodeType.NOT;
             case "<<":
                 return InstructionDFGMathOperationNodeType.ShiftLeftLogical;
             case ">>":
                 return InstructionDFGMathOperationNodeType.ShiftRightLogical;
             case ">>>":
                 return InstructionDFGMathOperationNodeType.ShiftRightArithmetic;
+            case "=":
+                return InstructionDFGMathOperationNodeType.Assign;
             default:
                 return null;
         }
     }
+    
+   public static boolean isMathOperator(String operator) {
+       return !(InstructionDFGMathOperationNodeType.getType(operator).equals(null));
+   }
     
     /** Meant for allowing the implementation of optimizations
      * 

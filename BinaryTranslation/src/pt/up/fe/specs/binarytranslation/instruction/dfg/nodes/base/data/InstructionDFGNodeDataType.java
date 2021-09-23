@@ -17,18 +17,34 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.data;
 
+
 public enum InstructionDFGNodeDataType {
     
     Register,
-    Immediate;
+    Immediate,
+    Flag;
     
     static public InstructionDFGNodeDataType getType(String data) {
-        
-        if(data.contains("r"))
+       
+        if(data.contains("r")) {
             return InstructionDFGNodeDataType.Register;
+        }
         
-        return InstructionDFGNodeDataType.Immediate;
+        try {
+            Integer.parseInt(data);
+            
+            return InstructionDFGNodeDataType.Immediate;
+        }catch(NumberFormatException e) {
+            return InstructionDFGNodeDataType.Flag;
+        }
         
+    }
+    
+    public boolean sameTypeAs(InstructionDFGNodeDataType node_type) {
+        if(this.equals(node_type)) {
+            return true;
+        }
+         return false;   
     }
     
 }

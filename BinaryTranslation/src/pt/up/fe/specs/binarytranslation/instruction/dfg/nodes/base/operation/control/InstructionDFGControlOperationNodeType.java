@@ -15,20 +15,10 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.data;
+package pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.operation.control;
 
-import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.InstructionDFGNode;
-import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.InstructionDFGNodeType;
-
-public abstract class InstructionDFGNodeData extends InstructionDFGNode{
-
+public enum InstructionDFGControlOperationNodeType {
     
-    protected InstructionDFGNodeDataType data_type;
     
-    protected InstructionDFGNodeData(Object reference, InstructionDFGNodeDataType type) {
-        super(InstructionDFGNodeType.DataNode);
-        this.reference = reference;
-        this.data_type = type;
-    }
- 
+
 }

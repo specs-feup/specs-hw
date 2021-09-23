@@ -15,20 +15,12 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.data;
+package pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.bitwise;
 
-import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.InstructionDFGNode;
-import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.InstructionDFGNodeType;
+public class InstructionCDFGXor extends AInstructionCDFGBitwiseNode{
 
-public abstract class InstructionDFGNodeData extends InstructionDFGNode{
-
-    
-    protected InstructionDFGNodeDataType data_type;
-    
-    protected InstructionDFGNodeData(Object reference, InstructionDFGNodeDataType type) {
-        super(InstructionDFGNodeType.DataNode);
-        this.reference = reference;
-        this.data_type = type;
+    public InstructionCDFGXor() {
+        
     }
- 
+    
 }
