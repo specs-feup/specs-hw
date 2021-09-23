@@ -16,21 +16,27 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
+import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowCriticalPath;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.ListScheduler;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveZeroLatencyOps;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class BasicBlockDataFlowAnalyzer extends ABasicBlockAnalyzer {
 
-    public BasicBlockDataFlowAnalyzer(TraceInstructionStream stream, ELFProvider elf, int window) {
+    public BasicBlockDataFlowAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
     }
-
+    
     public BasicBlockDataFlowAnalyzer(List<List<Instruction>> basicBlocks) {
         super(basicBlocks);
     }
@@ -38,11 +44,11 @@ public class BasicBlockDataFlowAnalyzer extends ABasicBlockAnalyzer {
     public List<DataFlowStatistics> analyze(int repetitions) {
         var res = new ArrayList<DataFlowStatistics>();
         var segments = getBasicBlocks();
-
+        
         for (var bb : segments) {
 
             var dfg = new BasicBlockDataFlowGraph(bb, repetitions);
-
+            
             // Critical path
             var pathfinder = new DataFlowCriticalPath(dfg);
             var path = pathfinder.calculatePath();
@@ -58,7 +64,7 @@ public class BasicBlockDataFlowAnalyzer extends ABasicBlockAnalyzer {
                 if (v.getType() == BtfVertexType.REGISTER)
                     sources.add(v.getLabel());
             }
-
+            
             var stats = new DataFlowStatistics(dfg);
             stats.setPath(path).setInsts(bb).setRepetitions(repetitions).setSources(sources).setSinks(sinks);
 

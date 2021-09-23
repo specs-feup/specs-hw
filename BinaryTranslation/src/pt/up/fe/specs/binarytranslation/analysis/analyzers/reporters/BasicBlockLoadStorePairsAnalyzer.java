@@ -19,7 +19,7 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
@@ -27,7 +27,7 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class BasicBlockLoadStorePairsAnalyzer extends ABasicBlockAnalyzer {
 
-    public BasicBlockLoadStorePairsAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+    public BasicBlockLoadStorePairsAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
         // TODO Auto-generated constructor stub
     }

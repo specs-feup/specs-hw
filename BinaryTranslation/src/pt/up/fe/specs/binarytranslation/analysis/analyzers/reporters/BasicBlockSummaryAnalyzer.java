@@ -17,22 +17,36 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class BasicBlockSummaryAnalyzer extends ABasicBlockAnalyzer {
 
-    public BasicBlockSummaryAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+    public BasicBlockSummaryAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
-        // TODO Auto-generated constructor stub
     }
     
     public BasicBlockSummaryAnalyzer(List<List<Instruction>> basicBlocks) {
         super(basicBlocks);
+    }
+    
+    public List<DataFlowStatistics> analyze() {
+        var res = new ArrayList<DataFlowStatistics>();
+        var segments = getBasicBlocks();
+        
+        for (var bb : segments) {
+            var dfg = new BasicBlockDataFlowGraph(bb, 1);
+            var stats = new DataFlowStatistics(dfg);
+            res.add(stats);
+        }
+        return res;
     }
 
 }

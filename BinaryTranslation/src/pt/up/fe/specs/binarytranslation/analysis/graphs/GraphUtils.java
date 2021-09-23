@@ -121,7 +121,12 @@ public class GraphUtils {
             if (v.getProperty() != BtfVertexProperty.NULL)
                 label += "\n{" + v.getProperty() + "}";
 
-            map.put("label", DefaultAttribute.createAttribute(label + " \\[" + v.getLatency() + "\\]"));
+            String extraInfo = "";
+//            if (v.getLoadStoreOrder() != -1)
+//                extraInfo = " \\[" + v.getLoadStoreOrder() + "\\]";
+            extraInfo = " \\[" + v.getPriority() + "\\]";
+            
+            map.put("label", DefaultAttribute.createAttribute(label + extraInfo));
             map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
             map.put("color", DefaultAttribute.createAttribute(v.getColor()));
             map.put("penwidth", DefaultAttribute.createAttribute("2.5"));
