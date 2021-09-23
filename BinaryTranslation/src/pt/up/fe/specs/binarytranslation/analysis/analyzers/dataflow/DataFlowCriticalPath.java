@@ -45,7 +45,8 @@ public class DataFlowCriticalPath {
         for (var source : sources) {
             for (var sink : sinks) {
                 var alg = new AllDirectedPaths<BtfVertex, DefaultEdge>(graph);
-                for (var path : alg.getAllPaths(source, sink, true, null)) {
+                var paths = alg.getAllPaths(source, sink, true, null); 
+                for (var path : paths) {
                     var currPath = path.getVertexList();
                     if (pathSize(currPath) > pathSize(bestPath))
                         bestPath = currPath;

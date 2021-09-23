@@ -14,14 +14,11 @@
 package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
 import java.util.Comparator;
-import java.util.List;
-
 import org.jgrapht.Graph;
 import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
 import org.jgrapht.graph.DefaultEdge;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressDetector;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.GraphTemplateReport;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
@@ -31,13 +28,11 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateT
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
-import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class MemoryAccessTypesAnalyzer extends ABasicBlockAnalyzer {
 
-    public MemoryAccessTypesAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+    public MemoryAccessTypesAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
     }
 

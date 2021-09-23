@@ -22,6 +22,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.Schedule;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
@@ -29,24 +30,24 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.ASegmentDataFlo
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class DataFlowStatistics {
-    private Graph<BtfVertex, DefaultEdge> graph;
+    private ASegmentDataFlowGraph graph;
     private Graph<BtfVertex, DefaultEdge> path;
-    private List<Instruction> insts;
     private List<String> sources;
     private List<String> sinks;
     private double ilp = 0;
     private int pathSize = 0;
     private int repetitions;
     private String pairs = "";
-    private int schedule;
     private String id;
     private String elfName = "";
     private int alus;
     private int memPorts;
-    private List<Integer> schedules = new ArrayList<>();
+    private List<Schedule> schedules = new ArrayList<>();
+    private List<Instruction> insts;
 
     public DataFlowStatistics(ASegmentDataFlowGraph graph) {
         this.graph = graph;
+        this.insts = graph.getSegment();
     }
 
     @Override
@@ -182,17 +183,6 @@ public class DataFlowStatistics {
         return pairs;
     }
 
-
-    public DataFlowStatistics setSched(int total) {
-        this.schedule = total;
-        return this;
-    }
-    
-    public int getSched() {
-        return schedule;
-    }
-
-
     public String getId() {
         return id;
     }
@@ -255,15 +245,11 @@ public class DataFlowStatistics {
         this.memPorts = memPorts;
     }
 
-    public List<Integer> getSchedules() {
+    public List<Schedule> getSchedules() {
         return schedules;
     }
-
-    public void setSchedules(List<Integer> schedules) {
-        this.schedules = schedules;
-    }
     
-    public void addSchedule(int schedule) {
+    public void addSchedule(Schedule schedule) {
         this.schedules.add(schedule);
     }
 }
