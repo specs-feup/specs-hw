@@ -24,7 +24,7 @@ public class StreamUnitGenerator {
      * 
      */
     public void advanceTo(long addr) {
-        this.istream.advanceTo(addr);
+        this.istream.runUntil(addr);
     }
 
     /*

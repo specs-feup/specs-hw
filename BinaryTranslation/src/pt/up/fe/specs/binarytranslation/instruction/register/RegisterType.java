@@ -6,7 +6,13 @@ public enum RegisterType {
     GENERALPURPOSE,
     TEMPORARY,
     STACKPOINTER,
-    RETURN,
+
+    RETURNADDR,
+    GLOBALPOINTER, // specific to riscv?
+    THREADPOINTER,
+    SAVED, // "saved registers" in riscv...
+
+    RETURNVALUE,
     PARAMETER,
     HARDZERO,
     SPECIAL

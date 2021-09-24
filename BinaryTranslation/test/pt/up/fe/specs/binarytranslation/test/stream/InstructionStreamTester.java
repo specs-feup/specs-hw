@@ -6,7 +6,7 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public class InstructionStreamTester {
 
     protected static void printStream(InstructionStream el) {
-        // el.advanceTo(el.getApp().getELFProvider().getKernelStart().longValue());
+        // el.advanceTo(el.getApp().getKernelStart());
         // el.advanceTo(0x1600);
         try {
             Instruction inst = null;
@@ -23,6 +23,7 @@ public class InstructionStreamTester {
     protected static void rawDump(InstructionStream el) {
         try {
             // el.advanceTo(el.getApp().getELFProvider().getKernelStart().longValue());
+            el.runUntil("main"); // skip init stuff?
             el.rawDump();
             el.close();
 

@@ -30,6 +30,15 @@ public class StreamUnitPattern {
         return occurenceCounter;
     }
 
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+        for (var unit : this.list) {
+            sb.append(unit.toString());
+        }
+        return sb.toString();
+    }
+
     /*
      * 
      */

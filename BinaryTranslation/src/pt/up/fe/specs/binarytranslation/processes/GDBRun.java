@@ -277,6 +277,7 @@ public class GDBRun extends StringProcessRun {
     public void stepi() {
         this.sendGDBCommand("stepi 1");
         this.discardAllGDBResponse();
+        // System.out.println(this.consumeAllGDBResponse());
     }
 
     /*

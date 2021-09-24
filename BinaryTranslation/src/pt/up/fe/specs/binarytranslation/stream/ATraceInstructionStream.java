@@ -13,8 +13,13 @@ public abstract class ATraceInstructionStream extends AInstructionStream impleme
     }
 
     @Override
-    public boolean advanceTo(long addr) {
-        return this.getProducer().advanceTo(addr);
+    public boolean runUntil(long addr) {
+        return this.getProducer().runUntil(addr);
+    }
+
+    @Override
+    public boolean runUntil(String namedTarget) {
+        return this.getProducer().runUntil(namedTarget);
     }
 
     @Override

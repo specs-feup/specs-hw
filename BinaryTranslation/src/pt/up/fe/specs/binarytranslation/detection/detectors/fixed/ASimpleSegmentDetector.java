@@ -62,7 +62,7 @@ public abstract class ASimpleSegmentDetector extends ASegmentDetector {
 
         // TODO: the advanceTo method doesnt work as intended since the "istream" is passed as the "abstract-most" class
         if (this.getConfig().getSkipToAddr().longValue() != -1)
-            istream.advanceTo(this.getConfig().getSkipToAddr().longValue());
+            istream.runUntil(this.getConfig().getSkipToAddr().longValue());
 
         // MODIFICATION FOR IEEE MICRO DATA GATHERING
         istream.setCycleCounterBounds(

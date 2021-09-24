@@ -17,7 +17,7 @@ public interface Register {
     }
 
     default boolean isReturn() {
-        return this.getRegTypes().contains(RegisterType.RETURN);
+        return this.getRegTypes().contains(RegisterType.RETURNVALUE);
     }
 
     default boolean isStackPointer() {
