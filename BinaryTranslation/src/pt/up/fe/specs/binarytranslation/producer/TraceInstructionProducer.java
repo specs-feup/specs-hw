@@ -38,10 +38,20 @@ public class TraceInstructionProducer extends AInstructionProducer {
     }
 
     @Override
-    public boolean advanceTo(long addr) {
+    public boolean runUntil(long addr) {
         if ((this.prun instanceof GDBRun)) {
             var gdb = (GDBRun) this.prun;
             gdb.runUntil(addr);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean runUntil(String namedTarget) {
+        if ((this.prun instanceof GDBRun)) {
+            var gdb = (GDBRun) this.prun;
+            gdb.runUntil(namedTarget);
             return true;
         }
         return false;

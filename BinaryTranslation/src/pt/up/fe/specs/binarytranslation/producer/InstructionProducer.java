@@ -10,7 +10,15 @@ public interface InstructionProducer extends ObjectProducer<Instruction> {
      * Advance to a given address (basically used to set a gdb breakpoint and run), returns false if the producer does
      * not implement this feature
      */
-    default boolean advanceTo(long addr) {
+    default boolean runUntil(long addr) {
+        return false;
+    }
+
+    /**
+     * Advance to a given symbol name (basically used to set a gdb breakpoint and run), returns false if the producer
+     * does not implement this feature
+     */
+    default boolean runUntil(String namedTarget) {
         return false;
     }
 
@@ -20,8 +28,7 @@ public interface InstructionProducer extends ObjectProducer<Instruction> {
      */
     public Instruction nextInstruction();
 
-    // TODO
-    // nextInstrucionWithRegisters()
+    // TODO: add a configuration for a no-Register run?
 
     /**
      * Only implementable by a @TraceInstructionProducer which is executing a simulator @ProcessRun

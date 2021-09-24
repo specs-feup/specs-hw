@@ -38,7 +38,7 @@ public class GDBRunTester {
                 // run until kernel start
                 gdb.runUntil(elf.getFunctionName());
 
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 200; i++) {
                     gdb.stepi();
                     var ret = gdb.getAddrAndInstruction();
                     if (ret == null)
@@ -59,11 +59,16 @@ public class GDBRunTester {
 
             try (var gdb = GDBRun.newInstanceInteractive(elf.toApplication())) {
 
+                // launch QEMU, then GDB (on localhost:1234)
+                gdb.start();
+
                 // stepi
                 for (int i = 0; i < 50; i++) {
                     gdb.stepi();
                     System.out.println(gdb.getAddrAndInstruction());
                 }
+
+                System.out.println(gdb.getRegisters());
 
                 System.out.println(gdb.getVariableList());
 

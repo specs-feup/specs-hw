@@ -85,7 +85,15 @@ public interface InstructionStream extends ObjectStream<Instruction> {
      * Advance the stream to a given address, returning true if the underlying @InstructionProducer supports this
      * feature
      */
-    default boolean advanceTo(long addr) {
+    default boolean runUntil(long addr) {
+        return false;
+    }
+
+    /**
+     * Advance the stream to a given function or symbol name, returning true if the underlying @InstructionProducer
+     * supports this feature (currently only @GDBRun supports this)
+     */
+    default boolean runUntil(String namedTarget) {
         return false;
     }
 

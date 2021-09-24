@@ -52,7 +52,7 @@ public abstract class AInstructionProducer implements InstructionProducer {
     @Override
     public void rawDump() {
         String line = null;
-        while ((line = this.prun.receive(100)) != null) {
+        while ((line = this.prun.receive(10000)) != null) {
             System.out.print(line + "\n");
         }
     }
