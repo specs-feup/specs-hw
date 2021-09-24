@@ -8,9 +8,9 @@ import org.specs.Arm.provider.ArmLivermoreN100;
 import org.specs.Arm.provider.ArmPolyBenchMiniFloat;
 
 import pt.up.fe.specs.binarytranslation.ELFProvider;
-import pt.up.fe.specs.binarytranslation.test.asm.ELFDumperTester;
+import pt.up.fe.specs.binarytranslation.asm.ELFDumper;
 
-public class ArmELFDumper extends ELFDumperTester {
+public class ArmELFDumper extends ELFDumper {
 
     @Test
     public void sequentialDump() {
