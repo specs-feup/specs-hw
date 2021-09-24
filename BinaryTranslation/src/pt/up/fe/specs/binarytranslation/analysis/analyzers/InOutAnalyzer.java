@@ -2,7 +2,7 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.BasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.OutElimination;
@@ -20,7 +20,7 @@ public class InOutAnalyzer extends ABasicBlockAnalyzer {
         ELIMINATION
     };
 
-    public InOutAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+    public InOutAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
     }
     

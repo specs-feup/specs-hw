@@ -15,24 +15,8 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.data;
+package pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.arithmetic;
 
-public class IntructionDFGRegisterNode extends InstructionDFGNodeData{
+public class InstructionCDFGShiftLeftLogical extends AInstructionCDFGArithmeticNode{
 
-       public IntructionDFGRegisterNode(String name) {
-           super(name, InstructionDFGNodeDataType.Register);
-       }
-    
-       public String getAsString() {
-           return ((String)this.reference);
-       }
-       
-       public void setRefence(String name) {
-           this.reference = name;
-       }
-       
-       @Override
-       public String toString() {
-           return this.getAsString();
-       }
 }

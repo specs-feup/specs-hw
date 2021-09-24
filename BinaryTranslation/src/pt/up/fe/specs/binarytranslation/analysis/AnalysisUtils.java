@@ -12,12 +12,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.InstructionType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
-import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class AnalysisUtils {
@@ -53,32 +59,25 @@ public class AnalysisUtils {
      *            true to print values in decimal; false to print in hexadecimal
      */
     public static void printInstructionWithRegisters(Instruction inst, boolean decimal) {
-        var sb = new StringBuilder();
-        var space = "  ";
-
-        sb.append(String.format("%-4s", inst.getName())).append(space);
-
-        for (var op : inst.getData().getOperands()) {
-            if (op.isRegister()) {
-
-                // var reg = op.getProperties().getPrefix() + op.getStringValue();
-                // var val = inst.getRegisters().getValue(reg);
-
-                // var reg = op.getContainerRegister().getRegisterDefinition().getName(); // TODO: correct?
-                var reg = op.getName();
-
-                var val = op.getDataValue(); // TODO: sill needs to be implemented
-
-                var strVal = val == null ? "??" : (decimal ? String.valueOf(val) : String.format("0x%X", val));
-                sb.append(String.format("%-16s", reg + "{" + strVal + "}")).append(space);
-            }
-            if (op.isImmediate()) {
-                long imm = Long.parseLong(op.getName(), 16);
-                var strImm = decimal ? String.valueOf(imm) : String.format("0x%X", imm);
-                sb.append(String.format("%-10s", strImm)).append(space);
-            }
-        }
-        System.out.println(sb.toString());
+//        StringBuilder sb = new StringBuilder();
+//        String space = "  ";
+//
+//        sb.append(String.format("%-4s", inst.getName())).append(space);
+//
+//        for (Operand op : inst.getData().getOperands()) {
+//            if (op.isRegister()) {
+//                String reg = op.getProperties().getPrefix() + op.getName();
+//                Long val = inst.getRegisters().getValue(reg);
+//                String strVal = val == null ? "??" : (decimal ? String.valueOf(val) : String.format("0x%X", val));
+//                sb.append(String.format("%-16s", reg + "{" + strVal + "}")).append(space);
+//            }
+//            if (op.isImmediate()) {
+//                long imm = Long.parseLong(op.getStringValue(), 16);
+//                String strImm = decimal ? String.valueOf(imm) : String.format("0x%X", imm);
+//                sb.append(String.format("%-10s", strImm)).append(space);
+//            }
+//        }
+//        System.out.println(sb.toString());
     }
 
     public static String mapBitsetToRegisters(BitSet set, ArrayList<String> regs) {
@@ -92,7 +91,7 @@ public class AnalysisUtils {
     }
 
     public static String getRegisterName(Operand op) {
-        return op.getName(); // op.getProperties().getPrefix() + op.getStringValue();
+        return op.getProperties().getPrefix() + op.getName();
     }
 
     public static void printSeparator(int size) {
@@ -102,14 +101,14 @@ public class AnalysisUtils {
         System.out.println(s);
     }
 
-    public static List<BinarySegment> getSegments(TraceInstructionStream stream, TraceBasicBlockDetector det) {
+    public static List<BinarySegment> getSegments(ATraceInstructionStream stream, TraceBasicBlockDetector det) {
         SegmentBundle bun = det.detectSegments(stream);
         if (bun.getSegments().size() == 0) {
             System.out.println("No basic blocks were detected");
-            return null;
+            return new ArrayList<BinarySegment>();
         }
 
-        System.out.println(bun.getSummary());
+        //System.out.println(bun.getSummary());
         return bun.getSegments();
     }
 
@@ -119,8 +118,8 @@ public class AnalysisUtils {
         for (Instruction i : insts) {
             for (Operand op : i.getData().getOperands()) {
                 if (op.isRegister()) {
-                    // String reg = getRegisterName(op);
-                    lst.add(op.getName());
+                    String reg = getRegisterName(op);
+                    lst.add(reg);
                 }
             }
         }
@@ -147,9 +146,13 @@ public class AnalysisUtils {
     }
 
     public static void saveAsCsv(StringBuilder sb, String filename) {
+        saveAsCsv(sb.toString(), filename);
+    }
+    
+    public static void saveAsCsv(String s, String filename) {
         var csv = new File(filename + ".csv");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csv))) {
-            writer.write(sb.toString());
+            writer.write(s);
         } catch (IOException e) {
             SpecsLogs.warn("Error message:\n", e);
         }

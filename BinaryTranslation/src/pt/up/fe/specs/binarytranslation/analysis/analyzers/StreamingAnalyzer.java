@@ -18,23 +18,18 @@
 package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.AddressGenerationUnit;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.InductionVariablesDetector;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressDetector;
-import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class StreamingAnalyzer extends ABasicBlockAnalyzer {
 
-    public StreamingAnalyzer(ATraceInstructionStream stream, ELFProvider elf, int window) {
+    public StreamingAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
     }
 

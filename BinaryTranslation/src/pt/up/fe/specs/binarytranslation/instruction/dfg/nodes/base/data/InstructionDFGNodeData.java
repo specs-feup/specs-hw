@@ -18,7 +18,7 @@
 package pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.data;
 
 import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.InstructionDFGNode;
-import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.data.InstructionDFGNodeDataType;
+import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.InstructionDFGNodeType;
 
 public abstract class InstructionDFGNodeData extends InstructionDFGNode{
 
@@ -26,13 +26,9 @@ public abstract class InstructionDFGNodeData extends InstructionDFGNode{
     protected InstructionDFGNodeDataType data_type;
     
     protected InstructionDFGNodeData(Object reference, InstructionDFGNodeDataType type) {
+        super(InstructionDFGNodeType.DataNode);
         this.reference = reference;
         this.data_type = type;
-    }
-    
-    
-    public InstructionDFGNodeDataType getType() {
-        return this.data_type;
     }
  
 }
