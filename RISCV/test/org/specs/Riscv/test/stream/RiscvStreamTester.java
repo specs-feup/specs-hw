@@ -5,7 +5,7 @@ import org.specs.Riscv.provider.RiscvLivermoreN100im;
 
 import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
 
-public class RiscvElfStreamTester extends InstructionStreamTester {
+public class RiscvStreamTester extends InstructionStreamTester {
 
     @Test
     public void testStatic() {
@@ -29,7 +29,7 @@ public class RiscvElfStreamTester extends InstructionStreamTester {
 
     @Test
     public void testTraceRaw() {
-        rawDump(RiscvLivermoreN100im.innerprod.toTraceStream());
+        rawDump(RiscvLivermoreN100im.cholesky.toTraceStream());
     }
 
     @Test

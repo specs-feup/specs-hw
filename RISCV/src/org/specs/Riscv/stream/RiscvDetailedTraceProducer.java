@@ -6,6 +6,7 @@ import org.specs.Riscv.provider.RiscvELFProvider;
 
 import pt.up.fe.specs.binarytranslation.producer.detailed.DetailedRegisterInstructionProducer;
 
+@Deprecated
 public class RiscvDetailedTraceProducer extends DetailedRegisterInstructionProducer {
 
     public RiscvDetailedTraceProducer(RiscvELFProvider elfprovider) {

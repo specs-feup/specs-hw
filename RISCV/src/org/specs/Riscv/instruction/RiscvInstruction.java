@@ -22,18 +22,11 @@ import org.specs.Riscv.parsing.RiscvIsaParser;
 import com.google.common.base.Enums;
 
 import pt.up.fe.specs.binarytranslation.instruction.AInstruction;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
-import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
+import pt.up.fe.specs.binarytranslation.instruction.AInstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionSet;
 
 public class RiscvInstruction extends AInstruction {
-
-    // raw field data
-    private final RiscvAsmFieldData fieldData;
-
-    // shared by all instructions, so they can go parse themselves
-    private static RiscvIsaParser parser;
 
     /*
      * Parser and "decoder" Shared by all
@@ -48,27 +41,52 @@ public class RiscvInstruction extends AInstruction {
      * Static "constructor"
      */
     public static RiscvInstruction newInstance(String address, String instruction) {
+        return RiscvInstruction.newInstance(address, instruction, null);
+    }
+
+    /*
+     * Static "constructor"
+     */
+    public static RiscvInstruction newInstance(String address, String instruction, String rawRegisterDump) {
+        var fieldData = (RiscvAsmFieldData) parser.parse(address, instruction);
+        var props = instSet.process(fieldData);
+        var idata = new RiscvInstructionData(props, fieldData, new RiscvRegisterDump(rawRegisterDump));
+        var inst = new RiscvInstruction(address, instruction, idata);
+        return inst;
+    }
+
+    /*
+     * Static "constructor"
+     
+    public static RiscvInstruction newInstance(String address, String instruction) {
         var fieldData = parser.parse(address, instruction);
         var props = instSet.process(fieldData);
         var idata = new RiscvInstructionData(props, fieldData);
         return new RiscvInstruction(address, instruction, idata, fieldData, props);
-    }
+    }*/
 
     /*
      * Create the instruction
      */
+    private RiscvInstruction(String address, String instruction, AInstructionData idata) {
+        super(Long.parseLong(address, 16), instruction, idata);
+    }
+
+    /*
+     * Create the instruction
+     
     private RiscvInstruction(String address, String instruction, InstructionData idata,
             RiscvAsmFieldData fieldData, InstructionProperties props) {
         super(Long.parseLong(address, 16), instruction, idata, props);
         this.fieldData = fieldData;
-    }
+    }*/
 
     /*
      * Helper constructor for copy, calls super copy
      */
     private RiscvInstruction(RiscvInstruction other) {
         super(other);
-        this.fieldData = this.getFieldData().copy();
+        // this.fieldData = this.getFieldData().copy();
     }
 
     /*
@@ -102,10 +120,11 @@ public class RiscvInstruction extends AInstruction {
         return null;
     }*/
 
+    /*
     @Override
     public RiscvAsmFieldData getFieldData() {
         return this.fieldData;
-    }
+    }*/
 
     @Override
     public InstructionPseudocode getPseudocode() {
