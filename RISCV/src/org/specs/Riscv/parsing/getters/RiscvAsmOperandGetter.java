@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.specs.Riscv.instruction.RiscvRegisterDump;
 import org.specs.Riscv.parsing.RiscvAsmFieldData;
 import org.specs.Riscv.parsing.RiscvAsmFieldType;
 
@@ -21,7 +22,8 @@ public class RiscvAsmOperandGetter {
      * map TYPE to a specific private branch target getter func
      */
     interface RiscvAsmOperandParse {
-        List<Operand> apply(RiscvAsmFieldData fielddata);
+        // List<Operand> apply(RiscvAsmFieldData fielddata);
+        List<Operand> apply(RiscvRegisterResolver fielddata);
     }
 
     private static final Map<RiscvAsmFieldType, RiscvAsmOperandParse> TARGETGET;
@@ -44,13 +46,14 @@ public class RiscvAsmOperandGetter {
         TARGETGET = Collections.unmodifiableMap(amap);
     }
 
-    public static List<Operand> getFrom(RiscvAsmFieldData fielddata) {
+    public static List<Operand> getFrom(RiscvAsmFieldData fielddata, RiscvRegisterDump registers) {
 
         var func = TARGETGET.get(fielddata.get(RiscvAsmFieldData.TYPE));
         if (func == null)
             func = RiscvAsmOperandGetter::undefined;
 
-        return func.apply(fielddata);
+        var resolver = new RiscvRegisterResolver(fielddata, registers);
+        return func.apply(resolver);
     }
 
     ///////////////////////////////////////////////////////////////////////

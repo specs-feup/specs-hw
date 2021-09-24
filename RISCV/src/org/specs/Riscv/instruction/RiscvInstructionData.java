@@ -2,16 +2,19 @@ package org.specs.Riscv.instruction;
 
 import org.specs.Riscv.parsing.RiscvAsmFieldData;
 
-import pt.up.fe.specs.binarytranslation.instruction.InstructionData;
+import pt.up.fe.specs.binarytranslation.instruction.AInstructionData;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionProperties;
 
-public class RiscvInstructionData extends InstructionData {
+public class RiscvInstructionData extends AInstructionData {
 
     /*
      * Only public constructor
      */
-    public RiscvInstructionData(InstructionProperties props, RiscvAsmFieldData fieldData) {
-        super(props, fieldData);
+    public RiscvInstructionData(
+            InstructionProperties props,
+            RiscvAsmFieldData fieldData,
+            RiscvRegisterDump registers) {
+        super(props, fieldData, registers);
         // TODO: some of the code in getOperands and getBranchTarget for RISCV is repeated
         // and could easily break :(
     }

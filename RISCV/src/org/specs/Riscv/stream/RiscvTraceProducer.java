@@ -8,8 +8,11 @@ import pt.up.fe.specs.binarytranslation.producer.TraceInstructionProducer;
 
 public class RiscvTraceProducer extends TraceInstructionProducer {
 
+    public RiscvTraceProducer(RiscvApplication app) {
+        super(app, RiscvInstruction::newInstance);
+    }
+
     public RiscvTraceProducer(RiscvELFProvider elfprovider) {
-        super(new RiscvApplication(elfprovider),
-                RiscvInstruction::newInstance);
+        this(elfprovider.toApplication());
     }
 }
