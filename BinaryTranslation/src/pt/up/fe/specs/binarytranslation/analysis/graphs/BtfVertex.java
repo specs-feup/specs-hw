@@ -33,6 +33,8 @@ public class BtfVertex {
     private String color = "black";
     private int latency = 0;
     private int priority = -1;
+    private int loadStoreOrder = -1;
+    private int tempId = -1;
     public static BtfVertex nullVertex = new BtfVertex("", BtfVertexType.NULL);
     
     public BtfVertex(String label, BtfVertexType type) {
@@ -112,5 +114,21 @@ public class BtfVertex {
     
     public int getPriority() {
         return priority;
+    }
+
+    public void setLoadStoreOrder(int order) {
+        this.loadStoreOrder = order;
+    }
+    
+    public int getLoadStoreOrder() {
+        return this.loadStoreOrder;
+    }
+
+    public int getTempId() {
+        return tempId;
+    }
+
+    public void setTempId(int tempId) {
+        this.tempId = tempId;
     }
 }

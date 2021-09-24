@@ -19,17 +19,17 @@ import java.util.Map;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 
 public class MicroBlazeBasicBlockInfo {
-    public static Map<ELFProvider, Integer[]> getLivermoreKernels() {
-        Map<ELFProvider, Integer[]> elfs = Map.of(
+    public static Map<ZippedELFProvider, Integer[]> getLivermoreKernels() {
+        Map<ZippedELFProvider, Integer[]> elfs = Map.of(
                 MicroBlazeLivermoreN10.innerprod, new Integer[] { 10 });
         return elfs;
     }
 
-    public static Map<ELFProvider, Integer[]> getPolybenchSmallFloatKernels() {
-        Map<ELFProvider, Integer[]> elfs = new HashMap<>();
+    public static Map<ZippedELFProvider, Integer[]> getPolybenchSmallFloatKernels() {
+        Map<ZippedELFProvider, Integer[]> elfs = new HashMap<>();
 
         elfs.put(MicroBlazePolyBenchMiniFloat._2mm, new Integer[] { 12, 13 });
         elfs.put(MicroBlazePolyBenchMiniFloat._3mm, new Integer[] { 11, 12, 13 });

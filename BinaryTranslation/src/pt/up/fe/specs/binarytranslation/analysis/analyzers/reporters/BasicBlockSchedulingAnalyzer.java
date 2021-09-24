@@ -16,48 +16,78 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
+import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.ListScheduler;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformAddMemoryDependencies;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveZeroLatencyOps;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class BasicBlockSchedulingAnalyzer extends ABasicBlockAnalyzer {
 
-    public BasicBlockSchedulingAnalyzer(TraceInstructionStream stream, ELFProvider elf, int window) {
+    private boolean useDependencies;
+
+    public BasicBlockSchedulingAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window,
+            boolean useDependencies) {
         super(stream, elf, window);
+        this.useDependencies = useDependencies;
     }
 
-    public BasicBlockSchedulingAnalyzer(List<List<Instruction>> basicBlocks) {
+    public BasicBlockSchedulingAnalyzer(List<List<Instruction>> basicBlocks, boolean useDependencies) {
         super(basicBlocks);
+        this.useDependencies = useDependencies;
     }
 
-    public List<DataFlowStatistics> analyze(int repetitions, int[] alus, int[] memPorts) {
+    public List<DataFlowStatistics> analyze(int[] repetitions, int[] alus, int[] memPorts) {
         var res = new ArrayList<DataFlowStatistics>();
         var segments = getBasicBlocks();
 
         for (var bb : segments) {
-            var dfg = new BasicBlockDataFlowGraph(bb, repetitions);
-            var t = new TransformRemoveZeroLatencyOps(dfg);
-            dfg = (BasicBlockDataFlowGraph) t.applyToGraph();
-            var stats = new DataFlowStatistics(dfg);
-            stats.setInsts(bb).setRepetitions(repetitions);
+            for (var repetition : repetitions) {
+                var dfg = new BasicBlockDataFlowGraph(bb, repetition);
+                var t = new TransformRemoveZeroLatencyOps(dfg);
+                dfg = (BasicBlockDataFlowGraph) t.applyToGraph();
 
-            for (var aluN : alus) {
-                for (var memPortsN : memPorts) {
-                    var sched = new ListScheduler(dfg);
-                    var s = sched.schedule(aluN, memPortsN);
-                    var total = sched.getScheduleLength(s);
-                    System.out
-                            .println("Schedule length (ALU=" + aluN + ", MEM=" + memPortsN + "): " + total + " cycles");
-                    stats.addSchedule(total);
-                    stats.setRepetitions(repetitions);
+                // Apply dependencies
+                if (useDependencies) {
+                    System.out.println("Adding extra dependency edges...");
+                    var trans = new TransformAddMemoryDependencies(dfg);
+                    dfg = (BasicBlockDataFlowGraph) trans.applyToGraph();
                 }
+                // Build temporary IDs
+                int id = 0;
+                for (var v : dfg.vertexSet()) {
+                    v.setTempId(id);
+                    id++;
+                }
+
+                System.out.println("Transformed graph:");
+                System.out.println(GraphUtils.generateGraphURL(dfg));
+
+                var stats = new DataFlowStatistics(dfg);
+                stats.setInsts(bb).setRepetitions(repetition);
+
+                System.out
+                        .println("Scheduling a BB of " + this.elf.getFilename() + " with " + repetition + " repetitions");
+                for (var aluN : alus) {
+                    for (var memPortsN : memPorts) {
+                        var scheduler = new ListScheduler(dfg);
+                        var schedule = scheduler.scheduleWithDiscreteResources(aluN, memPortsN);
+                        var total = schedule.getScheduleLatency();
+
+                        System.out.println(
+                                "Schedule length (ALU=" + aluN + ", MEM=" + memPortsN + "): " + total + " cycles");
+                        stats.addSchedule(schedule);
+                        stats.setRepetitions(repetition);
+                    }
+                }
+                res.add(stats);
             }
-            res.add(stats);
 
         }
         return res;

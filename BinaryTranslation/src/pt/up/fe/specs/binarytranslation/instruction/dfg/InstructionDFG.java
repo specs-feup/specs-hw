@@ -40,10 +40,13 @@ public  class InstructionDFG extends Multigraph<InstructionDFGNode, DefaultEdge>
             .edgeClass(DefaultWeightedEdge.class).buildType();
    */
     
+    
     public InstructionDFG() {
         
         super(DefaultEdge.class);
+                
         
+        this.vertexSet()
         
         //super(null, SupplierUtil.createSupplier(DefaultWeightedEdge.class), GTYPE);
         //var pseudcode = inst.getPseudocode().toString()

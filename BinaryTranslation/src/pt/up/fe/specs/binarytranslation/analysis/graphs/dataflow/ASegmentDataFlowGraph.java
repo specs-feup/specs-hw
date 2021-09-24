@@ -40,6 +40,7 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<BtfVerte
     private List<Instruction> segment;
     protected boolean hasTempValue = false;
     protected String tempValue = "";
+    protected int loadStoreN = 1;
 
     public ASegmentDataFlowGraph(List<Instruction> segment) {
         super(DefaultEdge.class);
@@ -131,6 +132,8 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<BtfVerte
 
         var memVert = new BtfVertex(i.isLoad() ? "Load" : "Store", BtfVertexType.MEMORY);
         memVert.setLatency(i.getLatency());
+        memVert.setLoadStoreOrder(this.loadStoreN);
+        this.loadStoreN++;
         
         addVertex(memVert);
         addEdge(rAvert, memVert);

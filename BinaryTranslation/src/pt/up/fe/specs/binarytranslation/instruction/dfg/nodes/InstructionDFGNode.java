@@ -19,13 +19,18 @@ package pt.up.fe.specs.binarytranslation.instruction.dfg.nodes;
 
 public abstract class InstructionDFGNode {
     
-    protected InstructionDFGNodeType type;
-    protected Object reference;
+    /*protected InstructionDFGNodeType type;
+    protected Object reference;*/
+    private String payload;
     
     public InstructionDFGNode(InstructionDFGNodeType type) {
         this.type = type;
     }
     
+    /*
+    public InstructionDFGAdder() {
+        super("+");
+    }*/
     
     /** Returns the type (InstructionDFGNodeType) of the node
      * 

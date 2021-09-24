@@ -17,111 +17,149 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.dfg;
 
-import java.util.ArrayList;
+import java.util.*;
 
+import org.specs.MicroBlaze.parsing.*;
+import org.specs.MicroBlaze.parsing.getters.MicroBlazeAsmOperandGetter.MicroBlazeAsmOperandParse;
+
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperatorASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.BinaryExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.ExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.FunctionExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.BareOperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.LiteralOperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.MetaOperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.RangeSubscriptOperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.ScalarSubscriptOperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfElseStatementASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfStatementASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.PlainStatementASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.StatementASTNode;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmFieldContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AssignmentExprContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.BinaryExprContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.FunctionExprContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfElseStatementContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfStatementContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.MetaFieldContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.OperatorContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ParenExprContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PlainStmtContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.RangesubscriptOperandContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ScalarsubscriptOperandContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.UnaryExprContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.VariableExprContext;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.*;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.*;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.*;
+import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.InstructionDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.data.InstructionDFGNodeData;
+import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.operation.InstructionDFGOperationNode;
+import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.operation.comparison.InstructionDFGComparisonOperationNode;
+import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.operation.comparison.InstructionDFGComparisonOperationNodeType;
+import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.operation.math.InstructionDFGMathOperationNode;
+import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.operation.math.InstructionDFGMathOperationNodeType;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.*;
 
-public class InstructionDFGGenerator extends PseudoInstructionBaseVisitor<InstructionDFG> {
+public class InstructionDFGGenerator { //extends PseudoInstructionBaseListener {
+    
+    //private InstructionDFG newgraph;
     
     public InstructionDFGGenerator() {
         // TODO Auto-generated constructor stub
     }
+    
+    public InstructionDFG generateDFG(Instruction inst) {
+        
+        /*
+        var graph = new InstructionDFG(); //empty
+        var tree = inst.getPseudocode().getParseTree();
+        
+        for (var s : tree.statement()) {
+            var nodes = visitStatement(s);
+            for(var n : nodes)
+                graph.addVertex(n, ??
+        }*/
+        
+        //var graph = new InstructionDFG(); //empty
+        var tree = inst.getPseudocode().getParseTree();
+        var s1 = tree.statement().get(0);
+                
+        
+        return graph = visitStatement(s1);
+    }
+    
 
     
  // Top level //////////////////////////////////////////////////////////////
-    @Override
-    public PseudoInstructionASTNode visitPseudoInstruction(PseudoInstructionContext ctx) {
+    /*private List<InstructionDFGNode> /(PseudoInstructionContext ctx) {
         var statements = new ArrayList<StatementASTNode>();
         for (var s : ctx.statement()) {
             statements.add((StatementASTNode) this.visit(s));
         }
         return new PseudoInstructionASTNode(statements);
-    }
-
-    // Statement level ////////////////////////////////////////////////////////
-    /*    @Override
-    public InstructionASTNode visitStatement(StatementContext ctx) {
-        return new StatementASTNode((ExpressionASTNode) visit(ctx.expression()));
     }*/
 
+    // Statement level ////////////////////////////////////////////////////////
+    public InstructionDFG visitStatement(StatementContext ctx) {
+        
+        if(ctx instanceof PlainStmtContext)
+            return visitPlainStmt((PlainStmtContext) ctx);
+        else
+            return null;
+    }
+    
+    interface InstructionDFGNodeCreators {
+        InstructionDFGNode apply(String operator);
+    }
+    
+    private static final Map<String, InstructionDFGNodeCreators> OPERANDMAP;
+    static {
+        var amap = new HashMap<String, InstructionDFGNodeCreators>();
+        amap.put("+", InstructionDFGAdder);
+        amap.put("-", InstructionDFGSubtractor);
+        ///
+        OPERANDMAP = Collections.unmodifiableMap(amap);
+    }
+    
+    public InstructionDFG visitPlainStmt(PlainStmtContext ctx) {
+
+        var expr = (AssignmentExprContext) ctx.expression();
+        var target =  expr.left;
+
+        var arithmetic = (BinaryExprContext) expr.right;
+        
+        var lo = arithmetic.left.getText();
+        var op = arithmetic.operator().getText();
+        var ro = arithmetic.right.getText();
+        
+        var vlo = new InstructionDFGNodeData(lo);        
+        var vop = OPERANDMAP.get(op).apply(op);        
+        var vro = new InstructionDFGNodeData(ro);
+        
+        
+
+        var graph = new InstructionDFG(); //empty
+        graph.addVertex(vlo);
+        graph.addEdge(vlo, vop);
+        
+    }
+    
+/*
     @Override
-    public InstructionASTNode visitPlainStmt(PlainStmtContext ctx) {
-        return new PlainStatementASTNode((ExpressionASTNode) visit(ctx.expression()));
+    public List<InstructionDFGNode> visitStatement(IfStatementContext ctx) {
+
+        
     }
 
     @Override
-    public InstructionASTNode visitIfStatement(IfStatementContext ctx) {
+    public InstructionDFGNode visitIfElseStatement(IfElseStatementContext ctx) {
 
-        var stats = new ArrayList<StatementASTNode>();
-        for (var stat : ctx.ifsats) {
-            stats.add((StatementASTNode) this.visit(stat));
-        }
+        
+    }*/
 
-        return new IfStatementASTNode((ExpressionASTNode) this.visit(ctx.condition), stats);
-    }
-
-    @Override
-    public InstructionASTNode visitIfElseStatement(IfElseStatementContext ctx) {
-
-        var stats = new ArrayList<StatementASTNode>();
-        for (var stat : ctx.ifsats) {
-            stats.add((StatementASTNode) this.visit(stat));
-        }
-
-        var estats = new ArrayList<StatementASTNode>();
-        for (var estat : ctx.elsestats) {
-            stats.add((StatementASTNode) this.visit(estat));
-        }
-
-        return new IfElseStatementASTNode((ExpressionASTNode) this.visit(ctx.condition), stats, estats);
-    }
-
+    
     // Expression level ///////////////////////////////////////////////////////
     @Override
-    public InstructionASTNode visitVariableExpr(VariableExprContext ctx) {
+    public InstructionDFGNode visitVariableExpr(VariableExprContext ctx) {
+        
+        /*
+        var variable_type = InstructionDFGNodeDataType.getType(ctx.getText());
+        
+        if(variable_type.equals(InstructionDFGNodeDataType.Register)) {
+            return new InstructionDFGRegisterNode(ctx.getText());
+        }else if(variable_type.equals(InstructionDFGNodeDataType.Immediate)) {
+            return new InstructionDFGImmediateNode(0);
+        }else {
+            return this.visit(ctx.operand());
+        }*/              
+        
         return this.visit(ctx.operand());
     }
-
+    
     @Override
     public InstructionASTNode visitAssignmentExpr(AssignmentExprContext ctx) {
         return new AssignmentExpressionASTNode((OperandASTNode) this.visit(ctx.left),
                 (ExpressionASTNode) this.visit(ctx.right));
+        ctx.
     }
-
+    /*
     @Override
     public InstructionASTNode visitBinaryExpr(BinaryExprContext ctx) {
         return new BinaryExpressionASTNode((ExpressionASTNode) this.visit(ctx.left),
@@ -138,11 +176,12 @@ public class InstructionDFGGenerator extends PseudoInstructionBaseVisitor<Instru
     public InstructionASTNode visitParenExpr(ParenExprContext ctx) {
         return this.visit(ctx.expression());
     }
-
+*/
     @Override
-    public InstructionASTNode visitFunctionExpr(FunctionExprContext ctx) {
+    public InstructionDFGNode visitFunctionExpr(FunctionExprContext ctx) {
 
         var args = ctx.arguments();
+        ctx.get
         if (args == null)
             return new FunctionExpressionASTNode(ctx.functionName().getText());
 
@@ -158,19 +197,29 @@ public class InstructionDFGGenerator extends PseudoInstructionBaseVisitor<Instru
 
     // Operator level /////////////////////////////////////////////////////////
     @Override
-    public OperatorASTNode visitOperator(OperatorContext ctx) {
-        return new OperatorASTNode(ctx.getText());
+    public InstructionDFGOperationNode visitOperator(OperatorContext ctx) {
+        
+        String ctx_str = ctx.getText(); 
+        
+        if(InstructionDFGMathOperationNodeType.isMathOperator(ctx_str)) {
+            return new InstructionDFGMathOperationNode(ctx_str);
+        }else if(InstructionDFGComparisonOperationNodeType.isComparisonOperator(ctx_str)) {
+            return new InstructionDFGComparisonOperationNode(ctx_str);
+        }else {
+            return null;
+        }
+
     }
 
     // Operand level //////////////////////////////////////////////////////////
     @Override
     public BareOperandASTNode visitAsmField(AsmFieldContext ctx) {
-        return new BareOperandASTNode(ctx.getText());
+        return new BareOperandDFGNode(ctx.getText());
     }
 
     @Override
     public LiteralOperandASTNode visitLiteral(LiteralContext ctx) {
-        return new LiteralOperandASTNode(Integer.valueOf(ctx.getText()));
+        return new LiteralOperandDFGNode(Integer.valueOf(ctx.getText()));
     }
 
     @Override

@@ -13,27 +13,31 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 
+import java.io.File;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.util.SpecsLogs;
 
 public abstract class AReporter {
-    private Map<ELFProvider, Integer[]> elfWindows;
+    private Map<ZippedELFProvider, Integer[]> elfWindows;
     protected Class streamClass;
-    private Map<ELFProvider, List<List<Instruction>>> staticBlocks;
+    private Map<ZippedELFProvider, List<List<Instruction>>> staticBlocks;
     private boolean isStatic = false;
 
-    public AReporter(Map<ELFProvider, Integer[]> elfWindows, Class streamClass) {
+    public AReporter(Map<ZippedELFProvider, Integer[]> elfWindows, Class streamClass) {
         this.elfWindows = elfWindows;
         this.streamClass = streamClass;
     }
 
-    public AReporter(Map<ELFProvider, List<List<Instruction>>> staticBlocks) {
+    public AReporter(Map<ZippedELFProvider, List<List<Instruction>>> staticBlocks) {
         this.staticBlocks = staticBlocks;
         this.isStatic = true;
     }
@@ -45,56 +49,65 @@ public abstract class AReporter {
     public void analyze(int[] repetitions, String prefix) {
         var results = new ArrayList<DataFlowStatistics>();
 
-        for (var repetition : repetitions) {
-            if (isStatic) {
-                staticHandler(repetition, results);
-            } else {
-                streamHandler(repetition, results);
-            }
+        // for (var repetition : repetitions) {
+        if (isStatic) {
+            staticHandler(repetitions, results);
+        } else {
+            streamHandler(repetitions, results);
         }
+        // }
 
         processResults(results, prefix);
     }
 
-    private void streamHandler(int repetitions, ArrayList<DataFlowStatistics> results) {
+    private void streamHandler(int[] repetitions, ArrayList<DataFlowStatistics> results) {
         for (var elf : elfWindows.keySet()) {
             int id = 1;
             for (var window : elfWindows.get(elf)) {
+                List<DataFlowStatistics> res = new ArrayList<>();
 
-                /*
-                // var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
-                var fd = elf.getFile();
-                Constructor cons;
-                ATraceInstructionStream stream = null;
-                try {
-                    cons = streamClass.getConstructor(File.class);
-                    stream = (ATraceInstructionStream) cons.newInstance(fd);
-                } catch (Exception e) {
-                    SpecsLogs.warn("Error message:\n", e);
-                }*/
+                do {
+                    var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
+                    Constructor cons;
+                    ATraceInstructionStream stream = null;
+                    try {
+                        cons = streamClass.getConstructor(File.class);
+                        stream = (ATraceInstructionStream) cons.newInstance(fd);
+                    } catch (Exception e) {
+                        SpecsLogs.warn("Error message:\n", e);
+                    }
+                    res = analyzeStream(repetitions, elf, window, stream);
+                    
+                } while (res.size() == 0);
 
-                var res = analyzeStream(repetitions, elf, window, elf.toTraceStream());
-                id = processResult(results, elf, id, res);
+                id = processResult(results, elf, id, res, repetitions);
             }
         }
     }
 
-    private void staticHandler(int repetitions, ArrayList<DataFlowStatistics> results) {
-        for (var elf : staticBlocks.keySet()) {
-            int id = 1;
-            for (var block : staticBlocks.get(elf)) {
-                var res = analyzeStatic(repetitions, block);
-                id = processResult(results, elf, id, res);
-            }
-        }
+    private void staticHandler(int[] repetitions, ArrayList<DataFlowStatistics> results) {
+        // for (var elf : staticBlocks.keySet()) {
+        // int id = 1;
+        // for (var block : staticBlocks.get(elf)) {
+        // var res = analyzeStatic(repetitions, block);
+        // id = processResult(results, elf, id, res);
+        // }
+        // }
     }
 
-    private int processResult(ArrayList<DataFlowStatistics> results, ELFProvider elf, int id,
-            List<DataFlowStatistics> res) {
+    private int processResult(ArrayList<DataFlowStatistics> results, ZippedELFProvider elf, int id,
+            List<DataFlowStatistics> res, int[] repetitions) {
+        var cnt = 0;
+        
         for (var r : res) {
             r.setId("BB" + id);
             r.setElfName(elf.toString());
-            id++;
+            cnt++;
+            
+            if (cnt == repetitions[repetitions.length - 1]) {
+                id++;
+                cnt = 0;
+            }
         }
         results.addAll(res);
         return id;
@@ -104,6 +117,6 @@ public abstract class AReporter {
 
     protected abstract List<DataFlowStatistics> analyzeStatic(int repetitions, List<Instruction> block);
 
-    protected abstract List<DataFlowStatistics> analyzeStream(int repetitions, ELFProvider elf, int window,
-            TraceInstructionStream stream);
+    protected abstract List<DataFlowStatistics> analyzeStream(int[] repetitions, ZippedELFProvider elf, int window,
+            ATraceInstructionStream stream);
 }

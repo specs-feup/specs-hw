@@ -17,11 +17,23 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.operation;
 
+import pt.up.fe.specs.binarytranslation.instruction.dfg.nodes.base.operation.math.InstructionDFGMathOperationNodeType;
+
 public enum InstructionDFGOperationNodeType {
 
     MemoryOperation,
     MathOperation,
     ComparisonOperation,
     ControlOperation;
+    
+    public static InstructionDFGOperationNodeType getType(String operation) {
+        
+        if(InstructionDFGMathOperationNodeType.isMathOperator(operation)) {
+            return InstructionDFGOperationNodeType.MathOperation;
+        }else {
+            return null;
+        }
+        
+    }
     
 }

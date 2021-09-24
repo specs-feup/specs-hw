@@ -16,31 +16,37 @@ package pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class BasicBlockDataFlowGraph extends ASegmentDataFlowGraph {
     private static final long serialVersionUID = -4935282237892925083L;
 
     public BasicBlockDataFlowGraph(List<Instruction> segment, int repetitions) {
-        super(getTransformedBasicBlock(segment, repetitions));
+        super(getTransformedBasicBlock(segment, repetitions, false));
     }
-
+    
     public BasicBlockDataFlowGraph(List<Instruction> segment) {
         this(segment, 1);
     }
 
-    private static List<Instruction> getTransformedBasicBlock(List<Instruction> oldBB, int repetitions) {
-        var<Instruction> newBB = new ArrayList<Instruction>();
-        var size = oldBB.size();
+    private static List<Instruction> getTransformedBasicBlock(List<Instruction> oldBB, int repetitions, boolean delaySlotFix) {
+        List<Instruction> newBB = new ArrayList<Instruction>();
+        List<Instruction> finalBB = new ArrayList<Instruction>();
 
-        newBB.add(oldBB.get(size - 1));
-        newBB.addAll(oldBB.subList(0, size - 1));
-
-        var finalBB = new ArrayList<Instruction>();
+        if (delaySlotFix) {
+            var size = oldBB.size();
+            newBB.add(oldBB.get(size - 1));
+            newBB.addAll(oldBB.subList(0, size - 1));
+        } 
+        else {
+            newBB = oldBB;
+        }
+        
         for (int i = 0; i < repetitions; i++) {
             finalBB.addAll(newBB);
         }
-
+        
         System.out.println("Transformed BB:");
         var cnt = 0;
         for (var i : newBB) {
@@ -49,7 +55,7 @@ public class BasicBlockDataFlowGraph extends ASegmentDataFlowGraph {
         }
         System.out.println("Total BB latency: " + cnt);
         System.out.println("-------------------");
-
+        
         return finalBB;
     }
 }
