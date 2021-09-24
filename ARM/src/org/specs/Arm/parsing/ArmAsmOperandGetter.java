@@ -14,6 +14,7 @@ import org.specs.Arm.instruction.ArmInstructionShift;
 import org.specs.Arm.instruction.ArmOperandBuilder;
 
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class ArmAsmOperandGetter {
 
@@ -150,27 +151,6 @@ public class ArmAsmOperandGetter {
         }
         wmask = replicate(wmask, esize);
         return wmask;
-    }
-
-    /*
-     * 
-     */
-    private static long signExtend64(int value, int currlen) {
-        return (value << (64 - currlen)) >> (64 - currlen);
-    }
-
-    /*
-     * 
-     */
-    private static int signExtend32(int value, int currlen) {
-        return (value << (32 - currlen)) >> (32 - currlen);
-    }
-
-    /*
-     * 
-     */
-    private static byte signExtend8(byte value, int currlen) {
-        return (byte) ((value << (8 - currlen)) >> (8 - currlen));
     }
 
     /*
@@ -373,7 +353,8 @@ public class ArmAsmOperandGetter {
 
         // first operand (target branch addr = this inst addr + offset)
         long addr = fielddata.getAddr().longValue();
-        Number fullimm = addr + signExtend64(fielddata.getMap().get(IMM) << 2, 21);
+        Number fullimm = addr
+                + BinaryTranslationUtils.signExtend64(fielddata.getMap().get(IMM) << 2, 21);
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
 
         return operands;
@@ -413,7 +394,8 @@ public class ArmAsmOperandGetter {
 
         // first operand
         long addr = fielddata.getAddr().longValue();
-        Number fullimm = addr + signExtend64(fielddata.getMap().get(IMM) << 2, 28);
+        Number fullimm = addr
+                + BinaryTranslationUtils.signExtend64(fielddata.getMap().get(IMM) << 2, 28);
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
 
         return operands;
@@ -428,7 +410,8 @@ public class ArmAsmOperandGetter {
 
         // second operand
         long addr = fielddata.getAddr().longValue();
-        Number fullimm = addr + signExtend64(fielddata.getMap().get(IMM) << 2, 21);
+        Number fullimm = addr
+                + BinaryTranslationUtils.signExtend64(fielddata.getMap().get(IMM) << 2, 21);
         operands.add(h.newImmediateLabel(IMM, fullimm, 64));
 
         return operands;
@@ -450,7 +433,7 @@ public class ArmAsmOperandGetter {
 
         // third operand
         long addr = fielddata.getAddr().longValue();
-        Number label = addr + signExtend64(map.get(IMM) << 2, 16);
+        Number label = addr + BinaryTranslationUtils.signExtend64(map.get(IMM) << 2, 16);
         operands.add(h.newImmediateLabel(IMM, label, 64));
 
         return operands;
@@ -468,7 +451,7 @@ public class ArmAsmOperandGetter {
 
         // second operand
         long addr = fielddata.getAddr().longValue();
-        Number label = addr + signExtend64(map.get(IMM) << 2, 21);
+        Number label = addr + BinaryTranslationUtils.signExtend64(map.get(IMM) << 2, 21);
         operands.add(h.newImmediateLabel(IMM, label, 64));
 
         return operands;
@@ -485,7 +468,7 @@ public class ArmAsmOperandGetter {
 
         // second operand
         long addr = fielddata.getAddr().longValue();
-        Number label = addr + signExtend64(map.get(IMM) << 2, 21);
+        Number label = addr + BinaryTranslationUtils.signExtend64(map.get(IMM) << 2, 21);
         operands.add(h.newImmediateLabel(IMM, label, 64));
 
         return operands;
@@ -509,7 +492,7 @@ public class ArmAsmOperandGetter {
 
         // fourth (optional) operand
         var imm = map.get(IMM) * (wd / 8);
-        Number fullimm = signExtend64(imm, 7);
+        Number fullimm = BinaryTranslationUtils.signExtend64(imm, 7);
 
         if (fielddata.getType() == ArmAsmFieldType.LOAD_STORE_PAIR_NO_ALLOC)
             wd = (wd == 32) ? 8 : 16;
