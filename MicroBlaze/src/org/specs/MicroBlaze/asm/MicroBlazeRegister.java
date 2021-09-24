@@ -14,8 +14,8 @@ public enum MicroBlazeRegister implements Register {
     R0("r0", HARDZERO),
     R1("r1", STACKPOINTER),
     R2("r2", GENERALPURPOSE),
-    R3("r3", GENERALPURPOSE, TEMPORARY, RETURN),
-    R4("r4", GENERALPURPOSE, TEMPORARY, RETURN),
+    R3("r3", GENERALPURPOSE, TEMPORARY, RETURNVALUE),
+    R4("r4", GENERALPURPOSE, TEMPORARY, RETURNVALUE),
     R5("r5", GENERALPURPOSE, TEMPORARY, PARAMETER),
     R6("r6", GENERALPURPOSE, TEMPORARY, PARAMETER),
     R7("r7", GENERALPURPOSE, TEMPORARY, PARAMETER),
@@ -45,20 +45,20 @@ public enum MicroBlazeRegister implements Register {
     R31("r31", GENERALPURPOSE),
 
     // SPECIALS
-    RPC("pc", PROGRAMCOUNTER, SPECIAL),
-    RMSR("msr", SPECIAL),
-    REAR("ear", SPECIAL),
-    RESR("esr", SPECIAL),
-    RFSR("fsr", SPECIAL),
-    RBTR("btr", SPECIAL),
-    REDR("edr", SPECIAL),
-    RSLR("slr", SPECIAL),
-    RSHR("shr", SPECIAL),
-    RPID("pid", SPECIAL),
-    RZPR("zpr", SPECIAL),
-    RTLBLO("tlblo", SPECIAL),
-    RTLBHI("tlblh", SPECIAL),
-    RTLBX("tlbx", SPECIAL);
+    RPC("rpc", PROGRAMCOUNTER, SPECIAL),
+    RMSR("rmsr", SPECIAL),
+    REAR("rear", SPECIAL),
+    RESR("resr", SPECIAL),
+    RFSR("rfsr", SPECIAL),
+    RBTR("rbtr", SPECIAL),
+    REDR("redr", SPECIAL),
+    RSLR("rslr", SPECIAL),
+    RSHR("rshr", SPECIAL),
+    RPID("rpid", SPECIAL),
+    RZPR("rzpr", SPECIAL),
+    RTLBLO("rtlblo", SPECIAL),
+    RTLBHI("rtlblh", SPECIAL),
+    RTLBX("rtlbx", SPECIAL);
     // RPVRO-12("rtlbx", SPECIAL), // TODO
 
     // IMM("imm"); // pseudo-register

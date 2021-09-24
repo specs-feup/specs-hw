@@ -25,7 +25,7 @@ public class MicroBlazeSequentialDetectTest {
             var startAddr = istream1.getApp().getKernelStart();
             var stopAddr = istream1.getApp().getKernelStop();
 
-            istream1.advanceTo(startAddr);
+            istream1.runUntil(startAddr);
 
             System.out.println("Looking for segments of size: " + i);
 

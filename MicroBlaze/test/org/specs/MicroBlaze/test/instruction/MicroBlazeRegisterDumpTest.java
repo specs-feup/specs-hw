@@ -1,13 +1,12 @@
 package org.specs.MicroBlaze.test.instruction;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.asm.MicroBlazeRegister;
 import org.specs.MicroBlaze.instruction.MicroBlazeRegisterDump;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 
-import pt.up.fe.specs.binarytranslation.processes.GDBRun;
+import pt.up.fe.specs.binarytranslation.test.instruction.RegisterDumpTest;
 
-public class MicroBlazeRegisterDumpTest {
+public class MicroBlazeRegisterDumpTest extends RegisterDumpTest {
 
     private static String gdbResponse = "r0             0x0                 0\n"
             + "r1             0x1f0f0             127216\n"
@@ -69,33 +68,19 @@ public class MicroBlazeRegisterDumpTest {
             + "rslr           0xffffffff00000000  18446744069414584320\n"
             + "rshr           0x55b9ffffffff      94257352278015";
 
+    /**
+     * Construction of a @MicroBlazeRegisterDump from the raw gdbresponse string. This process is hidden within the
+     * "nextInstruction()" flow of the @TraceInstructionStream (if this instance contains a @TraceInstructionProducer
+     * which is a @GDBRun). The @ARegisterDump class initializes a map where all values of the registers for the given
+     * ISA can be queried using the list of register definitions e.g., @MicroBlazeRegister
+     */
     @Test
     public void MicroBlazeTestDump() {
-        // var regDefinitions = Arrays.asList(MicroBlazeRegister.values());
-        // for (var regdef : regDefinitions)
-        // System.out.println(regdef.getName());
-
-        var mbdump = new MicroBlazeRegisterDump(gdbResponse);
-
-        var map = mbdump.getRegisterMap();
-        for (var regdef : map.keySet())
-            System.out.println(regdef.getName() + " = " + map.get(regdef));
-
-        mbdump.getValue(MicroBlazeRegister.R1);
+        TestRegisterDump(new MicroBlazeRegisterDump(gdbResponse));
     }
 
     @Test
     public void auxGetGDBResponse() {
-        var app = MicroBlazeLivermoreN100.innerprod.toApplication();
-        try (var gdb = GDBRun.newInstanceInteractive(app)) {
-
-            // launch QEMU, then GDB (on localhost:1234)
-            gdb.start();
-
-            // run until kernel start
-            gdb.runUntil(app.getELFProvider().getFunctionName());
-
-            System.out.println(gdb.getRegisters());
-        }
+        GetGDBResponse(MicroBlazeLivermoreN100.innerprod);
     }
 }
