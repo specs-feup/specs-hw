@@ -1,7 +1,9 @@
 package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
+import org.specs.MicroBlaze.asm.MicroBlazeRegister;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniInt;
 
 import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
 
@@ -13,6 +15,49 @@ import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
  *
  */
 public class MicroBlazeStreamTester extends InstructionStreamTester {
+
+    @Test
+    public void testB() {
+
+        var enumreg = MicroBlazeRegister.valueOf("R1");
+    }
+
+    @Test
+    public void testA() {
+        try (var stream = MicroBlazeLivermoreN100.matmul.toTraceStream()) {
+            stream.runUntil(stream.getApp().getKernelStart());
+
+            // 1st
+            var inst = stream.nextInstruction();
+            var map = inst.getRegisters().getRegisterMap();
+
+            // for (var reg : MicroBlazeRegister.values())
+            // System.out.println(reg.getName() + " = " + map.get(reg).longValue());
+
+            // System.out.println(inst.getRegisters().getValue(MicroBlazeRegister.R3));
+
+            for (var r : map.keySet())
+                System.out.println(r.getName() + " = " + map.get(r).longValue());
+
+            // 2nd
+            inst = stream.nextInstruction();
+            var ops = inst.getData().getOperands();
+            System.out.println(inst.getRepresentation());
+            for (var op : ops) {
+                System.out.println(
+                        "reg = " + op.getAsmField() + ", regc = "
+                                + op.getName() + ", value = " + op.getDataValue());
+
+                if (op.isRegister())
+                    System.out.println("is temp = "
+                            + op.getContainerRegister().getRegisterDefinition().isTemporary());
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void testStatic() {
@@ -42,12 +87,26 @@ public class MicroBlazeStreamTester extends InstructionStreamTester {
 
     @Test
     public void testTrace() {
-        printStream(MicroBlazeLivermoreN100.innerprod.toTraceStream());
+        printStream(MicroBlazeLivermoreN100.matmul.toTraceStream());
     }
 
     @Test
     public void testTraceRaw() {
-        rawDump(MicroBlazeLivermoreN100.innerprod.toTraceStream());
+        // for (var elf : MicroBlazePolyBenchMiniInt.values())
+        // for (var elf : MicroBlazeLivermoreN100.values())
+        // rawDump(elf.toTraceStream());
+
+        // rawDump(MicroBlazeRosetta.facedetection.toTraceStream());
+
+        // rawDump(MicroBlazeLivermoreN100.cholesky.toTraceStream());
+
+        rawDump(MicroBlazePolyBenchMiniInt.floydwarshall.toTraceStream());
+
+        // TODO:
+        /*0xd8 <precise_random_f32+216>:  0x30606b20
+        ../../binutils-2_35/gdb/inline-frame.c:176: internal-error: void inline_frame_this_id(frame_info*, void**, frame_id*): Assertion `!frame_id_eq (*this_id, outer_frame_id)' failed.
+        A problem internal to GDB has been detected,
+        further debugging may prove unreliable.*/
     }
 
     @Test
