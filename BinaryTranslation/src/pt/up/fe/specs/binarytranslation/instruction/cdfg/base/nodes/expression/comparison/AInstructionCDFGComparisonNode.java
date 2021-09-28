@@ -17,6 +17,12 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.comparison;
 
-public abstract class AInstructionCDFGComparisonNode {
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.AInstructionCDFGExpressionNode;
 
+public abstract class AInstructionCDFGComparisonNode extends AInstructionCDFGExpressionNode{
+
+    public AInstructionCDFGComparisonNode (String operator) {
+        super(operator);
+    }
+    
 }

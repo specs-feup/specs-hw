@@ -17,6 +17,17 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.comparison;
 
-public class InstructionCDFGGreaterThanOrEqualsTo {
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.InstructionCDFGNodeGenerator;
 
+public class InstructionCDFGGreaterThanOrEqualsTo extends AInstructionCDFGComparisonNode implements InstructionCDFGNodeGenerator{
+
+    public InstructionCDFGGreaterThanOrEqualsTo() {
+        super(">=");
+    }
+    
+    public AInstructionCDFGNode apply() {
+        return new InstructionCDFGGreaterThanOrEqualsTo();
+    }
+    
 }

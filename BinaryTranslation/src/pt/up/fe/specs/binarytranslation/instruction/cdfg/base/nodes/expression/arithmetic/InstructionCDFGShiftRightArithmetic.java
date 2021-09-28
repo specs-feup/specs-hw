@@ -17,6 +17,16 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.arithmetic;
 
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.InstructionCDFGNodeGenerator;
+
 public class InstructionCDFGShiftRightArithmetic extends AInstructionCDFGArithmeticNode{
 
+    public InstructionCDFGShiftRightArithmetic() {
+        super(">>>");
+    }
+    
+    public AInstructionCDFGNode apply() {
+        return new InstructionCDFGShiftRightArithmetic();
+    }
 }

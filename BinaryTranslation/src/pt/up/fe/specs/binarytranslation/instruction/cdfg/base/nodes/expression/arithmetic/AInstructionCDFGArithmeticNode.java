@@ -21,8 +21,8 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.A
 
 public abstract class AInstructionCDFGArithmeticNode extends AInstructionCDFGExpressionNode{
 
-    public AInstructionCDFGArithemeticNode() {
-        
+    public AInstructionCDFGArithmeticNode(String operator) {
+        super(operator);
     }
     
 }

@@ -17,6 +17,17 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.bitwise;
 
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.InstructionCDFGNodeGenerator;
+
 public class InstructionCDFGNot extends AInstructionCDFGBitwiseNode{
 
+    public InstructionCDFGNot() {
+        super("~");
+    }
+    
+    public AInstructionCDFGNode apply() {
+        return new InstructionCDFGNot();
+    }
+    
 }

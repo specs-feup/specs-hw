@@ -17,6 +17,16 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.comparison;
 
-public class InstructionCDFGEqualsTo {
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.InstructionCDFGNodeGenerator;
 
+public class InstructionCDFGEqualsTo extends AInstructionCDFGComparisonNode implements InstructionCDFGNodeGenerator{
+
+    public InstructionCDFGEqualsTo() {
+        super("==");
+    }
+    
+    public AInstructionCDFGNode apply () {
+        return new InstructionCDFGEqualsTo();
+    }
 }
