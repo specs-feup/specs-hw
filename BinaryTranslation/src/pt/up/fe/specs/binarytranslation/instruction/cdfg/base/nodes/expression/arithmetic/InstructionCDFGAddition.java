@@ -17,6 +17,17 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.arithmetic;
 
-public class InstructionCDFGAddition extends AInstructionCDFGArithmeticNode{
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.InstructionCDFGNodeGenerator;
 
+public class InstructionCDFGAddition extends AInstructionCDFGArithmeticNode {
+
+    public InstructionCDFGAddition() {
+        super("+");
+    }
+    
+    public AInstructionCDFGNode apply() {
+        return new InstructionCDFGAddition();
+    }
+    
 }

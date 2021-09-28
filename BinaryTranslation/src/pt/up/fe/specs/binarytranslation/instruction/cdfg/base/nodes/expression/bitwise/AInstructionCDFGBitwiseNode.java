@@ -21,8 +21,8 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.A
 
 public abstract class AInstructionCDFGBitwiseNode extends AInstructionCDFGExpressionNode{
 
-    protected AInstructionCDFGBitwiseNode() {
-        
+    protected AInstructionCDFGBitwiseNode(String operator) {
+        super(operator);
     }
     
 }

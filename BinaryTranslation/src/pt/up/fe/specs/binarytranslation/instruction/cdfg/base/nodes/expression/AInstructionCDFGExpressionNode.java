@@ -18,8 +18,9 @@
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.InstructionCDFGNodeGenerator;
 
-public abstract class AInstructionCDFGExpressionNode extends AInstructionCDFGNode{
+public abstract class AInstructionCDFGExpressionNode extends AInstructionCDFGNode  implements InstructionCDFGNodeGenerator{
 
   public AInstructionCDFGExpressionNode(String field) {
       super(field);

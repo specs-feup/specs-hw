@@ -17,7 +17,9 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes;
 
-public abstract class AInstructionCDFGNode {
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.InstructionCDFGBase;
+
+public abstract class AInstructionCDFGNode implements InstructionCDFGBase{
 
     private String field;
     
@@ -29,4 +31,8 @@ public abstract class AInstructionCDFGNode {
         return this.field;
     }
     
+    @Override
+    public String toString() {
+        return this.field;
+    }
 }

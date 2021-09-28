@@ -17,12 +17,17 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.expression.bitwise;
 
-public class InstructionCDFGAnd extends AInstructionCDFGBitwiseNode{
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.base.nodes.InstructionCDFGNodeGenerator;
 
-    private static final String str = "&";
+public class InstructionCDFGAnd extends AInstructionCDFGBitwiseNode{
     
     public InstructionCDFGAnd() {
-        
+        super("&");
+    }
+    
+    public AInstructionCDFGNode apply () {
+        return new InstructionCDFGAnd();
     }
     
 }
