@@ -67,7 +67,7 @@ functionName : BYTE | CLZ | MSB | LSB | MSW | LSW | SETCARRY | GETCARRY | SEXTEN
 arguments: expression (',' expression)*;
 
 /* Operators and operands  */
-operator : PLUS | MINUS | TIMES | DIV | GT | GET | LT | LET | EQUALS | NEQUALS | RSHIFT | LSHIFT | RASHIFT | LNOT | LOR | LAND | LXOR;
+operator : PLUS | MINUS | TIMES | DIV | GT | GET | LT | LET | EQUALS | NEQUALS | RSHIFT | LSHIFT | RASHIFT | LNOT | LOR | LAND | BXOR | BOR | BAND;
 
 /* Any symbol that can be defined (anything but an operator) */
 unsignednumber: (INT | DOUBLE);
@@ -109,9 +109,11 @@ EQ		: '=';
 EQUALS	: '==';
 NEQUALS	: '!=';
 LNOT	: '~';
-LOR		: '|';
-LAND	: '&';
-LXOR	: '^';
+LOR		: '||';
+LAND	: '&&';
+BOR		: '|';
+BAND	: '&';
+BXOR	: '^';
 RSHIFT	: '>>';
 LSHIFT	: '<<';
 RASHIFT	: '>>>';

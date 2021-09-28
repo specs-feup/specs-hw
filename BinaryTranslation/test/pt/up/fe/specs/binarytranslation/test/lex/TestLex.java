@@ -27,12 +27,11 @@ public class TestLex {
 
     // SEE FULL EXAMPLE AT: https://gist.github.com/mattmcd/5425206
 
-    @Test
-    public void testParseAndTreePrint() {
+    private void testParseAndTreePrint(ANTLRInputStream input) {
 
         // create a CharStream that reads from standard input
         // var input = new ANTLRInputStream("RB = RA + sext(IMM[14:10]);");
-        var input = new ANTLRInputStream("$pc = $pc + sext(IMM);");
+        // var input = new ANTLRInputStream("$pc = $pc + sext(IMM);");
 
         // create a lexer that feeds off of input CharStream
         var lexer = new PseudoInstructionLexer(input);
@@ -53,6 +52,24 @@ public class TestLex {
         var dumper = new TreeDumper();
         var walker = new ParseTreeWalker();
         walker.walk(dumper, tree);
+    }
+
+    @Test
+    public void testMetaFieldParse() {
+        var input = new ANTLRInputStream("$pc = $pc + sext(IMM);");
+        testParseAndTreePrint(input);
+    }
+
+    @Test
+    public void testLogicalAndFieldParse() {
+        var input = new ANTLRInputStream("RD = RA && RB;");
+        testParseAndTreePrint(input);
+    }
+
+    @Test
+    public void testBitwiseAndFieldParse() {
+        var input = new ANTLRInputStream("RD = RA & RB;");
+        testParseAndTreePrint(input);
     }
 
     @Test
