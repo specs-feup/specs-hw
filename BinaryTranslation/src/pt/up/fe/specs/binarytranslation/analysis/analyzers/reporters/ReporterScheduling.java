@@ -33,9 +33,9 @@ public class ReporterScheduling extends AReporter {
     private int[] memPorts;
     private boolean useDependencies;
 
-    public ReporterScheduling(Map<ZippedELFProvider, Integer[]> elfWindows, Class streamClass, int[] alus, int[] memPorts,
+    public ReporterScheduling(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams, int[] alus, int[] memPorts,
             boolean useDependencies) {
-        super(elfWindows, streamClass);
+        super(elfWindows, streams);
         this.alus = alus;
         this.memPorts = memPorts;
         this.useDependencies = useDependencies;
@@ -49,9 +49,9 @@ public class ReporterScheduling extends AReporter {
         this.useDependencies = useDependencies;
     }
 
-    public ReporterScheduling(Map<ZippedELFProvider, Integer[]> elfWindows, Class streamClass, List<Integer> alus,
+    public ReporterScheduling(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams, List<Integer> alus,
             List<Integer> memPorts, boolean useDependencies) {
-        super(elfWindows, streamClass);
+        super(elfWindows, streams);
         this.alus = new int[alus.size()];
         this.memPorts = new int[memPorts.size()];
         for (int i = 0; i < alus.size(); i++)
