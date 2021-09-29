@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +26,8 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class ReporterDataFlow extends AReporter {
 
-    public ReporterDataFlow(Map<ZippedELFProvider, Integer[]> elfWindows, Class streamClass) {
-        super(elfWindows, streamClass);
+    public ReporterDataFlow(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams) {
+        super(elfWindows, streams);
     }
 
     public ReporterDataFlow(Map<ZippedELFProvider, List<List<Instruction>>> staticBlocks) {

@@ -13,9 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 
-import java.io.File;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,18 +22,16 @@ import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
-import pt.up.fe.specs.util.SpecsLogs;
 
 public abstract class AReporter {
     private Map<ZippedELFProvider, Integer[]> elfWindows;
-    protected Class streamClass;
     private Map<ZippedELFProvider, List<List<Instruction>>> staticBlocks;
     private boolean isStatic = false;
+    private HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams;
 
-    public AReporter(Map<ZippedELFProvider, Integer[]> elfWindows, Class streamClass) {
+    public AReporter(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams) {
         this.elfWindows = elfWindows;
-        this.streamClass = streamClass;
+        this.streams = streams;
     }
 
     public AReporter(Map<ZippedELFProvider, List<List<Instruction>>> staticBlocks) {
@@ -65,21 +62,9 @@ public abstract class AReporter {
             int id = 1;
             for (var window : elfWindows.get(elf)) {
                 List<DataFlowStatistics> res = new ArrayList<>();
-
-                do {
-                    var fd = BinaryTranslationUtils.getFile(elf.asTraceTxtDump());
-                    Constructor cons;
-                    ATraceInstructionStream stream = null;
-                    try {
-                        cons = streamClass.getConstructor(File.class);
-                        stream = (ATraceInstructionStream) cons.newInstance(fd);
-                    } catch (Exception e) {
-                        SpecsLogs.warn("Error message:\n", e);
-                    }
-                    res = analyzeStream(repetitions, elf, window, stream);
-                    
-                } while (res.size() == 0);
-
+                var stream = streams.get(elf).get(window);
+                
+                res = analyzeStream(repetitions, elf, window, stream);
                 id = processResult(results, elf, id, res, repetitions);
             }
         }

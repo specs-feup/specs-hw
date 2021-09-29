@@ -27,8 +27,8 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class ReporterSummary extends AReporter {
 
-    public ReporterSummary(Map<ZippedELFProvider, Integer[]> elfWindows, Class streamClass) {
-        super(elfWindows, streamClass);
+    public ReporterSummary(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams) {
+        super(elfWindows, streams);
         // TODO Auto-generated constructor stub
     }
 
