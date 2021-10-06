@@ -36,17 +36,14 @@ public class MicroBlazeDataFlowTest {
     public void testUnrollingBasicBlockDataFlow() {
         int factors[] = { 1, 2, 3, 4, 5 };
 
-        for (var unrollFactor : factors) {
-            var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
-            var streams = buildStreams(elfs);
-            var analyzer = new ReporterDataFlow(elfs, streams);
-            
-            try {
-                analyzer.analyze(unrollFactor, "");
-            } catch (Exception e) {
-                SpecsLogs.warn("Error message:\n", e);
-            }
-            System.out.println("\nFinished Basic Block Data Flow for Factor = " + unrollFactor + "\n");
+        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
+        var streams = buildStreams(elfs);
+        var analyzer = new ReporterDataFlow(elfs, streams);
+        
+        try {
+            analyzer.analyze(factors, "");
+        } catch (Exception e) {
+            SpecsLogs.warn("Error message:\n", e);
         }
     }
 
