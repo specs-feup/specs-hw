@@ -36,39 +36,41 @@ public class BasicBlockDataFlowAnalyzer extends ABasicBlockAnalyzer {
     public BasicBlockDataFlowAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
     }
-    
+
     public BasicBlockDataFlowAnalyzer(List<List<Instruction>> basicBlocks) {
         super(basicBlocks);
     }
 
-    public List<DataFlowStatistics> analyze(int repetitions) {
+    public List<DataFlowStatistics> analyze(int[] repetitions) {
         var res = new ArrayList<DataFlowStatistics>();
         var segments = getBasicBlocks();
-        
+
         for (var bb : segments) {
 
-            var dfg = new BasicBlockDataFlowGraph(bb, repetitions);
-            
-            // Critical path
-            var pathfinder = new DataFlowCriticalPath(dfg);
-            var path = pathfinder.calculatePath();
+            for (var rep : repetitions) {
+                var dfg = new BasicBlockDataFlowGraph(bb, rep);
 
-            // Sources and sinks
-            var sources = new ArrayList<String>();
-            var sinks = new ArrayList<String>();
-            for (var v : pathfinder.findSinks()) {
-                if (v.getType() == BtfVertexType.REGISTER)
-                    sinks.add(v.getLabel());
-            }
-            for (var v : pathfinder.findSources()) {
-                if (v.getType() == BtfVertexType.REGISTER)
-                    sources.add(v.getLabel());
-            }
-            
-            var stats = new DataFlowStatistics(dfg);
-            stats.setPath(path).setInsts(bb).setRepetitions(repetitions).setSources(sources).setSinks(sinks);
+                // Critical path
+                var pathfinder = new DataFlowCriticalPath(dfg);
+                var path = pathfinder.calculatePath();
 
-            res.add(stats);
+                // Sources and sinks
+                var sources = new ArrayList<String>();
+                var sinks = new ArrayList<String>();
+                for (var v : pathfinder.findSinks()) {
+                    if (v.getType() == BtfVertexType.REGISTER)
+                        sinks.add(v.getLabel());
+                }
+                for (var v : pathfinder.findSources()) {
+                    if (v.getType() == BtfVertexType.REGISTER)
+                        sources.add(v.getLabel());
+                }
+
+                var stats = new DataFlowStatistics(dfg);
+                stats.setPath(path).setInsts(bb).setRepetitions(rep).setSources(sources).setSinks(sinks);
+
+                res.add(stats);
+            }
         }
         return res;
     }
