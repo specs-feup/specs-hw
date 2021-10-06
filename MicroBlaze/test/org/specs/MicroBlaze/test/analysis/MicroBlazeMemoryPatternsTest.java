@@ -31,7 +31,7 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateT
 public class MicroBlazeMemoryPatternsTest {
     @Test
     public void testMemoryAccessTypes() {
-        var elfs = MicroBlazeBasicBlockInfo.getPolybenchSmallFloatKernels();
+        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
 
         var allReports = new ArrayList<GraphTemplateReport>();
         var allGraphs = new HashMap<String, String>();

@@ -5,6 +5,9 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
+import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
+import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FixedSizeMegablockDetector;
@@ -14,13 +17,14 @@ public class MicroBlazeSequentialDetectTest {
     private void testSequentialDetectors(MicroBlazeELFProvider elf) {
 
         // file
-        int minwindow = 10, maxwindow = 10;
+        int minwindow = 10, maxwindow = 50;
 
         // do all detectors sequentially
         for (int i = minwindow; i <= maxwindow; i++) {
 
-            var istream1 = elf.toTraceStream();
-            istream1.silent(false);
+            //var istream1 = elf.toTraceStream();
+            var istream1 = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
+            istream1.silent(true);
 
             var startAddr = istream1.getApp().getKernelStart();
             var stopAddr = istream1.getApp().getKernelStop();
@@ -46,7 +50,8 @@ public class MicroBlazeSequentialDetectTest {
 
     @Test
     public void testSequentialDetectors() {
-        for (var file : Arrays.asList(MicroBlazeLivermoreN10.pic2d)) {
+        for (var file : MicroBlazeLivermoreN100.values()) {
+            System.out.println(file.getELFName());
             this.testSequentialDetectors(file);
         }
     }

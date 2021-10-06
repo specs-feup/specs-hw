@@ -37,7 +37,7 @@ public class MicroBlazeDataFlowTest {
         int factors[] = { 1, 2, 3, 4, 5 };
 
         for (var unrollFactor : factors) {
-            var elfs = MicroBlazeBasicBlockInfo.getPolybenchSmallFloatKernels();
+            var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
             var streams = buildStreams(elfs);
             var analyzer = new ReporterDataFlow(elfs, streams);
             
@@ -57,7 +57,7 @@ public class MicroBlazeDataFlowTest {
         
         var alus = new ArrayList<Integer>(List.of(1, 2, 4, 8, 200));
         var memPorts = new ArrayList<Integer>(List.of(1, 2, 4, 8, 200));
-        var elfs = MicroBlazeBasicBlockInfo.getPolybenchSmallFloatKernels();
+        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
         var streams = buildStreams(elfs);
         var analyzer = new ReporterScheduling(elfs, streams, alus, memPorts, dependencies);
         
@@ -70,7 +70,7 @@ public class MicroBlazeDataFlowTest {
     
     @Test
     public void testBenchmarkStatistics() {
-        var elfs = MicroBlazeBasicBlockInfo.getPolybenchSmallFloatKernels();
+        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
         var streams = buildStreams(elfs);
         var analyzer = new ReporterSummary(elfs, streams);
         
