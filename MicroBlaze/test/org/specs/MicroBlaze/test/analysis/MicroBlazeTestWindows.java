@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
@@ -33,10 +34,10 @@ public class MicroBlazeTestWindows {
     @Test
     public void testFindSuiteBasicBlockSizes() throws IOException {
         int minWindow = 4;
-        int maxWindow = 50;
+        int maxWindow = 60;
         var arr = new ArrayList<String>();
-        // var elfs = MicroBlazePolyBenchMiniFloat.values();
-        var elfs = List.of(MicroBlazePolyBenchMiniFloat.adi);
+        //var elfs = MicroBlazeLivermoreN100.values();
+        var elfs = List.of(MicroBlazeLivermoreN100.tridiag);
 
         for (var elf : elfs) {
             var windows = findBasicBlockSizes(elf, minWindow, maxWindow);
