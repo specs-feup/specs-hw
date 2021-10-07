@@ -56,8 +56,8 @@ public class MicroBlazeMemoryPatternsTest {
         System.out.println(GraphTemplateType.getAllTemplates());
 
         // Print graph of each BB
-        for (var key : allGraphs.keySet())
-            System.out.println(key + ": " + allGraphs.get(key));
+//        for (var key : allGraphs.keySet())
+//            System.out.println(key + ": " + allGraphs.get(key));
 
         // Print report
         var sb = new StringBuilder();
@@ -65,9 +65,9 @@ public class MicroBlazeMemoryPatternsTest {
         for (var r : allReports) {
             sb.append(r.toString());
         }
-        System.out.println("--------------------------");
-        System.out.println(sb.toString());
-        System.out.println("--------------------------");
+//        System.out.println("--------------------------");
+//        System.out.println(sb.toString());
+//        System.out.println("--------------------------");
 
         // Save as CSV
         AnalysisUtils.saveAsCsv(sb, "results/BasicBlockPatterns");
