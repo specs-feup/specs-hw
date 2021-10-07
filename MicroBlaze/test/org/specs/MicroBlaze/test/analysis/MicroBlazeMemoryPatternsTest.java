@@ -70,7 +70,7 @@ public class MicroBlazeMemoryPatternsTest {
         System.out.println("--------------------------");
 
         // Save as CSV
-        AnalysisUtils.saveAsCsv(sb, "BasicBlockPatterns");
+        AnalysisUtils.saveAsCsv(sb, "results/BasicBlockPatterns");
     }
 
     @Test

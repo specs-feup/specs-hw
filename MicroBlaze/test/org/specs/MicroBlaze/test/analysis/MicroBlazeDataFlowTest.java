@@ -71,7 +71,7 @@ public class MicroBlazeDataFlowTest {
         var streams = buildStreams(elfs);
         var analyzer = new ReporterSummary(elfs, streams);
         
-        analyzer.analyze(1, "_Summary");
+        analyzer.analyze("_Summary");
     }
     
 
