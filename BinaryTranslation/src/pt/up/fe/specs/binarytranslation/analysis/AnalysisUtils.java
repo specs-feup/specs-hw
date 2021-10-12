@@ -91,7 +91,7 @@ public class AnalysisUtils {
     }
 
     public static String getRegisterName(Operand op) {
-        return op.getProperties().getPrefix() + op.getName();
+        return /*op.getProperties().getPrefix() + */op.getName();
     }
 
     public static void printSeparator(int size) {
