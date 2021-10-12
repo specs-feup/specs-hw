@@ -15,18 +15,18 @@ package org.specs.MicroBlaze.test.analysis;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
-import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FixedSizeMegablockDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 
 public class MicroBlazeTestWindows {
@@ -35,12 +35,13 @@ public class MicroBlazeTestWindows {
     public void testFindSuiteBasicBlockSizes() throws IOException {
         int minWindow = 4;
         int maxWindow = 60;
+        boolean megaBlock = true;
         var arr = new ArrayList<String>();
-        //var elfs = MicroBlazeLivermoreN100.values();
-        var elfs = List.of(MicroBlazeLivermoreN100.tridiag);
+        // var elfs = MicroBlazeLivermoreN100.values();
+        var elfs = List.of(MicroBlazeLivermoreN100.matmul);
 
         for (var elf : elfs) {
-            var windows = findBasicBlockSizes(elf, minWindow, maxWindow);
+            var windows = findBlockSizes(elf, minWindow, maxWindow, megaBlock);
             var code = generateCode(windows, elf.getClass().getSimpleName(), elf.toString());
             arr.add(code);
         }
@@ -54,13 +55,14 @@ public class MicroBlazeTestWindows {
         var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
         var cntExpected = 0;
         var cntActual = 0;
+        boolean megaBlock = false;
 
         for (var elf : elfs.keySet()) {
             var windows = elfs.get(elf);
             cntExpected += windows.length;
-            
+
             for (var window : windows) {
-                var found = findBasicBlockSizes(elf, window, window);
+                var found = findBlockSizes(elf, window, window, megaBlock);
                 cntActual += (found.size() != 0) ? 1 : 0;
             }
         }
@@ -68,7 +70,8 @@ public class MicroBlazeTestWindows {
         System.out.println("Actual:   " + cntActual);
     }
 
-    public List<String> findBasicBlockSizes(ZippedELFProvider elf, int minWindow, int maxWindow) throws IOException {
+    public List<String> findBlockSizes(ZippedELFProvider elf, int minWindow, int maxWindow, boolean megaBlock)
+            throws IOException {
 
         var arr = new ArrayList<String>();
         System.out.println("ELF: " + elf.getELFName());
@@ -81,18 +84,31 @@ public class MicroBlazeTestWindows {
             var stopAddr = istream1.getApp().getKernelStop();
             istream1.runUntil(startAddr);
 
-            var detector1 = new TraceBasicBlockDetector(
-                    new DetectorConfigurationBuilder().withMaxWindow(window)
-                            .withStartAddr(startAddr)
-                            .withPrematureStopAddr(stopAddr)
-                            .build());
-            var result1 = detector1.detectSegments(istream1);
+            SegmentBundle result1 = null;
+            if (!megaBlock) {
+                var detector1 = new TraceBasicBlockDetector(
+                        new DetectorConfigurationBuilder()
+                                .withMaxWindow(window)
+                                .withStartAddr(startAddr)
+                                .withPrematureStopAddr(stopAddr)
+                                .build());
+                result1 = detector1.detectSegments(istream1);
+            } else {
+                var detector1 = new FixedSizeMegablockDetector(
+                        new DetectorConfigurationBuilder()
+                                .withMaxWindow(window)
+                                .withStartAddr(startAddr)
+                                .withPrematureStopAddr(stopAddr)
+                                .build());
+                result1 = detector1.detectSegments(istream1);
+            }
 
             if (result1.getSegments().size() == 0) {
                 System.out.println("Window " + window + ": -----");
             } else {
                 System.out.println("Window " + window + ": FOUND");
                 arr.add("" + window);
+                result1.printBundle();
             }
             istream1.close();
         }

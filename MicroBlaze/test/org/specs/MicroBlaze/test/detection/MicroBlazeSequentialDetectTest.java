@@ -1,6 +1,7 @@
 package org.specs.MicroBlaze.test.detection;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
@@ -17,7 +18,7 @@ public class MicroBlazeSequentialDetectTest {
     private void testSequentialDetectors(MicroBlazeELFProvider elf) {
 
         // file
-        int minwindow = 10, maxwindow = 50;
+        int minwindow = 36, maxwindow = 36;
 
         // do all detectors sequentially
         for (int i = minwindow; i <= maxwindow; i++) {
@@ -37,7 +38,7 @@ public class MicroBlazeSequentialDetectTest {
                     new DetectorConfigurationBuilder()
                             .withMaxWindow(i)
                             .withStartAddr(startAddr)
-                            .withStopAddr(stopAddr)
+                            //.withStopAddr(stopAddr)
                             .withPrematureStopAddr(stopAddr)
                             .build());
             var result1 = detector1.detectSegments(istream1);
@@ -50,7 +51,7 @@ public class MicroBlazeSequentialDetectTest {
 
     @Test
     public void testSequentialDetectors() {
-        for (var file : MicroBlazeLivermoreN100.values()) {
+        for (var file : List.of(MicroBlazeLivermoreN100.cholesky)) {
             System.out.println(file.getELFName());
             this.testSequentialDetectors(file);
         }
