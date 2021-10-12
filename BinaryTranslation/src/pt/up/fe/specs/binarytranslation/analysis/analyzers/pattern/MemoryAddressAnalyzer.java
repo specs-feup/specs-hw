@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.analyzers;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +10,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.InstructionSets;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.SimpleBasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.InductionVariablesDetector;
