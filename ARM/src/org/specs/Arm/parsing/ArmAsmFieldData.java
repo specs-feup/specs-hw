@@ -7,17 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.specs.Arm.instruction.ArmInstructionCondition;
+import org.specs.Arm.instruction.ArmRegisterDump;
 
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
 import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
+import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 
 public class ArmAsmFieldData extends AsmFieldData {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 62818512602539823L;
 
     /*
      * remmaping of <string, string> to <asmfield, string>
@@ -101,9 +98,31 @@ public class ArmAsmFieldData extends AsmFieldData {
     }
 
     /*
+    * Gets a list of integers which represent the operands in the fields
+    * This manner of field parsing, maintains the operand order as parsed
+    * in the AsmFields
+    */
+    @Override
+    public List<Operand> getOperands(RegisterDump registers) {
+        var mbreg = (ArmRegisterDump) registers;
+        return ArmAsmOperandGetter.getFrom(this, mbreg);
+    }
+
+    /*
     * Get target of branch if instruction is branch
     */
+    @Override
+    public Number getBranchTarget(RegisterDump registers) {
+
+        // operands
+        var mbreg = (ArmRegisterDump) registers;
+        return ArmAsmBranchTargetGetter.getFrom(this, mbreg);
+    }
+
+    /*
+    * Get target of branch if instruction is branch
+    
     public Number getBranchTarget() {
         return ArmAsmBranchTargetGetter.getFrom(this);
-    }
+    }*/
 }

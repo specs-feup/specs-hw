@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.specs.Arm.instruction.ArmInstruction;
-import org.specs.Arm.instruction.ArmInstructionData;
-import org.specs.Arm.parsing.ArmAsmFieldData;
 import org.specs.Arm.parsing.ArmAsmFieldType;
 
 public class ArmInstructionInstatiationTest {
@@ -2333,20 +2331,19 @@ public class ArmInstructionInstatiationTest {
     private void testDecode(String testname,
             String expected, ArmAsmFieldType fmt, String binaryInstruction) {
 
-        ArmInstruction testinst = ArmInstruction.newInstance("0", binaryInstruction);
-        ArmInstructionData idata = testinst.getData();
-        ArmAsmFieldData fieldData = testinst.getFieldData();
-
-        var typecorrect = (fmt == testinst.getFieldData().getType());
+        var testinst = ArmInstruction.newInstance("0", binaryInstruction);
+        var idata = testinst.getData();
+        var fieldData = idata.getFieldData();
+        var typecorrect = (fmt == fieldData.getType());
 
         System.out.print(testname + "\tresolved to\t->\t" + testinst.getName() +
                 "\t(SIMD: " + idata.isSimd() + ", width: " + idata.getBitWidth() + ")\t" +
                 "type is correct: " + typecorrect + "\n");
 
-        if (fmt != testinst.getFieldData().getType())
-            System.out.print("\t\t" + fmt.toString() + "\tvs.\t" + testinst.getFieldData().getType() + "\n");
+        if (fmt != fieldData.getType())
+            System.out.print("\t\t" + fmt.toString() + "\tvs.\t" + fieldData.getType() + "\n");
 
         assertEquals(expected, testinst.getName());
-        assertEquals(fmt, testinst.getFieldData().getType());
+        assertEquals(fmt, fieldData.getType());
     }
 }
