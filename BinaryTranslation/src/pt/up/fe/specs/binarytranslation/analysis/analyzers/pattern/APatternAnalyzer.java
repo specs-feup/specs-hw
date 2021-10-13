@@ -14,17 +14,18 @@
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern;
 
 import java.util.Comparator;
+import java.util.List;
 
 import org.jgrapht.Graph;
 import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
@@ -33,29 +34,20 @@ public abstract class APatternAnalyzer extends ABasicBlockAnalyzer {
         super(stream, elf, window);
     }
 
-    public GraphTemplateReport analyzeSegment() {
+    public APatternReport analyzeSegment() {
         var segs = getBasicBlockSegments();
-
-        var title = elf.getFilename();
-        var report = new GraphTemplateReport(title);
-
-        for (var bb : segs) {
-            matchTemplates(report, bb);
-        }
+        var report = matchTemplates(segs);
         return report;
     }
 
-    protected abstract void matchTemplates(GraphTemplateReport report, BinarySegment bb);
+    protected abstract APatternReport matchTemplates(List<BinarySegment> segs);
 
-    protected GraphTemplateType matchGraphToTemplate(Graph<BtfVertex, DefaultEdge> graph, GraphTemplateType type) {
+    protected boolean matchGraphToTemplate(Graph<BtfVertex, DefaultEdge> graph, SimpleDirectedGraph<BtfVertex, DefaultEdge> template) {
         var exprGraph = GraphUtils.getExpressionGraph(graph);
 
-        var template = type.getTemplateGraph();
         var iso = new VF2GraphIsomorphismInspector<BtfVertex, DefaultEdge>(exprGraph, template,
                 new VertexComparator(), new EdgeComparator());
-        if (iso.isomorphismExists())
-            return type;
-        return GraphTemplateType.TYPE_0;
+        return iso.isomorphismExists();
     }
 
     protected class VertexComparator implements Comparator<BtfVertex> {
