@@ -5,7 +5,7 @@ import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
-import pt.up.fe.specs.binarytranslation.stream.StaticInstructioStream;
+import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 
 public interface ArmELFProvider extends ZippedELFProvider {
@@ -18,7 +18,7 @@ public interface ArmELFProvider extends ZippedELFProvider {
     }
 
     @Override
-    default StaticInstructioStream toStaticStream() {
+    default StaticInstructionStream toStaticStream() {
         return new ArmElfStream(this.toApplication());
     }
 
