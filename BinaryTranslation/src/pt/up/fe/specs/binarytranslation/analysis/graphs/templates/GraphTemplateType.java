@@ -32,7 +32,9 @@ public enum GraphTemplateType {
     TYPE_10(new GraphTemplateType10()),
     TYPE_11(new GraphTemplateType11()),
     TYPE_12(new GraphTemplateType12()),
-    TYPE_13(new GraphTemplateType13());
+    TYPE_13(new GraphTemplateType13()),
+    TYPE_14(new GraphTemplateType14()),
+    TYPE_15(new GraphTemplateType15());
     
     private AGraphTemplate template;
 
