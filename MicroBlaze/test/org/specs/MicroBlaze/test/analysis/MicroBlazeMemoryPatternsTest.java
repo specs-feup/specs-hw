@@ -23,18 +23,19 @@ import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.StreamingAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.GraphTemplateReport;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryPatternReport;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.LoopIncrementPatternAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.LoopIncrementReport;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 
 public class MicroBlazeMemoryPatternsTest {
-    
+
     @Test
     public void testMemoryAccessTypes() {
         var elfs = MicroBlazeBasicBlockInfo.getLivermoreN100Kernels();
-
-        var allReports = new ArrayList<GraphTemplateReport>();
+        var allReports = new ArrayList<MemoryPatternReport>();
         var allGraphs = new HashMap<String, String>();
 
         for (var elf : elfs.keySet()) {
@@ -44,27 +45,53 @@ public class MicroBlazeMemoryPatternsTest {
             for (var window : windows) {
                 var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
                 var analyzer = new MemoryAccessTypesAnalyzer(stream, elf, window);
-                var name = elf.getResourceName();
-                var report = analyzer.analyzeSegment();
+                var name = elf.getELFName();
+                var report = (MemoryPatternReport) analyzer.analyzeSegment();
 
                 report.setName(name);
                 allReports.add(report);
                 allGraphs.put(name + "_" + id, report.getCompositeGraph());
             }
+            MemoryPatternReport.resetLastID();
         }
 
         // Print templates
         System.out.println(GraphTemplateType.getAllTemplates());
 
-        // Print report
         var sb = new StringBuilder();
         sb.append("Benchmark,Basic Block ID,Memory Access ID,Memory Access Type,#Occurrences,Graph\n");
         for (var r : allReports) {
             sb.append(r.toString());
         }
+        AnalysisUtils.saveAsCsv(sb, "results/MemoryAccessPatterns");
+    }
 
-        // Save as CSV
-        AnalysisUtils.saveAsCsv(sb, "results/BasicBlockPatterns");
+    @Test
+    public void testLoopIncrement() {
+        var elfs = MicroBlazeBasicBlockInfo.getLivermoreN100Kernels();
+        var allReports = new ArrayList<LoopIncrementReport>();
+
+        for (var elf : elfs.keySet()) {
+            var windows = elfs.get(elf);
+            var name = elf.getELFName();
+
+            for (var window : windows) {
+                var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
+                var analyzer = new LoopIncrementPatternAnalyzer(stream, elf, window);
+                var report = (LoopIncrementReport) analyzer.analyzeSegment();
+
+                report.setName(name);
+                allReports.add(report);
+            }
+            LoopIncrementReport.resetLastID();
+        }
+
+        var sb = new StringBuilder();
+        sb.append("Benchmark,Basic Block ID,Graph Single Iter,Graph Double Iter\n");
+        for (var r : allReports) {
+            sb.append(r.toString());
+        }
+        AnalysisUtils.saveAsCsv(sb, "results/LoopIncrements");
     }
 
     @Test
