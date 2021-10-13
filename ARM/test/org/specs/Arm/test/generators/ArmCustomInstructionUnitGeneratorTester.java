@@ -1,3 +1,16 @@
+/**
+ * Copyright 2021 SPeCS.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License. under the License.
+ */
+ 
 package org.specs.Arm.test.generators;
 
 import org.junit.Test;
@@ -5,10 +18,9 @@ import org.specs.Arm.provider.ArmLivermoreN100;
 import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
-import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.CustomInstructionUnitGenerator;
-import pt.up.fe.specs.binarytranslation.test.detection.SegmentDetectTestUtils;
 
 public class ArmCustomInstructionUnitGeneratorTester {
 
@@ -16,9 +28,20 @@ public class ArmCustomInstructionUnitGeneratorTester {
     public void testCustomUnitGenerate() {
 
         // get static frequent sequence bundle
-        var bundle = SegmentDetectTestUtils.detect(ArmLivermoreN100.innerprod.toApplication(),
+        /*var bundle = SegmentDetectTestUtils.detect(ArmLivermoreN100.innerprod.toApplication(),
                 ArmTraceStream.class, TraceBasicBlockDetector.class,
-                (new DetectorConfigurationBuilder().withMaxWindow(6)).build());
+                (new DetectorConfigurationBuilder().withMaxWindow(6)).build());*/
+
+        // get static frequent sequence bundle
+        var app = ArmLivermoreN100.cholesky.toApplication();
+
+        var config = new DetectorConfigurationBuilder()
+                .withMaxWindow(6)
+                .withStartAddr(app.getKernelStart())
+                .withStopAddr(app.getKernelStop()).build();
+
+        var detector = new FrequentStaticSequenceDetector(config);
+        var bundle = detector.detectSegments(new ArmTraceStream(app));
 
         // transform into graph bundle
         var graphs = GraphBundle.newInstance(bundle);

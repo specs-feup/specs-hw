@@ -40,6 +40,9 @@ public abstract class AInstructionData {
     // compute from operands during parsing
     private final Number branchTarget;
 
+    //
+    private final AsmFieldData fieldData; // TODO: see if its possible to remove, only using for testers
+
     /*
      * Constructor
      */
@@ -53,6 +56,8 @@ public abstract class AInstructionData {
         // NOTE: if registers are RegisterDumpNull, then all the
         // operand and branch resolvers should still work by returning 0 for all register values
         // (needed for static instruction analysis)
+
+        this.fieldData = fieldData;
     }
 
     /*
@@ -63,6 +68,8 @@ public abstract class AInstructionData {
         this.operands = other.operands;
         this.branchTarget = other.branchTarget;
         this.registers = other.registers;
+
+        this.fieldData = other.fieldData;
     }
 
     /*
@@ -97,6 +104,11 @@ public abstract class AInstructionData {
     */
     public Number getBranchTarget() {
         return branchTarget;
+    }
+
+    // TODO: can be removed?
+    public AsmFieldData getFieldData() {
+        return fieldData;
     }
 
     ///////////////////////////////////////////////////////////////////////////

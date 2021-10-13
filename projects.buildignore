@@ -11,3 +11,5 @@ crisp
 InstructionSimulator
 RISCV
 TraceAnalysisSw
+Base_Zynq_MPSoC_wrapper_hw_platform_0
+standalone_bsp_0
