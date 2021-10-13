@@ -83,14 +83,10 @@ public class MicroBlazeInstruction extends AInstruction {
         return (MicroBlazeInstructionData) super.getData();
     }
 
-    /*    @Override
-    public MicroBlazeAsmFieldData getFieldData() {
-        return this.fieldData;
-    }*/
-
     @Override
     public InstructionPseudocode getPseudocode() {
-        var pseudocode = Enums.getIfPresent(MicroBlazePseudocode.class, this.getData().getProperties().getEnumName());
+        var pseudocode = Enums.getIfPresent(MicroBlazePseudocode.class,
+                this.getData().getProperties().getEnumName());
         if (pseudocode.isPresent())
             return pseudocode.get();
         else

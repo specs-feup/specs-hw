@@ -3,7 +3,6 @@ package org.specs.MicroBlaze.test.stream;
 import org.junit.Test;
 import org.specs.MicroBlaze.asm.MicroBlazeRegister;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
-import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniInt;
 
 import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
 
@@ -100,7 +99,9 @@ public class MicroBlazeStreamTester extends InstructionStreamTester {
 
         // rawDump(MicroBlazeLivermoreN100.cholesky.toTraceStream());
 
-        rawDump(MicroBlazePolyBenchMiniInt.floydwarshall.toTraceStream());
+        // rawDump(MicroBlazePolyBenchMiniInt.floydwarshall.toTraceStream());
+
+        rawDump(MicroBlazeLivermoreN100.matmul.toTraceStream());
 
         // TODO:
         /*0xd8 <precise_random_f32+216>:  0x30606b20
