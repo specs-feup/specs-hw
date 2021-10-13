@@ -31,6 +31,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.EdgeReversedGraph;
+import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.dot.DOTExporter;
@@ -113,8 +114,8 @@ public class GraphUtils {
         return BtfVertex.nullVertex;
     }
 
-    public static Graph<BtfVertex, DefaultEdge> getExpressionGraph(Graph<BtfVertex, DefaultEdge> graph) {
-        Graph<BtfVertex, DefaultEdge> sub = new DefaultDirectedGraph<>(DefaultEdge.class);
+    public static SimpleDirectedGraph<BtfVertex, DefaultEdge> getExpressionGraph(Graph<BtfVertex, DefaultEdge> graph) {
+        SimpleDirectedGraph<BtfVertex, DefaultEdge> sub = new SimpleDirectedGraph<>(DefaultEdge.class);
         Graphs.addGraph(sub, graph);
         var mem = findAllNodesOfType(sub, BtfVertexType.MEMORY);
         var rd = findAllNodesWithIsaInfo(graph, BtfVertexIsaInfo.RD);
