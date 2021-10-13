@@ -19,5 +19,5 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern;
 
 public enum IncrementType {
     INC_TYPE_0,
-    INC_TYPE_1
+    INC_TYPE_1, INC_TYPE_2
 }
