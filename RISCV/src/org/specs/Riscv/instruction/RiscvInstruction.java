@@ -56,16 +56,6 @@ public class RiscvInstruction extends AInstruction {
     }
 
     /*
-     * Static "constructor"
-     
-    public static RiscvInstruction newInstance(String address, String instruction) {
-        var fieldData = parser.parse(address, instruction);
-        var props = instSet.process(fieldData);
-        var idata = new RiscvInstructionData(props, fieldData);
-        return new RiscvInstruction(address, instruction, idata, fieldData, props);
-    }*/
-
-    /*
      * Create the instruction
      */
     private RiscvInstruction(String address, String instruction, AInstructionData idata) {
@@ -73,20 +63,10 @@ public class RiscvInstruction extends AInstruction {
     }
 
     /*
-     * Create the instruction
-     
-    private RiscvInstruction(String address, String instruction, InstructionData idata,
-            RiscvAsmFieldData fieldData, InstructionProperties props) {
-        super(Long.parseLong(address, 16), instruction, idata, props);
-        this.fieldData = fieldData;
-    }*/
-
-    /*
      * Helper constructor for copy, calls super copy
      */
     private RiscvInstruction(RiscvInstruction other) {
         super(other);
-        // this.fieldData = this.getFieldData().copy();
     }
 
     /*
@@ -103,32 +83,10 @@ public class RiscvInstruction extends AInstruction {
         return (RiscvInstructionData) super.getData();
     }
 
-    /*
-    @Override
-    public Number getBranchTarget() {
-        if (this.isJump()) {
-            long branchTarget = (this.getData().getBranchTarget()).longValue();
-    
-            if (this.getData().getGenericTypes().contains(InstructionType.G_RJUMP)) {
-                var v = this.getAddress().longValue();
-                return branchTarget = v + branchTarget;
-            }
-    
-            else if (this.getData().getGenericTypes().contains(InstructionType.G_AJUMP))
-                return branchTarget;
-        }
-        return null;
-    }*/
-
-    /*
-    @Override
-    public RiscvAsmFieldData getFieldData() {
-        return this.fieldData;
-    }*/
-
     @Override
     public InstructionPseudocode getPseudocode() {
-        var pseudocode = Enums.getIfPresent(RiscvPseudocode.class, this.props.getEnumName());
+        var pseudocode = Enums.getIfPresent(RiscvPseudocode.class,
+                this.getData().getProperties().getEnumName());
         if (pseudocode.isPresent())
             return pseudocode.get();
         else
