@@ -1,4 +1,4 @@
-package pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern;
+package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +10,6 @@ import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.InstructionSets;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.SimpleBasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.InductionVariablesDetector;
@@ -85,33 +84,6 @@ public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
         System.out.println("Graph URL:\n" + url + "\n");
     }
 
-    private void handleMemoryComparison(Map<String, List<String>> prologueDeps,
-            ArrayList<Graph<BtfVertex, DefaultEdge>> graphs, HashMap<String, Integer> indVars,
-            InstructionSets inouts) {
-        var loadGraphs = new ArrayList<Graph<BtfVertex, DefaultEdge>>();
-        var storeGraphs = new ArrayList<Graph<BtfVertex, DefaultEdge>>();
-        for (var graph : graphs) {
-            if (GraphUtils.getVerticesWithType(graph, BtfVertexType.LOAD_TARGET).size() != 0)
-                loadGraphs.add(graph);
-            else
-                storeGraphs.add(graph);
-        }
-
-        var comparator = new MemoryAddressComparator(prologueDeps, graphs, indVars, isaProps);
-        for (int i = 0; i < storeGraphs.size(); i++) {
-            var store = storeGraphs.get(i);
-
-            for (int j = 0; j < loadGraphs.size(); j++) {
-                var load = loadGraphs.get(j);
-
-                System.out.println("Alias check for load/store pair L" + j + "-S" + i + ":");
-                var noConflict = comparator.compare(load, store);
-                System.out.println(noConflict ? "No alias" : "Possible alias");
-                AnalysisUtils.printSeparator(20);
-            }
-        }
-    }
-
     private ArrayList<Graph<BtfVertex, DefaultEdge>> handleMemoryGraphs(BinarySegment bb) {
         System.out.println("\nCalculating memory address graphs...");
         var mad = new MemoryAddressDetector(bb);
@@ -126,15 +98,6 @@ public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
         System.out.println("Memory address analysis for segment:");
         bb.printSegment();
         AnalysisUtils.printSeparator(40);
-    }
-
-    private Map<String, List<String>> handlePrologueDependencies(BasicBlockOccurrenceTracker tracker) {
-        System.out.println("\nDetected following dependencies in function prologue:");
-        var prologue = new PrologueDetector(tracker, isaProps);
-        var prologueDeps = prologue.getRegisterState();
-        PrologueDetector.printPrologueState(prologueDeps);
-        AnalysisUtils.printSeparator(40);
-        return prologueDeps;
     }
 
     private HashMap<String, Integer> handleInductionVariables(BinarySegment bb,
