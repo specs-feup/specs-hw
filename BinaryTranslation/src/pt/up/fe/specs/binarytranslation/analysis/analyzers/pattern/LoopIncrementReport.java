@@ -20,32 +20,47 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
 
 public class LoopIncrementReport extends APatternReport {
     private List<Graph<BtfVertex, DefaultEdge>> doubleGraphs = new ArrayList<>();
+    private List<IncrementType> incTypes = new ArrayList<>();
+    private List<String> registers = new ArrayList<>(); 
 
     public List<Graph<BtfVertex, DefaultEdge>> getDoubleGraphs() {
-        return graphs;
+        return doubleGraphs;
     }
-    
-    public void addEntry(BasicBlockDataFlowGraph g1, BasicBlockDataFlowGraph g2) {
+
+    public void addEntry(BasicBlockDataFlowGraph g1, BasicBlockDataFlowGraph g2, IncrementType type, String reg) {
         graphs.add(g1);
         doubleGraphs.add(g2);
+        incTypes.add(type);
+        registers.add(reg);
         getBasicBlockIDs().add("BB" + lastID);
         incrementLastID();
     }
-    
+
     @Override
     public String toString() {
         var sb = new StringBuilder();
-        
+
         for (int i = 0; i < getBasicBlockIDs().size(); i++) {
-            var g1 = getGraphs().get(i);
-            var g2 = getDoubleGraphs().get(i);
+            var type = incTypes.get(i).toString();
+            var reg = registers.get(i);
+            var g1 = GraphUtils.generateGraphURL(getGraphs().get(i));
+            var g2 = GraphUtils.generateGraphURL(doubleGraphs.get(i));
             var bbid = getBasicBlockIDs().get(i);
-            sb.append(this.name + "," + bbid + "," + g1 + "," + g2 + "\n");
+            sb.append(this.name + "," + bbid + "," + type + "," + reg + "," + g1 + "," + g2 + "\n");
         }
         return sb.toString();
+    }
+
+    public List<String> getRegisters() {
+        return registers;
+    }
+
+    public List<IncrementType> getIncTypes() {
+        return incTypes;
     }
 }

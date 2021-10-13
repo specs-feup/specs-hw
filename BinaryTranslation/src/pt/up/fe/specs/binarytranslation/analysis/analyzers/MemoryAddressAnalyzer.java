@@ -3,8 +3,6 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -13,13 +11,9 @@ import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.InstructionSets;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.SimpleBasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.InductionVariablesDetector;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressComparator;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressDetector;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.PrologueDetector;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
