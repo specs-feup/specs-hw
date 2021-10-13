@@ -57,16 +57,10 @@ public class ReporterDataFlow extends AReporter {
         return null;
     }
 
-    
-    private List<DataFlowStatistics> analyzeStream(int repetitions, ZippedELFProvider elf, int window, ATraceInstructionStream stream) {
+    @Override
+    protected List<DataFlowStatistics> analyzeStream(int[] repetitions, ZippedELFProvider elf, int window, ATraceInstructionStream stream) {
         var analyzer = new BasicBlockDataFlowAnalyzer(stream, elf, window);
         var resList = analyzer.analyze(repetitions);
         return resList;
-    }
-
-    @Override
-    protected List<DataFlowStatistics> analyzeStream(int[] repetitions, ZippedELFProvider elf, int window,
-            ATraceInstructionStream stream) {
-        return analyzeStream(repetitions[0], elf, window, stream);
     }
 }

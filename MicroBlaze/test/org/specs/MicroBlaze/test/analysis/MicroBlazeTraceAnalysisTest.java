@@ -14,7 +14,7 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.BtfPerformanceAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.InOutAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.MemoryAddressAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryAddressAnalyzer;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class MicroBlazeTraceAnalysisTest {

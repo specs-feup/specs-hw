@@ -72,7 +72,8 @@ public class FixedSizeMegablockDetector extends ASimpleSegmentDetector {
             return false;
 
         // target isn't start of window, skip this candidate
-        var targetAddr = last.getBranchTarget().longValue(); // TODO what if branch is based on register values?
+        //var targetAddr = last.getBranchTarget().longValue(); // TODO what if branch is based on register values?
+        var targetAddr = last.getData().getBranchTarget().longValue();
         var firstAddr = window.get(0).getAddress().longValue();
         if (targetAddr != firstAddr)
             return false;

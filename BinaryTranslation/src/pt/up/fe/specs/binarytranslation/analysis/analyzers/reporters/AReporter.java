@@ -39,20 +39,18 @@ public abstract class AReporter {
         this.isStatic = true;
     }
 
-    public void analyze(int repetition, String prefix) {
-        analyze(new int[] { repetition }, prefix);
+    public void analyze(String prefix) {
+        analyze(new int[] { }, prefix);
     }
 
     public void analyze(int[] repetitions, String prefix) {
         var results = new ArrayList<DataFlowStatistics>();
 
-        // for (var repetition : repetitions) {
         if (isStatic) {
             staticHandler(repetitions, results);
         } else {
             streamHandler(repetitions, results);
         }
-        // }
 
         processResults(results, prefix);
     }

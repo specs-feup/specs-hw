@@ -29,9 +29,10 @@ import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.GraphTemplate
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 
 public class MicroBlazeMemoryPatternsTest {
+    
     @Test
     public void testMemoryAccessTypes() {
-        var elfs = MicroBlazeBasicBlockInfo.getPolybenchSmallFloatKernels();
+        var elfs = MicroBlazeBasicBlockInfo.getLivermoreN100Kernels();
 
         var allReports = new ArrayList<GraphTemplateReport>();
         var allGraphs = new HashMap<String, String>();
@@ -55,22 +56,15 @@ public class MicroBlazeMemoryPatternsTest {
         // Print templates
         System.out.println(GraphTemplateType.getAllTemplates());
 
-        // Print graph of each BB
-        for (var key : allGraphs.keySet())
-            System.out.println(key + ": " + allGraphs.get(key));
-
         // Print report
         var sb = new StringBuilder();
         sb.append("Benchmark,Basic Block ID,Memory Access ID,Memory Access Type,#Occurrences,Graph\n");
         for (var r : allReports) {
             sb.append(r.toString());
         }
-        System.out.println("--------------------------");
-        System.out.println(sb.toString());
-        System.out.println("--------------------------");
 
         // Save as CSV
-        AnalysisUtils.saveAsCsv(sb, "BasicBlockPatterns");
+        AnalysisUtils.saveAsCsv(sb, "results/BasicBlockPatterns");
     }
 
     @Test
