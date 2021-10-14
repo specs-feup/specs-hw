@@ -48,6 +48,10 @@ public class RiscvRegisterResolver {
         this.registers = registers;
     }
 
+    public RiscvAsmFieldData getFielddata() {
+        return fielddata;
+    }
+
     public ExecutedRegister resolve(RiscvAsmField fieldName) {
         var fieldIntvalue = fielddata.getMap().get(fieldName);
         var regDef = generalRegsToDefs.get(fieldIntvalue);
