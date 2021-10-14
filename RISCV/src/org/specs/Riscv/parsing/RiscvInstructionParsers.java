@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.Riscv.parsing;
 
 import static org.specs.Riscv.parsing.RiscvAsmFieldType.*;
@@ -60,10 +60,11 @@ public interface RiscvInstructionParsers {
             newInstance(OPIMM, I.getFormat() + OPIMM.getFormat()),
             newInstance(LOAD, I.getFormat() + LOAD.getFormat()),
             newInstance(JALR, I.getFormat() + JALR.getFormat()),
+            newInstance(LOADFP, I.getFormat() + LOADFP.getFormat()), // TODO: check if correct
 
             // S types
             newInstance(STOREFP, S.getFormat() + STOREFP.getFormat()),
-            newInstance(LOADFP, S.getFormat() + LOADFP.getFormat()),
+            // newInstance(LOADFP, S.getFormat() + LOADFP.getFormat()),
             newInstance(STORE, S.getFormat() + STORE.getFormat()),
 
             // U types
