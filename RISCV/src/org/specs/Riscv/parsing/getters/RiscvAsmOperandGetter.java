@@ -35,7 +35,7 @@ public class RiscvAsmOperandGetter {
      * map TYPE to a specific private branch target getter func
      */
     interface RiscvAsmOperandParse {
-        List<Operand> apply(RiscvRegisterResolver fielddata);
+        List<Operand> apply(RiscvRegisterResolver resolver);
     }
 
     private static final Map<RiscvAsmFieldType, RiscvAsmOperandParse> TARGETGET;
