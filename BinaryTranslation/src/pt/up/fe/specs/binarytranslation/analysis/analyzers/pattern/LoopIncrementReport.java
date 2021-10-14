@@ -25,18 +25,20 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataF
 
 public class LoopIncrementReport extends APatternReport {
     private List<Graph<BtfVertex, DefaultEdge>> doubleGraphs = new ArrayList<>();
-    private List<IncrementType> incTypes = new ArrayList<>();
-    private List<String> registers = new ArrayList<>(); 
+    private List<String> incTypes = new ArrayList<>();
+    private List<String> registers = new ArrayList<>();
+    private List<String> constants = new ArrayList<>(); 
 
     public List<Graph<BtfVertex, DefaultEdge>> getDoubleGraphs() {
         return doubleGraphs;
     }
 
-    public void addEntry(BasicBlockDataFlowGraph g1, BasicBlockDataFlowGraph g2, IncrementType type, String reg) {
+    public void addEntry(BasicBlockDataFlowGraph g1, BasicBlockDataFlowGraph g2, String type, String reg, String imms) {
         graphs.add(g1);
         doubleGraphs.add(g2);
         incTypes.add(type);
         registers.add(reg);
+        constants.add(imms);
         getBasicBlockIDs().add("BB" + lastID);
         incrementLastID();
     }
@@ -48,10 +50,11 @@ public class LoopIncrementReport extends APatternReport {
         for (int i = 0; i < getBasicBlockIDs().size(); i++) {
             var type = incTypes.get(i).toString();
             var reg = registers.get(i);
+            var imm = constants.get(i);
             var g1 = GraphUtils.generateGraphURL(getGraphs().get(i));
             var g2 = GraphUtils.generateGraphURL(doubleGraphs.get(i));
             var bbid = getBasicBlockIDs().get(i);
-            sb.append(this.name + "," + bbid + "," + type + "," + reg + "," + g1 + "," + g2 + "\n");
+            sb.append(this.name + "," + bbid + "," + type + "," + reg + "," + imm + "," + g1 + "," + g2 + "\n");
         }
         return sb.toString();
     }
@@ -60,7 +63,7 @@ public class LoopIncrementReport extends APatternReport {
         return registers;
     }
 
-    public List<IncrementType> getIncTypes() {
+    public List<String> getIncTypes() {
         return incTypes;
     }
 }
