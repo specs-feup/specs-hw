@@ -43,11 +43,12 @@ expression
 	| functionName LPAREN arguments? RPAREN									# functionExpr
 	| operator right=expression 											# unaryExpr
 	| left=expression operator right=expression 							# binaryExpr
-	| left=expression rlop right=expression 			 					# assignmentExpr;
- 
+	| left=expression rlop right=expression 			 					# assignmentExpr; 
+	
 rlop: EQ; 
 
 /* Built ins */
+ADDR : 'addr'; // gets address of own instruction, called as "addr()"
 BYTE : 'byte';
 CLZ : 'clz';
 MSB : 'msb';
@@ -70,17 +71,24 @@ arguments: expression (',' expression)*;
 operator : PLUS | MINUS | TIMES | DIV | GT | GET | LT | LET | EQUALS | NEQUALS | RSHIFT | LSHIFT | RASHIFT | LNOT | LOR | LAND | BXOR | BOR | BAND;
 
 /* Any symbol that can be defined (anything but an operator) */
-unsignednumber: (INT | DOUBLE);
-signednumber: MINUS (INT | DOUBLE);
+integerval: INT;
+doubleval: DOUBLE;
+unsignednumber: (integerval | doubleval);
+signednumber: MINUS (integerval | doubleval);
 number: unsignednumber | signednumber;
-meta_field: METASYMBOL processorRegister=ASMFIELD;
+metafield: METASYMBOL processorRegister=ASMFIELD;
+
+rangesubscript: ASMFIELD LBRACK loidx=integerval SEMI hiidx=integerval RBRACK;
+scalarsubscript : ASMFIELD LBRACK idx=integerval RBRACK;
+ 
+//operandref: (ASMFIELD);
  
 operand:
-	(ASMFIELD | STACKPTR) 	# AsmField
-   | (meta_field)	# metaField
-   | (number)		# Literal
-   | operand LBRACK idx=unsignednumber RBRACK 								# scalarsubscriptOperand
-   | operand LBRACK loidx=unsignednumber SEMI hiidx=unsignednumber RBRACK 	# rangesubscriptOperand; 
+	ASMFIELD 			# Field
+   | (metafield)		# metaField
+   | (number)			# Literal
+   | scalarsubscript 	# scalarsubscriptOperand
+   | rangesubscript 	# rangesubscriptOperand; 
 
 /************************************************************
  * Lexing
@@ -118,15 +126,19 @@ RSHIFT	: '>>';
 LSHIFT	: '<<';
 RASHIFT	: '>>>';
 
+fragment DIGIT: [0-9];
+fragment CHARACTER: [A-Za-z];
+
 /* Any possible field in the ASM field list of any instruction */
 /* New ASMFIELD regex for RISC-V: [A-Za-z][A-Za-z0-9]+ */
 METASYMBOL : '$';
-ASMFIELD : [A-Za-z0-9]+;
-STACKPTR : 'sp';
+//ASMFIELD : [A-Za-z0-9]+;
+ASMFIELD : CHARACTER+;
+//STACKPTR : 'sp';
 
 /* Literal Numbers */
-INT    : [0-9]+;
-DOUBLE : [0-9]+'.'[0-9]+;
+INT    : DIGIT+;
+DOUBLE : DIGIT+'.'DIGIT+;
     
 /* We're going to ignore all white space characters */
 WS  : [ \t\r\n]+ -> skip ;
