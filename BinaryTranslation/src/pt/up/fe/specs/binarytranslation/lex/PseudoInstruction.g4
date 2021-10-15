@@ -32,10 +32,14 @@ pseudoInstruction : statement+;
  * Star stands for: zero or more 
  */
 
+statementlist
+	: statement
+	| LBRACE statement* RBRACE;
+
 statement 
 	: expression STATEMENTEND 																										# plainStmt
-	| 'if' LPAREN condition=expression RPAREN LBRACE? (ifsats+=statement)+ RBRACE? 													# ifStatement
-	| 'if' LPAREN condition=expression RPAREN LBRACE? (ifsats+=statement)+ RBRACE? ('else' LBRACE? (elsestats+=statement)+ RBRACE?)	# ifElseStatement;	
+	| 'if' LPAREN condition=expression RPAREN ifsats=statementlist 									# ifStatement
+	| 'if' LPAREN condition=expression RPAREN ifsats=statementlist ('else' elsestats=statementlist)	# ifElseStatement;	
 
 expression 
 	: operand 																# variableExpr 
