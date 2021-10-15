@@ -13,11 +13,13 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import org.jgrapht.Graph;
-import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
+import org.jgrapht.GraphMapping;
+import org.jgrapht.alg.isomorphism.IsomorphismInspector;
 import org.jgrapht.alg.isomorphism.VF2SubgraphIsomorphismInspector;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
@@ -25,7 +27,6 @@ import org.jgrapht.graph.SimpleDirectedGraph;
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
@@ -43,19 +44,84 @@ public abstract class APatternAnalyzer extends ABasicBlockAnalyzer {
 
     protected abstract APatternReport matchTemplates(List<BinarySegment> segs);
 
-    protected boolean matchGraphToTemplate(SimpleDirectedGraph<BtfVertex, DefaultEdge> graph,
+    protected MatchResult matchGraphToTemplate(SimpleDirectedGraph<BtfVertex, DefaultEdge> graph,
             SimpleDirectedGraph<BtfVertex, DefaultEdge> template) {
-        return matchGraphToTemplate(graph, template, false);
+        return matchGraphToTemplate(graph, template, false, false);
     }
 
-    protected boolean matchGraphToTemplate(SimpleDirectedGraph<BtfVertex, DefaultEdge> graph,
-            SimpleDirectedGraph<BtfVertex, DefaultEdge> template, boolean strictRegister) {
+    protected MatchResult matchGraphToTemplate(SimpleDirectedGraph<BtfVertex, DefaultEdge> graph,
+            SimpleDirectedGraph<BtfVertex, DefaultEdge> template, boolean strictRegister, boolean strictImm) {
 
-        Comparator<BtfVertex> comparator = strictRegister ? new StrictVertexComparator()
-                : new RelaxedVertexComparator();
-        //var iso = new VF2GraphIsomorphismInspector<BtfVertex, DefaultEdge>(graph, template, comparator, new EdgeComparator());
-        var iso = new VF2SubgraphIsomorphismInspector<BtfVertex, DefaultEdge>(graph, template, comparator, new EdgeComparator());
-        return iso.isomorphismExists();
+        Comparator<BtfVertex> comparator = new RelaxedVertexComparator();
+        var iso = new VF2SubgraphIsomorphismInspector<BtfVertex, DefaultEdge>(graph, template, comparator,
+                new EdgeComparator());
+        var newIso = (IsomorphismInspector<BtfVertex, DefaultEdge>) iso;
+
+        if (!iso.isomorphismExists())
+            return new MatchResult();
+
+        var fullMatch = new MatchResult();
+        if (strictRegister || strictImm) {
+            var iter = newIso.getMappings();
+
+            while (iter.hasNext()) {
+                var map = iter.next();
+                var same = "";
+                if (strictImm) {
+                    same = checkMatchImmediates(map, graph);
+                    if (same.equals("")) {
+                        System.out.println("IMM FAIL");
+                        return new MatchResult();
+                    }
+                    else
+                        fullMatch.addStrictImm(same);
+                }
+                if (strictRegister) {
+                    same = checkMatchRegisters(map, graph);
+                    if (same.equals(""))
+                        return new MatchResult();
+                    else
+                        fullMatch.addStrictRegister(same);
+                }
+            }
+        }
+        fullMatch.setMatch(true);
+        return fullMatch;
+    }
+
+    private String checkMatchImmediates(GraphMapping<BtfVertex, DefaultEdge> map,
+            SimpleDirectedGraph<BtfVertex, DefaultEdge> graph) {
+        var imms = new ArrayList<Long>();
+
+        for (var v : graph.vertexSet()) {
+            var match = map.getVertexCorrespondence(v, true);
+            if (match != null) {
+                if (v.getType() == BtfVertexType.IMMEDIATE) {
+                    imms.add(Long.valueOf(v.getLabel()));
+                }
+            }
+
+        }
+        // System.out.println("imm[0] = " + imms.get(0));
+        var same = Arrays.stream(imms.toArray()).allMatch(s -> s.equals(imms.get(0)));
+        return same ? "" + imms.get(0) : "";
+    }
+
+    private String checkMatchRegisters(GraphMapping<BtfVertex, DefaultEdge> map,
+            SimpleDirectedGraph<BtfVertex, DefaultEdge> graph) {
+        var regs = new ArrayList<String>();
+
+        for (var v : graph.vertexSet()) {
+            var match = map.getVertexCorrespondence(v, true);
+            if (match != null) {
+                if (v.getType() == BtfVertexType.REGISTER) {
+                    regs.add(v.getLabel());
+                }
+            }
+        }
+        // System.out.println("reg[0] = " + regs.get(0));
+        var same = Arrays.stream(regs.toArray()).allMatch(s -> s.equals(regs.get(0)));
+        return same ? "" + regs.get(0) : "";
     }
 
     protected class RelaxedVertexComparator implements Comparator<BtfVertex> {
@@ -120,6 +186,40 @@ public abstract class APatternAnalyzer extends ABasicBlockAnalyzer {
         @Override
         public int compare(DefaultEdge e1, DefaultEdge e2) {
             return 0;
+        }
+    }
+
+    protected class MatchResult {
+        private boolean match = false;
+        private List<String> strictRegisters = new ArrayList<>();
+        private List<String> strictImms = new ArrayList<>();
+
+        public boolean isMatch() {
+            return match;
+        }
+
+        public void setMatch(boolean match) {
+            this.match = match;
+        }
+
+        public List<String> getStrictRegisters() {
+            return strictRegisters;
+        }
+
+        public void addStrictRegister(String strictRegister) {
+            this.strictRegisters.add(strictRegister);
+        }
+
+        public List<String> getStrictImms() {
+            return strictImms;
+        }
+
+        public void addStrictImm(String strictImm) {
+            this.strictImms.add(strictImm);
+        }
+
+        public String getRegisterSet() {
+            return String.join("|", strictRegisters);
         }
     }
 }
