@@ -37,7 +37,7 @@ public class RiscvParseTreeTest {
         this.printParseTree(inst);
 
         var icdfg = icdfg_gen.generate(inst);
-        icdfg.mergeInputNodes();
+        // icdfg.mergeInputNodes();
         icdfg.toDot("test");
     }
 }
