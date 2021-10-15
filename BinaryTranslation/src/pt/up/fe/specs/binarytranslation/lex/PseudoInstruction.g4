@@ -132,9 +132,7 @@ fragment CHARACTER: [A-Za-z];
 /* Any possible field in the ASM field list of any instruction */
 /* New ASMFIELD regex for RISC-V: [A-Za-z][A-Za-z0-9]+ */
 METASYMBOL : '$';
-//ASMFIELD : [A-Za-z0-9]+;
 ASMFIELD : CHARACTER+;
-//STACKPTR : 'sp';
 
 /* Literal Numbers */
 INT    : DIGIT+;
