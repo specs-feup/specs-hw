@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jgrapht.graph.DefaultEdge;
@@ -39,47 +40,58 @@ public class LoopIncrementPatternAnalyzer extends APatternAnalyzer {
             var insts = bb.getInstructions();
             var dfg1 = new BasicBlockDataFlowGraph(insts, 1);
             var dfg2 = new BasicBlockDataFlowGraph(insts, 2);
+            var foundTypes = new ArrayList<String>();
+            var foundRegs = new ArrayList<String>();
+            var foundImms = new ArrayList<String>();
 
+            // Check strict template first
+            var template = getTemplate(true);
+            var match = matchGraphToTemplate(dfg2, template, true, true);
+            if (match.isMatch()) {
+                for (int i = 0; i < match.getStrictImms().size(); i++)
+                    foundTypes.add(IncrementType.INC_TYPE_1.toString());
+                foundRegs.addAll(match.getStrictRegisters());
+                foundImms.addAll(match.getStrictImms());
+            }
 
-            // Check for type 1
-            for (var i = 1; i < 32; i++) {
-                var reg = "r" + i;
-                var template = getType1(reg, "1");
-                var match = matchGraphToTemplate(dfg2, template, true);
-                
-                if (match) {
-                    report.addEntry(dfg1, dfg2, IncrementType.INC_TYPE_1, reg);
-                    return report;
+            // Check relaxed template after
+            template = getTemplate(false);
+            match = matchGraphToTemplate(dfg2, template, true, true);
+            if (match.isMatch()) {
+                for (int i = 0; i < match.getStrictRegisters().size(); i++) {
+                    var reg = match.getStrictRegisters().get(i);
+                    var imm = match.getStrictImms().get(i);
+
+                    if (!foundRegs.contains(reg)) {
+                        foundTypes.add(IncrementType.INC_TYPE_2.toString());
+                        foundRegs.add(reg);
+                        foundImms.add(imm);
+                    }
                 }
             }
-            for (var i = 1; i < 32; i++) {
-                var reg = "r" + i;
-                var template = getType2(reg, "1");
-                var match = matchGraphToTemplate(dfg2, template, true);
-                
-                if (match) {
-                    report.addEntry(dfg1, dfg2, IncrementType.INC_TYPE_2, reg);
-                    return report;
-                }
-            }
-            report.addEntry(dfg1, dfg2, IncrementType.INC_TYPE_0, "r0");
+
+            if (foundTypes.size() == 0)
+                report.addEntry(dfg1, dfg2, IncrementType.INC_TYPE_0.toString(), "--", "--");
+            else
+                report.addEntry(dfg1, dfg2, String.join("|", foundTypes), String.join("|", foundRegs), String.join("|", foundImms));
         }
         return report;
     }
 
-    private SimpleDirectedGraph<BtfVertex, DefaultEdge> getType1(String reg, String imm) {
+    private SimpleDirectedGraph<BtfVertex, DefaultEdge> getTemplate(boolean extraNode) {
         SimpleDirectedGraph<BtfVertex, DefaultEdge> graph = new SimpleDirectedGraph<>(DefaultEdge.class);
-        var ra = new BtfVertex(reg, BtfVertexType.REGISTER);
-        var rb = new BtfVertex(reg, BtfVertexType.REGISTER);
-        var rc = new BtfVertex(reg, BtfVertexType.REGISTER);
-        var imm1 = new BtfVertex(imm, BtfVertexType.IMMEDIATE);
-        var imm2 = new BtfVertex(imm, BtfVertexType.IMMEDIATE);
+        var ra = new BtfVertex("ra", BtfVertexType.REGISTER);
+        var rb = new BtfVertex("ra", BtfVertexType.REGISTER);
+        var rc = new BtfVertex("ra", BtfVertexType.REGISTER);
+        var imm1 = new BtfVertex("1", BtfVertexType.IMMEDIATE);
+        var imm2 = new BtfVertex("1", BtfVertexType.IMMEDIATE);
         var add1 = new BtfVertex("+", BtfVertexType.OPERATION);
         var add2 = new BtfVertex("+", BtfVertexType.OPERATION);
 
         graph.addVertex(ra);
         graph.addVertex(rb);
-        graph.addVertex(rc);
+        if (extraNode)
+            graph.addVertex(rc);
         graph.addVertex(imm1);
         graph.addVertex(imm2);
         graph.addVertex(add1);
@@ -90,31 +102,8 @@ public class LoopIncrementPatternAnalyzer extends APatternAnalyzer {
         graph.addEdge(add1, rb);
         graph.addEdge(rb, add2);
         graph.addEdge(imm2, add2);
-        graph.addEdge(add2, rc);
-        return graph;
-    }
-    
-    private SimpleDirectedGraph<BtfVertex, DefaultEdge> getType2(String reg, String imm) {
-        SimpleDirectedGraph<BtfVertex, DefaultEdge> graph = new SimpleDirectedGraph<>(DefaultEdge.class);
-        var ra = new BtfVertex(reg, BtfVertexType.REGISTER);
-        var rb = new BtfVertex(reg, BtfVertexType.REGISTER);
-        var imm1 = new BtfVertex(imm, BtfVertexType.IMMEDIATE);
-        var imm2 = new BtfVertex(imm, BtfVertexType.IMMEDIATE);
-        var add1 = new BtfVertex("+", BtfVertexType.OPERATION);
-        var add2 = new BtfVertex("+", BtfVertexType.OPERATION);
-
-        graph.addVertex(ra);
-        graph.addVertex(rb);
-        graph.addVertex(imm1);
-        graph.addVertex(imm2);
-        graph.addVertex(add1);
-        graph.addVertex(add2);
-
-        graph.addEdge(ra, add1);
-        graph.addEdge(imm1, add1);
-        graph.addEdge(add1, rb);
-        graph.addEdge(rb, add2);
-        graph.addEdge(imm2, add2);
+        if (extraNode)
+            graph.addEdge(add2, rc);
         return graph;
     }
 }
