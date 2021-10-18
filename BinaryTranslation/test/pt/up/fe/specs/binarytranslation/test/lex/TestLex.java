@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.test.lex;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
@@ -27,14 +27,14 @@ public class TestLex {
 
     // SEE FULL EXAMPLE AT: https://gist.github.com/mattmcd/5425206
 
-    private void testParseAndTreePrint(ANTLRInputStream input) {
+    private void testParseAndTreePrint(String input) {
 
         // create a CharStream that reads from standard input
         // var input = new ANTLRInputStream("RB = RA + sext(IMM[14:10]);");
         // var input = new ANTLRInputStream("$pc = $pc + sext(IMM);");
 
         // create a lexer that feeds off of input CharStream
-        var lexer = new PseudoInstructionLexer(input);
+        var lexer = new PseudoInstructionLexer(CharStreams.fromString(input));
 
         // create a buffer of tokens pulled from the lexer
         var tokens = new CommonTokenStream(lexer);
@@ -56,26 +56,29 @@ public class TestLex {
 
     @Test
     public void testMetaFieldParse() {
-        var input = new ANTLRInputStream("$pc = $pc + sext(IMM);");
-        testParseAndTreePrint(input);
+        testParseAndTreePrint("$pc = $pc + sext(IMM);");
     }
 
     @Test
     public void testLogicalAndFieldParse() {
-        var input = new ANTLRInputStream("RD = RA && RB;");
-        testParseAndTreePrint(input);
+        testParseAndTreePrint("RD = RA && RB;");
     }
 
     @Test
     public void testBitwiseAndFieldParse() {
-        var input = new ANTLRInputStream("RD = RA & RB;");
-        testParseAndTreePrint(input);
+        testParseAndTreePrint("RD = RA & RB;");
+    }
+
+    @Test
+    public void testSubscript() {
+        testParseAndTreePrint("RD = RA[4];");
+        // testParseAndTreePrint("RD = RA[2:4];");
     }
 
     @Test
     public void testASTConvert() {
 
-        var input = new ANTLRInputStream("$pc = $pc + sext(IMM);");
+        var input = CharStreams.fromString("$pc = $pc + sext(IMM);");
 
         // create a lexer that feeds off of input CharStream
         var lexer = new PseudoInstructionLexer(input);

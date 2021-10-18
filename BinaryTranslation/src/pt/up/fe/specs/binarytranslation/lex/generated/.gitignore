@@ -6,3 +6,5 @@
 /PseudoInstructionParser.java
 /PseudoInstructionBaseVisitor.java
 /PseudoInstructionVisitor.java
+/PseudoInstruction.interp
+/PseudoInstructionLexer.interp
