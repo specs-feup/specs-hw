@@ -70,7 +70,6 @@ public abstract class APatternAnalyzer extends ABasicBlockAnalyzer {
                 if (strictImm) {
                     same = checkMatchImmediates(map, graph);
                     if (same.equals("")) {
-                        System.out.println("IMM FAIL");
                         return new MatchResult();
                     }
                     else
@@ -186,40 +185,6 @@ public abstract class APatternAnalyzer extends ABasicBlockAnalyzer {
         @Override
         public int compare(DefaultEdge e1, DefaultEdge e2) {
             return 0;
-        }
-    }
-
-    protected class MatchResult {
-        private boolean match = false;
-        private List<String> strictRegisters = new ArrayList<>();
-        private List<String> strictImms = new ArrayList<>();
-
-        public boolean isMatch() {
-            return match;
-        }
-
-        public void setMatch(boolean match) {
-            this.match = match;
-        }
-
-        public List<String> getStrictRegisters() {
-            return strictRegisters;
-        }
-
-        public void addStrictRegister(String strictRegister) {
-            this.strictRegisters.add(strictRegister);
-        }
-
-        public List<String> getStrictImms() {
-            return strictImms;
-        }
-
-        public void addStrictImm(String strictImm) {
-            this.strictImms.add(strictImm);
-        }
-
-        public String getRegisterSet() {
-            return String.join("|", strictRegisters);
         }
     }
 }
