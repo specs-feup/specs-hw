@@ -28,7 +28,6 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 public abstract class APatternReport {
     protected List<Graph<BtfVertex, DefaultEdge>> graphs = new ArrayList<>();
     private List<String> basicBlockIDs = new ArrayList<>();
-    protected static int lastID = 1;
     
     protected String name;
     
@@ -40,17 +39,11 @@ public abstract class APatternReport {
         this.name = name;
     }
     
-    public static int getLastID() {
-        return lastID;
-    }
+    public abstract int getLastID();
     
-    public static void resetLastID() {
-        lastID = 1;
-    }
+    public abstract void resetLastID();
 
-    public static void incrementLastID() {
-        lastID++;
-    }
+    public abstract void incrementLastID();
     
     public List<Graph<BtfVertex, DefaultEdge>> getGraphs() {
         return graphs;

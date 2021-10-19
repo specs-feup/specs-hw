@@ -31,7 +31,7 @@ public class LoopIncrementPatternAnalyzer extends APatternAnalyzer {
     public LoopIncrementPatternAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
     }
-
+    
     @Override
     protected APatternReport matchTemplates(List<BinarySegment> segs) {
         var report = new LoopIncrementReport();
