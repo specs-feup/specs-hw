@@ -27,7 +27,8 @@ public class LoopIncrementReport extends APatternReport {
     private List<Graph<BtfVertex, DefaultEdge>> doubleGraphs = new ArrayList<>();
     private List<String> incTypes = new ArrayList<>();
     private List<String> registers = new ArrayList<>();
-    private List<String> constants = new ArrayList<>(); 
+    private List<String> constants = new ArrayList<>();
+    private static int lastID = 1;
 
     public List<Graph<BtfVertex, DefaultEdge>> getDoubleGraphs() {
         return doubleGraphs;
@@ -65,5 +66,20 @@ public class LoopIncrementReport extends APatternReport {
 
     public List<String> getIncTypes() {
         return incTypes;
+    }
+
+    @Override
+    public int getLastID() {
+        return lastID;
+    }
+    
+    @Override
+    public void resetLastID() {
+        lastID = 1;
+    }
+
+    @Override
+    public void incrementLastID() {
+        lastID++;
     }
 }

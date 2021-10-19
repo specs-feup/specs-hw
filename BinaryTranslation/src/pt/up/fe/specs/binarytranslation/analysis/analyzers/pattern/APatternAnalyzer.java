@@ -43,6 +43,10 @@ public abstract class APatternAnalyzer extends ABasicBlockAnalyzer {
     }
 
     protected abstract APatternReport matchTemplates(List<BinarySegment> segs);
+    
+    public APatternReport matchWithPrecalculatedBlocks(List<BinarySegment> segs) {
+        return matchTemplates(segs);
+    }
 
     protected MatchResult matchGraphToTemplate(SimpleDirectedGraph<BtfVertex, DefaultEdge> graph,
             SimpleDirectedGraph<BtfVertex, DefaultEdge> template) {

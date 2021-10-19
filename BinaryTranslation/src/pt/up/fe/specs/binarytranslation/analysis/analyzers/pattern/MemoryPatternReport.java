@@ -29,8 +29,8 @@ public class MemoryPatternReport extends APatternReport {
     private List<String> ids;
     private List<GraphTemplateType> types;
     private List<Integer> occurrences;
-
     private String segmentID = "?";
+    private static int lastID = 1;
 
 
     public MemoryPatternReport(String kernelName) {
@@ -70,5 +70,20 @@ public class MemoryPatternReport extends APatternReport {
         for (var g : graphs)
             Graphs.addGraph(composite, g);
         return GraphUtils.generateGraphURL(composite, name + "-" + segmentID);
+    }
+    
+    @Override
+    public int getLastID() {
+        return lastID;
+    }
+    
+    @Override
+    public void resetLastID() {
+        lastID = 1;
+    }
+
+    @Override
+    public void incrementLastID() {
+        lastID++;
     }
 }
