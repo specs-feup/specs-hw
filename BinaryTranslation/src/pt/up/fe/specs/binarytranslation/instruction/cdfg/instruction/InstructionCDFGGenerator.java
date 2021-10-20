@@ -83,30 +83,31 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AGene
      */
     public InstructionCDFG generate(Instruction inst) {
            
-        this.icdfg = new InstructionCDFG();
 
-        this.visitPseudoInstructionAST(inst.getPseudocode().getParseTree());
-     
-        return this.icdfg;
+        return this.visitPseudoInstructionAST(inst.getPseudocode().getParseTree());
     }
     
     public InstructionCDFG generate(PseudoInstructionContext inst) {
         
-        this.icdfg = new InstructionCDFG();
 
-        this.visitPseudoInstructionAST(inst);
+        
      
-        return this.icdfg;
+        return this.visitPseudoInstructionAST(inst);
     }
     
  // Top level //////////////////////////////////////////////////////////////
     public InstructionCDFG visitPseudoInstructionAST(PseudoInstructionContext ctx) {
         
+        InstructionCDFG cdfg  = new InstructionCDFG();
+        
         for(var statement : ctx.statement()){
+            this.icdfg = new InstructionCDFG();
           this.visit(statement);
+          cdfg.mergeGraph(this.icdfg);
+      
         } 
         
-        return null;
+        return cdfg;
     }
 
     // Statement level ////////////////////////////////////////////////////////
