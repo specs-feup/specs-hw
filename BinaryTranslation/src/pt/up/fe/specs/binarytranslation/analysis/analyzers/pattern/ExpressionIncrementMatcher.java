@@ -18,24 +18,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class ExpressionIncrementMatcher extends APatternAnalyzer {
-    private List<String> elfNames = new ArrayList<>();
-    private List<String> bbID = new ArrayList<>();
-    private List<String> memID = new ArrayList<>();
+    private List<String> bbIDs = new ArrayList<>();
+    private List<String> memIDs = new ArrayList<>();
     private List<String> registers = new ArrayList<>();
+    private List<String> matches = new ArrayList<>();
 
     public ExpressionIncrementMatcher(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
-    }
-
-    private void matchReports(MemoryPatternReport memRep, LoopIncrementReport incRep) {
-        System.out.println(memRep.getBasicBlockIDs());
-        System.err.println(incRep.getBasicBlockIDs());
-        System.out.println("----------");
     }
 
     @Override
@@ -51,7 +50,51 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
         incRep.setName(name);
 
         matchReports(memRep, incRep);
-        return null;
+        var rep = new ExpressionIncrementMatchReport(bbIDs, memIDs, registers, matches);
+        rep.setName(memRep.getName());
+        
+        return rep;
     }
 
+    private void matchReports(MemoryPatternReport memRep, LoopIncrementReport incRep) {
+        for (int i = 0; i < incRep.getBasicBlockIDs().size(); i++) {
+            var bbid = incRep.getBasicBlockIDs().get(i);
+            var regs = incRep.getRegisters().get(i);
+            
+            for (var j = 0; j < memRep.getBasicBlockIDs().size(); j++) {
+                
+                if (memRep.getBasicBlockIDs().get(j).equals(bbid)) {
+                    var exprGraph = memRep.getGraphs().get(j);
+                    var match = matchRegistersToExpression(exprGraph, regs);
+                    var memID = memRep.getMemIDs().get(j);
+                    
+                    bbIDs.add(bbid);
+                    memIDs.add(memID);
+                    registers.add(regs);
+                    matches.add(match);
+                }
+            }
+        }
+    }
+
+    private String matchRegistersToExpression(Graph<BtfVertex, DefaultEdge> exprGraph, String regs) {
+        var regList = regs.split("\\|");
+        var matchList = new ArrayList<String>();
+        
+        for (var reg : regList) {
+            var found = false;
+            
+            for (var v : exprGraph.vertexSet()) {
+
+                if (v.getType() == BtfVertexType.REGISTER) {
+                    if (v.getLabel().equals(reg)) {
+                        found = true;
+
+                    }
+                }
+            }
+            matchList.add(found ? "yes" : "no");
+        }
+        return String.join("|", matchList);
+    }
 }

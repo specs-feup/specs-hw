@@ -56,4 +56,6 @@ public abstract class APatternReport {
     public void setBasicBlockIDs(List<String> basicBlockIDs) {
         this.basicBlockIDs = basicBlockIDs;
     }
+    
+    public abstract String toCsv();
 }

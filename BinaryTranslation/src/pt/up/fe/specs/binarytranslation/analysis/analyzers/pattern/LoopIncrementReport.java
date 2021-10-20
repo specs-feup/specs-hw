@@ -44,22 +44,6 @@ public class LoopIncrementReport extends APatternReport {
         incrementLastID();
     }
 
-    @Override
-    public String toString() {
-        var sb = new StringBuilder();
-
-        for (int i = 0; i < getBasicBlockIDs().size(); i++) {
-            var type = incTypes.get(i).toString();
-            var reg = registers.get(i);
-            var imm = constants.get(i);
-            var g1 = GraphUtils.generateGraphURL(getGraphs().get(i));
-            var g2 = GraphUtils.generateGraphURL(doubleGraphs.get(i));
-            var bbid = getBasicBlockIDs().get(i);
-            sb.append(this.name + "," + bbid + "," + type + "," + reg + "," + imm + "," + g1 + "," + g2 + "\n");
-        }
-        return sb.toString();
-    }
-
     public List<String> getRegisters() {
         return registers;
     }
@@ -81,5 +65,21 @@ public class LoopIncrementReport extends APatternReport {
     @Override
     public void incrementLastID() {
         lastID++;
+    }
+
+    @Override
+    public String toCsv() {
+        var sb = new StringBuilder();
+
+        for (int i = 0; i < getBasicBlockIDs().size(); i++) {
+            var type = incTypes.get(i).toString();
+            var reg = registers.get(i);
+            var imm = constants.get(i);
+            var g1 = GraphUtils.generateGraphURL(getGraphs().get(i));
+            var g2 = GraphUtils.generateGraphURL(doubleGraphs.get(i));
+            var bbid = getBasicBlockIDs().get(i);
+            sb.append(this.name + "," + bbid + "," + type + "," + reg + "," + imm + "," + g1 + "," + g2 + "\n");
+        }
+        return sb.toString();
     }
 }
