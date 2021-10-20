@@ -15,8 +15,10 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
+package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction;
 
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +27,10 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.hardware.HardwareCDFG;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.SegmentCDFG;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.general.GeneralFlowGraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.dot.InstructionCDFGDOTExporter;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.generator.InstructionCDFGGenerator;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.segment.SegmentCDFG;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
@@ -35,11 +39,10 @@ import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
 public class RandomTest_deletethisafter {
 
     public PseudoInstructionContext getParseTree(String pseudocode) {
-        var parser = new PseudoInstructionParser(
-                new CommonTokenStream(new PseudoInstructionLexer(new ANTLRInputStream(pseudocode))));
+        var parser = new PseudoInstructionParser(new CommonTokenStream(new PseudoInstructionLexer(new ANTLRInputStream(pseudocode))));
         return parser.pseudoInstruction();
     }
-    
+    /*
   
     public InstructionCDFG generateICDFG(String instruction) {
         
@@ -51,7 +54,7 @@ public class RandomTest_deletethisafter {
         
         return icdfg;
     }
-    
+    */
     public void printParseTree(String instruction) {
         PseudoInstructionContext parse = this.getParseTree(instruction);
         var walker = new ParseTreeWalker();
@@ -60,17 +63,36 @@ public class RandomTest_deletethisafter {
     
     @Test
     public void testParse() {
-        List<InstructionCDFG> icdfg_list = new ArrayList<InstructionCDFG>();
+        
    
-        String inst = "if(RA == 0) {RD = 0; $dzo = 1;} else if(RA == -1 && RB == (1 << 31)) {RD = (1 << 31); $dzo = 1;} else {RD = RB / RA;}";
+        String instruction = "if(RA == IMM) {RB = RC + RD;}else {if(RA < IMM) {RB = RC + RD;}}";
       
+        //String instruction = "if(RE + RF -IMM) {RD = RB+RC;$dzo = 1;}";
         
+        InstructionCDFGGenerator icdfg_gen = new InstructionCDFGGenerator();
+        this.printParseTree(instruction);
+        InstructionCDFG icdf = icdfg_gen.generate(this.getParseTree(instruction));
        
-        this.printParseTree(inst);
-        icdfg_list.add(this.generateICDFG(inst));
         
-       /* SegmentCDFG scdfg = new SegmentCDFG(icdfg_list);
-        HardwareCDFG hcdfg = new HardwareCDFG("test",scdfg);
+        
+        InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
+        
+        Writer writer = new StringWriter();
+        
+        System.out.println(icdf.getOutputs());
+        
+        exp.exportGraph((GeneralFlowGraph)icdf, "s", writer);
+
+        
+        System.out.println(writer.toString());
+        
+        List<InstructionCDFG> icdfg_list = new ArrayList<>();
+        
+        icdfg_list.add(icdf);
+        
+       SegmentCDFG scdfg = new SegmentCDFG(icdfg_list);
+
+       /*  HardwareCDFG hcdfg = new HardwareCDFG("test",scdfg);
         
         hcdfg.print();
         */
