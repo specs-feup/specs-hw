@@ -25,6 +25,8 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.StreamingAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryPatternReport;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ArithmeticExpressionMatcher;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ArithmeticPatternReport;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ExpressionIncrementMatchReport;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ExpressionIncrementMatcher;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.LoopIncrementPatternAnalyzer;
@@ -124,6 +126,35 @@ public class MicroBlazePatternsTest {
         }
         AnalysisUtils.saveAsCsv(sb, "results/ExpressionIncrementMatches");
     }
+    
+    @Test
+    public void testArithmeticExpressions() {
+        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
+        var allReports = new ArrayList<ArithmeticPatternReport>();
+
+        for (var elf : elfs.keySet()) {
+            var windows = elfs.get(elf);
+            var name = elf.getELFName();
+
+            for (var window : windows) {
+                var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
+                var analyzer = new ArithmeticExpressionMatcher(stream, elf, window);
+                var report = (ArithmeticPatternReport) analyzer.analyzeSegment();
+
+                report.setName(name);
+                allReports.add(report);
+            }
+            allReports.get(0).resetLastID();
+        }
+
+        var sb = new StringBuilder();
+        sb.append("Benchmark,Basic Block ID,Types found\n");
+        for (var r : allReports) {
+            sb.append(r.toCsv());
+        }
+        AnalysisUtils.saveAsCsv(sb, "results/ArithmeticExpressions");
+    }
+
     
     @Test
     public void testStreaming() {
