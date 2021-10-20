@@ -18,10 +18,11 @@
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.control;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.graph.ControlFlowNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.control.InstructionCDFGDecisionNode;
 
-public class ControlFlowNodeDecision extends ControlFlowNode<AInstructionCDFGNode>{
+public class ControlFlowNodeDecision extends ControlFlowNode<AInstructionCDFGNode, AInstructionCDFGEdge>{
 
     public ControlFlowNodeDecision() {
         super(new InstructionCDFGDecisionNode());   

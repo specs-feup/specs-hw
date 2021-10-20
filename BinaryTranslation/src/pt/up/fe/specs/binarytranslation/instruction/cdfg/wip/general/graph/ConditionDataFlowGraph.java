@@ -17,8 +17,6 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.graph;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.general.GeneralFlowGraph;
-
 public class ConditionDataFlowGraph<V,E> extends DataFlowGraph<V,E>{
 
     public ConditionDataFlowGraph(Class<? extends V> DataVertexClass, Class<? extends V> OperationVertexClass, Class<? extends E> EdgeClass) {

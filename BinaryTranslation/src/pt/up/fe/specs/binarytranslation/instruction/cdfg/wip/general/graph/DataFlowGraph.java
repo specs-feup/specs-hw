@@ -17,11 +17,6 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.graph;
 
-import java.util.List;
-import java.util.function.Supplier;
-
-import org.jgrapht.Graphs;
-
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.general.GeneralFlowGraph;
 
 public class DataFlowGraph<V,E> extends GeneralFlowGraph<V,E>{
@@ -62,13 +57,13 @@ public class DataFlowGraph<V,E> extends GeneralFlowGraph<V,E>{
     }
     
     
-    public V addOperation(V operator, V operand_left, V operand_right) {
+    public V addOperation(V operator, V operand_left, E operand_left_edge, V operand_right, E operand_right_edge) {
         
         this.addVertex(operator);
         this.addVertex(operand_left);
         this.addVertex(operand_right);
-        this.addEdge(operand_left, operator);
-        this.addEdge(operand_right, operator);
+        this.addEdge(operand_left, operator, operand_left_edge);
+        this.addEdge(operand_right, operator, operand_right_edge);
         
         return operator;
     }

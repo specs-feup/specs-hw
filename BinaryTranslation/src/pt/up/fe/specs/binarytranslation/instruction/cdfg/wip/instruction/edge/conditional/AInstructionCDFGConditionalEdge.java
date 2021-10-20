@@ -15,20 +15,29 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.segment;
+package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.conditional;
 
-import java.util.List;
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.general.GeneralFlowGraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.AInstructionCDFGEdge;
 
-public class SegmentCDFG extends GeneralFlowGraph<InstructionCDFG, AInstructionCDFGEdge>{
+public abstract class AInstructionCDFGConditionalEdge extends AInstructionCDFGEdge{
 
-    public SegmentCDFG(List<InstructionCDFG> icdfg_list) {
-        super(AInstructionCDFGEdge.class);
-        
-        this.addVertexes(icdfg_list);
+    private boolean condition;
+    
+    protected AInstructionCDFGConditionalEdge(boolean condition) {
+        this.condition = condition;
+    }
+    
+    @Override
+    public Attribute getDOTLabel() {
+        return DefaultAttribute.createAttribute(String.valueOf(this.condition));
+    }
+    
+    @Override
+    public Attribute getDOTArrowHead() {
+        return DefaultAttribute.createAttribute("line");
     }
     
 }

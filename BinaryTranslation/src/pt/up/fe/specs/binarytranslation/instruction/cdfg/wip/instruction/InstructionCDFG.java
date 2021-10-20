@@ -17,15 +17,16 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction;
 
-import java.util.Arrays;
+import java.util.*;
+import java.util.function.Predicate;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.general.GeneralFlowGraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.graph.ControlAndDataFlowGraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.graph.ControlFlowNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.graph.DataFlowGraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.graph.*;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.AInstructionCDFGEdge;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.InstructionCDFGFalseEdge;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.InstructionCDFGTrueEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.conditional.InstructionCDFGFalseEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.conditional.InstructionCDFGTrueEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.data.AInstructionCDFGDataNode;
 
 public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, DataFlowGraph, ControlFlowNode, AInstructionCDFGEdge>{
 
@@ -33,6 +34,45 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, D
     public InstructionCDFG() {
         super(DataFlowGraph.class, ControlFlowNode.class, AInstructionCDFGEdge.class);
       
+    }
+    
+    public List<AInstructionCDFGNode> getUniqueOutputs(){
+        
+        
+        Predicate<GeneralFlowGraph> is_data_flow = g -> g.getClass().isInstance(DataFlowGraph.class);
+        //Predicate<AInstructionCDFGDataNode> is_unique = v -> !unique_list.contains(v);
+        
+        
+        
+        Set<AInstructionCDFGNode> node_set = new HashSet<>();
+        
+        this.vertexSet().forEach((graph) -> graph.vertexSet().forEach(vertex -> node_set.add((AInstructionCDFGNode) vertex)));
+        
+       
+        
+        return new ArrayList<AInstructionCDFGNode>(node_set);
+    }
+    
+    public List<AInstructionCDFGNode> getUniqueInputs(){
+    
+        List<AInstructionCDFGNode> unique_inputs = new ArrayList<>();
+        
+        this.vertexSet().forEach((vertex) ->{
+            
+            if(vertex instanceof DataFlowGraph) {
+                
+                DataFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> dfg = (DataFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> )vertex;
+                
+                dfg.getInputs().forEach((input) -> {
+                   if(!unique_inputs.contains(input)) {
+                       unique_inputs.add(input);
+                   }
+                });
+                
+            }
+            
+        });
+        return unique_inputs;
     }
     
     public void addVertexes(GeneralFlowGraph ... vertexes) {

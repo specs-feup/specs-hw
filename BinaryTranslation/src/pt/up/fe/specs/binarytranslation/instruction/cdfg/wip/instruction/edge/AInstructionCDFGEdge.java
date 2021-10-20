@@ -21,7 +21,7 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 
-public class AInstructionCDFGEdge extends DefaultEdge{
+public class AInstructionCDFGEdge extends DefaultEdge {
 
   
     public Attribute getDOTLabel() {
@@ -31,6 +31,10 @@ public class AInstructionCDFGEdge extends DefaultEdge{
   
     public Attribute getDOTArrowHead() {
         return DefaultAttribute.createAttribute("normal");
+    }
+    
+    public Attribute getDOTArrowTail() {
+        return DefaultAttribute.createAttribute("none");
     }
     
 }

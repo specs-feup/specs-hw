@@ -37,7 +37,7 @@ public class ControlAndDataFlowGraph<V, DFG extends V, CFN extends V, E> extends
         this.DataFlowGraphClass = DataFlowGraphClass;
         
     }
-
+    
     @Override
     public void addIncomingEdgesTo(V target, List<V> sources){      
         sources.forEach((source) -> {this.addEdge(source, target);});
@@ -50,13 +50,6 @@ public class ControlAndDataFlowGraph<V, DFG extends V, CFN extends V, E> extends
  
     @Override 
     public boolean addVertex(V vertex) throws IllegalArgumentException{
-        
-        /*
-        if((!ControlFlowNodeClass.in(vertex)) && (!this.isDataFlowGraph(vertex))) {
-            throw new IllegalArgumentException();
-        }
-        */
-        
         return super.addVertex(vertex);
     }
     

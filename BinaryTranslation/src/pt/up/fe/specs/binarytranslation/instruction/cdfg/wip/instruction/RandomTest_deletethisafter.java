@@ -17,10 +17,9 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction;
 
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -30,11 +29,11 @@ import org.junit.Test;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.dot.InstructionCDFGDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.generator.InstructionCDFGGenerator;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.segment.SegmentCDFG;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
+import pt.up.fe.specs.util.SpecsLogs;
 
 public class RandomTest_deletethisafter {
 
@@ -65,9 +64,9 @@ public class RandomTest_deletethisafter {
     public void testParse() {
         
    
-        String instruction = "if(RA == IMM) {RB = RC + RD;}else {if(RA < IMM) {RB = RC + RD;}}";
+        //String instruction = "if(RA == 0) {RD = 0; dzo = 1;} else if(RA == -1) {dzo = 1;} else {RD = RB / RA;}";
       
-        //String instruction = "if(RE + RF -IMM) {RD = RB+RC;$dzo = 1;}";
+        String instruction = "if(RA == 0) {RD = 0; dzo = 1;} else if(RA == -1) {dzo = 1;}";
         
         InstructionCDFGGenerator icdfg_gen = new InstructionCDFGGenerator();
         this.printParseTree(instruction);
@@ -83,16 +82,20 @@ public class RandomTest_deletethisafter {
         
         exp.exportGraph((GeneralFlowGraph)icdf, "s", writer);
 
-        
+        System.out.println("\n\nPrinting generatd InstructionCDFG from instruction: " + instruction + "\n\n");
         System.out.println(writer.toString());
         
+        System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
+        
+        System.out.println("\n" + icdf.getUniqueOutputs());
+        /*    
         List<InstructionCDFG> icdfg_list = new ArrayList<>();
         
         icdfg_list.add(icdf);
         
        SegmentCDFG scdfg = new SegmentCDFG(icdfg_list);
 
-       /*  HardwareCDFG hcdfg = new HardwareCDFG("test",scdfg);
+       HardwareCDFG hcdfg = new HardwareCDFG("test",scdfg);
         
         hcdfg.print();
         */
