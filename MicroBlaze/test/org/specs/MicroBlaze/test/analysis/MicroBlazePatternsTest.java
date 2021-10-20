@@ -25,17 +25,18 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.StreamingAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryPatternReport;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ExpressionIncrementMatchReport;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ExpressionIncrementMatcher;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.LoopIncrementPatternAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.LoopIncrementReport;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 
-public class MicroBlazeMemoryPatternsTest {
+public class MicroBlazePatternsTest {
 
     @Test
     public void testMemoryAccessTypes() {
-        var elfs = MicroBlazeBasicBlockInfo.getLivermoreN100Kernels();
+        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
         var allReports = new ArrayList<MemoryPatternReport>();
         var allGraphs = new HashMap<String, String>();
 
@@ -62,7 +63,7 @@ public class MicroBlazeMemoryPatternsTest {
         var sb = new StringBuilder();
         sb.append("Benchmark,Basic Block ID,Memory Access ID,Memory Access Type,#Occurrences,Graph\n");
         for (var r : allReports) {
-            sb.append(r.toString());
+            sb.append(r.toCsv());
         }
         AnalysisUtils.saveAsCsv(sb, "results/MemoryAccessPatterns");
     }
@@ -90,15 +91,15 @@ public class MicroBlazeMemoryPatternsTest {
         var sb = new StringBuilder();
         sb.append("Benchmark,Basic Block ID,Type,Register,Constant,Graph Single Iter,Graph Double Iter\n");
         for (var r : allReports) {
-            sb.append(r.toString());
+            sb.append(r.toCsv());
         }
         AnalysisUtils.saveAsCsv(sb, "results/LoopIncrements");
     }
 
     @Test
     public void testExpressionIncrementMatcher() {
-        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
-        var allReports = new ArrayList<LoopIncrementReport>();
+        var elfs = MicroBlazeBasicBlockInfo.getLivermoreN100Kernels();
+        var allReports = new ArrayList<ExpressionIncrementMatchReport>();
 
         for (var elf : elfs.keySet()) {
             var windows = elfs.get(elf);
@@ -107,19 +108,19 @@ public class MicroBlazeMemoryPatternsTest {
             for (var window : windows) {
                 var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
                 var analyzer = new ExpressionIncrementMatcher(stream, elf, window);
-                var report = analyzer.analyzeSegment();
+                var report = (ExpressionIncrementMatchReport) analyzer.analyzeSegment();
 
-                //report.setName(name);
-                //allReports.add(report);
+                report.setName(name);
+                allReports.add(report);
             }
             (new MemoryPatternReport("")).resetLastID();
             (new LoopIncrementReport()).resetLastID();
         }
 
         var sb = new StringBuilder();
-        sb.append("Benchmark,Basic Block ID,...\n");
+        sb.append("Benchmark,BBID,MemExpr ID,Registers,Matches\n");
         for (var r : allReports) {
-            sb.append(r.toString());
+            sb.append(r.toCsv());
         }
         AnalysisUtils.saveAsCsv(sb, "results/ExpressionIncrementMatches");
     }
