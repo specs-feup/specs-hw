@@ -17,6 +17,9 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.data;
 
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
+
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.AInstructionCDFGNode;
 
 public class AInstructionCDFGDataNode extends AInstructionCDFGNode{
@@ -25,4 +28,14 @@ public class AInstructionCDFGDataNode extends AInstructionCDFGNode{
         super(reference);
     }
 
+    @Override
+    public Attribute getDOTLabel() {
+        return DefaultAttribute.createAttribute(super.getReference());
+    }
+    
+    @Override
+    public String getReference() {
+        return "I_" + super.getReference().replace("-", "n");
+    }
+    
 }

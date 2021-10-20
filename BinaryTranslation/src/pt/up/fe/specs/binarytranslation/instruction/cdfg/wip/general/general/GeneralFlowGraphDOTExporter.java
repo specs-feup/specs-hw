@@ -19,6 +19,8 @@ package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.general;
 
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +37,7 @@ import org.jgrapht.nio.GraphExporter;
 import org.jgrapht.nio.IntegerIdProvider;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.dot.InstructionCDFGDOTVertexIdProvider;
+import pt.up.fe.specs.util.SpecsLogs;
 
 public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implements GraphExporter<V, E>{
     
@@ -73,6 +76,15 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
         this.validatedIds = new HashMap<>();
     }
     
+    public static String generateGraphURL(String dotGraph) {
+        try {
+            URI uri = new URI("https://dreampuf.github.io/GraphvizOnline/#",dotGraph,null);
+            return uri.toASCIIString().replace("#:", "#");
+        } catch (URISyntaxException e) {
+            SpecsLogs.warn("Error message:\n", e);
+        }
+        return "";
+    }
     
     public void exportGraph(GeneralFlowGraph<V, E> g, String name,  Writer writer) {
 

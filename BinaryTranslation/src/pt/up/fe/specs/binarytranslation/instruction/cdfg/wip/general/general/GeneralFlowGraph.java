@@ -89,9 +89,7 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
     
     protected void addToIO(List<V> io_list, V vertex) {
         
-        if(!this.containsVertex(vertex)) {
-            this.addVertex(vertex);
-        }
+        this.addVertex(vertex);
         
         if(this.hasInIO(io_list, vertex)) {  
             this.replaceVertex(this.getFromIO(io_list, vertex), vertex);
@@ -211,6 +209,8 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
               
           });
 
+          
+          
            return this;
        }
     

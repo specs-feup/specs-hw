@@ -20,11 +20,10 @@ package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.graph;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jgrapht.graph.DefaultEdge;
-
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.general.GeneralFlowGraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.AInstructionCDFGEdge;
 
-public class ControlFlowNode<V> extends GeneralFlowGraph<V, DefaultEdge>{
+public class ControlFlowNode<V,E> extends GeneralFlowGraph<V,AInstructionCDFGEdge>{
     
     private List<V> control_in;
     private List<V> control_out;
@@ -32,7 +31,7 @@ public class ControlFlowNode<V> extends GeneralFlowGraph<V, DefaultEdge>{
     private V vertex;
     
     public ControlFlowNode(V vertex) {
-        super(DefaultEdge.class);
+        super(AInstructionCDFGEdge.class);
 
         
         this.vertex = vertex;

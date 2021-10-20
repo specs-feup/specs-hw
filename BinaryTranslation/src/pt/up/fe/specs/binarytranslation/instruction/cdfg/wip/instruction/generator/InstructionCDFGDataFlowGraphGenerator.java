@@ -17,42 +17,34 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.generator;
 
-import java.util.List;
-import java.util.Map;
-
-import org.jgrapht.graph.DefaultEdge;
+import java.util.*;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.graph.DataFlowGraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.AInstructionCDFGEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.operand.InstructionCDFGLeftOperandEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.operand.InstructionCDFGRightOperandEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.modifier.*;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.AInstructionCDFGNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.data.AInstructionCDFGDataNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.data.InstructionCDFGLiteralNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.data.InstructionCDFGVariableNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.data.*;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.operation.AInstructionCDFGOperationNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.operation.InstructionCDFGOperationNodeMap;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmFieldContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AssignmentExprContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.BinaryExprContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfElseStatementContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfStatementContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.OperatorContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.UnaryExprContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.VariableExprContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.*;
 
 public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBaseVisitor<AInstructionCDFGNode>{
 
-    private DataFlowGraph<AInstructionCDFGNode, DefaultEdge> dfg;
+    private DataFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> dfg;
     private Map<String, Integer> uid_map;
-  
+   
+    private AInstructionCDFGSubscriptModifier subscript = null;
 
     private final static Class<AInstructionCDFGDataNode> DV = AInstructionCDFGDataNode.class;
     private final static Class<AInstructionCDFGOperationNode> OV = AInstructionCDFGOperationNode.class;
-    private final static Class<DefaultEdge> E = DefaultEdge.class;
+    private final static Class<AInstructionCDFGEdge> E = AInstructionCDFGEdge.class;
     
     private void setup(Map<String, Integer> uid_map){
-        this.dfg = new DataFlowGraph<AInstructionCDFGNode, DefaultEdge>(DV,OV,E);
+        this.dfg = new DataFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>(DV,OV,E);
         this.uid_map = uid_map;
     }
     
@@ -61,7 +53,7 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
         return this.uid_map;
     }
     
-    public DataFlowGraph<AInstructionCDFGNode, DefaultEdge> generate(Map<String, Integer> uid_map, PseudoInstructionParser.ExpressionContext ctx){
+    public DataFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> generate(Map<String, Integer> uid_map, PseudoInstructionParser.ExpressionContext ctx){
         
         this.setup(uid_map);
         
@@ -69,8 +61,17 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
         
         return this.dfg;
     }
+
+    public DataFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> generate(Map<String, Integer> uid_map, PseudoInstructionParser.PlainStmtContext ctx){
+        
+        this.setup(uid_map);
+        
+        this.visit(ctx.expression());
+
+        return this.dfg;
+    }
     
-    public DataFlowGraph<AInstructionCDFGNode, DefaultEdge> generate(Map<String, Integer> uid_map, AssignmentExprContext ctx){
+    public DataFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> generate(Map<String, Integer> uid_map, AssignmentExprContext ctx){
         
         this.setup(uid_map);
         
@@ -79,8 +80,7 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
         return this.dfg;
     }
     
-    
-    public DataFlowGraph<AInstructionCDFGNode, DefaultEdge> generate(Map<String, Integer> uid_map,List<PseudoInstructionParser.StatementContext> ctx){
+    public DataFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> generate(Map<String, Integer> uid_map,List<PseudoInstructionParser.StatementContext> ctx){
         
         this.setup(uid_map);
         
@@ -92,10 +92,8 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
     @Override
     public AInstructionCDFGNode visitAssignmentExpr(AssignmentExprContext ctx) {
         
-        AInstructionCDFGNode output = this.visit(ctx.left);
+        AInstructionCDFGNode output = this.dfg.addOutput(this.visit(ctx.left));
         AInstructionCDFGNode operand =  this.visit(ctx.right);
-        
-        this.dfg.addOutput(output);
         
         InstructionCDFGGenerator.generateUID(this.uid_map, output);
         InstructionCDFGGenerator.generateUID(this.uid_map, operand);
@@ -111,10 +109,27 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
         AInstructionCDFGNode operand_right = this.dfg.addInput(this.visit(ctx.right));
         
         InstructionCDFGGenerator.generateUID(this.uid_map, operator);
+        this.dfg.addVertex(operator);
+        
         InstructionCDFGGenerator.generateUID(this.uid_map, operand_left);
+        
+        if(this.subscript == null) {
+            this.dfg.addEdge(operand_left, operator, new InstructionCDFGLeftOperandEdge());
+        }else {
+            this.dfg.addEdge(operand_left, operator, new InstructionCDFGLeftOperandEdge(this.subscript));
+            this.subscript = null;
+        }
+        
         InstructionCDFGGenerator.generateUID(this.uid_map, operand_right);
         
-        return this.dfg.addOperation(operator, operand_left , operand_right);
+        if(this.subscript == null) {
+            this.dfg.addEdge(operand_right, operator, new InstructionCDFGRightOperandEdge());
+        }else {
+            this.dfg.addEdge(operand_right, operator, new InstructionCDFGRightOperandEdge(this.subscript));
+            this.subscript = null;
+        }
+        
+        return operator;
     }
     
     @Override
@@ -146,16 +161,36 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
     
     @Override
     public AInstructionCDFGNode visitLiteral(LiteralContext ctx) {
-        return new InstructionCDFGLiteralNode(ctx.getText());
+        return new InstructionCDFGLiteralNode(ctx.number().getText());
     }
     
-    @Override
+   /* @Override
     public AInstructionCDFGNode visitVariableExpr(VariableExprContext ctx) {
+        return new InstructionCDFGLiteralNode(ctx.getText());
+    }*/
+    
+    @Override
+    public AInstructionCDFGNode visitField(FieldContext ctx) {
         return new InstructionCDFGVariableNode(ctx.getText());
     }
     
     @Override
-    public AInstructionCDFGNode visitAsmField(AsmFieldContext ctx) {
+    public AInstructionCDFGNode visitRangesubscript(RangesubscriptContext ctx) {
+        
+        this.subscript = new InstructionCDFGRangeSubscript(Integer.valueOf(ctx.hiidx.getText()), Integer.valueOf(ctx.loidx.getText()));
+        return new InstructionCDFGVariableNode(ctx.getText().replace("[", "u").replace(":","l").replace("]", ""));
+    }
+    @Override
+    public AInstructionCDFGNode visitScalarsubscript(ScalarsubscriptContext ctx) {
+        
+        this.subscript = new InstructionCDFGScalarSubscript(Integer.valueOf(ctx.idx.getText()));
+
+        return new InstructionCDFGVariableNode(ctx.getText().replace("[", "u").replace("]", " "));
+    }
+    
+    @Override
+    public AInstructionCDFGNode visitMetafield(MetafieldContext ctx) {
         return new InstructionCDFGVariableNode(ctx.getText());
     }
+ 
 }

@@ -15,27 +15,20 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge;
+package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.conditional;
 
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 
-public abstract class AInstructionCDFGConditionalEdge extends AInstructionCDFGEdge{
+public class InstructionCDFGFalseEdge extends AInstructionCDFGConditionalEdge{
 
-    private boolean condition;
-    
-    protected AInstructionCDFGConditionalEdge(boolean condition) {
-        this.condition = condition;
+    public InstructionCDFGFalseEdge() {
+        super(false);
     }
     
     @Override
-    public Attribute getDOTLabel() {
-        return DefaultAttribute.createAttribute(String.valueOf(this.condition));
-    }
-    
-    @Override
-    public Attribute getDOTArrowHead() {
-        return DefaultAttribute.createAttribute("line");
+    public Attribute getDOTArrowTail() {
+        return DefaultAttribute.createAttribute("odiamond");
     }
     
 }

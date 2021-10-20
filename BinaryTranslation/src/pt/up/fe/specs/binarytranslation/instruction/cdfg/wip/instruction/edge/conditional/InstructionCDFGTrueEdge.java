@@ -15,12 +15,19 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge;
+package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.conditional;
 
-public class InstructionCDFGFalseEdge extends AInstructionCDFGConditionalEdge{
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
 
-    public InstructionCDFGFalseEdge() {
-        super(false);
+public class InstructionCDFGTrueEdge extends AInstructionCDFGConditionalEdge{
+
+    public InstructionCDFGTrueEdge() {
+        super(true);
     }
-    
+  
+    @Override
+    public Attribute getDOTArrowTail() {
+        return DefaultAttribute.createAttribute("diamond");
+    }
 }

@@ -24,8 +24,16 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.AI
 
 public abstract class AInstructionCDFGOperationNode extends AInstructionCDFGNode{
 
+    private String operator;
+    
     protected AInstructionCDFGOperationNode(String operator, String operator_name) {
         super(operator_name);
+        this.operator = operator;
+    }
+    
+    @Override
+    public Attribute getDOTLabel() {
+        return DefaultAttribute.createAttribute(this.operator);
     }
     
     @Override

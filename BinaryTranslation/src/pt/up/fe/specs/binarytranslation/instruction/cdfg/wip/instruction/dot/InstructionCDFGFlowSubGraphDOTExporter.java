@@ -20,18 +20,63 @@ package pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.dot;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.general.GeneralFlowGraphDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.general.graph.ControlFlowNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.AInstructionCDFGEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.edge.operand.*;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.wip.instruction.node.AInstructionCDFGNode;
 
-public class InstructionCDFGFlowSubGraphDOTExporter extends GeneralFlowGraphDOTExporter<AInstructionCDFGNode, DefaultEdge>{
+public class InstructionCDFGFlowSubGraphDOTExporter extends GeneralFlowGraphDOTExporter<AInstructionCDFGNode, AInstructionCDFGEdge>{
 
     @Override
-    protected String exportVertexes(GeneralFlowGraph<AInstructionCDFGNode, DefaultEdge> g) {
+    protected String exportEdges(GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> g) {
+        
+        this.setEdgeAttributeProvider((e) -> {
+            Map<String, Attribute> map = new LinkedHashMap<>();
+            
+            map.put("label", e.getDOTLabel()); 
+            map.put("arrowhead", e.getDOTArrowHead());
+            map.put("arrowtail", e.getDOTArrowTail());
+            map.put("dir", DefaultAttribute.createAttribute("both"));
+            return map;
+        });
+        
+        String connector = this.computeConnector(g);
+        StringBuilder edgeBuilder = new StringBuilder();
+        
+        for (AInstructionCDFGEdge e : g.edgeSet()) {
+            
+            edgeBuilder.append(INDENT_BASE + INDENT_INNER);
+            edgeBuilder.append(this.getVertexID(g.getEdgeSource(e)));
+            if(e instanceof AInstructionCDFGOperandEdge) {
+                edgeBuilder.append(":s");
+            }else {
+                edgeBuilder.append(":s");
+            }
+            
+            edgeBuilder.append(connector);
+            edgeBuilder.append(this.getVertexID(g.getEdgeTarget(e)));
+            if(e instanceof InstructionCDFGRightOperandEdge) {
+                edgeBuilder.append(":e");
+            }else if (e instanceof InstructionCDFGLeftOperandEdge) {
+                edgeBuilder.append(":w");
+            }else {
+                edgeBuilder.append(":n");
+            }
+            getEdgeAttributes(e).ifPresent(m -> { edgeBuilder.append(renderAttributes(m));});
+    
+            edgeBuilder.append(";\n");
+        }
+        
+        return edgeBuilder.toString();
+    }
+    
+    @Override
+    protected String exportVertexes(GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> g) {
         
         this.vertexIdProvider = new InstructionCDFGDOTVertexIdProvider();
         
@@ -63,7 +108,7 @@ public class InstructionCDFGFlowSubGraphDOTExporter extends GeneralFlowGraphDOTE
     }
     
     @Override
-    protected String exportHeader(GeneralFlowGraph<AInstructionCDFGNode, DefaultEdge> g, String name)
+    protected String exportHeader(GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> g, String name)
     {
         StringBuilder headerBuilder = new StringBuilder();
         
