@@ -75,7 +75,7 @@ public class MemoryAccessTypesAnalyzer extends APatternAnalyzer {
                 }
                 report.addEntry(graph, id, finalType, bb.getOccurences());
             }
-            MemoryPatternReport.incrementLastID();
+            report.incrementLastID();
         }
         return report;
     }
