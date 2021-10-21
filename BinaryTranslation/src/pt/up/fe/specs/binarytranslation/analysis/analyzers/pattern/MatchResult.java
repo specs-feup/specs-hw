@@ -64,7 +64,7 @@ public class MatchResult {
         return matchedGraphs;
     }
 
-    public void addMatchedGraphs(GraphMapping<BtfVertex, DefaultEdge> graph) {
-        this.matchedGraphs.add(graph);
+    public void setMatchedGraphs(List<GraphMapping<BtfVertex, DefaultEdge>> mappings) {
+        this.matchedGraphs = mappings;
     }
 }

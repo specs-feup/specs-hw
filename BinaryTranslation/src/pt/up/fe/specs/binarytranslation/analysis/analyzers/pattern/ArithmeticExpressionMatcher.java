@@ -17,7 +17,6 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,15 +26,40 @@ import org.jgrapht.graph.SimpleDirectedGraph;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class ArithmeticExpressionMatcher extends APatternAnalyzer {
+    public enum ArithmeticTemplates {
+        ADD_0_CONSTANTS,    // (r1 + r2) + r3
+        ADD_1_CONSTANT_A,   // (c1 + r2) + r3
+        ADD_1_CONSTANT_B,   // (r1 + r2) + c1
+        ADD_2_CONSTANTS,    // (c1 + r2) + c2
+        
+        MAD_0_CONSTANTS,    // r1 * r2 + r3
+        MAD_1_CONSTANT_A,   // c1 * r2 + r3
+        MAD_1_CONSTANT_B,   // r1 * r2 + c1
+        MAD_2_CONSTANTS     // c1 * r2 + c2
+        
+        // Should never happen, as they're solved statically:
+        // (c1 + c2) + r3
+        // (c1 + c2) + c3
+        // (c1 * c2) + r3
+        // (c1 * c2) + c3       
+    }
+    
+    private int repetitions = 1;
 
     public ArithmeticExpressionMatcher(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
+    }
+    
+    public ArithmeticExpressionMatcher(ATraceInstructionStream stream, ZippedELFProvider elf, int window, int repetitions) {
+        super(stream, elf, window);
+        this.repetitions = repetitions;
     }
 
     @Override
@@ -44,88 +68,84 @@ public class ArithmeticExpressionMatcher extends APatternAnalyzer {
         
         for (var bb : segs) {
             var insts = bb.getInstructions();
-            var dfg = new BasicBlockDataFlowGraph(insts, 1);
-            var matches = matchToAddSequence(dfg);
+            var dfg = new BasicBlockDataFlowGraph(insts, repetitions);
+            var matches = matchToSequences(dfg);
             
-            var types = new ArrayList<String>();
-            for (var key : matches.keySet()) {
-                for (int i = 0; i < matches.get(key).size(); i++) {
-                    types.add(key.toString());
-                }
-            }
-            report.addEntry(String.join(",", types));
+            report.addEntry(matches);
         }
         
         return report;
     }
     
-    private HashMap<ArithmeticTemplates, List<GraphMapping<BtfVertex, DefaultEdge>>> matchToAddSequence(BasicBlockDataFlowGraph dfg) {
+    private HashMap<ArithmeticTemplates, List<GraphMapping<BtfVertex, DefaultEdge>>> matchToSequences(BasicBlockDataFlowGraph dfg) {
         SimpleDirectedGraph<BtfVertex, DefaultEdge> graph = new SimpleDirectedGraph<>(DefaultEdge.class);
         var r1 = new BtfVertex("r1", BtfVertexType.REGISTER);
         var r2 = new BtfVertex("r2", BtfVertexType.REGISTER);
         var r3 = new BtfVertex("r3", BtfVertexType.REGISTER);
-        var add1 = new BtfVertex("+", BtfVertexType.OPERATION);
-        var add2 = new BtfVertex("+", BtfVertexType.OPERATION);
+        var temp = new BtfVertex("temp", BtfVertexType.REGISTER);
+        var op1 = new BtfVertex("+", BtfVertexType.OPERATION);
+        var op2 = new BtfVertex("+", BtfVertexType.OPERATION);
         graph.addVertex(r1);
         graph.addVertex(r2);
         graph.addVertex(r3);
-        graph.addVertex(add1);
-        graph.addVertex(add2);
-        graph.addEdge(r1, add1);
-        graph.addEdge(r2, add1);
-        graph.addEdge(add1, add2);
-        graph.addEdge(r3, add2);
-        
+        graph.addVertex(temp);
+        graph.addVertex(op1);
+        graph.addVertex(op2);
+        graph.addEdge(r1, op1);
+        graph.addEdge(r2, op1);
+        graph.addEdge(op1, temp);
+        graph.addEdge(temp, op2);
+        graph.addEdge(r3, op2);
         
         var res = new HashMap<ArithmeticTemplates, List<GraphMapping<BtfVertex, DefaultEdge>>>();
         
         var match = this.matchGraphToTemplate(dfg, graph);
-        res.put(ArithmeticTemplates.TRIPLE_ADD_C0, match.getMatchedGraphs());
+        res.put(ArithmeticTemplates.ADD_0_CONSTANTS, match.getMatchedGraphs());
 
         r1.setType(BtfVertexType.IMMEDIATE);
         r2.setType(BtfVertexType.REGISTER);
         r3.setType(BtfVertexType.REGISTER);
         match = this.matchGraphToTemplate(dfg, graph);
-        res.put(ArithmeticTemplates.TRIPLE_ADD_C1A, match.getMatchedGraphs());
+        res.put(ArithmeticTemplates.ADD_1_CONSTANT_A, match.getMatchedGraphs());
         
         r1.setType(BtfVertexType.REGISTER);
         r2.setType(BtfVertexType.REGISTER);
         r3.setType(BtfVertexType.IMMEDIATE);
         match = this.matchGraphToTemplate(dfg, graph);
-        res.put(ArithmeticTemplates.TRIPLE_ADD_C1B, match.getMatchedGraphs());
-        
-        r1.setType(BtfVertexType.IMMEDIATE);
-        r2.setType(BtfVertexType.IMMEDIATE);
-        r3.setType(BtfVertexType.REGISTER);
-        match = this.matchGraphToTemplate(dfg, graph);
-        res.put(ArithmeticTemplates.TRIPLE_ADD_C2A, match.getMatchedGraphs());
+        res.put(ArithmeticTemplates.ADD_1_CONSTANT_B, match.getMatchedGraphs());
         
         r1.setType(BtfVertexType.IMMEDIATE);
         r2.setType(BtfVertexType.REGISTER);
         r3.setType(BtfVertexType.IMMEDIATE);
         match = this.matchGraphToTemplate(dfg, graph);
-        res.put(ArithmeticTemplates.TRIPLE_ADD_C2B, match.getMatchedGraphs());
+        res.put(ArithmeticTemplates.ADD_2_CONSTANTS, match.getMatchedGraphs());
+
+        op1.setLabel("*");
+        
+        r1.setType(BtfVertexType.REGISTER);
+        r2.setType(BtfVertexType.REGISTER);
+        r3.setType(BtfVertexType.REGISTER);
+        match = this.matchGraphToTemplate(dfg, graph);
+        res.put(ArithmeticTemplates.MAD_0_CONSTANTS, match.getMatchedGraphs());
         
         r1.setType(BtfVertexType.IMMEDIATE);
-        r2.setType(BtfVertexType.IMMEDIATE);
+        r2.setType(BtfVertexType.REGISTER);
+        r3.setType(BtfVertexType.REGISTER);
+        match = this.matchGraphToTemplate(dfg, graph);
+        res.put(ArithmeticTemplates.MAD_1_CONSTANT_A, match.getMatchedGraphs());
+        
+        r1.setType(BtfVertexType.REGISTER);
+        r2.setType(BtfVertexType.REGISTER);
         r3.setType(BtfVertexType.IMMEDIATE);
         match = this.matchGraphToTemplate(dfg, graph);
-        res.put(ArithmeticTemplates.TRIPLE_ADD_C3, match.getMatchedGraphs());
+        res.put(ArithmeticTemplates.MAD_1_CONSTANT_B, match.getMatchedGraphs());
+        
+        r1.setType(BtfVertexType.IMMEDIATE);
+        r2.setType(BtfVertexType.REGISTER);
+        r3.setType(BtfVertexType.IMMEDIATE);
+        match = this.matchGraphToTemplate(dfg, graph);
+        res.put(ArithmeticTemplates.MAD_2_CONSTANTS, match.getMatchedGraphs());
         
         return res;
-    }
-    
-    private int matchToMultiplyAddSequence() {
-        return 0;
-    }
-    
-    public enum ArithmeticTemplates {
-        TRIPLE_ADD_C0,      // (r1 + r2) + r3
-        TRIPLE_ADD_C1A,     // (c1 + r2) + r3
-        TRIPLE_ADD_C1B,     // (r1 + r2) + c1
-        TRIPLE_ADD_C2A,     // (c1 + c2) + r3
-        TRIPLE_ADD_C2B,     // (c1 + rb) + c2
-        TRIPLE_ADD_C3,      // (c1 + c2) + c3
-        MAD_C0  
     }
 }

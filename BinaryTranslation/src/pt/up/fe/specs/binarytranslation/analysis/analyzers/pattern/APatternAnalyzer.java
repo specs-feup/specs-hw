@@ -43,7 +43,7 @@ public abstract class APatternAnalyzer extends ABasicBlockAnalyzer {
     }
 
     protected abstract APatternReport matchTemplates(List<BinarySegment> segs);
-    
+
     public APatternReport matchWithPrecalculatedBlocks(List<BinarySegment> segs) {
         return matchTemplates(segs);
     }
@@ -60,23 +60,21 @@ public abstract class APatternAnalyzer extends ABasicBlockAnalyzer {
         var iso = new VF2SubgraphIsomorphismInspector<BtfVertex, DefaultEdge>(graph, template, comparator,
                 new EdgeComparator());
         var newIso = (IsomorphismInspector<BtfVertex, DefaultEdge>) iso;
+        var mappings = getMappings(newIso);
 
-        if (!iso.isomorphismExists())
+        if (!iso.isomorphismExists()) {
             return new MatchResult();
+        }
 
         var fullMatch = new MatchResult();
         if (strictRegister || strictImm) {
-            var iter = newIso.getMappings();
-
-            while (iter.hasNext()) {
-                var map = iter.next();
+            for (var map : mappings) {
                 var same = "";
                 if (strictImm) {
                     same = checkMatchImmediates(map, graph);
                     if (same.equals("")) {
                         return new MatchResult();
-                    }
-                    else
+                    } else
                         fullMatch.addStrictImm(same);
                 }
                 if (strictRegister) {
@@ -89,7 +87,19 @@ public abstract class APatternAnalyzer extends ABasicBlockAnalyzer {
             }
         }
         fullMatch.setMatch(true);
+        fullMatch.setMatchedGraphs(mappings);
         return fullMatch;
+    }
+
+    private ArrayList<GraphMapping<BtfVertex, DefaultEdge>> getMappings(
+            IsomorphismInspector<BtfVertex, DefaultEdge> newIso) {
+        var mappings = new ArrayList<GraphMapping<BtfVertex, DefaultEdge>>();
+        var iter = newIso.getMappings();
+        while (iter.hasNext()) {
+            mappings.add(iter.next());
+        }
+
+        return mappings;
     }
 
     private String checkMatchImmediates(GraphMapping<BtfVertex, DefaultEdge> map,
