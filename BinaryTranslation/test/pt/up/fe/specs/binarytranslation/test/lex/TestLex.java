@@ -72,7 +72,7 @@ public class TestLex {
     @Test
     public void testSubscript() {
         testParseAndTreePrint("RD = RA[4];");
-        // testParseAndTreePrint("RD = RA[2:4];");
+        testParseAndTreePrint("RD = RA[2:4];");
     }
 
     @Test
