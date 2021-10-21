@@ -85,8 +85,6 @@ metafield: METASYMBOL processorRegister=ASMFIELD;
 rangesubscript: ASMFIELD LBRACK loidx=integerval SEMI hiidx=integerval RBRACK;
 scalarsubscript : ASMFIELD LBRACK idx=integerval RBRACK;
  
-//operandref: (ASMFIELD);
- 
 operand:
 	ASMFIELD 			# Field
    | (metafield)		# metaField
