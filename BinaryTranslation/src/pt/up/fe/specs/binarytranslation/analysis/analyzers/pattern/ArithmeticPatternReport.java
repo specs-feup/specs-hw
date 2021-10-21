@@ -18,10 +18,19 @@
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.jgrapht.GraphMapping;
+import org.jgrapht.graph.DefaultEdge;
+
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ArithmeticExpressionMatcher.ArithmeticTemplates;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 
 public class ArithmeticPatternReport extends APatternReport {
-    private List<String> types = new ArrayList<>();
+    private List<Map<ArithmeticTemplates, Integer>> foundTypes = new ArrayList<>();
+    private List<HashMap<ArithmeticTemplates, List<GraphMapping<BtfVertex, DefaultEdge>>>> foundGraphs = new ArrayList<>();
     private static int lastID = 1;
 
     @Override
@@ -44,16 +53,38 @@ public class ArithmeticPatternReport extends APatternReport {
         var sb = new StringBuilder();
 
         for (int i = 0; i < getBasicBlockIDs().size(); i++) {
-            var blockTypes = types.get(i);
+            var blockTypes = foundTypes.get(i);
             var bbid = getBasicBlockIDs().get(i);
-            sb.append(this.name + "," + bbid + "," + blockTypes + "\n");
+            sb.append(this.name + "," + bbid);
+            for (var type : ArithmeticTemplates.values()) {
+                sb.append(",").append(blockTypes.get(type));
+            }
+            sb.append("\n");
         }
         return sb.toString();
     }
     
-    public void addEntry(String blockTypes) {
-        types.add(blockTypes);
+    public void addEntry(HashMap<ArithmeticTemplates, List<GraphMapping<BtfVertex, DefaultEdge>>> matches) {
+        foundGraphs.add(matches);
         getBasicBlockIDs().add("BB" + lastID);
+        
+        var map = new HashMap<ArithmeticTemplates, Integer>();
+        for (var type : ArithmeticTemplates.values()) {
+            if (matches.get(type) == null)
+                map.put(type, 0);
+            else
+                map.put(type, matches.get(type).size());
+        }
+        foundTypes.add(map);
+        
         incrementLastID();
+    }
+
+    public List<Map<ArithmeticTemplates, Integer>> getFoundTypes() {
+        return foundTypes;
+    }
+
+    public List<HashMap<ArithmeticTemplates, List<GraphMapping<BtfVertex, DefaultEdge>>>> getFoundGraphs() {
+        return foundGraphs;
     }
 }
