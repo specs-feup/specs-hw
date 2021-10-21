@@ -25,16 +25,20 @@ import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.StreamingAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryPatternReport;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ArithmeticExpressionMatcher;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ArithmeticPatternReport;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ExpressionIncrementMatchReport;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ExpressionIncrementMatcher;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.LoopIncrementPatternAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.LoopIncrementReport;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 
-public class MicroBlazeMemoryPatternsTest {
+public class MicroBlazePatternsTest {
 
     @Test
     public void testMemoryAccessTypes() {
-        var elfs = MicroBlazeBasicBlockInfo.getLivermoreN100Kernels();
+        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
         var allReports = new ArrayList<MemoryPatternReport>();
         var allGraphs = new HashMap<String, String>();
 
@@ -52,7 +56,7 @@ public class MicroBlazeMemoryPatternsTest {
                 allReports.add(report);
                 allGraphs.put(name + "_" + id, report.getCompositeGraph());
             }
-            MemoryPatternReport.resetLastID();
+            allReports.get(0).resetLastID();
         }
 
         // Print templates
@@ -61,14 +65,14 @@ public class MicroBlazeMemoryPatternsTest {
         var sb = new StringBuilder();
         sb.append("Benchmark,Basic Block ID,Memory Access ID,Memory Access Type,#Occurrences,Graph\n");
         for (var r : allReports) {
-            sb.append(r.toString());
+            sb.append(r.toCsv());
         }
         AnalysisUtils.saveAsCsv(sb, "results/MemoryAccessPatterns");
     }
 
     @Test
     public void testLoopIncrement() {
-        var elfs = MicroBlazeBasicBlockInfo.getLivermoreN100Kernels();
+        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
         var allReports = new ArrayList<LoopIncrementReport>();
 
         for (var elf : elfs.keySet()) {
@@ -83,17 +87,75 @@ public class MicroBlazeMemoryPatternsTest {
                 report.setName(name);
                 allReports.add(report);
             }
-            LoopIncrementReport.resetLastID();
+            allReports.get(0).resetLastID();
         }
 
         var sb = new StringBuilder();
-        sb.append("Benchmark,Basic Block ID,Graph Single Iter,Graph Double Iter\n");
+        sb.append("Benchmark,Basic Block ID,Type,Register,Constant,Graph Single Iter,Graph Double Iter\n");
         for (var r : allReports) {
-            sb.append(r.toString());
+            sb.append(r.toCsv());
         }
         AnalysisUtils.saveAsCsv(sb, "results/LoopIncrements");
     }
 
+    @Test
+    public void testExpressionIncrementMatcher() {
+        var elfs = MicroBlazeBasicBlockInfo.getLivermoreN100Kernels();
+        var allReports = new ArrayList<ExpressionIncrementMatchReport>();
+
+        for (var elf : elfs.keySet()) {
+            var windows = elfs.get(elf);
+            var name = elf.getELFName();
+
+            for (var window : windows) {
+                var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
+                var analyzer = new ExpressionIncrementMatcher(stream, elf, window);
+                var report = (ExpressionIncrementMatchReport) analyzer.analyzeSegment();
+
+                report.setName(name);
+                allReports.add(report);
+            }
+            (new MemoryPatternReport("")).resetLastID();
+            (new LoopIncrementReport()).resetLastID();
+        }
+
+        var sb = new StringBuilder();
+        sb.append("Benchmark,BBID,MemExpr ID,Registers,Matches\n");
+        for (var r : allReports) {
+            sb.append(r.toCsv());
+        }
+        AnalysisUtils.saveAsCsv(sb, "results/ExpressionIncrementMatches");
+    }
+    
+    @Test
+    public void testArithmeticExpressions() {
+        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
+        var allReports = new ArrayList<ArithmeticPatternReport>();
+
+        for (var elf : elfs.keySet()) {
+            var windows = elfs.get(elf);
+            var name = elf.getELFName();
+
+            for (var window : windows) {
+                var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
+                var analyzer = new ArithmeticExpressionMatcher(stream, elf, window);
+                var report = (ArithmeticPatternReport) analyzer.analyzeSegment();
+
+                report.setName(name);
+                allReports.add(report);
+            }
+            allReports.get(0).resetLastID();
+        }
+
+        var sb = new StringBuilder();
+        sb.append("Benchmark,Basic Block ID,Types found\n");
+        for (var r : allReports) {
+            sb.append(r.toCsv());
+        }
+        AnalysisUtils.saveAsCsv(sb, "results/ArithmeticExpressions");
+    }
+
+    
     @Test
     public void testStreaming() {
         // var elf = MicroBlazeLivermoreELFN10.linrec; int window = 10;

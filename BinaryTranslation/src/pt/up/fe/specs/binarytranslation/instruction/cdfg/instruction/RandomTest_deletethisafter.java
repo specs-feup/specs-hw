@@ -47,7 +47,7 @@ public class RandomTest_deletethisafter {
         
         InstructionCDFG icdfg = new InstructionCDFG();
         icdfg.mergeGraph(((InstructionCDFGGenerator)icdfg.getGenerator()).generate(parse));
-       // icdfg.toDot(null);
+        icdfg.toDot(null);
         
         return icdfg;
     }
@@ -61,24 +61,18 @@ public class RandomTest_deletethisafter {
     @Test
     public void testParse() {
         List<InstructionCDFG> icdfg_list = new ArrayList<InstructionCDFG>();
-       
-        
-        String inst = "RC = RA + RB + RD;";
+   
+        String inst = "if(RA == 0) {RD = 0; $dzo = 1;} else if(RA == -1 && RB == (1 << 31)) {RD = (1 << 31); $dzo = 1;} else {RD = RB / RA;}";
       
         
+       
+        this.printParseTree(inst);
         icdfg_list.add(this.generateICDFG(inst));
         
-   
+       /* SegmentCDFG scdfg = new SegmentCDFG(icdfg_list);
+        HardwareCDFG hcdfg = new HardwareCDFG("test",scdfg);
         
-        icdfg_list.add(this.generateICDFG("RA = (RB >> IMM);"));
-        
-        this.printParseTree("RA = (RB >> IMM);");
-      
-        SegmentCDFG scdfg = new SegmentCDFG(icdfg_list);
-        
-        scdfg.toDot(null);
-        
-        HardwareCDFG hcdfg = new HardwareCDFG("testsxz",scdfg);
         hcdfg.print();
+        */
     }
 }

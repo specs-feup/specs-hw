@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.analysis;
 
 import java.io.BufferedWriter;
@@ -72,25 +72,25 @@ public class AnalysisUtils {
      *            true to print values in decimal; false to print in hexadecimal
      */
     public static void printInstructionWithRegisters(Instruction inst, boolean decimal) {
-//        StringBuilder sb = new StringBuilder();
-//        String space = "  ";
-//
-//        sb.append(String.format("%-4s", inst.getName())).append(space);
-//
-//        for (Operand op : inst.getData().getOperands()) {
-//            if (op.isRegister()) {
-//                String reg = op.getProperties().getPrefix() + op.getName();
-//                Long val = inst.getRegisters().getValue(reg);
-//                String strVal = val == null ? "??" : (decimal ? String.valueOf(val) : String.format("0x%X", val));
-//                sb.append(String.format("%-16s", reg + "{" + strVal + "}")).append(space);
-//            }
-//            if (op.isImmediate()) {
-//                long imm = Long.parseLong(op.getStringValue(), 16);
-//                String strImm = decimal ? String.valueOf(imm) : String.format("0x%X", imm);
-//                sb.append(String.format("%-10s", strImm)).append(space);
-//            }
-//        }
-//        System.out.println(sb.toString());
+        // StringBuilder sb = new StringBuilder();
+        // String space = " ";
+        //
+        // sb.append(String.format("%-4s", inst.getName())).append(space);
+        //
+        // for (Operand op : inst.getData().getOperands()) {
+        // if (op.isRegister()) {
+        // String reg = op.getProperties().getPrefix() + op.getName();
+        // Long val = inst.getRegisters().getValue(reg);
+        // String strVal = val == null ? "??" : (decimal ? String.valueOf(val) : String.format("0x%X", val));
+        // sb.append(String.format("%-16s", reg + "{" + strVal + "}")).append(space);
+        // }
+        // if (op.isImmediate()) {
+        // long imm = Long.parseLong(op.getStringValue(), 16);
+        // String strImm = decimal ? String.valueOf(imm) : String.format("0x%X", imm);
+        // sb.append(String.format("%-10s", strImm)).append(space);
+        // }
+        // }
+        // System.out.println(sb.toString());
     }
 
     public static String mapBitsetToRegisters(BitSet set, ArrayList<String> regs) {
@@ -121,7 +121,7 @@ public class AnalysisUtils {
             return new ArrayList<BinarySegment>();
         }
 
-        //System.out.println(bun.getSummary());
+        // System.out.println(bun.getSummary());
         return bun.getSegments();
     }
 
@@ -151,7 +151,22 @@ public class AnalysisUtils {
     }
 
     public static String hexToDec(String hex) {
-        return "" + Long.decode(hex);
+        hex = hex.replace("0x", "");
+        int base = 1;
+        int res = 0;
+
+        for (int i = hex.length() - 1; i >= 0; i--) {
+            if (hex.charAt(i) >= '0' && hex.charAt(i) <= '9') {
+                res += (hex.charAt(i) - 48) * base;
+                base *= 16;
+            }
+
+            else if (hex.charAt(i) >= 'A' && hex.charAt(i) <= 'F') {
+                res += (hex.charAt(i) - 55) * base;
+                base *= 16;
+            }
+        }
+        return "" + res;
     }
 
     public static String padRight(String s, int n) {
@@ -161,7 +176,7 @@ public class AnalysisUtils {
     public static void saveAsCsv(StringBuilder sb, String filename) {
         saveAsCsv(sb.toString(), filename);
     }
-    
+
     public static void saveAsCsv(String s, String filename) {
         var csv = new File(filename + ".csv");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csv))) {

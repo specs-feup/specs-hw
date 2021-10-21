@@ -181,8 +181,9 @@ public abstract class ASegmentDataFlowGraph extends SimpleDirectedGraph<BtfVerte
         if (op.isRegister()) {
             return AnalysisUtils.getRegisterName(op);
         }
-        if (op.isImmediate())
+        if (op.isImmediate()) {
             return op.getRepresentation();
+        }
         return "unknown";
     }
 

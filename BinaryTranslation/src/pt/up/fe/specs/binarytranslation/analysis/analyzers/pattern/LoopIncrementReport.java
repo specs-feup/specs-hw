@@ -27,7 +27,8 @@ public class LoopIncrementReport extends APatternReport {
     private List<Graph<BtfVertex, DefaultEdge>> doubleGraphs = new ArrayList<>();
     private List<String> incTypes = new ArrayList<>();
     private List<String> registers = new ArrayList<>();
-    private List<String> constants = new ArrayList<>(); 
+    private List<String> constants = new ArrayList<>();
+    private static int lastID = 1;
 
     public List<Graph<BtfVertex, DefaultEdge>> getDoubleGraphs() {
         return doubleGraphs;
@@ -43,8 +44,31 @@ public class LoopIncrementReport extends APatternReport {
         incrementLastID();
     }
 
+    public List<String> getRegisters() {
+        return registers;
+    }
+
+    public List<String> getIncTypes() {
+        return incTypes;
+    }
+
     @Override
-    public String toString() {
+    public int getLastID() {
+        return lastID;
+    }
+    
+    @Override
+    public void resetLastID() {
+        lastID = 1;
+    }
+
+    @Override
+    public void incrementLastID() {
+        lastID++;
+    }
+
+    @Override
+    public String toCsv() {
         var sb = new StringBuilder();
 
         for (int i = 0; i < getBasicBlockIDs().size(); i++) {
@@ -57,13 +81,5 @@ public class LoopIncrementReport extends APatternReport {
             sb.append(this.name + "," + bbid + "," + type + "," + reg + "," + imm + "," + g1 + "," + g2 + "\n");
         }
         return sb.toString();
-    }
-
-    public List<String> getRegisters() {
-        return registers;
-    }
-
-    public List<String> getIncTypes() {
-        return incTypes;
     }
 }

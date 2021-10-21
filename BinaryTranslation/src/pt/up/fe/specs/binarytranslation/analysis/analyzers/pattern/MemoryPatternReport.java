@@ -26,17 +26,17 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 
 public class MemoryPatternReport extends APatternReport {
-    private List<String> ids;
+    private List<String> memIDs;
     private List<GraphTemplateType> types;
     private List<Integer> occurrences;
-
     private String segmentID = "?";
+    private static int lastID = 1;
 
 
     public MemoryPatternReport(String kernelName) {
         name = "\"" + kernelName + "\"";
         graphs = new ArrayList<>();
-        ids = new ArrayList<>();
+        memIDs = new ArrayList<>();
         types = new ArrayList<>();
         occurrences = new ArrayList<>();
         setBasicBlockIDs(new ArrayList<>());
@@ -44,31 +44,50 @@ public class MemoryPatternReport extends APatternReport {
 
     public void addEntry(Graph<BtfVertex, DefaultEdge> graph, String id, GraphTemplateType type, int occurrence) {
         graphs.add(graph);
-        ids.add(id);
+        memIDs.add(id);
         types.add(type);
         occurrences.add(occurrence);
         getBasicBlockIDs().add("BB" + lastID);
     }
+
+    public String getCompositeGraph() {
+        var composite = new DefaultDirectedGraph<BtfVertex, DefaultEdge>(DefaultEdge.class);
+        for (var g : graphs)
+            Graphs.addGraph(composite, g);
+        return GraphUtils.generateGraphURL(composite, name + "-" + segmentID);
+    }
     
     @Override
-    public String toString() {
+    public int getLastID() {
+        return lastID;
+    }
+    
+    @Override
+    public void resetLastID() {
+        lastID = 1;
+    }
+
+    @Override
+    public void incrementLastID() {
+        lastID++;
+    }
+
+    @Override
+    public String toCsv() {
         var sb = new StringBuilder();
         
         for (int i = 0; i < graphs.size(); i++) {
             
             var typeStr = types.get(i).toString();
             typeStr = typeStr.replace("TYPE_", "");
-            sb.append(name).append(",").append(getBasicBlockIDs().get(i)).append(",").append(ids.get(i)).append(",").append(typeStr)
+            sb.append(name).append(",").append(getBasicBlockIDs().get(i)).append(",").append(memIDs.get(i)).append(",").append(typeStr)
                     .append(",").append(occurrences.get(i)).append(",").append(GraphUtils.generateGraphURL(graphs.get(i)))
                     .append("\n");
         }
         return sb.toString();
     }
-    
-    public String getCompositeGraph() {
-        var composite = new DefaultDirectedGraph<BtfVertex, DefaultEdge>(DefaultEdge.class);
-        for (var g : graphs)
-            Graphs.addGraph(composite, g);
-        return GraphUtils.generateGraphURL(composite, name + "-" + segmentID);
+
+    public List<String> getMemIDs() {
+        return memIDs;
     }
 }

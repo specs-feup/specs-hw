@@ -75,7 +75,7 @@ public class MicroBlazeDataFlowTest {
     }
     
 
-    private HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> buildStreams(Map<ZippedELFProvider, Integer[]> elfs) {
+    public static HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> buildStreams(Map<ZippedELFProvider, Integer[]> elfs) {
         var streams = new HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>>();
         for (var elf : elfs.keySet()) {
             var map = new HashMap<Integer, ATraceInstructionStream>();
