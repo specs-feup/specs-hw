@@ -25,7 +25,7 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class InOutAnalyzer extends ABasicBlockAnalyzer {
+public class InOutAnalyzer extends ASegmentAnalyzer {
     public enum InOutMode {
         BASIC_BLOCK,
         SIMPLE_BASIC_BLOCK,
@@ -38,7 +38,7 @@ public class InOutAnalyzer extends ABasicBlockAnalyzer {
     }
     
     public void analyse(InOutMode mode) {
-        var bbs = this.getBasicBlocks();
+        var bbs = this.getSegmentsAsList();
         
         if (mode == InOutMode.BASIC_BLOCK) {
             for (var bb : bbs) {

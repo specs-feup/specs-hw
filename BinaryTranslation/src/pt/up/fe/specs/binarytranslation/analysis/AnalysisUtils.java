@@ -30,6 +30,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
+import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
@@ -114,14 +115,13 @@ public class AnalysisUtils {
         System.out.println(s);
     }
 
-    public static List<BinarySegment> getSegments(ATraceInstructionStream stream, TraceBasicBlockDetector det) {
+    public static List<BinarySegment> getSegments(ATraceInstructionStream stream, SegmentDetector det) {
         SegmentBundle bun = det.detectSegments(stream);
         if (bun.getSegments().size() == 0) {
-            System.out.println("No basic blocks were detected");
+            System.out.println("No segments were detected");
             return new ArrayList<BinarySegment>();
         }
 
-        // System.out.println(bun.getSummary());
         return bun.getSegments();
     }
 
