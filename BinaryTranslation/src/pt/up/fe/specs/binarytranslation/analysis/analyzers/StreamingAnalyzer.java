@@ -27,14 +27,14 @@ import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.InductionVaria
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressDetector;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class StreamingAnalyzer extends ABasicBlockAnalyzer {
+public class StreamingAnalyzer extends ASegmentAnalyzer {
 
     public StreamingAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
     }
 
     public void analyze(int iter) {
-        var segs = this.getBasicBlockSegments();
+        var segs = this.getSegments();
 
         for (var bb : segs) {
             var mad = new MemoryAddressDetector(bb);

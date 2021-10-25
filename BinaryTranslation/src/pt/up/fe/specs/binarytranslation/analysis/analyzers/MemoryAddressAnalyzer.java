@@ -21,7 +21,7 @@ import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
+public class MemoryAddressAnalyzer extends ASegmentAnalyzer {
     private RegisterProperties isaProps;
 
     public MemoryAddressAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, RegisterProperties isaProps, int window) {
@@ -30,7 +30,7 @@ public class MemoryAddressAnalyzer extends ABasicBlockAnalyzer {
     }
 
     public void analyze() {
-        var segs = getBasicBlockSegments();
+        var segs = getSegments();
         
         for (var bb : segs) {
             // Print BB instructions

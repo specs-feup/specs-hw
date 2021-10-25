@@ -25,19 +25,19 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ASegmentAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public abstract class APatternAnalyzer extends ABasicBlockAnalyzer {
+public abstract class APatternAnalyzer extends ASegmentAnalyzer {
     public APatternAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
     }
 
     public APatternReport analyzeSegment() {
-        var segs = getBasicBlockSegments();
+        var segs = getSegments();
         var report = matchTemplates(segs);
         return report;
     }

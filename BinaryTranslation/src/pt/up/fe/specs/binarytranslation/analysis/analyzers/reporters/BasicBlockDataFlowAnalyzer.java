@@ -18,7 +18,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ASegmentAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowCriticalPath;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ocurrence.BasicBlockOccurrenceTracker;
@@ -31,7 +31,7 @@ import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class BasicBlockDataFlowAnalyzer extends ABasicBlockAnalyzer {
+public class BasicBlockDataFlowAnalyzer extends ASegmentAnalyzer {
 
     public BasicBlockDataFlowAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
@@ -43,7 +43,7 @@ public class BasicBlockDataFlowAnalyzer extends ABasicBlockAnalyzer {
 
     public List<DataFlowStatistics> analyze(int[] repetitions) {
         var res = new ArrayList<DataFlowStatistics>();
-        var segments = getBasicBlocks();
+        var segments = getSegmentsAsList();
 
         for (var bb : segments) {
 

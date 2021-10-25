@@ -20,12 +20,12 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ASegmentAnalyzer;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 
-public class BasicBlockLoadStorePairsAnalyzer extends ABasicBlockAnalyzer {
+public class BasicBlockLoadStorePairsAnalyzer extends ASegmentAnalyzer {
 
     public BasicBlockLoadStorePairsAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);

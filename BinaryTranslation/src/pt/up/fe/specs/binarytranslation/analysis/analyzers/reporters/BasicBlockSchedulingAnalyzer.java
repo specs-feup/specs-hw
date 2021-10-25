@@ -18,7 +18,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.ABasicBlockAnalyzer;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.ASegmentAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.ListScheduler;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
@@ -28,7 +28,7 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemo
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class BasicBlockSchedulingAnalyzer extends ABasicBlockAnalyzer {
+public class BasicBlockSchedulingAnalyzer extends ASegmentAnalyzer {
 
     private boolean useDependencies;
 
@@ -45,7 +45,7 @@ public class BasicBlockSchedulingAnalyzer extends ABasicBlockAnalyzer {
 
     public List<DataFlowStatistics> analyze(int[] repetitions, int[] alus, int[] memPorts) {
         var res = new ArrayList<DataFlowStatistics>();
-        var segments = getBasicBlocks();
+        var segments = getSegmentsAsList();
 
         for (var bb : segments) {
             for (var repetition : repetitions) {
