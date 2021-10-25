@@ -114,8 +114,6 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<Gener
         
         List<PseudoInstructionParser.StatementContext> ctx_sub = new ArrayList<>();
         
-       
-        
         for(PseudoInstructionParser.StatementContext statement : ctx) {
 
             if((statement instanceof IfStatementContext) || (statement instanceof IfElseStatementContext)) {

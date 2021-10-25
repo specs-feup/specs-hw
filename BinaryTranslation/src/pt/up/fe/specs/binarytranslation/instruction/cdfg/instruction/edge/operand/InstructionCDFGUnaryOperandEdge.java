@@ -17,6 +17,8 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand;
 
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
 
@@ -26,14 +28,16 @@ public class InstructionCDFGUnaryOperandEdge extends AInstructionCDFGOperandEdge
         super("");
     }
     
-    public InstructionCDFGUnaryOperandEdge(AInstructionCDFGModifier subscript) {
+    public InstructionCDFGUnaryOperandEdge(List<AInstructionCDFGModifier> modifier) {
         this();
-        this.setModifier(subscript);
+        
+        modifier.forEach(m -> this.setModifier(m));
+
     }
 
 
     public AInstructionCDFGEdge duplicate() {
-        return new InstructionCDFGUnaryOperandEdge(this.getModifier());
+        return new InstructionCDFGUnaryOperandEdge(this.getModifiers());
     }
     
 }

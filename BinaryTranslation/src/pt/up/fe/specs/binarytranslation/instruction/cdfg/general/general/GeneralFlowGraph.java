@@ -216,6 +216,14 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
         return this.getInputs().get(0);
     }
     
+    /** Merges the argument vertices List with the argument vertex.
+     * <br>
+     * This copies all of the edges from the vertices List to the argument vertex and removes the argument vertices List from the graph
+     * 
+     * @param vertex Vertex that vertices List merges with
+     * @param vertices Vertices to be merges and removed from the graph
+     * @throws IllegalArgumentException If any of the argument's vertices are not part of the graph
+     */
     public void mergeVertices(V vertex , List<V> vertices) throws IllegalArgumentException{
          
         this.assertVertexExist(vertex); 
@@ -232,6 +240,10 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
         
     }
     
+    /** Removes a vertex but keeps all of it's edges. All of the incoming edges sources get connected to all of the outgoing edges targets
+     * 
+     * @param vertex Vertex to be suppressed
+     */
     public void suppressVertex(V vertex) {
 
         this.incomingEdgesOf(vertex).forEach((in_edge) -> {
@@ -243,6 +255,13 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
         this.removeVertex(vertex);
     }
     
+    /** Returns the operands(vertices) before a vertex.<br>
+     * 
+     * This method is kind of redundant
+     * 
+     * @param vertex Vertex to get the operands of
+     * @return A List of the operands(vertices) of the argument vertex
+     */
     public List<V> getOperandsOf(V vertex){
         
         List<V> operand_list = new ArrayList<V>();
@@ -253,6 +272,7 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
         return operand_list;
     }
     
+    @Deprecated
     public GeneralFlowGraph<V,E> mergeGraph(GeneralFlowGraph<V,E> graph) {
         
             // Joins the new graph to the current one

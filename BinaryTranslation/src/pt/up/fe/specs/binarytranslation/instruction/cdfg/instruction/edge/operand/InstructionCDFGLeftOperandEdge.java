@@ -17,6 +17,8 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand;
 
+import java.util.List;
+
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 
@@ -29,9 +31,11 @@ public class InstructionCDFGLeftOperandEdge extends AInstructionCDFGOperandEdge{
         super("l");
     }
     
-   public InstructionCDFGLeftOperandEdge(AInstructionCDFGModifier subscript) {
+   public InstructionCDFGLeftOperandEdge(List<AInstructionCDFGModifier> modifier) {
        this();
-       this.setModifier(subscript);
+       
+       modifier.forEach(m -> this.setModifier(m));
+       
    }
     
     @Override
@@ -40,6 +44,6 @@ public class InstructionCDFGLeftOperandEdge extends AInstructionCDFGOperandEdge{
     }
     
     public AInstructionCDFGEdge duplicate() {
-        return new InstructionCDFGLeftOperandEdge(this.getModifier());
+        return new InstructionCDFGLeftOperandEdge(this.getModifiers());
     }
 }

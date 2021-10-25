@@ -39,13 +39,7 @@ public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGene
     private InstructionCDFGConverter converter;
     
     private Map<AInstructionCDFGNode, SingleStatement> completed_statements;
-    
-    public void addComment(String commentText) {
-        
-    }
-    
-    
-    
+
     public AHardwareInstance generateHardware(InstructionCDFG icdfg) {
         
         this.module_tree = new VerilogModuleTree("test");

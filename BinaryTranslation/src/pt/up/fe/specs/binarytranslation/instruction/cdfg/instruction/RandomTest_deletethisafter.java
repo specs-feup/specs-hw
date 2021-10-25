@@ -68,7 +68,7 @@ public class RandomTest_deletethisafter {
       
       // String instruction = "if(RA == 0) {RD = 0; dzo = 1;}";
         
-        String instruction = "RD = RA + IMM;";
+        String instruction = "RD = RA[2:0] + signed(RB[2:0]); RF = RD[2:0] + RE ;";
         
         InstructionCDFGGenerator icdfg_gen = new InstructionCDFGGenerator();
         this.printParseTree(instruction);
