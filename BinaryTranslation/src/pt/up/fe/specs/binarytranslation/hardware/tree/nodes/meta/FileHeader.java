@@ -25,7 +25,8 @@ public class FileHeader extends HardwareCommentNode {
 
     // TODO add more stuff to header
     public FileHeader() {
-        super(BinaryTranslationUtils.getSPeCSCopyright() + "\n");
+        //super(BinaryTranslationUtils.getSPeCSCopyright() + "\n"); NOTE : THIS IMPORT IS NOT WORKING, IT SAYS THE FILE OF THE COPYRIGHT DOES NOT EXIST
+        super("TEMPORARY HEADER \n");
         this.type = HardwareNodeType.Comment;
     }
 }

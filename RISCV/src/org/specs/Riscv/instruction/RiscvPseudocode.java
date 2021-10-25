@@ -27,24 +27,24 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.Ps
 
 public enum RiscvPseudocode implements InstructionPseudocode {
     
-    add("RD = RS1 + RS2;"),
-    sub("RD = RS1 - RS2;"),
-    slt("if(signed(RS1) < signed(RS2)) RD = 1; else RD = 0;"),
-    sltu("if(unsigned(RS1) < unsigned(RS2)) RD = 1; else RD = 0;"),
-    xor("RD = RS1 ^ RS2;"),
-    or("RD = RS1 | RS2;"),
-    and("RD = RS1 & RS2;"),
-    sll("RD = RS1 << RS2[4:0];"),
-    srl("RD = RS1 >> RS2[4:0]"),
-    sra("RD = RS1 >>> RS2[4:0]"),
+    add("RD = RA + RB;"),
+    sub("RD = RA - RB;"),
+    slt("if(signed(RA) < signed(RB)) RD = 1; else RD = 0;"),
+    sltu("if(unsigned(RA) < unsigned(RB)) RD = 1; else RD = 0;"),
+    xor("RD = RA ^ RB;"),
+    or("RD = RA | RB;"),
+    and("RD = RA & RB;"),
+    sll("RD = RA << RB[4:0];"),
+    srl("RD = RA >> RB[4:0];"),
+    sra("RD = RA >>> RB[4:0];"),
     
 
-    addi("RD = RS1 + sext(IMM);"),
-    slti("if(signed(RS1) < signed(IMM)) RD = 1; else RD = 0;"),
-    sltiu("if(unsgned(RS1) < unsigned(IMM)) RD = 1; else RD = 0;"),
-    xori("RD = RS1 ^ IMM;"),
-    ori("RD = RS1 | IMM;"),
-    andi("RD = RS1 & IMM;"),
+    addi("RD = RA + sext(IMM);"),
+    slti("if(signed(RA) < signed(IMM)) RD = 1; else RD = 0;"),
+    sltiu("if(unsigned(RA) < unsigned(IMM)) RD = 1; else RD = 0;"),
+    xori("RD = RA ^ IMM;"),
+    ori("RD = RA | IMM;"),
+    andi("RD = RA & IMM;"),
     slli("RD = RS << IMM[4:0];"),
     srli("RD = RS >> IMM[4:0];"),
     srai("RD = RS >>> IMM[4:0];"),
@@ -53,7 +53,7 @@ public enum RiscvPseudocode implements InstructionPseudocode {
     //lw(""),
     //lnu(""),
     //lhu(""),
-    jalr("RD = $pc + 4; $pc = RS1 + sext(IMM);"),
+    jalr("RD = $pc + 4; $pc = RA + sext(IMM);"),
     
     //sb(""),
     //sh(""),
@@ -62,21 +62,21 @@ public enum RiscvPseudocode implements InstructionPseudocode {
     //lui(""),
     auipic("RD = $pc + (IMM << 12);"),
     
-    beq("if(RS1 == RS2) $pc = $pc + sext(IMM);"),
-    bne("if(RS1 != RS2) $pc = $pc + sext(IMM);"),
-    blt("if(RS1 < RS2) $pc = $pc + sext(IMM);"),
-    bge("if(RS1 > RS2) $pc = $pc + sext(IMM);"),
-    bltu("if(unsigned(RS1) < unsigned(RS2)) $pc = $pc + sext(IMM);"),
-    bgeu("if(unsigned(RS1) > unsigned(RS2)) $pc = $pc + sext(IMM);"),
+    beq("if(RA == RB) $pc = $pc + sext(IMM);"),
+    bne("if(RA != RB) $pc = $pc + sext(IMM);"),
+    blt("if(RA < RB) $pc = $pc + sext(IMM);"),
+    bge("if(RA > RB) $pc = $pc + sext(IMM);"),
+    bltu("if(unsigned(RA) < unsigned(RB)) $pc = $pc + sext(IMM);"),
+    bgeu("if(unsigned(RA) > unsigned(RB)) $pc = $pc + sext(IMM);"),
     
     jal("RD = $pc + 4; $pc = $pc + sext(IMM);"),
     
-    mul("RD = lsw(RS1 * RS2);"),
-    mulh("RD = msw(RS1 * RS2)"),
-    mulhsu("RD = msw(signed(RS1) * unsigned(RS2));"),
-    mulhu("RD = msw(unsigned(RS1) * unsigned(RS2));"),
-    div("RD = signed(RS1) / signed(RS2);"), // Nota: na especificação é referido que o div e o rem podem ser juntos numa só operação, deve-se ter isto em conta ?
-    divu("RD = unsigned(RS1) / unsigned(RS2);"),
+    mul("RD = lsw(RA * RB);"),
+    mulh("RD = msw(RA * RB);"),
+    mulhsu("RD = msw(signed(RA) * unsigned(RB));"),
+    mulhu("RD = msw(unsigned(RA) * unsigned(RB));"),
+    div("RD = signed(RA) / signed(RB);"), // Nota: na especificação é referido que o div e o rem podem ser juntos numa só operação, deve-se ter isto em conta ?
+    divu("RD = unsigned(RA) / unsigned(RB);"),
     //rem("RD = "),
     //remu("RD = "),
     
@@ -94,34 +94,34 @@ public enum RiscvPseudocode implements InstructionPseudocode {
     
     //Falta lidar com as excepções dos float (Nan e assim) e tambem implementar o rounding mode
     
-    fadd_s("fadd.s", "RD = float(RS1) + float(RS2);"),
-    fsub_s("fsub.s", "RD = float(RS1) - float(RS2);"),
-    fmul_s("fmul.s", "RD = float(RS1) * float(RS2);"),
-    fdiv_s("fdiv.s", "RD = float(RS1) / float(RS2);"),
-    fsqrt_s("fsqrt.s", "RD = sqrt(float(RS1));"),
+    fadd_s("fadd.s", "RD = float(RA) + float(RB);"),
+    fsub_s("fsub.s", "RD = float(RA) - float(RB);"),
+    fmul_s("fmul.s", "RD = float(RA) * float(RB);"),
+    fdiv_s("fdiv.s", "RD = float(RA) / float(RB);"),
+    fsqrt_s("fsqrt.s", "RD = sqrt(float(RA));"),
     //fsqnj_s(""),
     //fsqrtn_s(""),
     //fsqnjx_s(""),
-    fmin_s("fmin.s", "if (float(RS1) < float(RS2)) RD = float(RS1); else RD = float(RS2);"),
-    fmax_s("fmax.s", "if (float(RS1) > float(RS2)) RD = float(RS1); else RD = float(RS2);"),
+    fmin_s("fmin.s", "if (float(RA) < float(RB)) RD = float(RA); else RD = float(RB);"),
+    fmax_s("fmax.s", "if (float(RA) > float(RB)) RD = float(RA); else RD = float(RB);"),
     
-    feq_s("feq.s", "if(float(RS1) == float(RS2)) RD = 1; else RD = 0;"),
-    flt_s("flt.s", "if(float(RS1) < float(RS2)) RD = 1; else RD = 0;"),
-    fle_s("fle.s", "if(float(RS1) <= float(RS2)) RD = 1; else RD = 0;"),
+    feq_s("feq.s", "if(float(RA) == float(RB)) RD = 1; else RD = 0;"),
+    flt_s("flt.s", "if(float(RA) < float(RB)) RD = 1; else RD = 0;"),
+    fle_s("fle.s", "if(float(RA) <= float(RB)) RD = 1; else RD = 0;"),
     
-    fmv_w_x("fmv.w.x", "RD = float(RS1);"),
+    fmv_w_x("fmv.w.x", "RD = float(RA);"),
     
-    fmadd_s("fmadd.s", "RD = (float(RS1) * float(RS2)) + float(RS3);"),
-    fmsub_s("fmsub.s", "RD = (float(RS1) * float(RS2)) - float(RS3);"),
-    fnmadd_s("fnmadd.s", "RD = -(float(RS1) * float(RS2)) + float(RS3);"),
-    fnmsub_s("fnmsub.s", "RD = -(float(RS1) * float(RS2)) - float(RS3);"),
+    fmadd_s("fmadd.s", "RD = (float(RA) * float(RB)) + float(RC);"),
+    fmsub_s("fmsub.s", "RD = (float(RA) * float(RB)) - float(RC);"),
+    fnmadd_s("fnmadd.s", "RD = -(float(RA) * float(RB)) + float(RC);"),
+    fnmsub_s("fnmsub.s", "RD = -(float(RA) * float(RB)) - float(RC);"),
     
     //flw(""),
     
     //fsw(""),
     
     
-    defaultCode("RD = RS1;");
+    defaultCode("RD = RA;");
     
     private final String name;
     private final String pseudocode;

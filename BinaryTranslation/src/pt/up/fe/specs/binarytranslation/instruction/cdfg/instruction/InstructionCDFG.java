@@ -17,63 +17,54 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
 
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.generic.AGenericCDFG;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
-import pt.up.fe.specs.util.SpecsLogs;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-/**
- * @author João Conceição
- */
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.controlanddataflowgraph.ControlAndDataFlowGraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.controlanddataflowgraph.ControlFlowNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.dataflowgraph.DataFlowGraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGFalseEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGTrueEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
-public class InstructionCDFG extends AGenericCDFG{
+public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, AInstructionCDFGEdge>{
 
-    private Instruction instruction;
-    private Object generator;
-    private InstructionAST iast;
-    private static final String unique_node_str = "i";
+    private List<AInstructionCDFGNode> data_inputs;
+    private List<AInstructionCDFGNode> data_outputs;
     
 
     public InstructionCDFG() {
-        super(unique_node_str);
-        this.generator = new InstructionCDFGGenerator(); 
+        super(InstructionCDFGDataFlowSubgraph.class, ControlFlowNode.class, AInstructionCDFGEdge.class);
+      
+        this.data_inputs = new ArrayList<>();
+        this.data_outputs = new ArrayList<>();
     }
-    
-    public InstructionCDFG(Instruction instruction) {
-        super(unique_node_str);
-        this.generator = new InstructionCDFGGenerator(); 
-        
-        this.instruction = instruction;
-        
-        this.mergeGraph(((InstructionCDFGGenerator)this.generator).generate(instruction));
 
+    
+    
+    public List<AInstructionCDFGNode> getDataInputs(){
+        
+        this.vertexSet().forEach(g -> this.data_inputs.addAll(g.getInputs()));
+
+        return this.data_inputs;
     }
     
-    public InstructionCDFG(InstructionAST iast) {
-        super(unique_node_str);
-        this.iast = iast;
-        this.instruction = iast.getInst();
-        this.generator = new InstructionCDFGFromInstructionASTGenenerator();
-        
-        try {
-            this.mergeGraph(((InstructionCDFGFromInstructionASTGenenerator)this.generator).generate(this.iast));
-        } catch (Exception e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
-        }
-        
-    }
-   
-    public Object getGenerator() {
-        return this.generator;
+    public List<AInstructionCDFGNode> getDataOutputs(){
+        this.vertexSet().forEach(g -> this.data_outputs.addAll(g.getOutputs()));
+        return this.data_outputs;
     }
     
-    public Instruction getInstruction() {
-        
-        return this.instruction;
+  
+    @Override
+    public void addControlEdgesTo(GeneralFlowGraph decision,
+            GeneralFlowGraph path_true,
+            GeneralFlowGraph path_false) {
+        this.addVerticesBefore(Map.of(path_true, new InstructionCDFGTrueEdge(), path_false, new InstructionCDFGFalseEdge()), decision);
     }
-    
-    public PseudoInstructionContext getInstructionParseTree() {
-        return this.instruction.getPseudocode().getParseTree();
-    }
+
+
 }
