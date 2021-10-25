@@ -29,11 +29,12 @@ import pt.up.fe.specs.binarytranslation.analysis.analyzers.ASegmentAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public abstract class APatternAnalyzer extends ASegmentAnalyzer {
-    public APatternAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
-        super(stream, elf, window);
+    public APatternAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window, BinarySegmentType type) {
+        super(stream, elf, window, type);
     }
 
     public APatternReport analyzeSegment() {

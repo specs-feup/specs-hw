@@ -25,6 +25,7 @@ import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class ExpressionIncrementMatcher extends APatternAnalyzer {
@@ -33,16 +34,16 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
     private List<String> registers = new ArrayList<>();
     private List<String> matches = new ArrayList<>();
 
-    public ExpressionIncrementMatcher(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
-        super(stream, elf, window);
+    public ExpressionIncrementMatcher(ATraceInstructionStream stream, ZippedELFProvider elf, int window, BinarySegmentType type) {
+        super(stream, elf, window, type);
     }
 
     @Override
     protected APatternReport matchTemplates(List<BinarySegment> segs) {
-        var memAn = new MemoryAccessTypesAnalyzer(stream, elf, window);
+        var memAn = new MemoryAccessTypesAnalyzer(stream, elf, window, getSegmentType());
         var memRep = (MemoryPatternReport) memAn.matchWithPrecalculatedBlocks(segs);
 
-        var incAn = new LoopIncrementPatternAnalyzer(stream, elf, window);
+        var incAn = new LoopIncrementPatternAnalyzer(stream, elf, window, getSegmentType());
         var incRep = (LoopIncrementReport) incAn.matchWithPrecalculatedBlocks(segs);
 
         var name = elf.getELFName();

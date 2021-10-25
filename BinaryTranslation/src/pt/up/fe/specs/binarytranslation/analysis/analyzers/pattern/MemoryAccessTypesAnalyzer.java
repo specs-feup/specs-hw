@@ -28,12 +28,13 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexT
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class MemoryAccessTypesAnalyzer extends APatternAnalyzer {
 
-    public MemoryAccessTypesAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
-        super(stream, elf, window);
+    public MemoryAccessTypesAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window, BinarySegmentType type) {
+        super(stream, elf, window, type);
     }
 
     @Override
