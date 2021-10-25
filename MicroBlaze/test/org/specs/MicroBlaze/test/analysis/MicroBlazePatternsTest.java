@@ -34,6 +34,7 @@ import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.LoopIncrement
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.LoopIncrementReport;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 
 public class MicroBlazePatternsTest {
 
@@ -49,7 +50,7 @@ public class MicroBlazePatternsTest {
 
             for (var window : windows) {
                 var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
-                var analyzer = new MemoryAccessTypesAnalyzer(stream, elf, window);
+                var analyzer = new MemoryAccessTypesAnalyzer(stream, elf, window, BinarySegmentType.TRACE_BASIC_BLOCK);
                 var name = elf.getELFName();
                 var report = (MemoryPatternReport) analyzer.analyzeSegment();
 
@@ -82,7 +83,7 @@ public class MicroBlazePatternsTest {
 
             for (var window : windows) {
                 var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
-                var analyzer = new LoopIncrementPatternAnalyzer(stream, elf, window);
+                var analyzer = new LoopIncrementPatternAnalyzer(stream, elf, window, BinarySegmentType.TRACE_BASIC_BLOCK);
                 var report = (LoopIncrementReport) analyzer.analyzeSegment();
 
                 report.setName(name);
@@ -110,7 +111,7 @@ public class MicroBlazePatternsTest {
 
             for (var window : windows) {
                 var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
-                var analyzer = new ExpressionIncrementMatcher(stream, elf, window);
+                var analyzer = new ExpressionIncrementMatcher(stream, elf, window, BinarySegmentType.TRACE_BASIC_BLOCK);
                 var report = (ExpressionIncrementMatchReport) analyzer.analyzeSegment();
 
                 report.setName(name);
@@ -140,7 +141,7 @@ public class MicroBlazePatternsTest {
 
             for (var window : windows) {
                 var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
-                var analyzer = new ArithmeticExpressionMatcher(stream, elf, window, reps);
+                var analyzer = new ArithmeticExpressionMatcher(stream, elf, window, reps, BinarySegmentType.TRACE_BASIC_BLOCK);
                 var report = (ArithmeticPatternReport) analyzer.analyzeSegment();
 
                 report.setName(name);
