@@ -25,20 +25,27 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformAddMemoryDependencies;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveZeroLatencyOps;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class BasicBlockSchedulingAnalyzer extends ASegmentAnalyzer {
+public class SegmentSchedulingAnalyzer extends ASegmentAnalyzer {
 
     private boolean useDependencies;
 
-    public BasicBlockSchedulingAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window,
+    public SegmentSchedulingAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window,
             boolean useDependencies) {
         super(stream, elf, window);
         this.useDependencies = useDependencies;
     }
 
-    public BasicBlockSchedulingAnalyzer(List<List<Instruction>> basicBlocks, boolean useDependencies) {
+    public SegmentSchedulingAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window,
+            boolean useDependencies, BinarySegmentType type) {
+        super(stream, elf, window, type);
+        this.useDependencies = useDependencies;
+    }
+
+    public SegmentSchedulingAnalyzer(List<List<Instruction>> basicBlocks, boolean useDependencies) {
         super(basicBlocks);
         this.useDependencies = useDependencies;
     }
@@ -73,7 +80,8 @@ public class BasicBlockSchedulingAnalyzer extends ASegmentAnalyzer {
                 stats.setInsts(bb).setRepetitions(repetition);
 
                 System.out
-                        .println("Scheduling a BB of " + this.elf.getFilename() + " with " + repetition + " repetitions");
+                        .println("Scheduling a BB of " + this.elf.getFilename() + " with " + repetition
+                                + " repetitions");
                 for (var aluN : alus) {
                     for (var memPortsN : memPorts) {
                         var scheduler = new ListScheduler(dfg);

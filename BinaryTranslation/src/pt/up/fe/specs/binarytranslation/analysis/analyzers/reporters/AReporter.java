@@ -20,6 +20,7 @@ import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
@@ -28,10 +29,17 @@ public abstract class AReporter {
     private Map<ZippedELFProvider, List<List<Instruction>>> staticBlocks;
     private boolean isStatic = false;
     private HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams;
+    protected BinarySegmentType segmentType = BinarySegmentType.TRACE_BASIC_BLOCK;
 
     public AReporter(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams) {
         this.elfWindows = elfWindows;
         this.streams = streams;
+    }
+    
+    public AReporter(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams, BinarySegmentType type) {
+        this.elfWindows = elfWindows;
+        this.streams = streams;
+        this.segmentType = type;
     }
 
     public AReporter(Map<ZippedELFProvider, List<List<Instruction>>> staticBlocks) {
@@ -39,11 +47,12 @@ public abstract class AReporter {
         this.isStatic = true;
     }
 
-    public void analyze(String prefix) {
-        analyze(new int[] { }, prefix);
+    public void analyze() {
+        analyze(new int[] { });
     }
+    
 
-    public void analyze(int[] repetitions, String prefix) {
+    public void analyze(int[] repetitions) {
         var results = new ArrayList<DataFlowStatistics>();
 
         if (isStatic) {
@@ -52,7 +61,7 @@ public abstract class AReporter {
             streamHandler(repetitions, results);
         }
 
-        processResults(results, prefix);
+        processResults(results);
     }
 
     private void streamHandler(int[] repetitions, ArrayList<DataFlowStatistics> results) {
@@ -63,6 +72,8 @@ public abstract class AReporter {
                 var stream = streams.get(elf).get(window);
                 
                 res = analyzeStream(repetitions, elf, window, stream);
+                if (res.size() == 0)
+                    continue;
                 id = processResult(results, elf, id, res, repetitions);
             }
         }
@@ -96,10 +107,18 @@ public abstract class AReporter {
         return id;
     }
 
-    protected abstract void processResults(ArrayList<DataFlowStatistics> results, String prefix);
+    protected abstract void processResults(ArrayList<DataFlowStatistics> results);
 
     protected abstract List<DataFlowStatistics> analyzeStatic(int repetitions, List<Instruction> block);
 
     protected abstract List<DataFlowStatistics> analyzeStream(int[] repetitions, ZippedELFProvider elf, int window,
             ATraceInstructionStream stream);
+
+    protected BinarySegmentType getSegmentType() {
+        return segmentType;
+    }
+
+    protected void setSegmentType(BinarySegmentType segmentType) {
+        this.segmentType = segmentType;
+    }
 }
