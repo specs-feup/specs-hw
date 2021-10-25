@@ -17,29 +17,31 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand;
 
+import java.util.List;
+import java.util.ArrayList;
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.AInstructionCDFGSubscriptModifier;
 
 public abstract class AInstructionCDFGOperandEdge extends AInstructionCDFGEdge{
 
     private String side;
     
-    private AInstructionCDFGModifier source_modifier = null;
+    private List<AInstructionCDFGModifier> source_modifier;
     
     protected AInstructionCDFGOperandEdge(String side) {
         this.side = side;
+        this.source_modifier = new ArrayList<>();
     }
     
-    public void setModifier(AInstructionCDFGModifier subscript) {
-        this.source_modifier = subscript;
+    public void setModifier(AInstructionCDFGModifier modifier) {
+        this.source_modifier.add(modifier);
     }
     
     
-    public AInstructionCDFGModifier getModifier() {
+    public List<AInstructionCDFGModifier> getModifiers() {
         return this.source_modifier;
     }
     
@@ -47,8 +49,13 @@ public abstract class AInstructionCDFGOperandEdge extends AInstructionCDFGEdge{
     @Override
     public Attribute getDOTLabel() {
         
-        if(this.source_modifier != null) {
-            return DefaultAttribute.createAttribute(this.side + "\\n" + this.getModifier());
+        if(!this.source_modifier.isEmpty()) {
+            
+            StringBuilder modifiers = new StringBuilder();
+            
+            this.source_modifier.forEach(m -> modifiers.append(m.toString()+"\\n"));
+            
+            return DefaultAttribute.createAttribute(this.side + "\\n" + modifiers.toString());
         }
         
         return DefaultAttribute.createAttribute(this.side);

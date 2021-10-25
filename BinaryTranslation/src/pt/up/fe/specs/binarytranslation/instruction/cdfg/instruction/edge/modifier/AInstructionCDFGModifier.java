@@ -17,15 +17,19 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier;
 
-public abstract class AInstructionCDFGModifier{
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+
+public abstract class AInstructionCDFGModifier extends AInstructionCDFGNode{
 
     private String reference;
     
     protected AInstructionCDFGModifier() {
+        super("");
         this.reference = "";
     }
     
     protected AInstructionCDFGModifier(String reference) {
+        super("");
         this.reference = reference;
     }
     
@@ -37,4 +41,8 @@ public abstract class AInstructionCDFGModifier{
         return this.reference;
     }
     
+    @Override
+    public String toString() {
+        return this.reference;
+    }
 }

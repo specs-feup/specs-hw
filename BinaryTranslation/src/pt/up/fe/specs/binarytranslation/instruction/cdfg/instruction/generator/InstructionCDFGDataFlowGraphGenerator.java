@@ -17,17 +17,22 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.InstructionCDFGEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.data_type.InstructionCDFGFloatCastModifier;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.data_type.InstructionCDFGSignedCastModifier;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.data_type.InstructionCDFGUnsignedCastModifier;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGRangeSubscript;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGScalarSubscript;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.AInstructionCDFGDataNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGGeneratedVariable;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableFunctionNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.InstructionCDFGOperationNodeMap;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGAssignmentNode;
@@ -39,6 +44,7 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.As
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.BinaryExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.FieldContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.FunctionExprContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.FunctionNameContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfElseStatementContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfStatementContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralContext;
@@ -158,19 +164,15 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
     @Override
     public AInstructionCDFGNode visitBinaryExpr(BinaryExprContext ctx) { 
         
-        AInstructionCDFGNode operator = this.visit(ctx.operator());
+        //AInstructionCDFGNode operator = this.visit(ctx.operator());
         AInstructionCDFGNode operandLeft = this.visit(ctx.left);
         AInstructionCDFGNode operandRight = this.visit(ctx.right);
-        
-        if(this.current_outputs.containsKey(operandLeft.getReference())) {
-            operandLeft = this.current_outputs.get(operandLeft.getReference());
-        }
-        
-        if(this.current_outputs.containsKey(operandRight.getReference())) {
-            operandRight = this.current_outputs.get(operandRight.getReference());
-        }
-        
-        return this.dfg.addOperation(operator, operandLeft, operandRight);
+
+        return this.dfg.addOperation(
+                this.visit(ctx.operator()), 
+                this.current_outputs.getOrDefault(operandLeft.getReference(), operandLeft), 
+                this.current_outputs.getOrDefault(operandRight.getReference(), operandRight)
+                );
     }
     
     @Override
@@ -181,14 +183,13 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
     @Override
     public AInstructionCDFGNode visitUnaryExpr(UnaryExprContext ctx) {
         
-        AInstructionCDFGNode operator = this.visit(ctx.operator());
+        //AInstructionCDFGNode operator = this.visit(ctx.operator());
         AInstructionCDFGNode operand = this.visit(ctx.right);
 
-        if(this.current_outputs.containsKey(operand.getReference())) {
-            operand = this.current_outputs.get(operand.getReference());
-        }
-        
-        return this.dfg.addOperation(operator, operand);
+        return this.dfg.addOperation(
+                this.visit(ctx.operator()),
+                this.current_outputs.getOrDefault(operand.getReference(), operand)
+                );
     }
     
     @Override
@@ -238,7 +239,38 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
   
     @Override
     public AInstructionCDFGNode visitFunctionExpr(FunctionExprContext ctx) {
-        return this.visit(ctx.arguments());
+        
+        if(ctx.arguments() == null) {
+            return new InstructionCDFGVariableFunctionNode(ctx.getText());
+        }else {
+            
+            AInstructionCDFGNode variable = this.visit(ctx.arguments().getChild(0));
+            
+            if(variable instanceof AInstructionCDFGDataNode) {
+                
+                AInstructionCDFGNode modifier = this.visit(ctx.functionName());
+                
+                ((AInstructionCDFGDataNode)variable).setModifier((AInstructionCDFGModifier) modifier);
+
+                return variable;
+            }else {
+                return null;
+            }
+        }
+    }
+    
+    @Override
+    public AInstructionCDFGNode visitFunctionName(FunctionNameContext ctx) {
+        
+        if(ctx.getText().equals("signed")) {
+            return new InstructionCDFGSignedCastModifier();
+        }else if(ctx.getText().equals("unsigned")) {
+            return new InstructionCDFGUnsignedCastModifier();
+        }else if (ctx.getText().equals("float")) {
+            return new InstructionCDFGFloatCastModifier();
+        }else {
+            return null;
+        }
     }
     
     @Override

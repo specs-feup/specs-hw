@@ -17,6 +17,9 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 
@@ -25,19 +28,33 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstr
 
 public class AInstructionCDFGDataNode extends AInstructionCDFGNode{
 
-    private AInstructionCDFGModifier modifier;
+    private List<AInstructionCDFGModifier> modifier;    // List of the data node's modifiers
     
     protected AInstructionCDFGDataNode(String reference) {
         super(reference);
-        this.modifier = null;
+        this.modifier = new ArrayList<>();
     }
     
     protected AInstructionCDFGDataNode(String reference, AInstructionCDFGModifier modifier) {
         this(reference);
-        this.modifier = modifier;
+        this.modifier.add(modifier);
     }
 
-    public AInstructionCDFGModifier getModifier() {
+    /** Adds a modifiers to the data node. Currently no check of oposing modifiers is checked (such as declaring the node is signed and unsigned).
+     * 
+     * In a future revision this will probably throw an Exception when that occurs
+     *  
+     * @param modifier Modifier to be added
+     */
+    public void setModifier(AInstructionCDFGModifier modifier) {
+        this.modifier.add(modifier);
+    }
+    
+    /** Returns the data node's modifiers
+     * 
+     * @return A List of the data node's modifiers
+     */
+    public List<AInstructionCDFGModifier> getModifiers() {
         return this.modifier;
     }
     

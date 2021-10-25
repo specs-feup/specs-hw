@@ -49,6 +49,10 @@ public class InstructionCDFGDataFlowSubgraph extends DataFlowGraph<AInstructionC
         this.uid_map = uid_map;
     }
     
+    /** Returns the UID Map of this graph's nodes
+     * 
+     * @return UID Map of this graph's node
+     */
     public Map<String, Integer> getUIDMap(){
         return this.uid_map;
     }
@@ -147,13 +151,19 @@ public class InstructionCDFGDataFlowSubgraph extends DataFlowGraph<AInstructionC
         vertices.forEach(v -> this.replaceVertex(v, vertex));
     }
     
+    /** Adds an unary operation to the graph
+     * 
+     * @param operator Operator node of the operation
+     * @param operand Operand of the operation
+     * @return Operator node
+     */
     public AInstructionCDFGNode addOperation(AInstructionCDFGNode operator, AInstructionCDFGNode operand) {
         
         this.addVertex(operator);
         this.addVertex(operand);
         
         if(operand instanceof InstructionCDFGVariableNode) {
-            this.addEdge(operand, operator, new InstructionCDFGUnaryOperandEdge(((InstructionCDFGVariableNode)operand).getModifier())); 
+            this.addEdge(operand, operator, new InstructionCDFGUnaryOperandEdge(((InstructionCDFGVariableNode)operand).getModifiers())); 
         }else {
             this.addEdge(operand, operator, new InstructionCDFGUnaryOperandEdge());
         }
@@ -162,39 +172,45 @@ public class InstructionCDFGDataFlowSubgraph extends DataFlowGraph<AInstructionC
     }
     
     
-    
+    /** Adds a binary operation to the graph (with order of operands)
+     * 
+     * @param operator Operator node of the operation
+     * @param operandLeft Left operand node of the operation
+     * @param operandRight Right operand node of the operation
+     * @return Operator node
+     */
     public AInstructionCDFGNode addOperation(AInstructionCDFGNode operator, AInstructionCDFGNode operandLeft, AInstructionCDFGNode operandRight) {
 
         this.addVertex(operator);
         this.addVertex(operandLeft);
         this.addVertex(operandRight);
-        /*
+        
         if(operandLeft instanceof InstructionCDFGVariableNode) {
             
-            AInstructionCDFGNode operandLeftClean = new InstructionCDFGVariableNode(operandLeft.getReference());
+           /* AInstructionCDFGNode operandLeftClean = new InstructionCDFGVariableNode(operandLeft.getReference());
             operandLeftClean.setUID(operandLeft.getUIDVal());
             super.addVertex(operandLeftClean);
-            this.removeVertex(operandLeft);
+            this.removeVertex(operandLeft);*/
             
-            this.addEdge(operandLeftClean, operator, new InstructionCDFGLeftOperandEdge(((InstructionCDFGVariableNode)operandLeft).getModifier())); 
+            this.addEdge(operandLeft, operator, new InstructionCDFGLeftOperandEdge(((InstructionCDFGVariableNode)operandLeft).getModifiers())); 
         }else {
             this.addEdge(operandLeft, operator, new InstructionCDFGLeftOperandEdge());
         }
    
         if(operandRight instanceof InstructionCDFGVariableNode) {
             
-            AInstructionCDFGNode operandRightClean = new InstructionCDFGVariableNode(operandRight.getReference());
+            /*AInstructionCDFGNode operandRightClean = new InstructionCDFGVariableNode(operandRight.getReference());
             super.addVertex(operandRightClean);
             operandRightClean.setUID(operandRight.getUIDVal());
-            this.removeVertex(operandRight);
+            this.removeVertex(operandRight);*/
             
-            this.addEdge(operandRightClean, operator, new InstructionCDFGRightOperandEdge(((InstructionCDFGVariableNode)operandRight).getModifier())); 
+            this.addEdge(operandRight, operator, new InstructionCDFGRightOperandEdge(((InstructionCDFGVariableNode)operandRight).getModifiers())); 
         }else {
             this.addEdge(operandRight, operator, new InstructionCDFGRightOperandEdge());
         }
-        */
-        this.addEdge(operandLeft, operator, new InstructionCDFGLeftOperandEdge());
-        this.addEdge(operandRight, operator, new InstructionCDFGRightOperandEdge());
+        
+      //  this.addEdge(operandLeft, operator, new InstructionCDFGLeftOperandEdge());
+        //this.addEdge(operandRight, operator, new InstructionCDFGRightOperandEdge());
         return operator;
     }
     

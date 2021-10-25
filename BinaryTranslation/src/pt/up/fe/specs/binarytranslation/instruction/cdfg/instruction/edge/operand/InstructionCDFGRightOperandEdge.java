@@ -17,12 +17,13 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand;
 
+import java.util.List;
+
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.AInstructionCDFGSubscriptModifier;
 
 public class InstructionCDFGRightOperandEdge extends AInstructionCDFGOperandEdge{
 
@@ -30,10 +31,14 @@ public class InstructionCDFGRightOperandEdge extends AInstructionCDFGOperandEdge
         super("r");
     }
     
-    public InstructionCDFGRightOperandEdge(AInstructionCDFGModifier subscript) {
+    public InstructionCDFGRightOperandEdge(List<AInstructionCDFGModifier> modifier) {
         this();
-        this.setModifier(subscript);
+        
+        modifier.forEach(m -> this.setModifier(m));
+
     }
+    
+
     
     @Override
     public Attribute getDOTArrowHead() {
@@ -41,7 +46,7 @@ public class InstructionCDFGRightOperandEdge extends AInstructionCDFGOperandEdge
     }
  
     public AInstructionCDFGEdge duplicate() {
-        return new InstructionCDFGRightOperandEdge(this.getModifier());
+        return new InstructionCDFGRightOperandEdge(this.getModifiers());
     }
     
 }

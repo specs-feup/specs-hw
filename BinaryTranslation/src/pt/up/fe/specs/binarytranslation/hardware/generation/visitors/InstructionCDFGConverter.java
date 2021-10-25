@@ -17,11 +17,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.generation.visitors;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
@@ -74,19 +72,12 @@ public class InstructionCDFGConverter {
 
         HashMap<AInstructionCDFGNode, VariableReference> signal_map = new HashMap<>();
         
-        List<AInstructionCDFGNode> nodes_being_resolved = new ArrayList<>();
+        Set<AInstructionCDFGNode> nodes_being_resolved = new HashSet<>();
         
         dfg.getInputs().forEach(i -> {
             signal_map.put(i, new VariableReference(i.getUID()));
             
-            dfg.getVerticesAfter(i).forEach(v -> {
-               
-                if(!nodes_being_resolved.contains(v)) {
-                    nodes_being_resolved.add(v);
-                }
-                
-            });
-            
+            dfg.getVerticesAfter(i).forEach(v -> nodes_being_resolved.add(v)); 
         });
 
         dfg.getOutputs().forEach(o -> signal_map.put(o, new VariableReference(o.getUID())));
@@ -104,29 +95,17 @@ public class InstructionCDFGConverter {
             signal_map.put(v,expr_var); // Adds the variable reference of the vertex
 
             HardwareExpression expr = HardwareNodeExpressionMap.generate(v.getClass());   // Generates a new hardware expression for the vertex
-            
-            
-            
-            
+
             prev.addChild(new ProceduralBlockingStatement(expr_var, expr));// Adds it to the dfg parent node
             
-            dfg.getOperandsOf(v).forEach(o -> {expr.addChild(signal_map.get(o));}); // Adds the operands of the new hardware expression
+            dfg.getOperandsOf(v).forEach(o -> expr.addChild(signal_map.get(o))); // Adds the operands of the new hardware expression
             
             dfg.getVerticesAfter(v).forEach(v_after -> {    // Gets the new vertices to be resolved
                 
                 if(!dfg.hasOutput(v_after)){
-                
-                    if(!nodes_being_resolved.contains(v_after)) {
-                        nodes_being_resolved.add(v_after);
-                    }
+                    nodes_being_resolved.add(v_after);
                 }else {
-
-                    dfg.outgoingEdgesOf(v_after).forEach(g -> {
-                        if(!nodes_being_resolved.contains(dfg.getEdgeTarget(g))) {
-                            nodes_being_resolved.add(dfg.getEdgeTarget(g));
-                        }
-                    });
-                   
+                    dfg.outgoingEdgesOf(v_after).forEach(g -> nodes_being_resolved.add(dfg.getEdgeTarget(g)));
                 }
             });
 
