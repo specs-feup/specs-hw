@@ -28,16 +28,22 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveZeroLatencyOps;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class BasicBlockDataFlowAnalyzer extends ASegmentAnalyzer {
+public class SegmentDataFlowAnalyzer extends ASegmentAnalyzer {
 
-    public BasicBlockDataFlowAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
+    public SegmentDataFlowAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
     }
+    
+    public SegmentDataFlowAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window, BinarySegmentType type) {
+        super(stream, elf, window, type);
+    }
 
-    public BasicBlockDataFlowAnalyzer(List<List<Instruction>> basicBlocks) {
+
+    public SegmentDataFlowAnalyzer(List<List<Instruction>> basicBlocks) {
         super(basicBlocks);
     }
 

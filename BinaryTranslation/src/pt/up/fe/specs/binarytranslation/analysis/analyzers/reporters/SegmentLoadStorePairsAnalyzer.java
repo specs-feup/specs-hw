@@ -21,18 +21,22 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ASegmentAnalyzer;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 
-public class BasicBlockLoadStorePairsAnalyzer extends ASegmentAnalyzer {
+public class SegmentLoadStorePairsAnalyzer extends ASegmentAnalyzer {
 
-    public BasicBlockLoadStorePairsAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
+    public SegmentLoadStorePairsAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
-        // TODO Auto-generated constructor stub
     }
     
-    public BasicBlockLoadStorePairsAnalyzer(List<List<Instruction>> basicBlocks) {
+    public SegmentLoadStorePairsAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window, BinarySegmentType type) {
+        super(stream, elf, window, type);
+    }
+    
+    public SegmentLoadStorePairsAnalyzer(List<List<Instruction>> basicBlocks) {
         super(basicBlocks);
     }
 

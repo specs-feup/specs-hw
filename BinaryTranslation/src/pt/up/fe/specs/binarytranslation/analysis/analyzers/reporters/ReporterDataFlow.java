@@ -21,6 +21,7 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
@@ -29,25 +30,29 @@ public class ReporterDataFlow extends AReporter {
     public ReporterDataFlow(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams) {
         super(elfWindows, streams);
     }
+    
+    public ReporterDataFlow(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams, BinarySegmentType type) {
+        super(elfWindows, streams, type);
+    }
 
     public ReporterDataFlow(Map<ZippedELFProvider, List<List<Instruction>>> staticBlocks) {
         super(staticBlocks);
     }
 
     @Override
-    public void processResults(ArrayList<DataFlowStatistics> results, String prefix) {
+    public void processResults(ArrayList<DataFlowStatistics> results) {
         var basicBlockCSV = new StringBuilder(
-                "Benchmark,Basic Block ID,#Inst,Critical Path Size,ILP Measure,Pairs,Graph\n");
+                "Benchmark,Segment ID,#Inst,Repetitions,Critical Path Size,ILP Measure,Pairs,Graph\n");
 
         for (var res : results) {
             basicBlockCSV.append(res.getElfName()).append(",").append(res.getId()).append(",")
-                    .append(res.getInsts().size()).append(",").append(res.getPathSize()).append(",")
+                    .append(res.getInsts().size()).append(",").append(res.getRepetitions()).append(",").append(res.getPathSize()).append(",")
                     .append(res.getILP()).append(",").append(res.getPairs()).append(",")
                     .append(res.getGraphAsDot()).append("\n");
             System.out.println(res.getGraphAsDot());
         }
 
-        AnalysisUtils.saveAsCsv(basicBlockCSV, "results/basicBlockFlowBenchmark" + prefix);
+        AnalysisUtils.saveAsCsv(basicBlockCSV, "results/SegmentDataFlow");
 
     }
 
@@ -59,7 +64,7 @@ public class ReporterDataFlow extends AReporter {
 
     @Override
     protected List<DataFlowStatistics> analyzeStream(int[] repetitions, ZippedELFProvider elf, int window, ATraceInstructionStream stream) {
-        var analyzer = new BasicBlockDataFlowAnalyzer(stream, elf, window);
+        var analyzer = new SegmentDataFlowAnalyzer(stream, elf, window, segmentType);
         var resList = analyzer.analyze(repetitions);
         return resList;
     }

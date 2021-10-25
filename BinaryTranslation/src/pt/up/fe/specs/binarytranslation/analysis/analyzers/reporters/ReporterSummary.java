@@ -22,14 +22,20 @@ import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class ReporterSummary extends AReporter {
 
-    public ReporterSummary(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams) {
+    public ReporterSummary(Map<ZippedELFProvider, Integer[]> elfWindows,
+            HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams) {
         super(elfWindows, streams);
-        // TODO Auto-generated constructor stub
+    }
+
+    public ReporterSummary(Map<ZippedELFProvider, Integer[]> elfWindows,
+            HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams, BinarySegmentType type) {
+        super(elfWindows, streams, type);
     }
 
     public ReporterSummary(Map<ZippedELFProvider, List<List<Instruction>>> staticBlocks) {
@@ -37,8 +43,9 @@ public class ReporterSummary extends AReporter {
     }
 
     @Override
-    protected void processResults(ArrayList<DataFlowStatistics> results, String prefix) {
-        var benchCSV = new StringBuilder("Benchmark,Basic Block ID, #Instructions, #Operations, #Memory accesses, Mean, STD\n");
+    protected void processResults(ArrayList<DataFlowStatistics> results) {
+        var benchCSV = new StringBuilder(
+                "Benchmark,Segment ID, #Instructions, #Operations, #Memory accesses, Mean, STD\n");
         var dfgCsv = new StringBuilder("Benchmark,Graph\n");
         var stats = new HashMap<String, List<Integer>>();
 
@@ -54,31 +61,31 @@ public class ReporterSummary extends AReporter {
             }
             dfgCsv.append(res.getElfName() + "_" + res.getId() + "," + res.getGraphAsDot() + "\n");
         }
-        AnalysisUtils.saveAsCsv(dfgCsv, "results_new/graphs");
+        AnalysisUtils.saveAsCsv(dfgCsv, "results/BenchmarkDataFlowGraphs");
 
         var total = new ArrayList<Integer>();
         var benchMean = new HashMap<String, Double>();
         var benchSTD = new HashMap<String, Double>();
-        
+
         for (var key : stats.keySet()) {
             var bbs = stats.get(key);
             var mean = arithmeticMean(bbs);
             var std = standardDeviation(bbs, mean);
-            
+
             benchMean.put(key, mean);
             benchSTD.put(key, std);
 
             total.addAll(bbs);
         }
-        
+
         for (var res : results) {
             benchCSV.append(res.getElfName()).append(",")
-            .append(res.getId()).append(",")
-            .append(res.getInsts().size()).append(",")
-            .append(getOperations(res)).append(",")
-            .append(getMemoryOps(res)).append(",")
-            .append(benchMean.get(res.getElfName())).append(",")
-            .append(benchSTD.get(res.getElfName())).append("\n");
+                    .append(res.getId()).append(",")
+                    .append(res.getInsts().size()).append(",")
+                    .append(getOperations(res)).append(",")
+                    .append(getMemoryOps(res)).append(",")
+                    .append(benchMean.get(res.getElfName())).append(",")
+                    .append(benchSTD.get(res.getElfName())).append("\n");
         }
 
         var totalMean = arithmeticMean(total);
@@ -86,7 +93,7 @@ public class ReporterSummary extends AReporter {
         benchCSV.append("Total,--,--,--,--,").append(totalMean).append(",")
                 .append(totalStd).append("\n");
 
-        AnalysisUtils.saveAsCsv(benchCSV, "results/dataFlowBenchmark" + prefix);
+        AnalysisUtils.saveAsCsv(benchCSV, "results/BenchmarkSummary");
     }
 
     private int getOperations(DataFlowStatistics res) {
@@ -131,15 +138,12 @@ public class ReporterSummary extends AReporter {
         return null;
     }
 
-    private List<DataFlowStatistics> analyzeStream(int repetitions, ZippedELFProvider elf, int window,
-            ATraceInstructionStream stream) {
-        return analyzeStream(repetitions, elf, window, stream);
-    }
-
     @Override
     protected List<DataFlowStatistics> analyzeStream(int[] repetitions, ZippedELFProvider elf, int window,
             ATraceInstructionStream stream) {
-        return analyzeStream(repetitions[0], elf, window, stream);
+        var analyzer = new SegmentDataFlowAnalyzer(stream, elf, window, segmentType);
+        var res = analyzer.analyze(repetitions);
+        return res;
     }
 
 }

@@ -24,16 +24,21 @@ import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ASegmentAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
-public class BasicBlockSummaryAnalyzer extends ASegmentAnalyzer {
+public class SegmentSummaryAnalyzer extends ASegmentAnalyzer {
 
-    public BasicBlockSummaryAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
+    public SegmentSummaryAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window) {
         super(stream, elf, window);
     }
     
-    public BasicBlockSummaryAnalyzer(List<List<Instruction>> basicBlocks) {
+    public SegmentSummaryAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window, BinarySegmentType type) {
+        super(stream, elf, window, type);
+    }
+    
+    public SegmentSummaryAnalyzer(List<List<Instruction>> basicBlocks) {
         super(basicBlocks);
     }
     
