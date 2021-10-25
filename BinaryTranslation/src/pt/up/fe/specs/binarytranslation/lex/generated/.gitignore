@@ -1,10 +1,10 @@
+/PseudoInstruction.interp
 /PseudoInstruction.tokens
 /PseudoInstructionBaseListener.java
+/PseudoInstructionBaseVisitor.java
+/PseudoInstructionLexer.interp
 /PseudoInstructionLexer.java
 /PseudoInstructionLexer.tokens
 /PseudoInstructionListener.java
 /PseudoInstructionParser.java
-/PseudoInstructionBaseVisitor.java
 /PseudoInstructionVisitor.java
-/PseudoInstruction.interp
-/PseudoInstructionLexer.interp

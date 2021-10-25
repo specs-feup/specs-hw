@@ -34,9 +34,9 @@ public class AlwaysCombBlock extends HardwareNode {
         var builder = new StringBuilder();
 
         if (!this.blockName.isBlank())
-            builder.append("always_comb : " + this.blockName + "\n");
+            builder.append("always_comb : " + this.blockName + " begin\n");
         else
-            builder.append("always_comb\n");
+            builder.append("always_comb begin\n");
 
         for (var child : this.getChildren()) {
             builder.append("\t" + child.getAsString() + "\n");

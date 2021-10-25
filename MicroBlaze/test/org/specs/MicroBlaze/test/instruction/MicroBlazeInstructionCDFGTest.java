@@ -27,8 +27,8 @@ import org.specs.MicroBlaze.instruction.MicroBlazeInstructionProperties;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.SegmentCDFG;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.legacy.instruction.InstructionCDFG;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.legacy.segment.SegmentCDFG;
 
 public class MicroBlazeInstructionCDFGTest {
 

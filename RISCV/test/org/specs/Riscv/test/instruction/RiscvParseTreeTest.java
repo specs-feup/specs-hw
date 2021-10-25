@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.specs.Riscv.instruction.RiscvInstruction;
 import org.specs.Riscv.instruction.RiscvInstructionProperties;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFGGenerator;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.legacy.instruction.InstructionCDFGGenerator;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
 
 public class RiscvParseTreeTest {

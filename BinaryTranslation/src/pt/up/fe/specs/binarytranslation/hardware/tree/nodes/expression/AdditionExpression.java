@@ -18,7 +18,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class AdditionExpression extends ABinaryHardwareExpression {
 
-    private AdditionExpression() {
+    public AdditionExpression() {
         super("+", HardwareNodeType.AdditionExpression);
     }
 

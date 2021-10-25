@@ -87,7 +87,7 @@ scalarsubscript : ASMFIELD LBRACK idx=integerval RBRACK;
  
 operand:
 	ASMFIELD 			# Field
-   | (metafield)		# metaField
+   | (metafield)		# metaFieldOperand
    | (number)			# Literal
    | scalarsubscript 	# scalarsubscriptOperand
    | rangesubscript 	# rangesubscriptOperand; 

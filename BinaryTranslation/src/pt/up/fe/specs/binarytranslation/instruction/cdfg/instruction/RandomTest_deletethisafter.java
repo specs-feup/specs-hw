@@ -17,16 +17,19 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.StringWriter;
+import java.io.Writer;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.hardware.HardwareCDFG;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.SegmentCDFG;
+import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnit;
+import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
@@ -35,11 +38,10 @@ import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
 public class RandomTest_deletethisafter {
 
     public PseudoInstructionContext getParseTree(String pseudocode) {
-        var parser = new PseudoInstructionParser(
-                new CommonTokenStream(new PseudoInstructionLexer(new ANTLRInputStream(pseudocode))));
+        var parser = new PseudoInstructionParser(new CommonTokenStream(new PseudoInstructionLexer(new ANTLRInputStream(pseudocode))));
         return parser.pseudoInstruction();
     }
-    
+    /*
   
     public InstructionCDFG generateICDFG(String instruction) {
         
@@ -51,7 +53,7 @@ public class RandomTest_deletethisafter {
         
         return icdfg;
     }
-    
+    */
     public void printParseTree(String instruction) {
         PseudoInstructionContext parse = this.getParseTree(instruction);
         var walker = new ParseTreeWalker();
@@ -60,17 +62,45 @@ public class RandomTest_deletethisafter {
     
     @Test
     public void testParse() {
-        List<InstructionCDFG> icdfg_list = new ArrayList<InstructionCDFG>();
+        
    
-        String inst = "if(RA == 0) {RD = 0; $dzo = 1;} else if(RA == -1 && RB == (1 << 31)) {RD = (1 << 31); $dzo = 1;} else {RD = RB / RA;}";
+        //String instruction = "if(RA == 0) {RD = 0; dzo = 1;RF = RD + 3;  RD = RY + 4;} else if(RA == -1) {dzo = 1;} else {RD = RB / RA;}";
       
+      // String instruction = "if(RA == 0) {RD = 0; dzo = 1;}";
         
+        String instruction = "RD = RA + IMM;";
+        
+        InstructionCDFGGenerator icdfg_gen = new InstructionCDFGGenerator();
+        this.printParseTree(instruction);
+        InstructionCDFG icdf = icdfg_gen.generate(this.getParseTree(instruction));
        
-        this.printParseTree(inst);
-        icdfg_list.add(this.generateICDFG(inst));
         
-       /* SegmentCDFG scdfg = new SegmentCDFG(icdfg_list);
-        HardwareCDFG hcdfg = new HardwareCDFG("test",scdfg);
+        
+        InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
+        
+        Writer writer = new StringWriter();
+        
+        
+        
+        exp.exportGraph((GeneralFlowGraph)icdf, "s", writer);
+
+        System.out.println("\n\nPrinting generated InstructionCDFG from instruction: " + instruction + "\n");
+        System.out.println(writer.toString());
+        
+        System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
+        
+        InstructionCDFGCustomInstructionUnitGenerator gen = new InstructionCDFGCustomInstructionUnitGenerator();
+
+        
+       gen.generateHardware(icdf).emit(System.out);
+        /*    
+        List<InstructionCDFG> icdfg_list = new ArrayList<>();
+        
+        icdfg_list.add(icdf);
+        
+       SegmentCDFG scdfg = new SegmentCDFG(icdfg_list);
+
+       HardwareCDFG hcdfg = new HardwareCDFG("test",scdfg);
         
         hcdfg.print();
         */
