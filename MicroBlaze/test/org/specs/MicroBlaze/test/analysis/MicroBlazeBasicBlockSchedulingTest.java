@@ -27,10 +27,11 @@ import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterDataFlow;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterScheduling;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterSummary;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 import pt.up.fe.specs.util.SpecsLogs;
 
-public class MicroBlazeDataFlowTest {
+public class MicroBlazeBasicBlockSchedulingTest {
 
     @Test
     public void testUnrollingBasicBlockDataFlow() {
@@ -41,25 +42,25 @@ public class MicroBlazeDataFlowTest {
         var analyzer = new ReporterDataFlow(elfs, streams);
         
         try {
-            analyzer.analyze(factors, "");
+            analyzer.analyze(factors);
         } catch (Exception e) {
             SpecsLogs.warn("Error message:\n", e);
         }
     }
 
     @Test
-    public void testScheduling() {
-        int factors[] = { 1, 2, 3, 4, 5 };
+    public void testSchedulingBasicBlock() {
+        int factors[] = { 1/*, 2, 3, 4, 5*/ };
         boolean dependencies = true;
         
-        var alus = new ArrayList<Integer>(List.of(1, 2, 4, 8, 200));
-        var memPorts = new ArrayList<Integer>(List.of(1, 2, 4, 8, 200));
+        var alus = new ArrayList<Integer>(List.of(1/*, 2, 4, 8, 200*/));
+        var memPorts = new ArrayList<Integer>(List.of(1/*, 2, 4, 8, 200*/));
         var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
         var streams = buildStreams(elfs);
         var analyzer = new ReporterScheduling(elfs, streams, alus, memPorts, dependencies);
         
         try {
-            analyzer.analyze(factors, "");
+            analyzer.analyze(factors);
         } catch (Exception e) {
             SpecsLogs.warn("Error message:\n", e);
         }
@@ -71,7 +72,7 @@ public class MicroBlazeDataFlowTest {
         var streams = buildStreams(elfs);
         var analyzer = new ReporterSummary(elfs, streams);
         
-        analyzer.analyze("_Summary");
+        analyzer.analyze();
     }
     
 

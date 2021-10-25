@@ -26,6 +26,7 @@ import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.StreamingAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryPatternReport;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ArithmeticExpressionMatcher;
+import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ArithmeticExpressionMatcher.ArithmeticTemplates;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ArithmeticPatternReport;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ExpressionIncrementMatchReport;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.ExpressionIncrementMatcher;
@@ -129,8 +130,9 @@ public class MicroBlazePatternsTest {
     
     @Test
     public void testArithmeticExpressions() {
-        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
+        var elfs = MicroBlazeBasicBlockInfo.getLivermoreN100Kernels();
         var allReports = new ArrayList<ArithmeticPatternReport>();
+        int reps = 1;
 
         for (var elf : elfs.keySet()) {
             var windows = elfs.get(elf);
@@ -138,7 +140,7 @@ public class MicroBlazePatternsTest {
 
             for (var window : windows) {
                 var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
-                var analyzer = new ArithmeticExpressionMatcher(stream, elf, window);
+                var analyzer = new ArithmeticExpressionMatcher(stream, elf, window, reps);
                 var report = (ArithmeticPatternReport) analyzer.analyzeSegment();
 
                 report.setName(name);
@@ -148,7 +150,11 @@ public class MicroBlazePatternsTest {
         }
 
         var sb = new StringBuilder();
-        sb.append("Benchmark,Basic Block ID,Types found\n");
+        sb.append("Benchmark,Basic Block ID");
+        for (var t : ArithmeticTemplates.values()) {
+            sb.append(",").append(t.toString());
+        }
+        sb.append("\n");
         for (var r : allReports) {
             sb.append(r.toCsv());
         }

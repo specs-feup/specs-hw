@@ -29,7 +29,7 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FixedSizeMegablockDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
 
-public class MicroBlazeTestWindows {
+public class MicroBlazeWindowsTest {
 
     @Test
     public void testFindSuiteBasicBlockSizes() throws IOException {
