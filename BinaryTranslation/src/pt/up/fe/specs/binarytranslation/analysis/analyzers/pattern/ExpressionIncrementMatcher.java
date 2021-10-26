@@ -24,6 +24,7 @@ import org.jgrapht.graph.DefaultEdge;
 import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
@@ -31,8 +32,11 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 public class ExpressionIncrementMatcher extends APatternAnalyzer {
     private List<String> bbIDs = new ArrayList<>();
     private List<String> memIDs = new ArrayList<>();
-    private List<String> registers = new ArrayList<>();
-    private List<String> matches = new ArrayList<>();
+    private List<String> memTypes = new ArrayList<>();
+    private List<String> streaming = new ArrayList<>();
+    private List<String> inductionVars = new ArrayList<>();
+    private List<String> increments = new ArrayList<>();
+    private List<String> baseAddrs = new ArrayList<>();
 
     public ExpressionIncrementMatcher(ATraceInstructionStream stream, ZippedELFProvider elf, int window, BinarySegmentType type) {
         super(stream, elf, window, type);
@@ -51,7 +55,7 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
         incRep.setName(name);
 
         matchReports(memRep, incRep);
-        var rep = new ExpressionIncrementMatchReport(bbIDs, memIDs, registers, matches);
+        var rep = new ExpressionIncrementMatchReport(bbIDs, memIDs, memTypes, streaming, inductionVars, increments, baseAddrs);
         rep.setName(memRep.getName());
         
         return rep;
@@ -65,17 +69,47 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
             for (var j = 0; j < memRep.getBasicBlockIDs().size(); j++) {
                 
                 if (memRep.getBasicBlockIDs().get(j).equals(bbid)) {
+                    bbIDs.add(bbid); 
                     var exprGraph = memRep.getGraphs().get(j);
-                    var match = matchRegistersToExpression(exprGraph, regs);
                     var memID = memRep.getMemIDs().get(j);
-                    
-                    bbIDs.add(bbid);
                     memIDs.add(memID);
-                    registers.add(regs);
-                    matches.add(match);
+                    
+                    // Mem Expr type
+                    var memType = memRep.getTypes().get(j);
+                    memTypes.add(memType.toString());
+                    
+                    // Streaming?
+                    boolean streaming = checkStreaming(memType);
+                    this.streaming.add(streaming ? "yes" : "no");
+                    
+                    // Induction var
+                    var indVarReg = matchRegistersToExpression(exprGraph, regs);
+                    inductionVars.add(indVarReg);
+
+                    // Increment
+                    int inc = getIncrement(exprGraph, indVarReg);
+                    increments.add("" + inc);
+                    
+                    // BaseAddr
+                    var bases = getBases(exprGraph, indVarReg);
+                    baseAddrs.add(String.join("|", bases));
                 }
             }
         }
+    }
+
+    private List<String> getBases(Graph<BtfVertex, DefaultEdge> exprGraph, String indVarReg) {
+        // TODO Auto-generated method stub
+        return new ArrayList<>();
+    }
+
+    private int getIncrement(Graph<BtfVertex, DefaultEdge> exprGraph, String indVarReg) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    private boolean checkStreaming(GraphTemplateType memType) {
+        return true;
     }
 
     private String matchRegistersToExpression(Graph<BtfVertex, DefaultEdge> exprGraph, String regs) {
@@ -94,7 +128,8 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
                     }
                 }
             }
-            matchList.add(found ? "yes" : "no");
+            if (found)
+                matchList.add(reg);
         }
         return String.join("|", matchList);
     }
