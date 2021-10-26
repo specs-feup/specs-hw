@@ -90,4 +90,8 @@ public class MemoryPatternReport extends APatternReport {
     public List<String> getMemIDs() {
         return memIDs;
     }
+
+    public List<GraphTemplateType> getTypes() {
+        return types;
+    }
 }

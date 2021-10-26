@@ -27,6 +27,7 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 
 public abstract class APatternReport {
     protected List<Graph<BtfVertex, DefaultEdge>> graphs = new ArrayList<>();
+    private String csvHeader = "";
     private List<String> basicBlockIDs = new ArrayList<>();
     
     protected String name;
@@ -58,4 +59,12 @@ public abstract class APatternReport {
     }
     
     public abstract String toCsv();
+
+    public String getCsvHeader() {
+        return csvHeader;
+    }
+
+    protected void setCsvHeader(String csvHeader) {
+        this.csvHeader = csvHeader;
+    }
 }
