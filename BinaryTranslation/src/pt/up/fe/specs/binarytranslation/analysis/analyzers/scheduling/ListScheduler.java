@@ -25,6 +25,7 @@ import java.util.Queue;
 
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.traverse.TopologicalOrderIterator;
 
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowCriticalPath;
@@ -32,14 +33,14 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.ASegmentDataFlowGraph;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.dependency.DependencyGraph;
 
 public class ListScheduler {
-    private ASegmentDataFlowGraph graph;
+    private DependencyGraph graph;
 
-    public ListScheduler(ASegmentDataFlowGraph g) {
+    public ListScheduler(DependencyGraph g) {
         this.graph = g;
         setPriorities();
-        //System.out.println(GraphUtils.generateGraphURL(g));
     }
 
     public Schedule scheduleWithDiscreteResources(int alus, int memoryPorts) {

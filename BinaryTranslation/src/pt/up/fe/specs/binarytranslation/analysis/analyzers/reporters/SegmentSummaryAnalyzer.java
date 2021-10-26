@@ -48,7 +48,7 @@ public class SegmentSummaryAnalyzer extends ASegmentAnalyzer {
         
         for (var bb : segments) {
             var dfg = new BasicBlockDataFlowGraph(bb, 1);
-            var stats = new DataFlowStatistics(dfg);
+            var stats = new DataFlowStatistics(dfg, dfg.getSegment());
             res.add(stats);
         }
         return res;

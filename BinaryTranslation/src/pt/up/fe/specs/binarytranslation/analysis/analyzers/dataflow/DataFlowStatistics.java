@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
 
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.Schedule;
@@ -30,7 +31,7 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.ASegmentDataFlo
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public class DataFlowStatistics {
-    private ASegmentDataFlowGraph graph;
+    private SimpleDirectedGraph<BtfVertex, DefaultEdge> graph;
     private Graph<BtfVertex, DefaultEdge> path;
     private List<String> sources;
     private List<String> sinks;
@@ -45,9 +46,9 @@ public class DataFlowStatistics {
     private List<Schedule> schedules = new ArrayList<>();
     private List<Instruction> insts;
 
-    public DataFlowStatistics(ASegmentDataFlowGraph graph) {
+    public DataFlowStatistics(SimpleDirectedGraph<BtfVertex, DefaultEdge> graph, List<Instruction> insts) {
         this.graph = graph;
-        this.insts = graph.getSegment();
+        this.insts = insts;
     }
 
     @Override
