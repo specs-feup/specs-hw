@@ -23,6 +23,7 @@ import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStat
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.ListScheduler;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
+import pt.up.fe.specs.binarytranslation.analysis.graphs.dependency.DependencyGraph;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformAddMemoryDependencies;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveZeroLatencyOps;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
@@ -57,34 +58,37 @@ public class SegmentSchedulingAnalyzer extends ASegmentAnalyzer {
         for (var bb : segments) {
             for (var repetition : repetitions) {
                 var dfg = new BasicBlockDataFlowGraph(bb, repetition);
-                var t = new TransformRemoveZeroLatencyOps(dfg);
-                dfg = (BasicBlockDataFlowGraph) t.applyToGraph();
+                var dep = new DependencyGraph(dfg, useDependencies);
 
-                // Apply dependencies
-                if (useDependencies) {
-                    System.out.println("Adding extra dependency edges...");
-                    var trans = new TransformAddMemoryDependencies(dfg);
-                    dfg = (BasicBlockDataFlowGraph) trans.applyToGraph();
-                }
-                // Build temporary IDs
-                int id = 0;
-                for (var v : dfg.vertexSet()) {
-                    v.setTempId(id);
-                    id++;
-                }
+                // ---------------------
+                // var t = new TransformRemoveZeroLatencyOps(dfg);
+                // dfg = (BasicBlockDataFlowGraph) t.applyToGraph();
+                //
+                // // Apply dependencies
+                // if (useDependencies) {
+                // System.out.println("Adding extra dependency edges...");
+                // var trans = new TransformAddMemoryDependencies(dfg);
+                // dfg = (BasicBlockDataFlowGraph) trans.applyToGraph();
+                // }
+                // // Build temporary IDs
+                // int id = 0;
+                // for (var v : dfg.vertexSet()) {
+                // v.setTempId(id);
+                // id++;
+                // }
+                //
+                // System.out.println("Transformed graph:");
+                // System.out.println(GraphUtils.generateGraphURL(dfg));
+                // --------------------------
 
-                System.out.println("Transformed graph:");
-                System.out.println(GraphUtils.generateGraphURL(dfg));
-
-                var stats = new DataFlowStatistics(dfg);
+                var stats = new DataFlowStatistics(dep, dfg.getSegment());
                 stats.setInsts(bb).setRepetitions(repetition);
 
-                System.out
-                        .println("Scheduling a BB of " + this.elf.getFilename() + " with " + repetition
-                                + " repetitions");
+                System.out.println(
+                        "Scheduling a segment of " + this.elf.getFilename() + " with " + repetition + " repetitions");
                 for (var aluN : alus) {
                     for (var memPortsN : memPorts) {
-                        var scheduler = new ListScheduler(dfg);
+                        var scheduler = new ListScheduler(dep);
                         var schedule = scheduler.scheduleWithDiscreteResources(aluN, memPortsN);
                         var total = schedule.getScheduleLatency();
 

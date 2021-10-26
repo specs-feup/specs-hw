@@ -72,7 +72,7 @@ public class SegmentDataFlowAnalyzer extends ASegmentAnalyzer {
                         sources.add(v.getLabel());
                 }
 
-                var stats = new DataFlowStatistics(dfg);
+                var stats = new DataFlowStatistics(dfg, dfg.getSegment());
                 stats.setPath(path).setInsts(bb).setRepetitions(rep).setSources(sources).setSinks(sinks);
 
                 res.add(stats);
