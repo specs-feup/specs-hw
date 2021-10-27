@@ -122,7 +122,7 @@ public class MicroBlazePatternsTest {
         }
 
         var sb = new StringBuilder();
-        sb.append("Benchmark,BBID,MemExpr ID,Registers,Matches\n");
+        sb.append(allReports.get(0).getCsvHeader());
         for (var r : allReports) {
             sb.append(r.toCsv());
         }

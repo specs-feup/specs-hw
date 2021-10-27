@@ -50,11 +50,11 @@ public class MicroBlazeBasicBlockSchedulingTest {
 
     @Test
     public void testSchedulingBasicBlock() {
-        int factors[] = { 1/*, 2, 3, 4, 5*/ };
+        int factors[] = { /*1,*/ 2/*, 3, 4, 5*/ };
         boolean dependencies = true;
         
-        var alus = new ArrayList<Integer>(List.of(1/*, 2, 4, 8, 200*/));
-        var memPorts = new ArrayList<Integer>(List.of(1/*, 2, 4, 8, 200*/));
+        var alus = new ArrayList<Integer>(List.of(1, 2, 4/*, 8, 200*/));
+        var memPorts = new ArrayList<Integer>(List.of(1, 2, 4/*, 8, 200*/));
         var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
         var streams = buildStreams(elfs);
         var analyzer = new ReporterScheduling(elfs, streams, alus, memPorts, dependencies);
