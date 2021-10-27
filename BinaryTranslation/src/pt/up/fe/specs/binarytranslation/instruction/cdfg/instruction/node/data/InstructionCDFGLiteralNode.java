@@ -23,6 +23,10 @@ public class InstructionCDFGLiteralNode extends AInstructionCDFGDataNode{
         super(reference);
     }
 
+    public Number getValue() {
+        return Integer.valueOf(super.getReference());
+    }
+    
     @Override
     public String getReference() {
         return "I_" + super.getReference().replace("-", "n");

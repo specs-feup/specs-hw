@@ -18,17 +18,17 @@
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jgrapht.Graphs;
-
 public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
 
-    private VertexList<V> inputs;
-    private VertexList<V> outputs; 
+    private Set<V> inputs;
+    private Set<V> outputs; 
     
     /** Creates a new GeneralFlowGraph
      * 
@@ -37,8 +37,8 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
     public GeneralFlowGraph(Class<? extends E> EdgeClass) {
         super(EdgeClass);
         
-        this.inputs = new VertexList<V>();
-        this.outputs = new VertexList<V>(); 
+        this.inputs = new HashSet<V>();
+        this.outputs = new HashSet<V>(); 
        
     }
 
@@ -54,8 +54,8 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
     @Override
     public void replaceVertex(V current, V replacement) {
         
-        this.getInputVertexList().replace(current);
-        this.getOutputVertexList().replace(current);
+        this.getInputs().remove(current);
+        this.getOutputs().remove(current);
         
         super.replaceVertex(current, replacement);
     }
@@ -65,8 +65,8 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * @param predicate Predicate to be evaluated
      * @return List of vertices that evaluate true
      */
-    public List<V> getVerticesOfPredicate(Predicate<V> predicate){
-        return this.getVertexStreamOfPredicate(predicate).collect(Collectors.toList());
+    public Set<V> getVerticesOfPredicate(Predicate<V> predicate){
+        return this.getVertexStreamOfPredicate(predicate).collect(Collectors.toSet());
     }
     
     /** Returns a Stream of vertices that evaluate true to the argument predicate
@@ -96,20 +96,18 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * 
      * @return List of the graph's input vertices
      */
-    public List<V> getInputs(){
+    public Set<V> getInputs(){
         return this.inputs;
     }
     
-    public VertexList<V> getInputVertexList(){
-        return this.inputs;
-    }
+
     
     /** Sets the graph's input vertices List to the parameter's List<br>
      * The parameter's vertices must have been already added to the graph
      * @param vertices New List of outputs
      */
-    public void setInputs(List<V> vertices) {
-        this.getInputVertexList().set(vertices);
+    public void setInputs(Set<V> vertices) {
+        vertices.forEach(v -> this.getInputs().add(v));
     }
     
     /** Adds a vertex to the graph's input vertices List, only if the vertex does not exist
@@ -119,7 +117,7 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
     public void addInput(V vertex) {
        this.assertVertexExist(vertex);
        this.replaceVertex(vertex, this.getInput(vertex));
-       this.getInputVertexList().add(vertex);
+       this.getInputs().add(vertex);
         
     }
     
@@ -130,7 +128,14 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * @return The vertex found or null if no vertex is found
      */
     public V getInput(V vertex) {
-        return this.getInputVertexList().get(vertex);
+        
+        for(V v : this.getInputs()) {
+            if(v.equals(vertex)) {
+                return v;
+            }
+        }
+        
+        return null;
     }
     
     /** Checks if the graph has the argument vertex in the graph's input vertices List.<br>
@@ -139,7 +144,7 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * @return True if the graph has the argument vertex in the inputs list, otherwise false
      */
     public boolean hasInput(V vertex) {
-        return this.getInputVertexList().contains(vertex);
+        return this.getInputs().contains(vertex);
     }
     
     /** Removes the argument vertex from the graph's input vertices List.<br>
@@ -148,27 +153,25 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * @param vertex Vertex to be removed
      */
     public void removeInput(V vertex) {
-        this.getInputVertexList().remove(vertex);
+        this.getInputs().remove(vertex);
     }
     
     /** Returns a List of the graph's output vertices
      * 
      * @return List of the graph's output vertices
      */
-    public List<V> getOutputs(){
+    public Set<V> getOutputs(){
         return this.outputs;
     }
     
-    public VertexList<V> getOutputVertexList(){
-        return this.outputs;
-    }
+
     
     /** Sets the graph's output vertices List to the parameter's List<br>
      * The parameter's vertices must have been already added to the graph
      * @param vertices New List of outputs
      */
-    public void setOutputs(List<V> vertices) {
-        this.getOutputVertexList().add(vertices);
+    public void setOutputs(Set<V> vertices) {      
+        vertices.forEach(v -> this.getOutputs().add(v));
     }
     
     /** Adds a vertex of the graph to the graph's outputs List, only if the vertex does not exist
@@ -177,7 +180,7 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      */
     public void addOutput(V vertex) {
         this.assertVertexExist(vertex);
-        this.getOutputVertexList().add(vertex);
+        this.getOutputs().add(vertex);
     }
     
     /** Returns the vertex from the graph's outputs list that the equals() method of the vertices evaluates true against the argument vertex.<br>
@@ -187,7 +190,14 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * @return The vertex found or null if no vertex is found
      */
     public V getOutput(V vertex) {
-        return this.getOutputVertexList().get(vertex);
+        
+        for(V v : this.getOutputs()) {
+            if(v.equals(vertex)) {
+                return v;
+            }
+        }
+        
+        return null;
     }
     
     /** Checks if the graph has the argument vertex in the graph's output vertices List.<br>
@@ -196,7 +206,7 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * @return True if the graph has the argument vertex in the outputs list, otherwise false
      */
     public boolean hasOutput(V vertex) {
-        return this.getOutputVertexList().contains(vertex);
+        return this.getOutputs().contains(vertex);
     }
     
     /** Removes the argument vertex from the graph's output vertices List.<br>
@@ -205,15 +215,7 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * @param vertex Vertex to be removed
      */
     public void removeOutput(V vertex) {
-        this.getOutputVertexList().remove(vertex);
-    }
-    
-    public V getFirstOutput() {
-        return this.getOutputs().get(0);
-    }
-
-    public V getFirstInput() {
-        return this.getInputs().get(0);
+        this.getOutputs().remove(vertex);
     }
     
     /** Merges the argument vertices List with the argument vertex.
@@ -224,7 +226,7 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * @param vertices Vertices to be merges and removed from the graph
      * @throws IllegalArgumentException If any of the argument's vertices are not part of the graph
      */
-    public void mergeVertices(V vertex , List<V> vertices) throws IllegalArgumentException{
+    public void mergeVertices(V vertex , Collection<V> vertices) throws IllegalArgumentException{
          
         this.assertVertexExist(vertex); 
         vertices.forEach(v -> this.assertVertexExist(v));
@@ -262,79 +264,15 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * @param vertex Vertex to get the operands of
      * @return A List of the operands(vertices) of the argument vertex
      */
-    public List<V> getOperandsOf(V vertex){
+    public Collection<V> getOperandsOf(V vertex){
         
-        List<V> operand_list = new ArrayList<V>();
+        Collection<V> operand_list = new ArrayList<V>();
         
         
         this.incomingEdgesOf(vertex).forEach(e -> operand_list.add(this.getEdgeSource(e)));
         
         return operand_list;
     }
-    
-    @Deprecated
-    public GeneralFlowGraph<V,E> mergeGraph(GeneralFlowGraph<V,E> graph) {
-        
-            // Joins the new graph to the current one
-           Graphs.addGraph(this, graph);
-    
-           
-           
-      // Merge this graph output nodes that output to graph input nodes, and add the independent input nodes of graph to this graph's inputs
-         /*  for(V vertex : graph.getInputs()) {
 
-              
-              if(this.hasOutput(vertex)) {   
-    
-                  this.replaceVertex(graph.getInput(vertex), this.getOutput(vertex)); 
-                  
-                  this.removeNodeAndJoinEdges(this.getOutput(vertex));
-                  this.outputs.remove(vertex);
-      
-              }else {
-      
-                  if(this.hasInput(vertex)) {
-                      this.replaceVertex(graph.getInput(vertex), this.getInput(vertex));
-                  }else{   
-                      System.out.println(vertex);
-                      this.addInput(vertex);
-                  }
-              }
-
-          }
-          */
-           
-           
-           graph.getInputs().forEach(v -> {
-               
-               if(this.hasOutput(v)) {
-                   //super.replaceVertex(v, this.getOutput(v));
-               }
-               
-               if(this.hasInput(v)) {
-                   this.mergeVertices(this.getInput(v), List.of(v));
-  
-               }else {
-                   this.addInput(v);
-               }
-               
-           });
-           
-          // merges the output nodes of both graphs
-          
-          graph.getOutputs().forEach(vertex -> {
-              
-              if(!this.hasOutput(vertex)) {   
-                  this.addOutput(vertex);
-               }else {
-                   this.replaceVertex(graph.getOutput(vertex), this.getOutput(vertex));
-               }
-              
-          });
-
-          
-          
-           return this;
-       }
         
 }

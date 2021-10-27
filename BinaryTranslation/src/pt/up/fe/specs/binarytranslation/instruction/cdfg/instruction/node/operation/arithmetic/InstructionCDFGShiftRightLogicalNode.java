@@ -17,9 +17,9 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic;
 
-public class InstructionCDFGShiftRightLogical extends AInstructionCDFGArithmeticOperationNode{
+public class InstructionCDFGShiftRightLogicalNode extends AInstructionCDFGArithmeticOperationNode{
 
-    public InstructionCDFGShiftRightLogical() {
+    public InstructionCDFGShiftRightLogicalNode() {
         super(InstructionCDFGArithmeticOperationNodeType.ShiftRightLogical);
     }
     

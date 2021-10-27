@@ -17,14 +17,14 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.dataflowgraph.DataFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.AInstructionCDFGSubscriptModifier;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.InstructionCDFGLeftOperandEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.InstructionCDFGRightOperandEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.InstructionCDFGUnaryOperandEdge;
@@ -36,7 +36,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.p
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.AInstructionCDFGOperationNode;
 
 public class InstructionCDFGDataFlowSubgraph extends DataFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>{
-
+ 
     private Map<String, Integer> uid_map;
     
     public InstructionCDFGDataFlowSubgraph() {
@@ -60,7 +60,7 @@ public class InstructionCDFGDataFlowSubgraph extends DataFlowGraph<AInstructionC
     
     @Override
     public void generateOutputs() {
-        this.setOutputs(this.getVertexStreamOfPredicate(v -> v instanceof AInstructionCDFGDataNode).filter(v -> !this.incomingEdgesOf(v).isEmpty()).collect(Collectors.toList()));
+        this.setOutputs(this.getVertexStreamOfPredicate(v -> v instanceof AInstructionCDFGDataNode).filter(v -> !this.incomingEdgesOf(v).isEmpty()).collect(Collectors.toSet()));
     }
     
     public void setVertexUID(AInstructionCDFGNode vertex) {
@@ -92,7 +92,7 @@ public class InstructionCDFGDataFlowSubgraph extends DataFlowGraph<AInstructionC
     }
     
     @Override
-    public void addVertices(List<AInstructionCDFGNode> vertices) {
+    public void addVertices(Set<AInstructionCDFGNode> vertices) {
         super.addVertices(vertices);
         vertices.forEach(v -> this.setVertexUID(v));
     }
@@ -107,7 +107,7 @@ public class InstructionCDFGDataFlowSubgraph extends DataFlowGraph<AInstructionC
         }
         
     }
-    
+
     @Override
     public void addOutput(AInstructionCDFGNode vertex) throws IllegalArgumentException{
         
@@ -118,7 +118,7 @@ public class InstructionCDFGDataFlowSubgraph extends DataFlowGraph<AInstructionC
         }
         
     }
-    
+    /*
     @Override
     public void replaceVertex(AInstructionCDFGNode current, AInstructionCDFGNode replacement) throws IllegalArgumentException{
         
@@ -145,9 +145,9 @@ public class InstructionCDFGDataFlowSubgraph extends DataFlowGraph<AInstructionC
         
         this.removeVertex(current);
     }
-    
+    */
     @Override
-    public void mergeVertices(AInstructionCDFGNode vertex, List<AInstructionCDFGNode> vertices) throws IllegalArgumentException {        
+    public void mergeVertices(AInstructionCDFGNode vertex, Collection<AInstructionCDFGNode> vertices) throws IllegalArgumentException {        
         vertices.forEach(v -> this.replaceVertex(v, vertex));
     }
     
@@ -209,8 +209,6 @@ public class InstructionCDFGDataFlowSubgraph extends DataFlowGraph<AInstructionC
             this.addEdge(operandRight, operator, new InstructionCDFGRightOperandEdge());
         }
         
-      //  this.addEdge(operandLeft, operator, new InstructionCDFGLeftOperandEdge());
-        //this.addEdge(operandRight, operator, new InstructionCDFGRightOperandEdge());
         return operator;
     }
     

@@ -17,6 +17,12 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data;
 
+import java.util.Map;
+
 public class InstructionCDFGControlFlowConditionSubgraph extends InstructionCDFGDataFlowSubgraph{
 
+    public InstructionCDFGControlFlowConditionSubgraph(Map<String, Integer> uid_map) {
+        super(uid_map);
+    }
+    
 }

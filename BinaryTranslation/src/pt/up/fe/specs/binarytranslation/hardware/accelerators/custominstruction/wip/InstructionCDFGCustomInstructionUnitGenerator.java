@@ -30,13 +30,13 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDecl
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.SingleStatement;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGGeneratedVariable;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
 
 public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGenerator{
 
     private VerilogModuleTree module_tree;
     private ModuleDeclaration module;
-    
-    private InstructionCDFGConverter converter;
     
     private Map<AInstructionCDFGNode, SingleStatement> completed_statements;
 
@@ -48,18 +48,23 @@ public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGene
         
         
         icdfg.getDataInputs().forEach((input) -> {
-            this.module_tree.addDeclaration(new PortDeclaration(input.getUID(), 32, ModulePortDirection.input));
+            if(!(input instanceof InstructionCDFGLiteralNode) && !(input instanceof InstructionCDFGGeneratedVariable)) {
+                this.module_tree.addDeclaration(new PortDeclaration(input.getUID(), 32, ModulePortDirection.input));
+            }
+           
         });
         
         icdfg.getDataOutputs().forEach((output) -> {
-            this.module_tree.addDeclaration(new PortDeclaration(output.getUID(), 32, ModulePortDirection.output));
+            if(!(output instanceof InstructionCDFGGeneratedVariable)) {
+                this.module_tree.addDeclaration(new PortDeclaration(output.getUID(), 32, ModulePortDirection.output));
+            }
         });
         
 
         InstructionCDFGConverter.convertInstruction(this.module.addChild(new AlwaysCombBlock()), icdfg);
         
         
-        return new InstructionCDFGCustomInstructionUnit("test", module_tree);
+        return new InstructionCDFGCustomInstructionUnit(icdfg.getInstruction().getName(), module_tree);
     }
     
 }

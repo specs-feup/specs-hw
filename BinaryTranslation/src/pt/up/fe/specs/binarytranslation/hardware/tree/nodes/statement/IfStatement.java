@@ -27,7 +27,7 @@ public class IfStatement extends HardwareStatement {
         this.addChild(expr);
         this.type = HardwareNodeType.IfStatement;
     }
-
+    
     public void addStatement(HardwareStatement stat) {
         this.addChild(stat);
     }
@@ -37,11 +37,12 @@ public class IfStatement extends HardwareStatement {
     }
 
     public List<HardwareStatement> getStatements() {
-        var list = this.getChildren();
+      /*  var list = this.getChildren();
         var nlist = new ArrayList<HardwareStatement>();
         for (var c : list)
             nlist.add((HardwareStatement) c);
-        return nlist;
+        return nlist;*/
+        return new ArrayList<HardwareStatement>();
     }
 
     @Override

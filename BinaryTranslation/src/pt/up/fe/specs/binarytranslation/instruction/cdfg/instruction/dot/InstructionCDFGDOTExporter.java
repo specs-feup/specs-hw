@@ -21,7 +21,6 @@ import java.util.*;
 
 import org.jgrapht.nio.*;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.controlanddataflowgraph.ControlFlowNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.dataflowgraph.DataFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraphDOTExporter;
@@ -31,6 +30,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.condit
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGControlMergeNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGDecisionNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AControlFlowNode;
 
 public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>, AInstructionCDFGEdge>{
 
@@ -56,7 +56,6 @@ public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<Gene
         if (vertexId == null) {
     
             vertexId = vertex.getUID();
-    
             
             if (!isValidID(vertexId)) {
                 throw new ExportException("Generated id '" + vertexId + "'for vertex '" + vertex + "' is not valid with respect to the .dot language");
@@ -95,40 +94,28 @@ public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<Gene
             if(source != null && target != null){
            
                 if(source instanceof DataFlowGraph) {
-                    edgeBuilder.append(this.getVertexID(source.getFirstOutput()));
-                    edgeBuilder.append(":s");
-                }else if(source instanceof ControlFlowNode){
-                    AInstructionCDFGNode control = ((ControlFlowNode<AInstructionCDFGNode,AInstructionCDFGEdge>)source).getVertex();
+                    edgeBuilder.append(this.getVertexID((AInstructionCDFGNode) source.getOutputs().toArray()[0]).toString() + ":s");
+                }else if(source instanceof AControlFlowNode){
+                    AInstructionCDFGNode control = ((AControlFlowNode)source).getVertex();
                     edgeBuilder.append(this.getVertexID(control));
                     
-                    if(control instanceof InstructionCDFGDecisionNode) {
-                        if(edge instanceof InstructionCDFGTrueEdge) {
-                            edgeBuilder.append(":se");
-                        }else if(edge instanceof InstructionCDFGFalseEdge) {
-                            edgeBuilder.append(":sw");
-                        }
+                    if(control instanceof InstructionCDFGDecisionNode) {    
+                        edgeBuilder.append((edge instanceof InstructionCDFGTrueEdge) ? ":se" : ((edge instanceof InstructionCDFGFalseEdge) ? ":sw" : ""));
                     }else if(control instanceof InstructionCDFGControlMergeNode) {
                         edgeBuilder.append(":s");
                     }
-                    
-                    
                 }
                 
                 edgeBuilder.append(connector);
                 
                 if(target instanceof DataFlowGraph) {
-                    edgeBuilder.append(this.getVertexID(target.getFirstInput()));
-                    edgeBuilder.append(":n");
-                }else if (target instanceof ControlFlowNode){
-                    AInstructionCDFGNode control = ((ControlFlowNode<AInstructionCDFGNode,AInstructionCDFGEdge>)target).getVertex();
+                    edgeBuilder.append(this.getVertexID((AInstructionCDFGNode) target.getInputs().toArray()[0]).toString() + ":n");    
+                }else if (target instanceof AControlFlowNode){
+                    AInstructionCDFGNode control = ((AControlFlowNode)target).getVertex();
                     edgeBuilder.append(this.getVertexID(control));
                     
-                    if(control instanceof InstructionCDFGDecisionNode) {
-                        edgeBuilder.append(":n");
-                    }else if(control instanceof InstructionCDFGControlMergeNode) {
-                        edgeBuilder.append(":n");
-                        
-                    }
+                    edgeBuilder.append(((control instanceof InstructionCDFGControlMergeNode) || (control instanceof InstructionCDFGDecisionNode)) ? ":n" : "");
+    
                 }
         
                 getEdgeAttributes(edge).ifPresent(m -> { edgeBuilder.append(renderAttributes(m));});

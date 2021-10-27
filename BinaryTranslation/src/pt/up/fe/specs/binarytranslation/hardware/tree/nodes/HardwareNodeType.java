@@ -32,7 +32,22 @@ public enum HardwareNodeType {
     SubtractionExpression,
     MultiplicationExpression,
     LeftShiftExpression,
+    RightLogicalShiftExpression,
+    RightArithmeticShiftExpression,
+    
     BitWiseAndExpression,
+    BitWiseNotExpression,
+    BitWiseXorExpression,
+    BitWiseOrExpression,
+    
+    EqualsToExpression,
+    NotEqualsToExpression,
+    GreaterThanExpression,
+    LessThanExpression,
+    GreaterThanOrEqualsToExpression,
+    LessThanOrEqualsToExpression,
+    
+    
     ComparsionExpression,
     ImmediateReference,
     VariableReference,
@@ -51,5 +66,7 @@ public enum HardwareNodeType {
     ContinuousAssignment,
     ProceduralBlocking,
     ProceduralNonBlocking,
-    IfStatement;
+    IfStatement,
+    IfElseStatement
+    ;
 }
