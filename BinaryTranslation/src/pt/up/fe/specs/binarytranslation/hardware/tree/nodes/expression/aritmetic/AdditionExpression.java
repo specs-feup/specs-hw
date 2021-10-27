@@ -11,19 +11,21 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
  
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class LeftShiftExpression extends ABinaryHardwareExpression {
+public class AdditionExpression extends ABinaryHardwareExpression {
 
-    private LeftShiftExpression() {
-        super("<<", HardwareNodeType.LeftShiftExpression);
+    private AdditionExpression() {
+        super("+", HardwareNodeType.AdditionExpression);
     }
 
-    public LeftShiftExpression(HardwareExpression varA, HardwareExpression varB) {
-        super("<<", HardwareNodeType.LeftShiftExpression, varA, varB);
+    public AdditionExpression(HardwareExpression varA, HardwareExpression varB) {
+        super("+", HardwareNodeType.AdditionExpression, varA, varB);
     }
 
     /*
@@ -31,6 +33,6 @@ public class LeftShiftExpression extends ABinaryHardwareExpression {
      */
     @Override
     protected HardwareNode copyPrivate() {
-        return new LeftShiftExpression();
+        return new AdditionExpression();
     }
 }

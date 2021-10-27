@@ -11,19 +11,21 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
  
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class MultiplicationExpression extends ABinaryHardwareExpression {
+public class BitWiseAndExpression extends ABinaryHardwareExpression {
 
-    private MultiplicationExpression() {
-        super("*", HardwareNodeType.MultiplicationExpression);
+    private BitWiseAndExpression() {
+        super("&", HardwareNodeType.BitWiseAndExpression);
     }
 
-    public MultiplicationExpression(HardwareExpression varA, HardwareExpression varB) {
-        super("*", HardwareNodeType.MultiplicationExpression, varA, varB);
+    public BitWiseAndExpression(HardwareExpression varA, HardwareExpression varB) {
+        super("&", HardwareNodeType.BitWiseAndExpression, varA, varB);
     }
 
     /*
@@ -31,6 +33,6 @@ public class MultiplicationExpression extends ABinaryHardwareExpression {
      */
     @Override
     protected HardwareNode copyPrivate() {
-        return new MultiplicationExpression();
+        return new BitWiseAndExpression();
     }
 }

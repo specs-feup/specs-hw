@@ -163,8 +163,7 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
     
     @Override
     public AInstructionCDFGNode visitBinaryExpr(BinaryExprContext ctx) { 
-        
-        //AInstructionCDFGNode operator = this.visit(ctx.operator());
+
         AInstructionCDFGNode operandLeft = this.visit(ctx.left);
         AInstructionCDFGNode operandRight = this.visit(ctx.right);
 
@@ -182,8 +181,7 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
     
     @Override
     public AInstructionCDFGNode visitUnaryExpr(UnaryExprContext ctx) {
-        
-        //AInstructionCDFGNode operator = this.visit(ctx.operator());
+
         AInstructionCDFGNode operand = this.visit(ctx.right);
 
         return this.dfg.addOperation(
@@ -212,11 +210,6 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
         return new InstructionCDFGLiteralNode(ctx.number().getText());
     }
     
-   /* @Override
-    public AInstructionCDFGNode visitVariableExpr(VariableExprContext ctx) {
-        return new InstructionCDFGLiteralNode(ctx.getText());
-    }*/
-    
     @Override
     public AInstructionCDFGNode visitField(FieldContext ctx) {
         return new InstructionCDFGVariableNode(ctx.getText());
@@ -230,7 +223,6 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
     public AInstructionCDFGNode visitScalarsubscript(ScalarsubscriptContext ctx) {
         return new InstructionCDFGVariableNode(ctx.getText(), new InstructionCDFGScalarSubscript(Integer.valueOf(ctx.idx.getText())));
     }
-    
     
     @Override
     public AInstructionCDFGNode visitMetafield(MetafieldContext ctx) {

@@ -23,12 +23,10 @@ import org.jgrapht.nio.DefaultAttribute;
 
 public abstract class AInstructionCDFGEdge extends DefaultEdge {
 
-  
     public Attribute getDOTLabel() {
         return DefaultAttribute.createAttribute("");
     }
     
-  
     public Attribute getDOTArrowHead() {
         return DefaultAttribute.createAttribute("normal");
     }

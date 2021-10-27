@@ -17,12 +17,9 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.controlanddataflowgraph.ControlFlowNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGDecisionNode;
 
-public class ControlFlowNodeDecision extends ControlFlowNode<AInstructionCDFGNode, AInstructionCDFGEdge>{
+public class ControlFlowNodeDecision extends AControlFlowNode{
 
     public ControlFlowNodeDecision() {
         super(new InstructionCDFGDecisionNode());   

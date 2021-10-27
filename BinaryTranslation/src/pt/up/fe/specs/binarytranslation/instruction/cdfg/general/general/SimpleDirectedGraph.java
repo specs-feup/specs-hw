@@ -18,8 +18,10 @@
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jgrapht.Graphs;
 
@@ -41,7 +43,7 @@ public class SimpleDirectedGraph<V,E> extends org.jgrapht.graph.SimpleDirectedGr
      * 
      * @param vertices List of vertices to be added
      */
-    public void addVertices(List<V> vertices) {
+    public void addVertices(Set<V> vertices) {
         vertices.forEach((vertex) -> {this.addVertex(vertex);});
     }
     
@@ -50,7 +52,7 @@ public class SimpleDirectedGraph<V,E> extends org.jgrapht.graph.SimpleDirectedGr
      * @param source Vertex were the edges originate from
      * @param targets Target vertices for the created edges
      */
-    public void addVerticesAfter(V source, List<V> targets) {
+    public void addVerticesAfter(V source, Set<V> targets) {
         this.addVertex(source);
         this.addVertices(targets);
         this.addOutgoingEdgesTo(source, targets);
@@ -63,7 +65,7 @@ public class SimpleDirectedGraph<V,E> extends org.jgrapht.graph.SimpleDirectedGr
      */
     public void addVerticesAfter(V source, Map<V,E> targets_and_edges) {
         this.addVertex(source);
-        this.addVertices(new ArrayList<V>(targets_and_edges.keySet()));
+        this.addVertices(targets_and_edges.keySet());
         targets_and_edges.forEach((target, edge) -> {this.addEdge(source, target, edge);});
     }
     
@@ -72,14 +74,14 @@ public class SimpleDirectedGraph<V,E> extends org.jgrapht.graph.SimpleDirectedGr
      * @param sources Vertices where the edges originate from
      * @param target Target vertex for the created edges
      */
-    public void addVerticesBefore(List<V> sources, V target) {
+    public void addVerticesBefore(Set<V> sources, V target) {
         this.addVertex(target);
         this.addVertices(sources);
         this.addIncomingEdgesTo(target, sources);
     }
     
     public void addVerticesBefore(Map<V,E> sources_and_edges, V target) {
-        this.addVertices(new ArrayList<V>(sources_and_edges.keySet()));
+        this.addVertices(sources_and_edges.keySet());
         this.addVertex(target);
         sources_and_edges.forEach((source, edge) -> {this.addEdge(source, target, edge);});
     }
@@ -101,20 +103,20 @@ public class SimpleDirectedGraph<V,E> extends org.jgrapht.graph.SimpleDirectedGr
         this.removeVertex(current);
     }
     
-    public List<V> getVerticesBefore(V vertex){
-        return Graphs.predecessorListOf(this, vertex);
+    public Set<V> getVerticesBefore(V vertex){
+        return new HashSet<V>(Graphs.predecessorListOf(this, vertex));
     }
     
-    public List<V> getVerticesAfter(V vertex){
-        return Graphs.successorListOf(this, vertex);
+    public Set<V> getVerticesAfter(V vertex){
+        return new HashSet<V>(Graphs.successorListOf(this, vertex));
     }
     
-    public void addIncomingEdgesTo(V target, List<V> sources){   
+    public void addIncomingEdgesTo(V target, Set<V> sources){   
         sources.forEach((source) -> {this.addEdge(source, target);});
     }
     
     
-    public void addOutgoingEdgesTo(V source, List<V> targets) {
+    public void addOutgoingEdgesTo(V source, Set<V> targets) {
         targets.forEach((target) -> {this.addEdge(source, target);});
     }
     

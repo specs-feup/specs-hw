@@ -17,6 +17,26 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control;
 
-public abstract class AControlFlowNode {
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 
+public abstract class AControlFlowNode extends GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>{
+    
+    private AInstructionCDFGNode vertex;
+    
+    public AControlFlowNode(AInstructionCDFGNode vertex) {
+        super(AInstructionCDFGEdge.class);
+
+        
+        this.vertex = vertex;
+        this.addVertex(vertex);   
+ 
+    }
+
+    public AInstructionCDFGNode getVertex() {
+        return this.vertex;
+    }
+    
+   
 }

@@ -30,8 +30,8 @@ public enum InstructionCDFGArithmeticOperationNodeType implements InstructionCDF
     Multiplication("*", "mul", InstructionCDFGMultiplicationNode.class),
     Division("/", "div", InstructionCDFGDivisionNode.class),
     ShiftRightArithmetic(">>>", "sra", InstructionCDFGShiftRightArithmeticNode.class),
-    ShiftRightLogical(">>", "srl", InstructionCDFGShiftRightArithmeticNode.class),
-    ShiftLeftLogical("<<", "sll", InstructionCDFGShiftRightArithmeticNode.class),
+    ShiftRightLogical(">>", "srl", InstructionCDFGShiftRightLogicalNode.class),
+    ShiftLeftLogical("<<", "sll", InstructionCDFGShiftLeftLogicalNode.class),
     Assignment("=","ass", InstructionCDFGAssignmentNode.class)
     
     ;

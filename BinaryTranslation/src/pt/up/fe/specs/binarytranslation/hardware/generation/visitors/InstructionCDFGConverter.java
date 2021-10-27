@@ -17,22 +17,33 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.generation.visitors;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareNodeExpressionMap;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ImmediateReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.controlanddataflowgraph.ControlFlowNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGControlFlowConditionSubgraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.AInstructionCDFGDataNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGGeneratedVariable;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.ControlFlowIfElseNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.ControlFlowIfNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AControlFlowNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.ControlFlowNodeDecision;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
 //http://digitaljs.tilk.eu/#
@@ -43,21 +54,44 @@ public class InstructionCDFGConverter {
     public static HardwareNode convertInstruction(HardwareNode parent, InstructionCDFG icdfg) {
        
         Set<GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>> nodes_being_resolved = new HashSet<>();
-        
-        icdfg.getInputs().forEach(g -> {
-            icdfg.getVerticesAfter(g).forEach(g_after -> {
-                nodes_being_resolved.add(g_after);
-            });
-        });
-        
+
+        icdfg.getInputs().forEach(g -> nodes_being_resolved.add(g));
+        InstructionCDFGDataFlowSubgraph condition_dfg = null;
         while(!nodes_being_resolved.isEmpty()) {
             
+            GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> gg = null;
+            
+            for(GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> subgraph : nodes_being_resolved) {
+                
+                if(subgraph instanceof InstructionCDFGDataFlowSubgraph) {
+                    
+                    if(icdfg.isControlFlowConditionNode(subgraph)) {             
+                        condition_dfg = (InstructionCDFGDataFlowSubgraph) subgraph;        
+                    }else {
+                        InstructionCDFGConverter.visitDataFlowGraph(parent, (InstructionCDFGDataFlowSubgraph) subgraph);
+                    }
+                    
+                }else {
+                    
+                    if(subgraph instanceof ControlFlowNodeDecision) {         
+                        InstructionCDFGConverter.visitControlFlowDecisionNode(parent, condition_dfg, (AControlFlowNode) subgraph);                     
+                    }else {
+                        
+                    }
+                    
+                }
+
+                gg = subgraph;
+            }
+            
+            nodes_being_resolved.remove(gg);
+            nodes_being_resolved.addAll((Collection<? extends GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>>) icdfg.getVerticesAfter(gg));
         }
         
         return parent;
     }
     
-    public static boolean allOperandsResolved(InstructionCDFGDataFlowSubgraph dfg, AInstructionCDFGNode node, HashMap<AInstructionCDFGNode, VariableReference> signal_map) {
+    public static boolean allOperandsResolved(InstructionCDFGDataFlowSubgraph dfg, AInstructionCDFGNode node, HashMap<AInstructionCDFGNode, HardwareExpression> signal_map) {
         
         for(AInstructionCDFGEdge e : dfg.incomingEdgesOf(node)) {
             if(!signal_map.containsKey(dfg.getEdgeSource(e))) {
@@ -68,46 +102,55 @@ public class InstructionCDFGConverter {
         return true;
     }
     
-    public static Collection<VariableReference> visitDataFlowGraph(HardwareNode prev, InstructionCDFGDataFlowSubgraph dfg) {
+    public static AInstructionCDFGNode nextNodeisDataNode(InstructionCDFGDataFlowSubgraph dfg, AInstructionCDFGNode node) {
+        
+        for(AInstructionCDFGNode v : dfg.getVerticesAfter(node)) {
+            if(v instanceof AInstructionCDFGDataNode) {
+                return v;
+            }
+        }
+        
+        return null;
+    }
+    
+    public static Collection<HardwareExpression> visitDataFlowGraph(HardwareNode prev, InstructionCDFGDataFlowSubgraph dfg) {
 
-        HashMap<AInstructionCDFGNode, VariableReference> signal_map = new HashMap<>();
+        HashMap<AInstructionCDFGNode, HardwareExpression> signal_map = new HashMap<>();
         
         Set<AInstructionCDFGNode> nodes_being_resolved = new HashSet<>();
         
-        dfg.getInputs().forEach(i -> {
-            signal_map.put(i, new VariableReference(i.getUID()));
-            
-            dfg.getVerticesAfter(i).forEach(v -> nodes_being_resolved.add(v)); 
+        dfg.getInputs().forEach(i -> {           
+            signal_map.put(i, (i instanceof InstructionCDFGLiteralNode) ?  new ImmediateReference(((InstructionCDFGLiteralNode)i).getValue(), 32) : new VariableReference(i.getUID()));
+            nodes_being_resolved.addAll(dfg.getVerticesAfter(i));
         });
 
         dfg.getOutputs().forEach(o -> signal_map.put(o, new VariableReference(o.getUID())));
         
-        
         while(!nodes_being_resolved.isEmpty()) {
-
+            
         nodes_being_resolved.stream().filter(v -> InstructionCDFGConverter.allOperandsResolved(dfg, v, signal_map)).toList().forEach(v -> {
 
             nodes_being_resolved.remove(v); // Remove from list of vertices to be resolved
             
+            VariableReference expr_var = (VariableReference) signal_map.getOrDefault(InstructionCDFGConverter.nextNodeisDataNode(dfg, v), new VariableReference(v.getUID()));
+            signal_map.putIfAbsent(v, expr_var);
             
-            VariableReference expr_var =  new VariableReference(v.getUID()); // Creates a new VariableReference for the output of the vertex
-
-            signal_map.put(v,expr_var); // Adds the variable reference of the vertex
-
-            HardwareExpression expr = HardwareNodeExpressionMap.generate(v.getClass());   // Generates a new hardware expression for the vertex
+            List<HardwareExpression> signals = new ArrayList<>();
+            
+            dfg.getOperandsOf(v).forEach(op -> signals.add(signal_map.get(op)));
+            
+            HardwareExpression expr = HardwareNodeExpressionMap.generate(v.getClass(), signals);   // Generates a new hardware expression for the vertex
 
             prev.addChild(new ProceduralBlockingStatement(expr_var, expr));// Adds it to the dfg parent node
-            
-            dfg.getOperandsOf(v).forEach(o -> expr.addChild(signal_map.get(o))); // Adds the operands of the new hardware expression
-            
+
             dfg.getVerticesAfter(v).forEach(v_after -> {    // Gets the new vertices to be resolved
                 
                 if(!dfg.hasOutput(v_after)){
                     nodes_being_resolved.add(v_after);
                 }else {
-                    dfg.outgoingEdgesOf(v_after).forEach(g -> nodes_being_resolved.add(dfg.getEdgeTarget(g)));
+                    nodes_being_resolved.addAll(dfg.getVerticesAfter(v_after));
                 }
-            });
+            }); 
 
         });
         
@@ -116,7 +159,60 @@ public class InstructionCDFGConverter {
         return signal_map.values();
     }
     
-    public HardwareNode visitControlFlowDecisionNode(HardwareNode prev,InstructionCDFGControlFlowConditionSubgraph condition_dfg, ControlFlowNode<AInstructionCDFGNode, AInstructionCDFGEdge> cfn) {
+    public static HardwareNode visitDataFlowGraph(InstructionCDFGDataFlowSubgraph dfg) {
+        
+        HashMap<AInstructionCDFGNode, HardwareExpression> signal_map = new HashMap<>();
+        
+        Set<AInstructionCDFGNode> nodes_being_resolved = new HashSet<>();
+        
+        HardwareNode output = null;
+        
+        dfg.getInputs().forEach(i -> {
+            signal_map.put(i, (i instanceof InstructionCDFGLiteralNode) ? new ImmediateReference(((InstructionCDFGLiteralNode)i).getValue(), 32) : new VariableReference(i.getUID()));
+            nodes_being_resolved.addAll(dfg.getVerticesAfter(i));
+        });
+
+        while(!nodes_being_resolved.isEmpty()) {
+            
+                for(AInstructionCDFGNode v : nodes_being_resolved.stream().filter(v -> InstructionCDFGConverter.allOperandsResolved(dfg, v, signal_map)).toList()) {
+
+                nodes_being_resolved.remove(v); // Remove from list of vertices to be resolved
+                
+                List<HardwareExpression> signals = new ArrayList<>();
+                
+                dfg.getOperandsOf(v).forEach(op -> signals.add(signal_map.get(op)));
+
+                signal_map.put(v, HardwareNodeExpressionMap.generate(v.getClass(), signals));// Generates a new hardware expression for the vertex
+
+                for(AInstructionCDFGNode v_after : dfg.getVerticesAfter(v)) {
+                    if(v_after instanceof InstructionCDFGGeneratedVariable) {
+                        output = signal_map.get(v);
+                    }
+                }
+                
+            }
+        }
+        
+        return output;
+    }
+    
+    public static HardwareNode visitControlFlowDecisionNode(HardwareNode prev, InstructionCDFGDataFlowSubgraph condition_dfg, AControlFlowNode cfn) {
+        
+        HardwareStatement decision = null;
+        
+        if(cfn instanceof ControlFlowIfNode) {
+            decision = new IfStatement((HardwareExpression) InstructionCDFGConverter.visitDataFlowGraph(condition_dfg));
+        }else if (cfn instanceof ControlFlowIfElseNode) {
+            decision = new IfElseStatement((HardwareExpression) InstructionCDFGConverter.visitDataFlowGraph(condition_dfg));
+            InstructionCDFGConverter.visitDataFlowGraph((HardwareNode) ((IfElseStatement)decision).getIfStatements(), condition_dfg);
+            InstructionCDFGConverter.visitDataFlowGraph((HardwareNode) ((IfElseStatement)decision).getElseStatements(), condition_dfg);
+        }
+        
+        
+        
+        
+        prev.addChild(decision);
+        
         return null;
     }
  

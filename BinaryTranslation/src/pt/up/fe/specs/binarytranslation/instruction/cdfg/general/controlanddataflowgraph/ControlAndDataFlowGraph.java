@@ -17,7 +17,7 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.general.controlanddataflowgraph;
 
-import java.util.List;
+import java.util.Set;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 
@@ -49,26 +49,8 @@ public class ControlAndDataFlowGraph<V, E> extends GeneralFlowGraph<V, E>{
         return super.addVertex(vertex);
     }
     
-    @Override
-    public void addVertices(List<V> vertices) {
-        /*
-        vertices.forEach((vertex) -> {
-            if(!this.hasInput(vertex)) {
-                this.addInput(vertex);
-            }
-            
-            if(!this.hasOutput(vertex)) {
-                this.addOutput(vertex);
-            }
-        });
-        */
-        super.addVertices(vertices);
-    }
-    
-    
     public void addControlEdgesTo(V decision, V path_true, V path_false) {
-        this.addVerticesBefore(List.of(path_true, path_false), decision);
+        this.addVerticesBefore(Set.of(path_true, path_false), decision);
     }
-    
     
 }
