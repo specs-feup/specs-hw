@@ -38,7 +38,8 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
     private List<String> increments = new ArrayList<>();
     private List<String> baseAddrs = new ArrayList<>();
 
-    public ExpressionIncrementMatcher(ATraceInstructionStream stream, ZippedELFProvider elf, int window, BinarySegmentType type) {
+    public ExpressionIncrementMatcher(ATraceInstructionStream stream, ZippedELFProvider elf, int window,
+            BinarySegmentType type) {
         super(stream, elf, window, type);
     }
 
@@ -55,9 +56,10 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
         incRep.setName(name);
 
         matchReports(memRep, incRep);
-        var rep = new ExpressionIncrementMatchReport(bbIDs, memIDs, memTypes, streaming, inductionVars, increments, baseAddrs);
+        var rep = new ExpressionIncrementMatchReport(bbIDs, memIDs, memTypes, streaming, inductionVars, increments,
+                baseAddrs);
         rep.setName(memRep.getName());
-        
+
         return rep;
     }
 
@@ -65,72 +67,91 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
         for (int i = 0; i < incRep.getBasicBlockIDs().size(); i++) {
             var bbid = incRep.getBasicBlockIDs().get(i);
             var regs = incRep.getRegisters().get(i);
-            
+            var incs = incRep.getConstants().get(i);
+
             for (var j = 0; j < memRep.getBasicBlockIDs().size(); j++) {
-                
+
                 if (memRep.getBasicBlockIDs().get(j).equals(bbid)) {
-                    bbIDs.add(bbid); 
+                    bbIDs.add(bbid);
                     var exprGraph = memRep.getGraphs().get(j);
                     var memID = memRep.getMemIDs().get(j);
                     memIDs.add(memID);
-                    
+
                     // Mem Expr type
                     var memType = memRep.getTypes().get(j);
                     memTypes.add(memType.toString());
-                    
+
                     // Streaming?
                     boolean streaming = checkStreaming(memType);
                     this.streaming.add(streaming ? "yes" : "no");
-                    
-                    // Induction var
-                    var indVarReg = matchRegistersToExpression(exprGraph, regs);
-                    inductionVars.add(indVarReg);
 
-                    // Increment
-                    int inc = getIncrement(exprGraph, indVarReg);
-                    increments.add("" + inc);
-                    
-                    // BaseAddr
-                    var bases = getBases(exprGraph, indVarReg);
-                    baseAddrs.add(String.join("|", bases));
+                    var indVarRegIdx = matchRegistersToExpression(exprGraph, regs);
+                    if (indVarRegIdx != -1) {
+                        // Induction var
+                        var indVarReg = regs.split("\\|")[indVarRegIdx];
+                        inductionVars.add(indVarReg);
+
+                        // Increment
+                        var inc = incs.split("\\|")[indVarRegIdx];
+                        increments.add(inc);
+
+                        if (streaming) {
+                            // BaseAddr
+                            var bases = getBases(exprGraph, indVarReg);
+                            baseAddrs.add(String.join("|", bases));
+                        } else {
+                            baseAddrs.add("--");
+                        }
+                    } else {
+                        inductionVars.add("--");
+                        increments.add("--");
+                        baseAddrs.add("--");
+                    }
+
                 }
             }
         }
     }
 
     private List<String> getBases(Graph<BtfVertex, DefaultEdge> exprGraph, String indVarReg) {
-        // TODO Auto-generated method stub
-        return new ArrayList<>();
-    }
+        List<String> res = new ArrayList<>();
 
-    private int getIncrement(Graph<BtfVertex, DefaultEdge> exprGraph, String indVarReg) {
-        // TODO Auto-generated method stub
-        return 0;
+        for (var v : exprGraph.vertexSet()) {
+            if (v.getType() == BtfVertexType.REGISTER) {
+                if (!v.getLabel().equals(indVarReg))
+                    res.add(v.getLabel());
+            }
+        }
+        return res;
     }
 
     private boolean checkStreaming(GraphTemplateType memType) {
-        return true;
+        switch (memType) {
+        case TYPE_0:
+        case TYPE_5:
+        case TYPE_6:
+        case TYPE_7:
+        case TYPE_15:
+            return false;
+        default:
+            return true;
+        }
     }
 
-    private String matchRegistersToExpression(Graph<BtfVertex, DefaultEdge> exprGraph, String regs) {
+    private int matchRegistersToExpression(Graph<BtfVertex, DefaultEdge> exprGraph, String regs) {
         var regList = regs.split("\\|");
-        var matchList = new ArrayList<String>();
-        
-        for (var reg : regList) {
-            var found = false;
-            
-            for (var v : exprGraph.vertexSet()) {
 
+        int i = 0;
+        for (var reg : regList) {
+            for (var v : exprGraph.vertexSet()) {
                 if (v.getType() == BtfVertexType.REGISTER) {
                     if (v.getLabel().equals(reg)) {
-                        found = true;
-
+                        return i;
                     }
                 }
             }
-            if (found)
-                matchList.add(reg);
+            i++;
         }
-        return String.join("|", matchList);
+        return -1;
     }
 }
