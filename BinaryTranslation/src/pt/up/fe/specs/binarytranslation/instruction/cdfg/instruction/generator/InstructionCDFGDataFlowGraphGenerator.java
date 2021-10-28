@@ -24,18 +24,21 @@ import java.util.Map;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.InstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.data_type.InstructionCDFGFloatCastModifier;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.data_type.InstructionCDFGSignExtendModifier;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.data_type.InstructionCDFGSignedCastModifier;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.data_type.InstructionCDFGUnsignedCastModifier;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGRangeSubscript;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGScalarSubscript;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.AInstructionCDFGControlNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGControlConditionalNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.AInstructionCDFGDataNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGGeneratedVariable;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableFunctionNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.InstructionCDFGOperationNodeMap;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGAssignmentNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
@@ -61,8 +64,8 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
     
     private Map<String, AInstructionCDFGNode> current_outputs;
 
-    private void setup(Map<String, Integer> uid_map){
-        this.dfg = new InstructionCDFGDataFlowSubgraph(uid_map);
+    private void setup(InstructionCDFGDataFlowSubgraph dfg){
+        this.dfg = dfg;
         this.current_outputs = new HashMap<>();
     }
 
@@ -73,20 +76,20 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
 
         return this.dfg;
     }
-    
-    public Map<String, Integer> getUIDMap(){
-        return this.dfg.getUIDMap();
-    }
-    
-    public InstructionCDFGDataFlowSubgraph generate(Map<String, Integer> uid_map, PseudoInstructionParser.ExpressionContext ctx){
+
+    public InstructionCDFGDataFlowSubgraph generate(InstructionCDFGDataFlowSubgraph dfg, PseudoInstructionParser.ExpressionContext ctx){
         
-        this.setup(uid_map);
+
+        this.setup(dfg);
         
         AInstructionCDFGNode output = this.visit(ctx);
 
         
         if((ctx instanceof BinaryExprContext) || (ctx instanceof UnaryExprContext)) {
-            AInstructionCDFGNode empty = new InstructionCDFGGeneratedVariable("generated");
+            AInstructionCDFGNode empty = new InstructionCDFGControlConditionalNode();
+            
+            ((AInstructionCDFGControlFlowSubgraph)dfg).setControlVertex((AInstructionCDFGControlNode) empty);
+            
             this.dfg.addVertex(empty);
 
             this.dfg.addEdge(output, empty, new InstructionCDFGEdge());
@@ -95,29 +98,29 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
         return this.finish();
     }
 
-    public InstructionCDFGDataFlowSubgraph generate(Map<String, Integer> uid_map, PseudoInstructionParser.PlainStmtContext ctx){
+    public InstructionCDFGDataFlowSubgraph generate(InstructionCDFGDataFlowSubgraph dfg, PseudoInstructionParser.PlainStmtContext ctx){
         
-        this.setup(uid_map);
+        this.setup(dfg);
         
         this.visit(ctx.expression());
 
         return this.finish();
     }
     
-    public InstructionCDFGDataFlowSubgraph generate(Map<String, Integer> uid_map, AssignmentExprContext ctx){
+    public InstructionCDFGDataFlowSubgraph generate(InstructionCDFGDataFlowSubgraph dfg, AssignmentExprContext ctx){
         
-        this.setup(uid_map);
+        this.setup(dfg);
         
         this.visit(ctx);
 
         return this.finish();
     }
     
-    public InstructionCDFGDataFlowSubgraph generate(Map<String, Integer> uid_map,List<PseudoInstructionParser.StatementContext> ctx){
+    public InstructionCDFGDataFlowSubgraph generate(InstructionCDFGDataFlowSubgraph dfg, List<PseudoInstructionParser.StatementContext> ctx){
         
-        this.setup(uid_map);
+        this.setup(dfg);
 
-        ctx.forEach(statement -> {this.visit(statement);});
+        ctx.forEach(statement -> this.visit(statement));
 
         return this.finish();
     }
@@ -260,6 +263,8 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
             return new InstructionCDFGUnsignedCastModifier();
         }else if (ctx.getText().equals("float")) {
             return new InstructionCDFGFloatCastModifier();
+        }else if (ctx.getText().equals("sext")) {
+            return new InstructionCDFGSignExtendModifier();
         }else {
             return null;
         }

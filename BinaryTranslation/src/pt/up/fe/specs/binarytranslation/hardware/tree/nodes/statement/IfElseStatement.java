@@ -70,13 +70,13 @@ public class IfElseStatement extends HardwareStatement {
 
         builder.append("if(" + this.getCondition().getAsString() + ") begin\n");
 
-        this.getIfStatements().forEach(statement -> builder.append("\t" + statement.getAsString() + "\n"));
+        this.getIfStatements().forEach(statement -> builder.append("\t\t" + statement.getAsString() + "\n"));
 
         builder.append("\tend\n");
         
         builder.append("\telse begin\n");
 
-        this.getElseStatements().forEach(statement -> builder.append("\t" + statement.getAsString() + "\n"));
+        this.getElseStatements().forEach(statement -> builder.append("\t\t" + statement.getAsString() + "\n"));
 
         builder.append("\tend \n");
         

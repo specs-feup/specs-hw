@@ -15,14 +15,12 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control;
+package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.data_type;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGControlMergeNode;
+public class InstructionCDFGSignExtendModifier extends AInstructionCDFGDataTypeModifier{
 
-public class ControlFlowNodeMerge extends AControlFlowNode{
-
-    public ControlFlowNodeMerge() {
-        super(new InstructionCDFGControlMergeNode());
+    public InstructionCDFGSignExtendModifier() {
+        super("sext");
     }
     
 }
