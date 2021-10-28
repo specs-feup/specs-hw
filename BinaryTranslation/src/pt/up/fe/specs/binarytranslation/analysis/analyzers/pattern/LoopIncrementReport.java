@@ -82,4 +82,12 @@ public class LoopIncrementReport extends APatternReport {
         }
         return sb.toString();
     }
+
+    public List<String> getConstants() {
+        return constants;
+    }
+
+    public void setConstants(List<String> constants) {
+        this.constants = constants;
+    }
 }
