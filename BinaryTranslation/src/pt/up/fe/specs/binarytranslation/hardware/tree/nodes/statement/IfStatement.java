@@ -36,13 +36,8 @@ public class IfStatement extends HardwareStatement {
         return (HardwareExpression) this.getChild(0);
     }
 
-    public List<HardwareStatement> getStatements() {
-      /*  var list = this.getChildren();
-        var nlist = new ArrayList<HardwareStatement>();
-        for (var c : list)
-            nlist.add((HardwareStatement) c);
-        return nlist;*/
-        return new ArrayList<HardwareStatement>();
+    public List<HardwareNode> getStatements() {
+        return this.getChildren().subList(1, this.getNumChildren());
     }
 
     @Override
@@ -59,14 +54,14 @@ public class IfStatement extends HardwareStatement {
         var stats = this.getStatements();
         if (stats.size() > 1)
             builder.append(" begin");
-        builder.append("\n\t");
+        builder.append("\n");
 
         for (var child : stats) {
-            builder.append("\t" + child.getAsString() + "\n");
+            builder.append("\t\t" + child.getAsString() + "\n");
         }
 
         if (this.getStatements().size() > 1)
-            builder.append("end");
+            builder.append("\tend");
         builder.append("\n");
 
         return builder.toString();

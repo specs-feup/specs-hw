@@ -147,9 +147,9 @@ public enum MicroBlazePseudocode implements InstructionPseudocode {
     idivu("if(RA == 0) {RD = 0; $dzo = 1;} else {RD = RB / RA;}"),
     fadd("RD = RA + RB;"),
     // TODO: exceptions for fadd
-    frsub("RD = RB) - RA;"),
-    fmul("RD = RB) * RA);"),
-    fdiv("RD = RB) / RA);"),
+    frsub("RD = RB - RA;"),
+    fmul("RD = RB * RA;"),
+    fdiv("RD = RB / RA;"),
 
     fcmp_un("fcmp.un", "RD = 1;"),
     fcmp_lt("fcmp.lt", "RD = (RB < RA);"),

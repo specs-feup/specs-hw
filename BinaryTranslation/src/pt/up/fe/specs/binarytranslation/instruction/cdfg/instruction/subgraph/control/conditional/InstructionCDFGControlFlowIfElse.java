@@ -15,15 +15,16 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control;
+package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGDecisionNode;
+import java.util.Map;
 
-public class ControlFlowNodeDecision extends AControlFlowNode{
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
 
-    public ControlFlowNodeDecision() {
-        super(new InstructionCDFGDecisionNode());   
+public class InstructionCDFGControlFlowIfElse extends AInstructionCDFGControlFlowConditionalSubgraph{
 
+    public InstructionCDFGControlFlowIfElse(InstructionCDFGControlFlowMerge merge, Map<String, Integer> uid_map) {
+        super(merge, uid_map);
     }
     
 }

@@ -26,9 +26,11 @@ import org.jgrapht.nio.DefaultAttribute;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraphDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.*;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.AInstructionCDFGOperandEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.InstructionCDFGLeftOperandEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.InstructionCDFGRightOperandEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AControlFlowNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
 
 public class InstructionCDFGFlowSubGraphDOTExporter extends GeneralFlowGraphDOTExporter<AInstructionCDFGNode, AInstructionCDFGEdge>{
 
@@ -119,8 +121,8 @@ public class InstructionCDFGFlowSubGraphDOTExporter extends GeneralFlowGraphDOTE
         
         headerBuilder.append(INDENT_BASE + INDENT_INNER + "label=\""+ this.graph_name +"\"\n");
         
-        if(g instanceof AControlFlowNode) {
-            headerBuilder.append(INDENT_BASE + INDENT_INNER + "color=\"white\"\n");
+        if(g instanceof AInstructionCDFGControlFlowSubgraph) {
+            headerBuilder.append(INDENT_BASE + INDENT_INNER + "style=\"striped\"\n");
         }
         
         return headerBuilder.toString();

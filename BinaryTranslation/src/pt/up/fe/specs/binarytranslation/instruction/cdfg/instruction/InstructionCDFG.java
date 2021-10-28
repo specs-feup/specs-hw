@@ -17,8 +17,8 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.controlanddataflowgraph.ControlAndDataFlowGraph;
@@ -28,20 +28,21 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.Instru
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGFalseEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGTrueEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AControlFlowNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
 public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, AInstructionCDFGEdge>{
 
-    private List<AInstructionCDFGNode> data_inputs;
-    private List<AInstructionCDFGNode> data_outputs;
+    private Set<AInstructionCDFGNode> data_inputs;
+    private Set<AInstructionCDFGNode> data_outputs;
     private Instruction instruction;
 
     public InstructionCDFG(Instruction instruction) {
-        super(InstructionCDFGDataFlowSubgraph.class, AControlFlowNode.class, AInstructionCDFGEdge.class);
+        super(InstructionCDFGDataFlowSubgraph.class, AInstructionCDFGControlFlowSubgraph.class, AInstructionCDFGEdge.class);
       
-        this.data_inputs = new ArrayList<>();
-        this.data_outputs = new ArrayList<>();
+        this.data_inputs = new HashSet<>();
+        this.data_outputs = new HashSet<>();
         
         this.instruction = instruction;
     }
@@ -54,7 +55,7 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, A
         
         for(GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> next : this.getVerticesAfter(node)) {
             
-            if(next instanceof AControlFlowNode) {
+            if(next instanceof AInstructionCDFGControlFlowSubgraph) {
                 return true;
             }
             
@@ -63,14 +64,14 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, A
         return false;
     }
     
-    public List<AInstructionCDFGNode> getDataInputs(){
+    public Set<AInstructionCDFGNode> getDataInputs(){
         
         this.vertexSet().forEach(g -> this.data_inputs.addAll(g.getInputs()));
 
         return this.data_inputs;
     }
     
-    public List<AInstructionCDFGNode> getDataOutputs(){
+    public Set<AInstructionCDFGNode> getDataOutputs(){
         this.vertexSet().forEach(g -> this.data_outputs.addAll(g.getOutputs()));
         return this.data_outputs;
     }
@@ -89,5 +90,27 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, A
         this.addEdge(decision, path_false, new InstructionCDFGFalseEdge());
     }
 
+    
+    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> getTruePath(AInstructionCDFGControlFlowConditionalSubgraph vertex){
+        
+        for(AInstructionCDFGEdge e : this.outgoingEdgesOf(vertex)) {
+            if(e instanceof InstructionCDFGTrueEdge) {
+                return this.getEdgeTarget(e);
+            }
+        }
+        
+        return null;
+    }
+    
+    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> getFalsePath(AInstructionCDFGControlFlowConditionalSubgraph vertex){
+        
+        for(AInstructionCDFGEdge e : this.outgoingEdgesOf(vertex)) {
+            if(e instanceof InstructionCDFGFalseEdge) {
+                return this.getEdgeTarget(e);
+            }
+        }
+        
+        return null;
+    }
 
 }
