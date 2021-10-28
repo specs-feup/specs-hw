@@ -21,7 +21,7 @@ import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.wip.InstructionCDFGConverter;
+import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionCDFGConverter;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.HardwareDeclaration;
