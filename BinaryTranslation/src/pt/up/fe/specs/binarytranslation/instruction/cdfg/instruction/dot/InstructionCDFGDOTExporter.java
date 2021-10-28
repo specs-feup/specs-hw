@@ -17,20 +17,25 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.jgrapht.nio.*;
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
+import org.jgrapht.nio.ExportException;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.dataflowgraph.DataFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraphDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGFalseEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGTrueEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGControlConditionalNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGControlMergeNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGDecisionNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AControlFlowNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
 public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>, AInstructionCDFGEdge>{
 
@@ -93,30 +98,29 @@ public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<Gene
             
             if(source != null && target != null){
            
-                if(source instanceof DataFlowGraph) {
-                    edgeBuilder.append(this.getVertexID((AInstructionCDFGNode) source.getOutputs().toArray()[0]).toString() + ":s");
-                }else if(source instanceof AControlFlowNode){
-                    AInstructionCDFGNode control = ((AControlFlowNode)source).getVertex();
+                if(source instanceof AInstructionCDFGControlFlowSubgraph) {
+                    AInstructionCDFGNode control = ((AInstructionCDFGControlFlowSubgraph) source).getControlVertex();
                     edgeBuilder.append(this.getVertexID(control));
                     
-                    if(control instanceof InstructionCDFGDecisionNode) {    
+                    if(control instanceof InstructionCDFGControlConditionalNode) {    
                         edgeBuilder.append((edge instanceof InstructionCDFGTrueEdge) ? ":se" : ((edge instanceof InstructionCDFGFalseEdge) ? ":sw" : ""));
                     }else if(control instanceof InstructionCDFGControlMergeNode) {
                         edgeBuilder.append(":s");
                     }
+                }else if(source instanceof InstructionCDFGDataFlowSubgraph){
+                    edgeBuilder.append(this.getVertexID((AInstructionCDFGNode) source.getOutputs().toArray()[0]).toString() + ":s");
                 }
                 
                 edgeBuilder.append(connector);
                 
-                if(target instanceof DataFlowGraph) {
-                    edgeBuilder.append(this.getVertexID((AInstructionCDFGNode) target.getInputs().toArray()[0]).toString() + ":n");    
-                }else if (target instanceof AControlFlowNode){
-                    AInstructionCDFGNode control = ((AControlFlowNode)target).getVertex();
+                if (target instanceof InstructionCDFGControlFlowMerge){
+                    AInstructionCDFGNode control = ((AInstructionCDFGControlFlowSubgraph)target).getControlVertex();
                     edgeBuilder.append(this.getVertexID(control));
                     
-                    edgeBuilder.append(((control instanceof InstructionCDFGControlMergeNode) || (control instanceof InstructionCDFGDecisionNode)) ? ":n" : "");
-    
-                }
+                    edgeBuilder.append(((control instanceof InstructionCDFGControlMergeNode) || (control instanceof InstructionCDFGControlConditionalNode)) ? ":n" : "");
+                }else if(target instanceof InstructionCDFGDataFlowSubgraph){
+                    edgeBuilder.append(this.getVertexID((AInstructionCDFGNode) target.getInputs().toArray()[0]).toString() + ":n");    
+                } 
         
                 getEdgeAttributes(edge).ifPresent(m -> { edgeBuilder.append(renderAttributes(m));});
         
@@ -133,15 +137,7 @@ public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<Gene
      
         StringBuilder vertexSubgraphsBuilder = new StringBuilder();
 
-        g.vertexSet().forEach((vertex) -> {
-            
-            GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> subgraph = (GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>)vertex;
-            
-            if(!subgraph.vertexSet().isEmpty()) {
-                vertexSubgraphsBuilder.append(this.subgraph_dot_exporter.exportGraph(subgraph, (subgraph instanceof DataFlowGraph) ? "dfg" + String.valueOf(this.dfg_uid++) : "cfn" + String.valueOf(this.cfn_uid++))); 
-            }
-      
-        });
+        g.vertexSet().forEach(vertex -> vertexSubgraphsBuilder.append(this.subgraph_dot_exporter.exportGraph(vertex, (vertex instanceof AInstructionCDFGControlFlowSubgraph) ? "cfn" + String.valueOf(this.cfn_uid++) : "dfg" + String.valueOf(this.dfg_uid++))));
         
         return vertexSubgraphsBuilder.toString();
     }

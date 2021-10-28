@@ -23,6 +23,7 @@ import java.io.Writer;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
+import org.specs.Riscv.instruction.RiscvInstruction;
 import org.specs.Riscv.instruction.RiscvPseudocode;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
@@ -43,12 +44,18 @@ public class RiscvCDFGGenerationTest {
     @Test
     public void generateInstructionCDFGs() {
         
-        InstructionCDFGGenerator icdfg_generator = new InstructionCDFGGenerator();
+        System.out.println("Generating InstructionCDFG of currently implemented instructions ...\n\n");
         
         for(var instruction : RiscvPseudocode.values()) {
-        
-            InstructionCDFG icdfg = icdfg_generator.generate(this.getParseTree(instruction.getCode()));
-           
+            InstructionCDFGGenerator icdfg_generator = new InstructionCDFGGenerator();
+            InstructionCDFG icdfg;
+            try {
+                icdfg = icdfg_generator.generate(instruction.getParseTree());
+            }catch(Exception e){
+                System.out.println("ERROR: Could not generate graph of InstructionCDFG of instruction: " + instruction.getName());
+                System.out.println();
+                continue;
+            }
             
             
             InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();

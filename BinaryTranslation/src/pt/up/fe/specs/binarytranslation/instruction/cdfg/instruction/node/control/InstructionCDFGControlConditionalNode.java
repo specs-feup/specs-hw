@@ -15,14 +15,20 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data;
+package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control;
 
-import java.util.Map;
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
 
-public class InstructionCDFGControlFlowConditionSubgraph extends InstructionCDFGDataFlowSubgraph{
+public class InstructionCDFGControlConditionalNode extends AInstructionCDFGControlNode{
 
-    public InstructionCDFGControlFlowConditionSubgraph(Map<String, Integer> uid_map) {
-        super(uid_map);
+    public InstructionCDFGControlConditionalNode() {
+        super("conditional");
+    }
+
+    @Override
+    public Attribute getDOTShape() {
+        return DefaultAttribute.createAttribute("trapezium");
     }
     
 }
