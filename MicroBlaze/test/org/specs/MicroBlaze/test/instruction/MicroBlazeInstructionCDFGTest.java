@@ -17,80 +17,56 @@
 
 package org.specs.MicroBlaze.test.instruction;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.StringWriter;
+import java.io.Writer;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
-import org.specs.MicroBlaze.instruction.MicroBlazeInstruction;
-import org.specs.MicroBlaze.instruction.MicroBlazeInstructionProperties;
+import org.specs.MicroBlaze.instruction.MicroBlazePseudocode;
 
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
-import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.legacy.instruction.InstructionCDFG;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.legacy.segment.SegmentCDFG;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
+
 
 public class MicroBlazeInstructionCDFGTest {
 
-    private static final MicroBlazeInstructionProperties instruction = MicroBlazeInstructionProperties.idiv;
+    public PseudoInstructionContext getParseTree(String pseudocode) {
+        var parser = new PseudoInstructionParser(new CommonTokenStream(new PseudoInstructionLexer(new ANTLRInputStream(pseudocode))));
+        return parser.pseudoInstruction();
+    }
     
-   @Test
-   public void generateFromInstruction() {
-       
-       Instruction inst = MicroBlazeInstruction.newInstance("0", Integer.toHexString(instruction.getOpCode()));
-       
-       System.out.println("Testing generating InstructionCDFG from Instruction...\n\n");
-       System.out.println(inst);
-       
-       
-       InstructionCDFG icdfg = new InstructionCDFG(inst);
-     
-       icdfg.toDot("test"); 
-       
-       System.out.println("Done\n\n");
-   }
-   
-   @Test
-   public void generateFromInstructionAST() {
-       
-       Instruction inst = MicroBlazeInstruction.newInstance("0", Integer.toHexString(instruction.getOpCode()));
-   
-       System.out.println("Testing generating InstructionCDFG from InstructionAST...\n\n");
-       System.out.println(inst);
-       
-       InstructionAST iast = new InstructionAST(inst);
-       System.out.println(iast);
-       //ApplyInstructionPass iast_aip = new ApplyInstructionPass();
-       //iast_aip.visit(iast);
-       
-       InstructionCDFG icdfg = new InstructionCDFG(iast);
-       
-       
-
-       icdfg.toDot("test");
-       System.out.println("Done\n\n");
-   }
-    
-   
-   @Test
-   public void generateSegmentCDFG() {
-       
-       Instruction inst = MicroBlazeInstruction.newInstance("0", Integer.toHexString(instruction.getOpCode()));
-       
-       System.out.println("Testing generating SegmentCDFG from InstructionAST...\n\n");
-       System.out.println(inst);
-       
-       InstructionAST iast = new InstructionAST(inst);
-       //ApplyInstructionPass iast_aip = new ApplyInstructionPass();
-      // iast_aip.visit(iast);
-       
-       List<InstructionCDFG> icdfg_list = new ArrayList<InstructionCDFG>();
-       
-       icdfg_list.add(new InstructionCDFG(iast));
-       icdfg_list.add(new InstructionCDFG(iast));
-      
-       SegmentCDFG scdfg = new SegmentCDFG(icdfg_list);
-       scdfg.toDot(null);
-   }
-   
+    @Test
+    public void generateInstructionCDFGs() {
+        
+        System.out.println("Generating InstructionCDFG of currently implemented instructions ...\n\n");
+        
+        for(var instruction : MicroBlazePseudocode.values()) {
+            InstructionCDFGGenerator icdfg_generator = new InstructionCDFGGenerator();
+            InstructionCDFG icdfg;
+            try {
+                icdfg = icdfg_generator.generate(instruction.getParseTree());
+            }catch(Exception e){
+                System.out.println("ERROR: Could not generate graph of InstructionCDFG of instruction: " + instruction.getName());
+                System.out.println();
+                continue;
+            }
+            
+            
+            InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
+            
+            Writer writer = new StringWriter();
+            
+            exp.exportGraph((GeneralFlowGraph)icdfg, instruction.getName().replace(".", "_"), writer);
+            
+            System.out.println("Graph of InstructionCDFG of instruction: " + instruction.getName());
+            System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
+            System.out.println();
+        }
+    }
 }

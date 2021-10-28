@@ -31,6 +31,7 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
@@ -79,12 +80,12 @@ public class RandomTest_deletethisafter {
     public void testParse() {
         
         FakeInstruction instruction = new FakeInstruction("fakeInstructionTest", 
-                "if(RA == 2){RD = RB + RA;} if(RZ == 3){RF = RE + RJ;} RO = RD + RF;"
-                //"if(RA + 0 == 3) {RD = 0; dzo = 1;}"
-                //"RD = RA + RB;"
+                //"if(RA == 2){RD = RB + RA;} if(RZ == 3){RF = RE + RJ;} RO = RD + RF;"
+                "RZ = RH + 3;if(RA == RE) {RG = 0 + sext(RH);}else{RG = RH + 3;}"
+                //"RD = RA + RB;RF = RA + RG;"
                 );
         InstructionCDFGGenerator icdfg_gen = new InstructionCDFGGenerator();
-        this.printParseTree(instruction);
+       // this.printParseTree(instruction);
         InstructionCDFG icdf = icdfg_gen.generate(instruction);
        
         
@@ -92,8 +93,7 @@ public class RandomTest_deletethisafter {
         InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
         
         Writer writer = new StringWriter();
-        
-        
+
         
         exp.exportGraph((GeneralFlowGraph)icdf, "s", writer);
 
@@ -104,8 +104,8 @@ public class RandomTest_deletethisafter {
         
         InstructionCDFGCustomInstructionUnitGenerator gen = new InstructionCDFGCustomInstructionUnitGenerator();
 
-        
-       //gen.generateHardware(icdf).emit(System.out);
+        //InstructionCDFGNameResolver.resolveNames(icdf); 
+       gen.generateHardware(icdf).emit(System.out);
         /*    
         List<InstructionCDFG> icdfg_list = new ArrayList<>();
         

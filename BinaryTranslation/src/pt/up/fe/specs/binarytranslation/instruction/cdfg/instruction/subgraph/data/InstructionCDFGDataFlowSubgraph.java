@@ -49,6 +49,10 @@ public class InstructionCDFGDataFlowSubgraph extends DataFlowGraph<AInstructionC
         this.uid_map = uid_map;
     }
     
+    public void setUIDMap(Map<String, Integer> uid_map) {
+        this.uid_map = uid_map;
+    }
+    
     /** Returns the UID Map of this graph's nodes
      * 
      * @return UID Map of this graph's node

@@ -28,7 +28,7 @@ public class InstructionCDFGControlMergeNode extends AInstructionCDFGControlNode
 
     @Override
     public Attribute getDOTShape() {
-        return DefaultAttribute.createAttribute("invtriangle");
+        return DefaultAttribute.createAttribute("invtrapezium");
     }
 
 }

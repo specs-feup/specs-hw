@@ -15,8 +15,18 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control;
+package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge;
 
-public class InstructionCDFGControlIfNode extends InstructionCDFGDecisionNode{
+import java.util.Map;
+
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.AInstructionCDFGControlNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
+
+public class AInstructionCDFGControlFlowMergeSubgraph extends AInstructionCDFGControlFlowSubgraph{
+
+    public AInstructionCDFGControlFlowMergeSubgraph(Map<String, Integer> uid_map, AInstructionCDFGControlNode vertex) {
+        super(uid_map);
+        this.setControlVertex(vertex);
+    }
 
 }
