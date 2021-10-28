@@ -22,23 +22,24 @@ import java.util.List;
 public class ExpressionIncrementMatchReport extends APatternReport {
 
     private List<String> memID;
-    private List<String> matches;
     private List<String> memTypes;
     private List<String> streaming;
     private List<String> inductionVars;
     private List<String> increments;
-    private List<String> bases;
+    private List<String> invariants;
+    private List<String> variants;
 
     public ExpressionIncrementMatchReport(List<String> bbID, List<String> memID, List<String> memTypes,
-            List<String> streaming, List<String> inductionVars, List<String> increments, List<String> baseAddrs) {
+            List<String> streaming, List<String> inductionVars, List<String> increments, List<String> invariants, List<String> variants) {
         this.setBasicBlockIDs(bbID);
         this.memID = memID;
         this.memTypes = memTypes;
         this.streaming = streaming;
         this.inductionVars = inductionVars;
         this.increments = increments;
-        this.bases = baseAddrs;
-        this.setCsvHeader("Benchmark,Segment ID,MemExpr ID,Type,Streaming,IndVar,Increment,BaseAddr\n");
+        this.invariants = invariants;
+        this.variants = variants;
+        this.setCsvHeader("Benchmark,Segment ID,MemExpr ID,Type,Streaming,IndVar,Increment,Invariants,Variants\n");
     }
 
     @Override
@@ -70,7 +71,8 @@ public class ExpressionIncrementMatchReport extends APatternReport {
             sb.append(streaming.get(i)).append(",");
             sb.append(inductionVars.get(i)).append(",");
             sb.append(increments.get(i)).append(",");
-            sb.append(bases.get(i)).append("\n");
+            sb.append(invariants.get(i)).append(",");
+            sb.append(variants.get(i)).append("\n");
         }
         return sb.toString();
     }

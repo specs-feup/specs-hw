@@ -36,7 +36,8 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
     private List<String> streaming = new ArrayList<>();
     private List<String> inductionVars = new ArrayList<>();
     private List<String> increments = new ArrayList<>();
-    private List<String> baseAddrs = new ArrayList<>();
+    private List<String> invariants = new ArrayList<>();
+    private List<String> variants = new ArrayList<>();
 
     public ExpressionIncrementMatcher(ATraceInstructionStream stream, ZippedELFProvider elf, int window,
             BinarySegmentType type) {
@@ -57,7 +58,7 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
 
         matchReports(memRep, incRep);
         var rep = new ExpressionIncrementMatchReport(bbIDs, memIDs, memTypes, streaming, inductionVars, increments,
-                baseAddrs);
+                invariants, variants);
         rep.setName(memRep.getName());
 
         return rep;
@@ -68,6 +69,7 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
             var bbid = incRep.getBasicBlockIDs().get(i);
             var regs = incRep.getRegisters().get(i);
             var incs = incRep.getConstants().get(i);
+            var dfg = incRep.getGraphs().get(i);
 
             for (var j = 0; j < memRep.getBasicBlockIDs().size(); j++) {
 
@@ -83,7 +85,7 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
 
                     // Streaming?
                     boolean streaming = checkStreaming(memType);
-                    this.streaming.add(streaming ? "yes" : "no");
+                    var streamingStr = streaming ? "yes" : "no";
 
                     var indVarRegIdx = matchRegistersToExpression(exprGraph, regs);
                     if (indVarRegIdx != -1) {
@@ -98,19 +100,46 @@ public class ExpressionIncrementMatcher extends APatternAnalyzer {
                         if (streaming) {
                             // BaseAddr
                             var bases = getBases(exprGraph, indVarReg);
-                            baseAddrs.add(String.join("|", bases));
+                            var invBases = checkRegisterWrite(bases, dfg, false);
+                            var invStr = invBases.size() > 0 ? String.join("|", invBases) : "--";
+                            invariants.add(invStr);
+                            
+                            var varBases = checkRegisterWrite(bases, dfg, true);
+                            var varStr = varBases.size() > 0 ? String.join("|", varBases) : "--";
+                            variants.add(varStr);
+                            if (varBases.size() > 0)
+                                streamingStr = "no*";
                         } else {
-                            baseAddrs.add("--");
+                            invariants.add("--");
+                            variants.add("--");
                         }
                     } else {
                         inductionVars.add("--");
                         increments.add("--");
-                        baseAddrs.add("--");
+                        invariants.add("--");
+                        variants.add("--");
                     }
-
+                    this.streaming.add(streamingStr);
                 }
             }
         }
+    }
+
+    private List<String> checkRegisterWrite(List<String> regs, Graph<BtfVertex, DefaultEdge> dfg, boolean write) {
+        var res = new ArrayList<String>();
+        
+        for (var reg : regs) {
+            for (var v : dfg.vertexSet()) {
+                if (v.getType() == BtfVertexType.REGISTER && v.getLabel().equals(reg)) {
+                    var indeg = dfg.inDegreeOf(v);
+                    if (!write && indeg == 0)
+                        res.add(reg);
+                    if (write && indeg > 0)
+                        res.add(reg);
+                }
+            }
+        }
+        return res;
     }
 
     private List<String> getBases(Graph<BtfVertex, DefaultEdge> exprGraph, String indVarReg) {
