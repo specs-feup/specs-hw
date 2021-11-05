@@ -15,29 +15,26 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
+package pt.up.fe.specs.binarytranslation.instruction.cdfg.segment;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
-import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
 
-public class RandomTest_deletethisafter {
+public class TestSegemn {
+
 
     private class FakeInstruction implements Instruction, InstructionPseudocode{
         
@@ -69,55 +66,24 @@ public class RandomTest_deletethisafter {
         
     }
     
- 
-    public void printParseTree(FakeInstruction instruction) {
-        PseudoInstructionContext parse = instruction.getParseTree();
-        var walker = new ParseTreeWalker();
-        walker.walk(new TreeDumper(), parse);
-    }
-    
     @Test
-    public void testParse() {
+    public void generate() {
         
-        FakeInstruction instruction = new FakeInstruction("fakeInstructionTest", 
-                //"if(RA == 2){RD = RB + RA;} if(RZ == 3){RF = RE + RJ;} RO = RD + RF;"
-                "if(RA == 0) {RD = 0; $dzo = 1;} else if((RA == -1) && (RB == (1 << 31))) {RD = (1 << 31); $dzo = 1;} else {RD = RB * RA;}"
-                //"RD = RA + RB;RF = RA + RG;"
+        List<Instruction> instructions = List.of(
+                new FakeInstruction("fakeInstructionTest", "RD = RA + RC;"),
+                new FakeInstruction("fakeInstructionTest", "RZ = RA + RC;")
                 );
-        InstructionCDFGGenerator icdfg_gen = new InstructionCDFGGenerator();
-       // this.printParseTree(instruction);
-        InstructionCDFG icdf = icdfg_gen.generate(instruction);
-       
         
+        SegmentCDFG segment = new SegmentCDFG(instructions);
+        
+        segment.generate();
         
         InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
         
         Writer writer = new StringWriter();
-        
-        System.out.println(icdf.getDataOutputs());
-        
-        exp.exportGraph((GeneralFlowGraph)icdf, "s", writer);
-
-        System.out.println("\n\nPrinting generated InstructionCDFG from instruction: " + instruction + "\n");
-        //System.out.println(writer.toString());
-        
+        exp.exportGraph((GeneralFlowGraph)segment, "s", writer);
         System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
         
-        InstructionCDFGCustomInstructionUnitGenerator gen = new InstructionCDFGCustomInstructionUnitGenerator();
-
-        InstructionCDFGNameResolver.resolveNames(icdf); 
-        
-       gen.generateHardware(icdf).emit(System.out);
-        /*    
-        List<InstructionCDFG> icdfg_list = new ArrayList<>();
-        
-        icdfg_list.add(icdf);
-        
-       SegmentCDFG scdfg = new SegmentCDFG(icdfg_list);
-
-       HardwareCDFG hcdfg = new HardwareCDFG("test",scdfg);
-        
-        hcdfg.print();
-        */
     }
+    
 }

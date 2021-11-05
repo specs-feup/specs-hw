@@ -15,21 +15,30 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
-import java.util.Map;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
+public class InitialBlock extends HardwareNode{
 
-public class InstructionCDFGDataFlowSubgraph extends AInstructionCDFGSubgraph{
- 
-    public InstructionCDFGDataFlowSubgraph() {
-        super();
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new InitialBlock();
     }
 
-    public InstructionCDFGDataFlowSubgraph(Map<String, Integer> uid_map) {
-        super(uid_map);
+    @Override
+    public String getAsString() {
         
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append("initial begin\n");
+        
+        for (var child : this.getChildren()) {
+            builder.append("\t" + child.getAsString() + "\n");
+        }
+        
+        builder.append("end\n");
+        
+        return builder.toString();
     }
-    
 }

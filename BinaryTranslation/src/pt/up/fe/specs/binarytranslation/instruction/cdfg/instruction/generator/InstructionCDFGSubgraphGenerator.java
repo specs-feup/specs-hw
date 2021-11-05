@@ -38,8 +38,8 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.I
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.InstructionCDFGOperationNodeMap;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGAssignmentNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ArgumentsContext;
@@ -58,28 +58,27 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.Ra
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ScalarsubscriptContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.UnaryExprContext;
 
-public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBaseVisitor<AInstructionCDFGNode>{
+public class InstructionCDFGSubgraphGenerator extends PseudoInstructionBaseVisitor<AInstructionCDFGNode>{
 
-    private InstructionCDFGDataFlowSubgraph dfg;
+    private AInstructionCDFGSubgraph subgraph;
     
     private Map<String, AInstructionCDFGNode> current_outputs;
 
-    private void setup(InstructionCDFGDataFlowSubgraph dfg){
-        this.dfg = dfg;
+    private void setup(AInstructionCDFGSubgraph dfg){
+        this.subgraph = dfg;
         this.current_outputs = new HashMap<>();
     }
 
-    private InstructionCDFGDataFlowSubgraph finish(){
+    private AInstructionCDFGSubgraph finish(){
         
-        this.dfg.generateInputs();
-        this.dfg.generateOutputs();
+        this.subgraph.generateInputs();
+        this.subgraph.generateOutputs();
 
-        return this.dfg;
+        return this.subgraph;
     }
 
-    public InstructionCDFGDataFlowSubgraph generate(InstructionCDFGDataFlowSubgraph dfg, PseudoInstructionParser.ExpressionContext ctx){
+    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, PseudoInstructionParser.ExpressionContext ctx){
         
-
         this.setup(dfg);
         
         AInstructionCDFGNode output = this.visit(ctx);
@@ -90,15 +89,15 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
             
             ((AInstructionCDFGControlFlowSubgraph)dfg).setControlVertex((AInstructionCDFGControlNode) empty);
             
-            this.dfg.addVertex(empty);
+            this.subgraph.addVertex(empty);
 
-            this.dfg.addEdge(output, empty, new InstructionCDFGEdge());
+            this.subgraph.addEdge(output, empty, new InstructionCDFGEdge());
         }
         
         return this.finish();
     }
 
-    public InstructionCDFGDataFlowSubgraph generate(InstructionCDFGDataFlowSubgraph dfg, PseudoInstructionParser.PlainStmtContext ctx){
+    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, PseudoInstructionParser.PlainStmtContext ctx){
         
         this.setup(dfg);
         
@@ -107,7 +106,7 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
         return this.finish();
     }
     
-    public InstructionCDFGDataFlowSubgraph generate(InstructionCDFGDataFlowSubgraph dfg, AssignmentExprContext ctx){
+    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, AssignmentExprContext ctx){
         
         this.setup(dfg);
         
@@ -116,7 +115,7 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
         return this.finish();
     }
     
-    public InstructionCDFGDataFlowSubgraph generate(InstructionCDFGDataFlowSubgraph dfg, List<PseudoInstructionParser.StatementContext> ctx){
+    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, List<PseudoInstructionParser.StatementContext> ctx){
         
         this.setup(dfg);
 
@@ -134,31 +133,31 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
         
         if(this.current_outputs.containsKey(output.getReference())) {
 
-            this.dfg.incomingEdgesOf(this.current_outputs.get(output.getReference())).stream().filter(e -> (this.dfg.getEdgeSource(e) instanceof InstructionCDFGAssignmentNode)).toList().forEach(e -> this.dfg.suppressVertex(this.dfg.getEdgeSource(e)));;
+            this.subgraph.incomingEdgesOf(this.current_outputs.get(output.getReference())).stream().filter(e -> (this.subgraph.getEdgeSource(e) instanceof InstructionCDFGAssignmentNode)).toList().forEach(e -> this.subgraph.suppressVertex(this.subgraph.getEdgeSource(e)));;
 
-            this.dfg.suppressVertex(this.current_outputs.get(output.getReference()));
+            this.subgraph.suppressVertex(this.current_outputs.get(output.getReference()));
             this.current_outputs.remove(output.getReference());
         }
         
-        this.dfg.addVertex(output);
+        this.subgraph.addVertex(output);
         this.current_outputs.put(output.getReference(), output);
         
         
         if(ctx.right instanceof PseudoInstructionParser.VariableExprContext) {
             
-            this.dfg.addVertex(operand);
+            this.subgraph.addVertex(operand);
             
             AInstructionCDFGNode assignment = InstructionCDFGOperationNodeMap.generate("=");
             
-            this.dfg.addVertex(assignment);
+            this.subgraph.addVertex(assignment);
             
-            this.dfg.addEdge(operand, assignment, new InstructionCDFGEdge());
-            this.dfg.addEdge(assignment, output, new InstructionCDFGEdge());
+            this.subgraph.addEdge(operand, assignment, new InstructionCDFGEdge());
+            this.subgraph.addEdge(assignment, output, new InstructionCDFGEdge());
             
            return assignment; 
         }
         
-        this.dfg.addEdge(operand, output, new InstructionCDFGEdge());
+        this.subgraph.addEdge(operand, output, new InstructionCDFGEdge());
         
         return output;
        
@@ -170,7 +169,7 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
         AInstructionCDFGNode operandLeft = this.visit(ctx.left);
         AInstructionCDFGNode operandRight = this.visit(ctx.right);
 
-        return this.dfg.addOperation(
+        return this.subgraph.addOperation(
                 this.visit(ctx.operator()), 
                 this.current_outputs.getOrDefault(operandLeft.getReference(), operandLeft), 
                 this.current_outputs.getOrDefault(operandRight.getReference(), operandRight)
@@ -187,7 +186,7 @@ public class InstructionCDFGDataFlowGraphGenerator extends PseudoInstructionBase
 
         AInstructionCDFGNode operand = this.visit(ctx.right);
 
-        return this.dfg.addOperation(
+        return this.subgraph.addOperation(
                 this.visit(ctx.operator()),
                 this.current_outputs.getOrDefault(operand.getReference(), operand)
                 );

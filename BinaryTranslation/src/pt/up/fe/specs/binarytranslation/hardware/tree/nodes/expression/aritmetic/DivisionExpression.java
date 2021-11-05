@@ -15,22 +15,21 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.AUnaryHardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class BitWiseNotExpression extends AUnaryHardwareExpression {
+public class DivisionExpression extends ABinaryHardwareExpression {
 
-    private BitWiseNotExpression() {
-        super("~", HardwareNodeType.BitWiseNotExpression);
+    private DivisionExpression() {
+        super("/", HardwareNodeType.DivisionExpression);
     }
 
-    public BitWiseNotExpression(HardwareExpression varA) {
-        super("~", HardwareNodeType.BitWiseNotExpression, varA);
+    public DivisionExpression(HardwareExpression varA, HardwareExpression varB) {
+        super("/", HardwareNodeType.DivisionExpression, varA, varB);
     }
 
     /*
@@ -38,6 +37,6 @@ public class BitWiseNotExpression extends AUnaryHardwareExpression {
      */
     @Override
     protected HardwareNode copyPrivate() {
-        return new BitWiseNotExpression();
+        return new DivisionExpression();
     }
 }

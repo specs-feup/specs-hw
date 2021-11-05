@@ -28,6 +28,10 @@ public class RegisterDeclaration extends VariableDeclaration {
         this.type = HardwareNodeType.RegisterDeclaration;
     }
 
+    public int getNumberOfBits() {
+        return this.numBits;
+    }
+    
     @Override
     public String getVariableName() {
         return this.regName;

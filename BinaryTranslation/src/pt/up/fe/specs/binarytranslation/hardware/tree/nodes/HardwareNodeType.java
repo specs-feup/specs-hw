@@ -34,11 +34,16 @@ public enum HardwareNodeType {
     LeftShiftExpression,
     RightLogicalShiftExpression,
     RightArithmeticShiftExpression,
+    DivisionExpression, // only for testing cannot be used in real hardware !!!
     
     BitWiseAndExpression,
     BitWiseNotExpression,
     BitWiseXorExpression,
     BitWiseOrExpression,
+    
+    LogicalAndExpression,
+    LogicalOrExpression,
+    LogicalNotExpression,
     
     EqualsToExpression,
     NotEqualsToExpression,

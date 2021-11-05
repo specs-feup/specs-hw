@@ -15,22 +15,22 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.logical;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.AUnaryHardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.BitWiseAndExpression;
 
-public class BitWiseNotExpression extends AUnaryHardwareExpression {
+public class LogicalAndExpression extends ABinaryHardwareExpression {
 
-    private BitWiseNotExpression() {
-        super("~", HardwareNodeType.BitWiseNotExpression);
+    private LogicalAndExpression() {
+        super("&&", HardwareNodeType.LogicalAndExpression);
     }
 
-    public BitWiseNotExpression(HardwareExpression varA) {
-        super("~", HardwareNodeType.BitWiseNotExpression, varA);
+    public LogicalAndExpression(HardwareExpression varA, HardwareExpression varB) {
+        super("&&", HardwareNodeType.LogicalAndExpression, varA, varB);
     }
 
     /*
@@ -38,6 +38,6 @@ public class BitWiseNotExpression extends AUnaryHardwareExpression {
      */
     @Override
     protected HardwareNode copyPrivate() {
-        return new BitWiseNotExpression();
+        return new LogicalAndExpression();
     }
 }

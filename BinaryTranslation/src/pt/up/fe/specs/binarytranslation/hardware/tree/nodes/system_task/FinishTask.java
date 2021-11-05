@@ -15,13 +15,24 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.port;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task;
 
-public class InstructionCDFGInputPortNode extends AInstructionCDFGPortNode{
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
-    public InstructionCDFGInputPortNode(String reference) {
-        super(reference);
-        // TODO Auto-generated constructor stub
+public class FinishTask extends HardwareNode{
+
+    
+    public FinishTask() {
+
+    }
+    
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new FinishTask();
     }
 
+    @Override
+    public String getAsString() {
+        return "$finish;\n";
+    }
 }
