@@ -22,19 +22,19 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 public abstract class AReadMemoryTask extends HardwareNode{
 
     private String fileName;
-    private String array;
+    private HardwareNode array;
     
     private Number startAddress;
     private Number endAddress;
     
-    protected AReadMemoryTask(String fileName, String array) {
+    protected AReadMemoryTask(String fileName, HardwareNode array) {
         this.fileName = fileName;
         this.array = array;
         this.startAddress = null;
         this.endAddress = null;
     }
     
-    protected AReadMemoryTask(String fileName, String array, Number startAddress, Number endAddress) {
+    protected AReadMemoryTask(String fileName, HardwareNode array, Number startAddress, Number endAddress) {
         this.fileName = fileName;
         this.array = array;
         this.startAddress = startAddress;
@@ -45,7 +45,7 @@ public abstract class AReadMemoryTask extends HardwareNode{
         return this.fileName;
     }
     
-    public String getArray() {
+    public HardwareNode getArray() {
         return this.array;
     }
     
