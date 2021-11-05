@@ -19,7 +19,7 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class AUnaryHardwareExpression extends HardwareExpression {
+public abstract class AUnaryHardwareExpression extends HardwareExpression {
 
     protected String expressionOperator;
 
@@ -27,7 +27,7 @@ public class AUnaryHardwareExpression extends HardwareExpression {
         super();
         this.expressionOperator = operator;
         this.type = type;
-    }
+    } 
 
     protected AUnaryHardwareExpression(String operator,HardwareNodeType type, HardwareExpression varA) {
         this(operator, type);
@@ -48,4 +48,5 @@ public class AUnaryHardwareExpression extends HardwareExpression {
     public String getAsString() {
         return this.toContentString() + " " + this.getOperand().getAsString();
     }
+
 }

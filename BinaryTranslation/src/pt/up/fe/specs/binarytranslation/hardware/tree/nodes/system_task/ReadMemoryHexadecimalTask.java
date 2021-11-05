@@ -21,11 +21,11 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
 public class ReadMemoryHexadecimalTask extends AReadMemoryTask{
 
-    public ReadMemoryHexadecimalTask(String fileName, String array) {
+    public ReadMemoryHexadecimalTask(String fileName, HardwareNode array) {
         super(fileName, array);
     }
     
-    public ReadMemoryHexadecimalTask(String fileName, String array, Number startAddress, Number endAddress) {
+    public ReadMemoryHexadecimalTask(String fileName, HardwareNode array, Number startAddress, Number endAddress) {
         super(fileName, array, startAddress, endAddress);
     }
     

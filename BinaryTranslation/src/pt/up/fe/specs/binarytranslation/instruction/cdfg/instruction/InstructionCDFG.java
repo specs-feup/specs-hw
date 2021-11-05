@@ -37,15 +37,10 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.da
 
 public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSubgraph, AInstructionCDFGEdge>{
 
-    private Set<AInstructionCDFGNode> data_inputs;
-    private Set<AInstructionCDFGNode> data_outputs;
     private Instruction instruction;
 
     public InstructionCDFG(Instruction instruction) {
         super(InstructionCDFGDataFlowSubgraph.class, AInstructionCDFGControlFlowSubgraph.class, AInstructionCDFGEdge.class);
-      
-        this.data_inputs = new HashSet<>();
-        this.data_outputs = new HashSet<>();
         
         this.instruction = instruction;
     }
@@ -69,18 +64,23 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
     
     public Set<AInstructionCDFGNode> getDataInputs(){
         
-        this.vertexSet().forEach(g -> this.data_inputs.addAll(g.getInputs().stream().
+        Set<AInstructionCDFGNode> data_inputs = new HashSet<>();
+        
+        this.vertexSet().forEach(g -> data_inputs.addAll(g.getInputs().stream().
                 filter(v -> !(v instanceof InstructionCDFGLiteralNode)).
                 filter(v -> !(v instanceof InstructionCDFGGeneratedVariable)).
                 collect(Collectors.toSet())
                 ));
 
-        return this.data_inputs;
+        return data_inputs;
     }
     
     public Set<AInstructionCDFGNode> getDataOutputs(){
-        this.vertexSet().forEach(g -> this.data_outputs.addAll(g.getOutputs()));
-        return this.data_outputs;
+        
+        Set<AInstructionCDFGNode> data_outputs = new HashSet<>();
+        
+        this.vertexSet().forEach(g -> data_outputs.addAll(g.getOutputs()));
+        return data_outputs;
     }
     
   
