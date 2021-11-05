@@ -24,7 +24,6 @@ public class DataFlowGraph<V,E> extends GeneralFlowGraph<V,E>{
     private final Class<? extends V> DataVertexClass;
     private final Class<? extends V> OperationVertexClass;
     
-    
     public DataFlowGraph(Class<? extends V> DataVertexClass, Class<? extends V> OperationVertexClass, Class<? extends E> EdgeClass) {
         super(EdgeClass);
 

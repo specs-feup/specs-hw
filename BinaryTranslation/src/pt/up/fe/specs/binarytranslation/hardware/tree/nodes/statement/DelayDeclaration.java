@@ -15,15 +15,26 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.port;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
-public abstract class AInstructionCDFGPortNode extends InstructionCDFGVariableNode{
+public class DelayDeclaration extends HardwareStatement{
 
-    public AInstructionCDFGPortNode(String reference) {
-        super(reference);
-        // TODO Auto-generated constructor stub
+    private Number value;
+    
+    public DelayDeclaration(Number value) {
+        this.value = value;
+    }
+    
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new DelayDeclaration(this.value);
+    }
+    
+    @Override
+    public String getAsString() {
+        return "#" + String.valueOf(this.value) + ";\n";
     }
 
 }

@@ -22,9 +22,10 @@ import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.AInstructionCDFGControlNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
-public class AInstructionCDFGControlFlowSubgraph extends InstructionCDFGDataFlowSubgraph{
+public class AInstructionCDFGControlFlowSubgraph extends AInstructionCDFGSubgraph{
 
     private AInstructionCDFGControlNode control_vertex;
     

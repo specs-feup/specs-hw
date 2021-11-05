@@ -15,21 +15,31 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
-import java.util.Map;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
+public class AlwaysBlock extends HardwareNode {
 
-public class InstructionCDFGDataFlowSubgraph extends AInstructionCDFGSubgraph{
- 
-    public InstructionCDFGDataFlowSubgraph() {
-        super();
+    public AlwaysBlock() {
     }
 
-    public InstructionCDFGDataFlowSubgraph(Map<String, Integer> uid_map) {
-        super(uid_map);
+    @Override
+    public String getAsString() {
         
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("always begin\n");
+
+        this.getChildren().forEach(child -> builder.append("\t" + child.getAsString() + "\n"));
+
+        builder.append("end\n");
+        
+        return builder.toString();
     }
-    
+
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new AlwaysBlock();
+    }
 }

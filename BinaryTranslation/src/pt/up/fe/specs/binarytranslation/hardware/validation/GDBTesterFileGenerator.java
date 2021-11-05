@@ -15,21 +15,18 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data;
+package pt.up.fe.specs.binarytranslation.hardware.validation;
 
-import java.util.Map;
+public class GDBTesterFileGenerator {
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
-
-public class InstructionCDFGDataFlowSubgraph extends AInstructionCDFGSubgraph{
- 
-    public InstructionCDFGDataFlowSubgraph() {
-        super();
-    }
-
-    public InstructionCDFGDataFlowSubgraph(Map<String, Integer> uid_map) {
-        super(uid_map);
+    public static String export() {
         
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append("set confirm off\n");
+        
+        builder.append("quit\n");
+        
+        return builder.toString();
     }
-    
 }

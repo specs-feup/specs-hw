@@ -15,23 +15,23 @@
  *  under the License.
  */
 
-package org.specs.Riscv.test.hardware;
+package org.specs.MicroBlaze.test.hardware;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
+import org.specs.MicroBlaze.instruction.MicroBlazePseudocode;
 import org.specs.Riscv.instruction.RiscvPseudocode;
 
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AControlFlowNode;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
 
-public class RiscvHardwareGenerateTest {
+public class MicroBlazeHardwareGeneratorTest {
 
     public PseudoInstructionContext getParseTree(String pseudocode) {
         var parser = new PseudoInstructionParser(new CommonTokenStream(new PseudoInstructionLexer(new ANTLRInputStream(pseudocode))));
@@ -43,12 +43,12 @@ public class RiscvHardwareGenerateTest {
         
         
       
-        for(var instruction : RiscvPseudocode.values()) {
-        
-        //var instruction = RiscvPseudocode.srai;
+        for(var instruction : MicroBlazePseudocode.values()) {
+   
+        //var instruction = MicroBlazePseudocode.idiv;
         
             InstructionCDFGGenerator icdfg_generator = new InstructionCDFGGenerator();
-            InstructionCDFG icdfg = null;
+            InstructionCDFG icdfg;
             
             try {
                 icdfg = icdfg_generator.generate(instruction.getParseTree());
@@ -68,11 +68,10 @@ public class RiscvHardwareGenerateTest {
                 hardware_generator.generateHardware(icdfg).emit(System.out);
             }catch(Exception e) {
                 System.out.println("ERROR: Could not generate HDL of instruction: " + instruction.getName());
-                continue;
             }
+            
+            System.out.flush();
         }
-        
-        System.out.println("DONE");
     }
     
     

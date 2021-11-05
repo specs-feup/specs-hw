@@ -19,20 +19,23 @@ package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.controlanddataflowgraph.ControlAndDataFlowGraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.InstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGFalseEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGTrueEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGGeneratedVariable;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
-public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, AInstructionCDFGEdge>{
+public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSubgraph, AInstructionCDFGEdge>{
 
     private Set<AInstructionCDFGNode> data_inputs;
     private Set<AInstructionCDFGNode> data_outputs;
@@ -51,9 +54,9 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, A
         return this.instruction;
     }
     
-    public boolean isControlFlowConditionNode(GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> node) {
+    public boolean isControlFlowConditionNode(AInstructionCDFGSubgraph node) {
         
-        for(GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> next : this.getVerticesAfter(node)) {
+        for(AInstructionCDFGSubgraph next : this.getVerticesAfter(node)) {
             
             if(next instanceof AInstructionCDFGControlFlowSubgraph) {
                 return true;
@@ -66,7 +69,11 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, A
     
     public Set<AInstructionCDFGNode> getDataInputs(){
         
-        this.vertexSet().forEach(g -> this.data_inputs.addAll(g.getInputs()));
+        this.vertexSet().forEach(g -> this.data_inputs.addAll(g.getInputs().stream().
+                filter(v -> !(v instanceof InstructionCDFGLiteralNode)).
+                filter(v -> !(v instanceof InstructionCDFGGeneratedVariable)).
+                collect(Collectors.toSet())
+                ));
 
         return this.data_inputs;
     }
@@ -78,20 +85,20 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, A
     
   
     @Override
-    public AInstructionCDFGEdge addEdge(GeneralFlowGraph sourceVertex, GeneralFlowGraph targetVertex) {
+    public AInstructionCDFGEdge addEdge(AInstructionCDFGSubgraph sourceVertex, AInstructionCDFGSubgraph targetVertex) {
         AInstructionCDFGEdge edge = new InstructionCDFGEdge();
         this.addEdge(sourceVertex, targetVertex, edge);
         return edge;
     }
     
     @Override
-    public void addControlEdgesTo(GeneralFlowGraph decision,GeneralFlowGraph path_true,GeneralFlowGraph path_false) {
+    public void addControlEdgesTo(AInstructionCDFGSubgraph decision,AInstructionCDFGSubgraph path_true,AInstructionCDFGSubgraph path_false) {
         this.addEdge(decision, path_true, new InstructionCDFGTrueEdge());
         this.addEdge(decision, path_false, new InstructionCDFGFalseEdge());
     }
 
     
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> getTruePath(AInstructionCDFGControlFlowConditionalSubgraph vertex){
+    public AInstructionCDFGSubgraph getTruePath(AInstructionCDFGControlFlowConditionalSubgraph vertex){
         
         for(AInstructionCDFGEdge e : this.outgoingEdgesOf(vertex)) {
             if(e instanceof InstructionCDFGTrueEdge) {
@@ -102,7 +109,7 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, A
         return null;
     }
     
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> getFalsePath(AInstructionCDFGControlFlowConditionalSubgraph vertex){
+    public AInstructionCDFGSubgraph getFalsePath(AInstructionCDFGControlFlowConditionalSubgraph vertex){
         
         for(AInstructionCDFGEdge e : this.outgoingEdgesOf(vertex)) {
             if(e instanceof InstructionCDFGFalseEdge) {

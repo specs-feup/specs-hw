@@ -15,21 +15,10 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data;
+package pt.up.fe.specs.binarytranslation.hardware.testbench.testsignalsgenerator;
 
-import java.util.Map;
+public class AHardwareTestbenchSignalsGenerator {
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
-
-public class InstructionCDFGDataFlowSubgraph extends AInstructionCDFGSubgraph{
- 
-    public InstructionCDFGDataFlowSubgraph() {
-        super();
-    }
-
-    public InstructionCDFGDataFlowSubgraph(Map<String, Integer> uid_map) {
-        super(uid_map);
-        
-    }
+    
     
 }

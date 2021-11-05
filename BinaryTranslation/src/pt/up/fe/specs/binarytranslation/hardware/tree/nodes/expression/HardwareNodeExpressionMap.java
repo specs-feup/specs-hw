@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.DivisionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.LeftShiftExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.MultiplicationExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.RightArithmeticShiftExpression;
@@ -41,8 +42,11 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.compariso
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.LessThanExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.LessThanOrEqualsToExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.NotEqualsToExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.logical.LogicalAndExpression;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGAdditionNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGAssignmentNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGDivisionNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGMultiplicationNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGShiftLeftLogicalNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGShiftRightArithmeticNode;
@@ -58,6 +62,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operat
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.comparison.InstructionCDFGLessThanNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.comparison.InstructionCDFGLessThanOrEqualsToNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.comparison.InstructionCDFGNotEqualsToNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.logical.InstructionCDFGLogicalAndNode;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class HardwareNodeExpressionMap{
@@ -75,7 +80,11 @@ public class HardwareNodeExpressionMap{
             Constructor<? extends HardwareExpression> constructor;
             
             if(operand.size() == 1) {
-                constructor = MAP.get(key).getConstructor(HardwareExpression.class);
+                if(key.equals(InstructionCDFGAssignmentNode.class)) {
+                    constructor = MAP.get(key).getConstructor(String.class);
+                }else {
+                    constructor = MAP.get(key).getConstructor(HardwareExpression.class);
+                }
             }else {
                 constructor = MAP.get(key).getConstructor(HardwareExpression.class,HardwareExpression.class);
             }
@@ -85,6 +94,11 @@ public class HardwareNodeExpressionMap{
             }
             
             if(operand.size() == 1) {
+                
+                if(key.equals(InstructionCDFGAssignmentNode.class)) {
+                    return  constructor.newInstance(operand.get(0).getAsString());
+                }
+                
                 return  constructor.newInstance(operand.get(0));
             }else {
                 return  constructor.newInstance(operand.get(0), operand.get(1));
@@ -92,7 +106,7 @@ public class HardwareNodeExpressionMap{
             
             
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            //SpecsLogs.msgWarn("Error message:\n", e);
             return null;
         }
         
@@ -104,17 +118,22 @@ public class HardwareNodeExpressionMap{
         
         var map = new HashMap<Class<? extends AInstructionCDFGNode>, Class<? extends HardwareExpression>>();
         
+        map.put(InstructionCDFGAssignmentNode.class, VariableReference.class);
+        
         map.put(InstructionCDFGAdditionNode.class, AdditionExpression.class);
         map.put(InstructionCDFGSubtractionNode.class, SubtractionExpression.class);
         map.put(InstructionCDFGMultiplicationNode.class, MultiplicationExpression.class);
         map.put(InstructionCDFGShiftLeftLogicalNode.class, LeftShiftExpression.class);
         map.put(InstructionCDFGShiftRightArithmeticNode.class, RightArithmeticShiftExpression.class);
         map.put(InstructionCDFGShiftRightLogicalNode.class, RightLogicalShiftExpression.class);
+        map.put(InstructionCDFGDivisionNode.class, DivisionExpression.class);
         
         map.put(InstructionCDFGBitwiseAndNode.class, BitWiseAndExpression.class);
         map.put(InstructionCDFGBitwiseOrNode.class, BitWiseOrExpression.class);
         map.put(InstructionCDFGBitwiseXorNode.class, BitWiseXorExpression.class);
         map.put(InstructionCDFGBitwiseNotNode.class, BitWiseNotExpression.class);
+        
+        map.put(InstructionCDFGLogicalAndNode.class, LogicalAndExpression.class);
         
         map.put(InstructionCDFGEqualsToNode.class, EqualsToExpression.class);
         map.put(InstructionCDFGNotEqualsToNode.class, NotEqualsToExpression.class);
