@@ -37,8 +37,8 @@ public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGene
         this.module_tree = new VerilogModuleTree("test");
         this.module = module_tree.getModule();
 
-        icdfg.getDataInputsNames().forEach(inputName ->  this.module_tree.addDeclaration(new InputPortDeclaration(inputName, 32)));
-        icdfg.getDataOutputsNames().forEach(outputName -> this.module_tree.addDeclaration(new OutputPortDeclaration(outputName, 32)));
+        icdfg.getDataInputsNames().forEach(inputName ->  new InputPortDeclaration(inputName, 32, this.module_tree));
+        icdfg.getDataOutputsNames().forEach(outputName -> new OutputPortDeclaration(outputName, 32, this.module_tree));
 
         InstructionCDFGConverter.convert(icdfg, this.module.addChild(new AlwaysCombBlock()));
         

@@ -17,12 +17,20 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 
 public class InputPortDeclaration extends PortDeclaration{
 
     public InputPortDeclaration(String portName, int portWidth) {
         super(portName, portWidth, ModulePortDirection.input);
+    }
+    
+    public InputPortDeclaration(String portName, int portWidth, VerilogModuleTree moduleTree) {
+        super(portName, portWidth, ModulePortDirection.input);
+        
+        moduleTree.addDeclaration(this);
+        
     }
     
 }
