@@ -53,7 +53,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator{
         var testbenchtree = new VerilogModuleTree(module.getName() + "_tb");
         var testbench = testbenchtree.getModule();
 
-        testbenchtree.getRoot().addChildLeftOf(testbench, new TimeScaleDeclaration());
+        new TimeScaleDeclaration(testbenchtree);
         
         var loadNext = new InputPortDeclaration("loadNext", 1, testbenchtree);
         var verify = new InputPortDeclaration("verify", 1, testbenchtree);
@@ -95,17 +95,13 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator{
         List<HardwareNode> subInputs = new ArrayList<>();
         
         for(int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32) {
-
-            subInputs.add(new IndexSelection(new RangeSelection(new VariableReference("inputs"), i, i + 32), new VariableReference("index")));
+            subInputs.add(new RangeSelection (new IndexSelection(new VariableReference("inputs"), new VariableReference("index")), i, i + 32));
         }
         
         for(int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32) {
-
             subInputs.add(new RangeSelection(new VariableReference("moduleOutputs"), i, i + 32));
         }
-        
- 
-        
+
         new ModuleStatement(module, "test", subInputs, testbench);
         
 

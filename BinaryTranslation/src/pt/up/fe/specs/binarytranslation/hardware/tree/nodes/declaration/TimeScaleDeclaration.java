@@ -17,12 +17,17 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
 public class TimeScaleDeclaration extends HardwareDeclaration{
     
     public TimeScaleDeclaration() {
         
+    }
+    
+    public TimeScaleDeclaration(VerilogModuleTree tree) {
+        tree.getRoot().addChildLeftOf(tree.getRoot().getChild(0), this);
     }
     
     @Override
