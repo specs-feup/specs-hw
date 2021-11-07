@@ -37,4 +37,9 @@ public class IntegerDeclaration extends VariableDeclaration{
         return new IntegerDeclaration(this.getVariableName());
     }
 
+    @Override
+    public String getAsString() {
+        return "integer " + this.getVariableName() + ";";
+    }
+    
 }

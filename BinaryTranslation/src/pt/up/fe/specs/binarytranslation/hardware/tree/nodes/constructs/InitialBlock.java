@@ -31,7 +31,7 @@ public class InitialBlock extends HardwareNode{
         
         StringBuilder builder = new StringBuilder();
         
-        builder.append("initial begin\n");
+        builder.append("\ninitial begin\n");
         
         for (var child : this.getChildren()) {
             builder.append("\t" + child.getAsString() + "\n");

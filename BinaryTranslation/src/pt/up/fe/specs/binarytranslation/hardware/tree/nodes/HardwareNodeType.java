@@ -58,6 +58,7 @@ public enum HardwareNodeType {
     VariableReference,
     ParenthesisExpression,
     RangeSelection,
+    IndexSelection,
 
     // meta
     DeclarationBlock,

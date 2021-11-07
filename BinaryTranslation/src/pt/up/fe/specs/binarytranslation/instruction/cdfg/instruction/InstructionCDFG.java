@@ -17,8 +17,13 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -38,11 +43,21 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.da
 public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSubgraph, AInstructionCDFGEdge>{
 
     private Instruction instruction;
-
+    
+    private Map<AInstructionCDFGNode, AInstructionCDFGSubgraph> dataInputs;
+    private Map<AInstructionCDFGNode, AInstructionCDFGSubgraph> dataOutputs;
+    
+    private static Predicate<AInstructionCDFGNode> notGeneratedVariableNode = v -> !(v instanceof InstructionCDFGGeneratedVariable);
+    private static Predicate<AInstructionCDFGNode> notLiteralNode = v -> !(v instanceof InstructionCDFGLiteralNode);
+    private static Predicate<AInstructionCDFGNode> notControlNode = v -> !(v instanceof InstructionCDFGGeneratedVariable);
+    
     public InstructionCDFG(Instruction instruction) {
         super(InstructionCDFGDataFlowSubgraph.class, AInstructionCDFGControlFlowSubgraph.class, AInstructionCDFGEdge.class);
         
         this.instruction = instruction;
+        
+        this.dataInputs = new HashMap<>();
+        this.dataOutputs = new HashMap<>();
     }
     
     public Instruction getInstruction() {
@@ -62,27 +77,54 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         return false;
     }
     
-    public Set<AInstructionCDFGNode> getDataInputs(){
+    public void generateDataInputs() {
         
-        Set<AInstructionCDFGNode> data_inputs = new HashSet<>();
-        
-        this.vertexSet().forEach(g -> data_inputs.addAll(g.getInputs().stream().
-                filter(v -> !(v instanceof InstructionCDFGLiteralNode)).
-                filter(v -> !(v instanceof InstructionCDFGGeneratedVariable)).
-                collect(Collectors.toSet())
-                ));
+        this.vertexSet().forEach(g -> g.getInputs().stream()
+                .filter(InstructionCDFG.notLiteralNode.and(InstructionCDFG.notGeneratedVariableNode))
+                .collect(Collectors.toSet()).forEach(i -> this.dataInputs.put(i, g))
+                );
 
-        return data_inputs;
+    }
+    
+    public Set<AInstructionCDFGNode> getDataInputs(){
+        return this.dataInputs.keySet();
+    }
+    
+    public Map<AInstructionCDFGNode, AInstructionCDFGSubgraph> getDataInputsMap(){
+        return this.dataInputs;
+    }
+    
+    public Set<String> getDataInputsNames(){
+        Set<String> names = new HashSet<>();
+        
+        this.getDataInputs().forEach(name -> names.add(name.getUID()));
+        
+        return names;
+    }
+    
+    public void generateDataOutputs() {
+       
+        this.vertexSet().forEach(g -> g.getOutputs().stream()
+                .filter(InstructionCDFG.notGeneratedVariableNode.and(InstructionCDFG.notControlNode))
+                .collect(Collectors.toSet()).forEach(o -> this.dataOutputs.put(o, g))
+            );
     }
     
     public Set<AInstructionCDFGNode> getDataOutputs(){
-        
-        Set<AInstructionCDFGNode> data_outputs = new HashSet<>();
-        
-        this.vertexSet().forEach(g -> data_outputs.addAll(g.getOutputs()));
-        return data_outputs;
+        return this.dataOutputs.keySet();
     }
     
+    public Map<AInstructionCDFGNode, AInstructionCDFGSubgraph> getDataOutputsMap(){
+        return this.dataOutputs;
+    }
+    
+    public Set<String> getDataOutputsNames(){
+        Set<String> names = new HashSet<>();
+        
+        this.getDataOutputs().forEach(name -> names.add(name.getUID()));
+        
+        return names;
+    }
   
     @Override
     public AInstructionCDFGEdge addEdge(AInstructionCDFGSubgraph sourceVertex, AInstructionCDFGSubgraph targetVertex) {
@@ -120,4 +162,9 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         return null;
     }
 
+    @Override
+    public String toString() {
+        return this.instruction.getName();
+    }
+    
 }

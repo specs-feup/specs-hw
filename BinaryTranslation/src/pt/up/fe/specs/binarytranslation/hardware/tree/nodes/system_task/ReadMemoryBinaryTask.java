@@ -21,11 +21,11 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
 public class ReadMemoryBinaryTask extends AReadMemoryTask{
 
-    public ReadMemoryBinaryTask(String fileName, String array) {
+    public ReadMemoryBinaryTask(String fileName, HardwareNode array) {
         super(fileName, array);
     }
     
-    public ReadMemoryBinaryTask(String fileName, String array, Number startAddress, Number endAddress) {
+    public ReadMemoryBinaryTask(String fileName, HardwareNode array, Number startAddress, Number endAddress) {
         super(fileName, array, startAddress, endAddress);
     }
     

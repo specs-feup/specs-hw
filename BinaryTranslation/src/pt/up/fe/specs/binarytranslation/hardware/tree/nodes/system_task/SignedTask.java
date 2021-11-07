@@ -15,31 +15,30 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
-public class AlwaysBlock extends HardwareNode {
+public class SignedTask extends HardwareNode{
 
-    public AlwaysBlock() {
+    public SignedTask(HardwareNode expression) {
+        super();
+        
+        this.addChild(expression);
+    }
+    
+    public HardwareNode getExpression() {
+        return this.getChild(0);
+    }
+    
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new SignedTask(this.getExpression());
     }
 
     @Override
     public String getAsString() {
-        
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("\nalways begin\n");
-
-        this.getChildren().forEach(child -> builder.append("\t" + child.getAsString() + "\n"));
-
-        builder.append("end\n");
-        
-        return builder.toString();
+        return "$signed(" + this.getExpression().getAsString() + ")";
     }
-
-    @Override
-    protected HardwareNode copyPrivate() {
-        return new AlwaysBlock();
-    }
+    
 }

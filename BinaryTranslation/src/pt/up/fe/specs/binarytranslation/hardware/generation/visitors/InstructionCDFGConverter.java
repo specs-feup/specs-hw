@@ -29,6 +29,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareNodeExpressionMap;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ImmediateReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.RangeSelection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfStatement;
@@ -36,8 +37,9 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.Procedural
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.InstructionCDFGLeftOperandEdge;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.InstructionCDFGRightOperandEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.AInstructionCDFGSubscriptModifier;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGRangeSubscript;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
@@ -95,14 +97,8 @@ public class InstructionCDFGConverter {
     }
     
     public static Set<AInstructionCDFGNode> getInitialCandidates(AInstructionCDFGSubgraph dfg){
-        
-        Set<AInstructionCDFGNode> candidates = new HashSet<>();
-        
-        dfg.getInputs().forEach(i -> candidates.addAll(dfg.getVerticesAfter(i)));
-        
-        return candidates;
+        return dfg.getVerticesAfter(dfg.getInputs());
     }
-    
     
     public static void getNextCandidates(AInstructionCDFGSubgraph dfg, Set<AInstructionCDFGNode> currentCandidates, Set<AInstructionCDFGNode> currentValidCandidates){
         
@@ -120,13 +116,38 @@ public class InstructionCDFGConverter {
              
     }
     
+    public static HardwareExpression addSignal(AInstructionCDFGNode operand, List<AInstructionCDFGModifier> modifierList, Map<AInstructionCDFGNode, HardwareExpression> signalMap) {
+        
+        if(!modifierList.isEmpty()) {
+            
+            for(AInstructionCDFGModifier modifier : modifierList) {
+
+                if(modifier instanceof InstructionCDFGRangeSubscript) {
+                    
+                    RangeSelection rangeSelection = new RangeSelection(
+                            (VariableReference) signalMap.get(operand), 
+                            ((InstructionCDFGRangeSubscript)modifier).getLowerBound().intValue(),
+                            ((InstructionCDFGRangeSubscript)modifier).getUpperBound().intValue()
+                            );
+                    
+                    return rangeSelection;
+                }
+            }
+        }
+        
+        return signalMap.get(operand);
+
+    }
+    
     public static List<HardwareExpression> getExpressionSignals(AInstructionCDFGSubgraph dfg, AInstructionCDFGNode expression, Map<AInstructionCDFGNode, HardwareExpression> signalMap) {
         
         List<HardwareExpression> signals = new ArrayList<>();
         
         if(dfg.getOperandsOf(expression).size() == 2) {
-            signals.add(signalMap.get(dfg.getLeftOperand(expression)));
-            signals.add(signalMap.get(dfg.getRightOperand(expression)));
+            
+            signals.add(InstructionCDFGConverter.addSignal(dfg.getLeftOperand(expression), dfg.getLeftOperandEdge(expression).getModifiers(), signalMap));
+            signals.add(InstructionCDFGConverter.addSignal(dfg.getRightOperand(expression), dfg.getRightOperandEdge(expression).getModifiers(), signalMap));
+  
         }else {
             dfg.getOperandsOf(expression).forEach(op -> signals.add(signalMap.get(op)));
         }
@@ -149,6 +170,7 @@ public class InstructionCDFGConverter {
                 signal_map.putIfAbsent(v, expr_var);
                 
                 HardwareExpression expr = HardwareNodeExpressionMap.generate(v.getClass(), InstructionCDFGConverter.getExpressionSignals(dfg, v, signal_map));   // Generates a new hardware expression for the vertex
+                
                 
                 parent.addChild(new ProceduralBlockingStatement(expr_var, expr));// Adds it to the dfg parent node
 

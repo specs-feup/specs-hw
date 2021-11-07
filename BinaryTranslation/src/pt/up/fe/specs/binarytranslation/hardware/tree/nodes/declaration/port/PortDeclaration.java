@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
 import pt.up.fe.specs.binarytranslation.graph.edge.GraphEdge;
 import pt.up.fe.specs.binarytranslation.graph.edge.GraphEdgeType;
@@ -19,6 +19,8 @@ import pt.up.fe.specs.binarytranslation.graph.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graph.edge.GraphOutput;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.VariableDeclaration;
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 
 public class PortDeclaration extends VariableDeclaration {

@@ -25,7 +25,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
@@ -81,7 +83,7 @@ public class RandomTest_deletethisafter {
         
         FakeInstruction instruction = new FakeInstruction("fakeInstructionTest", 
                 //"if(RA == 2){RD = RB + RA;} if(RZ == 3){RF = RE + RJ;} RO = RD + RF;"
-                "if(RA == 0) {RD = 0; $dzo = 1;} else if((RA == -1) && (RB == (1 << 31))) {RD = (1 << 31); $dzo = 1;} else {RD = RB * RA;}"
+                "if(RA == 0) {RD = 0; $dzo = 1;} else if(RA == -1 && RB == (1 << 31)) {RD = (1 << 31); $dzo = 1;} else {RD = RB / RA;}"
                 //"RD = RA + RB;RF = RA + RG;"
                 );
         InstructionCDFGGenerator icdfg_gen = new InstructionCDFGGenerator();
@@ -94,8 +96,6 @@ public class RandomTest_deletethisafter {
         
         Writer writer = new StringWriter();
         
-        System.out.println(icdf.getDataOutputs());
-        
         exp.exportGraph((GeneralFlowGraph)icdf, "s", writer);
 
         System.out.println("\n\nPrinting generated InstructionCDFG from instruction: " + instruction + "\n");
@@ -107,7 +107,13 @@ public class RandomTest_deletethisafter {
 
         InstructionCDFGNameResolver.resolveNames(icdf); 
         
-       gen.generateHardware(icdf).emit(System.out);
+        AHardwareInstance hw = gen.generateHardware(icdf);
+       hw.emit(System.out);
+       
+      
+        
+       HardwareTestbenchGenerator.generate(hw, 10,  "input.mem", "output.mem").emit(System.out);
+       
         /*    
         List<InstructionCDFG> icdfg_list = new ArrayList<>();
         

@@ -19,26 +19,30 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
-public class RegisterArrayDeclaration extends RegisterDeclaration{
+public class ArrayDeclaration extends HardwareNode{
 
-    private final int size;
+    private int size;
     
-    public RegisterArrayDeclaration(String regName, int size, int numBits) {
-        super(regName, numBits);
+    public ArrayDeclaration(HardwareNode var, int size) {
+        super();
+        
         this.size = size;
+        
+        this.addChild(var);    
     }
     
-    public int getSize() {
-        return this.size;
+    public String getVariableName() {
+        return ((VariableDeclaration)this.getChild(0)).getVariableName();
     }
-
+    
     @Override
     public String getAsString() {
-        return "reg [ (" + this.getNumberOfBits() + " - 1) : 0] " + this.getVariableName() + "[ (" + this.getSize() + " - 1) : 0] " + ";\n";
+        return this.getChild(0).getAsString() + " [" + (this.size - 1) + " : 0];";
     }
-
+    
     @Override
     protected HardwareNode copyPrivate() {
-        return new RegisterArrayDeclaration(this.getVariableName(), this.size,  this.getNumberOfBits());
+        return new ArrayDeclaration(this.getChild(size), this.size);
     }
+
 }

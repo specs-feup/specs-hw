@@ -17,20 +17,15 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionCDFGConverter;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.AInstructionCDFGControlNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGGeneratedVariable;
 
 public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGenerator{
 
@@ -42,26 +37,8 @@ public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGene
         this.module_tree = new VerilogModuleTree("test");
         this.module = module_tree.getModule();
 
-        Set<String> resolvedNames = new HashSet<>();
-        
-        icdfg.getDataInputs().forEach((input) -> {
-                
-                if(resolvedNames.add(input.getUID())) {
-                    this.module_tree.addDeclaration(new PortDeclaration(input.getUID(), 32, ModulePortDirection.input));
-                }
-
-        });
-        
-        resolvedNames.clear();
-        
-        icdfg.getDataOutputs().forEach((output) -> {
-            if(!(output instanceof InstructionCDFGGeneratedVariable) && !(output instanceof AInstructionCDFGControlNode)) {
-                if(resolvedNames.add(output.getUID())) {
-                    this.module_tree.addDeclaration(new PortDeclaration(output.getUID(), 32, ModulePortDirection.output));
-                }
-            }
-        });
- 
+        icdfg.getDataInputsNames().forEach(inputName ->  this.module_tree.addDeclaration(new InputPortDeclaration(inputName, 32)));
+        icdfg.getDataOutputsNames().forEach(outputName -> this.module_tree.addDeclaration(new OutputPortDeclaration(outputName, 32)));
 
         InstructionCDFGConverter.convert(icdfg, this.module.addChild(new AlwaysCombBlock()));
         

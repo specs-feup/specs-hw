@@ -27,19 +27,21 @@ public class RangeSelection extends HardwareExpression {
         this.type = HardwareNodeType.RangeSelection;
     }
 
-    public RangeSelection(VariableReference var, int lower, int upper) {
+    public RangeSelection(HardwareNode var, int lower, int upper) {
         this(lower, upper);
         this.addChild(var);
     }
 
-    public RangeSelection(VariableReference var, int upper) {
+    public RangeSelection(HardwareNode var, int upper) {
         this(var, 0, upper);
     }
 
-    public VariableReference getVar() {
-        return (VariableReference) this.getChild(0);
+    public HardwareNode getVar() {
+        return this.getChild(0);
     }
 
+    
+    
     @Override
     public String getAsString() {
         return this.getVar().getAsString() + "[" + (this.upper - 1) + ":" + this.lower + "]";

@@ -34,6 +34,6 @@ public class DisplayTask extends HardwareNode{
 
     @Override
     public String getAsString() {
-        return "$display("+ this.arguments +");\n";
+        return "$display(\""+ this.arguments +"\");";
     }
 }

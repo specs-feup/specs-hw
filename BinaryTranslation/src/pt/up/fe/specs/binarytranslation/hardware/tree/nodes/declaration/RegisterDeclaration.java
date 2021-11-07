@@ -38,8 +38,16 @@ public class RegisterDeclaration extends VariableDeclaration {
     }
 
     @Override
+    public String getNodeName() {
+        if(this.numBits == 1) {
+            return "reg " + this.regName;
+        }
+        return "reg [" + (this.numBits - 1) + " : 0] " + this.regName;
+    }
+    
+    @Override
     public String getAsString() {
-        return "reg [ (" + this.numBits + " - 1) : 0] " + this.regName + ";\n";
+        return this.getNodeName() + ";";
     }
 
     @Override

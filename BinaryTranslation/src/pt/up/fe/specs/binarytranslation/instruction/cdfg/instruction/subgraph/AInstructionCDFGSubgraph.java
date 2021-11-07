@@ -144,7 +144,15 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
         return this.getOperand(operator, InstructionCDFGLeftOperandEdge.class);
     }
     
+    public InstructionCDFGLeftOperandEdge getLeftOperandEdge(AInstructionCDFGNode operator) {
+        return (InstructionCDFGLeftOperandEdge) this.getEdge(this.getLeftOperand(operator), operator);
+    }
+    
     public AInstructionCDFGNode getRightOperand(AInstructionCDFGNode operator) {
         return this.getOperand(operator, InstructionCDFGRightOperandEdge.class);
+    }
+    
+    public InstructionCDFGRightOperandEdge getRightOperandEdge(AInstructionCDFGNode operator) {
+        return (InstructionCDFGRightOperandEdge) this.getEdge(this.getRightOperand(operator), operator);
     }
 }

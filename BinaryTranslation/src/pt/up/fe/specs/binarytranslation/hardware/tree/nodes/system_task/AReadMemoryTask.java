@@ -18,23 +18,25 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ArrayDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterArrayDeclaration;
 
 public abstract class AReadMemoryTask extends HardwareNode{
 
     private String fileName;
-    private HardwareNode array;
+    private ArrayDeclaration array;
     
     private Number startAddress;
     private Number endAddress;
     
-    protected AReadMemoryTask(String fileName, HardwareNode array) {
+    protected AReadMemoryTask(String fileName, ArrayDeclaration array) {
         this.fileName = fileName;
         this.array = array;
         this.startAddress = null;
         this.endAddress = null;
     }
     
-    protected AReadMemoryTask(String fileName, HardwareNode array, Number startAddress, Number endAddress) {
+    protected AReadMemoryTask(String fileName, ArrayDeclaration array, Number startAddress, Number endAddress) {
         this.fileName = fileName;
         this.array = array;
         this.startAddress = startAddress;
@@ -45,7 +47,7 @@ public abstract class AReadMemoryTask extends HardwareNode{
         return this.fileName;
     }
     
-    public HardwareNode getArray() {
+    public ArrayDeclaration getArray() {
         return this.array;
     }
     
@@ -68,7 +70,7 @@ public abstract class AReadMemoryTask extends HardwareNode{
         
         builder.append("(");
         builder.append("\"" + this.getFileName() + "\",");
-        builder.append(this.getArray());
+        builder.append(this.getArray().getVariableName());
         
         if(this.hasBoundaries()) {
             builder.append("," + String.valueOf(this.getStartAddress()));

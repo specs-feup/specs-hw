@@ -17,6 +17,13 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.testbench;
 
-public class AHardwareTestbench {
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareTree;
+
+public class AHardwareTestbench extends AHardwareInstance{
+
+    public AHardwareTestbench(String instancename, HardwareTree tree) {
+        super(instancename, tree);
+    }
 
 }

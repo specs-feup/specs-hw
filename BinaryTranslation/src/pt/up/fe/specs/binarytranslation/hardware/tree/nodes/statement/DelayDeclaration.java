@@ -34,7 +34,7 @@ public class DelayDeclaration extends HardwareStatement{
     
     @Override
     public String getAsString() {
-        return "#" + String.valueOf(this.value) + ";\n";
+        return "#" + String.valueOf(this.value) + ";";
     }
 
 }

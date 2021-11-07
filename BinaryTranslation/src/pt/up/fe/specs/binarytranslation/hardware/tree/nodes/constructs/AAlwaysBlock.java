@@ -19,27 +19,11 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
-public class AlwaysBlock extends HardwareNode {
-
-    public AlwaysBlock() {
-    }
+public abstract class AAlwaysBlock extends HardwareNode{
 
     @Override
     public String getAsString() {
-        
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("\nalways begin\n");
-
-        this.getChildren().forEach(child -> builder.append("\t" + child.getAsString() + "\n"));
-
-        builder.append("end\n");
-        
-        return builder.toString();
+        return "always";
     }
-
-    @Override
-    protected HardwareNode copyPrivate() {
-        return new AlwaysBlock();
-    }
+    
 }

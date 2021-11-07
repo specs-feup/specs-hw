@@ -18,14 +18,15 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ArrayDeclaration;
 
 public class ReadMemoryHexadecimalTask extends AReadMemoryTask{
 
-    public ReadMemoryHexadecimalTask(String fileName, HardwareNode array) {
+    public ReadMemoryHexadecimalTask(String fileName, ArrayDeclaration array) {
         super(fileName, array);
     }
     
-    public ReadMemoryHexadecimalTask(String fileName, HardwareNode array, Number startAddress, Number endAddress) {
+    public ReadMemoryHexadecimalTask(String fileName, ArrayDeclaration array, Number startAddress, Number endAddress) {
         super(fileName, array, startAddress, endAddress);
     }
     
@@ -42,7 +43,7 @@ public class ReadMemoryHexadecimalTask extends AReadMemoryTask{
 
     @Override
     public String getAsString() {
-        return "$readmemh" + super.getAsString() + ";\n";
+        return "$readmemh" + super.getAsString() + ";";
     }
     
 }
