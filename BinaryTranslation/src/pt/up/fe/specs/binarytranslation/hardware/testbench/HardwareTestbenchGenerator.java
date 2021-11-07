@@ -55,10 +55,8 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator{
 
         testbenchtree.getRoot().addChildLeftOf(testbench, new TimeScaleDeclaration());
         
-        var loadNext = new InputPortDeclaration("loadNext", 1);
-        testbenchtree.addDeclaration(loadNext);
-        var verify = new InputPortDeclaration("verify", 1);
-        testbenchtree.addDeclaration(verify);
+        var loadNext = new InputPortDeclaration("loadNext", 1, testbenchtree);
+        var verify = new InputPortDeclaration("verify", 1, testbenchtree);
         
         var index = testbench.addChild(new RegisterDeclaration("index", 32));
         
@@ -90,7 +88,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator{
                 );
         
         alwaysBlockVerify_failed.addChild(new DisplayTask("Validation error"));
-        alwaysBlockVerify_failed.addChild(new FinishTask());
+        new FinishTask(alwaysBlockVerify_failed);
         
         //always_block.addChild(new ContinuousStatement((VariableReference) iterator, new AdditionExpression((HardwareExpression) iterator, new ImmediateReference(1, 32))));
         
@@ -108,7 +106,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator{
         
  
         
-        var modulestatement = testbench.addChild(new ModuleStatement(module, "test", subInputs));
+        new ModuleStatement(module, "test", subInputs, testbench);
         
 
         return new HardwareTestbench("test_tb", testbenchtree);

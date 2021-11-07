@@ -26,6 +26,10 @@ public class FinishTask extends HardwareNode{
 
     }
     
+    public FinishTask(HardwareNode parent) {
+        parent.addChild(this);
+    }
+    
     @Override
     protected HardwareNode copyPrivate() {
         return new FinishTask();

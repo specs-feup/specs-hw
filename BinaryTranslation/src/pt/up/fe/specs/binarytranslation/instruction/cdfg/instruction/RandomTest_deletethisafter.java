@@ -108,7 +108,7 @@ public class RandomTest_deletethisafter {
         InstructionCDFGNameResolver.resolveNames(icdf); 
         
         AHardwareInstance hw = gen.generateHardware(icdf);
-       hw.emit(System.out);
+       //hw.emit(System.out);
        
       
         

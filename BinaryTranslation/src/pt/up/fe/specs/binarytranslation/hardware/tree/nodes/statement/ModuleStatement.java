@@ -48,6 +48,13 @@ public class ModuleStatement extends HardwareStatement{
         this.addChildren(ports);
     }
     
+    public ModuleStatement(AHardwareInstance moduleInstance, String moduleName, List<HardwareNode> ports, HardwareNode parent) throws IllegalArgumentException{
+        this(moduleInstance, moduleName, ports);
+     
+        parent.addChild(this);
+    }
+    
+    
     @Override
     protected HardwareNode copyPrivate() {
         return new ModuleStatement(this.moduleInstance, this.moduleName);

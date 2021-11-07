@@ -17,6 +17,7 @@ import pt.up.fe.specs.binarytranslation.graph.edge.GraphEdge;
 import pt.up.fe.specs.binarytranslation.graph.edge.GraphEdgeType;
 import pt.up.fe.specs.binarytranslation.graph.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graph.edge.GraphOutput;
+import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
@@ -39,7 +40,7 @@ public class PortDeclaration extends VariableDeclaration {
         this.direction = direction;
         this.type = HardwareNodeType.PortDeclaration;
     }
-
+    
     private PortDeclaration(GraphEdge edge, ModulePortDirection direction) {
         super();
         this.portWidth = edge.getWidth();
