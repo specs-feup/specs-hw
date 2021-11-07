@@ -17,15 +17,15 @@ import pt.up.fe.specs.binarytranslation.hardware.generation.exception.HardwareGe
 import pt.up.fe.specs.binarytranslation.hardware.generation.exception.UnimplementedExpressionException;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ImmediateReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ParenthesisExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.LeftShiftExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.MultiplicationExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.SubtractionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.BitWiseAndExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.ComparsionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;

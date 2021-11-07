@@ -31,6 +31,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.Instru
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGFalseEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGTrueEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.AInstructionCDFGControlNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGGeneratedVariable;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
@@ -47,7 +48,7 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
     
     private static Predicate<AInstructionCDFGNode> notGeneratedVariableNode = v -> !(v instanceof InstructionCDFGGeneratedVariable);
     private static Predicate<AInstructionCDFGNode> notLiteralNode = v -> !(v instanceof InstructionCDFGLiteralNode);
-    private static Predicate<AInstructionCDFGNode> notControlNode = v -> !(v instanceof InstructionCDFGGeneratedVariable);
+    private static Predicate<AInstructionCDFGNode> notControlNode = v -> !(v instanceof AInstructionCDFGControlNode);
     
     public InstructionCDFG(Instruction instruction) {
         super(InstructionCDFGDataFlowSubgraph.class, AInstructionCDFGControlFlowSubgraph.class, AInstructionCDFGEdge.class);

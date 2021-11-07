@@ -15,46 +15,33 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
-
-import java.util.List;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class AlwaysAtBlock extends AAlwaysBlock{
+public class AssertTask extends HardwareNode{
 
-    public AlwaysAtBlock(HardwareNode signal) {
-        super();
-        
-        this.addChild(signal);
+    public AssertTask(HardwareExpression expression) {
+        this.addChild(expression);
     }
-    
-    public HardwareNode getSignal() {
-        return this.getChild(0);
+
+    public HardwareExpression getExpression() {
+        return (HardwareExpression) this.getChild(0);
     }
     
     @Override
     protected HardwareNode copyPrivate() {
-        return new AlwaysAtBlock(this.getSignal());
-    }
-
-    public List<HardwareNode> getStatements() {
-        return this.getChildren().subList(1, this.getChildren().size());
+        return new AssertTask(this.getExpression());
     }
     
     @Override
     public String getAsString() {
         StringBuilder builder = new StringBuilder();
         
-        builder.append(super.getAsString());
-        builder.append(" @ ( ");
-        builder.append(this.getSignal().getAsString());
-        builder.append(" ) begin\n");
-        
-        this.getStatements().forEach(statement -> builder.append("\t" + statement.getAsString() + "\n"));
-        
-        builder.append("end\n");
+        builder.append("$assert(");
+        builder.append(this.getExpression().getAsString());
+        builder.append(");");
         
         return builder.toString();
     }

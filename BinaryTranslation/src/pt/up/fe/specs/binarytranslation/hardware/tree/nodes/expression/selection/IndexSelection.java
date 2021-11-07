@@ -15,10 +15,12 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 
 public class IndexSelection extends HardwareExpression {
 

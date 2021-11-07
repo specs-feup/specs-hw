@@ -19,7 +19,6 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ArrayDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterArrayDeclaration;
 
 public abstract class AReadMemoryTask extends HardwareNode{
 

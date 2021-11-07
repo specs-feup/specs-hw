@@ -22,7 +22,7 @@ import java.util.List;
 import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.RangeSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.RangeSelection;
 
 public class ModuleStatement extends HardwareStatement{
 
