@@ -11,34 +11,30 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class ImmediateReference extends HardwareExpression {
+public class VariableReference extends HardwareExpression {
 
-    private int width;
-    private final Number value;
-    // TODO: private final VariableDeclaration declaration;
+    // private final VariableDeclaration declaration;
+    private final String name;
 
-    /*
-     * Note: for now, all immediates are represented as decimals
-     */
-    public ImmediateReference(Number value, int width) {
+    public VariableReference(String declaration) {
         super();
-        this.value = value;
-        this.width = width;
-        this.type = HardwareNodeType.ImmediateReference;
+        this.name = declaration;
+        this.type = HardwareNodeType.VariableReference;
     }
 
     @Override
     public String getAsString() {
-        return Integer.toString(this.width) + "'d" + this.value;
+        return this.name;
     }
 
     @Override
     protected HardwareNode copyPrivate() {
-        return new ImmediateReference(this.value, this.width);
+        return new VariableReference(this.name);
     }
 }

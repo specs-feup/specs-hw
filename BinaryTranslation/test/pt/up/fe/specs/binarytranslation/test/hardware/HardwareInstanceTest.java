@@ -19,9 +19,9 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCom
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.RangeSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.RangeSelection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareRootNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
