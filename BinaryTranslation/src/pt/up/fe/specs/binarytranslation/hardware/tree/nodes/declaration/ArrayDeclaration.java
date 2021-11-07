@@ -35,14 +35,18 @@ public class ArrayDeclaration extends HardwareNode{
         return ((VariableDeclaration)this.getChild(0)).getVariableName();
     }
     
+    public int getSize() {
+        return this.size;
+    }
+    
     @Override
     public String getAsString() {
-        return this.getChild(0).getAsString() + " [" + (this.size - 1) + " : 0];";
+        return this.getChild(0).getNodeName() + " [" + (this.getSize() - 1) + " : 0];";
     }
     
     @Override
     protected HardwareNode copyPrivate() {
-        return new ArrayDeclaration(this.getChild(size), this.size);
+        return new ArrayDeclaration(this.getChild(size), this.getSize());
     }
 
 }

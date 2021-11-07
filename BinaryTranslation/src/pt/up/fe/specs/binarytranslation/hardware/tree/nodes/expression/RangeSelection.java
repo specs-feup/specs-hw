@@ -40,8 +40,6 @@ public class RangeSelection extends HardwareExpression {
         return this.getChild(0);
     }
 
-    
-    
     @Override
     public String getAsString() {
         return this.getVar().getAsString() + "[" + (this.upper - 1) + ":" + this.lower + "]";

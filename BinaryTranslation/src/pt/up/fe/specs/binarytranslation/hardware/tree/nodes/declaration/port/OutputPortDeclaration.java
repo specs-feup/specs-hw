@@ -30,7 +30,6 @@ public class OutputPortDeclaration extends PortDeclaration{
         super(portName, portWidth, ModulePortDirection.output);
         
         moduleTree.addDeclaration(this);
-        
     }
     
 }

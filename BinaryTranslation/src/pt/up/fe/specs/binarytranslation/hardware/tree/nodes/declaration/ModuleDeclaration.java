@@ -34,11 +34,11 @@ public class ModuleDeclaration extends HardwareDeclaration {
     @Override
     public String getAsString() {
         var builder = new StringBuilder();
-        builder.append("module " + this.moduleName);
+        builder.append("\nmodule " + this.moduleName);
         
         if(!this.getChild(0).getChildren().isEmpty()) {
         
-            builder.append("(");
+            builder.append(" (");
             
             this.getChild(0).getChildren().forEach(child -> {
                 builder.append(((PortDeclaration)child).getVariableName()  +",");
@@ -47,7 +47,7 @@ public class ModuleDeclaration extends HardwareDeclaration {
             builder.deleteCharAt(builder.length() - 1).append(")");
         }
         
-        builder.append(";\n");
+        builder.append(";\n\n");
         
         /*
          * The children should be port declarations, followed by body (?)
