@@ -35,7 +35,7 @@ public class TimeScaleDeclaration extends HardwareDeclaration{
         
         StringBuilder builder = new StringBuilder();
         
-        builder.append("'timescale ");
+        builder.append("\n`timescale ");
         
         // put time unit
         builder.append("1ns");
@@ -43,7 +43,7 @@ public class TimeScaleDeclaration extends HardwareDeclaration{
         builder.append("/");
         
         // put time precision
-        builder.append("10ps");
+        builder.append("10ps;\n");
         
         return builder.toString();
     }

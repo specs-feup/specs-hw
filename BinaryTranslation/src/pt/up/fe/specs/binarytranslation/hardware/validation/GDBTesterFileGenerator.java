@@ -17,16 +17,63 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.validation;
 
+import pt.up.fe.specs.binarytranslation.detection.segments.ABinarySegment;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+
 public class GDBTesterFileGenerator {
 
-    public static String export() {
+    public static String exportInital() {
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append("set confirm off\n");
+        
+        return builder.toString();
+    }
+    
+    public static String export(Instruction instruction) {
+        
+        StringBuilder builder = new StringBuilder();
+        
+        
+        
+        builder.append(GDBTesterFileGenerator.addBreakpoint(instruction));
+        
+        builder.append("run\n");
+        
+        builder.append("info registers\n");
+        
+        builder.append("quit\n");
+        
+        return builder.toString();
+    }
+    
+    public static String export(ABinarySegment segment) {
         
         StringBuilder builder = new StringBuilder();
         
         builder.append("set confirm off\n");
         
+        builder.append(GDBTesterFileGenerator.addBreakpoint(segment.getInstructions().get(0)));
+        builder.append(GDBTesterFileGenerator.addBreakpoint(segment.getInstructions().get(segment.getInstructions().size() - 1)));
+        
+      
+        
+        builder.append("run\n");
+        
+        builder.append("continue\n;");
+        builder.append("info registers\n");
         builder.append("quit\n");
         
+        return builder.toString();
+    }
+    
+    public static String addBreakpoint(Instruction instruction) {
+        
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append("break *0x");
+        builder.append(Long.toHexString(instruction.getAddress()));
+        builder.append("\n");
         return builder.toString();
     }
 }

@@ -15,6 +15,7 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 
 public class ModuleDeclaration extends HardwareDeclaration {
 
@@ -33,14 +34,21 @@ public class ModuleDeclaration extends HardwareDeclaration {
     @Override
     public String getAsString() {
         var builder = new StringBuilder();
-        builder.append("module " + this.moduleName + "(");
+        builder.append("module " + this.moduleName);
         
-        this.getChild(0).getChildren().forEach(child -> {
-            builder.append(((PortDeclaration)child).getVariableName()  +",");
-        });
+        if(!this.getChild(0).getChildren().isEmpty()) {
         
-        builder.deleteCharAt(builder.length() - 1).append(");\n");
-
+            builder.append("(");
+            
+            this.getChild(0).getChildren().forEach(child -> {
+                builder.append(((PortDeclaration)child).getVariableName()  +",");
+            });
+            
+            builder.deleteCharAt(builder.length() - 1).append(")");
+        }
+        
+        builder.append(";\n");
+        
         /*
          * The children should be port declarations, followed by body (?)
          */

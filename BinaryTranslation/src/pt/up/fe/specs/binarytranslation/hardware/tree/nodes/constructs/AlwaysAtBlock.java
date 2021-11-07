@@ -17,29 +17,46 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.VariableReference;
 
-public class AlwaysBlock extends HardwareNode {
+public class AlwaysAtBlock extends AAlwaysBlock{
 
-    public AlwaysBlock() {
+    public AlwaysAtBlock(VariableReference signal) {
+        super();
+        
+        this.addChild(signal);
+    }
+    
+    public VariableReference getSignal() {
+        return (VariableReference) this.getChild(0);
+    }
+    
+    @Override
+    protected HardwareNode copyPrivate() {
+        return new AlwaysAtBlock(this.getSignal());
     }
 
+    public List<HardwareNode> getStatements() {
+        return this.getChildren().subList(1, this.getChildren().size());
+    }
+    
     @Override
     public String getAsString() {
-        
         StringBuilder builder = new StringBuilder();
-
-        builder.append("\nalways begin\n");
-
-        this.getChildren().forEach(child -> builder.append("\t" + child.getAsString() + "\n"));
-
+        
+        builder.append(super.getAsString());
+        builder.append(" @ (posedge ");
+        builder.append(this.getSignal().getAsString());
+        builder.append(") begin\n");
+        
+        this.getStatements().forEach(statement -> builder.append("\t" + statement.getAsString() + "\n"));
+        
         builder.append("end\n");
         
         return builder.toString();
     }
-
-    @Override
-    protected HardwareNode copyPrivate() {
-        return new AlwaysBlock();
-    }
+    
 }

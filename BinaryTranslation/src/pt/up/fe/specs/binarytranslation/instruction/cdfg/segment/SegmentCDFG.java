@@ -17,13 +17,13 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.segment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jgrapht.Graphs;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.InstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
 
 public class SegmentCDFG extends InstructionCDFG{
@@ -37,13 +37,37 @@ public class SegmentCDFG extends InstructionCDFG{
 
     public void generate() {
 
+        // Merge InstructionCDFGs to this graph
         this.instructions.forEach(instruction -> {
             InstructionCDFGGenerator icdfg_gen = new InstructionCDFGGenerator();
-            Graphs.addGraph(this, icdfg_gen.generate(instruction));
+            InstructionCDFG icdfg = icdfg_gen.generate(instruction);
+            
+            Graphs.addGraph(this, icdfg);
+            
+            this.getDataOutputsMap().forEach((output, out_subgraph) -> {
+                icdfg.getDataInputsMap().forEach((input, in_subgraph) -> {
+                    
+                    System.out.println("prev:" + output.getReference() + "\tnew:" + input.getReference());
+                    
+                    if(output.getReference().equals(input.getReference())) {
+                        
+                        this.addEdge(out_subgraph, in_subgraph, new InstructionCDFGEdge());
+                    }
+                });
+            });
+            
+            this.generateInputs();
+            this.generateOutputs();
+            this.generateDataInputs();
+            this.generateDataOutputs();
+            
         });
         
-        this.generateInputs();
-        this.generateOutputs();
+        //Add edges
+        
+        
+        
+        
         
     }
     

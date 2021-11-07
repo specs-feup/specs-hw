@@ -17,23 +17,36 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
+import java.util.List;
+
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.RangeSelection;
 
 public class ModuleStatement extends HardwareStatement{
 
-    private String moduleInstance;
+    private AHardwareInstance moduleInstance;
     private String moduleName;
     
     /*
      * Maybe use a map to pass the child port - parent module signal relation ?
      */
     
-    public ModuleStatement(String moduleInstance, String moduleName) {
+    public ModuleStatement(AHardwareInstance moduleInstance, String moduleName) {
         this.moduleInstance = moduleInstance;
         this.moduleName = moduleName;
     }
     
-    
+    public ModuleStatement(AHardwareInstance moduleInstance, String moduleName, List<HardwareNode> ports) throws IllegalArgumentException{
+        this(moduleInstance, moduleName);
+        
+        if(ports.size() != this.moduleInstance.getPorts().size()) {
+            throw new IllegalArgumentException();
+        }
+        
+        this.addChildren(ports);
+    }
     
     @Override
     protected HardwareNode copyPrivate() {
@@ -42,10 +55,23 @@ public class ModuleStatement extends HardwareStatement{
     
     @Override
     public String getAsString() {
+        
         StringBuilder builder = new StringBuilder();
         
-        builder.append(this.moduleInstance + " ");
+        builder.append(this.moduleInstance.getName() + " ");
         builder.append(this.moduleName + " (\n");
+        
+        List<HardwareNode> modulePorts = this.moduleInstance.getPorts();
+        
+        for(int i = 0; i < modulePorts.size(); i++ ) {
+            builder.append("\t." + ((PortDeclaration)modulePorts.get(i)).getVariableName() + "(" + this.getChild(i).getAsString() + ")");
+            
+            if(i != (modulePorts.size() - 1)) {
+                builder.append(",");
+            }
+            builder.append("\n");
+        }
+
         
         builder.append(");\n");
         

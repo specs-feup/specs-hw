@@ -15,24 +15,14 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task;
+package pt.up.fe.specs.binarytranslation.hardware.testbench;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareTree;
 
-public class FinishTask extends HardwareNode{
+public class HardwareTestbench extends AHardwareTestbench{
 
-    
-    public FinishTask() {
-
-    }
-    
-    @Override
-    protected HardwareNode copyPrivate() {
-        return new FinishTask();
+    public HardwareTestbench(String instancename, HardwareTree tree) {
+        super(instancename, tree);
     }
 
-    @Override
-    public String getAsString() {
-        return "$finish;";
-    }
 }

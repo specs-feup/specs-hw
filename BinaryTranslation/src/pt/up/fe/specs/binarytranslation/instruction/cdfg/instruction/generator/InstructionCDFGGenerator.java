@@ -61,6 +61,13 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
         this.uidMap = new HashMap<>();
     }
     
+    private void finish() {
+        this.icdfg.generateInputs();
+        this.icdfg.generateOutputs();
+        this.icdfg.generateDataInputs();
+        this.icdfg.generateDataOutputs();
+    }
+    
     public static void generateUID(Map<String, Integer> uidMap, AInstructionCDFGNode vertex) {
         
         uidMap.put(vertex.getReference(), (uidMap.containsKey(vertex.getReference())) ? uidMap.get(vertex.getReference()) + 1 : 0);
@@ -78,8 +85,7 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
         
         this.visit(instruction.getPseudocode().getParseTree());
 
-        this.icdfg.generateInputs();
-        this.icdfg.generateOutputs();
+        this.finish();
         
         return this.icdfg;
     }
@@ -90,8 +96,7 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
         
         this.visit(instruction);
 
-        this.icdfg.generateInputs();
-        this.icdfg.generateOutputs();
+        this.finish();
         
         return this.icdfg;
     }
@@ -111,8 +116,6 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
         this.last_node_edge = new InstructionCDFGEdge();
         
         ctx.clear();
-        
-        
         
         return new_dfg; 
     }

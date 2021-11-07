@@ -61,6 +61,7 @@ public class InstructionCDFGNameResolver {
      
      
      public static void visitDataFlowSubgraph(InstructionCDFG icdfg, Map<String, Integer> previousNames, Map<InstructionCDFGControlFlowMerge, Map<AInstructionCDFGSubgraph, Boolean>> resolved, InstructionCDFGDataFlowSubgraph dfg) {
+         
          InstructionCDFGNameResolver.renameInputRegisters(Set.of(dfg), previousNames); 
          InstructionCDFGNameResolver.renameOutputRegisters(icdfg, Set.of(dfg), previousNames);  
          

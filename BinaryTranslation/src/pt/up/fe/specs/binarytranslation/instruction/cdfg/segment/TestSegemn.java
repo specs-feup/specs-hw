@@ -29,6 +29,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
@@ -71,16 +72,19 @@ public class TestSegemn {
         
         List<Instruction> instructions = List.of(
                 new FakeInstruction("fakeInstructionTest", "RD = RA + RC;"),
-                new FakeInstruction("fakeInstructionTest", "RZ = RA + RC;")
+                new FakeInstruction("fakeInstructionTest", "RZ = RC - RF;")
                 );
         
         SegmentCDFG segment = new SegmentCDFG(instructions);
         
         segment.generate();
         
+        System.out.println(segment.getDataInputsMap().keySet());
+        
         InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
         
         Writer writer = new StringWriter();
+        InstructionCDFGNameResolver.resolveNames(segment);
         exp.exportGraph((GeneralFlowGraph)segment, "s", writer);
         System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
         

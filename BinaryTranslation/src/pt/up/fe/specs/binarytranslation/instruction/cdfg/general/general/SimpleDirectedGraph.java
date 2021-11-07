@@ -119,6 +119,24 @@ public class SimpleDirectedGraph<V,E> extends org.jgrapht.graph.SimpleDirectedGr
         return new HashSet<V>(Graphs.successorListOf(this, vertex));
     }
     
+    public Set<V> getVerticesBefore(Set<V> vertices){
+        
+        Set<V> verticesBefore = new HashSet<>();
+        
+        vertices.forEach(vertex -> verticesBefore.addAll(this.getVerticesBefore(vertex)));
+        
+        return verticesBefore;
+    }
+    
+    public Set<V> getVerticesAfter(Set<V> vertices){
+        
+        Set<V> verticesAfter = new HashSet<>();
+        
+        vertices.forEach(vertex -> verticesAfter.addAll(this.getVerticesAfter(vertex)));
+        
+        return verticesAfter;
+    }
+    
     public void addIncomingEdgesTo(V target, Set<V> sources){   
         sources.forEach(source -> this.addEdge(source, target));
     }

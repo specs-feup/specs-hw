@@ -15,24 +15,14 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 
-public class FinishTask extends HardwareNode{
+public class OutputPortDeclaration extends PortDeclaration{
 
-    
-    public FinishTask() {
-
+    public OutputPortDeclaration(String portName, int portWidth) {
+        super(portName, portWidth, ModulePortDirection.output);
     }
     
-    @Override
-    protected HardwareNode copyPrivate() {
-        return new FinishTask();
-    }
-
-    @Override
-    public String getAsString() {
-        return "$finish;";
-    }
 }
