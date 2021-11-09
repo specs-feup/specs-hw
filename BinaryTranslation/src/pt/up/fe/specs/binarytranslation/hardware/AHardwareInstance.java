@@ -64,6 +64,11 @@ public abstract class AHardwareInstance implements HardwareInstance {
     }
 
     @Override
+    public void emit() {
+        this.tree.emit();
+    }
+    
+    @Override
     public HardwareTree getTree() {
         return this.tree;
     }

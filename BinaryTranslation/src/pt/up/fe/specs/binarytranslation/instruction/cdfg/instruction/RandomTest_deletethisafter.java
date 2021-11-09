@@ -82,8 +82,8 @@ public class RandomTest_deletethisafter {
     public void testParse() {
         
         FakeInstruction instruction = new FakeInstruction("fakeInstructionTest", 
-                //"if(RA == 2){RD = RB + RA;} if(RZ == 3){RF = RE + RJ;} RO = RD + RF;"
-                "if(RA == 0) {RD = 0; $dzo = 1;} else if(RA == -1 && RB == (1 << 31)) {RD = (1 << 31); $dzo = 1;} else {RD = RB / RA;}"
+                "if(RA == 2){RD = RB + RA;} else{RD = RB - RA;}"
+                //"(RA == 0) {RD = 0; $dzo = 1;} else if(RA == -1 && RB == (1 << 31)) {RD = (1 << 31); $dzo = 1;} else {RD = RB / RA;}"
                 //"RD = RA + RB;RF = RA + RG;"
                 );
         InstructionCDFGGenerator icdfg_gen = new InstructionCDFGGenerator();
@@ -101,18 +101,19 @@ public class RandomTest_deletethisafter {
         System.out.println("\n\nPrinting generated InstructionCDFG from instruction: " + instruction + "\n");
         //System.out.println(writer.toString());
         
-        System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
+        System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()) + "\n");
+        
         
         InstructionCDFGCustomInstructionUnitGenerator gen = new InstructionCDFGCustomInstructionUnitGenerator();
 
         InstructionCDFGNameResolver.resolveNames(icdf); 
         
         AHardwareInstance hw = gen.generateHardware(icdf);
-       //hw.emit(System.out);
+        hw.emit();
        
       
         
-       HardwareTestbenchGenerator.generate(hw, 10,  "input.mem", "output.mem").emit(System.out);
+       HardwareTestbenchGenerator.generate(hw, 10,  "input.mem", "output.mem").emit();
        
         /*    
         List<InstructionCDFG> icdfg_list = new ArrayList<>();
