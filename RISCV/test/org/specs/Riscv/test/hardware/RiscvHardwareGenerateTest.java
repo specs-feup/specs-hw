@@ -22,7 +22,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
 import org.specs.Riscv.instruction.RiscvPseudocode;
 
+import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnit;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
@@ -39,15 +41,14 @@ public class RiscvHardwareGenerateTest {
     
     @Test
     public void generateInstructionCDFGs() {
-        
-        
       
         for(var instruction : RiscvPseudocode.values()) {
         
-        //var instruction = RiscvPseudocode.srai;
-        
             InstructionCDFGGenerator icdfg_generator = new InstructionCDFGGenerator();
             InstructionCDFG icdfg = null;
+            
+            System.out.println("\n\nProcessing instruction: " + instruction.getName() + "\n\n");
+            
             
             try {
                 icdfg = icdfg_generator.generate(instruction.getParseTree());
@@ -57,22 +58,30 @@ public class RiscvHardwareGenerateTest {
                 continue;
             }
             InstructionCDFGCustomInstructionUnitGenerator hardware_generator = new InstructionCDFGCustomInstructionUnitGenerator();
-            
-            System.out.println("\n\nProcessing instruction: " + instruction.getName() + "\n\n");
-
+            InstructionCDFGCustomInstructionUnit module = null;
             
             
             try {
-                InstructionCDFGNameResolver.resolveNames(icdfg); 
-                hardware_generator.generateHardware(icdfg).emit();
+                InstructionCDFGNameResolver.resolveNames(icdfg);
+                
+                module = (InstructionCDFGCustomInstructionUnit) hardware_generator.generateHardware(icdfg);
+                
+                System.out.println("Generated module");
+                module.emit();
             }catch(Exception e) {
                 System.out.println("ERROR: Could not generate HDL of instruction: " + instruction.getName());
                 continue;
             }
+            
+            try {
+                System.out.println("Generated testbench");
+                HardwareTestbenchGenerator.generate(module, 5, "inputs", "outputs").emit(); 
+            }catch(Exception e) {
+                System.out.println("ERROR: Could not generate testbench of instruction: " + instruction.getName());
+                continue;
+            }
         }
         
-        System.out.println("DONE");
     }
-    
     
 }
