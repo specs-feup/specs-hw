@@ -166,4 +166,8 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         return this.instruction.getName();
     }
     
+    public void splitSubgraph(AInstructionCDFGSubgraph subgraph, Set<AInstructionCDFGNode> vertices) {
+        
+    }
+    
 }

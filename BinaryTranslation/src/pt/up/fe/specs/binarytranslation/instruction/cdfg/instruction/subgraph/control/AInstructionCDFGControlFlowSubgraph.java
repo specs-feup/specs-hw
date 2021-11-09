@@ -18,16 +18,18 @@
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control;
 
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.AInstructionCDFGControlNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
 public class AInstructionCDFGControlFlowSubgraph extends AInstructionCDFGSubgraph{
 
     private AInstructionCDFGControlNode control_vertex;
+    
+    public static Predicate<AInstructionCDFGSubgraph> predicate = s -> s instanceof AInstructionCDFGControlFlowSubgraph;
     
     public AInstructionCDFGControlFlowSubgraph(Map<String, Integer> uid_map) {
         super(uid_map);

@@ -35,6 +35,8 @@ public class InstructionCDFGVisitor {
   
     private Map<InstructionCDFGControlFlowMerge, Boolean> mergeResolved;
     
+    private Set<Set<AInstructionCDFGSubgraph>> subgraphsToResolve;
+    
     public InstructionCDFGVisitor(InstructionCDFG icdfg) {
         this.icdfg = icdfg;
     }
@@ -96,6 +98,9 @@ public class InstructionCDFGVisitor {
     }
     
     public void visitControlIfElseSubgraph(InstructionCDFGControlFlowIfElse subgraph) {
+        
+        this.subgraphsToResolve.add(this.icdfg.getVerticesAfter(subgraph));
+        
         
     }
     

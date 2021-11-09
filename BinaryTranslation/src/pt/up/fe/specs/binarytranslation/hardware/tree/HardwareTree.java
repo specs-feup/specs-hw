@@ -31,4 +31,6 @@ public interface HardwareTree {
      * 
      */
     public void emit(OutputStream os);
+    
+    public void emit();
 }

@@ -34,4 +34,9 @@ public class AHardwareTree implements HardwareTree {
     public void emit(OutputStream os) {
         this.root.emit(os);
     }
+
+    @Override
+    public void emit() {
+        this.root.emit();
+    }
 }

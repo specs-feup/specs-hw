@@ -263,5 +263,4 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
         return this.getVerticesBefore(vertex);
     }
 
-        
 }

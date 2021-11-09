@@ -20,6 +20,7 @@ package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.InstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
@@ -133,7 +134,10 @@ public class InstructionCDFGSubgraphGenerator extends PseudoInstructionBaseVisit
         
         if(this.current_outputs.containsKey(output.getReference())) {
 
-            this.subgraph.incomingEdgesOf(this.current_outputs.get(output.getReference())).stream().filter(e -> (this.subgraph.getEdgeSource(e) instanceof InstructionCDFGAssignmentNode)).toList().forEach(e -> this.subgraph.suppressVertex(this.subgraph.getEdgeSource(e)));;
+            this.subgraph.incomingEdgesOf(this.current_outputs.get(output.getReference()))
+            .stream()
+            .filter(e -> (this.subgraph.getEdgeSource(e) instanceof InstructionCDFGAssignmentNode))
+            .collect(Collectors.toSet()).forEach(e -> this.subgraph.suppressVertex(this.subgraph.getEdgeSource(e)));;
 
             this.subgraph.suppressVertex(this.current_outputs.get(output.getReference()));
             this.current_outputs.remove(output.getReference());

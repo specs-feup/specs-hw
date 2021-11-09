@@ -64,7 +64,7 @@ public class RiscvHardwareGenerateTest {
             
             try {
                 InstructionCDFGNameResolver.resolveNames(icdfg); 
-                hardware_generator.generateHardware(icdfg).emit(System.out);
+                hardware_generator.generateHardware(icdfg).emit();
             }catch(Exception e) {
                 System.out.println("ERROR: Could not generate HDL of instruction: " + instruction.getName());
                 continue;
