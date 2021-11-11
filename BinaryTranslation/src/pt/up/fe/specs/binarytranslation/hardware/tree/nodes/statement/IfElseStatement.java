@@ -34,12 +34,14 @@ public class IfElseStatement extends HardwareStatement {
         this.addChild(new StatementList()); // False condition statement list
     }
 
-    public void addIfStatement(HardwareStatement stat) {
+    public IfElseStatement addIfStatement(HardwareStatement stat) {
        ((StatementList)this.getChild(1)).addStatement(stat);
+       return this;
     }
     
-    public void addElseStatement(HardwareStatement stat) {
+    public IfElseStatement addElseStatement(HardwareStatement stat) {
         ((StatementList)this.getChild(2)).addStatement(stat);
+        return this;
     }
 
     public HardwareExpression getCondition() {

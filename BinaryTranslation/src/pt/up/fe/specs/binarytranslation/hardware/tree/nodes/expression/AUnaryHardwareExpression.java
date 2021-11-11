@@ -49,4 +49,5 @@ public abstract class AUnaryHardwareExpression extends HardwareExpression {
         return this.toContentString() + " " + this.getOperand().getAsString();
     }
 
+
 }

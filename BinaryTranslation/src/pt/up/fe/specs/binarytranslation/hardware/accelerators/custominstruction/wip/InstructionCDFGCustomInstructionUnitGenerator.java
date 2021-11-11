@@ -23,6 +23,8 @@ import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.Instruction
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
@@ -32,17 +34,17 @@ public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGene
     private VerilogModuleTree module_tree;
     private ModuleDeclaration module;
 
-    public AHardwareInstance generateHardware(InstructionCDFG icdfg) {
+    public AHardwareInstance generateHardware(InstructionCDFG icdfg, String moduleName) {
         
-        this.module_tree = new VerilogModuleTree("test");
+        this.module_tree = new VerilogModuleTree(moduleName);
         this.module = module_tree.getModule();
 
-        icdfg.getDataInputsNames().forEach(inputName ->  new InputPortDeclaration(inputName, 32, this.module_tree));
-        icdfg.getDataOutputsNames().forEach(outputName -> new OutputPortDeclaration(outputName, 32, this.module_tree));
+        icdfg.getDataInputsNames().forEach(inputName ->  new InputPortDeclaration(new WireDeclaration(inputName, 32), this.module_tree));
+        icdfg.getDataOutputsNames().forEach(outputName -> new OutputPortDeclaration(new RegisterDeclaration(outputName, 32), this.module_tree));
 
         InstructionCDFGConverter.convert(icdfg, this.module.addChild(new AlwaysCombBlock()));
         
-        return new InstructionCDFGCustomInstructionUnit("testInstruction", module_tree);
+        return new InstructionCDFGCustomInstructionUnit(moduleName, module_tree);
     }
     
 }
