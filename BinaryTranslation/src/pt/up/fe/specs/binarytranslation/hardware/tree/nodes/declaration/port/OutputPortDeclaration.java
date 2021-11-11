@@ -19,9 +19,11 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.VariableDeclaration;
 
 public class OutputPortDeclaration extends PortDeclaration{
 
+    /*
     public OutputPortDeclaration(String portName, int portWidth) {
         super(portName, portWidth, ModulePortDirection.output);
     }
@@ -31,5 +33,14 @@ public class OutputPortDeclaration extends PortDeclaration{
         
         moduleTree.addDeclaration(this);
     }
+    */
     
+    public OutputPortDeclaration(VariableDeclaration port) {
+        super(port, ModulePortDirection.output);
+    }
+    
+    public OutputPortDeclaration(VariableDeclaration port, VerilogModuleTree moduleTree) {
+        this(port);
+        moduleTree.addDeclaration(this);
+    }
 }

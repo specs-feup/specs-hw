@@ -31,18 +31,20 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.Register
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.TimeScaleDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.NotEqualsToExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.IndexSelection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.RangeSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.signal_change.NegedgeSignalChange;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.signal_change.PosedgeSignalChange;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task.AssertTask;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task.DisplayTask;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task.ReadMemoryHexadecimalTask;
 
 public class HardwareTestbenchGenerator extends AHardwareGenerator{
@@ -54,8 +56,9 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator{
 
         new TimeScaleDeclaration(testbenchtree);
         
-        var loadNext = new InputPortDeclaration("loadNext", 1, testbenchtree);
-        var verify = new InputPortDeclaration("verify", 1, testbenchtree);
+ 
+        var verify = new InputPortDeclaration(new RegisterDeclaration("verify", 1), testbenchtree);
+        var verificationResult = new OutputPortDeclaration(new RegisterDeclaration("verifyResults", 1), testbenchtree);
         
         var index = testbench.addChild(new RegisterDeclaration("index", 32));
 
@@ -70,16 +73,21 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator{
         initial_block.addChild(new ProceduralBlockingStatement(new VariableReference("index"), new ImmediateReference(0, 32)));
         initial_block.addChild(new ReadMemoryHexadecimalTask(inputValidationFileName, (ArrayDeclaration) validation_inputs)); // load input validation array
         initial_block.addChild(new ReadMemoryHexadecimalTask(outputValidationFileName, (ArrayDeclaration) validation_outputs));// load output validation array
+        initial_block.addChild((new ProceduralBlockingStatement(new VariableReference("verifyResults"), new ImmediateReference(0, 1))));
         
-        var always_block = testbench.addChild(new AlwaysAtBlock(new PosedgeSignalChange(new VariableReference(loadNext.getVariableName()))));
+        var always_block = testbench.addChild(new AlwaysAtBlock(new PosedgeSignalChange(new VariableReference(verify.getVariableName()))));
         always_block.addChild(new ProceduralNonBlockingStatement(new VariableReference("index"), new AdditionExpression(new VariableReference("index") , new ImmediateReference(1, 32))));
         
-        var alwaysBlockVerify = testbench.addChild(new AlwaysAtBlock(new PosedgeSignalChange(new VariableReference(verify.getVariableName()))));
+        var alwaysBlockVerify = testbench.addChild(new AlwaysAtBlock(new NegedgeSignalChange(new VariableReference(verify.getVariableName()))));
        
         var alwaysBlockVerify_failed = alwaysBlockVerify.addChild(
-                new AssertTask(
-                        new NotEqualsToExpression(new VariableReference("moduleOutputs"), new IndexSelection(new VariableReference("outputs"), new VariableReference("index"))
-                                )));
+                new IfElseStatement(new NotEqualsToExpression(
+                        new VariableReference("moduleOutputs"), 
+                        new RangeSelection (new IndexSelection(new VariableReference("outputs"), new VariableReference("index")), 0, 32))
+                        )
+                .addIfStatement(new ProceduralNonBlockingStatement(new VariableReference("verifyResults"), new ImmediateReference(0, 1)))
+                .addElseStatement(new ProceduralNonBlockingStatement(new VariableReference("verifyResults"), new ImmediateReference(1, 1)))
+                );
 
         List<HardwareNode> subInputs = new ArrayList<>();
         

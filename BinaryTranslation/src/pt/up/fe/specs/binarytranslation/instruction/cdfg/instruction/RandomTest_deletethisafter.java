@@ -19,6 +19,8 @@ package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Map;
+import java.util.Set;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -27,7 +29,10 @@ import org.junit.Test;
 
 import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.testbench.GenerateMakefile;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorTestbenchGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
@@ -82,15 +87,25 @@ public class RandomTest_deletethisafter {
     public void testParse() {
         
         FakeInstruction instruction = new FakeInstruction("fakeInstructionTest", 
-                "if(RA == 2){RD = RB + RA;} else{RD = RB - RA;}"
-                //"(RA == 0) {RD = 0; $dzo = 1;} else if(RA == -1 && RB == (1 << 31)) {RD = (1 << 31); $dzo = 1;} else {RD = RB / RA;}"
+                //"RD = RA + RB;"
+                "if(RA == 0) {RD = 0; $dzo = 1;} else if((RA == -1) && (RB == 31)) {RD = (1 << 31); $dzo = 1;} else {RD = RB / RA;}"
                 //"RD = RA + RB;RF = RA + RG;"
                 );
         InstructionCDFGGenerator icdfg_gen = new InstructionCDFGGenerator();
-       // this.printParseTree(instruction);
+        this.printParseTree(instruction);
         InstructionCDFG icdf = icdfg_gen.generate(instruction);
        
+        HardwareValidationGenerator validation = new HardwareValidationGenerator();
         
+        Map<Map<String, Number>, Map<String, Number>> validationData = HardwareValidationGenerator.generateValidationData(instruction.getPseudocode().getParseTree(), Set.of("RA", "RB"), 10);
+        
+        System.out.println(HardwareValidationGenerator.generateHexMemFile("input.mem", validationData.keySet()));
+        System.out.println(HardwareValidationGenerator.generateHexMemFile("output.mem", validationData.values()));
+
+        
+        
+        
+        /*
         
         InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
         
@@ -108,13 +123,16 @@ public class RandomTest_deletethisafter {
 
         InstructionCDFGNameResolver.resolveNames(icdf); 
         
-        AHardwareInstance hw = gen.generateHardware(icdf);
+        AHardwareInstance hw = gen.generateHardware(icdf, "add_test");
         hw.emit();
        
-      
         
        HardwareTestbenchGenerator.generate(hw, 10,  "input.mem", "output.mem").emit();
+       System.out.println(VerilatorTestbenchGenerator.emit(hw.getName() + "_tb", 3));
+       System.out.println(GenerateMakefile.emit(hw.getName() + "_tb"));
        
+       
+      */
         /*    
         List<InstructionCDFG> icdfg_list = new ArrayList<>();
         

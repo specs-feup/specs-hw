@@ -38,7 +38,6 @@ public class InstructionCDFGNameResolver {
             Map<String, Integer> previous_names = new HashMap<>();
             Map<InstructionCDFGControlFlowMerge, Map<AInstructionCDFGSubgraph, Boolean>> resolved = new HashMap<>();
 
-  
             icdfg.getInputs().forEach(subgraph -> InstructionCDFGNameResolver.visit(icdfg, previous_names, resolved, subgraph));
     }
      
@@ -58,6 +57,15 @@ public class InstructionCDFGNameResolver {
          icdfg.getVerticesAfter(node).forEach(subgraph -> InstructionCDFGNameResolver.visit(icdfg, previousNames, resolved, subgraph));
          
      }
+     
+     public void resolveInputs() {
+         
+     }
+     
+     public void resolveOutputs() {
+         
+     }
+     
      
      
      public static void visitDataFlowSubgraph(InstructionCDFG icdfg, Map<String, Integer> previousNames, Map<InstructionCDFGControlFlowMerge, Map<AInstructionCDFGSubgraph, Boolean>> resolved, InstructionCDFGDataFlowSubgraph dfg) {

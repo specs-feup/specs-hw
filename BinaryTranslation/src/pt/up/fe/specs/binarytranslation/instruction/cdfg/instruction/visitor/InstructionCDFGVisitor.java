@@ -29,13 +29,9 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.co
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
-public class InstructionCDFGVisitor {
+public class InstructionCDFGVisitor<R> {
 
     private final InstructionCDFG icdfg;
-  
-    private Map<InstructionCDFGControlFlowMerge, Boolean> mergeResolved;
-    
-    private Set<Set<AInstructionCDFGSubgraph>> subgraphsToResolve;
     
     public InstructionCDFGVisitor(InstructionCDFG icdfg) {
         this.icdfg = icdfg;
@@ -45,67 +41,63 @@ public class InstructionCDFGVisitor {
         this.visit(this.icdfg.getInputs());
     }
     
-    private void visit(Set<AInstructionCDFGSubgraph> subgraphs) {
-        
-        Set<AInstructionCDFGSubgraph> nextSubgraphs = new HashSet<>();
-        
-        for(AInstructionCDFGSubgraph sub : subgraphs) {
-            if(sub instanceof InstructionCDFGControlFlowIf) {
-                this.visitAInstructionCDFGControlFlowConditionalSubgraph((AInstructionCDFGControlFlowConditionalSubgraph) sub);
-            }else if(sub instanceof InstructionCDFGControlFlowIfElse) {
-                this.visitAInstructionCDFGControlFlowConditionalSubgraph((AInstructionCDFGControlFlowConditionalSubgraph) sub);
-            }else if(sub instanceof InstructionCDFGControlFlowMerge) {
-                if(this.mergeResolved.get((InstructionCDFGControlFlowMerge)sub) == true) {
-                    this.visitControlMergeSubgraph((InstructionCDFGControlFlowMerge) sub);
-                }else {
-                    continue;
-                }
-            }else if(sub instanceof InstructionCDFGDataFlowSubgraph) {
-                this.visitDataFlowSubgraph((InstructionCDFGDataFlowSubgraph) sub);
-            }
-            
-            nextSubgraphs.addAll(this.icdfg.getVerticesAfter(sub));
+    protected R visit(AInstructionCDFGSubgraph subgraph) throws IllegalArgumentException{
+        if(subgraph instanceof AInstructionCDFGControlFlowConditionalSubgraph) {
+            return this.visitAInstructionCDFGControlFlowConditionalSubgraph((AInstructionCDFGControlFlowConditionalSubgraph) subgraph);
+        }else if(subgraph instanceof InstructionCDFGControlFlowMerge) {
+            return this.visitControlMergeSubgraph((InstructionCDFGControlFlowMerge) subgraph);
+        }else if(subgraph instanceof InstructionCDFGDataFlowSubgraph) {
+            return this.visitDataFlowSubgraph((InstructionCDFGDataFlowSubgraph) subgraph);
+        }else {
+            throw new IllegalArgumentException(subgraph.getClass().toString() + " is an invalid node to visit!");
         }
-        
-        this.visit(nextSubgraphs);
     }
     
-    
-    public void visitDataFlowSubgraph(InstructionCDFGDataFlowSubgraph subgraph) {
+    protected R visit(Set<AInstructionCDFGSubgraph> subgraphs) {
         
+        subgraphs.forEach(subgraph -> {
+        
+            if(subgraph instanceof AInstructionCDFGControlFlowConditionalSubgraph) {
+                 this.visitAInstructionCDFGControlFlowConditionalSubgraph((AInstructionCDFGControlFlowConditionalSubgraph) subgraph);
+            }else if(subgraph instanceof InstructionCDFGControlFlowMerge) {
+                 this.visitControlMergeSubgraph((InstructionCDFGControlFlowMerge) subgraph);
+            }else if(subgraph instanceof InstructionCDFGDataFlowSubgraph) {
+                 this.visitDataFlowSubgraph((InstructionCDFGDataFlowSubgraph) subgraph);
+            }else {
+                throw new IllegalArgumentException(subgraph.getClass().toString() + " is an invalid node to visit!");
+            }
+        
+        });
+        
+        return null;
     }
     
-    private void visitAInstructionCDFGControlFlowConditionalSubgraph(AInstructionCDFGControlFlowConditionalSubgraph subgraph) {
-        
-        this.mergeResolved.putIfAbsent(subgraph.getMerge(), null);
-        
+    protected R visitDataFlowSubgraph(InstructionCDFGDataFlowSubgraph subgraph) {
+        return this.visit(this.icdfg.getVerticesAfter(subgraph));   
+    }
+    
+    protected R visitAInstructionCDFGControlFlowConditionalSubgraph(AInstructionCDFGControlFlowConditionalSubgraph subgraph) {
+
         if(subgraph instanceof InstructionCDFGControlFlowIf) {
             this.visitControlIfSubgraph((InstructionCDFGControlFlowIf) subgraph);
         }else if(subgraph instanceof InstructionCDFGControlFlowIfElse) {
             this.visitControlIfElseSubgraph((InstructionCDFGControlFlowIfElse) subgraph);
         }
         
+        
+        return this.visit(subgraph.getMerge());
     }
     
-    public void visitControlIfSubgraph(InstructionCDFGControlFlowIf subgraph) {
-        
-        if(this.mergeResolved.get(subgraph.getMerge()) == null) {
-            this.mergeResolved.replace(subgraph.getMerge(), false);
-        }else if(this.mergeResolved.get(subgraph.getMerge()) == false) {
-            this.mergeResolved.remove(subgraph.getMerge(), true);
-        }
-        
+    protected R visitControlIfSubgraph(InstructionCDFGControlFlowIf subgraph) {  
+        return this.visit(this.icdfg.getTruePath(subgraph));
     }
     
-    public void visitControlIfElseSubgraph(InstructionCDFGControlFlowIfElse subgraph) {
-        
-        this.subgraphsToResolve.add(this.icdfg.getVerticesAfter(subgraph));
-        
-        
+    protected R visitControlIfElseSubgraph(InstructionCDFGControlFlowIfElse subgraph) {
+        return this.visit(Set.of(this.icdfg.getTruePath(subgraph), this.icdfg.getFalsePath(subgraph)));
     }
     
-    public void visitControlMergeSubgraph(InstructionCDFGControlFlowMerge subgraph) {
-        
+    protected R visitControlMergeSubgraph(InstructionCDFGControlFlowMerge subgraph) {
+        return null;
     }
     
 }
