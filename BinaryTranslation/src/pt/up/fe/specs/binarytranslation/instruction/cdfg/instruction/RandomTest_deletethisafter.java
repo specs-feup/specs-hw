@@ -97,7 +97,9 @@ public class RandomTest_deletethisafter {
        
         HardwareValidationGenerator validation = new HardwareValidationGenerator();
         
-        Map<Map<String, Number>, Map<String, Number>> validationData = HardwareValidationGenerator.generateValidationData(instruction.getPseudocode().getParseTree(), Set.of("RA", "RB"), 10);
+        System.out.println(icdf.getDataInputsReferences());
+        
+        Map<Map<String, Number>, Map<String, Number>> validationData = HardwareValidationGenerator.generateValidationData(instruction, icdf.getDataInputsReferences(), 10);
         
         System.out.println(HardwareValidationGenerator.generateHexMemFile("input.mem", validationData.keySet()));
         System.out.println(HardwareValidationGenerator.generateHexMemFile("output.mem", validationData.values()));
