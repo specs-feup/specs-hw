@@ -32,7 +32,7 @@ import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.
 import pt.up.fe.specs.binarytranslation.hardware.testbench.GenerateMakefile;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorTestbenchGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationDataGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
@@ -95,14 +95,14 @@ public class RandomTest_deletethisafter {
         this.printParseTree(instruction);
         InstructionCDFG icdf = icdfg_gen.generate(instruction);
        
-        HardwareValidationGenerator validation = new HardwareValidationGenerator();
+        HardwareValidationDataGenerator validation = new HardwareValidationDataGenerator();
         
         System.out.println(icdf.getDataInputsReferences());
         
-        Map<Map<String, Number>, Map<String, Number>> validationData = HardwareValidationGenerator.generateValidationData(instruction, icdf.getDataInputsReferences(), 10);
+        Map<Map<String, Number>, Map<String, Number>> validationData = HardwareValidationDataGenerator.generateValidationData(instruction, icdf.getDataInputsReferences(), 10);
         
-        System.out.println(HardwareValidationGenerator.generateHexMemFile("input.mem", validationData.keySet()));
-        System.out.println(HardwareValidationGenerator.generateHexMemFile("output.mem", validationData.values()));
+        System.out.println(HardwareValidationDataGenerator.generateHexMemFile("input.mem", validationData.keySet()));
+        System.out.println(HardwareValidationDataGenerator.generateHexMemFile("output.mem", validationData.values()));
 
         
         
