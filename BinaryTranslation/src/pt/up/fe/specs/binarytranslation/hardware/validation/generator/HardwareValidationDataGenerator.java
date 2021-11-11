@@ -23,9 +23,12 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.AHardwareValidationBinaryOperation;
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.HardwareValidationBinaryOperationMap;
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.AHardwareValidationUnaryOperation;
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.HardwareValidationUnaryOperationMap;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AssignmentExprContext;
@@ -44,12 +47,12 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.St
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.UnaryExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.VariableExprContext;
 
-public class HardwareValidationGenerator extends PseudoInstructionBaseVisitor<Object>{
+public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisitor<Object>{
 
     private Map<String, Number> valueMap;
     private Map<String, Number> outputs;
     
-    public HardwareValidationGenerator() {
+    public HardwareValidationDataGenerator() {
         this.valueMap = new HashMap<>();
         this.outputs = new HashMap<>();
     }
@@ -70,7 +73,7 @@ public class HardwareValidationGenerator extends PseudoInstructionBaseVisitor<Ob
         Random randomInputData = new Random();
         
         for(int i = 0; i < samples; i++) {
-            HardwareValidationGenerator validationDataGenerator = new HardwareValidationGenerator();
+            HardwareValidationDataGenerator validationDataGenerator = new HardwareValidationDataGenerator();
             
             inputRegisters.forEach(input -> validationDataGenerator.getValueMap().put(input, randomInputData.nextInt()));
             Map<String, Number> inputs = validationDataGenerator.getValueMap();
@@ -156,44 +159,35 @@ public class HardwareValidationGenerator extends PseudoInstructionBaseVisitor<Ob
     public Object visitParenExpr(ParenExprContext ctx) {
         return this.visit(ctx.expression());
     }
+    
+    private Number visitOperand(ParserRuleContext ctx) {
+        
+        if((ctx instanceof BinaryExprContext) || (ctx instanceof UnaryExprContext) || (ctx instanceof ParenExprContext)) {
+            return (Number) this.visit(ctx);
+        }else if(ctx instanceof VariableExprContext) {
+            return this.valueMap.get(this.visit(ctx));
+        }
+        
+        throw new IllegalArgumentException();
+    }
 
     @Override
     public Object visitBinaryExpr(BinaryExprContext ctx) {
-        
-        Number operandLeft = null, operandRight = null;
-        
-        if((ctx.left instanceof BinaryExprContext) || (ctx.left instanceof UnaryExprContext) || (ctx.left instanceof ParenExprContext)) {
-            operandLeft = (Number) this.visit(ctx.left);
-        }else if(ctx.left instanceof VariableExprContext) {
-            operandLeft = this.valueMap.get(this.visit(ctx.left));
-        }
-        
-        if(ctx.right instanceof BinaryExprContext || (ctx.right instanceof UnaryExprContext) || (ctx.right instanceof ParenExprContext)) {
-            operandRight = (Number) this.visit(ctx.right);
-        }else if(ctx.right instanceof VariableExprContext) {
-            operandRight = this.valueMap.get(this.visit(ctx.right));
-        }
-        
-        return ((AHardwareValidationBinaryOperation)this.visit(ctx.operator())).apply(operandLeft, operandRight);
+        return ((AHardwareValidationBinaryOperation)this.visit(ctx.operator())).apply(this.visitOperand(ctx.left), this.visitOperand(ctx.right));
     }
     
     @Override
     public Object visitUnaryExpr(UnaryExprContext ctx) {
-        
-        Number operand = null;
-        
-        if((ctx.right instanceof BinaryExprContext) || (ctx.right instanceof UnaryExprContext)) {
-            operand = (Number) this.visit(ctx.right);
-        }else if(ctx.right instanceof VariableExprContext) {
-            operand = this.valueMap.get(this.visit(ctx.right));
-        }
-        
-        return ((AHardwareValidationUnaryOperation)this.visit(ctx.operator())).apply(operand);
+        return ((AHardwareValidationUnaryOperation)this.visit(ctx.operator())).apply(this.visitOperand(ctx.right));
     }
     
     @Override
     public Object visitOperator(OperatorContext ctx) {
-        return HardwareValidationBinaryOperationMap.get(ctx.getText());
+        
+        if(HardwareValidationBinaryOperationMap.get(ctx.getText()) != null)
+            return HardwareValidationBinaryOperationMap.get(ctx.getText());
+        else 
+            return HardwareValidationUnaryOperationMap.get(ctx.getText());
     }
     
     @Override

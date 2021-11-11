@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.AHardwareValidationBinaryOperation;
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.bitwise.HardwareValidationBitwiseNot;
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.function.cast.HardwareValidationFloatCast;
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.function.cast.HardwareValidationSignedCast;
@@ -34,7 +35,13 @@ public class HardwareValidationUnaryOperationMap {
     private static final Map<String, Supplier<AHardwareValidationUnaryOperation>> MAP;
 
     public static AHardwareValidationUnaryOperation get(String operator) {
-        return MAP.get(operator).get();
+
+        Supplier<AHardwareValidationUnaryOperation> operation = MAP.get(operator);
+        
+        if(operation == null)
+            return null;
+        
+        return operation.get();
     }
     
     static {

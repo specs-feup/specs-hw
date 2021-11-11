@@ -46,7 +46,13 @@ public class HardwareValidationBinaryOperationMap {
     private static final Map<String, Supplier<AHardwareValidationBinaryOperation>> MAP;
 
     public static AHardwareValidationBinaryOperation get(String operator) {
-        return MAP.get(operator).get();
+        
+        Supplier<AHardwareValidationBinaryOperation> operation = MAP.get(operator);
+        
+        if(operation == null)
+            return null;
+        
+        return operation.get();
     }
     
     static {
