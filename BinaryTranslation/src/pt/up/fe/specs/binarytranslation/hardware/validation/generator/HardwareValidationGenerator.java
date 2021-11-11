@@ -26,6 +26,7 @@ import java.util.Set;
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.AHardwareValidationBinaryOperation;
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.HardwareValidationBinaryOperationMap;
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.AHardwareValidationUnaryOperation;
+import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AssignmentExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.BinaryExprContext;
@@ -62,7 +63,7 @@ public class HardwareValidationGenerator extends PseudoInstructionBaseVisitor<Ob
     }
     
     @SuppressWarnings("unchecked")
-    public static Map<Map<String, Number>, Map<String, Number>> generateValidationData(PseudoInstructionContext ctx, Set<String> inputRegisters, int samples) {
+    public static Map<Map<String, Number>, Map<String, Number>> generateValidationData(Instruction instruction, Set<String> inputRegisters, int samples) {
         
         Map<Map<String, Number>, Map<String, Number>> validationData = new HashMap<>();
         
@@ -74,7 +75,7 @@ public class HardwareValidationGenerator extends PseudoInstructionBaseVisitor<Ob
             inputRegisters.forEach(input -> validationDataGenerator.getValueMap().put(input, randomInputData.nextInt()));
             Map<String, Number> inputs = validationDataGenerator.getValueMap();
             
-            validationDataGenerator.visitPseudoInstruction(ctx);
+            validationDataGenerator.visitPseudoInstruction(instruction.getPseudocode().getParseTree());
             
             
             validationData.put(inputs, validationDataGenerator.getOutputMap());

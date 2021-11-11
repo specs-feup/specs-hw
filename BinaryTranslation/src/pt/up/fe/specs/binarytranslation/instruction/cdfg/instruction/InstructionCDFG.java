@@ -101,6 +101,14 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         return names;
     }
     
+    public Set<String> getDataInputsReferences(){
+        Set<String> names = new HashSet<>();
+        
+        this.getDataInputs().forEach(name -> names.add(name.getReference()));
+        
+        return names;
+    }
+    
     public void generateDataOutputs() {
        
         this.vertexSet().forEach(g -> g.getOutputs().stream()
@@ -125,6 +133,14 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         return names;
     }
   
+    public Set<String> getDataOutputsReferences(){
+        Set<String> names = new HashSet<>();
+        
+        this.getDataOutputs().forEach(name -> names.add(name.getReference()));
+        
+        return names;
+    }
+    
     @Override
     public AInstructionCDFGEdge addEdge(AInstructionCDFGSubgraph sourceVertex, AInstructionCDFGSubgraph targetVertex) {
         AInstructionCDFGEdge edge = new InstructionCDFGEdge();
