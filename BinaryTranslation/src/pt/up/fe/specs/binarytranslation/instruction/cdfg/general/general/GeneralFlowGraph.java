@@ -17,7 +17,6 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;

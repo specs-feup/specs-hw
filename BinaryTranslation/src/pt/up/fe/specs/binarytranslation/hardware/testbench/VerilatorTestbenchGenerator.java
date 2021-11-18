@@ -17,45 +17,52 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.testbench;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URISyntaxException;
+import java.util.Scanner;
+
+import pt.up.fe.specs.util.SpecsLogs;
+
 public class VerilatorTestbenchGenerator {
 
-    public static String emit(String testbench_name, int samples) {
+    public static void emit(OutputStream output, String moduleName, int samples) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(output));
+            bw.write(VerilatorTestbenchGenerator.emit(moduleName, samples));
+            bw.flush();
+            bw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static String emit(String moduleName, int samples) throws IOException {
         
         StringBuilder fileBuilder = new StringBuilder();
+        File templateFile;
         
-        fileBuilder.append("#include <stdlib.h>\n#include <iostream>\n#include <verilated.h>\n#include <verilated_vcd_c.h>\n");
+        try {
+            templateFile = new File(VerilatorTestbenchGenerator.class.getClassLoader().getResource("pt/up/fe/specs/binarytranslation/hardware/verilator/verilator_testbench_template.cpp").toURI());
+        } catch (URISyntaxException e) {
+            SpecsLogs.msgWarn("Error message:\n", e);
+            return null;
+        }
         
-        fileBuilder.append("\n#include \"V" + testbench_name + ".h\"\n");
-        fileBuilder.append("\n#define VALIDATION_SAMPLES " + String.valueOf(samples) + "\n");
+        Scanner templateScanner = new Scanner(templateFile);
         
-        fileBuilder.append("#define VERIFICATION_FAIL 0\n"
-                + "#define VERIFICATION_OK 1\n\n"
-                + "int main(int argc, char **argv)\n{\n\n"
-                + "  V");
-        fileBuilder.append(testbench_name);
+        while(templateScanner.hasNextLine()) {
+            fileBuilder.append(templateScanner.nextLine().replace("<TESTBENCHNAME>", moduleName + "_tb").replace("<NUMBEROFSAMPLES>", String.valueOf(samples)) + "\n");
+        }
         
-        fileBuilder.append(" *tb = new V");
+        templateScanner.close();
         
-        fileBuilder.append(testbench_name + ";\n\n");
-        
-        fileBuilder.append("  for(int i = VALIDATION_SAMPLES; i > 0; i--){\n\n"
-                + "    tb->verify = 1;\n\n"
-                + "    for(int w = 0; w < 100; w++)\r\n"
-                + "      tb->eval();\r\n"
-                + "\r\n"
-                + "    tb->verify = 0;\r\n"
-                + "    tb->eval();\r\n"
-                + "\r\n"
-                + "    if(tb->verifyResults == VERIFICATION_FAIL) {\r\n"
-                + "      delete tb;\r\n"
-                + "      exit(-1);\r\n"
-                + "    }\n\n"
-                + "  }\n\n"
-                + "  delete tb;\r\n"
-                + "  exit(EXIT_SUCCESS);\n\n"
-                + "}");
-        
-        return fileBuilder.toString();
+        return fileBuilder.toString();  
     }
+
     
 }

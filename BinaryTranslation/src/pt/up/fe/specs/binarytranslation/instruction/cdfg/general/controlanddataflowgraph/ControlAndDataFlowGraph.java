@@ -27,7 +27,6 @@ public class ControlAndDataFlowGraph<V, E> extends GeneralFlowGraph<V, E>{
     private final Class<? extends V> ControlFlowNodeClass;
     
     public ControlAndDataFlowGraph(Class<? extends V> DataFlowGraphClass, Class<? extends V> ControlFlowNodeClass, Class<? extends E> EdgeClass) {
-        
         super(EdgeClass);
         
         this.ControlFlowNodeClass = ControlFlowNodeClass;

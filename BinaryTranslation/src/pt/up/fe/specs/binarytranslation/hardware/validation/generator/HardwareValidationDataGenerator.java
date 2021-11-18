@@ -49,20 +49,26 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.Va
 
 public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisitor<Object>{
 
-    private Map<String, Number> valueMap;
+    private Map<String, Number> value;
     private Map<String, Number> outputs;
+    private Map<String, Number> inputs;
     
     public HardwareValidationDataGenerator() {
-        this.valueMap = new HashMap<>();
+        this.inputs = new HashMap<>();
         this.outputs = new HashMap<>();
+        this.value = new HashMap<>();
     }
     
-    public Map<String, Number> getValueMap(){
-        return this.valueMap;
+    public Map<String, Number> getInputMap(){
+        return this.inputs;
     }
     
     public Map<String, Number> getOutputMap(){
         return this.outputs;
+    }
+    
+    public Map<String, Number> getValueMap(){
+        return this.value;
     }
     
     @SuppressWarnings("unchecked")
@@ -75,19 +81,18 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
         for(int i = 0; i < samples; i++) {
             HardwareValidationDataGenerator validationDataGenerator = new HardwareValidationDataGenerator();
             
-            inputRegisters.forEach(input -> validationDataGenerator.getValueMap().put(input, randomInputData.nextInt()));
-            Map<String, Number> inputs = validationDataGenerator.getValueMap();
+            inputRegisters.forEach(input -> validationDataGenerator.getInputMap().put(input, randomInputData.nextInt()));
             
-            validationDataGenerator.visitPseudoInstruction(instruction.getPseudocode().getParseTree());
+            validationDataGenerator.getValueMap().putAll(validationDataGenerator.getInputMap());
             
-            
-            validationData.put(inputs, validationDataGenerator.getOutputMap());
-
+            validationDataGenerator.visitPseudoInstruction(instruction.getPseudocode().getParseTree()); 
+            validationData.put(validationDataGenerator.getInputMap(), validationDataGenerator.getOutputMap());
+   
         }
         return validationData;
     }
     
-    public static String generateHexMemFile(String fileName, Collection<Map<String,Number>> data) {
+    public static String generateHexMemFile(Collection<Map<String,Number>> data) {
         
         StringBuilder fileBuilder = new StringBuilder();
         
@@ -96,11 +101,11 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
                 if(value instanceof Float)
                     fileBuilder.append(Float.toHexString((Float) value));
                 else if (value instanceof Integer)
-                    fileBuilder.append(Integer.toHexString((Integer) value));
+                    fileBuilder.append(String.format("%08X", value.intValue()));
             });
             fileBuilder.append("\n");
         });
-        
+ 
         return fileBuilder.toString();
     }
     
@@ -149,7 +154,6 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
         String output = (String) this.visit(ctx.left);
         Number value = (Number) this.visit(ctx.right);
         
-        this.valueMap.put(output, value);
         this.outputs.put(output, value);
         
         return null;
@@ -165,7 +169,7 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
         if((ctx instanceof BinaryExprContext) || (ctx instanceof UnaryExprContext) || (ctx instanceof ParenExprContext)) {
             return (Number) this.visit(ctx);
         }else if(ctx instanceof VariableExprContext) {
-            return this.valueMap.get(this.visit(ctx));
+            return this.getValueMap().get(this.visit(ctx));
         }
         
         throw new IllegalArgumentException();
@@ -183,11 +187,7 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
     
     @Override
     public Object visitOperator(OperatorContext ctx) {
-        
-        if(HardwareValidationBinaryOperationMap.get(ctx.getText()) != null)
-            return HardwareValidationBinaryOperationMap.get(ctx.getText());
-        else 
-            return HardwareValidationUnaryOperationMap.get(ctx.getText());
+        return (HardwareValidationBinaryOperationMap.get(ctx.getText()) != null) ?  HardwareValidationBinaryOperationMap.get(ctx.getText()) : HardwareValidationUnaryOperationMap.get(ctx.getText());
     }
     
     @Override
@@ -195,7 +195,7 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
         
         String operand = (String) this.visit(ctx.operand());
         
-        this.valueMap.putIfAbsent(operand, 0);
+        this.getValueMap().putIfAbsent(operand, 0);
         
         return operand;
     }
@@ -203,7 +203,7 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
     @Override
     public Object visitLiteral(LiteralContext ctx) {
         
-        this.valueMap.putIfAbsent(ctx.getText(), Integer.valueOf(ctx.getText()));
+        this.getValueMap().putIfAbsent(ctx.getText(), Integer.valueOf(ctx.getText()));
         
         return ctx.getText();
     }

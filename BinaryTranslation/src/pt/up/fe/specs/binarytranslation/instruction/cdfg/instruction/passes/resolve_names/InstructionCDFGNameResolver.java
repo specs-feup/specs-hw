@@ -18,124 +18,108 @@
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIf;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIfElse;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.AInstructionCDFGControlFlowMergeSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.visitor.InstructionCDFGVisitor;
 
-public class InstructionCDFGNameResolver {
+public class InstructionCDFGNameResolver extends InstructionCDFGVisitor<Map<String, AInstructionCDFGNode>>{
     
-     public static void resolveNames(InstructionCDFG icdfg) {
-            
-            Map<String, Integer> previous_names = new HashMap<>();
-            Map<InstructionCDFGControlFlowMerge, Map<AInstructionCDFGSubgraph, Boolean>> resolved = new HashMap<>();
-
-            icdfg.getInputs().forEach(subgraph -> InstructionCDFGNameResolver.visit(icdfg, previous_names, resolved, subgraph));
+    private final Map<String, Integer> SSAMap;
+    private final Map<AInstructionCDFGControlFlowMergeSubgraph, Set<String>> phiFunction;
+     
+    private InstructionCDFGNameResolver(InstructionCDFG icdfg) {
+        super(icdfg);
+        this.SSAMap = new HashMap<>();
+        this.phiFunction = new HashMap<>();
     }
-     
-
-     public static void visit(InstructionCDFG icdfg, Map<String, Integer> previousNames,  Map<InstructionCDFGControlFlowMerge, Map<AInstructionCDFGSubgraph, Boolean>> resolved, AInstructionCDFGSubgraph node) {
-        
-         if(node instanceof InstructionCDFGControlFlowIf) {
-             InstructionCDFGNameResolver.visitControlFlowIfNode(icdfg, previousNames, resolved, (InstructionCDFGControlFlowIf) node);
-         }else if(node instanceof InstructionCDFGControlFlowIfElse) {
-             InstructionCDFGNameResolver.visitControlFlowIfElseNode(icdfg, previousNames, resolved, (InstructionCDFGControlFlowIfElse) node);
-         }else if(node instanceof InstructionCDFGControlFlowMerge) {
-             InstructionCDFGNameResolver.visitControlFlowMergeNode(icdfg, previousNames, resolved, (InstructionCDFGControlFlowMerge) node);
-         }else if(node instanceof InstructionCDFGDataFlowSubgraph) {
-             InstructionCDFGNameResolver.visitDataFlowSubgraph(icdfg, previousNames, resolved, (InstructionCDFGDataFlowSubgraph) node);
-         }
-
-         icdfg.getVerticesAfter(node).forEach(subgraph -> InstructionCDFGNameResolver.visit(icdfg, previousNames, resolved, subgraph));
-         
-     }
-     
-     public void resolveInputs() {
-         
-     }
-     
-     public void resolveOutputs() {
-         
-     }
-     
-     
-     
-     public static void visitDataFlowSubgraph(InstructionCDFG icdfg, Map<String, Integer> previousNames, Map<InstructionCDFGControlFlowMerge, Map<AInstructionCDFGSubgraph, Boolean>> resolved, InstructionCDFGDataFlowSubgraph dfg) {
-         
-         InstructionCDFGNameResolver.renameInputRegisters(Set.of(dfg), previousNames); 
-         InstructionCDFGNameResolver.renameOutputRegisters(icdfg, Set.of(dfg), previousNames);  
-         
-     }
-     
-     
-     @SuppressWarnings("unchecked")
-    public static void visitControlFlowMergeNode(InstructionCDFG icdfg, Map<String, Integer> previousNames, Map<InstructionCDFGControlFlowMerge, Map<AInstructionCDFGSubgraph, Boolean>> resolved, InstructionCDFGControlFlowMerge merge) {
-
-         InstructionCDFGNameResolver.renameOutputRegisters(icdfg, icdfg.getVerticesBefore(merge), previousNames);
-     }
-     
-     public static void visitControlFlowIfNode(InstructionCDFG icdfg, Map<String, Integer> previousNames, Map<InstructionCDFGControlFlowMerge, Map<AInstructionCDFGSubgraph, Boolean>> resolved, InstructionCDFGControlFlowIf node) {
-         
-         InstructionCDFGNameResolver.renameInputRegisters(Set.of(node), previousNames);
-         
-
-
-     }
     
-     public static void visitControlFlowIfElseNode(InstructionCDFG icdfg, Map<String, Integer> previousNames, Map<InstructionCDFGControlFlowMerge, Map<AInstructionCDFGSubgraph, Boolean>> resolved, InstructionCDFGControlFlowIfElse node) {
+    public static void resolve(InstructionCDFG icdfg) {
+        InstructionCDFGNameResolver resolver = new InstructionCDFGNameResolver(icdfg);
+        resolver.begin();
+    }
+    
+    @Override
+    protected Map<String, AInstructionCDFGNode> visitDataFlowSubgraph(InstructionCDFGDataFlowSubgraph subgraph) {
+        this.resolveInputs(subgraph);
+        return super.visitDataFlowSubgraph(subgraph);
+    }
+    
+    @Override
+    protected Map<String, AInstructionCDFGNode> visitAInstructionCDFGControlFlowConditionalSubgraph(AInstructionCDFGControlFlowConditionalSubgraph subgraph) {
+        
+        this.resolveInputs(subgraph);
+        return super.visitAInstructionCDFGControlFlowConditionalSubgraph(subgraph);
+    }
+    
+    @Override
+    protected Map<String, AInstructionCDFGNode> visitControlMergeSubgraph(InstructionCDFGControlFlowMerge subgraph) {
+        // TODO Auto-generated method stub
+        return super.visitControlMergeSubgraph(subgraph);
+    }
+    
+    
+    @Override
+    protected Map<String, AInstructionCDFGNode> visitControlIfSubgraph(InstructionCDFGControlFlowIf subgraph) {
+        
+        return super.visitControlIfSubgraph((InstructionCDFGControlFlowIf) this.convertIftoIfElse(subgraph));
+    }
+    
+     public void resolveInputs(AInstructionCDFGSubgraph subgraph) {
          
-         InstructionCDFGNameResolver.renameInputRegisters(Set.of(node), previousNames);
-         
+         subgraph.getInputs().forEach(input -> {
+             this.SSAMap.putIfAbsent(input.getReference(), 0);
+             input.setUID(String.valueOf(this.SSAMap.get(input.getReference())));
+         });
          
      }
      
-     @SuppressWarnings("unchecked")
-    public static Set<String> renameOutputRegisters(InstructionCDFG icdfg, Set<AInstructionCDFGSubgraph> subgraphs, Map<String, Integer> previousNames) {
+     public void resolveOutputs(AInstructionCDFGSubgraph subgraph) {
+         subgraph.getOutputs().forEach(output -> {
+             this.SSAMap.putIfAbsent(output.getReference(), 0);
+             output.setUID(String.valueOf(this.SSAMap.get(output.getReference())));
+         });
+     }
+     
+     public void addNewAssignment() {
          
-         //Get List of all subgraphs inputs, but filter out control flow nodes
+     }
+     
+     public void renameOutput(Map<String, Integer> UIDs, InstructionCDFGDataFlowSubgraph subgraph) {
+         /*
+         UIDs.forEach((reference, uid) -> {
+             subgraph.getOu
+         });
+         */
+     }
+     
+     public AInstructionCDFGSubgraph convertIftoIfElse(InstructionCDFGControlFlowIf subgraph) {
          
-         Set<String> modifiedRegisters = new HashSet<>();
+         AInstructionCDFGSubgraph newSubgraph =  new InstructionCDFGControlFlowIfElse(subgraph.getMerge(), subgraph.getUIDMap());
          
-         subgraphs.forEach(candidate -> {
-             
-             if(!(candidate instanceof AInstructionCDFGControlFlowSubgraph)) {
-             
-                 candidate.getOutputs().forEach(output -> {
+         this.icdfg.addVertex(newSubgraph);
+         
+         this.icdfg.getVerticesBefore(subgraph).forEach(before -> this.icdfg.addEdge(before, newSubgraph, this.icdfg.getEdge(before, subgraph).duplicate()));
 
-                         previousNames.putIfAbsent(((AInstructionCDFGNode) output).getReference(), 0);
-                       
-                         ((AInstructionCDFGNode) output).setUID(String.valueOf(previousNames.get(((AInstructionCDFGNode) output).getReference()) + 1));
-                         
-                         modifiedRegisters.add(output.getReference());
-                         
-                 });
-             }else if (candidate instanceof InstructionCDFGControlFlowMerge) {
-                 modifiedRegisters.addAll(InstructionCDFGNameResolver.renameOutputRegisters(icdfg, icdfg.getVerticesBefore(candidate), previousNames));
-             }
-         });
          
-         return modifiedRegisters;
+         this.icdfg.addControlEdgesTo(newSubgraph, this.icdfg.getTruePath(subgraph), this.icdfg.getFalsePath(subgraph));
+         
+         subgraph.copyVerticesTo(newSubgraph);
+         
+         //this.icdfg.removeVertex(subgraph);
+         
+
+         return subgraph;
      }
      
      
-     public static void renameInputRegisters(Set<AInstructionCDFGSubgraph> subgraphs , Map<String, Integer> previousNames) {
-         
-         //Get List of all subgraphs inputs, but filter out control flow nodes
-         
-         subgraphs.stream().filter(subgraph -> !(subgraph instanceof InstructionCDFGControlFlowMerge)).forEach(subgraph -> {
-             subgraph.getInputs().forEach(input -> {
-                 previousNames.putIfAbsent(input.getReference(), 0);
-                 input.setUID(String.valueOf(previousNames.get(input.getReference())));
-             });
-         });
-         
-     }
 }
