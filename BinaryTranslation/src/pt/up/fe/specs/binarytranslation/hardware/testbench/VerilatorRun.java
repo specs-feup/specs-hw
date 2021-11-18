@@ -13,22 +13,90 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.testbench;
 
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
+import pt.up.fe.specs.util.SpecsLogs;
 
-public class VerilatorRun extends StringProcessRun{
+public class VerilatorRun{
 
-    public VerilatorRun(List<String> args) {
-        super(args);
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
+    
+    
+    public static boolean start(String directory, String testbenchName) throws IOException {
+        VerilatorRun.verilate(directory, testbenchName);
+        
+        return VerilatorRun.simulate(directory, testbenchName);
     }
     
-    @Override
-    public Process start() {
-        // TODO Auto-generated method stub
-        return super.start();
+    public static void verilate(String directory, String testbenchName) throws IOException {
+
+        StringBuilder processCommands = new StringBuilder();
+        
+        if(VerilatorRun.IS_WINDOWS)
+            processCommands.append("bash -c \"");
+        
+        processCommands.append("cd " + directory + ";");
+        processCommands.append("verilator -cc ./" + testbenchName + "_tb.sv ../hdl/" + testbenchName + ".sv -exe ./" + testbenchName + "_tb.cpp;");
+        processCommands.append("make -C obj_dir -f V" + testbenchName + "_tb.mk V" + testbenchName + "_tb;");
+        
+        if(VerilatorRun.IS_WINDOWS)
+            processCommands.append("\"");
+        
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        
+        Process process = processBuilder.command("cmd.exe", "/c", processCommands.toString()).start();
+
+        try {
+            process.waitFor();
+        } catch (InterruptedException e) {
+            SpecsLogs.msgWarn("Error message:\n", e);
+        }
+            
+        
     }
     
+    public static boolean simulate(String directory, String testbenchName) throws IOException {
+        
+        StringBuilder processCommands = new StringBuilder();
+        
+        if(VerilatorRun.IS_WINDOWS)
+            processCommands.append("bash -c \"");
+        
+        processCommands.append("cd " + directory + ";");
+        processCommands.append("./obj_dir/V" + testbenchName + "_tb;");
+        
+        if(VerilatorRun.IS_WINDOWS)
+            processCommands.append("\"");
 
+     
+        
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        
+        Process process = processBuilder.command("cmd.exe", "/c", processCommands.toString()).start();
 
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        
+        String line;
+        String returnLine = "";
+        
+        
+        while((line = reader.readLine()) != null){
+            returnLine = line;
+        }
+        
+        
+        try {
+            process.waitFor();
+        } catch (InterruptedException e) {
+            SpecsLogs.msgWarn("Error message:\n", e);
+        }
+        
+        System.out.println("\t" + returnLine);
+        
+        return returnLine.equals("PASSED") ? true : false;
+      
+    }
+    
 }

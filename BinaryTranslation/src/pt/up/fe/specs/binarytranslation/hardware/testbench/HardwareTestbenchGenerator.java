@@ -102,7 +102,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator{
         new ModuleStatement(module, "test", subInputs, testbench);
         
 
-        return new HardwareTestbench("test_tb", testbenchtree);
+        return new HardwareTestbench(module.getName() + "_tb", testbenchtree);
     }
     
 }

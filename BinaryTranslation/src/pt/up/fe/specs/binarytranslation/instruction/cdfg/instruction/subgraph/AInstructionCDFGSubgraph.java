@@ -19,6 +19,7 @@ package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -154,5 +155,34 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
     
     public InstructionCDFGRightOperandEdge getRightOperandEdge(AInstructionCDFGNode operator) {
         return (InstructionCDFGRightOperandEdge) this.getEdge(this.getRightOperand(operator), operator);
+    }
+    
+    public void copyVerticesTo(AInstructionCDFGSubgraph destinationSubgraph) {
+        
+        Set<AInstructionCDFGNode> currentVertices = new LinkedHashSet<>();
+        Set<AInstructionCDFGNode> nextVertices = new LinkedHashSet<>();
+        
+        currentVertices.addAll(this.getInputs());
+        
+        while(!currentVertices.isEmpty()) {
+            
+            nextVertices.addAll(this.getVerticesAfter(currentVertices));
+            
+            currentVertices.forEach(vertex -> {
+                destinationSubgraph.addVertex(vertex);
+                this.getVerticesBefore(vertex).forEach(before -> {
+                    destinationSubgraph.addEdge(before, vertex, this.getEdge(before, vertex).duplicate());
+                });
+            });
+            
+            
+            currentVertices.clear();
+            currentVertices.addAll(nextVertices);
+            nextVertices.clear();
+        }
+        
+        destinationSubgraph.generateInputs();
+        destinationSubgraph.generateOutputs();
+        
     }
 }

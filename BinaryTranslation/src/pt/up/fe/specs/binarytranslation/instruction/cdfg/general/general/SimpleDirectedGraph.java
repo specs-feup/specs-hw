@@ -115,8 +115,16 @@ public class SimpleDirectedGraph<V,E> extends org.jgrapht.graph.SimpleDirectedGr
         return new HashSet<V>(Graphs.predecessorListOf(this, vertex));
     }
     
+    public boolean hasVerticesBefore(V vertex) {
+        return !this.getVerticesBefore(vertex).isEmpty();
+    }
+    
     public Set<V> getVerticesAfter(V vertex){
         return new HashSet<V>(Graphs.successorListOf(this, vertex));
+    }
+    
+    public boolean hasVerticesAfter(V vertex) {
+        return !this.getVerticesAfter(vertex).isEmpty();
     }
     
     public Set<V> getVerticesBefore(Set<V> vertices){
