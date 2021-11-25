@@ -23,6 +23,7 @@ public class BtfVertex {
         STORE_TARGET,
         CHECK,
         JUMP,
+        AGU,
         NULL 
     };
     public enum BtfVertexProperty {

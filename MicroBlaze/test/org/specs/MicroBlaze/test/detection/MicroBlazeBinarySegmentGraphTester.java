@@ -16,6 +16,8 @@ package org.specs.MicroBlaze.test.detection;
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
+import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -30,7 +32,8 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 public class MicroBlazeBinarySegmentGraphTester {
 
     private MicroBlazeELFProvider getELF() {
-        return MicroBlazeLivermoreN10.cholesky;
+        var elf = MicroBlazeLivermoreN100.cholesky;
+        return new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf);
     }
 
     private void getSegments(InstructionStream el, SegmentDetector bbd) {

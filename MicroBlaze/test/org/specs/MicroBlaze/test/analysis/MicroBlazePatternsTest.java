@@ -19,6 +19,7 @@ import java.util.HashMap;
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
+import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -35,6 +36,8 @@ import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.LoopIncrement
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryAccessTypesAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
+import pt.up.fe.specs.binarytranslation.tracer.StreamUnitGraphGenerator;
+import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 public class MicroBlazePatternsTest {
 
@@ -161,7 +164,18 @@ public class MicroBlazePatternsTest {
         }
         AnalysisUtils.saveAsCsv(sb, "results/ArithmeticExpressions");
     }
-
+    
+    @Test
+    public void testBaseAddressOrigin() {
+        var elf = MicroBlazePolyBenchMiniFloat.cholesky;
+        var stream = new MicroBlazeTraceStream(new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
+        var graphGenerator = new StreamUnitGraphGenerator(stream);
+        var startAddr = stream.getApp().getKernelStart();
+        var stopAddr = stream.getApp().getKernelStop();
+        var graph = graphGenerator.generateBasicBlockGraph(startAddr, stopAddr);
+        var dot = graph.toDotty();
+        System.out.println(dot);
+    }
     
     @Test
     public void testStreaming() {

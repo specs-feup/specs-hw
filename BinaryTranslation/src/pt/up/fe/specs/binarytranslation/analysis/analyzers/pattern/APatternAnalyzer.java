@@ -49,12 +49,12 @@ public abstract class APatternAnalyzer extends ASegmentAnalyzer {
         return matchTemplates(segs);
     }
 
-    protected MatchResult matchGraphToTemplate(SimpleDirectedGraph<BtfVertex, DefaultEdge> graph,
+    public static MatchResult matchGraphToTemplate(SimpleDirectedGraph<BtfVertex, DefaultEdge> graph,
             SimpleDirectedGraph<BtfVertex, DefaultEdge> template) {
         return matchGraphToTemplate(graph, template, false, false);
     }
 
-    protected MatchResult matchGraphToTemplate(SimpleDirectedGraph<BtfVertex, DefaultEdge> graph,
+    public static MatchResult matchGraphToTemplate(SimpleDirectedGraph<BtfVertex, DefaultEdge> graph,
             SimpleDirectedGraph<BtfVertex, DefaultEdge> template, boolean strictRegister, boolean strictImm) {
 
         Comparator<BtfVertex> comparator = new RelaxedVertexComparator();
@@ -92,7 +92,7 @@ public abstract class APatternAnalyzer extends ASegmentAnalyzer {
         return fullMatch;
     }
 
-    private ArrayList<GraphMapping<BtfVertex, DefaultEdge>> getMappings(
+    protected static ArrayList<GraphMapping<BtfVertex, DefaultEdge>> getMappings(
             IsomorphismInspector<BtfVertex, DefaultEdge> newIso) {
         var mappings = new ArrayList<GraphMapping<BtfVertex, DefaultEdge>>();
         var iter = newIso.getMappings();
@@ -103,7 +103,7 @@ public abstract class APatternAnalyzer extends ASegmentAnalyzer {
         return mappings;
     }
 
-    private String checkMatchImmediates(GraphMapping<BtfVertex, DefaultEdge> map,
+    protected static String checkMatchImmediates(GraphMapping<BtfVertex, DefaultEdge> map,
             SimpleDirectedGraph<BtfVertex, DefaultEdge> graph) {
         var imms = new ArrayList<Long>();
 
@@ -121,7 +121,7 @@ public abstract class APatternAnalyzer extends ASegmentAnalyzer {
         return same ? "" + imms.get(0) : "";
     }
 
-    private String checkMatchRegisters(GraphMapping<BtfVertex, DefaultEdge> map,
+    protected static String checkMatchRegisters(GraphMapping<BtfVertex, DefaultEdge> map,
             SimpleDirectedGraph<BtfVertex, DefaultEdge> graph) {
         var regs = new ArrayList<String>();
 
@@ -136,33 +136,6 @@ public abstract class APatternAnalyzer extends ASegmentAnalyzer {
         // System.out.println("reg[0] = " + regs.get(0));
         var same = Arrays.stream(regs.toArray()).allMatch(s -> s.equals(regs.get(0)));
         return same ? "" + regs.get(0) : "";
-    }
-
-    protected class RelaxedVertexComparator implements Comparator<BtfVertex> {
-        @Override
-        public int compare(BtfVertex o1, BtfVertex o2) {
-            var type1 = o1.getType();
-            var type2 = o2.getType();
-            var label1 = o1.getLabel();
-            var label2 = o2.getLabel();
-
-            if (type1 == BtfVertexType.REGISTER && type2 == BtfVertexType.REGISTER)
-                return 0;
-            if (type1 == BtfVertexType.OPERATION && type2 == BtfVertexType.OPERATION) {
-                if (label1.equals(label2))
-                    return 0;
-                else if ((label1.equals("+") || label1.equals("-")) && (label2.equals("+") || label2.equals("-")))
-                    return 0;
-                else
-                    return -1;
-            }
-            if (type1 == BtfVertexType.IMMEDIATE && type2 == BtfVertexType.IMMEDIATE) {
-                return 0;
-            }
-            if (type1 == BtfVertexType.MEMORY && type2 == BtfVertexType.MEMORY)
-                return 0;
-            return -1;
-        }
     }
 
     protected class StrictVertexComparator implements Comparator<BtfVertex> {
@@ -193,13 +166,6 @@ public abstract class APatternAnalyzer extends ASegmentAnalyzer {
             if (type1 == BtfVertexType.MEMORY && type2 == BtfVertexType.MEMORY)
                 return 0;
             return -1;
-        }
-    }
-
-    protected class EdgeComparator implements Comparator<DefaultEdge> {
-        @Override
-        public int compare(DefaultEdge e1, DefaultEdge e2) {
-            return 0;
         }
     }
 }

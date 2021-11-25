@@ -48,7 +48,7 @@ public abstract class AReporter {
     }
 
     public void analyze() {
-        analyze(new int[] { });
+        analyze(new int[] { 1 });
     }
     
 
