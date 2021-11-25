@@ -18,13 +18,17 @@
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional;
 
 import java.util.Map;
+import java.util.function.Predicate;
 
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
 
 public class AInstructionCDFGControlFlowConditionalSubgraph extends AInstructionCDFGControlFlowSubgraph{
 
     private InstructionCDFGControlFlowMerge merge;
+    
+    public static Predicate<AInstructionCDFGSubgraph> predicate = s -> s instanceof AInstructionCDFGControlFlowConditionalSubgraph;
     
     public AInstructionCDFGControlFlowConditionalSubgraph(InstructionCDFGControlFlowMerge merge, Map<String, Integer> uid_map) {
         super(uid_map);

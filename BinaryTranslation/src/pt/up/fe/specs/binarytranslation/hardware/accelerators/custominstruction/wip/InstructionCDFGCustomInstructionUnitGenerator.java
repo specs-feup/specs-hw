@@ -17,56 +17,34 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip;
 
-import java.util.Map;
-
 import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionCDFGConverter;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.HardwareDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.SingleStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.AInstructionCDFGControlNode;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGGeneratedVariable;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
 
 public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGenerator{
 
     private VerilogModuleTree module_tree;
     private ModuleDeclaration module;
-    
-    private Map<AInstructionCDFGNode, SingleStatement> completed_statements;
 
-    public AHardwareInstance generateHardware(InstructionCDFG icdfg) {
+    public AHardwareInstance generateHardware(InstructionCDFG icdfg, String moduleName) {
         
-        this.module_tree = new VerilogModuleTree("test");
+        this.module_tree = new VerilogModuleTree(moduleName);
         this.module = module_tree.getModule();
-        
-        
-        
-        icdfg.getDataInputs().forEach((input) -> {
-            if(!(input instanceof InstructionCDFGLiteralNode) && !(input instanceof InstructionCDFGGeneratedVariable)) {
-                this.module_tree.addDeclaration(new PortDeclaration(input.getUID(), 32, ModulePortDirection.input));
-            }
-           
-        });
-        
-        icdfg.getDataOutputs().forEach((output) -> {
-            if(!(output instanceof InstructionCDFGGeneratedVariable) && !(output instanceof AInstructionCDFGControlNode)) {
-                this.module_tree.addDeclaration(new PortDeclaration(output.getUID(), 32, ModulePortDirection.output));
-            }
-        });
- 
+
+        icdfg.getDataInputsNames().forEach(inputName ->  new InputPortDeclaration(new WireDeclaration(inputName, 32), this.module_tree));
+        icdfg.getDataOutputsNames().forEach(outputName -> new OutputPortDeclaration(new RegisterDeclaration(outputName, 32), this.module_tree));
 
         InstructionCDFGConverter.convert(icdfg, this.module.addChild(new AlwaysCombBlock()));
         
-        
-        return new InstructionCDFGCustomInstructionUnit(icdfg.getInstruction().getName(), module_tree);
+        return new InstructionCDFGCustomInstructionUnit(moduleName, module_tree);
     }
     
 }

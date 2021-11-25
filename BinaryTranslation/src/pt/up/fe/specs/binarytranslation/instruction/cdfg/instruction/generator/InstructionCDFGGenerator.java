@@ -25,14 +25,13 @@ import java.util.Set;
 import java.util.Stack;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.dataflowgraph.DataFlowGraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.InstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGFalseEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGTrueEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIf;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIfElse;
@@ -46,30 +45,38 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.Pl
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.StatementlistContext;
 
-public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<GeneralFlowGraph<AInstructionCDFGNode,AInstructionCDFGEdge>>{
+public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInstructionCDFGSubgraph>{
 
     private InstructionCDFG icdfg; 
     
-    private InstructionCDFGDataFlowGraphGenerator dfg_visitor;
+    private InstructionCDFGSubgraphGenerator subgraphGenerator;
     
-    private GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> last_node;
+    private AInstructionCDFGSubgraph last_node;
     private AInstructionCDFGEdge last_node_edge;
     
-    
-    private Stack<Map<String, Integer>> uid_map_stack;
-    
-    private Map<String, Integer> uid_map;
+    private Map<String, Integer> uidMap;
 
     public InstructionCDFGGenerator() {
-        this.dfg_visitor = new InstructionCDFGDataFlowGraphGenerator();
-        this.uid_map = new HashMap<>();
+        this.subgraphGenerator = new InstructionCDFGSubgraphGenerator();
+        this.uidMap = new HashMap<>();
     }
     
-    public static void generateUID(Map<String, Integer> uid_map, AInstructionCDFGNode vertex) {
+    private void finish() {
+        this.icdfg.generateInputs();
+        this.icdfg.generateOutputs();
+        this.icdfg.generateDataInputs();
+        this.icdfg.generateDataOutputs();
+    }
+    
+    public static void generateUID(Map<String, Integer> uidMap, AInstructionCDFGNode vertex) {
         
-        uid_map.put(vertex.getReference(), (uid_map.containsKey(vertex.getReference())) ? uid_map.get(vertex.getReference()) + 1 : 0);
+        uidMap.put(vertex.getReference(), (uidMap.containsKey(vertex.getReference())) ? uidMap.get(vertex.getReference()) + 1 : 0);
  
-        vertex.setUID(String.valueOf(uid_map.get(vertex.getReference())));
+        vertex.setUID(String.valueOf(uidMap.get(vertex.getReference())));
+    }
+    
+    public static void setUID(Map<String, Integer> uidMap, AInstructionCDFGNode vertex) {
+        vertex.setUID(String.valueOf(uidMap.get(vertex.getReference())));
     }
     
     public InstructionCDFG generate(Instruction instruction) {
@@ -78,8 +85,7 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<Gener
         
         this.visit(instruction.getPseudocode().getParseTree());
 
-        this.icdfg.generateInputs();
-        this.icdfg.generateOutputs();
+        this.finish();
         
         return this.icdfg;
     }
@@ -90,19 +96,18 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<Gener
         
         this.visit(instruction);
 
-        this.icdfg.generateInputs();
-        this.icdfg.generateOutputs();
+        this.finish();
         
         return this.icdfg;
     }
     
-    public DataFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> generateDataFlowGraph(List<PseudoInstructionParser.StatementContext>  ctx){
+    public InstructionCDFGDataFlowSubgraph generateDataFlowGraph(List<PseudoInstructionParser.StatementContext>  ctx){
        
         if(ctx.isEmpty()) {
             return null;
         }
         
-        InstructionCDFGDataFlowSubgraph new_dfg = this.dfg_visitor.generate(new InstructionCDFGDataFlowSubgraph(this.uid_map), ctx);
+        InstructionCDFGDataFlowSubgraph new_dfg = (InstructionCDFGDataFlowSubgraph) this.subgraphGenerator.generate(new InstructionCDFGDataFlowSubgraph(this.uidMap), ctx);
         this.icdfg.addVertex(new_dfg);
         
         this.addPreviousStatementEdge(new_dfg);
@@ -116,62 +121,68 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<Gener
     }
 
     @Override
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> visitPseudoInstruction(PseudoInstructionContext ctx) {     
+    public AInstructionCDFGSubgraph visitPseudoInstruction(PseudoInstructionContext ctx) {     
         
         this.visitStatementlist(ctx.statement());
         
        return null;
     }
     
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> addPreviousStatementEdge(GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> new_statement) {
+    public AInstructionCDFGSubgraph addPreviousStatementEdge(AInstructionCDFGSubgraph new_statement) {
+        
         if(this.last_node != null) {
             this.icdfg.addEdge(this.last_node, new_statement, this.last_node_edge);
             this.last_node = null;
         }
+        
         return new_statement;
     }
     
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> visitStatementlist(List<PseudoInstructionParser.StatementContext> ctx) {
+    public AInstructionCDFGSubgraph visitStatementlist(List<PseudoInstructionParser.StatementContext> ctx) {
 
-        GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> return_graph = null;
-        GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> new_dfg = null;
+        AInstructionCDFGSubgraph return_graph = null;
+        AInstructionCDFGSubgraph new_dfg = null;
         
         List<PseudoInstructionParser.StatementContext> ctx_sub = new ArrayList<>();
         
         for(PseudoInstructionParser.StatementContext statement : ctx) {
             
             if((statement instanceof IfStatementContext) || (statement instanceof IfElseStatementContext)) {
-                
+                 
                 this.generateDataFlowGraph(ctx_sub);
+                
                 return_graph = this.visit(statement);
-             
+                
+                this.last_node = return_graph;
+                this.last_node_edge = new InstructionCDFGEdge();
+                
             }else {
                 ctx_sub.add(statement);
             }
         }
-            
-            
-        new_dfg = this.generateDataFlowGraph(ctx_sub);
+                        
+        new_dfg = (AInstructionCDFGSubgraph) this.generateDataFlowGraph(ctx_sub);
    
         return (new_dfg == null) ? return_graph : new_dfg;
     }
     
     @Override
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> visitStatementlist(StatementlistContext ctx) {
+    public AInstructionCDFGSubgraph visitStatementlist(StatementlistContext ctx) {
         return this.visitStatementlist(ctx.statement());
     }
     
     @Override
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> visitIfStatement(IfStatementContext ctx) {
+    public AInstructionCDFGSubgraph visitIfStatement(IfStatementContext ctx) {
              
-        InstructionCDFGControlFlowMerge merge = new InstructionCDFGControlFlowMerge(this.uid_map);
+        InstructionCDFGControlFlowMerge merge = new InstructionCDFGControlFlowMerge(this.uidMap);
         this.icdfg.addVertex(merge);
         
-        InstructionCDFGControlFlowIf condition =  (InstructionCDFGControlFlowIf) this.dfg_visitor.generate(new InstructionCDFGControlFlowIf(merge, this.uid_map), ctx.condition);
+        InstructionCDFGControlFlowIf condition =  (InstructionCDFGControlFlowIf) this.subgraphGenerator.generate(new InstructionCDFGControlFlowIf(merge, this.uidMap), ctx.condition);
         this.icdfg.addVertex(condition);
+       
         this.addPreviousStatementEdge(condition);
 
-        GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> path_true = this.visitConditionalPathStatements(condition, true, ctx.ifsats);
+        AInstructionCDFGSubgraph path_true = this.visitConditionalPathStatements(condition, true, ctx.ifsats);
         this.icdfg.addVertex(path_true);
  
         this.icdfg.addEdge(condition, merge, new InstructionCDFGFalseEdge());
@@ -181,17 +192,17 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<Gener
     }
     
     @Override
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> visitIfElseStatement(IfElseStatementContext ctx) {
+    public AInstructionCDFGSubgraph visitIfElseStatement(IfElseStatementContext ctx) {
        
-        InstructionCDFGControlFlowMerge merge = new InstructionCDFGControlFlowMerge(this.uid_map);
+        InstructionCDFGControlFlowMerge merge = new InstructionCDFGControlFlowMerge(this.uidMap);
         this.icdfg.addVertex(merge);
         
-        InstructionCDFGControlFlowIfElse condition = (InstructionCDFGControlFlowIfElse) this.dfg_visitor.generate(new InstructionCDFGControlFlowIfElse(merge, this.uid_map), ctx.condition);
+        InstructionCDFGControlFlowIfElse condition = (InstructionCDFGControlFlowIfElse) this.subgraphGenerator.generate(new InstructionCDFGControlFlowIfElse(merge, this.uidMap), ctx.condition);
         this.icdfg.addVertex(condition);
         this.addPreviousStatementEdge(condition); 
 
-        GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> path_true = this.visitConditionalPathStatements(condition, true, ctx.ifsats);
-        GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> path_false = this.visitConditionalPathStatements(condition, false, ctx.elsestats);
+        AInstructionCDFGSubgraph path_true = this.visitConditionalPathStatements(condition, true, ctx.ifsats);
+        AInstructionCDFGSubgraph path_false = this.visitConditionalPathStatements(condition, false, ctx.elsestats);
 
         this.icdfg.addVertices(Set.of(path_true, path_false));
         this.icdfg.addIncomingEdgesTo(merge, Set.of(path_true, path_false));
@@ -200,15 +211,15 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<Gener
     }
         
     @Override
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> visitPlainStmt(PlainStmtContext ctx) {
+    public AInstructionCDFGSubgraph visitPlainStmt(PlainStmtContext ctx) {
         
-        InstructionCDFGDataFlowSubgraph dfg = this.dfg_visitor.generate(new InstructionCDFGDataFlowSubgraph(this.uid_map), ctx);
+        InstructionCDFGDataFlowSubgraph dfg = (InstructionCDFGDataFlowSubgraph) this.subgraphGenerator.generate(new InstructionCDFGDataFlowSubgraph(this.uidMap), ctx);
         this.icdfg.addVertex(dfg);
         
         return dfg;
     }
     
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> visitConditionalPathStatements(AInstructionCDFGControlFlowConditionalSubgraph decision, boolean condition, StatementlistContext ctx){
+    public AInstructionCDFGSubgraph visitConditionalPathStatements(AInstructionCDFGControlFlowConditionalSubgraph decision, boolean condition, StatementlistContext ctx){
         this.last_node = decision;
         this.last_node_edge = (condition) ? new InstructionCDFGTrueEdge() : new InstructionCDFGFalseEdge();
         return this.visitStatementlist(ctx);

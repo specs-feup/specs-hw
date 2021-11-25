@@ -25,7 +25,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareCommentNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareErrorMessage;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;

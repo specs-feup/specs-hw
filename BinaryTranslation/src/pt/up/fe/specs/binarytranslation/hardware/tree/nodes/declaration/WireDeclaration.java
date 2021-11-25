@@ -35,7 +35,7 @@ public class WireDeclaration extends VariableDeclaration {
 
     @Override
     public String getAsString() {
-        return "wire [ (" + this.numBits + " - 1) : 0] " + this.wireName + ";\n";
+        return "wire [" + (this.numBits - 1) + " : 0] " + this.wireName + ";";
     }
 
     @Override

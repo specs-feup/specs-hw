@@ -17,7 +17,6 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -99,15 +98,13 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
     public Set<V> getInputs(){
         return this.inputs;
     }
-    
 
-    
     /** Sets the graph's input vertices List to the parameter's List<br>
      * The parameter's vertices must have been already added to the graph
      * @param vertices New List of outputs
      */
     public void setInputs(Set<V> vertices) {
-        vertices.forEach(v -> this.getInputs().add(v));
+        this.getInputs().addAll(vertices);
     }
     
     /** Adds a vertex to the graph's input vertices List, only if the vertex does not exist
@@ -164,14 +161,12 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
         return this.outputs;
     }
     
-
-    
     /** Sets the graph's output vertices List to the parameter's List<br>
      * The parameter's vertices must have been already added to the graph
      * @param vertices New List of outputs
      */
     public void setOutputs(Set<V> vertices) {      
-        vertices.forEach(v -> this.getOutputs().add(v));
+        this.getOutputs().addAll(vertices);
     }
     
     /** Adds a vertex of the graph to the graph's outputs List, only if the vertex does not exist
@@ -229,15 +224,14 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
     public void mergeVertices(V vertex , Collection<V> vertices) throws IllegalArgumentException{
          
         this.assertVertexExist(vertex); 
-        vertices.forEach(v -> this.assertVertexExist(v));
         
-        vertices.forEach(v -> {
+        vertices.forEach(v -> {       
+            this.assertVertexExist(v);
             
-            this.incomingEdgesOf(v).forEach(e -> {this.addEdge(this.getEdgeSource(e), vertex);});
-            this.outgoingEdgesOf(v).forEach(e -> {this.addEdge(vertex, this.getEdgeTarget(e));});
+            this.incomingEdgesOf(v).forEach(e -> this.addEdge(this.getEdgeSource(e), vertex));
+            this.outgoingEdgesOf(v).forEach(e -> this.addEdge(vertex, this.getEdgeTarget(e)));
             
-            this.removeVertex(v);
-            
+            this.removeVertex(v);   
         });
         
     }
@@ -264,15 +258,8 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * @param vertex Vertex to get the operands of
      * @return A List of the operands(vertices) of the argument vertex
      */
-    public Collection<V> getOperandsOf(V vertex){
-        
-        Collection<V> operand_list = new ArrayList<V>();
-        
-        
-        this.incomingEdgesOf(vertex).forEach(e -> operand_list.add(this.getEdgeSource(e)));
-        
-        return operand_list;
+    public Collection<V> getOperandsOf(V vertex){    
+        return this.getVerticesBefore(vertex);
     }
 
-        
 }
