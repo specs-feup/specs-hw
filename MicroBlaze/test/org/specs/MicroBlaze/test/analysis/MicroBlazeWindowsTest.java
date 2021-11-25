@@ -20,6 +20,7 @@ import java.util.List;
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
+import org.specs.MicroBlaze.provider.MicroBlazeRosetta;
 import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
@@ -38,7 +39,7 @@ public class MicroBlazeWindowsTest {
         boolean megaBlock = true;
         var arr = new ArrayList<String>();
         // var elfs = MicroBlazeLivermoreN100.values();
-        var elfs = List.of(MicroBlazeLivermoreN100.matmul);
+        var elfs = List.of(MicroBlazeRosetta.rendering3d);
 
         for (var elf : elfs) {
             var windows = findBlockSizes(elf, minWindow, maxWindow, megaBlock);
@@ -81,7 +82,9 @@ public class MicroBlazeWindowsTest {
             istream1.silent(true);
 
             var startAddr = istream1.getApp().getKernelStart();
+            startAddr = 0x14c4;
             var stopAddr = istream1.getApp().getKernelStop();
+            stopAddr = 0x1528;
             istream1.runUntil(startAddr);
 
             SegmentBundle result1 = null;
@@ -115,6 +118,58 @@ public class MicroBlazeWindowsTest {
         System.out.println("-------------------");
         return arr;
 
+    }
+
+    @Test
+    public void printBlockList() throws IOException {
+        var elfs = MicroBlazeMegaBlockInfo.getLivermoreN100Kernels();
+        var sb = new StringBuilder();
+
+        for (var elf : elfs.keySet()) {
+            var windows = elfs.get(elf);
+            if (windows.length == 0)
+                continue;
+            
+            sb.append("-------- START OF ELF " + elf.getELFName() + "--------\n");
+            
+            var count = 1;
+            for (var window : windows) {
+                var istream1 = new MicroBlazeTraceStream(
+                        new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf));
+                istream1.silent(true);
+
+                var startAddr = istream1.getApp().getKernelStart();
+                var stopAddr = istream1.getApp().getKernelStop();
+                istream1.runUntil(startAddr);
+
+                SegmentBundle result1 = null;
+
+                var detector1 = new FixedSizeMegablockDetector(
+                        new DetectorConfigurationBuilder()
+                                .withMaxWindow(window)
+                                .withStartAddr(startAddr)
+                                .withPrematureStopAddr(stopAddr)
+                                .build());
+                result1 = detector1.detectSegments(istream1);
+
+                if (result1.getSegments().size() == 0) {
+                    System.out.println("Window " + window + ": -----");
+                } else {
+                    System.out.println("Window " + window + ": FOUND");
+                    for (var seg : result1.getSegments()) {
+                        sb.append(elf.getELFName() + " - MEGABLOCK " + count + ":\n");
+                        sb.append("\n");
+                        for (var i : seg.getInstructions())
+                            sb.append(i.getRepresentation() + "\n");
+                        sb.append("--------------------------\n");
+                        count++;
+                    }
+                }
+                istream1.close();
+            }
+            sb.append("--------- END OF ELF " + elf.getELFName() + "---------\n\n");
+        }
+        System.out.println(sb.toString());
     }
 
     public String generateCode(List<String> windows, String className, String elf) {

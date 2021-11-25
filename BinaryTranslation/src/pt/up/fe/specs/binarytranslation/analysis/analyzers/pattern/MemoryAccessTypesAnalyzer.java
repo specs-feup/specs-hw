@@ -71,8 +71,9 @@ public class MemoryAccessTypesAnalyzer extends APatternAnalyzer {
                     SimpleDirectedGraph<BtfVertex, DefaultEdge> template = type.getTemplate().getGraph();
                     var exprGraph = GraphUtils.getExpressionGraph(graph);
                     var match = matchGraphToTemplate(exprGraph, template);
-                    if (match.isMatch())
+                    if (match.isMatch()) {
                         finalType = type;
+                    }
                 }
                 report.addEntry(graph, id, finalType, bb.getOccurences());
             }
