@@ -30,4 +30,9 @@ public class VerilogModule extends AHardwareInstance implements HardwareInstance
     public void emit(OutputStream os) {
         this.tree.emit(os);
     }
+    
+    @Override
+    public void emit() {
+        this.tree.emit();
+    }
 }

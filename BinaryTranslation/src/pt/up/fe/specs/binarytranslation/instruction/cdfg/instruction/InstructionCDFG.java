@@ -17,84 +17,140 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.controlanddataflowgraph.ControlAndDataFlowGraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.InstructionCDFGEdge;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.AInstructionCDFGConditionalEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGFalseEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGTrueEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.AInstructionCDFGControlNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGGeneratedVariable;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
-public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, AInstructionCDFGEdge>{
+public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSubgraph, AInstructionCDFGEdge>{
 
-    private Set<AInstructionCDFGNode> data_inputs;
-    private Set<AInstructionCDFGNode> data_outputs;
     private Instruction instruction;
-
+    
+    private Map<AInstructionCDFGNode, AInstructionCDFGSubgraph> dataInputs;
+    private Map<AInstructionCDFGNode, AInstructionCDFGSubgraph> dataOutputs;
+    
+    private static Predicate<AInstructionCDFGNode> notGeneratedVariableNode = v -> !(v instanceof InstructionCDFGGeneratedVariable);
+    private static Predicate<AInstructionCDFGNode> notLiteralNode = v -> !(v instanceof InstructionCDFGLiteralNode);
+    private static Predicate<AInstructionCDFGNode> notControlNode = v -> !(v instanceof AInstructionCDFGControlNode);
+    
     public InstructionCDFG(Instruction instruction) {
         super(InstructionCDFGDataFlowSubgraph.class, AInstructionCDFGControlFlowSubgraph.class, AInstructionCDFGEdge.class);
-      
-        this.data_inputs = new HashSet<>();
-        this.data_outputs = new HashSet<>();
         
         this.instruction = instruction;
+        
+        this.dataInputs = new HashMap<>();
+        this.dataOutputs = new HashMap<>();
     }
     
     public Instruction getInstruction() {
         return this.instruction;
     }
     
-    public boolean isControlFlowConditionNode(GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> node) {
-        
-        for(GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> next : this.getVerticesAfter(node)) {
-            
-            if(next instanceof AInstructionCDFGControlFlowSubgraph) {
-                return true;
-            }
-            
-        }
-        
-        return false;
+    public boolean isControlFlowConditionNode(AInstructionCDFGSubgraph node) {
+        return this.getVerticesAfter(node).stream().anyMatch(next -> next instanceof AInstructionCDFGControlFlowSubgraph);
+    }
+    
+    public void generateDataInputs() {
+        this.vertexSet().forEach(g -> g.getInputs().stream()
+                .filter(InstructionCDFG.notLiteralNode.and(InstructionCDFG.notGeneratedVariableNode))
+                .forEach(i -> this.dataInputs.put(i, g))
+                );
     }
     
     public Set<AInstructionCDFGNode> getDataInputs(){
+        return this.dataInputs.keySet();
+    }
+    
+    public Map<AInstructionCDFGNode, AInstructionCDFGSubgraph> getDataInputsMap(){
+        return this.dataInputs;
+    }
+    
+    public Set<String> getDataInputsNames(){
         
-        this.vertexSet().forEach(g -> this.data_inputs.addAll(g.getInputs()));
-
-        return this.data_inputs;
+        Set<String> names = new HashSet<>();
+        
+        this.getDataInputs().forEach(name -> names.add(name.getUID()));
+        
+        return names;
+    }
+    
+    public Set<String> getDataInputsReferences(){
+        Set<String> names = new HashSet<>();
+        
+        this.getDataInputs().forEach(name -> names.add(name.getReference()));
+        
+        return names;
+    }
+    
+    public void generateDataOutputs() {    
+        this.vertexSet().forEach(g -> g.getOutputs().stream()
+                .filter(InstructionCDFG.notGeneratedVariableNode.and(InstructionCDFG.notControlNode))
+                .forEach(o -> this.dataOutputs.put(o, g))
+            );
     }
     
     public Set<AInstructionCDFGNode> getDataOutputs(){
-        this.vertexSet().forEach(g -> this.data_outputs.addAll(g.getOutputs()));
-        return this.data_outputs;
+        return this.dataOutputs.keySet();
     }
     
+    public Map<AInstructionCDFGNode, AInstructionCDFGSubgraph> getDataOutputsMap(){
+        return this.dataOutputs;
+    }
+    
+    
+    public Set<String> getDataOutputsNames(){
+        
+        Set<String> names = new HashSet<>();    
+        
+        this.getDataOutputs().forEach(name -> names.add(name.getUID()));
+        
+        return names;
+    }
   
+    public Set<String> getDataOutputsReferences(){
+        Set<String> names = new HashSet<>();
+        
+        this.getDataOutputs().forEach(name -> names.add(name.getReference()));
+        
+        return names;
+    }
+    
     @Override
-    public AInstructionCDFGEdge addEdge(GeneralFlowGraph sourceVertex, GeneralFlowGraph targetVertex) {
+    public AInstructionCDFGEdge addEdge(AInstructionCDFGSubgraph sourceVertex, AInstructionCDFGSubgraph targetVertex) {
         AInstructionCDFGEdge edge = new InstructionCDFGEdge();
         this.addEdge(sourceVertex, targetVertex, edge);
         return edge;
     }
     
     @Override
-    public void addControlEdgesTo(GeneralFlowGraph decision,GeneralFlowGraph path_true,GeneralFlowGraph path_false) {
+    public void addControlEdgesTo(AInstructionCDFGSubgraph decision,AInstructionCDFGSubgraph path_true,AInstructionCDFGSubgraph path_false) {
         this.addEdge(decision, path_true, new InstructionCDFGTrueEdge());
         this.addEdge(decision, path_false, new InstructionCDFGFalseEdge());
     }
 
-    
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> getTruePath(AInstructionCDFGControlFlowConditionalSubgraph vertex){
+    private AInstructionCDFGSubgraph getConditionalPath(Class<? extends AInstructionCDFGConditionalEdge> type, AInstructionCDFGControlFlowConditionalSubgraph vertex) {
         
-        for(AInstructionCDFGEdge e : this.outgoingEdgesOf(vertex)) {
-            if(e instanceof InstructionCDFGTrueEdge) {
+        for(AInstructionCDFGEdge e : this.outgoingEdgesOf(vertex)) {     
+            if(type.isInstance(e)) {
                 return this.getEdgeTarget(e);
             }
         }
@@ -102,15 +158,21 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<GeneralFlowGraph, A
         return null;
     }
     
-    public GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge> getFalsePath(AInstructionCDFGControlFlowConditionalSubgraph vertex){
-        
-        for(AInstructionCDFGEdge e : this.outgoingEdgesOf(vertex)) {
-            if(e instanceof InstructionCDFGFalseEdge) {
-                return this.getEdgeTarget(e);
-            }
-        }
-        
-        return null;
+    public AInstructionCDFGSubgraph getTruePath(AInstructionCDFGControlFlowConditionalSubgraph vertex){
+        return this.getConditionalPath(InstructionCDFGTrueEdge.class, vertex);
+    }
+    
+    public AInstructionCDFGSubgraph getFalsePath(AInstructionCDFGControlFlowConditionalSubgraph vertex){
+        return this.getConditionalPath(InstructionCDFGFalseEdge.class, vertex);
     }
 
+    @Override
+    public String toString() {
+        return this.instruction.getName();
+    }
+    
+    public void splitSubgraph(AInstructionCDFGSubgraph subgraph, Set<AInstructionCDFGNode> vertices) {
+        
+    }
+    
 }

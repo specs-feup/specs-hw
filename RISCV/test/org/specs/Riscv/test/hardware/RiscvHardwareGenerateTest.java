@@ -22,10 +22,12 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
 import org.specs.Riscv.instruction.RiscvPseudocode;
 
+import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnit;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AControlFlowNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
@@ -39,25 +41,47 @@ public class RiscvHardwareGenerateTest {
     
     @Test
     public void generateInstructionCDFGs() {
-        
-        InstructionCDFGGenerator icdfg_generator = new InstructionCDFGGenerator();
       
-       // for(var instruction : RiscvPseudocode.values()) {
-       var instruction = RiscvPseudocode.sub; 
-            InstructionCDFG icdfg = icdfg_generator.generate(this.getParseTree(instruction.getCode()));
-            InstructionCDFGCustomInstructionUnitGenerator hardware_generator = new InstructionCDFGCustomInstructionUnitGenerator();
+        for(var instruction : RiscvPseudocode.values()) {
+        
+            InstructionCDFGGenerator icdfg_generator = new InstructionCDFGGenerator();
+            InstructionCDFG icdfg = null;
             
             System.out.println("\n\nProcessing instruction: " + instruction.getName() + "\n\n");
             
-            if(icdfg.vertexSet().stream().anyMatch(g -> (g instanceof AControlFlowNode))) {
-                System.out.println("Currently instructions with conditionals are still not supported");
-                //continue;
+            
+            try {
+                icdfg = icdfg_generator.generate(instruction.getParseTree());
+            }catch(Exception e){
+                System.out.println("ERROR: Could not generate graph of InstructionCDFG of instruction: " + instruction.getName());
+                System.out.println();
+                continue;
+            }
+            InstructionCDFGCustomInstructionUnitGenerator hardware_generator = new InstructionCDFGCustomInstructionUnitGenerator();
+            InstructionCDFGCustomInstructionUnit module = null;
+            
+            
+            try {
+                InstructionCDFGNameResolver.resolveNames(icdfg);
+                
+                module = (InstructionCDFGCustomInstructionUnit) hardware_generator.generateHardware(icdfg);
+                
+                System.out.println("Generated module");
+                module.emit();
+            }catch(Exception e) {
+                System.out.println("ERROR: Could not generate HDL of instruction: " + instruction.getName());
+                continue;
             }
             
-            hardware_generator.generateHardware(icdfg).emit(System.out);
-      
-        //}
+            try {
+                System.out.println("Generated testbench");
+                HardwareTestbenchGenerator.generate(module, 5, "inputs", "outputs").emit(); 
+            }catch(Exception e) {
+                System.out.println("ERROR: Could not generate testbench of instruction: " + instruction.getName());
+                continue;
+            }
+        }
+        
     }
-    
     
 }

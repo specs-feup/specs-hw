@@ -20,16 +20,17 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.AUnaryHardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class BitWiseNotExpression extends ABinaryHardwareExpression {
+public class BitWiseNotExpression extends AUnaryHardwareExpression {
 
     private BitWiseNotExpression() {
         super("~", HardwareNodeType.BitWiseNotExpression);
     }
 
-    public BitWiseNotExpression(HardwareExpression varA, HardwareExpression varB) {
-        super("~", HardwareNodeType.BitWiseNotExpression, varA, varB);
+    public BitWiseNotExpression(HardwareExpression varA) {
+        super("~", HardwareNodeType.BitWiseNotExpression, varA);
     }
 
     /*

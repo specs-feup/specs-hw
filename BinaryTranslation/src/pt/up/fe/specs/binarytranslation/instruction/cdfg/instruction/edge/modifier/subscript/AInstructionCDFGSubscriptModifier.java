@@ -29,6 +29,13 @@ public abstract class AInstructionCDFGSubscriptModifier extends AInstructionCDFG
         this.subscript = new Pair<Integer, Integer>(upper, lower);
     }
     
+    public Integer getLowerBound() {
+        return this.subscript.getSecond();
+    }
+    
+    public Integer getUpperBound() {
+        return this.subscript.getFirst();
+    }
  
     @Override
     public String toString() {

@@ -24,6 +24,8 @@ public interface HardwareInstance {
      */
     public void emit(OutputStream os);
 
+    public void emit();
+    
     /*
      * 
      */

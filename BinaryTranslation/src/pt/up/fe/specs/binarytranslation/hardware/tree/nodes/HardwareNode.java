@@ -73,4 +73,8 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
             e.printStackTrace();
         }
     }
+    
+    public void emit() {
+        System.out.println(this.getAsString());
+    }
 }

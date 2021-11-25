@@ -14,8 +14,14 @@
 package pt.up.fe.specs.binarytranslation.hardware;
 
 import java.io.OutputStream;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareTree;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 
 public abstract class AHardwareInstance implements HardwareInstance {
 
@@ -31,11 +37,37 @@ public abstract class AHardwareInstance implements HardwareInstance {
         this.tree = tree;
     }
 
+    public String getName() {
+        return this.instancename;
+    }
+    
+    public List<HardwareNode> getPorts(){
+        return  this.getTree().getRoot().getChild(1).getChild(0).getChildren();
+    }
+    
+    private List<HardwareNode> getPorts(Predicate<HardwareNode> portType){
+        return  this.getPorts().stream().filter(portType).collect(Collectors.toList());
+    }
+    
+    public List<HardwareNode> getInputPorts(){
+        return this.getPorts(port -> port instanceof InputPortDeclaration);
+    }
+    
+    public List<HardwareNode> getOutputPorts(){
+        return this.getPorts(port -> port instanceof OutputPortDeclaration);
+    }
+    
+    
     @Override
     public void emit(OutputStream os) {
         this.tree.emit(os);
     }
 
+    @Override
+    public void emit() {
+        this.tree.emit();
+    }
+    
     @Override
     public HardwareTree getTree() {
         return this.tree;

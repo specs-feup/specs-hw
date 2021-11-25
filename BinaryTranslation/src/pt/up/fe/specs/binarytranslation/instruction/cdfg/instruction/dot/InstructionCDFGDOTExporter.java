@@ -34,6 +34,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstr
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGControlConditionalNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGControlMergeNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
@@ -118,7 +119,7 @@ public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<Gene
                     edgeBuilder.append(this.getVertexID(control));
                     
                     edgeBuilder.append(((control instanceof InstructionCDFGControlMergeNode) || (control instanceof InstructionCDFGControlConditionalNode)) ? ":n" : "");
-                }else if(target instanceof InstructionCDFGDataFlowSubgraph){
+                }else if((target instanceof InstructionCDFGDataFlowSubgraph) || (target instanceof AInstructionCDFGControlFlowConditionalSubgraph)){
                     edgeBuilder.append(this.getVertexID((AInstructionCDFGNode) target.getInputs().toArray()[0]).toString() + ":n");    
                 } 
         
