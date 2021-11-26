@@ -105,8 +105,11 @@ public abstract class Application extends ADataClass<Application> {
         var nameNoExt = elf.getFunctionName(); // SpecsIo.removeExtension(elf.getELFName());
         if (IS_WINDOWS)
             arguments.add("findstr " + nameNoExt);
-        else
-            arguments.add("grep -w " + nameNoExt);
+        else {
+            arguments.add("grep");
+            arguments.add("-w");
+            arguments.add(nameNoExt);
+        }
 
         var output = SpecsSystem.runProcess(arguments, true, false);
 
@@ -142,8 +145,12 @@ public abstract class Application extends ADataClass<Application> {
 
         if (IS_WINDOWS)
             arguments.add("findstr /irc:DW_AT_producer");
-        else
-            arguments.add("grep -i compilation -A6");
+        else {
+            arguments.add("grep");
+            arguments.add("-i");
+            arguments.add("compilation");
+            arguments.add("-A6");
+        }
 
         var output = SpecsSystem.runProcess(arguments, true, false);
         var pat = Pattern.compile("GNU.*");
