@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.MicroBlaze;
 
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -33,6 +33,7 @@ public enum MicroBlazeResource implements ResourceProvider {
     GDBINTERACTIVE_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl.gdb"),
     GDBNONINTERACTIVE_TEMPLATE("org/specs/MicroBlaze/gdb/qemutmpl_noninteractive.gdb"),
     BAREMETAL_DTB("org/specs/MicroBlaze/qemu/2021.1/system.dtb"),
+    BAREMETAL_DTB_4GB("org/specs/MicroBlaze/qemu/2021.1_4GB_manual/system.dtb"),
     QEMU_ARGS_TEMPLATE("org/specs/MicroBlaze/qemu/QEMUArgsMicroBlaze");
 
     private final String resource;

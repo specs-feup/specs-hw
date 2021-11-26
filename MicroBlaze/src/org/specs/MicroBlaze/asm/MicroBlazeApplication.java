@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.MicroBlaze.asm;
 
 import org.specs.MicroBlaze.MicroBlazeResource;
@@ -34,7 +34,8 @@ public class MicroBlazeApplication extends Application {
         data.set(OBJDUMP, ARCHPREFIX + "objdump");
         data.set(GDBTMPLINTER, MicroBlazeResource.GDBINTERACTIVE_TEMPLATE);
         data.set(GDBTMPLNONINTER, MicroBlazeResource.GDBNONINTERACTIVE_TEMPLATE);
-        data.set(BAREMETAL_DTB, MicroBlazeResource.BAREMETAL_DTB);
+        // data.set(BAREMETAL_DTB, MicroBlazeResource.BAREMETAL_DTB);
+        data.set(BAREMETAL_DTB, MicroBlazeResource.BAREMETAL_DTB_4GB);
         data.set(QEMU_ARGS_TEMPLATE, MicroBlazeResource.QEMU_ARGS_TEMPLATE);
     }
 
