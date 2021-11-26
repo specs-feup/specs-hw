@@ -253,7 +253,6 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
     
     /** Returns the operands(vertices) before a vertex.<br>
      * 
-     * This method is kind of redundant
      * 
      * @param vertex Vertex to get the operands of
      * @return A List of the operands(vertices) of the argument vertex

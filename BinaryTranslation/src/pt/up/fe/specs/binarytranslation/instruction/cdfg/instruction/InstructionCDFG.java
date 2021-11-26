@@ -25,6 +25,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.jgrapht.Graphs;
+
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.controlanddataflowgraph.ControlAndDataFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
@@ -175,4 +177,38 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         
     }
     
+    @Override
+    public void replaceVertex(AInstructionCDFGSubgraph current, AInstructionCDFGSubgraph replacement) {
+        
+        this.getInputs().remove(current);
+        this.getOutputs().remove(current);
+        
+        this.assertVertexExist(current);
+        
+        this.addVertex(replacement);
+        
+        this.getVerticesBefore(current).forEach(before -> {
+            this.addEdge(before, replacement, this.getEdge(before, current).duplicate());
+        });
+        
+        this.getVerticesAfter(current).forEach(after -> {
+            this.addEdge(replacement, after, this.getEdge(current, after).duplicate());
+        });
+        
+        
+        this.removeVertex(current);
+    }
+    
+    public void copyVerticesOfSubgraph(AInstructionCDFGSubgraph source, AInstructionCDFGSubgraph target) {
+        
+        target.addVertices(source.vertexSet());
+
+        Graphs.addAllEdges(target, source, source.edgeSet());
+        
+        
+        target.generateInputs();
+        target.generateOutputs();
+        
+    }
+   
 }

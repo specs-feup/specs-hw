@@ -177,7 +177,7 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
         InstructionCDFGControlFlowMerge merge = new InstructionCDFGControlFlowMerge(this.uidMap);
         this.icdfg.addVertex(merge);
         
-        InstructionCDFGControlFlowIf condition =  (InstructionCDFGControlFlowIf) this.subgraphGenerator.generate(new InstructionCDFGControlFlowIf(merge, this.uidMap), ctx.condition);
+        InstructionCDFGControlFlowIfElse condition =  (InstructionCDFGControlFlowIfElse) this.subgraphGenerator.generate(new InstructionCDFGControlFlowIfElse(merge, this.uidMap), ctx.condition);
         this.icdfg.addVertex(condition);
        
         this.addPreviousStatementEdge(condition);
