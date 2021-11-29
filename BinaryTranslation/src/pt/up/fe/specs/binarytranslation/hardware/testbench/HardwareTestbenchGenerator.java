@@ -44,63 +44,65 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStat
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task.AssertTask;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task.ReadMemoryHexadecimalTask;
 
 public class HardwareTestbenchGenerator extends AHardwareGenerator{
 
+    private static final String verificationStartInputSignal = "verify"; 
+    private static final String verificationOutputSignal = "verifyResults";
+    private static final String validationInputs = "inputs";
+    private static final String validationOutputs = "outputs";
+    private static final String moduleOutputs = "moduleOutputs";
+    private static final String validationCurrentIndex = "index";
+    
     public static AHardwareTestbench generate(AHardwareInstance module, int validationDataSize, String inputValidationFileName, String outputValidationFileName) {
        
         var testbenchtree = new VerilogModuleTree(module.getName() + "_tb");
         var testbench = testbenchtree.getModule();
 
         new TimeScaleDeclaration(testbenchtree);
-        
  
-        var verify = new InputPortDeclaration(new RegisterDeclaration("verify", 1), testbenchtree);
-        var verificationResult = new OutputPortDeclaration(new RegisterDeclaration("verifyResults", 1), testbenchtree);
+        var verify = new InputPortDeclaration(new RegisterDeclaration(verificationStartInputSignal, 1), testbenchtree);
+        var verificationResult = new OutputPortDeclaration(new RegisterDeclaration(verificationOutputSignal, 1), testbenchtree);
         
-        var index = testbench.addChild(new RegisterDeclaration("index", 32));
+        var index = testbench.addChild(new RegisterDeclaration(validationCurrentIndex, 32));
 
         // add modules to be tested ports
         
-        var validation_inputs = testbench.addChild(new ArrayDeclaration(new RegisterDeclaration("inputs", 32 * module.getInputPorts().size()), validationDataSize));  // input validation array
-        var validation_outputs = testbench.addChild(new ArrayDeclaration(new RegisterDeclaration("outputs", 32 * module.getOutputPorts().size()),validationDataSize));// output validation array
+        var validation_inputs = testbench.addChild(new ArrayDeclaration(new RegisterDeclaration(validationInputs, 32 * module.getInputPorts().size()), validationDataSize));  // input validation array
+        var validation_outputs = testbench.addChild(new ArrayDeclaration(new RegisterDeclaration(validationOutputs, 32 * module.getOutputPorts().size()),validationDataSize));// output validation array
         
-        var module_outputs = testbench.addChild(new WireDeclaration("moduleOutputs", 32 * module.getOutputPorts().size()));
+        var module_outputs = testbench.addChild(new WireDeclaration(moduleOutputs, 32 * module.getOutputPorts().size()));
         
         var initial_block = testbench.addChild(new InitialBlock()); // initial block for loading the validation array files
-        initial_block.addChild(new ProceduralBlockingStatement(new VariableReference("index"), new ImmediateReference(0, 32)));
+        initial_block.addChild(new ProceduralBlockingStatement(new VariableReference(validationCurrentIndex), new ImmediateReference(0, 32)));
         initial_block.addChild(new ReadMemoryHexadecimalTask(inputValidationFileName, (ArrayDeclaration) validation_inputs)); // load input validation array
         initial_block.addChild(new ReadMemoryHexadecimalTask(outputValidationFileName, (ArrayDeclaration) validation_outputs));// load output validation array
-        initial_block.addChild((new ProceduralBlockingStatement(new VariableReference("verifyResults"), new ImmediateReference(0, 1))));
+        initial_block.addChild((new ProceduralBlockingStatement(new VariableReference(verificationOutputSignal), new ImmediateReference(0, 1))));
         
-        var always_block = testbench.addChild(new AlwaysAtBlock(new PosedgeSignalChange(new VariableReference(verify.getVariableName()))));
-        always_block.addChild(new ProceduralNonBlockingStatement(new VariableReference("index"), new AdditionExpression(new VariableReference("index") , new ImmediateReference(1, 32))));
+        var always_block = testbench.addChild(new AlwaysAtBlock(new PosedgeSignalChange(new VariableReference(verificationStartInputSignal))));
+        always_block.addChild(new ProceduralNonBlockingStatement(new VariableReference(validationCurrentIndex), new AdditionExpression(new VariableReference(validationCurrentIndex) , new ImmediateReference(1, 32))));
         
-        var alwaysBlockVerify = testbench.addChild(new AlwaysAtBlock(new NegedgeSignalChange(new VariableReference(verify.getVariableName()))));
+        var alwaysBlockVerify = testbench.addChild(new AlwaysAtBlock(new NegedgeSignalChange(new VariableReference(verificationStartInputSignal))));
        
         var alwaysBlockVerify_failed = alwaysBlockVerify.addChild(
                 new IfElseStatement(new NotEqualsToExpression(
-                        new VariableReference("moduleOutputs"), 
-                        new RangeSelection (new IndexSelection(new VariableReference("outputs"), new VariableReference("index")), 0, 32))
+                        new VariableReference(moduleOutputs), 
+                        new RangeSelection (new IndexSelection(new VariableReference(validationOutputs), new VariableReference(validationCurrentIndex)), 0, 32))
                         )
-                .addIfStatement(new ProceduralNonBlockingStatement(new VariableReference("verifyResults"), new ImmediateReference(0, 1)))
-                .addElseStatement(new ProceduralNonBlockingStatement(new VariableReference("verifyResults"), new ImmediateReference(1, 1)))
+                .addIfStatement(new ProceduralNonBlockingStatement(new VariableReference(verificationOutputSignal), new ImmediateReference(0, 1)))
+                .addElseStatement(new ProceduralNonBlockingStatement(new VariableReference(verificationOutputSignal), new ImmediateReference(1, 1)))
                 );
 
         List<HardwareNode> subInputs = new ArrayList<>();
         
-        for(int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32) {
-            subInputs.add(new RangeSelection (new IndexSelection(new VariableReference("inputs"), new VariableReference("index")), i, i + 32));
-        }
+        for(int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32) 
+            subInputs.add(new RangeSelection (new IndexSelection(new VariableReference(validationInputs), new VariableReference(validationCurrentIndex)), i, i + 32));
         
-        for(int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32) {
-            subInputs.add(new RangeSelection(new VariableReference("moduleOutputs"), i, i + 32));
-        }
+        for(int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32) 
+            subInputs.add(new RangeSelection(new VariableReference(moduleOutputs), i, i + 32));
 
-        new ModuleStatement(module, "test", subInputs, testbench);
-        
+        new ModuleStatement(module, module.getName() + "_test", subInputs, testbench);
 
         return new HardwareTestbench(module.getName() + "_tb", testbenchtree);
     }

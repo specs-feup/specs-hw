@@ -20,7 +20,9 @@ package pt.up.fe.specs.binarytranslation.hardware.analysis.timing;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
+import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorRun;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class TimingAnalysisRun {
@@ -44,7 +46,11 @@ public class TimingAnalysisRun {
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         
-        Process process = processBuilder.command("cmd.exe", "/c", processCommands.toString()).start();
+        Process process;
+        if(TimingAnalysisRun.IS_WINDOWS)
+            process = processBuilder.command("cmd.exe", "/c", processCommands.toString()).start();
+        else
+            process = processBuilder.command("bash", "-c", processCommands.toString()).start();
         /*
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         
@@ -57,8 +63,13 @@ public class TimingAnalysisRun {
         
         System.out.println(returnLine);
         */
-        
-        
+        /*
+        try {
+            process.waitFor(60, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            SpecsLogs.msgWarn("Error message:\n", e);
+        }
+        */
     }
     
 }
