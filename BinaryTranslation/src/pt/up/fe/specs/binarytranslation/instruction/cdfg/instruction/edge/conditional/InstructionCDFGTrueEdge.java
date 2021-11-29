@@ -37,5 +37,5 @@ public class InstructionCDFGTrueEdge extends AInstructionCDFGConditionalEdge{
     public AInstructionCDFGEdge duplicate() {
         return new InstructionCDFGTrueEdge();
     }
-    
+
 }

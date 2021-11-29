@@ -17,7 +17,14 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general;
 
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,6 +32,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +44,8 @@ import org.jgrapht.nio.ExportException;
 import org.jgrapht.nio.GraphExporter;
 import org.jgrapht.nio.IntegerIdProvider;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTVertexIdProvider;
+import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorTestbenchGenerator;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implements GraphExporter<V, E>{
@@ -84,6 +93,46 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
             SpecsLogs.warn("Error message:\n", e);
         }
         return "";
+    }
+    
+    public static void generateGraphvizFile(String path, String name, String dotGraph) throws IOException {
+        
+        StringBuilder fileBuilder = new StringBuilder();
+        File templateFile;
+        
+        try {
+            templateFile = new File(VerilatorTestbenchGenerator.class.getClassLoader().getResource("pt/up/fe/specs/binarytranslation/cdfg/dot/graphvizRedirect.html").toURI());
+        } catch (URISyntaxException e) {
+            SpecsLogs.msgWarn("Error message:\n", e);
+            return;
+        }
+        
+        Scanner templateScanner = new Scanner(templateFile);
+        
+        while(templateScanner.hasNextLine()) {
+            fileBuilder.append(templateScanner.nextLine().replace("<INSERTURL>", generateGraphURL(dotGraph)));
+        }
+        
+        templateScanner.close();
+        
+        HardwareFolderGenerator.newFile(path, name +"_dot", "html").write(fileBuilder.toString().getBytes());
+    }
+    
+    public void emit(GeneralFlowGraph<V, E> g, String name,  Writer writer, OutputStream output_stream) {
+        
+        this.graph_name = name;
+        
+        try {
+            Writer bw = new OutputStreamWriter(output_stream);
+            bw.write(this.exportGraph(g, name));
+            bw.flush();
+            bw.close();
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
     
     public void exportGraph(GeneralFlowGraph<V, E> g, String name,  Writer writer) {

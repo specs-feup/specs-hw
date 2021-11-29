@@ -17,30 +17,26 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.InstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGAssignmentNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIf;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIfElse;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.AInstructionCDFGControlFlowMergeSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.visitor.InstructionCDFGVisitor;
 
 public class InstructionCDFGNameResolver extends InstructionCDFGVisitor<Map<String, AInstructionCDFGNode>>{
-    
-    private final Map<String, Integer> SSAMap;
-    private final Map<AInstructionCDFGControlFlowMergeSubgraph, Set<String>> phiFunction;
-     
+
     private InstructionCDFGNameResolver(InstructionCDFG icdfg) {
         super(icdfg);
-        this.SSAMap = new HashMap<>();
-        this.phiFunction = new HashMap<>();
     }
     
     public static void resolve(InstructionCDFG icdfg) {
@@ -63,63 +59,57 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor<Map<Stri
     
     @Override
     protected Map<String, AInstructionCDFGNode> visitControlMergeSubgraph(InstructionCDFGControlFlowMerge subgraph) {
-        // TODO Auto-generated method stub
+        /*
+         * Resolve previous nodes outputs
+         */
         return super.visitControlMergeSubgraph(subgraph);
     }
+ 
     
-    
-    @Override
-    protected Map<String, AInstructionCDFGNode> visitControlIfSubgraph(InstructionCDFGControlFlowIf subgraph) {
-        
-        return super.visitControlIfSubgraph((InstructionCDFGControlFlowIf) this.convertIftoIfElse(subgraph));
-    }
-    
-     public void resolveInputs(AInstructionCDFGSubgraph subgraph) {
+     public Map<String, Integer> resolveInputs(Map<String, Integer> UIDMap, AInstructionCDFGSubgraph subgraph) {
+         
+         Map<String, Integer> newUIDMap = new HashMap<>();
+         newUIDMap.putAll(UIDMap);
          
          subgraph.getInputs().forEach(input -> {
-             this.SSAMap.putIfAbsent(input.getReference(), 0);
-             input.setUID(String.valueOf(this.SSAMap.get(input.getReference())));
+             
+             newUIDMap.putIfAbsent(input.getReference(), 0);
+             input.setUID(String.valueOf(newUIDMap.get(input.getReference())));
+         
          });
          
+         return newUIDMap;
      }
      
-     public void resolveOutputs(AInstructionCDFGSubgraph subgraph) {
+     public Map<String, Integer> resolveOutputs(Map<String, Integer> UIDMap, AInstructionCDFGSubgraph subgraph) {
+         
+         Map<String, Integer> newUIDMap = new HashMap<>();
+         newUIDMap.putAll(UIDMap);
+         
          subgraph.getOutputs().forEach(output -> {
-             this.SSAMap.putIfAbsent(output.getReference(), 0);
-             output.setUID(String.valueOf(this.SSAMap.get(output.getReference())));
+             
+             UIDMap.putIfAbsent(output.getReference(), 0);
+             output.setUID(String.valueOf(UIDMap.get(output.getReference())));
+         
          });
-     }
-     
-     public void addNewAssignment() {
          
+         return newUIDMap;
      }
      
-     public void renameOutput(Map<String, Integer> UIDs, InstructionCDFGDataFlowSubgraph subgraph) {
-         /*
-         UIDs.forEach((reference, uid) -> {
-             subgraph.getOu
+     public void addNewAssignments(Map<String, String> newAssignments, InstructionCDFGDataFlowSubgraph subgraph) {
+         
+         newAssignments.forEach((input, output) -> {
+             
+             InstructionCDFGVariableNode inputNode = new InstructionCDFGVariableNode(input);
+             InstructionCDFGVariableNode outputNode = new InstructionCDFGVariableNode(output);
+             InstructionCDFGAssignmentNode assignmentNode = new InstructionCDFGAssignmentNode();
+             
+             subgraph.addVertices(Set.of(inputNode, outputNode, assignmentNode));
+             subgraph.addEdge(inputNode, assignmentNode, new InstructionCDFGEdge());
+             subgraph.addEdge(assignmentNode, outputNode, new InstructionCDFGEdge());
+             
          });
-         */
+         
      }
-     
-     public AInstructionCDFGSubgraph convertIftoIfElse(InstructionCDFGControlFlowIf subgraph) {
-         
-         AInstructionCDFGSubgraph newSubgraph =  new InstructionCDFGControlFlowIfElse(subgraph.getMerge(), subgraph.getUIDMap());
-         
-         this.icdfg.addVertex(newSubgraph);
-         
-         this.icdfg.getVerticesBefore(subgraph).forEach(before -> this.icdfg.addEdge(before, newSubgraph, this.icdfg.getEdge(before, subgraph).duplicate()));
-
-         
-         this.icdfg.addControlEdgesTo(newSubgraph, this.icdfg.getTruePath(subgraph), this.icdfg.getFalsePath(subgraph));
-         
-         subgraph.copyVerticesTo(newSubgraph);
-         
-         //this.icdfg.removeVertex(subgraph);
-         
-
-         return subgraph;
-     }
-     
-     
+  
 }
