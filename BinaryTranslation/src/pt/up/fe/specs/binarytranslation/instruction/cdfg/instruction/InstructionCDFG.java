@@ -67,6 +67,13 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         return this.instruction;
     }
     
+    public void refresh() {
+        this.generateInputs();
+        this.generateOutputs();
+        this.generateDataInputs();
+        this.generateDataOutputs();
+    }
+    
     public boolean isControlFlowConditionNode(AInstructionCDFGSubgraph node) {
         return this.getVerticesAfter(node).stream().anyMatch(next -> next instanceof AInstructionCDFGControlFlowSubgraph);
     }
