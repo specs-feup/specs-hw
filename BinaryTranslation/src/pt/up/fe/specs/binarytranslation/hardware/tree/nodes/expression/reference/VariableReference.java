@@ -47,7 +47,7 @@ public class VariableReference extends HardwareExpression {
      */
     public VariableReference(VariableDeclaration declaration) {
         super();
-        this.name = declaration.getAsString();
+        this.name = declaration.getVariableName();
         this.type = HardwareNodeType.VariableReference;
     }
 

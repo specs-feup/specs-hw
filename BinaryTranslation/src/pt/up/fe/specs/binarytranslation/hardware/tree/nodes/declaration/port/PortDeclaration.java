@@ -13,28 +13,16 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.VariableDeclaration;
 
-public class PortDeclaration extends VariableDeclaration {
+public abstract class PortDeclaration extends VariableDeclaration {
 
     // private final int portWidth;
     // private final String portname;
     private final ModulePortDirection direction;
 
-    /*
-     * Plain constructor
-     */
-    /*  public PortDeclaration(String portName, int portWidth, ModulePortDirection direction) {
-        super();
-        this.portname = portName;
-        this.portWidth = portWidth;
-        this.direction = direction;
-        this.type = HardwareNodeType.PortDeclaration;
-    }*/
-
-    public PortDeclaration(VariableDeclaration port, ModulePortDirection direction) {
+    protected PortDeclaration(VariableDeclaration port, ModulePortDirection direction) {
         this.addChild(port);
         this.direction = direction;
     }
@@ -90,24 +78,16 @@ public class PortDeclaration extends VariableDeclaration {
     */
     @Override
     public String getVariableName() {
-        // return this.portname;
         return ((VariableDeclaration) this.getChild(0)).getVariableName();
     }
 
     @Override
-    public String getAsString() {
-        /*if (this.portWidth > 1)
-            return this.direction.toString() + " "
-                    + "[" + (this.portWidth - 1) + " : 0] " + this.portname + ";";
-        else
-            return this.direction.toString() + " " + this.portname + ";";
-            */
-        return this.direction.toString() + " " + ((VariableDeclaration) this.getChild(0)).getAsString();
+    public int getVariableWidth() {
+        return ((VariableDeclaration) this.getChild(0)).getVariableWidth();
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
-        // return new PortDeclaration(this.portname, this.portWidth, this.direction);
-        return new PortDeclaration((VariableDeclaration) this.getChild(0), this.direction);
+    public String getAsString() {
+        return this.direction.toString() + " " + ((VariableDeclaration) this.getChild(0)).getAsString();
     }
 }

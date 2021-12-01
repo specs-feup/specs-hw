@@ -17,6 +17,8 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference
 
 public abstract class VariableDeclaration extends HardwareDeclaration {
 
+    public abstract int getVariableWidth();
+
     public abstract String getVariableName();
 
     @Override

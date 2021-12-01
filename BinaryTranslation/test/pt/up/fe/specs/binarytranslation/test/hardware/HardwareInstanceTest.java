@@ -31,22 +31,14 @@ public class HardwareInstanceTest {
 
     @Test
     public void testHardwareFast() {
-        /*var root = new HardwareRootNode();
-        var header = new FileHeader();
-        root.addChild(header);*/
-
-        var newVar1 = new VariableReference("cenas1");
-        var newVar2 = new VariableReference("cenas2");
+        var portA = new InputPortDeclaration("cenas1", 8);
+        var portB = new InputPortDeclaration("cenas2", 8);
         var module = new VerilogModuleTree("testAdder");
-        module.addDeclaration((new InputPortDeclaration(newVar1, 8)));
-        module.addDeclaration((new InputPortDeclaration(newVar2, 8)));
-
-        module.getModule().addChild(
-                new ContinuousStatement(newVar1, new AdditionExpression(newVar1, newVar2)));
-
+        module.addDeclaration(portA).addDeclaration(portB);
+        module.addStatement(
+                new ContinuousStatement(portA.getReference(),
+                        new AdditionExpression(portA.getReference(), portB.getReference())));
         module.emit();
-
-        // var v = new VerilogModule(instanceName, moduleName, tree);
     }
 
     @Test

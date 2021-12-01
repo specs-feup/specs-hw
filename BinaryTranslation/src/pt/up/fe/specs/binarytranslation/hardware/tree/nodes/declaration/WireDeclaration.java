@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
@@ -31,6 +31,11 @@ public class WireDeclaration extends VariableDeclaration {
     @Override
     public String getVariableName() {
         return this.wireName;
+    }
+
+    @Override
+    public int getVariableWidth() {
+        return this.numBits;
     }
 
     @Override
