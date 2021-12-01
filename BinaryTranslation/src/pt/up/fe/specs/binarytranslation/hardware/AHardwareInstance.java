@@ -45,23 +45,21 @@ public abstract class AHardwareInstance implements HardwareInstance {
      * Must be implemented by children on a case by case basis
      * (i.e., which node is the root of the port declarations?)
      */
+    @Override
     public List<PortDeclaration> getPorts() {
         throw new NotImplementedException("HardwareInstance: getPorts()");
     }
-
-    /*
-    public List<PortDeclaration> getPorts() {
-        return this.getTree().getRoot().getChild(1).getChild(0).getChildren(); // ???
-    }*/
 
     private List<PortDeclaration> getPorts(Predicate<PortDeclaration> port) {
         return this.getPorts().stream().filter(port).collect(Collectors.toList());
     }
 
+    @Override
     public List<PortDeclaration> getInputPorts() {
         return this.getPorts(port -> port.getDirection() == ModulePortDirection.input); // TODO: inout?
     }
 
+    @Override
     public List<PortDeclaration> getOutputPorts() {
         return this.getPorts(port -> port.getDirection() == ModulePortDirection.output);
     }

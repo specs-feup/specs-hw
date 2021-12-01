@@ -14,7 +14,6 @@
 package pt.up.fe.specs.binarytranslation.hardware.testbench;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -32,9 +31,9 @@ public class VerilatorTestbenchGenerator {
         templatecontent.replace("<TESTBENCHNAME>", moduleName + "_tb");
         templatecontent.replace("<NUMBEROFSAMPLES>", String.valueOf(samples));
 
-        var fd = new File("tmpscript_" + cpuname + "_" + appname + "port" + qemuport + ".gdb");
+        /*var fd = new File("tmpscript_" + cpuname + "_" + appname + "port" + qemuport + ".gdb");
         SpecsIo.write(fd, gdbScript.toString());
-        fd.deleteOnExit();
+        fd.deleteOnExit();*/
 
         try {
             var bw = new BufferedWriter(new OutputStreamWriter(output));

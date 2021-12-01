@@ -17,9 +17,21 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference
 
 public abstract class VariableDeclaration extends HardwareDeclaration {
 
-    public abstract int getVariableWidth();
+    private final int width;
+    private final String name;
 
-    public abstract String getVariableName();
+    protected VariableDeclaration(String name, int width) {
+        this.name = name;
+        this.width = width;
+    }
+
+    public final int getVariableWidth() {
+        return width;
+    }
+
+    public final String getVariableName() {
+        return name;
+    }
 
     @Override
     public String toContentString() {

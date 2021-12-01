@@ -14,8 +14,10 @@
 package pt.up.fe.specs.binarytranslation.hardware;
 
 import java.io.OutputStream;
+import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareTree;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 
 public interface HardwareInstance {
 
@@ -32,5 +34,25 @@ public interface HardwareInstance {
     /*
      * 
      */
+    public String getName();
+
+    /*
+     * 
+     */
     public HardwareTree getTree();
+
+    /*
+     * 
+     */
+    public List<PortDeclaration> getOutputPorts();
+
+    /*
+     * 
+     */
+    public List<PortDeclaration> getInputPorts();
+
+    /*
+     * 
+     */
+    public List<PortDeclaration> getPorts();
 }
