@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes;
 
 public enum HardwareNodeType {
@@ -25,6 +25,7 @@ public enum HardwareNodeType {
     PortDeclaration,
     RegisterDeclaration,
     WireDeclaration,
+    IntegerDeclaration,
 
     // expressions,
     UnimplementedExpression,
@@ -35,24 +36,23 @@ public enum HardwareNodeType {
     RightLogicalShiftExpression,
     RightArithmeticShiftExpression,
     DivisionExpression, // only for testing cannot be used in real hardware !!!
-    
+
     BitWiseAndExpression,
     BitWiseNotExpression,
     BitWiseXorExpression,
     BitWiseOrExpression,
-    
+
     LogicalAndExpression,
     LogicalOrExpression,
     LogicalNotExpression,
-    
+
     EqualsToExpression,
     NotEqualsToExpression,
     GreaterThanExpression,
     LessThanExpression,
     GreaterThanOrEqualsToExpression,
     LessThanOrEqualsToExpression,
-    
-    
+
     ComparsionExpression,
     ImmediateReference,
     VariableReference,
@@ -73,6 +73,5 @@ public enum HardwareNodeType {
     ProceduralBlocking,
     ProceduralNonBlocking,
     IfStatement,
-    IfElseStatement
-    ;
+    IfElseStatement;
 }

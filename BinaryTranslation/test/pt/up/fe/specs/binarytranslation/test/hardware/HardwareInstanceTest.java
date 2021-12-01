@@ -17,13 +17,9 @@ import org.junit.Test;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.RangeSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareRootNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
@@ -43,28 +39,22 @@ public class HardwareInstanceTest {
 
     @Test
     public void testHardwareInstance() {
-        var root = new HardwareRootNode();
-        var header = new FileHeader();
-        root.addChild(header);
-
-        var module = new ModuleDeclaration("testModule");
-        root.addChild(module);
+        var module = new VerilogModuleTree("testModule");
         var a = new InputPortDeclaration("testA", 32);
         var b = new InputPortDeclaration("testB", 32);
         var c = new InputPortDeclaration("testC", 32);
-        module.addChild(a);
-        module.addChild(b);
-        module.addChild(c);
-        var refA = new RangeSelection(new VariableReference(b.getVariableName()), 15);
-        var expr = new AdditionExpression(refA, new VariableReference(c.getVariableName()));
+        module.addDeclaration(a).addDeclaration(b).addDeclaration(c);
+
+        var refA = new RangeSelection(b.getReference(), 15);
+        var expr = new AdditionExpression(refA, c.getReference());
 
         var body = new AlwaysCombBlock("additionblock");
-        module.addChild(body);
-        body.addChild(new ProceduralNonBlockingStatement(new VariableReference(a.getVariableName()), expr));
+        module.addStatement(body);
+        body.addChild(new ProceduralNonBlockingStatement(a.getReference(), expr));
 
         /*
          * Print to console!
          */
-        root.emit(System.out);
+        module.emit();
     }
 }

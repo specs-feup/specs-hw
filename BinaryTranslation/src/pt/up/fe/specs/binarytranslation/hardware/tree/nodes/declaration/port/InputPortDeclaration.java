@@ -15,12 +15,16 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.VariableDeclaration;
 
 public class InputPortDeclaration extends PortDeclaration {
 
     public InputPortDeclaration(String portName, int portWidth) {
-        super(new WireDeclaration(portName, portWidth), ModulePortDirection.input);
+        super(portName, portWidth, ModulePortDirection.input);
+    }
+
+    public InputPortDeclaration(VariableDeclaration declared) {
+        super(declared, ModulePortDirection.input);
     }
 
     private InputPortDeclaration(InputPortDeclaration other) {

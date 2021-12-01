@@ -23,7 +23,6 @@ import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.processes.ProcessRun;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsSystem;
-import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
 
 public class BinaryTranslationUtils {
@@ -244,6 +243,16 @@ public class BinaryTranslationUtils {
         return BinaryTranslationUtils.getSingleOutputLine(pb);
     }
 
+    /*
+     * Get contact info and github repo stuff
+     */
+    public static String getContactInfo() {
+        var info = new StringBuilder();
+        info.append("Available on GitHub at https://github.com/specs-feup/specs-hw\n");
+        info.append("Contacts:\n\tNuno Paulino (nuno.m.paulino@inesctec.pt)\n\tJoão Bispo (jbispo@fe.up.pt)");
+        return info.toString();
+    }
+
     /*.
      * Output compilation flags for a given elf, using a given variant of a GNU based "readelf"
      
@@ -308,7 +317,7 @@ public class BinaryTranslationUtils {
      * Get SPeCS copyright text with current year
      */
     public static String getSPeCSCopyright() {
-        ResourceProvider crtext = BinaryTranslationResource.SPECS_COPYRIGHT_TEXT;
+        var crtext = BinaryTranslationResource.SPECS_COPYRIGHT_TEXT;
         var crreplacer = new Replacer(crtext);
         crreplacer.replace("<THEYEAR>", LocalDateTime.now().getYear());
         return crreplacer.toString();

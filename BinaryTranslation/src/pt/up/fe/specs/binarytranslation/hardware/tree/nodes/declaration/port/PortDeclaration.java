@@ -15,75 +15,27 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.VariableDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 
 public abstract class PortDeclaration extends VariableDeclaration {
 
-    // private final int portWidth;
-    // private final String portname;
     private final ModulePortDirection direction;
 
-    protected PortDeclaration(VariableDeclaration port, ModulePortDirection direction) {
-        this.addChild(port);
+    protected PortDeclaration(String portName, int portWidth, ModulePortDirection direction) {
+        super(portName, portWidth);
         this.direction = direction;
+        this.addChild(new WireDeclaration(portName, portWidth));
+    }
+
+    // TODO eventually deprecate this?
+    protected PortDeclaration(VariableDeclaration declared, ModulePortDirection direction) {
+        super(declared.getVariableName(), declared.getVariableWidth());
+        this.direction = direction;
+        this.addChild(declared);
     }
 
     public ModulePortDirection getDirection() {
         return direction;
-    }
-
-    /*private PortDeclaration(GraphEdge edge, ModulePortDirection direction) {
-        super();
-        this.portWidth = edge.getWidth();
-        this.direction = direction;
-        this.portname = edge.getRepresentation().replace("<", "").replace(">", "").replace("[", "").replace("]", "");
-        // TODO: VERY CLUMSY!!
-        this.type = HardwareNodeType.PortDeclaration;
-    }
-    
-    private PortDeclaration(Operand op, ModulePortDirection direction) {
-        super();
-        this.portWidth = op.getProperties().getWidth();
-        this.direction = direction;
-        this.portname = op.getRepresentation().replace("<", "").replace(">", "").replace("[", "").replace("]", "");
-        // TODO: VERY CLUMSY!!
-        this.type = HardwareNodeType.PortDeclaration;
-    }
-    
-    public static PortDeclaration newInputPort(GraphInput edge) {
-        return new PortDeclaration(edge, ModulePortDirection.input);
-    }
-    
-    public static PortDeclaration newOutputPort(GraphOutput edge) {
-        return new PortDeclaration(edge, ModulePortDirection.output);
-    }
-    
-    public static PortDeclaration newPort(GraphEdge edge) {
-        var dir = (edge.getType() == GraphEdgeType.livein)
-                ? ModulePortDirection.input
-                : ModulePortDirection.output;
-        // TODO: THIS IS STILL UGLY!!
-    
-        return new PortDeclaration(edge, dir);
-    }
-    
-    /*
-     * Used to create a port directly from an operand
-     */
-    /*
-    public static PortDeclaration newPort(Operand op) {
-        var dir = (op.isRead()) ? ModulePortDirection.input : ModulePortDirection.output;
-        // TODO: THIS IS STILL UGLY!!
-        return new PortDeclaration(op, dir);
-    }
-    */
-    @Override
-    public String getVariableName() {
-        return ((VariableDeclaration) this.getChild(0)).getVariableName();
-    }
-
-    @Override
-    public int getVariableWidth() {
-        return ((VariableDeclaration) this.getChild(0)).getVariableWidth();
     }
 
     @Override

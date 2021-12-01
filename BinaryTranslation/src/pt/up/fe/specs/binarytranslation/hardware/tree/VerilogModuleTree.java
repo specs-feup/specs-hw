@@ -56,4 +56,7 @@ public class VerilogModuleTree extends AHardwareTree {
     public ModuleDeclaration getModule() {
         return module;
     }
+
+    // TODO: helpers like "newRegister" which returns the RegisterDeclaration
+    // this helps reduce the verbosity of the "new" keywords in user code
 }

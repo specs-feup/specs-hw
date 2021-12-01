@@ -23,13 +23,6 @@ public class VariableReference extends HardwareExpression {
     // private final VariableDeclaration declaration;
     private final String name;
 
-    @Deprecated
-    public VariableReference(String declaration) {
-        super();
-        this.name = declaration;
-        this.type = HardwareNodeType.VariableReference;
-    }
-
     /*
      * Auxiliary copy constructor
      */
