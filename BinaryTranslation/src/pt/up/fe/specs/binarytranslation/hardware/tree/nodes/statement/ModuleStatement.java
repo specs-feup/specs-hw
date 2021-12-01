@@ -17,7 +17,6 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 
 public class ModuleStatement extends HardwareStatement {
 
@@ -33,22 +32,15 @@ public class ModuleStatement extends HardwareStatement {
         this.moduleName = moduleName;
     }
 
-    public ModuleStatement(HardwareInstance moduleInstance, String moduleName, List<HardwareNode> ports)
+    public ModuleStatement(HardwareInstance moduleDefinition, String instanceName, List<HardwareNode> ports)
             throws IllegalArgumentException {
-        this(moduleInstance, moduleName);
+        this(moduleDefinition, instanceName);
 
         if (ports.size() != this.moduleInstance.getPorts().size()) {
             throw new IllegalArgumentException();
         }
 
         this.addChildren(ports);
-    }
-
-    public ModuleStatement(HardwareInstance moduleInstance, String moduleName, List<HardwareNode> ports,
-            HardwareNode parent) throws IllegalArgumentException {
-        this(moduleInstance, moduleName, ports);
-
-        parent.addChild(this);
     }
 
     @Override
@@ -64,10 +56,9 @@ public class ModuleStatement extends HardwareStatement {
         builder.append(this.moduleInstance.getName() + " ");
         builder.append(this.moduleName + " (\n");
 
-        List<HardwareNode> modulePorts = this.moduleInstance.getPorts();
-
+        var modulePorts = this.moduleInstance.getPorts();
         for (int i = 0; i < modulePorts.size(); i++) {
-            builder.append("\t." + ((PortDeclaration) modulePorts.get(i)).getVariableName() + "("
+            builder.append("\t." + modulePorts.get(i).getVariableName() + "("
                     + this.getChild(i).getAsString() + ")");
 
             if (i != (modulePorts.size() - 1)) {
@@ -80,5 +71,4 @@ public class ModuleStatement extends HardwareStatement {
 
         return builder.toString();
     }
-
 }

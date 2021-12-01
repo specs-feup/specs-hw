@@ -50,7 +50,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
     // private static final String moduleOutputs = "moduleOutputs";
     // private static final String validationCurrentIndex = "index";
 
-    public static AHardwareTestbench generate(HardwareInstance module, int validationDataSize,
+    public static HardwareTestbench generate(HardwareInstance module, int validationDataSize,
             String inputValidationFileName, String outputValidationFileName) {
 
         /*
@@ -91,43 +91,58 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         /*
          * Initial block
          */
-        var initial_block = new InitialBlock();
-        testbenchtree.addStatement(initial_block); // initial block for loading the validation array
-                                                   // files
-        initial_block.addChild(new ProceduralBlockingStatement(new VariableReference(validationCurrentIndex),
-                new ImmediateReference(0, 32)));
-        initial_block
-                .addChild(new ReadMemoryHexadecimalTask(inputValidationFileName, validation_inputs)); // load
-                                                                                                      // input
-                                                                                                      // validation
-                                                                                                      // array
-        initial_block.addChild(
-                new ReadMemoryHexadecimalTask(outputValidationFileName, validation_outputs));// load
-                                                                                             // output
-                                                                                             // validation
-                                                                                             // array
-        initial_block.addChild((new ProceduralBlockingStatement(new VariableReference(verificationOutputSignal),
-                new ImmediateReference(0, 1))));
+        var initialblock = new InitialBlock();
+        testbenchtree.addStatement(initialblock);
+        // initial block for loading the validation array files
 
-        var always_block = testbench.addChild(
-                new AlwaysAtBlock(new PosedgeSignalChange(new VariableReference(verificationStartInputSignal))));
-        always_block.addChild(new ProceduralNonBlockingStatement(new VariableReference(validationCurrentIndex),
-                new AdditionExpression(new VariableReference(validationCurrentIndex), new ImmediateReference(1, 32))));
+        var immediate0_32 = ImmediateReference.Zeroes(32);
+        var block1 = new ProceduralBlockingStatement(validationCurrentIndex.getReference(), immediate0_32);
+        initialblock.addChild(block1);
 
-        var alwaysBlockVerify = testbench.addChild(
-                new AlwaysAtBlock(new NegedgeSignalChange(new VariableReference(verificationStartInputSignal))));
+        // TODO: "inputValidationFileName" should be a File (already verified to exist!) and NOT a string
+        var stat2 = new ReadMemoryHexadecimalTask(inputValidationFileName, validation_inputs);
+        initialblock.addChild(stat2);
+        // load input validation array
 
-        var alwaysBlockVerify_failed = alwaysBlockVerify.addChild(
+        // TODO: "outputValidationFileName" should be a File (already verified to exist!) and NOT a string
+        var stat3 = new ReadMemoryHexadecimalTask(outputValidationFileName, validation_outputs);
+        initialblock.addChild(stat3);
+        // load output validation array
+
+        var immediate0_1 = ImmediateReference.Zeroes(1);
+        var block2 = new ProceduralBlockingStatement(verificationOutputSignal.getReference(), immediate0_1);
+        initialblock.addChild(block2);
+
+        /*
+         * Always block
+         */
+        var posedge1 = new PosedgeSignalChange(verificationStartInputSignal.getReference());
+        var alwaysblock1 = new AlwaysAtBlock(posedge1);
+        testbenchtree.addStatement(alwaysblock1);
+
+        var immediate1_32 = ImmediateReference.Ones(32);
+        var addition1 = new AdditionExpression(validationCurrentIndex.getReference(), immediate1_32);
+        var stat4 = new ProceduralNonBlockingStatement(validationCurrentIndex.getReference(), addition1);
+        alwaysblock1.addChild(stat4);
+
+        /*
+         * Always block
+         */
+        var negedge1 = new NegedgeSignalChange(verificationStartInputSignal.getReference());
+        var alwaysblock2 = new AlwaysAtBlock(negedge1);
+
+        var immediate1_1 = ImmediateReference.Ones(1);
+
+        var ifstat1 = new ProceduralNonBlockingStatement(verificationOutputSignal.getReference(), immediate0_1);
+        var elsestat1 = new ProceduralNonBlockingStatement(verificationOutputSignal.getReference(), immediate1_1);
+        var select = new RangeSelection(
+                new IndexSelection(validationOutputs.getReference(), validationCurrentIndex.getReference()), 32);
+
+        alwaysblock2.addChild(
                 new IfElseStatement(new NotEqualsToExpression(
-                        new VariableReference(moduleOutputs),
-                        new RangeSelection(new IndexSelection(new VariableReference(validationOutputs),
-                                new VariableReference(validationCurrentIndex)), 0, 32)))
-                                        .addIfStatement(new ProceduralNonBlockingStatement(
-                                                new VariableReference(verificationOutputSignal),
-                                                new ImmediateReference(0, 1)))
-                                        .addElseStatement(new ProceduralNonBlockingStatement(
-                                                new VariableReference(verificationOutputSignal),
-                                                new ImmediateReference(1, 1))));
+                        moduleOutputs.getReference(), select))
+                                .addIfStatement(ifstat1)
+                                .addElseStatement(elsestat1));
 
         var subInputs = new ArrayList<HardwareNode>();
 
@@ -138,9 +153,11 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         for (int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32)
             subInputs.add(new RangeSelection(new VariableReference(moduleOutputs), i, i + 32));
 
-        new ModuleStatement(module, module.getName() + "_test", subInputs, testbench);
+        /*
+         * Instantiate the Design Under Test (DUT)
+         */
+        testbenchtree.addStatement(new ModuleStatement(module, module.getName() + "_test", subInputs));
 
         return new HardwareTestbench(module.getName() + "_tb", testbenchtree);
     }
-
 }
