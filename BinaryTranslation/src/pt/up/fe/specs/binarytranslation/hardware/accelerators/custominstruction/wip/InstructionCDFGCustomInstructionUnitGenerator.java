@@ -19,20 +19,19 @@ import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.Instruction
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 
 public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGenerator {
 
-    private VerilogModuleTree module_tree;
+    private VerilogModuleTree moduletree;
     private ModuleDeclaration module;
 
     public AHardwareInstance generateHardware(InstructionCDFG icdfg, String moduleName) {
 
-        this.module_tree = new VerilogModuleTree(moduleName);
-        this.module = module_tree.getModule();
+        this.moduletree = new VerilogModuleTree(moduleName);
+        this.module = moduletree.getModule();
 
         /*
          * don't pass this.module_tree into the constructor of PortDeclarations; 
@@ -41,16 +40,11 @@ public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGene
          * 
          * nmcp
          */
+        for (var in : icdfg.getDataInputsNames())
+            moduletree.addDeclaration(new InputPortDeclaration(in, 32));
 
-        for (var in : icdfg.getDataInputsNames()) {
-            var newport = new InputPortDeclaration(new WireDeclaration(in, 32));
-            module_tree.addDeclaration(newport);
-        }
-
-        for (var out : icdfg.getDataOutputsNames()) {
-            var newport = new OutputPortDeclaration(new WireDeclaration(out, 32));
-            module_tree.addDeclaration(newport);
-        }
+        for (var out : icdfg.getDataOutputsNames())
+            moduletree.addDeclaration(new OutputPortDeclaration(out, 32));
 
         /*
         icdfg.getDataInputsNames().forEach(inputName ->  new InputPortDeclaration(new WireDeclaration(inputName, 32), this.module_tree));
@@ -59,7 +53,7 @@ public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGene
 
         InstructionCDFGConverter.convert(icdfg, this.module.addChild(new AlwaysCombBlock()));
 
-        return new InstructionCDFGCustomInstructionUnit(moduleName, module_tree);
+        return new InstructionCDFGCustomInstructionUnit(moduleName, moduletree);
     }
 
 }

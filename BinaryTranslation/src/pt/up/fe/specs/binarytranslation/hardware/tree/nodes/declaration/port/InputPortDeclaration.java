@@ -13,17 +13,22 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.VariableDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 
 public class InputPortDeclaration extends PortDeclaration {
 
     public InputPortDeclaration(String portName, int portWidth) {
-        this(new WireDeclaration(portName, portWidth));
+        super(new WireDeclaration(portName, portWidth), ModulePortDirection.input);
     }
 
-    public InputPortDeclaration(VariableDeclaration port) {
-        super(port, ModulePortDirection.input);
+    private InputPortDeclaration(InputPortDeclaration other) {
+        this(other.getVariableName(), other.getVariableWidth());
+    }
+
+    @Override
+    public HardwareNode copyPrivate() {
+        return new InputPortDeclaration(this);
     }
 }

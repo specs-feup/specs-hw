@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.HardwareDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
@@ -26,17 +27,26 @@ public class VerilogModuleTree extends AHardwareTree {
 
     public VerilogModuleTree(String moduleName) {
         super();
+
+        // two children of root
         this.header = new FileHeader();
         this.module = new ModuleDeclaration(moduleName);
         this.root.addChild(this.header);
         this.root.addChild(this.module);
 
+        // one child of second child of root
         this.declarations = new DeclarationBlock();
         this.module.addChild(declarations);
     }
 
-    public void addDeclaration(HardwareDeclaration declare) {
-        this.module.getChild(0).addChild(declare);
+    public VerilogModuleTree addDeclaration(HardwareDeclaration declare) {
+        this.declarations.addChild(declare);
+        return this;
+    }
+
+    public VerilogModuleTree addStatement(HardwareNode node) {
+        this.module.addChild(node);
+        return this;
     }
 
     public DeclarationBlock getDeclarations() {
