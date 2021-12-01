@@ -15,6 +15,8 @@ package pt.up.fe.specs.binarytranslation.test.hardware;
 
 import org.junit.Test;
 
+import pt.up.fe.specs.binarytranslation.hardware.VerilogModule;
+import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
@@ -29,12 +31,20 @@ public class HardwareInstanceTest {
     public void testHardwareFast() {
         var portA = new InputPortDeclaration("cenas1", 8);
         var portB = new InputPortDeclaration("cenas2", 8);
-        var module = new VerilogModuleTree("testAdder");
-        module.addDeclaration(portA).addDeclaration(portB);
-        module.addStatement(
+        var tree = new VerilogModuleTree("testAdder");
+        tree.addDeclaration(portA).addDeclaration(portB);
+        tree.addStatement(
                 new ContinuousStatement(portA.getReference(),
                         new AdditionExpression(portA.getReference(), portB.getReference())));
+
+        var module = new VerilogModule("testinstance", "moduleA", tree);
         module.emit();
+
+        /*
+         * test testbench too 
+         */
+        var tb = HardwareTestbenchGenerator.generate(module, 100, "testinput.mem", "testoutput.mem");
+        tb.emit();
     }
 
     @Test

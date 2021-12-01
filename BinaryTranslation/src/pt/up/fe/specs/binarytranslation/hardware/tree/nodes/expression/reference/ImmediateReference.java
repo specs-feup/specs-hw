@@ -37,9 +37,17 @@ public class ImmediateReference extends HardwareExpression {
     public String getAsString() {
         return Integer.toString(this.width) + "'d" + this.value;
     }
-    
+
     @Override
     protected HardwareNode copyPrivate() {
         return new ImmediateReference(this.value, this.width);
+    }
+
+    public static ImmediateReference Zeroes(int numbits) {
+        return new ImmediateReference(0, numbits);
+    }
+
+    public static ImmediateReference Ones(int numbits) {
+        return new ImmediateReference(1, numbits);
     }
 }
