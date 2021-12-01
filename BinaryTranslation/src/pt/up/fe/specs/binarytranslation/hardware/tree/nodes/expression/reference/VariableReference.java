@@ -15,6 +15,7 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.referenc
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.VariableDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
 public class VariableReference extends HardwareExpression {
@@ -22,9 +23,31 @@ public class VariableReference extends HardwareExpression {
     // private final VariableDeclaration declaration;
     private final String name;
 
+    @Deprecated
     public VariableReference(String declaration) {
         super();
         this.name = declaration;
+        this.type = HardwareNodeType.VariableReference;
+    }
+
+    /*
+     * Auxiliary copy constructor
+     */
+    private VariableReference(VariableReference other) {
+        this.name = other.name;
+        this.type = other.type;
+    }
+
+    /*
+     * This should be the ONLY valid constructor, since
+     * we should only be able to reference something we've
+     * declared
+     * (I've also added a "getReference()" method to
+     * any class which inherits from @VariableDeclaration)
+     */
+    public VariableReference(VariableDeclaration declaration) {
+        super();
+        this.name = declaration.getAsString();
         this.type = HardwareNodeType.VariableReference;
     }
 
@@ -35,6 +58,6 @@ public class VariableReference extends HardwareExpression {
 
     @Override
     protected HardwareNode copyPrivate() {
-        return new VariableReference(this.name);
+        return new VariableReference(this);
     }
 }
