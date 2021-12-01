@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
+
 public abstract class VariableDeclaration extends HardwareDeclaration {
 
     public abstract String getVariableName();
@@ -20,5 +22,9 @@ public abstract class VariableDeclaration extends HardwareDeclaration {
     @Override
     public String toContentString() {
         return getAsString();
+    }
+
+    public VariableReference getReference() {
+        return new VariableReference(this);
     }
 }

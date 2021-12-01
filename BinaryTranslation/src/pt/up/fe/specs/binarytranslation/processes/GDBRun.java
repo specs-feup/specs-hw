@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.processes;
 
 import java.io.File;
@@ -134,6 +134,10 @@ public class GDBRun extends StringProcessRun {
         SpecsIo.write(fd, gdbScript.toString());
         fd.deleteOnExit();
         return fd;
+    }
+
+    public void printQEMULaunchArguments() {
+        System.out.println(this.qemurun.getLaunchArguments());
     }
 
     @Override
@@ -360,7 +364,8 @@ public class GDBRun extends StringProcessRun {
 
         // find matching line
         String line = null;
-        while ((line = this.getGDBResponse(1000)) != null && (!SpecsStrings.matches(line, INSTPATTERN)))
+        while ((line = this.getGDBResponse(1000)) != null
+                && (!SpecsStrings.matches(line, INSTPATTERN)))
             ;
 
         if (line != null) {

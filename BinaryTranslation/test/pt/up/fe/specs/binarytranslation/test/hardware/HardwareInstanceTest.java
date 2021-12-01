@@ -10,23 +10,44 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.test.hardware;
 
 import org.junit.Test;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.RangeSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareRootNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareRootNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
 public class HardwareInstanceTest {
+
+    @Test
+    public void testHardwareFast() {
+        /*var root = new HardwareRootNode();
+        var header = new FileHeader();
+        root.addChild(header);*/
+
+        var newVar1 = new VariableReference("cenas1");
+        var newVar2 = new VariableReference("cenas2");
+        var module = new VerilogModuleTree("testAdder");
+        module.addDeclaration((new InputPortDeclaration(newVar1, 8)));
+        module.addDeclaration((new InputPortDeclaration(newVar2, 8)));
+
+        module.getModule().addChild(
+                new ContinuousStatement(newVar1, new AdditionExpression(newVar1, newVar2)));
+
+        module.emit();
+
+        // var v = new VerilogModule(instanceName, moduleName, tree);
+    }
 
     @Test
     public void testHardwareInstance() {
@@ -36,9 +57,9 @@ public class HardwareInstanceTest {
 
         var module = new ModuleDeclaration("testModule");
         root.addChild(module);
-        var a = new PortDeclaration("testA", 32, ModulePortDirection.input);
-        var b = new PortDeclaration("testB", 32, ModulePortDirection.input);
-        var c = new PortDeclaration("testC", 32, ModulePortDirection.output);
+        var a = new InputPortDeclaration("testA", 32);
+        var b = new InputPortDeclaration("testB", 32);
+        var c = new InputPortDeclaration("testC", 32);
         module.addChild(a);
         module.addChild(b);
         module.addChild(c);

@@ -17,8 +17,8 @@ import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionASTConverter;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareCommentNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareErrorMessage;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -70,10 +70,10 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
             // TODO: solve inputs/outputs with same name!
 
             else if (op.isRead())
-                moduletree.addDeclaration(new PortDeclaration(name, width, ModulePortDirection.input));
+                moduletree.addDeclaration(new InputPortDeclaration(name, width));
 
             else if (op.isWrite())
-                moduletree.addDeclaration(new PortDeclaration(name, width, ModulePortDirection.output));
+                moduletree.addDeclaration(new OutputPortDeclaration(name, width));
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////

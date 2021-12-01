@@ -10,10 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.tree;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.*;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.HardwareDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
 
