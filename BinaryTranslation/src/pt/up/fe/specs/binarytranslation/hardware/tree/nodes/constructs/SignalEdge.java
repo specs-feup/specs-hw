@@ -11,14 +11,29 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 
-public abstract class AHardwareStatement extends HardwareNode implements HardwareStatement {
+public abstract class SignalEdge extends HardwareNode {
 
-    protected AHardwareStatement(HardwareNodeType type) {
+    private VariableReference signal;
+
+    public SignalEdge(HardwareNodeType type, VariableReference signal) {
         super(type);
+        this.signal = signal;
+    }
+
+    public VariableReference getSignal() {
+        return signal;
+    }
+
+    protected abstract String getEdge();
+
+    @Override
+    public String getAsString() {
+        return this.getEdge() + " " + this.getChild(0).getAsString();
     }
 }

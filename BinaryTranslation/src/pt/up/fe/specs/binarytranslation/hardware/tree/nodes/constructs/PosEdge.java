@@ -11,37 +11,26 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 
-public class HardwareErrorMessage extends HardwareNode {
+public class PosEdge extends SignalEdge {
 
-    final private String errorText;
-
-    public HardwareErrorMessage(String commentText) {
-        super(HardwareNodeType.ErrorMsg);
-        this.errorText = commentText;
+    public PosEdge(VariableReference signal) {
+        super(HardwareNodeType.PosEdge, signal);
     }
 
     @Override
-    public String getAsString() {
-        return "$error(\"" + errorText + "\");";
+    protected String getEdge() {
+        return "posedge";
     }
 
     @Override
-    public String toContentString() {
-        return this.getAsString();
-    }
-
-    @Override
-    protected HardwareErrorMessage copyPrivate() {
-        return new HardwareErrorMessage(this.errorText);
-    }
-
-    @Override
-    public HardwareErrorMessage copy() {
-        return (HardwareErrorMessage) super.copy();
+    protected HardwareNode copyPrivate() {
+        var signalReferenceCopy = (VariableReference) this.getSignal().copy();
+        return new PosEdge(signalReferenceCopy);
     }
 }

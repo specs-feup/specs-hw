@@ -1,25 +1,20 @@
 /**
- *  Copyright 2021 SPeCS.
+ * Copyright 2021 SPeCS.
  * 
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  * 
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *  under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License. under the License.
  */
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -64,63 +59,61 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operat
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.comparison.InstructionCDFGLessThanOrEqualsToNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.comparison.InstructionCDFGNotEqualsToNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.logical.InstructionCDFGLogicalAndNode;
-import pt.up.fe.specs.util.SpecsLogs;
 
-public class HardwareNodeExpressionMap{
+public class HardwareNodeExpressionMap {
 
     public static final Map<Class<? extends AInstructionCDFGNode>, Class<? extends HardwareExpression>> MAP;
 
-    public static HardwareExpression generate(Class<? extends AInstructionCDFGNode> key, List<HardwareExpression> operand ) throws IllegalArgumentException{
-        
-        if(operand.size() > 2) {
+    public static HardwareExpression generate(Class<? extends AInstructionCDFGNode> key,
+            List<HardwareExpression> operand) throws IllegalArgumentException {
+
+        if (operand.size() > 2) {
             throw new IllegalArgumentException();
         }
-        
+
         try {
- 
+
             Constructor<? extends HardwareExpression> constructor;
-            
-            if(operand.size() == 1) {
-                if(key.equals(InstructionCDFGAssignmentNode.class)) {
+
+            if (operand.size() == 1) {
+                if (key.equals(InstructionCDFGAssignmentNode.class)) {
                     constructor = MAP.get(key).getConstructor(String.class);
-                }else {
+                } else {
                     constructor = MAP.get(key).getConstructor(HardwareExpression.class);
                 }
-            }else {
-                constructor = MAP.get(key).getConstructor(HardwareExpression.class,HardwareExpression.class);
+            } else {
+                constructor = MAP.get(key).getConstructor(HardwareExpression.class, HardwareExpression.class);
             }
-            
-            if(constructor == null) {
+
+            if (constructor == null) {
                 throw new IllegalArgumentException();
             }
-            
-            if(operand.size() == 1) {
-                
-                if(key.equals(InstructionCDFGAssignmentNode.class)) {
-                    return  constructor.newInstance(operand.get(0).getAsString());
+
+            if (operand.size() == 1) {
+
+                if (key.equals(InstructionCDFGAssignmentNode.class)) {
+                    return constructor.newInstance(operand.get(0).getAsString());
                 }
-                
-                return  constructor.newInstance(operand.get(0));
-            }else {
-                return  constructor.newInstance(operand.get(0), operand.get(1));
+
+                return constructor.newInstance(operand.get(0));
+            } else {
+                return constructor.newInstance(operand.get(0), operand.get(1));
             }
-            
-            
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            //SpecsLogs.msgWarn("Error message:\n", e);
+
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException
+                | SecurityException e) {
+            // SpecsLogs.msgWarn("Error message:\n", e);
             return null;
         }
-        
+
     }
-    
-    
-    
+
     static {
-        
+
         var map = new HashMap<Class<? extends AInstructionCDFGNode>, Class<? extends HardwareExpression>>();
-        
+
         map.put(InstructionCDFGAssignmentNode.class, VariableReference.class);
-        
+
         map.put(InstructionCDFGAdditionNode.class, AdditionExpression.class);
         map.put(InstructionCDFGSubtractionNode.class, SubtractionExpression.class);
         map.put(InstructionCDFGMultiplicationNode.class, MultiplicationExpression.class);
@@ -128,22 +121,21 @@ public class HardwareNodeExpressionMap{
         map.put(InstructionCDFGShiftRightArithmeticNode.class, RightArithmeticShiftExpression.class);
         map.put(InstructionCDFGShiftRightLogicalNode.class, RightLogicalShiftExpression.class);
         map.put(InstructionCDFGDivisionNode.class, DivisionExpression.class);
-        
+
         map.put(InstructionCDFGBitwiseAndNode.class, BitWiseAndExpression.class);
         map.put(InstructionCDFGBitwiseOrNode.class, BitWiseOrExpression.class);
         map.put(InstructionCDFGBitwiseXorNode.class, BitWiseXorExpression.class);
         map.put(InstructionCDFGBitwiseNotNode.class, BitWiseNotExpression.class);
-        
+
         map.put(InstructionCDFGLogicalAndNode.class, LogicalAndExpression.class);
-        
+
         map.put(InstructionCDFGEqualsToNode.class, EqualsToExpression.class);
         map.put(InstructionCDFGNotEqualsToNode.class, NotEqualsToExpression.class);
         map.put(InstructionCDFGLessThanNode.class, LessThanExpression.class);
         map.put(InstructionCDFGGreaterThanNode.class, GreaterThanExpression.class);
         map.put(InstructionCDFGLessThanOrEqualsToNode.class, LessThanOrEqualsToExpression.class);
         map.put(InstructionCDFGGreaterThanOrEqualsToNode.class, GreaterThanOrEqualsToExpression.class);
-        
-        
+
         MAP = Collections.unmodifiableMap(map);
     }
 }

@@ -19,7 +19,7 @@ import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class ModuleInstance extends AHardwareStatement {
+public class ModuleInstance extends HardwareStatement {
 
     private HardwareInstance moduleInstance;
     private String moduleName;
@@ -46,8 +46,13 @@ public class ModuleInstance extends AHardwareStatement {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected ModuleInstance copyPrivate() {
         return new ModuleInstance(this.moduleInstance, this.moduleName);
+    }
+
+    @Override
+    public ModuleInstance copy() {
+        return (ModuleInstance) super.copy();
     }
 
     @Override

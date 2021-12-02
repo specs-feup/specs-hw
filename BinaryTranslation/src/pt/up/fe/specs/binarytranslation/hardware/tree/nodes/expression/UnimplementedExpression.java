@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareErrorMessage;
 
@@ -42,7 +41,12 @@ public class UnimplementedExpression extends HardwareExpression {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
-        return new UnimplementedExpression((HardwareErrorMessage) this.getChild(0));
+    protected UnimplementedExpression copyPrivate() {
+        return new UnimplementedExpression(this.getChild(HardwareErrorMessage.class, 0));
+    }
+
+    @Override
+    public UnimplementedExpression copy() {
+        return (UnimplementedExpression) super.copy();
     }
 }

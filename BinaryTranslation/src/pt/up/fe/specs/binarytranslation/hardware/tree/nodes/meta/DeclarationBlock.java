@@ -29,7 +29,12 @@ public class DeclarationBlock extends HardwareNode {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected DeclarationBlock copyPrivate() {
         return new DeclarationBlock();
+    }
+
+    @Override
+    public DeclarationBlock copy() {
+        return (DeclarationBlock) super.copy();
     }
 }

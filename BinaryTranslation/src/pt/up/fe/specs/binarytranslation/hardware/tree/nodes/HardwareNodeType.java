@@ -20,6 +20,8 @@ public enum HardwareNodeType {
     AlwaysFF, // equivalent to Always @
     Always,
     Initial,
+    PosEdge,
+    NegEdge,
 
     // declarations
     ModuleDeclaration, // this is the definition of a module body
@@ -80,5 +82,13 @@ public enum HardwareNodeType {
     ProceduralNonBlocking,
     ForLoop,
     IfStatement,
-    IfElseStatement;
+    IfElseStatement,
+
+    // tasks
+    AssertTask,
+    ReadMemoryHexTask,
+    ReadMemoryBinaryTask,
+    SignedTask,
+    FinishTask,
+    DisplayTask;
 }

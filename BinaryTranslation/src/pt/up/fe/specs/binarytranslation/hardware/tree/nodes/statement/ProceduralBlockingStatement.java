@@ -10,10 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
@@ -40,7 +39,12 @@ public class ProceduralBlockingStatement extends ASingleStatement {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected ProceduralBlockingStatement copyPrivate() {
         return new ProceduralBlockingStatement();
+    }
+
+    @Override
+    public ProceduralBlockingStatement copy() {
+        return (ProceduralBlockingStatement) super.copy();
     }
 }

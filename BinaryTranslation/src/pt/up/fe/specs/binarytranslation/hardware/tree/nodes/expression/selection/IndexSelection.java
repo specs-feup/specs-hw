@@ -13,9 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 
 public class IndexSelection extends HardwareExpression {
@@ -24,18 +24,18 @@ public class IndexSelection extends HardwareExpression {
         super(HardwareNodeType.IndexSelection);
     }
 
-    public IndexSelection(HardwareNode var, VariableReference index) {
+    public IndexSelection(VariableReference var, ImmediateReference index) {
         this();
         this.addChild(index);
         this.addChild(var);
     }
 
-    public HardwareNode getIndex() {
-        return this.getChild(0);
+    public ImmediateReference getIndex() {
+        return this.getChild(ImmediateReference.class, 0);
     }
 
-    public HardwareNode getVar() {
-        return this.getChild(1);
+    public VariableReference getVar() {
+        return this.getChild(VariableReference.class, 1);
     }
 
     @Override
@@ -44,7 +44,12 @@ public class IndexSelection extends HardwareExpression {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
-        return new IndexSelection(this.getVar(), (VariableReference) this.getIndex());
+    protected IndexSelection copyPrivate() {
+        return new IndexSelection(this.getVar(), this.getIndex());
+    }
+
+    @Override
+    public IndexSelection copy() {
+        return (IndexSelection) super.copy();
     }
 }

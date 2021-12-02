@@ -30,7 +30,12 @@ public class HardwareAnchorNode extends HardwareNode {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected HardwareAnchorNode copyPrivate() {
         return new HardwareAnchorNode();
+    }
+
+    @Override
+    public HardwareAnchorNode copy() {
+        return (HardwareAnchorNode) super.copy();
     }
 }

@@ -14,15 +14,11 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.util.treenode.TreeNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-/**
- * Used only to provide typing for subclasses of @HardwareNode (Extension of @TreeNode<@HardwareNode> required to comply
- * with abstract class @HardwareNode)
- * 
- * @author nuno
- *
- */
-public interface HardwareStatement extends TreeNode<HardwareNode> {
+public abstract class HardwareStatement extends HardwareNode {
 
+    protected HardwareStatement(HardwareNodeType type) {
+        super(type);
+    }
 }

@@ -15,48 +15,49 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareAnchorNode;
 
-public class IfElseStatement extends AHardwareStatement {
+public class IfElseStatement extends HardwareStatement {
 
-    public IfElseStatement(HardwareExpression expr) {
+    /*
+     * empty node to hold list of statements
+     */
+    private HardwareAnchorNode iflist, elselist;
+
+    public IfElseStatement(HardwareExpression condition) {
         super(HardwareNodeType.IfElseStatement);
-        this.addChild(expr); // Condition of the if/else statement
+        this.iflist = new HardwareAnchorNode();
+        this.elselist = new HardwareAnchorNode();
+
+        this.addChild(condition); // Condition of the if/else statement
 
         // True condition statement list
-        this.addChild(new HardwareAnchorNode()); // will hold children which are individual statements
+        this.addChild(iflist); // will hold children which are individual statements
 
         // False condition statement list
-        this.addChild(new HardwareAnchorNode()); // will hold children which are individual statements
+        this.addChild(elselist); // will hold children which are individual statements
     }
 
-    public IfElseStatement addIfStatement(HardwareStatement stat) {
-        ((StatementList) this.getChild(1)).addStatement(stat);
-        return this;
+    public void addIfStatement(HardwareStatement stat) {
+        this.iflist.addChild(stat);
     }
 
-    public IfElseStatement addElseStatement(HardwareStatement stat) {
-        ((StatementList) this.getChild(2)).addStatement(stat);
-        return this;
+    public void addElseStatement(HardwareStatement stat) {
+        this.elselist.addChild(stat);
     }
 
     public HardwareExpression getCondition() {
         return (HardwareExpression) this.getChild(0);
     }
 
-    private List<HardwareStatement> getStatements(HardwareNode path) {
-        return ((StatementList) path).getStatements();
-    }
-
     public List<HardwareStatement> getIfStatements() {
-        return this.getStatements(this.getChild(1));
+        return iflist.getChildren(HardwareStatement.class);
     }
 
     public List<HardwareStatement> getElseStatements() {
-        return this.getStatements(this.getChild(2));
+        return elselist.getChildren(HardwareStatement.class);
     }
 
     @Override
@@ -87,7 +88,12 @@ public class IfElseStatement extends AHardwareStatement {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected IfElseStatement copyPrivate() {
         return new IfElseStatement(this.getCondition());
+    }
+
+    @Override
+    public IfElseStatement copy() {
+        return (IfElseStatement) super.copy();
     }
 }
