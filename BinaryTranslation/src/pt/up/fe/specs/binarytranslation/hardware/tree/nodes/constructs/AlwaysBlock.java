@@ -24,20 +24,20 @@ public class AlwaysBlock extends HardwareNode {
 
     @Override
     public String getAsString() {
-
-        StringBuilder builder = new StringBuilder();
-
+        var builder = new StringBuilder();
         builder.append("always begin\n");
-
         this.getChildren().forEach(child -> builder.append("\t" + child.getAsString() + "\n"));
-
         builder.append("end\n");
-
         return builder.toString();
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected AlwaysBlock copyPrivate() {
         return new AlwaysBlock();
+    }
+
+    @Override
+    public AlwaysBlock copy() {
+        return (AlwaysBlock) super.copy();
     }
 }

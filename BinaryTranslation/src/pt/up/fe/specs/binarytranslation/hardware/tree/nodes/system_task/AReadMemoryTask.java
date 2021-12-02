@@ -67,7 +67,7 @@ public abstract class AReadMemoryTask extends HardwareNode {
         var builder = new StringBuilder();
         builder.append("(");
         builder.append("\"" + this.getFileName() + "\",");
-        builder.append(this.getArray().getVariableName());
+        builder.append(this.getArray().getVariable().getVariableName());
 
         if (this.hasBoundaries()) {
             builder.append("," + String.valueOf(this.getStartAddress()));

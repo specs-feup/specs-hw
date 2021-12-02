@@ -15,18 +15,18 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
 
 public abstract class SignalEdge extends HardwareNode {
 
-    private VariableReference signal;
+    private IdentifierReference signal;
 
-    public SignalEdge(HardwareNodeType type, VariableReference signal) {
+    public SignalEdge(HardwareNodeType type, IdentifierReference signal) {
         super(type);
         this.signal = signal;
     }
 
-    public VariableReference getSignal() {
+    public IdentifierReference getSignal() {
         return signal;
     }
 
@@ -35,5 +35,13 @@ public abstract class SignalEdge extends HardwareNode {
     @Override
     public String getAsString() {
         return this.getEdge() + " " + this.getChild(0).getAsString();
+    }
+
+    @Override
+    protected abstract SignalEdge copyPrivate();
+
+    @Override
+    public SignalEdge copy() {
+        return (SignalEdge) super.copy();
     }
 }

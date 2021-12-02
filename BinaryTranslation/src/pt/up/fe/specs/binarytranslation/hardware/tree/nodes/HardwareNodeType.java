@@ -32,7 +32,6 @@ public enum HardwareNodeType {
     IntegerDeclaration,
     ArrayDeclaration,
     TimeScaleDeclaration,
-    DelayDeclaration,
 
     // expressions,
     UnimplementedExpression,
@@ -62,7 +61,7 @@ public enum HardwareNodeType {
 
     ComparsionExpression,
     ImmediateReference,
-    VariableReference,
+    IdentifierReference,
     ParenthesisExpression,
     RangeSelection,
     IndexSelection,
@@ -83,6 +82,7 @@ public enum HardwareNodeType {
     ForLoop,
     IfStatement,
     IfElseStatement,
+    DelayStatement,
 
     // tasks
     AssertTask,

@@ -13,9 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
 
 public class ModuleDeclaration extends HardwareDeclaration {
 
@@ -36,23 +36,25 @@ public class ModuleDeclaration extends HardwareDeclaration {
         var builder = new StringBuilder();
         builder.append("\nmodule " + this.moduleName);
 
-        if (!this.getChild(0).getChildren().isEmpty()) {
+        /*
+         * Get only the names of the ports
+         */
+        var declarations = this.getChild(DeclarationBlock.class, 0);
+        if (declarations != null) {
 
             builder.append(" (");
-
-            this.getChild(0).getChildren().forEach(child -> {
-                builder.append(((PortDeclaration) child).getVariableName() + ",");
+            var ports = declarations.getChildren(PortDeclaration.class);
+            ports.forEach(port -> {
+                builder.append(port.getVariableName() + ",");
             });
-
             builder.deleteCharAt(builder.length() - 1).append(")");
         }
-
         builder.append(";\n\n");
 
         /*
          * The children should be port declarations, followed by body (?)
          */
-        for (HardwareNode comp : this.getChildren()) {
+        for (var comp : this.getChildren()) {
             builder.append(comp.getAsString() + "\n");
         }
 
@@ -66,7 +68,12 @@ public class ModuleDeclaration extends HardwareDeclaration {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected ModuleDeclaration copyPrivate() {
         return new ModuleDeclaration(this.moduleName);
+    }
+
+    @Override
+    public ModuleDeclaration copy() {
+        return (ModuleDeclaration) super.copy();
     }
 }

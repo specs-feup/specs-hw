@@ -11,25 +11,27 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class MultiplicationExpression extends ABinaryHardwareExpression {
+public abstract class HardwareOperator extends HardwareExpression {
 
-    public MultiplicationExpression(HardwareExpression varA, HardwareExpression varB) {
-        super("*", HardwareNodeType.MultiplicationExpression, varA, varB);
+    public HardwareOperator(HardwareNodeType type) {
+        super(type);
     }
 
     @Override
-    protected MultiplicationExpression copyPrivate() {
-        return new MultiplicationExpression(this.getLeft().copy(), this.getRight().copy());
-    }
+    protected abstract HardwareOperator copyPrivate();
 
     @Override
-    public MultiplicationExpression copy() {
-        return (MultiplicationExpression) super.copy();
+    public HardwareOperator copy() {
+        return (HardwareOperator) super.copy();
     }
+
+    /*
+     * Should return identifier names or immediate values
+     */
+    protected abstract String getValue();
 }

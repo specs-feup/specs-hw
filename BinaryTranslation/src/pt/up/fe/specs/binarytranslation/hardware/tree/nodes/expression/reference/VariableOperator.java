@@ -11,30 +11,26 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
 
-public class NegEdge extends SignalEdge {
+public abstract class VariableOperator extends HardwareOperator {
 
-    public NegEdge(IdentifierReference signal) {
-        super(HardwareNodeType.NegEdge, signal);
+    public VariableOperator(HardwareNodeType type) {
+        super(type);
     }
 
     @Override
-    protected String getEdge() {
-        return "negedge";
+    protected abstract VariableOperator copyPrivate();
+
+    @Override
+    public VariableOperator copy() {
+        return (VariableOperator) super.copy();
     }
 
     @Override
-    protected NegEdge copyPrivate() {
-        var signalReferenceCopy = this.getSignal().copy();
-        return new NegEdge(signalReferenceCopy);
-    }
-
-    @Override
-    public NegEdge copy() {
-        return (NegEdge) super.copy();
+    protected String getValue() {
+        return this.getAsString();
     }
 }

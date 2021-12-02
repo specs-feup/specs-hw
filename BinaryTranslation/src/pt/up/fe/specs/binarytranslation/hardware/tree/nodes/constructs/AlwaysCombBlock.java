@@ -50,4 +50,9 @@ public class AlwaysCombBlock extends HardwareNode {
     protected HardwareNode copyPrivate() {
         return new AlwaysCombBlock(this.blockName);
     }
+
+    @Override
+    public AlwaysCombBlock copy() {
+        return (AlwaysCombBlock) super.copy();
+    }
 }

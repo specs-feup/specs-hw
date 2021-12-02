@@ -23,23 +23,25 @@ public class InitialBlock extends HardwareNode {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    public String getAsString() {
+
+        var builder = new StringBuilder();
+        builder.append("\ninitial begin\n");
+
+        for (var child : this.getChildren())
+            builder.append("\t" + child.getAsString() + "\n");
+
+        builder.append("end\n");
+        return builder.toString();
+    }
+
+    @Override
+    protected InitialBlock copyPrivate() {
         return new InitialBlock();
     }
 
     @Override
-    public String getAsString() {
-
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("\ninitial begin\n");
-
-        for (var child : this.getChildren()) {
-            builder.append("\t" + child.getAsString() + "\n");
-        }
-
-        builder.append("end\n");
-
-        return builder.toString();
+    public InitialBlock copy() {
+        return (InitialBlock) super.copy();
     }
 }

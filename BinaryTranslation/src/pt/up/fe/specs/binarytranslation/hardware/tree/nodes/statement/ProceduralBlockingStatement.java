@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
 
 public class ProceduralBlockingStatement extends ASingleStatement {
 
@@ -23,7 +23,7 @@ public class ProceduralBlockingStatement extends ASingleStatement {
         super(HardwareNodeType.ProceduralBlocking);
     }
 
-    public ProceduralBlockingStatement(VariableReference target, HardwareExpression expression) {
+    public ProceduralBlockingStatement(IdentifierReference target, HardwareExpression expression) {
         super(HardwareNodeType.ProceduralBlocking, target, expression);
     }
 

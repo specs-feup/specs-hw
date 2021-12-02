@@ -11,29 +11,27 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 
-public class RangeSelection extends HardwareExpression {
+public class RangedSelection extends VariableOperator {
 
     private int lower, upper;
 
-    public RangeSelection(VariableReference var, int lower, int upper) {
+    public RangedSelection(VariableOperator namedIdentifier, int lower, int upper) {
         super(HardwareNodeType.RangeSelection);
-        this.addChild(var);
+        this.addChild(namedIdentifier);
         this.lower = lower;
         this.upper = upper;
     }
 
-    public RangeSelection(VariableReference var, int upper) {
+    public RangedSelection(IdentifierReference var, int upper) {
         this(var, 0, upper);
     }
 
-    public VariableReference getVariable() {
-        return this.getChild(VariableReference.class, 0);
+    public IdentifierReference getVariable() {
+        return this.getChild(IdentifierReference.class, 0);
     }
 
     @Override
@@ -42,13 +40,13 @@ public class RangeSelection extends HardwareExpression {
     }
 
     @Override
-    protected RangeSelection copyPrivate() {
+    protected RangedSelection copyPrivate() {
         var copyvar = this.getVariable().copy();
-        return new RangeSelection(copyvar, this.lower, this.upper);
+        return new RangedSelection(copyvar, this.lower, this.upper);
     }
 
     @Override
-    public RangeSelection copy() {
-        return (RangeSelection) super.copy();
+    public RangedSelection copy() {
+        return (RangedSelection) super.copy();
     }
 }

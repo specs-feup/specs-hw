@@ -22,38 +22,40 @@ public class AlwaysFFBlock extends HardwareNode {
 
     // TODO: signal should be of bounded type, like HardwareSignalEdge
 
-    public AlwaysFFBlock(HardwareNode signal) {
+    public AlwaysFFBlock(SignalEdge signal) {
         super(HardwareNodeType.AlwaysFF);
         this.addChild(signal);
     }
 
-    public HardwareNode getSignal() {
-        return this.getChild(0);
-    }
-
-    @Override
-    protected HardwareNode copyPrivate() {
-        return new AlwaysFFBlock(this.getSignal());
+    public SignalEdge getSignal() {
+        return this.getChild(SignalEdge.class, 0);
     }
 
     public List<HardwareNode> getStatements() {
         return this.getChildren().subList(1, this.getChildren().size());
+        // TODO: children should only be statements (or is it expressions???)
     }
 
     @Override
     public String getAsString() {
-        StringBuilder builder = new StringBuilder();
-
+        var builder = new StringBuilder();
         builder.append(super.getAsString());
         builder.append("always_ff @ ( ");
         builder.append(this.getSignal().getAsString());
         builder.append(" ) begin\n");
 
         this.getStatements().forEach(statement -> builder.append("\t" + statement.getAsString() + "\n"));
-
         builder.append("end\n");
-
         return builder.toString();
     }
 
+    @Override
+    protected AlwaysFFBlock copyPrivate() {
+        return new AlwaysFFBlock(this.getSignal());
+    }
+
+    @Override
+    public AlwaysFFBlock copy() {
+        return (AlwaysFFBlock) super.copy();
+    }
 }

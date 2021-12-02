@@ -13,10 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class RegisterDeclaration extends VariableDeclaration {
+public class RegisterDeclaration extends IdentifierDeclaration {
 
     public RegisterDeclaration(String regName, int numBits) {
         super(regName, numBits, HardwareNodeType.RegisterDeclaration);
@@ -36,7 +35,12 @@ public class RegisterDeclaration extends VariableDeclaration {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected RegisterDeclaration copyPrivate() {
         return new RegisterDeclaration(this.getVariableName(), this.getVariableWidth());
+    }
+
+    @Override
+    public RegisterDeclaration copy() {
+        return (RegisterDeclaration) super.copy();
     }
 }

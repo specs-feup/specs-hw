@@ -31,10 +31,10 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.Inp
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.NotEqualsToExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateReference;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.IndexSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.RangeSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IndexedSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.RangedSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
@@ -95,7 +95,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         testbenchtree.addStatement(initialblock);
         // initial block for loading the validation array files
 
-        var immediate0_32 = ImmediateReference.Zeroes(32);
+        var immediate0_32 = ImmediateOperator.Zeroes(32);
         var block1 = new ProceduralBlockingStatement(validationCurrentIndex.getReference(), immediate0_32);
         initialblock.addChild(block1);
 
@@ -109,7 +109,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         initialblock.addChild(stat3);
         // load output validation array
 
-        var immediate0_1 = ImmediateReference.Zeroes(1);
+        var immediate0_1 = ImmediateOperator.Zeroes(1);
         var block2 = new ProceduralBlockingStatement(verificationOutputSignal.getReference(), immediate0_1);
         initialblock.addChild(block2);
 
@@ -120,7 +120,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         var alwaysblock1 = new AlwaysFFBlock(posedge1); // TODO: AlwaysFFBlock.atPosEdge(signal) --> static method?
         testbenchtree.addStatement(alwaysblock1);
 
-        var immediate1_32 = ImmediateReference.Ones(32);
+        var immediate1_32 = ImmediateOperator.Ones(32);
         var addition1 = new AdditionExpression(validationCurrentIndex.getReference(), immediate1_32);
         var stat4 = new ProceduralNonBlockingStatement(validationCurrentIndex.getReference(), addition1);
         alwaysblock1.addChild(stat4);
@@ -131,12 +131,12 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         var negedge1 = new NegEdge(verificationStartInputSignal.getReference());
         var alwaysblock2 = new AlwaysFFBlock(negedge1); // TODO: AlwaysFFBlock.atNegEdge(signal) --> static method?
 
-        var immediate1_1 = ImmediateReference.Ones(1);
+        var immediate1_1 = ImmediateOperator.Ones(1);
 
         var ifstat1 = new ProceduralNonBlockingStatement(verificationOutputSignal.getReference(), immediate0_1);
         var elsestat1 = new ProceduralNonBlockingStatement(verificationOutputSignal.getReference(), immediate1_1);
-        var select = new RangeSelection(
-                new IndexSelection(validationOutputs.getReference(), validationCurrentIndex.getReference()), 32);
+        var index = new IndexedSelection(validationOutputs.getReference(), validationCurrentIndex.getReference());
+        var select = new RangedSelection(index, 32);
 
         // TODO: factory methods like "Verilog.alwaysFF.atPosEdge(signal)... etc"
 
@@ -149,11 +149,11 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         var subInputs = new ArrayList<HardwareNode>();
 
         for (int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32)
-            subInputs.add(new RangeSelection(new IndexSelection(new VariableReference(validationInputs),
-                    new VariableReference(validationCurrentIndex)), i, i + 32));
+            subInputs.add(new RangedSelection(new IndexedSelection(new IdentifierReference(validationInputs),
+                    new IdentifierReference(validationCurrentIndex)), i, i + 32));
 
         for (int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32)
-            subInputs.add(new RangeSelection(new VariableReference(moduleOutputs), i, i + 32));
+            subInputs.add(new RangedSelection(new IdentifierReference(moduleOutputs), i, i + 32));
 
         /*
          * Instantiate the Design Under Test (DUT)

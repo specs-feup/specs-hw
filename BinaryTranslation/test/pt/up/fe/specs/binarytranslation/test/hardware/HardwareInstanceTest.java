@@ -19,13 +19,48 @@ import pt.up.fe.specs.binarytranslation.hardware.VerilogModule;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.RangeSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IndexedSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.RangedSelection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
 public class HardwareInstanceTest {
+
+    @Test
+    public void testOperatorReferences() {
+
+        var decl1 = new RegisterDeclaration("testReg", 32);
+        decl1.emit();
+
+        var imm = new ImmediateOperator(14, 32);
+        imm.emit();
+
+        var ref1 = new IdentifierReference(decl1);
+        ref1.emit();
+
+        var ref1b = decl1.getReference();
+        ref1b.emit();
+
+        // 1d index
+        var index = new IndexedSelection(decl1.getReference(), imm);
+        index.emit();
+
+        // 2d index
+        var index2 = new IndexedSelection(index, imm);
+        index2.emit();
+
+        // 2d index left hand
+        var index3 = new IndexedSelection(imm, index);
+        index3.emit();
+
+        // var select = new RangedReference(index, 32);
+
+    }
 
     @Test
     public void testHardwareFast() {
@@ -55,7 +90,7 @@ public class HardwareInstanceTest {
         var c = new InputPortDeclaration("testC", 32);
         module.addDeclaration(a).addDeclaration(b).addDeclaration(c);
 
-        var refA = new RangeSelection(b.getReference(), 15);
+        var refA = new RangedSelection(b.getReference(), 15);
         var expr = new AdditionExpression(refA, c.getReference());
 
         var body = new AlwaysCombBlock("additionblock");

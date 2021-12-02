@@ -15,10 +15,10 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.VariableDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 
-public abstract class PortDeclaration extends VariableDeclaration {
+public abstract class PortDeclaration extends IdentifierDeclaration {
 
     private final ModulePortDirection direction;
 
@@ -29,7 +29,7 @@ public abstract class PortDeclaration extends VariableDeclaration {
     }
 
     // TODO eventually deprecate this?
-    protected PortDeclaration(VariableDeclaration declared, ModulePortDirection direction) {
+    protected PortDeclaration(IdentifierDeclaration declared, ModulePortDirection direction) {
         super(declared.getVariableName(), declared.getVariableWidth(), HardwareNodeType.PortDeclaration);
         this.direction = direction;
         this.addChild(declared);
@@ -41,6 +41,14 @@ public abstract class PortDeclaration extends VariableDeclaration {
 
     @Override
     public String getAsString() {
-        return this.direction.toString() + " " + ((VariableDeclaration) this.getChild(0)).getAsString();
+        return this.direction.toString() + " " + ((IdentifierDeclaration) this.getChild(0)).getAsString();
+    }
+
+    @Override
+    protected abstract PortDeclaration copyPrivate();
+
+    @Override
+    public PortDeclaration copy() {
+        return (PortDeclaration) super.copy();
     }
 }
