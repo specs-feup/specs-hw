@@ -32,7 +32,8 @@ public class ReporterScheduling extends AReporter {
 
     private int[] alus;
     private int[] memPorts;
-    private boolean useDependencies;
+    private boolean useDependencies = false;
+    private boolean useAGUs = false;
 
     public ReporterScheduling(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams, int[] alus, int[] memPorts,
             boolean useDependencies) {
@@ -72,6 +73,19 @@ public class ReporterScheduling extends AReporter {
     }
     
     public ReporterScheduling(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams, List<Integer> alus,
+            List<Integer> memPorts, boolean useDependencies, boolean useAGUs) {
+        super(elfWindows, streams);
+        this.alus = new int[alus.size()];
+        this.memPorts = new int[memPorts.size()];
+        for (int i = 0; i < alus.size(); i++)
+            this.alus[i] = alus.get(i);
+        for (int i = 0; i < memPorts.size(); i++)
+            this.memPorts[i] = memPorts.get(i);
+        this.useDependencies = useDependencies;
+        this.useAGUs  = useAGUs;
+    }
+    
+    public ReporterScheduling(Map<ZippedELFProvider, Integer[]> elfWindows, HashMap<ZippedELFProvider, HashMap<Integer, ATraceInstructionStream>> streams, List<Integer> alus,
             List<Integer> memPorts, boolean useDependencies, BinarySegmentType type) {
         super(elfWindows, streams, type);
         this.alus = new int[alus.size()];
@@ -82,6 +96,7 @@ public class ReporterScheduling extends AReporter {
             this.memPorts[i] = memPorts.get(i);
         this.useDependencies = useDependencies;
     }
+
 
     @Override
     protected void processResults(ArrayList<DataFlowStatistics> results) {
@@ -160,7 +175,7 @@ public class ReporterScheduling extends AReporter {
     @Override
     public List<DataFlowStatistics> analyzeStream(int[] repetitions, ZippedELFProvider elf, int window,
             ATraceInstructionStream stream) {
-        var analyzer = new SegmentSchedulingAnalyzer(stream, elf, window, useDependencies, segmentType);
+        var analyzer = new SegmentSchedulingAnalyzer(stream, elf, window, useDependencies, segmentType, useAGUs);
         var resList = analyzer.analyze(repetitions, alus, memPorts);
         return resList;
     }

@@ -32,7 +32,8 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class SegmentSchedulingAnalyzer extends ASegmentAnalyzer {
 
-    private boolean useDependencies;
+    private boolean useDependencies = false;
+    private boolean useAGUs = false;
 
     public SegmentSchedulingAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window,
             boolean useDependencies) {
@@ -41,9 +42,10 @@ public class SegmentSchedulingAnalyzer extends ASegmentAnalyzer {
     }
 
     public SegmentSchedulingAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, int window,
-            boolean useDependencies, BinarySegmentType type) {
+            boolean useDependencies, BinarySegmentType type, boolean useAGUs) {
         super(stream, elf, window, type);
         this.useDependencies = useDependencies;
+        this.useAGUs  = useAGUs;
     }
 
     public SegmentSchedulingAnalyzer(List<List<Instruction>> basicBlocks, boolean useDependencies) {
@@ -58,28 +60,11 @@ public class SegmentSchedulingAnalyzer extends ASegmentAnalyzer {
         for (var bb : segments) {
             for (var repetition : repetitions) {
                 var dfg = new BasicBlockDataFlowGraph(bb, repetition);
+                if (useAGUs) {
+                    System.out.println("Modifying with AGUs");
+                    SegmentAddressGenerationUnitAnalyzer.modifyWithAGUs(dfg);
+                }
                 var dep = new DependencyGraph(dfg, useDependencies);
-
-                // ---------------------
-                // var t = new TransformRemoveZeroLatencyOps(dfg);
-                // dfg = (BasicBlockDataFlowGraph) t.applyToGraph();
-                //
-                // // Apply dependencies
-                // if (useDependencies) {
-                // System.out.println("Adding extra dependency edges...");
-                // var trans = new TransformAddMemoryDependencies(dfg);
-                // dfg = (BasicBlockDataFlowGraph) trans.applyToGraph();
-                // }
-                // // Build temporary IDs
-                // int id = 0;
-                // for (var v : dfg.vertexSet()) {
-                // v.setTempId(id);
-                // id++;
-                // }
-                //
-                // System.out.println("Transformed graph:");
-                // System.out.println(GraphUtils.generateGraphURL(dfg));
-                // --------------------------
 
                 var stats = new DataFlowStatistics(dep, dfg.getSegment());
                 stats.setInsts(bb).setRepetitions(repetition);

@@ -14,10 +14,7 @@
 package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.jgrapht.GraphMapping;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
@@ -27,18 +24,14 @@ import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ASegmentAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowStatistics;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.pattern.MemoryAccessTypesAnalyzer;
-import pt.up.fe.specs.binarytranslation.analysis.analyzers.scheduling.ListScheduler;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
-import pt.up.fe.specs.binarytranslation.analysis.graphs.dependency.DependencyGraph;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
-import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class SegmentAddressGenerationUnitAnalyzer extends ASegmentAnalyzer {
@@ -49,23 +42,26 @@ public class SegmentAddressGenerationUnitAnalyzer extends ASegmentAnalyzer {
     }
     
     public List<DataFlowStatistics> analyze() {
+        return analyze(1);
+    }
+    
+    public List<DataFlowStatistics> analyze(int repetitions) {
         var res = new ArrayList<DataFlowStatistics>();
         var segments = getSegmentsAsList();
 
         for (var bb : segments) {
-            var dfg = new BasicBlockDataFlowGraph(bb);
-            preprocessGraph(dfg);
-            //modifyWithAGUs(dfg);
+            var dfg = new BasicBlockDataFlowGraph(bb, repetitions);
+ 
+            modifyWithAGUs(dfg);
 
             var stats = new DataFlowStatistics(dfg, bb);
-            stats.setRepetitions(1);
+            stats.setRepetitions(repetitions);
             res.add(stats);
         }
-
         return res;
     }
 
-    private void preprocessGraph(BasicBlockDataFlowGraph graph) {
+    private static void preprocessGraph(BasicBlockDataFlowGraph graph) {
         var t1 = new TransformHexToDecimal(graph);
         t1.applyToGraph();
         var t2 = new TransformShiftsToMult(graph);
@@ -74,7 +70,9 @@ public class SegmentAddressGenerationUnitAnalyzer extends ASegmentAnalyzer {
         t3.applyToGraph();
     }
 
-    private void modifyWithAGUs(BasicBlockDataFlowGraph graph) {
+    public static void modifyWithAGUs(BasicBlockDataFlowGraph graph) {
+        preprocessGraph(graph);
+        
         var aguID = 1;
         // TODO: plug in AGU simulation class
         // let's use dot for vizualzation for now
@@ -96,7 +94,7 @@ public class SegmentAddressGenerationUnitAnalyzer extends ASegmentAnalyzer {
         }
     }
 
-    private void modifyTemplate(SimpleDirectedGraph<BtfVertex, DefaultEdge> template) {
+    private static void modifyTemplate(SimpleDirectedGraph<BtfVertex, DefaultEdge> template) {
         for (var v : template.vertexSet()) {
             if (template.outDegreeOf(v) == 0) {
                 v.setType(BtfVertexType.MEMORY);
@@ -104,7 +102,7 @@ public class SegmentAddressGenerationUnitAnalyzer extends ASegmentAnalyzer {
         }
     }
 
-    private boolean bindAguToMatch(GraphMapping<BtfVertex, DefaultEdge> mapping, int aguID, GraphTemplateType type,
+    private static boolean bindAguToMatch(GraphMapping<BtfVertex, DefaultEdge> mapping, int aguID, GraphTemplateType type,
             BasicBlockDataFlowGraph graph) {
         System.out.println("AGU BOUND - " + type.name());
 
@@ -126,7 +124,9 @@ public class SegmentAddressGenerationUnitAnalyzer extends ASegmentAnalyzer {
         }
         
         // Create AGU vertex
-        var agu = new BtfVertex("AGU " + aguID + " (" + type.toString() + ")\n" + memVertex.getLabel(), BtfVertexType.AGU);
+        var latency = calculateLatency(aguVertices);
+        var agu = new BtfVertex("AGU " + aguID + " (" + type.toString() + ")\n" + memVertex.getLabel() + "\nLatency = " + latency, BtfVertexType.AGU);
+        agu.setLatency(latency);
         graph.addVertex(agu);
         
         // If load, connect AGU to RD
@@ -164,7 +164,14 @@ public class SegmentAddressGenerationUnitAnalyzer extends ASegmentAnalyzer {
         return true;
     }
 
-    private List<BtfVertex> getAguVertices(GraphMapping<BtfVertex, DefaultEdge> mapping,
+    private static int calculateLatency(List<BtfVertex> aguVertices) {
+        var lat = 0;
+        for (var v : aguVertices)
+            lat += v.getLatency();
+        return lat;
+    }
+
+    private static List<BtfVertex> getAguVertices(GraphMapping<BtfVertex, DefaultEdge> mapping,
             BasicBlockDataFlowGraph graph, boolean aguVertices) {
         var res = new ArrayList<BtfVertex>();
         BtfVertex mem = BtfVertex.nullVertex;
