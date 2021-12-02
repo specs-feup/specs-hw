@@ -13,10 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class IntegerDeclaration extends VariableDeclaration {
+public class IntegerDeclaration extends IdentifierDeclaration {
 
     public IntegerDeclaration(String name) {
         super(name, 32, HardwareNodeType.IntegerDeclaration);
@@ -28,7 +27,12 @@ public class IntegerDeclaration extends VariableDeclaration {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected IntegerDeclaration copyPrivate() {
         return new IntegerDeclaration(this.getVariableName());
+    }
+
+    @Override
+    public IntegerDeclaration copy() {
+        return (IntegerDeclaration) super.copy();
     }
 }

@@ -14,14 +14,14 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
 
-public abstract class VariableDeclaration extends HardwareDeclaration {
+public abstract class IdentifierDeclaration extends HardwareDeclaration {
 
     private final int width;
     private final String name;
 
-    protected VariableDeclaration(String name, int width, HardwareNodeType type) {
+    protected IdentifierDeclaration(String name, int width, HardwareNodeType type) {
         super(type);
         this.name = name;
         this.width = width;
@@ -40,7 +40,15 @@ public abstract class VariableDeclaration extends HardwareDeclaration {
         return getAsString();
     }
 
-    public VariableReference getReference() {
-        return new VariableReference(this);
+    public IdentifierReference getReference() {
+        return new IdentifierReference(this);
+    }
+
+    @Override
+    protected abstract IdentifierDeclaration copyPrivate();
+
+    @Override
+    public IdentifierDeclaration copy() {
+        return (IdentifierDeclaration) super.copy();
     }
 }

@@ -19,7 +19,7 @@ public class ArrayDeclaration extends HardwareDeclaration {
 
     private int size;
 
-    private ArrayDeclaration(VariableDeclaration variable) {
+    private ArrayDeclaration(IdentifierDeclaration variable) {
         super(HardwareNodeType.ArrayDeclaration);
         this.addChild(variable);
     }
@@ -28,8 +28,7 @@ public class ArrayDeclaration extends HardwareDeclaration {
      * Copy constructor
      */
     private ArrayDeclaration(ArrayDeclaration other) {
-        this((VariableDeclaration) other.getChild(0));
-        // TODO: make cleaner
+        this(other.getVariable().copy());
     }
 
     /*
@@ -52,9 +51,8 @@ public class ArrayDeclaration extends HardwareDeclaration {
         this.size = size;
     }
 
-    public String getVariableName() {
-        return ((VariableDeclaration) this.getChild(0)).getVariableName();
-        // TODO: make cleaner
+    public IdentifierDeclaration getVariable() {
+        return this.getChild(IdentifierDeclaration.class, 0);
     }
 
     public int getSize() {

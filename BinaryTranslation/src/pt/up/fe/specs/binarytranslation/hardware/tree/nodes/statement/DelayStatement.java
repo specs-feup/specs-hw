@@ -15,23 +15,23 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class DelayDeclaration extends HardwareStatement {
+public class DelayStatement extends HardwareStatement {
 
     private Number value;
 
-    public DelayDeclaration(Number value) {
-        super(HardwareNodeType.DelayDeclaration);
+    public DelayStatement(Number value) {
+        super(HardwareNodeType.DelayStatement);
         this.value = value;
     }
 
     @Override
-    protected DelayDeclaration copyPrivate() {
-        return new DelayDeclaration(this.value);
+    protected DelayStatement copyPrivate() {
+        return new DelayStatement(this.value);
     }
 
     @Override
-    public DelayDeclaration copy() {
-        return (DelayDeclaration) super.copy();
+    public DelayStatement copy() {
+        return (DelayStatement) super.copy();
     }
 
     @Override

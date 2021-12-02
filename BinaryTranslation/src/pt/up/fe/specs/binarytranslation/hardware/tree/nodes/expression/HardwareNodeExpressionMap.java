@@ -38,7 +38,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.compariso
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.LessThanOrEqualsToExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.NotEqualsToExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.logical.LogicalAndExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGAdditionNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGAssignmentNode;
@@ -112,7 +112,7 @@ public class HardwareNodeExpressionMap {
 
         var map = new HashMap<Class<? extends AInstructionCDFGNode>, Class<? extends HardwareExpression>>();
 
-        map.put(InstructionCDFGAssignmentNode.class, VariableReference.class);
+        map.put(InstructionCDFGAssignmentNode.class, IdentifierReference.class);
 
         map.put(InstructionCDFGAdditionNode.class, AdditionExpression.class);
         map.put(InstructionCDFGSubtractionNode.class, SubtractionExpression.class);

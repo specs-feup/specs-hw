@@ -10,29 +10,26 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
 public class BitWiseAndExpression extends ABinaryHardwareExpression {
 
-    private BitWiseAndExpression() {
-        super("&", HardwareNodeType.BitWiseAndExpression);
-    }
-
     public BitWiseAndExpression(HardwareExpression varA, HardwareExpression varB) {
         super("&", HardwareNodeType.BitWiseAndExpression, varA, varB);
     }
 
-    /*
-     * Shallow copy
-     */
     @Override
-    protected HardwareNode copyPrivate() {
-        return new BitWiseAndExpression();
+    protected BitWiseAndExpression copyPrivate() {
+        return new BitWiseAndExpression(this.getLeft().copy(), this.getRight().copy());
+    }
+
+    @Override
+    public BitWiseAndExpression copy() {
+        return (BitWiseAndExpression) super.copy();
     }
 }

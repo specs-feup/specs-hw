@@ -13,9 +13,8 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.VariableDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
 
 public class OutputPortDeclaration extends PortDeclaration {
 
@@ -23,7 +22,7 @@ public class OutputPortDeclaration extends PortDeclaration {
         super(portName, portWidth, ModulePortDirection.output);
     }
 
-    public OutputPortDeclaration(VariableDeclaration declared) {
+    public OutputPortDeclaration(IdentifierDeclaration declared) {
         super(declared, ModulePortDirection.output);
     }
 
@@ -32,7 +31,12 @@ public class OutputPortDeclaration extends PortDeclaration {
     }
 
     @Override
-    public HardwareNode copyPrivate() {
+    public OutputPortDeclaration copyPrivate() {
         return new OutputPortDeclaration(this);
+    }
+
+    @Override
+    public OutputPortDeclaration copy() {
+        return (OutputPortDeclaration) super.copy();
     }
 }

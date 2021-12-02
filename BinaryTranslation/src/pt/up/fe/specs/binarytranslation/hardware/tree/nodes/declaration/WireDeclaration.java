@@ -13,10 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class WireDeclaration extends VariableDeclaration {
+public class WireDeclaration extends IdentifierDeclaration {
 
     public WireDeclaration(String wireName, int numBits) {
         super(wireName, numBits, HardwareNodeType.WireDeclaration);
@@ -28,7 +27,12 @@ public class WireDeclaration extends VariableDeclaration {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected WireDeclaration copyPrivate() {
         return new WireDeclaration(this.getVariableName(), this.getVariableWidth());
+    }
+
+    @Override
+    public WireDeclaration copy() {
+        return (WireDeclaration) super.copy();
     }
 }

@@ -14,10 +14,9 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.VariableDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
 
-public class VariableReference extends HardwareExpression {
+public class IdentifierReference extends VariableOperator {
 
     // private final VariableDeclaration declaration;
     private final String name;
@@ -25,7 +24,7 @@ public class VariableReference extends HardwareExpression {
     /*
      * Auxiliary copy constructor
      */
-    private VariableReference(VariableReference other) {
+    private IdentifierReference(IdentifierReference other) {
         super(other.type);
         this.name = other.name;
     }
@@ -37,9 +36,9 @@ public class VariableReference extends HardwareExpression {
      * (I've also added a "getReference()" method to
      * any class which inherits from @VariableDeclaration)
      */
-    public VariableReference(VariableDeclaration declaration) {
-        super(HardwareNodeType.VariableReference);
-        this.name = declaration.getVariableName();
+    public IdentifierReference(IdentifierDeclaration namedIdentifier) {
+        super(HardwareNodeType.IdentifierReference);
+        this.name = namedIdentifier.getVariableName();
     }
 
     @Override
@@ -48,12 +47,17 @@ public class VariableReference extends HardwareExpression {
     }
 
     @Override
-    protected VariableReference copyPrivate() {
-        return new VariableReference(this);
+    protected String getValue() {
+        return this.getAsString();
     }
 
     @Override
-    public VariableReference copy() {
-        return (VariableReference) super.copy();
+    protected IdentifierReference copyPrivate() {
+        return new IdentifierReference(this);
+    }
+
+    @Override
+    public IdentifierReference copy() {
+        return (IdentifierReference) super.copy();
     }
 }

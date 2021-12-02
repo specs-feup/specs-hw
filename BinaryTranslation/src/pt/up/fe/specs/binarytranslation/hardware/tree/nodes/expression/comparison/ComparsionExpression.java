@@ -10,29 +10,26 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
 public class ComparsionExpression extends ABinaryHardwareExpression {
 
-    private ComparsionExpression() {
-        super("==", HardwareNodeType.ComparsionExpression);
-    }
-
     public ComparsionExpression(HardwareExpression varA, HardwareExpression varB) {
         super("==", HardwareNodeType.ComparsionExpression, varA, varB);
     }
 
-    /*
-     * Shallow copy
-     */
     @Override
-    protected HardwareNode copyPrivate() {
-        return new ComparsionExpression();
+    protected ComparsionExpression copyPrivate() {
+        return new ComparsionExpression(this.getLeft().copy(), this.getRight().copy());
+    }
+
+    @Override
+    public ComparsionExpression copy() {
+        return (ComparsionExpression) super.copy();
     }
 }

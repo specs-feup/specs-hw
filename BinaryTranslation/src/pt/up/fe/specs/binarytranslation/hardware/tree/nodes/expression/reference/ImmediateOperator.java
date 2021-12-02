@@ -14,9 +14,8 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class ImmediateReference extends HardwareExpression {
+public class ImmediateOperator extends HardwareOperator {
 
     private int width;
     private final Number value;
@@ -25,7 +24,7 @@ public class ImmediateReference extends HardwareExpression {
     /*
      * Note: for now, all immediates are represented as decimals
      */
-    public ImmediateReference(Number value, int width) {
+    public ImmediateOperator(Number value, int width) {
         super(HardwareNodeType.ImmediateReference);
         this.value = value;
         this.width = width;
@@ -36,21 +35,30 @@ public class ImmediateReference extends HardwareExpression {
         return Integer.toString(this.width) + "'d" + this.value;
     }
 
+    /*
+     * TODO: this is only used to get the identifier name for uses like ranged selection...
+     * is this the best way?
+     */
     @Override
-    protected ImmediateReference copyPrivate() {
-        return new ImmediateReference(this.value, this.width);
+    protected String getValue() {
+        return String.valueOf(this.value.intValue());
     }
 
     @Override
-    public ImmediateReference copy() {
-        return (ImmediateReference) super.copy();
+    protected ImmediateOperator copyPrivate() {
+        return new ImmediateOperator(this.value, this.width);
     }
 
-    public static ImmediateReference Zeroes(int numbits) {
-        return new ImmediateReference(0, numbits);
+    @Override
+    public ImmediateOperator copy() {
+        return (ImmediateOperator) super.copy();
     }
 
-    public static ImmediateReference Ones(int numbits) {
-        return new ImmediateReference(1, numbits);
+    public static ImmediateOperator Zeroes(int numbits) {
+        return new ImmediateOperator(0, numbits);
+    }
+
+    public static ImmediateOperator Ones(int numbits) {
+        return new ImmediateOperator(1, numbits);
     }
 }

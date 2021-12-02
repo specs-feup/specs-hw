@@ -13,13 +13,12 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
 
 public class PosEdge extends SignalEdge {
 
-    public PosEdge(VariableReference signal) {
+    public PosEdge(IdentifierReference signal) {
         super(HardwareNodeType.PosEdge, signal);
     }
 
@@ -29,8 +28,13 @@ public class PosEdge extends SignalEdge {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
-        var signalReferenceCopy = (VariableReference) this.getSignal().copy();
+    protected PosEdge copyPrivate() {
+        var signalReferenceCopy = this.getSignal().copy();
         return new PosEdge(signalReferenceCopy);
+    }
+
+    @Override
+    public PosEdge copy() {
+        return (PosEdge) super.copy();
     }
 }
