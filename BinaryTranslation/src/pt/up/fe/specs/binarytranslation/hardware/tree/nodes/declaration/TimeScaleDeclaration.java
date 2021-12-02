@@ -14,8 +14,13 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class TimeScaleDeclaration extends HardwareDeclaration {
+
+    public TimeScaleDeclaration() {
+        super(HardwareNodeType.TimeScaleDeclaration);
+    }
 
     @Override
     protected HardwareNode copyPrivate() {

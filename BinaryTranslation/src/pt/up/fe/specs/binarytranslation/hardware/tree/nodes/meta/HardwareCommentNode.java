@@ -11,8 +11,8 @@ public class HardwareCommentNode extends HardwareNode {
     final private String commentText;
 
     public HardwareCommentNode(String commentText) {
+        super(HardwareNodeType.Comment);
         this.commentText = commentText.replace("\n", "\n// ");
-        this.type = HardwareNodeType.Comment;
     }
 
     @Override

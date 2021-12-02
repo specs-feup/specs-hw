@@ -23,7 +23,6 @@ import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
  */
 public class FileHeader extends HardwareCommentNode {
 
-    // TODO add more stuff to header
     public FileHeader() {
         super(generateHeader());
         this.type = HardwareNodeType.Comment;

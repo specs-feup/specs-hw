@@ -17,15 +17,20 @@ public enum HardwareNodeType {
 
     // constructs
     AlwaysComb,
-    AlwaysFF,
+    AlwaysFF, // equivalent to Always @
+    Always,
+    Initial,
 
     // declarations
-    ModuleDeclaration,
+    ModuleDeclaration, // this is the definition of a module body
     ParameterDeclaration,
     PortDeclaration,
     RegisterDeclaration,
     WireDeclaration,
     IntegerDeclaration,
+    ArrayDeclaration,
+    TimeScaleDeclaration,
+    DelayDeclaration,
 
     // expressions,
     UnimplementedExpression,
@@ -69,9 +74,11 @@ public enum HardwareNodeType {
     Root,
 
     // statement
+    ModuleInstantiation,
     ContinuousAssignment,
     ProceduralBlocking,
     ProceduralNonBlocking,
+    ForLoop,
     IfStatement,
     IfElseStatement;
 }

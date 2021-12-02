@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.VariableDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
@@ -22,14 +23,14 @@ public abstract class PortDeclaration extends VariableDeclaration {
     private final ModulePortDirection direction;
 
     protected PortDeclaration(String portName, int portWidth, ModulePortDirection direction) {
-        super(portName, portWidth);
+        super(portName, portWidth, HardwareNodeType.PortDeclaration);
         this.direction = direction;
         this.addChild(new WireDeclaration(portName, portWidth));
     }
 
     // TODO eventually deprecate this?
     protected PortDeclaration(VariableDeclaration declared, ModulePortDirection direction) {
-        super(declared.getVariableName(), declared.getVariableWidth());
+        super(declared.getVariableName(), declared.getVariableWidth(), HardwareNodeType.PortDeclaration);
         this.direction = direction;
         this.addChild(declared);
     }

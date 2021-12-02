@@ -19,8 +19,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 public class IntegerDeclaration extends VariableDeclaration {
 
     public IntegerDeclaration(String name) {
-        super(name, 32);
-        this.type = HardwareNodeType.IntegerDeclaration;
+        super(name, 32, HardwareNodeType.IntegerDeclaration);
     }
 
     @Override

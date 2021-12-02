@@ -19,8 +19,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 public class WireDeclaration extends VariableDeclaration {
 
     public WireDeclaration(String wireName, int numBits) {
-        super(wireName, numBits);
-        this.type = HardwareNodeType.WireDeclaration;
+        super(wireName, numBits, HardwareNodeType.WireDeclaration);
     }
 
     @Override

@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
@@ -27,28 +27,28 @@ public class ModuleDeclaration extends HardwareDeclaration {
     // TODO: what else??
 
     public ModuleDeclaration(String moduleName) {
+        super(HardwareNodeType.ModuleDeclaration);
         this.moduleName = moduleName;
-        this.type = HardwareNodeType.ModuleDeclaration;
     }
 
     @Override
     public String getAsString() {
         var builder = new StringBuilder();
         builder.append("\nmodule " + this.moduleName);
-        
-        if(!this.getChild(0).getChildren().isEmpty()) {
-        
+
+        if (!this.getChild(0).getChildren().isEmpty()) {
+
             builder.append(" (");
-            
+
             this.getChild(0).getChildren().forEach(child -> {
-                builder.append(((PortDeclaration)child).getVariableName()  +",");
+                builder.append(((PortDeclaration) child).getVariableName() + ",");
             });
-            
+
             builder.deleteCharAt(builder.length() - 1).append(")");
         }
-        
+
         builder.append(";\n\n");
-        
+
         /*
          * The children should be port declarations, followed by body (?)
          */

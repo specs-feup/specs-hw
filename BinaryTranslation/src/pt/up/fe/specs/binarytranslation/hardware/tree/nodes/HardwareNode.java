@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes;
 
 import java.io.BufferedWriter;
@@ -24,8 +24,9 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
 
     protected HardwareNodeType type;
 
-    public HardwareNode() {
+    public HardwareNode(HardwareNodeType type) {
         super(null);
+        this.type = type;
     }
 
     public HardwareNodeType getType() {
@@ -73,7 +74,7 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
             e.printStackTrace();
         }
     }
-    
+
     public void emit() {
         System.out.println(this.getAsString());
     }

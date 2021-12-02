@@ -14,21 +14,48 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class ArrayDeclaration extends HardwareDeclaration {
 
     private int size;
 
-    public ArrayDeclaration(HardwareNode var, int size) {
-        super();
+    private ArrayDeclaration(VariableDeclaration variable) {
+        super(HardwareNodeType.ArrayDeclaration);
+        this.addChild(variable);
+    }
 
+    /*
+     * Copy constructor
+     */
+    private ArrayDeclaration(ArrayDeclaration other) {
+        this((VariableDeclaration) other.getChild(0));
+        // TODO: make cleaner
+    }
+
+    /*
+     * TODO: fix later, but for now, 3 different constructors 
+     * just too prevent instantiating ArrayDeclaration as an
+     * array of type PortDeclaration (not permitted in Verilog)
+     */
+    public ArrayDeclaration(WireDeclaration variable, int size) {
+        this(variable);
         this.size = size;
+    }
 
-        this.addChild(var);
+    public ArrayDeclaration(RegisterDeclaration variable, int size) {
+        this(variable);
+        this.size = size;
+    }
+
+    public ArrayDeclaration(IntegerDeclaration variable, int size) {
+        this(variable);
+        this.size = size;
     }
 
     public String getVariableName() {
         return ((VariableDeclaration) this.getChild(0)).getVariableName();
+        // TODO: make cleaner
     }
 
     public int getSize() {
@@ -42,7 +69,6 @@ public class ArrayDeclaration extends HardwareDeclaration {
 
     @Override
     protected HardwareNode copyPrivate() {
-        return new ArrayDeclaration(this.getChild(size), this.getSize());
+        return new ArrayDeclaration(this);
     }
-
 }
