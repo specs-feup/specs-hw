@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
 
 /**
@@ -25,7 +24,6 @@ public class FileHeader extends HardwareCommentNode {
 
     public FileHeader() {
         super(generateHeader());
-        this.type = HardwareNodeType.Comment;
     }
 
     /*
@@ -38,5 +36,15 @@ public class FileHeader extends HardwareCommentNode {
                 + BinaryTranslationUtils.getCommitDescription() + "\n");
         commentText.append(BinaryTranslationUtils.getContactInfo());
         return commentText.toString();
+    }
+
+    @Override
+    protected FileHeader copyPrivate() {
+        return new FileHeader();
+    }
+
+    @Override
+    public FileHeader copy() {
+        return (FileHeader) super.copy();
     }
 }

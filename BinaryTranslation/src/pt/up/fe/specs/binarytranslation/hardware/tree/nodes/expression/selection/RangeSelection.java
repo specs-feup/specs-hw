@@ -13,40 +13,42 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 
 public class RangeSelection extends HardwareExpression {
 
     private int lower, upper;
 
-    private RangeSelection(int lower, int upper) {
+    public RangeSelection(VariableReference var, int lower, int upper) {
         super(HardwareNodeType.RangeSelection);
+        this.addChild(var);
         this.lower = lower;
         this.upper = upper;
     }
 
-    public RangeSelection(HardwareNode var, int lower, int upper) {
-        this(lower, upper);
-        this.addChild(var);
-    }
-
-    public RangeSelection(HardwareNode var, int upper) {
+    public RangeSelection(VariableReference var, int upper) {
         this(var, 0, upper);
     }
 
-    public HardwareNode getVar() {
-        return this.getChild(0);
+    public VariableReference getVariable() {
+        return this.getChild(VariableReference.class, 0);
     }
 
     @Override
     public String getAsString() {
-        return this.getVar().getAsString() + "[" + (this.upper - 1) + ":" + this.lower + "]";
+        return this.getVariable().getAsString() + "[" + (this.upper - 1) + ":" + this.lower + "]";
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
-        return new RangeSelection(this.lower, this.upper);
+    protected RangeSelection copyPrivate() {
+        var copyvar = this.getVariable().copy();
+        return new RangeSelection(copyvar, this.lower, this.upper);
+    }
+
+    @Override
+    public RangeSelection copy() {
+        return (RangeSelection) super.copy();
     }
 }

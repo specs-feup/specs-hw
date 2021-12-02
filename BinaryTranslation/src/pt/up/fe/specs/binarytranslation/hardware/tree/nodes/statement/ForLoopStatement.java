@@ -18,7 +18,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareAnchorNode;
 
-public class ForLoopStatement extends AHardwareStatement {
+public class ForLoopStatement extends HardwareStatement {
 
     public ForLoopStatement(ContinuousStatement initialization, HardwareExpression condition,
             HardwareExpression step) {
@@ -69,8 +69,13 @@ public class ForLoopStatement extends AHardwareStatement {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected ForLoopStatement copyPrivate() {
         return new ForLoopStatement(this.getInitialzationStatement(), this.getConditionExpression(),
                 this.getStepExpression());
+    }
+
+    @Override
+    public ForLoopStatement copy() {
+        return (ForLoopStatement) super.copy();
     }
 }

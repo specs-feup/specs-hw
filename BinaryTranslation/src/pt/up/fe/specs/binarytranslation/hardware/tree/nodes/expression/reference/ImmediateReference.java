@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
@@ -38,8 +37,13 @@ public class ImmediateReference extends HardwareExpression {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected ImmediateReference copyPrivate() {
         return new ImmediateReference(this.value, this.width);
+    }
+
+    @Override
+    public ImmediateReference copy() {
+        return (ImmediateReference) super.copy();
     }
 
     public static ImmediateReference Zeroes(int numbits) {

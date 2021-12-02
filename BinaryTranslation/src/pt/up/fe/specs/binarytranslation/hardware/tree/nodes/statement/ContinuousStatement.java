@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
@@ -41,7 +40,12 @@ public class ContinuousStatement extends ASingleStatement {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected ContinuousStatement copyPrivate() {
         return new ContinuousStatement();
+    }
+
+    @Override
+    public ContinuousStatement copy() {
+        return (ContinuousStatement) super.copy();
     }
 }

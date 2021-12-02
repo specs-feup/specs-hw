@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class ArrayDeclaration extends HardwareDeclaration {
@@ -68,7 +67,12 @@ public class ArrayDeclaration extends HardwareDeclaration {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected ArrayDeclaration copyPrivate() {
         return new ArrayDeclaration(this);
+    }
+
+    @Override
+    public ArrayDeclaration copy() {
+        return (ArrayDeclaration) super.copy();
     }
 }

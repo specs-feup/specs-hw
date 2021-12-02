@@ -26,4 +26,9 @@ public abstract class HardwareExpression extends HardwareNode {
     public String toContentString() {
         return this.getAsString();
     }
+
+    @Override
+    public HardwareExpression copy() {
+        return (HardwareExpression) super.copy();
+    }
 }

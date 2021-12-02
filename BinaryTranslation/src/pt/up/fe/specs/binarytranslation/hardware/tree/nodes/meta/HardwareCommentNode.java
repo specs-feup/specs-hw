@@ -21,7 +21,12 @@ public class HardwareCommentNode extends HardwareNode {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected HardwareCommentNode copyPrivate() {
         return new HardwareCommentNode(this.commentText);
+    }
+
+    @Override
+    public HardwareCommentNode copy() {
+        return (HardwareCommentNode) super.copy();
     }
 }

@@ -75,6 +75,9 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
         }
     }
 
+    /*
+     * 
+     */
     public void emit() {
         System.out.println(this.getAsString());
     }

@@ -15,27 +15,35 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareAnchorNode;
 
-public class IfStatement extends AHardwareStatement {
+public class IfStatement extends HardwareStatement {
 
-    public IfStatement(HardwareExpression expr) {
+    /*
+     * empty node to hold list of statements
+     */
+    private HardwareAnchorNode listanchor;
+
+    public IfStatement(HardwareExpression condition) {
         super(HardwareNodeType.IfStatement);
-        this.addChild(expr);
+        this.listanchor = new HardwareAnchorNode();
+
+        this.addChild(condition);
+        this.addChild(listanchor);
     }
 
-    public void addStatement(AHardwareStatement stat) {
-        this.addChild(stat);
+    public void addStatement(HardwareStatement stat) {
+        this.listanchor.addChild(stat);
     }
 
     public HardwareExpression getCondition() {
         return (HardwareExpression) this.getChild(0);
     }
 
-    public List<HardwareNode> getStatements() {
-        return this.getChildren().subList(1, this.getNumChildren());
+    public List<HardwareStatement> getStatements() {
+        return listanchor.getChildren(HardwareStatement.class);
     }
 
     @Override
@@ -66,7 +74,12 @@ public class IfStatement extends AHardwareStatement {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected IfStatement copyPrivate() {
         return new IfStatement(this.getCondition());
+    }
+
+    @Override
+    public IfStatement copy() {
+        return (IfStatement) super.copy();
     }
 }

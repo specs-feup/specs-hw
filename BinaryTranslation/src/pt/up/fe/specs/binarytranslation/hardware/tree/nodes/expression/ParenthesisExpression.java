@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class ParenthesisExpression extends HardwareExpression {
@@ -42,7 +41,12 @@ public class ParenthesisExpression extends HardwareExpression {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected ParenthesisExpression copyPrivate() {
         return new ParenthesisExpression();
+    }
+
+    @Override
+    public ParenthesisExpression copy() {
+        return (ParenthesisExpression) super.copy();
     }
 }

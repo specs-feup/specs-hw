@@ -21,6 +21,8 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysFFBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.InitialBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.NegEdge;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.PosEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ArrayDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.TimeScaleDeclaration;
@@ -33,8 +35,6 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.IndexSelection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.RangeSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.signal_change.NegedgeSignalChange;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.signal_change.PosedgeSignalChange;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
@@ -116,8 +116,8 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         /*
          * Always block
          */
-        var posedge1 = new PosedgeSignalChange(verificationStartInputSignal.getReference());
-        var alwaysblock1 = new AlwaysFFBlock(posedge1);
+        var posedge1 = new PosEdge(verificationStartInputSignal.getReference());
+        var alwaysblock1 = new AlwaysFFBlock(posedge1); // TODO: AlwaysFFBlock.atPosEdge(signal) --> static method?
         testbenchtree.addStatement(alwaysblock1);
 
         var immediate1_32 = ImmediateReference.Ones(32);
@@ -128,8 +128,8 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         /*
          * Always block
          */
-        var negedge1 = new NegedgeSignalChange(verificationStartInputSignal.getReference());
-        var alwaysblock2 = new AlwaysFFBlock(negedge1);
+        var negedge1 = new NegEdge(verificationStartInputSignal.getReference());
+        var alwaysblock2 = new AlwaysFFBlock(negedge1); // TODO: AlwaysFFBlock.atNegEdge(signal) --> static method?
 
         var immediate1_1 = ImmediateReference.Ones(1);
 
@@ -137,6 +137,8 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         var elsestat1 = new ProceduralNonBlockingStatement(verificationOutputSignal.getReference(), immediate1_1);
         var select = new RangeSelection(
                 new IndexSelection(validationOutputs.getReference(), validationCurrentIndex.getReference()), 32);
+
+        // TODO: factory methods like "Verilog.alwaysFF.atPosEdge(signal)... etc"
 
         alwaysblock2.addChild(
                 new IfElseStatement(new NotEqualsToExpression(

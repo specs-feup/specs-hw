@@ -24,12 +24,21 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
  */
 public class HardwareRootNode extends HardwareNode {
 
+    // TODO: add metadata to the root node
+    // e.g., used compile flow, origin of binary traces
+    // conditions for translation, used passes etc
+
     public HardwareRootNode() {
         super(HardwareNodeType.Root);
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected HardwareRootNode copyPrivate() {
         return new HardwareRootNode();
+    }
+
+    @Override
+    public HardwareRootNode copy() {
+        return (HardwareRootNode) super.copy();
     }
 }

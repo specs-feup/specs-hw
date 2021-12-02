@@ -17,7 +17,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 
-public abstract class ASingleStatement extends AHardwareStatement {
+public abstract class ASingleStatement extends HardwareStatement {
 
     protected ASingleStatement(HardwareNodeType type) {
         super(type);
@@ -31,10 +31,10 @@ public abstract class ASingleStatement extends AHardwareStatement {
     }
 
     protected VariableReference getTarget() {
-        return (VariableReference) this.getChild(0);
+        return this.getChild(VariableReference.class, 0);
     }
 
     protected HardwareExpression getExpression() {
-        return (HardwareExpression) this.getChild(1);
+        return this.getChild(HardwareExpression.class, 1);
     }
 }
