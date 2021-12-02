@@ -67,6 +67,25 @@ public class MicroBlazeBasicBlockSchedulingTest {
     }
     
     @Test
+    public void testSchedulingBasicBlockWithAGUs() {
+        int factors[] = { 1, 2, 3 };
+        boolean dependencies = true;
+        boolean agus = true;
+        
+        var alus = new ArrayList<Integer>(List.of(1, 2, 4, 8, 200));
+        var memPorts = new ArrayList<Integer>(List.of(1, 2, 4, 8, 200));
+        var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
+        var streams = buildStreams(elfs);
+        var analyzer = new ReporterScheduling(elfs, streams, alus, memPorts, dependencies, agus);
+        
+        try {
+            analyzer.analyze(factors);
+        } catch (Exception e) {
+            SpecsLogs.warn("Error message:\n", e);
+        }
+    }
+    
+    @Test
     public void testBenchmarkStatistics() {
         var elfs = MicroBlazeBasicBlockInfo.getPolybenchMiniFloatKernels();
         var streams = buildStreams(elfs);
