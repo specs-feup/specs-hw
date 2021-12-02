@@ -21,9 +21,8 @@ public class ParameterDeclaration extends VariableDeclaration {
     private final String initializer;
 
     public ParameterDeclaration(String parameterName, int numBits, String initializer) {
-        super(parameterName, numBits);
+        super(parameterName, numBits, HardwareNodeType.ParameterDeclaration);
         this.initializer = initializer;
-        this.type = HardwareNodeType.ParameterDeclaration;
     }
 
     @Override

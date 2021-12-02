@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 
 public abstract class VariableDeclaration extends HardwareDeclaration {
@@ -20,7 +21,8 @@ public abstract class VariableDeclaration extends HardwareDeclaration {
     private final int width;
     private final String name;
 
-    protected VariableDeclaration(String name, int width) {
+    protected VariableDeclaration(String name, int width, HardwareNodeType type) {
+        super(type);
         this.name = name;
         this.width = width;
     }

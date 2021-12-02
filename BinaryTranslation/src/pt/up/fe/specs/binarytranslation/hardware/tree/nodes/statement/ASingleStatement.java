@@ -10,21 +10,21 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 
-public abstract class SingleStatement extends HardwareStatement {
+public abstract class ASingleStatement extends AHardwareStatement {
 
-    protected SingleStatement(HardwareNodeType type) {
-        super();
-        this.type = type;
+    protected ASingleStatement(HardwareNodeType type) {
+        super(type);
     }
 
-    protected SingleStatement(HardwareNodeType type, VariableReference target, HardwareExpression expression) {
+    protected ASingleStatement(HardwareNodeType type,
+            VariableReference target, HardwareExpression expression) {
         this(type);
         this.addChild(target);
         this.addChild(expression);

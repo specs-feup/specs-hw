@@ -17,8 +17,9 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class ModuleStatement extends HardwareStatement {
+public class ModuleInstance extends AHardwareStatement {
 
     private HardwareInstance moduleInstance;
     private String moduleName;
@@ -27,12 +28,13 @@ public class ModuleStatement extends HardwareStatement {
      * Maybe use a map to pass the child port - parent module signal relation ?
      */
 
-    public ModuleStatement(HardwareInstance moduleInstance, String moduleName) {
+    public ModuleInstance(HardwareInstance moduleInstance, String moduleName) {
+        super(HardwareNodeType.ModuleInstantiation);
         this.moduleInstance = moduleInstance;
         this.moduleName = moduleName;
     }
 
-    public ModuleStatement(HardwareInstance moduleDefinition, String instanceName, List<HardwareNode> ports)
+    public ModuleInstance(HardwareInstance moduleDefinition, String instanceName, List<HardwareNode> ports)
             throws IllegalArgumentException {
         this(moduleDefinition, instanceName);
 
@@ -45,7 +47,7 @@ public class ModuleStatement extends HardwareStatement {
 
     @Override
     protected HardwareNode copyPrivate() {
-        return new ModuleStatement(this.moduleInstance, this.moduleName);
+        return new ModuleInstance(this.moduleInstance, this.moduleName);
     }
 
     @Override

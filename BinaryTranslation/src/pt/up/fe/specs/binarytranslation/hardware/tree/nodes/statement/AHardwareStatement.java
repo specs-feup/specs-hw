@@ -11,32 +11,14 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class HardwareErrorMessage extends HardwareNode {
+public abstract class AHardwareStatement extends HardwareNode implements HardwareStatement {
 
-    final private String errorText;
-
-    public HardwareErrorMessage(String commentText) {
-        super(HardwareNodeType.ErrorMsg);
-        this.errorText = commentText;
-    }
-
-    @Override
-    public String getAsString() {
-        return "$error(\"" + errorText + "\");";
-    }
-
-    @Override
-    public String toContentString() {
-        return this.getAsString();
-    }
-
-    @Override
-    protected HardwareNode copyPrivate() {
-        return new HardwareErrorMessage(this.errorText);
+    protected AHardwareStatement(HardwareNodeType type) {
+        super(type);
     }
 }

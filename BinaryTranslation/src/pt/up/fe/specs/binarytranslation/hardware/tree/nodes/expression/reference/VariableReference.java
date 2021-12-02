@@ -27,8 +27,8 @@ public class VariableReference extends HardwareExpression {
      * Auxiliary copy constructor
      */
     private VariableReference(VariableReference other) {
+        super(other.type);
         this.name = other.name;
-        this.type = other.type;
     }
 
     /*
@@ -39,9 +39,8 @@ public class VariableReference extends HardwareExpression {
      * any class which inherits from @VariableDeclaration)
      */
     public VariableReference(VariableDeclaration declaration) {
-        super();
+        super(HardwareNodeType.VariableReference);
         this.name = declaration.getVariableName();
-        this.type = HardwareNodeType.VariableReference;
     }
 
     @Override

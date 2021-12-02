@@ -1,18 +1,14 @@
 /**
- *  Copyright 2021 SPeCS.
+ * Copyright 2021 SPeCS.
  * 
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  * 
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *  under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License. under the License.
  */
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
@@ -24,12 +20,11 @@ public abstract class AUnaryHardwareExpression extends HardwareExpression {
     protected String expressionOperator;
 
     protected AUnaryHardwareExpression(String operator, HardwareNodeType type) {
-        super();
+        super(type);
         this.expressionOperator = operator;
-        this.type = type;
-    } 
+    }
 
-    protected AUnaryHardwareExpression(String operator,HardwareNodeType type, HardwareExpression varA) {
+    protected AUnaryHardwareExpression(String operator, HardwareNodeType type, HardwareExpression varA) {
         this(operator, type);
         this.addChild(varA);
     }
@@ -37,7 +32,6 @@ public abstract class AUnaryHardwareExpression extends HardwareExpression {
     protected HardwareExpression getOperand() {
         return (HardwareExpression) this.getChild(0);
     }
-
 
     @Override
     public String toContentString() {
@@ -48,6 +42,4 @@ public abstract class AUnaryHardwareExpression extends HardwareExpression {
     public String getAsString() {
         return this.toContentString() + " " + this.getOperand().getAsString();
     }
-
-
 }

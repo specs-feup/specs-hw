@@ -27,10 +27,9 @@ public class ImmediateReference extends HardwareExpression {
      * Note: for now, all immediates are represented as decimals
      */
     public ImmediateReference(Number value, int width) {
-        super();
+        super(HardwareNodeType.ImmediateReference);
         this.value = value;
         this.width = width;
-        this.type = HardwareNodeType.ImmediateReference;
     }
 
     @Override

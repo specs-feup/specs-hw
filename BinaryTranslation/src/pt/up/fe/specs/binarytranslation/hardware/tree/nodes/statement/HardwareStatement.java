@@ -10,14 +10,19 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.util.treenode.TreeNode;
 
-public abstract class HardwareStatement extends HardwareNode {
+/**
+ * Used only to provide typing for subclasses of @HardwareNode (Extension of @TreeNode<@HardwareNode> required to comply
+ * with abstract class @HardwareNode)
+ * 
+ * @author nuno
+ *
+ */
+public interface HardwareStatement extends TreeNode<HardwareNode> {
 
-    protected HardwareStatement() {
-        super();
-    }
 }

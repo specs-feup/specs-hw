@@ -19,8 +19,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 public class RegisterDeclaration extends VariableDeclaration {
 
     public RegisterDeclaration(String regName, int numBits) {
-        super(regName, numBits);
-        this.type = HardwareNodeType.RegisterDeclaration;
+        super(regName, numBits, HardwareNodeType.RegisterDeclaration);
     }
 
     @Override

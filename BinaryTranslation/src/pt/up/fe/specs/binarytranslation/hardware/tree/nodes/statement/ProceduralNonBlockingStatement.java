@@ -18,7 +18,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
 
-public class ProceduralNonBlockingStatement extends SingleStatement {
+public class ProceduralNonBlockingStatement extends ASingleStatement {
 
     private ProceduralNonBlockingStatement() {
         super(HardwareNodeType.ProceduralNonBlocking);

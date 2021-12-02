@@ -19,7 +19,7 @@ import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysAtBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysFFBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.InitialBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ArrayDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
@@ -36,7 +36,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.signal_change.NegedgeSignalChange;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.signal_change.PosedgeSignalChange;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task.ReadMemoryHexadecimalTask;
@@ -117,7 +117,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
          * Always block
          */
         var posedge1 = new PosedgeSignalChange(verificationStartInputSignal.getReference());
-        var alwaysblock1 = new AlwaysAtBlock(posedge1);
+        var alwaysblock1 = new AlwaysFFBlock(posedge1);
         testbenchtree.addStatement(alwaysblock1);
 
         var immediate1_32 = ImmediateReference.Ones(32);
@@ -129,7 +129,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
          * Always block
          */
         var negedge1 = new NegedgeSignalChange(verificationStartInputSignal.getReference());
-        var alwaysblock2 = new AlwaysAtBlock(negedge1);
+        var alwaysblock2 = new AlwaysFFBlock(negedge1);
 
         var immediate1_1 = ImmediateReference.Ones(1);
 
@@ -156,7 +156,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         /*
          * Instantiate the Design Under Test (DUT)
          */
-        testbenchtree.addStatement(new ModuleStatement(module, module.getName() + "_test", subInputs));
+        testbenchtree.addStatement(new ModuleInstance(module, module.getName() + "_test", subInputs));
 
         return new HardwareTestbench(module.getName() + "_tb", testbenchtree);
     }

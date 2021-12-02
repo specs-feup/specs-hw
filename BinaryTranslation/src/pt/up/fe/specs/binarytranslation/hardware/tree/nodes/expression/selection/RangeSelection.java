@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
@@ -22,10 +22,9 @@ public class RangeSelection extends HardwareExpression {
     private int lower, upper;
 
     private RangeSelection(int lower, int upper) {
-        super();
+        super(HardwareNodeType.RangeSelection);
         this.lower = lower;
         this.upper = upper;
-        this.type = HardwareNodeType.RangeSelection;
     }
 
     public RangeSelection(HardwareNode var, int lower, int upper) {
