@@ -60,11 +60,14 @@ public class SegmentSchedulingAnalyzer extends ASegmentAnalyzer {
         for (var bb : segments) {
             for (var repetition : repetitions) {
                 var dfg = new BasicBlockDataFlowGraph(bb, repetition);
+
                 if (useAGUs) {
                     System.out.println("Modifying with AGUs");
-                    SegmentAddressGenerationUnitAnalyzer.modifyWithAGUs(dfg);
+                    SegmentAddressGenerationUnitAnalyzer.modifyWithAGUs(dfg, false);
                 }
+                System.out.println("Before pruning: " + GraphUtils.generateGraphURL(dfg));
                 var dep = new DependencyGraph(dfg, useDependencies);
+                System.out.println("After pruning: " + GraphUtils.generateGraphURL(dep));
 
                 var stats = new DataFlowStatistics(dep, dfg.getSegment());
                 stats.setInsts(bb).setRepetitions(repetition);

@@ -138,7 +138,7 @@ public class GraphUtils {
             String extraInfo = "";
 //            if (v.getLoadStoreOrder() != -1)
 //                extraInfo = " \\[" + v.getLoadStoreOrder() + "\\]";
-//            extraInfo = " \\[" + v.getPriority() + "\\]";
+            extraInfo = " \\\n[L=" + v.getLatency() + "\\]";
             
             map.put("label", DefaultAttribute.createAttribute(label + extraInfo));
             map.put("type", DefaultAttribute.createAttribute(v.getType().toString()));
