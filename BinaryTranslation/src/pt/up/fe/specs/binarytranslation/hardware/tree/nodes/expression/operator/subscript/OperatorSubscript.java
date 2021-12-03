@@ -11,14 +11,14 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
 public abstract class OperatorSubscript extends HardwareExpression {
 
-    public OperatorSubscript(HardwareNodeType type) {
+    protected OperatorSubscript(HardwareNodeType type) {
         super(type);
     }
 }

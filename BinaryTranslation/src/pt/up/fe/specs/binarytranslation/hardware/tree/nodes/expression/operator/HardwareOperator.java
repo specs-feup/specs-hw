@@ -18,7 +18,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareE
 
 public abstract class HardwareOperator extends HardwareExpression {
 
-    public HardwareOperator(HardwareNodeType type) {
+    protected HardwareOperator(HardwareNodeType type) {
         super(type);
     }
 

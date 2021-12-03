@@ -35,8 +35,8 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.IndexedSelection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.RangedSelection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript.RangedSubscript;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript.ScalarSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.ScalarSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
