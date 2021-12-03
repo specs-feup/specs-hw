@@ -14,11 +14,11 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 
 public class PosEdge extends SignalEdge {
 
-    public PosEdge(IdentifierReference signal) {
+    public PosEdge(VariableOperator signal) {
         super(HardwareNodeType.PosEdge, signal);
     }
 

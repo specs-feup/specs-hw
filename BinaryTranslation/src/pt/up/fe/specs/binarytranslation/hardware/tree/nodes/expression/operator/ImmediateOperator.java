@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
@@ -25,7 +25,7 @@ public class ImmediateOperator extends HardwareOperator {
      * Note: for now, all immediates are represented as decimals
      */
     public ImmediateOperator(Number value, int width) {
-        super(HardwareNodeType.ImmediateReference);
+        super(HardwareNodeType.ImmediateOperator);
         this.value = value;
         this.width = width;
     }
@@ -40,7 +40,7 @@ public class ImmediateOperator extends HardwareOperator {
      * is this the best way?
      */
     @Override
-    protected String getValue() {
+    public String getValue() {
         return String.valueOf(this.value.intValue());
     }
 

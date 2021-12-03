@@ -14,11 +14,11 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 
 public class NegEdge extends SignalEdge {
 
-    public NegEdge(IdentifierReference signal) {
+    public NegEdge(VariableOperator signal) {
         super(HardwareNodeType.NegEdge, signal);
     }
 

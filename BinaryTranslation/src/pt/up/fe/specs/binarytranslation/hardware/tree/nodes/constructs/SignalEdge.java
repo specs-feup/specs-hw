@@ -15,18 +15,18 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 
 public abstract class SignalEdge extends HardwareNode {
 
-    private IdentifierReference signal;
+    private VariableOperator signal;
 
-    public SignalEdge(HardwareNodeType type, IdentifierReference signal) {
+    public SignalEdge(HardwareNodeType type, VariableOperator signal) {
         super(type);
         this.signal = signal;
     }
 
-    public IdentifierReference getSignal() {
+    public VariableOperator getSignal() {
         return signal;
     }
 

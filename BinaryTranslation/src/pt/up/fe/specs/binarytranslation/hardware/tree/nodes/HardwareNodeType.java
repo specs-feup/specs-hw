@@ -60,9 +60,11 @@ public enum HardwareNodeType {
     LessThanOrEqualsToExpression,
 
     ComparsionExpression,
-    ImmediateReference,
-    IdentifierReference,
     ParenthesisExpression,
+
+    // operators
+    ImmediateOperator,
+    VariableOperator,
     RangeSelection,
     IndexSelection,
 

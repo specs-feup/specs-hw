@@ -11,12 +11,13 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript.OperatorSubscript;
 
-public class IdentifierReference extends VariableOperator {
+public class VariableOperator extends HardwareOperator {
 
     // private final VariableDeclaration declaration;
     private final String name;
@@ -24,7 +25,7 @@ public class IdentifierReference extends VariableOperator {
     /*
      * Auxiliary copy constructor
      */
-    private IdentifierReference(IdentifierReference other) {
+    private VariableOperator(VariableOperator other) {
         super(other.type);
         this.name = other.name;
     }
@@ -36,28 +37,46 @@ public class IdentifierReference extends VariableOperator {
      * (I've also added a "getReference()" method to
      * any class which inherits from @VariableDeclaration)
      */
-    public IdentifierReference(IdentifierDeclaration namedIdentifier) {
-        super(HardwareNodeType.IdentifierReference);
+    public VariableOperator(IdentifierDeclaration namedIdentifier) {
+        super(HardwareNodeType.VariableOperator);
         this.name = namedIdentifier.getVariableName();
     }
 
     @Override
     public String getAsString() {
-        return this.name;
+
+        var sb = new StringBuilder();
+        sb.append(this.name);
+
+        // print any right hand indexing children;
+        // TODO: ensure that right hand children are only indexing nodes
+        for (var indexes : this.getChildren(OperatorSubscript.class)) {
+            sb.append(indexes.getAsString());
+        }
+
+        return sb.toString();
     }
 
     @Override
-    protected String getValue() {
+    public String getValue() {
         return this.getAsString();
     }
 
     @Override
-    protected IdentifierReference copyPrivate() {
-        return new IdentifierReference(this);
+    protected VariableOperator copyPrivate() {
+        return new VariableOperator(this);
     }
 
     @Override
-    public IdentifierReference copy() {
-        return (IdentifierReference) super.copy();
+    public VariableOperator copy() {
+        return (VariableOperator) super.copy();
+    }
+
+    /*
+     * 
+     */
+    public VariableOperator addSubscript(OperatorSubscript subs) {
+        this.addChild(subs);
+        return this;
     }
 }
