@@ -22,11 +22,11 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCom
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.RangedSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript.RangedSubscript;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript.ScalarSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.ScalarSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
@@ -56,6 +56,9 @@ public class HardwareInstanceTest {
 
         var opWithSubscript = ref1.copy().addSubscript(index).addSubscript(index2);
         opWithSubscript.emit();
+
+        var opWithSubscript2 = ref1.copy().addSubscript(7).addSubscript(4, 7);
+        opWithSubscript2.emit();
 
         /*
         // 1d index

@@ -15,7 +15,9 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript.OperatorSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.OperatorSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.ScalarSubscript;
 
 public class VariableOperator extends HardwareOperator {
 
@@ -77,6 +79,38 @@ public class VariableOperator extends HardwareOperator {
      */
     public VariableOperator addSubscript(OperatorSubscript subs) {
         this.addChild(subs);
+        return this;
+    }
+
+    /*
+     * 
+     */
+    public VariableOperator addSubscript(HardwareOperator idx) {
+        this.addChild(new ScalarSubscript(idx));
+        return this;
+    }
+
+    /*
+     * 
+     */
+    public VariableOperator addSubscript(int idx) {
+        this.addChild(new ScalarSubscript(idx));
+        return this;
+    }
+
+    /*
+     * 
+     */
+    public VariableOperator addSubscript(HardwareOperator left, HardwareOperator right) {
+        this.addChild(new RangedSubscript(left, right));
+        return this;
+    }
+
+    /*
+     * 
+     */
+    public VariableOperator addSubscript(int left, int right) {
+        this.addChild(new RangedSubscript(left, right));
         return this;
     }
 }

@@ -15,10 +15,13 @@ package pt.up.fe.specs.binarytranslation.hardware.factory;
 
 /**
  * Factory methods for verilog AST nodes
+ * 
  * @author nuno
  *
  */
 public class Verilog {
 
-    public static 
+    // public static
+
+    // public static HardwareTestbench newTestBench(HardwareModule dut, TestbenchSetup setup);
 }
