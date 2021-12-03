@@ -31,10 +31,12 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.Inp
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.NotEqualsToExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IndexedSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.RangedSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.IndexedSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.RangedSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript.RangedSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript.ScalarSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
@@ -135,25 +137,27 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
 
         var ifstat1 = new ProceduralNonBlockingStatement(verificationOutputSignal.getReference(), immediate0_1);
         var elsestat1 = new ProceduralNonBlockingStatement(verificationOutputSignal.getReference(), immediate1_1);
-        var index = new IndexedSelection(validationOutputs.getReference(), validationCurrentIndex.getReference());
-        var select = new RangedSelection(index, 32);
+
+        var ref1 = validationOutputs.getReference();
+        var index1 = validationCurrentIndex.getReference();
+        ref1.addSubscript(new ScalarSubscript(index1)).addSubscript(new RangedSubscript(0, 32));
 
         // TODO: factory methods like "Verilog.alwaysFF.atPosEdge(signal)... etc"
 
         alwaysblock2.addChild(
                 new IfElseStatement(new NotEqualsToExpression(
-                        moduleOutputs.getReference(), select))
+                        moduleOutputs.getReference(), ref1))
                                 .addIfStatement(ifstat1)
                                 .addElseStatement(elsestat1));
 
         var subInputs = new ArrayList<HardwareNode>();
 
         for (int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32)
-            subInputs.add(new RangedSelection(new IndexedSelection(new IdentifierReference(validationInputs),
-                    new IdentifierReference(validationCurrentIndex)), i, i + 32));
+            subInputs.add(new RangedSelection(new IndexedSelection(new VariableOperator(validationInputs),
+                    new VariableOperator(validationCurrentIndex)), i, i + 32));
 
         for (int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32)
-            subInputs.add(new RangedSelection(new IdentifierReference(moduleOutputs), i, i + 32));
+            subInputs.add(new RangedSelection(new VariableOperator(moduleOutputs), i, i + 32));
 
         /*
          * Instantiate the Design Under Test (DUT)

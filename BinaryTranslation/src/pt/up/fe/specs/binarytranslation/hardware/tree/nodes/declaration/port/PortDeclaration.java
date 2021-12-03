@@ -14,8 +14,8 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 
 public abstract class PortDeclaration extends IdentifierDeclaration {
@@ -41,7 +41,7 @@ public abstract class PortDeclaration extends IdentifierDeclaration {
 
     @Override
     public String getAsString() {
-        return this.direction.toString() + " " + ((IdentifierDeclaration) this.getChild(0)).getAsString();
+        return this.direction.toString() + " " + this.getChild(IdentifierDeclaration.class, 0).getAsString();
     }
 
     @Override

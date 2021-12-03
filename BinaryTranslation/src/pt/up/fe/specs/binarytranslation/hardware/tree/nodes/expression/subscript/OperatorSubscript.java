@@ -11,26 +11,14 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public abstract class VariableOperator extends HardwareOperator {
+public abstract class OperatorSubscript extends HardwareExpression {
 
-    public VariableOperator(HardwareNodeType type) {
+    public OperatorSubscript(HardwareNodeType type) {
         super(type);
-    }
-
-    @Override
-    protected abstract VariableOperator copyPrivate();
-
-    @Override
-    public VariableOperator copy() {
-        return (VariableOperator) super.copy();
-    }
-
-    @Override
-    protected String getValue() {
-        return this.getAsString();
     }
 }

@@ -14,7 +14,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 
 public abstract class IdentifierDeclaration extends HardwareDeclaration {
 
@@ -40,8 +40,8 @@ public abstract class IdentifierDeclaration extends HardwareDeclaration {
         return getAsString();
     }
 
-    public IdentifierReference getReference() {
-        return new IdentifierReference(this);
+    public VariableOperator getReference() {
+        return new VariableOperator(this);
     }
 
     @Override

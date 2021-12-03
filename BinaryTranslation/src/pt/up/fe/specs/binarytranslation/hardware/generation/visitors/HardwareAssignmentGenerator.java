@@ -24,8 +24,8 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.SubtractionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.BitWiseAndExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.ComparsionExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
@@ -79,19 +79,19 @@ public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareN
     public ContinuousStatement generateAssign(AssignmentExpressionASTNode node)
             throws HardwareGenerationException {
 
-        return new ContinuousStatement(new IdentifierReference(node.getTarget().getAsString()),
+        return new ContinuousStatement(new VariableOperator(node.getTarget().getAsString()),
                 convertExpression(node));
     }
 
     public ProceduralBlockingStatement generateBlocking(AssignmentExpressionASTNode node)
             throws HardwareGenerationException {
-        return new ProceduralBlockingStatement(new IdentifierReference(node.getTarget().getAsString()),
+        return new ProceduralBlockingStatement(new VariableOperator(node.getTarget().getAsString()),
                 convertExpression(node));
     }
 
     public ProceduralNonBlockingStatement generateNonBlocking(AssignmentExpressionASTNode node)
             throws HardwareGenerationException {
-        return new ProceduralNonBlockingStatement(new IdentifierReference(node.getTarget().getAsString()),
+        return new ProceduralNonBlockingStatement(new VariableOperator(node.getTarget().getAsString()),
                 convertExpression(node));
     }
 
@@ -166,12 +166,12 @@ public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareN
 
         // TODO: otherwise create
 
-        return new IdentifierReference(variablename);
+        return new VariableOperator(variablename);
     }
 
     @Override
     protected HardwareNode visit(MetaOperandASTNode node) throws Exception {
-        return new IdentifierReference(node.getAsString());
+        return new VariableOperator(node.getAsString());
     }
 
     @Override

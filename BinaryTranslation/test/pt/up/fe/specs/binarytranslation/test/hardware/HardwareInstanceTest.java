@@ -22,10 +22,11 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCom
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IndexedSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.RangedSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.RangedSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript.RangedSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.subscript.ScalarSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
@@ -40,23 +41,34 @@ public class HardwareInstanceTest {
         var imm = new ImmediateOperator(14, 32);
         imm.emit();
 
-        var ref1 = new IdentifierReference(decl1);
+        var ref1 = new VariableOperator(decl1);
         ref1.emit();
 
         var ref1b = decl1.getReference();
         ref1b.emit();
 
+        // index1
+        var index = new ScalarSubscript(1);
+        index.emit();
+
+        var index2 = new RangedSubscript(4, 8);
+        index2.emit();
+
+        var opWithSubscript = ref1.copy().addSubscript(index).addSubscript(index2);
+        opWithSubscript.emit();
+
+        /*
         // 1d index
         var index = new IndexedSelection(decl1.getReference(), imm);
         index.emit();
-
+        
         // 2d index
         var index2 = new IndexedSelection(index, imm);
         index2.emit();
-
+        
         // 2d index left hand
         var index3 = new IndexedSelection(imm, index);
-        index3.emit();
+        index3.emit();*/
 
         // var select = new RangedReference(index, 32);
 

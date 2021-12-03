@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareNodeExpressionMap;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.RangedSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.IdentifierReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.RangedSelection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
@@ -79,8 +79,8 @@ public class InstructionCDFGConverter {
         
         Map<AInstructionCDFGNode, HardwareExpression> signal_map = new HashMap<>();
         
-        dfg.getInputs().forEach(i -> signal_map.put(i, (i instanceof InstructionCDFGLiteralNode) ?  new ImmediateOperator(((InstructionCDFGLiteralNode)i).getValue(), 32) : new IdentifierReference(i.getUID())));
-        dfg.getOutputs().forEach(o -> signal_map.put(o, new IdentifierReference(o.getUID())));
+        dfg.getInputs().forEach(i -> signal_map.put(i, (i instanceof InstructionCDFGLiteralNode) ?  new ImmediateOperator(((InstructionCDFGLiteralNode)i).getValue(), 32) : new VariableOperator(i.getUID())));
+        dfg.getOutputs().forEach(o -> signal_map.put(o, new VariableOperator(o.getUID())));
         
         return signal_map;
     }
@@ -123,7 +123,7 @@ public class InstructionCDFGConverter {
                 if(modifier instanceof InstructionCDFGRangeSubscript) {
                     
                     RangedSelection rangeSelection = new RangedSelection(
-                            (IdentifierReference) signalMap.get(operand), 
+                            (VariableOperator) signalMap.get(operand), 
                             ((InstructionCDFGRangeSubscript)modifier).getLowerBound().intValue(),
                             ((InstructionCDFGRangeSubscript)modifier).getUpperBound().intValue()
                             );
@@ -166,7 +166,7 @@ public class InstructionCDFGConverter {
             
             validCandidates.forEach(v -> {
 
-                IdentifierReference expr_var = (IdentifierReference) signal_map.getOrDefault(InstructionCDFGConverter.nextNodeisDataNode(dfg, v), new IdentifierReference(v.getUID()));
+                VariableOperator expr_var = (VariableOperator) signal_map.getOrDefault(InstructionCDFGConverter.nextNodeisDataNode(dfg, v), new VariableOperator(v.getUID()));
                 signal_map.putIfAbsent(v, expr_var);
                 
                 HardwareExpression expr = HardwareNodeExpressionMap.generate(v.getClass(), InstructionCDFGConverter.getExpressionSignals(dfg, v, signal_map));   // Generates a new hardware expression for the vertex
