@@ -13,10 +13,10 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule;
 
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareModule;
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 
-public class SingleInstructionModule extends AHardwareModule {
+public class SingleInstructionModule extends AHardwareArchitecture {
 
     private String moduleName;
 

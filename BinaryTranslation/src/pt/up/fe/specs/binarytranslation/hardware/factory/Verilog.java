@@ -13,8 +13,12 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.factory;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysFFBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.NegEdge;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.PosEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.SubtractionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
@@ -34,7 +38,19 @@ public class Verilog {
         return new AdditionExpression(refA, refB);
     }
 
+    public static SubtractionExpression sub(HardwareExpression refA, HardwareExpression refB) {
+        return new SubtractionExpression(refA, refB);
+    }
+
     public static ProceduralNonBlockingStatement nonBlocking(VariableOperator target, HardwareExpression expression) {
         return new ProceduralNonBlockingStatement(target, expression);
+    }
+
+    public static AlwaysFFBlock alwaysAtPosedge(VariableOperator signal) {
+        return new AlwaysFFBlock(new PosEdge(signal));
+    }
+
+    public static AlwaysFFBlock alwaysAtNegedge(VariableOperator signal) {
+        return new AlwaysFFBlock(new NegEdge(signal));
     }
 }

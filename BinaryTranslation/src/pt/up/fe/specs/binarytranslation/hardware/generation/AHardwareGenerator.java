@@ -17,7 +17,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
-import pt.up.fe.specs.binarytranslation.hardware.HardwareModule;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareArchitecture;
 
 public abstract class AHardwareGenerator implements HardwareGenerator {
 
@@ -30,19 +30,19 @@ public abstract class AHardwareGenerator implements HardwareGenerator {
     // ......// LoopAcceleratorModule (C) --> could internally resolve the language?
 
     @Override
-    public HardwareModule generateHardware(BinarySegmentGraph graph) {
+    public HardwareArchitecture generateHardware(BinarySegmentGraph graph) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public HardwareModule generateHardware(List<BinarySegmentGraph> graphs) {
+    public HardwareArchitecture generateHardware(List<BinarySegmentGraph> graphs) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public HardwareModule generateHarware(GraphBundle gbundle) {
+    public HardwareArchitecture generateHarware(GraphBundle gbundle) {
         // TODO Auto-generated method stub
         return null;
     }

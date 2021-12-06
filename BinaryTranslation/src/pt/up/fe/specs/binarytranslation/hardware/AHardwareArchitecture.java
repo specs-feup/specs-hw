@@ -18,15 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareTree;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareRootNode;
 
-public abstract class AHardwareModule implements HardwareModule {
+public abstract class AHardwareArchitecture implements HardwareArchitecture {
 
     // TODO: the HardareInstance should be either a tree itself, or contain a tree, or have single root node with a
     // header child, and the other children are other subtrees (e.g., each is a verilog module with its only
     // declaration block???)
 
     private final String moduleName;
-    private final HardwareTree tree;
+    private final HardwareRootNode tree; // TODO: replace with list of modules that make up the design
     private final List<String> inputs, outputs; // raw list of port names just for instantiation
 
     /*
@@ -46,7 +47,7 @@ public abstract class AHardwareModule implements HardwareModule {
             this.outputs.add(port.getVariableName());
     }*/
 
-    public AHardwareModule(String moduleName, HardwareTree tree) {
+    public AHardwareArchitecture(String moduleName, HardwareTree tree) {
 
         this.moduleName = moduleName;
         this.tree = tree;

@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.hardware.testbench;
 
 import java.util.ArrayList;
 
-import pt.up.fe.specs.binarytranslation.hardware.HardwareModule;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
@@ -29,6 +29,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.TimeScal
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareTestbench;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.NotEqualsToExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
@@ -47,7 +48,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
     // private static final String moduleOutputs = "moduleOutputs";
     // private static final String validationCurrentIndex = "index";
 
-    public static HardwareTestbench generate(HardwareModule module, int validationDataSize,
+    public static HardwareTestbench generate(HardwareArchitecture module, int validationDataSize,
             String inputValidationFileName, String outputValidationFileName) {
 
         /*

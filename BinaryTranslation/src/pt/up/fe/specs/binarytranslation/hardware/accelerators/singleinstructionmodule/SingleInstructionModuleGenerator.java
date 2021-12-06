@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule;
 
-import pt.up.fe.specs.binarytranslation.hardware.HardwareModule;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionASTConverter;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
@@ -48,7 +48,7 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
      *            The instruction thats being used for generation
      */
     @Override
-    public HardwareModule generateHarware(Instruction inst) {
+    public HardwareArchitecture generateHarware(Instruction inst) {
 
         // The VerilogModuleTree
         var moduletree = new VerilogModuleTree(inst.getName() + "_" + inst.getInstruction());

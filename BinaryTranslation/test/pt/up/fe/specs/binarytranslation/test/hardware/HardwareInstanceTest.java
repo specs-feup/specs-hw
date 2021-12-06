@@ -17,24 +17,17 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.hardware.HardwareModule;
-import pt.up.fe.specs.binarytranslation.hardware.VerilogModule;
 import pt.up.fe.specs.binarytranslation.hardware.factory.Verilog;
-import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.NewHardwareModule;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.ScalarSubscript;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
 public class HardwareInstanceTest {
 
@@ -83,90 +76,14 @@ public class HardwareInstanceTest {
 
     }
 
-    @Test
-    public void testHardwareFast() {
-        var portA = new InputPortDeclaration("cenas1", 8);
-        var portB = new InputPortDeclaration("cenas2", 8);
-        var tree = new VerilogModuleTree("testAdder");
-        tree.addPort(portA).addPort(portB);
-        tree.addStatement(
-                new ContinuousStatement(portA.getReference(),
-                        new AdditionExpression(portA.getReference(), portB.getReference())));
-
-        var module = new VerilogModule("testinstance", tree);
-        module.emit();
-
-        /*
-         * test testbench too 
-         */
-        var tb = HardwareTestbenchGenerator.generate(module, 100, "testinput.mem", "testoutput.mem");
-        tb.emit();
-    }
-
     private static HardwareModule getAdder() {
-        var tree = new VerilogModuleTree("testModule");
-        var a = new InputPortDeclaration("testA", 32);
-        var b = new InputPortDeclaration("testB", 32);
-        var c = new InputPortDeclaration("testC", 32);
-        tree.addPort(a).addPort(b).addPort(c);
 
-        var refA = b.getReference().addSubscript(15);
-        var expr = new AdditionExpression(refA, c.getReference());
-
-        var body = new AlwaysCombBlock("additionblock");
-        tree.addStatement(body);
-        body.addChild(new ProceduralNonBlockingStatement(a.getReference(), expr));
-        return new VerilogModule("testModule", tree);
-
-        // TODO: makes no sense that "VerilogModule" needs the module name,
-        // since that is already a field of the ModuleHeader type node inside the
-        // "VerilogModuleTree"...
-    }
-
-    @Test
-    public void testHardwareInstance() {
-        var tree = new VerilogModuleTree("testModule");
-        var a = new InputPortDeclaration("testA", 32);
-        var b = new InputPortDeclaration("testB", 32);
-        var c = new InputPortDeclaration("testC", 32);
-        tree.addPort(a).addPort(b).addPort(c);
-
-        var refA = b.getReference().addSubscript(15);
-        var expr = new AdditionExpression(refA, c.getReference());
-
-        var body = new AlwaysCombBlock("additionblock");
-        tree.addStatement(body);
-        body.addChild(new ProceduralNonBlockingStatement(a.getReference(), expr));
-
-        /*
-         * Print to console!
-         */
-        tree.emit();
-    }
-
-    @Test
-    public void testHardwareModuleInstance() {
-        var testAdder = HardwareInstanceTest.getAdder();
-        testAdder.emit();
-        // this var is HardwareModule
-
-        var module = new VerilogModuleTree("adderWrapper");
-        var a = new InputPortDeclaration("inA", 32);
-        var b = new InputPortDeclaration("inB", 32);
-        var c = new InputPortDeclaration("outC", 32);
-        module.addPort(a).addPort(b).addPort(c);
-
-        var connections = new ArrayList<HardwareOperator>();
-        connections.add(a.getReference());
-        connections.add(b.getReference());
-        connections.add(c.getReference());
-        var adderInstantiation = new ModuleInstance(testAdder, "adder1", connections);
-        module.addStatement(adderInstantiation);
-
-        /*
-         * Test module instantiation inside other module
-         */
-        module.emit();
+        var adder = new HardwareModule("testAdder");
+        adder.addInputPort("testA", 32).addInputPort("testB", 32).addOutputPort("testC", 32);
+        var block = adder.addChild(new AlwaysCombBlock("additionblock"));
+        var refA = adder.getPort(1).addSubscript(15);
+        block.addChild(Verilog.nonBlocking(adder.getPort(2), Verilog.add(refA, adder.getPort(0))));
+        return adder;
     }
 
     @Test
@@ -175,15 +92,20 @@ public class HardwareInstanceTest {
         testAdder.emit();
         // this var is HardwareModule
 
-        var wrapperadder = new NewHardwareModule("adderWrapper");
+        var wrapperadder = new HardwareModule("adderWrapper");
         wrapperadder.addInputPort("winA", 32).addInputPort("winB", 32).addOutputPort("woutC", 32);
+
+        var wire = new WireDeclaration("tmp", 32);
+        wrapperadder.addWire(wire);
 
         var connections = new ArrayList<HardwareOperator>();
         connections.add(wrapperadder.getPort(0));
         connections.add(wrapperadder.getPort(1));
-        connections.add(wrapperadder.getPort(2));
+        connections.add(wire.getReference());
         var adderInstantiation = new ModuleInstance(testAdder, "adder1", connections);
         wrapperadder.addStatement(adderInstantiation);
+        wrapperadder.addStatement(Verilog.nonBlocking(wrapperadder.getPort(2),
+                Verilog.add(wire.getReference(), ImmediateOperator.Ones(15))));
 
         /*
          * Test module instantiation inside other module
@@ -232,7 +154,7 @@ public class HardwareInstanceTest {
         /*
          * With more more sugar
          */
-        var adder = new NewHardwareModule("adderDef");
+        var adder = new HardwareModule("adderDef");
         adder.addInputPort("inA", 32).addInputPort("inB", 32).addOutputPort("outC", 32);
         adder.addStatement(Verilog.nonBlocking(adder.getPort(2), Verilog.add(adder.getPort(0), adder.getPort(1))));
 

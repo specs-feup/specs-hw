@@ -29,11 +29,11 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 
-public class NewHardwareModule extends HardwareDefinition {
+public class HardwareModule extends HardwareDefinition {
 
     private final String moduleName;
 
-    public NewHardwareModule(String moduleName) {
+    public HardwareModule(String moduleName) {
         super(HardwareNodeType.ModuleDefinition);
         this.moduleName = moduleName;
 
@@ -63,7 +63,7 @@ public class NewHardwareModule extends HardwareDefinition {
         return this.getChild(DeclarationBlock.class, 4);
     }
 
-    private NewHardwareModule addCode(HardwareNode node) {
+    private HardwareModule addCode(HardwareNode node) {
         this.addChild(node);
         return this;
     }
@@ -71,35 +71,35 @@ public class NewHardwareModule extends HardwareDefinition {
     /* *****************************
      * Public stuff
      */
-    public NewHardwareModule addPort(PortDeclaration port) {
+    public HardwareModule addPort(PortDeclaration port) {
         this.getHeader().addChild(port);
         this.getPortDeclarationBlock().addChild(port);
         return this;
     }
 
-    public NewHardwareModule addInputPort(String portName, int portWidth) {
+    public HardwareModule addInputPort(String portName, int portWidth) {
         return addPort(new InputPortDeclaration(portName, portWidth));
     }
 
-    public NewHardwareModule addOutputPort(String portName, int portWidth) {
+    public HardwareModule addOutputPort(String portName, int portWidth) {
         return addPort(new OutputPortDeclaration(portName, portWidth));
     }
 
-    public NewHardwareModule addWire(WireDeclaration wire) {
+    public HardwareModule addWire(WireDeclaration wire) {
         this.getWireDeclarationBlock().addChild(wire);
         return this;
     }
 
-    public NewHardwareModule addRegister(RegisterDeclaration reg) {
+    public HardwareModule addRegister(RegisterDeclaration reg) {
         this.getRegisterDeclarationBlock().addChild(reg);
         return this;
     }
 
-    public NewHardwareModule addStatement(HardwareStatement stat) {
+    public HardwareModule addStatement(HardwareStatement stat) {
         return this.addCode(stat);
     }
 
-    public NewHardwareModule addInstance(ModuleInstance instantiatedModule) {
+    public HardwareModule addInstance(ModuleInstance instantiatedModule) {
         return this.addCode(instantiatedModule);
     }
 
@@ -142,25 +142,17 @@ public class NewHardwareModule extends HardwareDefinition {
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
-        // TODO Auto-generated method stub
-        return null;
+    protected HardwareModule copyPrivate() {
+        return new HardwareModule(this.moduleName);
     }
 
     @Override
-    public NewHardwareModule copy() {
-        // TODO Auto-generated method stub
-        return (NewHardwareModule) super.copy();
+    public HardwareModule copy() {
+        return (HardwareModule) super.copy();
     }
 
     @Override
     public String getAsString() {
-        /*
-        var sb = new StringBuilder();
-        for (var child : this.getChildren())
-            sb.append(child.getAsString() + "\n");
-        sb.append("endmodule\n");*/
-
         var sb = new StringBuilder();
         sb.append(super.getAsString());
         sb.append("endmodule\n");

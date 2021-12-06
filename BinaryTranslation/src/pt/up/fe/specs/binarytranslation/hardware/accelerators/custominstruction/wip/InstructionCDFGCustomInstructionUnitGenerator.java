@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip;
 
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareModule;
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionCDFGConverter;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
@@ -28,7 +28,7 @@ public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGene
     private VerilogModuleTree moduletree;
     private ModuleHeader module;
 
-    public AHardwareModule generateHardware(InstructionCDFG icdfg, String moduleName) {
+    public AHardwareArchitecture generateHardware(InstructionCDFG icdfg, String moduleName) {
 
         this.moduletree = new VerilogModuleTree(moduleName);
         this.module = moduletree.getModule();
