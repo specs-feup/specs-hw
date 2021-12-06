@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 /**
@@ -22,7 +21,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
  * @author nuno
  *
  */
-public class DeclarationBlock extends HardwareNode {
+public class DeclarationBlock extends HardwareMetaNode {
 
     public DeclarationBlock() {
         super(HardwareNodeType.DeclarationBlock);

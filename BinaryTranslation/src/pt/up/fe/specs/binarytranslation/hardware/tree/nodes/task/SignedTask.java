@@ -11,13 +11,12 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.task;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class SignedTask extends HardwareNode {
+public class SignedTask extends HardwareTask {
 
     public SignedTask(HardwareExpression expression) {
         super(HardwareNodeType.SignedTask);

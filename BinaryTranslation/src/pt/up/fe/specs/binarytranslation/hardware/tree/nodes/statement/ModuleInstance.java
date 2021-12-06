@@ -15,39 +15,54 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 
 public class ModuleInstance extends HardwareStatement {
 
-    private HardwareInstance moduleInstance;
-    private String moduleName;
+    private HardwareModule moduleDefinition;
+    private String instanceName;
+    private List<HardwareOperator> portConnections;
 
     /*
-     * Maybe use a map to pass the child port - parent module signal relation ?
+     * TODO: Maybe use a map to pass the child port - parent module signal relation ?
      */
 
-    public ModuleInstance(HardwareInstance moduleInstance, String moduleName) {
-        super(HardwareNodeType.ModuleInstantiation);
-        this.moduleInstance = moduleInstance;
-        this.moduleName = moduleName;
-    }
-
-    public ModuleInstance(HardwareInstance moduleDefinition, String instanceName, List<HardwareNode> ports)
+    public ModuleInstance(HardwareModule moduleDefinition,
+            String instanceName, List<HardwareOperator> connections)
             throws IllegalArgumentException {
-        this(moduleDefinition, instanceName);
 
-        if (ports.size() != this.moduleInstance.getPorts().size()) {
+        // "connections" must be single name operators,
+        // i.e., @VariableOperator,
+        // or @ImmediateOperator, for now
+        // if we want an input that is a complex expression,
+        // assign that expression to
+        // a @HardwareOperator first
+
+        super(HardwareNodeType.ModuleInstantiation);
+        this.instanceName = instanceName;
+        this.moduleDefinition = moduleDefinition;
+        this.portConnections = connections;
+
+        if (this.moduleDefinition.getPorts().size() != this.portConnections.size()) {
             throw new IllegalArgumentException();
         }
 
-        this.addChildren(ports);
+        /*
+         * NOTE: dont use children here, since its a fixed 1 to 1 list
+         * 
+        for (var asNode : this.portConnections) {
+            this.addChild(asNode.copy());
+            // we must copy since the HardwareOperator is
+            // part of another part of the module body
+            // and a node cannot have 2 parents in a tree
+        }*/
     }
 
     @Override
     protected ModuleInstance copyPrivate() {
-        return new ModuleInstance(this.moduleInstance, this.moduleName);
+        return new ModuleInstance(this.moduleDefinition, this.instanceName, this.portConnections);
     }
 
     @Override
@@ -55,27 +70,29 @@ public class ModuleInstance extends HardwareStatement {
         return (ModuleInstance) super.copy();
     }
 
+    /*
+     * Supposed to print an instantiation of the module only, i.e.
+     * 
+     * "adder add1(.inA(wireA), .inB(wireB));"
+     */
     @Override
     public String getAsString() {
 
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
 
-        builder.append(this.moduleInstance.getName() + " ");
-        builder.append(this.moduleName + " (\n");
+        builder.append(this.moduleDefinition.getName() + " ");
+        builder.append(this.instanceName + " (\n");
 
-        var modulePorts = this.moduleInstance.getPorts();
-        for (int i = 0; i < modulePorts.size(); i++) {
-            builder.append("\t." + modulePorts.get(i).getVariableName() + "("
-                    + this.getChild(i).getAsString() + ")");
-
-            if (i != (modulePorts.size() - 1)) {
+        var ports = this.moduleDefinition.getPorts();
+        for (int i = 0; i < ports.size(); i++) {
+            var connection = this.portConnections.get(i).getValue();
+            builder.append("\t." + ports.get(i) + "(" + connection + ")");
+            if (i != ports.size() - 1) {
                 builder.append(",");
             }
             builder.append("\n");
         }
-
         builder.append(");\n");
-
         return builder.toString();
     }
 }

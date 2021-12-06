@@ -18,7 +18,7 @@ import java.util.List;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class AlwaysFFBlock extends HardwareNode {
+public class AlwaysFFBlock extends HardwareBlock {
 
     // TODO: signal should be of bounded type, like HardwareSignalEdge
 

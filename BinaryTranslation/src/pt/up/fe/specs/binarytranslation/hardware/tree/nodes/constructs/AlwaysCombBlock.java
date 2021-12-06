@@ -16,7 +16,7 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class AlwaysCombBlock extends HardwareNode {
+public class AlwaysCombBlock extends HardwareBlock {
 
     private String blockName;
 

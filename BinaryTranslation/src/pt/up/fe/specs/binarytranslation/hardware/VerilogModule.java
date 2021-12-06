@@ -10,29 +10,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
-package pt.up.fe.specs.binarytranslation.hardware;
 
-import java.io.OutputStream;
+package pt.up.fe.specs.binarytranslation.hardware;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 
-public class VerilogModule extends AHardwareInstance implements HardwareInstance {
+public class VerilogModule extends AHardwareModule implements HardwareModule {
 
-    private String moduleName;
-
-    public VerilogModule(String instanceName, String moduleName, VerilogModuleTree tree) {
+    public VerilogModule(String instanceName, VerilogModuleTree tree) {
         super(instanceName, tree);
-        this.moduleName = moduleName;
     }
 
-    @Override
-    public void emit(OutputStream os) {
-        this.tree.emit(os);
-    }
-    
-    @Override
-    public void emit() {
-        this.tree.emit();
-    }
+    // TODO: VerilogModuleBuilder?
+    // returns a new VerilogModule via a static newInstance declared here?
+
 }

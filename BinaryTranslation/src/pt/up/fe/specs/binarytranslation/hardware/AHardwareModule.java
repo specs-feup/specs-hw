@@ -14,54 +14,67 @@
 package pt.up.fe.specs.binarytranslation.hardware;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareTree;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
-import pt.up.fe.specs.util.exceptions.NotImplementedException;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 
-public abstract class AHardwareInstance implements HardwareInstance {
+public abstract class AHardwareModule implements HardwareModule {
 
     // TODO: the HardareInstance should be either a tree itself, or contain a tree, or have single root node with a
     // header child, and the other children are other subtrees (e.g., each is a verilog module with its only
     // declaration block???)
 
-    protected String instancename;
-    protected HardwareTree tree;
+    private final String instancename;
+    private final HardwareTree tree;
+    private final List<String> inputs, outputs; // raw list of port names just for instantiation
 
-    public AHardwareInstance(String instancename, HardwareTree tree) {
+    /*
+     * HardwareTree tree will have to be entirely defined so we can
+     * close the specification of the module
+     */
+    public AHardwareModule(String instancename, HardwareTree tree) {
         this.instancename = instancename;
         this.tree = tree;
+
+        this.inputs = new ArrayList<String>();
+        for (var port : tree.getRoot().getChildrenOf(InputPortDeclaration.class))
+            this.inputs.add(port.getVariableName());
+
+        this.outputs = new ArrayList<String>();
+        for (var port : tree.getRoot().getChildrenOf(OutputPortDeclaration.class))
+            this.outputs.add(port.getVariableName());
     }
 
+    /*
+     * 
+     */
+    @Override
     public String getName() {
         return this.instancename;
     }
 
     /*
-     * Must be implemented by children on a case by case basis
-     * (i.e., which node is the root of the port declarations?)
+     * 
      */
     @Override
-    public List<PortDeclaration> getPorts() {
-        throw new NotImplementedException("HardwareInstance: getPorts()");
-    }
-
-    private List<PortDeclaration> getPorts(Predicate<PortDeclaration> port) {
-        return this.getPorts().stream().filter(port).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<PortDeclaration> getInputPorts() {
-        return this.getPorts(port -> port.getDirection() == ModulePortDirection.input); // TODO: inout?
+    public List<String> getPorts() {
+        var all = new ArrayList<String>();
+        all.addAll(this.inputs);
+        all.addAll(this.outputs);
+        return all;
     }
 
     @Override
-    public List<PortDeclaration> getOutputPorts() {
-        return this.getPorts(port -> port.getDirection() == ModulePortDirection.output);
+    public List<String> getInputPorts() {
+        return this.inputs;
+    }
+
+    @Override
+    public List<String> getOutputPorts() {
+        return this.outputs;
     }
 
     @Override
@@ -72,10 +85,5 @@ public abstract class AHardwareInstance implements HardwareInstance {
     @Override
     public void emit() {
         this.tree.emit();
-    }
-
-    @Override
-    public HardwareTree getTree() {
-        return this.tree;
     }
 }

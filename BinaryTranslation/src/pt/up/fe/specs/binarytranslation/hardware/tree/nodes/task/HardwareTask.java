@@ -11,29 +11,14 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.task;
 
-import java.io.OutputStream;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareRootNode;
+public abstract class HardwareTask extends HardwareNode {
 
-/*
- * A HardwareTree represents the *only the code* of any HardwareInstance
- */
-public interface HardwareTree {
-
-    /*
-     * 
-     */
-    public HardwareRootNode getRoot();
-
-    /*
-     * 
-     */
-    public void emit(OutputStream os);
-
-    /*
-     * 
-     */
-    public void emit();
+    public HardwareTask(HardwareNodeType type) {
+        super(type);
+    }
 }

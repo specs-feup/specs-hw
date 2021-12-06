@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.hardware.testbench;
 
 import java.util.ArrayList;
 
-import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
@@ -32,16 +32,11 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.Out
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.NotEqualsToExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.IndexedSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.RangedSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.ScalarSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.system_task.ReadMemoryHexadecimalTask;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.task.ReadMemoryHexadecimalTask;
 
 public class HardwareTestbenchGenerator extends AHardwareGenerator {
 
@@ -52,7 +47,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
     // private static final String moduleOutputs = "moduleOutputs";
     // private static final String validationCurrentIndex = "index";
 
-    public static HardwareTestbench generate(HardwareInstance module, int validationDataSize,
+    public static HardwareTestbench generate(HardwareModule module, int validationDataSize,
             String inputValidationFileName, String outputValidationFileName) {
 
         /*
@@ -135,29 +130,38 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
 
         var immediate1_1 = ImmediateOperator.Ones(1);
 
-        var ifstat1 = new ProceduralNonBlockingStatement(verificationOutputSignal.getReference(), immediate0_1);
-        var elsestat1 = new ProceduralNonBlockingStatement(verificationOutputSignal.getReference(), immediate1_1);
-
         var ref1 = validationOutputs.getReference();
         var index1 = validationCurrentIndex.getReference();
-        ref1.addSubscript(new ScalarSubscript(index1)).addSubscript(new RangedSubscript(0, 32));
+        ref1.addSubscript(index1).addSubscript(0, 32);
 
         // TODO: factory methods like "Verilog.alwaysFF.atPosEdge(signal)... etc"
 
-        alwaysblock2.addChild(
-                new IfElseStatement(new NotEqualsToExpression(
-                        moduleOutputs.getReference(), ref1))
-                                .addIfStatement(ifstat1)
-                                .addElseStatement(elsestat1));
+        // TODO: method "if.notEquals().else()" etc
+
+        var notEqual = new NotEqualsToExpression(moduleOutputs.getReference(), ref1);
+        var ifelse = new IfElseStatement(notEqual);
+        var ifstat1 = new ProceduralNonBlockingStatement(verificationOutputSignal.getReference(), immediate0_1);
+        var elsestat1 = new ProceduralNonBlockingStatement(verificationOutputSignal.getReference(), immediate1_1);
+        ifelse.addIfStatement(ifstat1).addElseStatement(elsestat1);
 
         var subInputs = new ArrayList<HardwareNode>();
 
-        for (int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32)
-            subInputs.add(new RangedSelection(new IndexedSelection(new VariableOperator(validationInputs),
-                    new VariableOperator(validationCurrentIndex)), i, i + 32));
+        for (int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32) {
+            var ref = validationInputs.getReference();
+            var idx = validationCurrentIndex.getReference();
+            ref.addSubscript(idx).addSubscript(i, i + 32);
+            subInputs.add(ref);
 
-        for (int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32)
-            subInputs.add(new RangedSelection(new VariableOperator(moduleOutputs), i, i + 32));
+            /*subInputs.add(new RangedSelection(new IndexedSelection(new VariableOperator(validationInputs),
+                    new VariableOperator(validationCurrentIndex)), i, i + 32));*/
+        }
+
+        for (int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32) {
+            var ref = moduleOutputs.getReference();
+            subInputs.add(ref.addSubscript(i, i + 32));
+
+            // subInputs.add(new RangedSelection(new VariableOperator(moduleOutputs), i, i + 32));
+        }
 
         /*
          * Instantiate the Design Under Test (DUT)

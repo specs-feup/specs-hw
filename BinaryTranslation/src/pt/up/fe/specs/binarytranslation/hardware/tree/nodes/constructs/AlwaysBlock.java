@@ -13,10 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class AlwaysBlock extends HardwareNode {
+public class AlwaysBlock extends HardwareBlock {
 
     public AlwaysBlock() {
         super(HardwareNodeType.Always);

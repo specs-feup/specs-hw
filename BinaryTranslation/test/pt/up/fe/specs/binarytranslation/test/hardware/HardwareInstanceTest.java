@@ -87,7 +87,7 @@ public class HardwareInstanceTest {
                 new ContinuousStatement(portA.getReference(),
                         new AdditionExpression(portA.getReference(), portB.getReference())));
 
-        var module = new VerilogModule("testinstance", "moduleA", tree);
+        var module = new VerilogModule("testinstance", tree);
         module.emit();
 
         /*
