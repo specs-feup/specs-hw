@@ -13,7 +13,14 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 
 /**
  * This block should emit nothing, and serve only as an anchor point to all declarations in a HardwareTree
@@ -27,15 +34,32 @@ public class DeclarationBlock extends HardwareMetaNode {
      * Simply indicates the meta-name of this block
      */
     private String blockName;
+    private Map<String, HardwareOperator> nameMap; // list of references
 
     public DeclarationBlock(String blockName) {
         super(HardwareNodeType.DeclarationBlock);
         this.blockName = blockName;
+        this.nameMap = new HashMap<String, HardwareOperator>();
         this.addChild(new HardwareCommentNode("Declarations block: " + blockName));
     }
 
     public String getBlockName() {
         return blockName;
+    }
+
+    @Override
+    public HardwareNode addChild(HardwareNode child) {
+        var declaration = (IdentifierDeclaration) child;
+        this.nameMap.put(declaration.getVariableName(), declaration.getReference());
+        return super.addChild(child);
+    }
+
+    /*
+     * get by name
+     */
+    public Optional<HardwareOperator> getDeclaration(String name) {
+        var ref = this.nameMap.get(name);
+        return Optional.ofNullable(ref);
     }
 
     @Override
