@@ -11,32 +11,15 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree;
+package pt.up.fe.specs.binarytranslation.hardware.factory;
 
-import java.io.OutputStream;
+import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareRootNode;
+public class VerilogModuleBuilder {
 
-public abstract class AHardwareTree implements HardwareTree {
+    private VerilogModuleTree tree;
 
-    protected HardwareRootNode root;
-
-    public AHardwareTree() {
-        this.root = new HardwareRootNode();
-    }
-
-    @Override
-    public HardwareRootNode getRoot() {
-        return this.root;
-    }
-
-    @Override
-    public void emit(OutputStream os) {
-        this.root.emit(os);
-    }
-
-    @Override
-    public void emit() {
-        this.root.emit();
+    public VerilogModuleBuilder(String moduleName) {
+        this.tree = new VerilogModuleTree(moduleName);
     }
 }

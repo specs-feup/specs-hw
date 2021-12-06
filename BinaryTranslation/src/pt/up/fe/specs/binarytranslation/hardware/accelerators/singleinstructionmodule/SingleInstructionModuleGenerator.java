@@ -70,10 +70,10 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
             // TODO: solve inputs/outputs with same name!
 
             else if (op.isRead())
-                moduletree.addDeclaration(new InputPortDeclaration(name, width));
+                moduletree.addPort(new InputPortDeclaration(name, width));
 
             else if (op.isWrite())
-                moduletree.addDeclaration(new OutputPortDeclaration(name, width));
+                moduletree.addPort(new OutputPortDeclaration(name, width));
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////

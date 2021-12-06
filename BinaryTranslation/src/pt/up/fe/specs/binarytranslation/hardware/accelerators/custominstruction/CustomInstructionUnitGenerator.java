@@ -95,22 +95,22 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
 
         // clk and rst ports if module is registered
         if (this.isClocked) {
-            moduletree.addDeclaration(new InputPortDeclaration("clk", 1));
-            moduletree.addDeclaration(new InputPortDeclaration("rst", 1));
+            moduletree.addPort(new InputPortDeclaration("clk", 1));
+            moduletree.addPort(new InputPortDeclaration("rst", 1));
         }
 
         // top level graph liveins
         for (var livein : graph.getLiveins()) {
             var liveinname = livein.getRepresentation();
             // TODO: replace symbolic names?
-            moduletree.addDeclaration(new InputPortDeclaration(liveinname, livein.getWidth()));
+            moduletree.addPort(new InputPortDeclaration(liveinname, livein.getWidth()));
         }
 
         // top level graph liveouts
         for (var liveout : graph.getLiveouts()) {
             var liveoutname = liveout.getRepresentation();
             // TODO: replace symbolic names?
-            moduletree.addDeclaration(new OutputPortDeclaration(liveoutname, liveout.getWidth()));
+            moduletree.addPort(new OutputPortDeclaration(liveoutname, liveout.getWidth()));
         }
 
         /*
@@ -162,7 +162,7 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
                     // TODO: to know the real width, we have to consult the @RegisterProperties
                     // of the respective source ISA; assuming 32 bits for now
 
-                    moduletree.addDeclaration(newport);
+                    moduletree.addPort(newport);
 
                 }
 

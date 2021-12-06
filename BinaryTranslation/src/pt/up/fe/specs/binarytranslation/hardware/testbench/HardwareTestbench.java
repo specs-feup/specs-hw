@@ -13,21 +13,12 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.testbench;
 
-import java.util.List;
-
 import pt.up.fe.specs.binarytranslation.hardware.AHardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareTree;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 
 public class HardwareTestbench extends AHardwareModule {
 
     public HardwareTestbench(String instancename, HardwareTree tree) {
         super(instancename, tree);
-    }
-
-    @Override
-    public List<PortDeclaration> getPorts() {
-        // TODO Auto-generated method stub
-        return super.getPorts();
     }
 }
