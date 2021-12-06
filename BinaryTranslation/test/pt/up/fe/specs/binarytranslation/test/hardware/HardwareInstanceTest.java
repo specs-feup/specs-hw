@@ -13,8 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.test.hardware;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
 
 import pt.up.fe.specs.binarytranslation.hardware.factory.Verilog;
@@ -22,12 +20,10 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCom
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareModule;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.ScalarSubscript;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 
 public class HardwareInstanceTest {
 
@@ -98,12 +94,8 @@ public class HardwareInstanceTest {
         var wire = new WireDeclaration("tmp", 32);
         wrapperadder.addWire(wire);
 
-        var connections = new ArrayList<HardwareOperator>();
-        connections.add(wrapperadder.getPort(0));
-        connections.add(wrapperadder.getPort(1));
-        connections.add(wire.getReference());
-        var adderInstantiation = new ModuleInstance(testAdder, "adder1", connections);
-        wrapperadder.addStatement(adderInstantiation);
+        wrapperadder.addInstance(testAdder.instantiate("adder1",
+                wrapperadder.getPort(0), wrapperadder.getPort(1), wire.getReference()));
         wrapperadder.addStatement(Verilog.nonBlocking(wrapperadder.getPort(2),
                 Verilog.add(wire.getReference(), ImmediateOperator.Ones(15))));
 
