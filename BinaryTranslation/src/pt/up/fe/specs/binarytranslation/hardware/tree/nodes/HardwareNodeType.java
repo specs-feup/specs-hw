@@ -26,7 +26,7 @@ public enum HardwareNodeType {
     // definitions,
     ModuleDefinition,
     // FunctionDefinition??
-    // TestBenchDefinition???
+    TestBenchDefinition,
 
     // declarations
     ModuleDeclaration, // this is the definition of a module body

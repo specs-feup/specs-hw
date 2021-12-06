@@ -27,7 +27,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareModule;
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.analysis.timing.TimingAnalysisRun;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
@@ -93,7 +93,7 @@ public class RandomTest_deletethisafter {
     
     private InstructionCDFG icdfg;
     
-    private AHardwareModule generatedModule;
+    private AHardwareArchitecture generatedModule;
     
     private final int moduleTestbenchSamples = 1000;
     

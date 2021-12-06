@@ -15,8 +15,8 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.hardware.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 
 public class ModuleInstance extends HardwareStatement {
@@ -45,7 +45,7 @@ public class ModuleInstance extends HardwareStatement {
         this.moduleDefinition = moduleDefinition;
         this.portConnections = connections;
 
-        if (this.moduleDefinition.getPorts().size() != this.portConnections.size()) {
+        if (this.moduleDefinition.getPortDeclarations().size() != this.portConnections.size()) {
             throw new IllegalArgumentException();
         }
 
@@ -83,10 +83,10 @@ public class ModuleInstance extends HardwareStatement {
         builder.append(this.moduleDefinition.getName() + " ");
         builder.append(this.instanceName + " (\n");
 
-        var ports = this.moduleDefinition.getPorts();
+        var ports = this.moduleDefinition.getPortDeclarations();
         for (int i = 0; i < ports.size(); i++) {
             var connection = this.portConnections.get(i).getValue();
-            builder.append("\t." + ports.get(i) + "(" + connection + ")");
+            builder.append("\t." + ports.get(i).getVariableName() + "(" + connection + ")");
             if (i != ports.size() - 1) {
                 builder.append(",");
             }

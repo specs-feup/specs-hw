@@ -16,7 +16,7 @@ package pt.up.fe.specs.binarytranslation.hardware;
 import java.io.OutputStream;
 import java.util.List;
 
-public interface HardwareModule {
+public interface HardwareArchitecture {
 
     /*
      * 

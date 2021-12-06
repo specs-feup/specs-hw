@@ -17,7 +17,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
-import pt.up.fe.specs.binarytranslation.hardware.HardwareModule;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 
 public interface HardwareGenerator {
@@ -25,28 +25,28 @@ public interface HardwareGenerator {
     /*
      * Create a type of hardware instance from one binary segment
      */
-    default public HardwareModule generateHardware(BinarySegmentGraph graph) {
+    default public HardwareArchitecture generateHardware(BinarySegmentGraph graph) {
         return null;
     }
 
     /*
      * Create a type of hardware instance from binary segments
      */
-    default public HardwareModule generateHardware(List<BinarySegmentGraph> graphs) {
+    default public HardwareArchitecture generateHardware(List<BinarySegmentGraph> graphs) {
         return null;
     }
 
     /*
      * Create a type of hardware instance from a bundle of graphs 
      */
-    default public HardwareModule generateHarware(GraphBundle gbundle) {
+    default public HardwareArchitecture generateHarware(GraphBundle gbundle) {
         return null;
     }
 
     /*
      * 
      */
-    default public HardwareModule generateHarware(Instruction inst) {
+    default public HardwareArchitecture generateHarware(Instruction inst) {
         return null;
     }
 }
