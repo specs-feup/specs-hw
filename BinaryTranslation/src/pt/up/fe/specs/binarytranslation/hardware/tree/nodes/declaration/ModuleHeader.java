@@ -17,16 +17,14 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
 
-public class ModuleDeclaration extends HardwareDeclaration {
+public class ModuleHeader extends HardwareDeclaration {
 
     /*
      * 
      */
     private String moduleName;
 
-    // TODO: what else??
-
-    public ModuleDeclaration(String moduleName) {
+    public ModuleHeader(String moduleName) {
         super(HardwareNodeType.ModuleDeclaration);
         this.moduleName = moduleName;
     }
@@ -68,12 +66,12 @@ public class ModuleDeclaration extends HardwareDeclaration {
     }
 
     @Override
-    protected ModuleDeclaration copyPrivate() {
-        return new ModuleDeclaration(this.moduleName);
+    protected ModuleHeader copyPrivate() {
+        return new ModuleHeader(this.moduleName);
     }
 
     @Override
-    public ModuleDeclaration copy() {
-        return (ModuleDeclaration) super.copy();
+    public ModuleHeader copy() {
+        return (ModuleHeader) super.copy();
     }
 }

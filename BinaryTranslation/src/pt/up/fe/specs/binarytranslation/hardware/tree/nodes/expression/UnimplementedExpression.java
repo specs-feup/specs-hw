@@ -14,7 +14,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareErrorMessage;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.task.HardwareErrorMessage;
 
 public class UnimplementedExpression extends HardwareExpression {
 

@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction
 
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graph.GraphNode;
-import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionASTConverter;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
@@ -24,7 +24,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCom
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareCommentNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareErrorMessage;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.task.HardwareErrorMessage;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
@@ -78,7 +78,7 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
     // then it should be possible to walk an entire combined AST to generate verilog!
 
     @Override
-    public HardwareInstance generateHardware(BinarySegmentGraph graph) {
+    public HardwareModule generateHardware(BinarySegmentGraph graph) {
 
         // The VerilogModuleTree
         var name = graph.getSegment().getSegmentType().toString().toLowerCase() + "_" + graph.hashCode();

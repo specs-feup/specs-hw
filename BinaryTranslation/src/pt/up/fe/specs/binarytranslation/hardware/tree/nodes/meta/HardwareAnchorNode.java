@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 /**
@@ -23,7 +22,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
  * @author nuno
  *
  */
-public class HardwareAnchorNode extends HardwareNode {
+public class HardwareAnchorNode extends HardwareMetaNode {
 
     public HardwareAnchorNode() {
         super(HardwareNodeType.Anchor);

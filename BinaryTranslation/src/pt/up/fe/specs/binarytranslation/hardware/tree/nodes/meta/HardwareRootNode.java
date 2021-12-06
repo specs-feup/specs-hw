@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 /**
@@ -22,7 +21,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
  * @author nuno
  *
  */
-public class HardwareRootNode extends HardwareNode {
+public class HardwareRootNode extends HardwareMetaNode {
 
     // TODO: add metadata to the root node
     // e.g., used compile flow, origin of binary traces

@@ -16,10 +16,7 @@ package pt.up.fe.specs.binarytranslation.hardware;
 import java.io.OutputStream;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareTree;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
-
-public interface HardwareInstance {
+public interface HardwareModule {
 
     /*
      * 
@@ -37,22 +34,29 @@ public interface HardwareInstance {
     public String getName();
 
     /*
-     * 
+     * Only the names of the ports, to help instantiation
      */
-    public HardwareTree getTree();
+    public List<String> getPorts();
 
     /*
      * 
      */
-    public List<PortDeclaration> getOutputPorts();
+    public List<String> getInputPorts();
 
     /*
      * 
      */
+    public List<String> getOutputPorts();
+
+    /*
+     * 
+     
+    public String getName();
+    
+    public List<PortDeclaration> getOutputPorts(); // TODO: i need another class besises PortDeclaration to represent
+                                                   // this at this level...
+    
     public List<PortDeclaration> getInputPorts();
-
-    /*
-     * 
-     */
-    public List<PortDeclaration> getPorts();
+    
+    public List<PortDeclaration> getPorts();*/
 }

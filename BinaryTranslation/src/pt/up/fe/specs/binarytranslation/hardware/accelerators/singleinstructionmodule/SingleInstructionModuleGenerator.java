@@ -13,14 +13,14 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.singleinstructionmodule;
 
-import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionASTConverter;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareCommentNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareErrorMessage;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.task.HardwareErrorMessage;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
@@ -48,7 +48,7 @@ public class SingleInstructionModuleGenerator implements HardwareGenerator {
      *            The instruction thats being used for generation
      */
     @Override
-    public HardwareInstance generateHarware(Instruction inst) {
+    public HardwareModule generateHarware(Instruction inst) {
 
         // The VerilogModuleTree
         var moduletree = new VerilogModuleTree(inst.getName() + "_" + inst.getInstruction());

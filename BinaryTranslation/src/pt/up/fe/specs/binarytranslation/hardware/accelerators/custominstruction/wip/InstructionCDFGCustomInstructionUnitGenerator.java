@@ -13,12 +13,12 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip;
 
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionCDFGConverter;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleHeader;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
@@ -26,9 +26,9 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.Instruction
 public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGenerator {
 
     private VerilogModuleTree moduletree;
-    private ModuleDeclaration module;
+    private ModuleHeader module;
 
-    public AHardwareInstance generateHardware(InstructionCDFG icdfg, String moduleName) {
+    public AHardwareModule generateHardware(InstructionCDFG icdfg, String moduleName) {
 
         this.moduletree = new VerilogModuleTree(moduleName);
         this.module = moduletree.getModule();

@@ -40,16 +40,18 @@ public class IfElseStatement extends HardwareStatement {
         this.addChild(elselist); // will hold children which are individual statements
     }
 
-    public void addIfStatement(HardwareStatement stat) {
+    public IfElseStatement addIfStatement(HardwareStatement stat) {
         this.iflist.addChild(stat);
+        return this;
     }
 
-    public void addElseStatement(HardwareStatement stat) {
+    public IfElseStatement addElseStatement(HardwareStatement stat) {
         this.elselist.addChild(stat);
+        return this;
     }
 
     public HardwareExpression getCondition() {
-        return (HardwareExpression) this.getChild(0);
+        return this.getChild(HardwareExpression.class, 0);
     }
 
     public List<HardwareStatement> getIfStatements() {

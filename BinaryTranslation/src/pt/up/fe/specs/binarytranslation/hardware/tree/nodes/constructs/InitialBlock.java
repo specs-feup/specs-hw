@@ -13,10 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class InitialBlock extends HardwareNode {
+public class InitialBlock extends HardwareBlock {
 
     public InitialBlock() {
         super(HardwareNodeType.Initial);
