@@ -22,6 +22,11 @@ public abstract class HardwareDefinition extends HardwareNode {
         super(type);
     }
 
+    /*
+     * 
+     */
+    public abstract String getName();
+
     // TODO: children
     // HardwareFunction
     // HardwareModule

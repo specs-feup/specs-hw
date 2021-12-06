@@ -19,11 +19,13 @@ import org.junit.Test;
 
 import pt.up.fe.specs.binarytranslation.hardware.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.VerilogModule;
+import pt.up.fe.specs.binarytranslation.hardware.factory.Verilog;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.NewHardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
@@ -165,5 +167,78 @@ public class HardwareInstanceTest {
          * Test module instantiation inside other module
          */
         module.emit();
+    }
+
+    @Test
+    public void testHardwareModuleInstanceNewFamily() {
+        var testAdder = HardwareInstanceTest.getAdder();
+        testAdder.emit();
+        // this var is HardwareModule
+
+        var wrapperadder = new NewHardwareModule("adderWrapper");
+        wrapperadder.addInputPort("winA", 32).addInputPort("winB", 32).addOutputPort("woutC", 32);
+
+        var connections = new ArrayList<HardwareOperator>();
+        connections.add(wrapperadder.getPort(0));
+        connections.add(wrapperadder.getPort(1));
+        connections.add(wrapperadder.getPort(2));
+        var adderInstantiation = new ModuleInstance(testAdder, "adder1", connections);
+        wrapperadder.addStatement(adderInstantiation);
+
+        /*
+         * Test module instantiation inside other module
+         */
+        wrapperadder.emit();
+    }
+
+    @Test
+    public void testHardwareNewFamily() {
+
+        /*
+         * With explicit class creation
+         * 
+         * 
+        var adder = new NewHardwareModule("adderDef");
+        var a = new InputPortDeclaration("inA", 32);
+        var b = new InputPortDeclaration("inB", 32);
+        var c = new InputPortDeclaration("outC", 32);
+        adder.addPort(a).addPort(b).addPort(c);
+        var expr = new AdditionExpression(a.getReference(), b.getReference());
+        var stat = new ProceduralNonBlockingStatement(c.getReference(), expr);
+        */
+
+        /*
+         * With sugar
+         *          
+        var adder = new NewHardwareModule("adderDef");
+        adder.addInputPort("inA", 32) .addInputPort("inB", 32).addOutputPort("outC", 32);        
+        var ports = adder.getPortDeclarations();
+        var a = ports.get(0);
+        var b = ports.get(1);
+        var c = ports.get(2);
+        var expr = new AdditionExpression(a.getReference(), b.getReference());
+        var stat = new ProceduralNonBlockingStatement(c.getReference(), expr);
+        */
+
+        /*
+         * With more sugar
+         
+        var adder = new NewHardwareModule("adderDef");
+        adder.addInputPort("inA", 32).addInputPort("inB", 32).addOutputPort("outC", 32);
+        var expr = new AdditionExpression(adder.getPort(0), adder.getPort(1));
+        var stat = new ProceduralNonBlockingStatement(adder.getPort(2), expr);
+        */
+
+        /*
+         * With more more sugar
+         */
+        var adder = new NewHardwareModule("adderDef");
+        adder.addInputPort("inA", 32).addInputPort("inB", 32).addOutputPort("outC", 32);
+        adder.addStatement(Verilog.nonBlocking(adder.getPort(2), Verilog.add(adder.getPort(0), adder.getPort(1))));
+
+        /*
+         * 
+         */
+        adder.emit();
     }
 }

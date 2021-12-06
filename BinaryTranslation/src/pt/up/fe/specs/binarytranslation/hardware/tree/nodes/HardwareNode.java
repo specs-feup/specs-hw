@@ -53,8 +53,10 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
     public String getAsString() {
 
         var builder = new StringBuilder();
-        for (HardwareNode comp : this.getChildren()) {
-            builder.append(comp.getAsString() + "\n");
+        for (var comp : this.getChildren()) {
+            var str = comp.getAsString();
+            if (!str.isEmpty())
+                builder.append(comp.getAsString() + "\n");
         }
         return builder.toString();
     }
