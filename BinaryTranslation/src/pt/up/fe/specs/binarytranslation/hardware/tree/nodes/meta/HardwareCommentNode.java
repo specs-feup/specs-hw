@@ -4,9 +4,6 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class HardwareCommentNode extends HardwareMetaNode {
 
-    /*
-     * Copyright comment info
-     */
     final private String commentText;
 
     public HardwareCommentNode(String commentText) {

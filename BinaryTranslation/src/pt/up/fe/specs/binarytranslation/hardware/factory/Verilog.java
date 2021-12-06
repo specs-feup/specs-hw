@@ -13,6 +13,11 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.factory;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
+
 /**
  * Factory methods for verilog AST nodes
  * 
@@ -24,4 +29,12 @@ public class Verilog {
     // public static
 
     // public static HardwareTestbench newTestBench(HardwareModule dut, TestbenchSetup setup);
+
+    public static AdditionExpression add(HardwareExpression refA, HardwareExpression refB) {
+        return new AdditionExpression(refA, refB);
+    }
+
+    public static ProceduralNonBlockingStatement nonBlocking(VariableOperator target, HardwareExpression expression) {
+        return new ProceduralNonBlockingStatement(target, expression);
+    }
 }

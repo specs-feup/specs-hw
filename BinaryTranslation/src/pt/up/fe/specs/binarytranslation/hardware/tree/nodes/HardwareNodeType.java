@@ -23,6 +23,11 @@ public enum HardwareNodeType {
     PosEdge,
     NegEdge,
 
+    // definitions,
+    ModuleDefinition,
+    // FunctionDefinition??
+    // TestBenchDefinition???
+
     // declarations
     ModuleDeclaration, // this is the definition of a module body
     ParameterDeclaration,

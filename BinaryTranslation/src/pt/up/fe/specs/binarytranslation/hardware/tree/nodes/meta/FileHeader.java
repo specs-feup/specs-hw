@@ -22,6 +22,9 @@ import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
  */
 public class FileHeader extends HardwareCommentNode {
 
+    /*
+     * Copyright comment info
+     */
     public FileHeader() {
         super(generateHeader());
     }

@@ -23,17 +23,35 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
  */
 public class DeclarationBlock extends HardwareMetaNode {
 
-    public DeclarationBlock() {
+    /*
+     * Simply indicates the meta-name of this block
+     */
+    private String blockName;
+
+    public DeclarationBlock(String blockName) {
         super(HardwareNodeType.DeclarationBlock);
+        this.blockName = blockName;
+        this.addChild(new HardwareCommentNode("Declarations block: " + blockName));
+    }
+
+    public String getBlockName() {
+        return blockName;
     }
 
     @Override
     protected DeclarationBlock copyPrivate() {
-        return new DeclarationBlock();
+        return new DeclarationBlock(this.blockName);
     }
 
     @Override
     public DeclarationBlock copy() {
         return (DeclarationBlock) super.copy();
+    }
+
+    @Override
+    public String getAsString() {
+        if (this.getNumChildren() > 1)
+            return super.getAsString();
+        return "";
     }
 }

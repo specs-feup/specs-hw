@@ -15,7 +15,6 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
 
 public class ModuleHeader extends HardwareDeclaration {
 
@@ -32,37 +31,19 @@ public class ModuleHeader extends HardwareDeclaration {
     @Override
     public String getAsString() {
         var builder = new StringBuilder();
-        builder.append("\nmodule " + this.moduleName);
+        builder.append("\nmodule " + this.moduleName + "(");
 
         /*
-         * Get only the names of the ports
+         * Operate under the assumption that only PortDeclarations are added as children...
          */
-        var declarations = this.getChild(DeclarationBlock.class, 0);
-        if (declarations != null) {
-
-            builder.append(" (");
-            var ports = declarations.getChildren(PortDeclaration.class);
-            ports.forEach(port -> {
-                builder.append(port.getVariableName() + ",");
-            });
-            builder.deleteCharAt(builder.length() - 1).append(")");
+        var list = this.getChildren(PortDeclaration.class);
+        for (int i = 0; i < list.size(); i++) {
+            builder.append(list.get(i).getVariableName());
+            if (i < list.size() - 1)
+                builder.append(", ");
         }
-        builder.append(";\n\n");
-
-        /*
-         * The children should be port declarations, followed by body (?)
-         */
-        for (var comp : this.getChildren()) {
-            builder.append(comp.getAsString() + "\n");
-        }
-
-        builder.append("endmodule");
+        builder.append(");\n");
         return builder.toString();
-    }
-
-    @Override
-    public String toContentString() {
-        return "module " + this.moduleName;
     }
 
     @Override
