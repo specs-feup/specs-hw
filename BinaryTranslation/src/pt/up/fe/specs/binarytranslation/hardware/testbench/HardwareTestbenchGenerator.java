@@ -81,9 +81,9 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
         /*
          * Add all to declaration block of toplevel
          */
-        testbenchtree.addDeclaration(verify).addDeclaration(verificationResult).addDeclaration(validation_inputs)
-                .addDeclaration(validation_outputs).addDeclaration(moduleOutputs)
-                .addDeclaration(validationCurrentIndex);
+        testbenchtree.addPort(verify).addPort(verificationResult).addPort(validation_inputs)
+                .addPort(validation_outputs).addPort(moduleOutputs)
+                .addPort(validationCurrentIndex);
 
         /*
          * Initial block

@@ -41,10 +41,10 @@ public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGene
          * nmcp
          */
         for (var in : icdfg.getDataInputsNames())
-            moduletree.addDeclaration(new InputPortDeclaration(in, 32));
+            moduletree.addPort(new InputPortDeclaration(in, 32));
 
         for (var out : icdfg.getDataOutputsNames())
-            moduletree.addDeclaration(new OutputPortDeclaration(out, 32));
+            moduletree.addPort(new OutputPortDeclaration(out, 32));
 
         /*
         icdfg.getDataInputsNames().forEach(inputName ->  new InputPortDeclaration(new WireDeclaration(inputName, 32), this.module_tree));

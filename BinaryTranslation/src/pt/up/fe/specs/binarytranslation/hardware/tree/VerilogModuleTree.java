@@ -13,9 +13,13 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree;
 
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.HardwareDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleHeader;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
 
@@ -23,7 +27,10 @@ public class VerilogModuleTree extends AHardwareTree {
 
     private FileHeader header; // first child of tree root
     private ModuleHeader module; // second child of tree root
-    private DeclarationBlock declarations; // first child of ModuleHeader
+    private DeclarationBlock portDeclarations; // 1st child of ModuleHeader
+    private DeclarationBlock wireDeclarations; // 2nd child of ModuleHeader
+    private DeclarationBlock registerDeclarations; // 3rd child of ModuleHeader
+    // private DeclarationBlock moduleDeclarations; // 4th child of ModuleHeader
 
     public VerilogModuleTree(String moduleName) {
         super();
@@ -34,13 +41,20 @@ public class VerilogModuleTree extends AHardwareTree {
         this.root.addChild(this.header);
         this.root.addChild(this.module);
 
-        // one child of second child of root
-        this.declarations = new DeclarationBlock();
-        this.module.addChild(declarations);
+        // 4 children of second child of root
+        this.portDeclarations = new DeclarationBlock();
+        this.wireDeclarations = new DeclarationBlock();
+        this.registerDeclarations = new DeclarationBlock();
+        // this.moduleDeclarations = new DeclarationBlock();
+
+        this.module.addChild(this.portDeclarations);
+        this.module.addChild(this.wireDeclarations);
+        this.module.addChild(this.registerDeclarations);
+        // this.module.addChild(this.moduleDeclarations);
     }
 
-    public VerilogModuleTree addDeclaration(HardwareDeclaration declare) {
-        this.declarations.addChild(declare);
+    public VerilogModuleTree addPort(PortDeclaration declare) {
+        this.portDeclarations.addChild(declare);
         return this;
     }
 
@@ -49,13 +63,24 @@ public class VerilogModuleTree extends AHardwareTree {
         return this;
     }
 
-    public DeclarationBlock getDeclarations() {
-        return declarations;
+    @Override
+    public List<PortDeclaration> getPortDeclarations() {
+        return portDeclarations.getChildren(PortDeclaration.class);
     }
 
-    public ModuleHeader getModule() {
-        return module;
+    @Override
+    public List<InputPortDeclaration> getInputPortDeclarations() {
+        return portDeclarations.getChildrenOf(InputPortDeclaration.class);
     }
+
+    @Override
+    public List<OutputPortDeclaration> getOutputPortDeclarations() {
+        return portDeclarations.getChildrenOf(OutputPortDeclaration.class);
+    }
+
+    /*    public ModuleHeader getModule() {
+        return module;
+    }*/
 
     // TODO: helpers like "newRegister" which returns the RegisterDeclaration
     // this helps reduce the verbosity of the "new" keywords in user code

@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareTree;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 
 public abstract class AHardwareModule implements HardwareModule {
 
@@ -27,33 +25,66 @@ public abstract class AHardwareModule implements HardwareModule {
     // header child, and the other children are other subtrees (e.g., each is a verilog module with its only
     // declaration block???)
 
-    private final String instancename;
+    private final String moduleName;
     private final HardwareTree tree;
     private final List<String> inputs, outputs; // raw list of port names just for instantiation
 
     /*
      * HardwareTree tree will have to be entirely defined so we can
      * close the specification of the module
-     */
-    public AHardwareModule(String instancename, HardwareTree tree) {
-        this.instancename = instancename;
+     
+    public AHardwareModule(String moduleName, HardwareTree tree) {
+        this.moduleName = moduleName;
         this.tree = tree;
-
+    
         this.inputs = new ArrayList<String>();
         for (var port : tree.getRoot().getChildrenOf(InputPortDeclaration.class))
             this.inputs.add(port.getVariableName());
-
+    
         this.outputs = new ArrayList<String>();
         for (var port : tree.getRoot().getChildrenOf(OutputPortDeclaration.class))
             this.outputs.add(port.getVariableName());
+    }*/
+
+    public AHardwareModule(String moduleName, HardwareTree tree) {
+
+        this.moduleName = moduleName;
+        this.tree = tree;
+
+        this.inputs = new ArrayList<String>();
+        for (var port : tree.getInputPortDeclarations())
+            this.inputs.add(port.getVariableName());
+
+        this.outputs = new ArrayList<String>();
+        for (var port : tree.getOutputPortDeclarations())
+            this.outputs.add(port.getVariableName());
     }
+
+    /*
+    private static List<String> getInputPorts(HardwareTree tree) {
+        var list = new ArrayList<String>();
+        for (var port : tree.getPortDeclarations()) {
+            if (port.getDirection() == ModulePortDirection.input)
+                list.add(port.getVariableName());
+        }
+        return list;
+    }
+    
+    private static List<String> getOutputPorts(HardwareTree tree) {
+        var list = new ArrayList<String>();
+        for (var port : tree.getPortDeclarations()) {
+            if (port.getDirection() == ModulePortDirection.output)
+                list.add(port.getVariableName());
+        }
+        return list;
+    }*/
 
     /*
      * 
      */
     @Override
     public String getName() {
-        return this.instancename;
+        return this.moduleName;
     }
 
     /*

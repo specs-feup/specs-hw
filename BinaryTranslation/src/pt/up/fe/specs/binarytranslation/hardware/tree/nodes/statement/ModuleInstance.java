@@ -21,9 +21,9 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.
 
 public class ModuleInstance extends HardwareStatement {
 
-    private HardwareModule moduleDefinition;
-    private String instanceName;
-    private List<HardwareOperator> portConnections;
+    private final HardwareModule moduleDefinition;
+    private final String instanceName;
+    private final List<HardwareOperator> portConnections;
 
     /*
      * TODO: Maybe use a map to pass the child port - parent module signal relation ?
