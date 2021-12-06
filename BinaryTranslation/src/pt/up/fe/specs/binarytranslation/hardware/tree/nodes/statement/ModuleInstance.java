@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
+import java.util.Arrays;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
@@ -58,6 +59,12 @@ public class ModuleInstance extends HardwareStatement {
             // part of another part of the module body
             // and a node cannot have 2 parents in a tree
         }*/
+    }
+
+    public ModuleInstance(HardwareModule moduleDefinition,
+            String instanceName, HardwareOperator... connections)
+            throws IllegalArgumentException {
+        this(moduleDefinition, instanceName, Arrays.asList(connections));
     }
 
     @Override

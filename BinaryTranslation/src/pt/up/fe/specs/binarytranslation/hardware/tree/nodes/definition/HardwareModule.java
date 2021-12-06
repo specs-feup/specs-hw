@@ -23,6 +23,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDecl
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
@@ -71,6 +72,11 @@ public class HardwareModule extends HardwareDefinition {
     /* *****************************
      * Public stuff
      */
+    @Override
+    public ModuleInstance instantiate(String instanceName, HardwareOperator... connections) {
+        return new ModuleInstance(this, instanceName, connections);
+    }
+
     public HardwareModule addPort(PortDeclaration port) {
         this.getHeader().addChild(port);
         this.getPortDeclarationBlock().addChild(port);
