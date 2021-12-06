@@ -18,7 +18,7 @@ import org.junit.Test;
 import pt.up.fe.specs.binarytranslation.hardware.factory.Verilog;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
@@ -75,7 +75,9 @@ public class HardwareInstanceTest {
     private static HardwareModule getAdder() {
 
         var adder = new HardwareModule("testAdder");
-        adder.addInputPort("testA", 32).addInputPort("testB", 32).addOutputPort("testC", 32);
+        adder.addInputPort("testA", 32);
+        adder.addInputPort("testB", 32);
+        adder.addOutputPort("testC", 32);
         var block = adder.addChild(new AlwaysCombBlock("additionblock"));
         var refA = adder.getPort(1).addSubscript(15);
         block.addChild(Verilog.nonBlocking(adder.getPort(2), Verilog.add(refA, adder.getPort(0))));
@@ -88,21 +90,23 @@ public class HardwareInstanceTest {
         testAdder.emit();
         // this var is HardwareModule
 
-        var wrapperadder = new HardwareModule("adderWrapper");
-        wrapperadder.addInputPort("winA", 32).addInputPort("winB", 32).addOutputPort("woutC", 32);
+        var wrap = new HardwareModule("adderWrapper",
+                new InputPortDeclaration("winA", 32),
+                new InputPortDeclaration("winB", 32),
+                new InputPortDeclaration("woutC", 32));
 
-        var wire = new WireDeclaration("tmp", 32);
-        wrapperadder.addWire(wire);
+        var wire = wrap.addWire("tmp", 32).getReference();
 
-        wrapperadder.addInstance(testAdder.instantiate("adder1",
-                wrapperadder.getPort(0), wrapperadder.getPort(1), wire.getReference()));
-        wrapperadder.addStatement(Verilog.nonBlocking(wrapperadder.getPort(2),
-                Verilog.add(wire.getReference(), ImmediateOperator.Ones(15))));
+        wrap.addInstance(testAdder.instantiate("adder1",
+                wrap.getPort(0), wrap.getPort(1), wire));
+
+        wrap.addStatement(Verilog.nonBlocking(wrap.getPort(2),
+                Verilog.add(wire, ImmediateOperator.Ones(15))));
 
         /*
          * Test module instantiation inside other module
          */
-        wrapperadder.emit();
+        wrap.emit();
     }
 
     @Test
@@ -147,7 +151,9 @@ public class HardwareInstanceTest {
          * With more more sugar
          */
         var adder = new HardwareModule("adderDef");
-        adder.addInputPort("inA", 32).addInputPort("inB", 32).addOutputPort("outC", 32);
+        adder.addInputPort("inA", 32);
+        adder.addInputPort("inB", 32);
+        adder.addOutputPort("outC", 32);
         adder.addStatement(Verilog.nonBlocking(adder.getPort(2), Verilog.add(adder.getPort(0), adder.getPort(1))));
 
         /*

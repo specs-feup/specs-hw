@@ -45,6 +45,12 @@ public class HardwareModule extends HardwareDefinition {
         this.addChild(new DeclarationBlock("Registers")); // register declarations
     }
 
+    public HardwareModule(String moduleName, PortDeclaration... ports) {
+        this(moduleName);
+        for (var port : ports)
+            this.addPort(port);
+    }
+
     /* *****************************
      * Private stuff
      */
@@ -64,9 +70,9 @@ public class HardwareModule extends HardwareDefinition {
         return this.getChild(DeclarationBlock.class, 4);
     }
 
-    private HardwareModule addCode(HardwareNode node) {
+    private HardwareNode addCode(HardwareNode node) {
         this.addChild(node);
-        return this;
+        return node;
     }
 
     /* *****************************
@@ -77,49 +83,42 @@ public class HardwareModule extends HardwareDefinition {
         return new ModuleInstance(this, instanceName, connections);
     }
 
-    public HardwareModule addPort(PortDeclaration port) {
+    public PortDeclaration addPort(PortDeclaration port) {
         this.getHeader().addChild(port);
         this.getPortDeclarationBlock().addChild(port);
-        return this;
+        return port;
     }
 
-    public HardwareModule addInputPort(String portName, int portWidth) {
-        return addPort(new InputPortDeclaration(portName, portWidth));
+    public InputPortDeclaration addInputPort(String portName, int portWidth) {
+        return (InputPortDeclaration) addPort(new InputPortDeclaration(portName, portWidth));
     }
 
-    public HardwareModule addOutputPort(String portName, int portWidth) {
-        return addPort(new OutputPortDeclaration(portName, portWidth));
+    public OutputPortDeclaration addOutputPort(String portName, int portWidth) {
+        return (OutputPortDeclaration) addPort(new OutputPortDeclaration(portName, portWidth));
     }
 
-    public HardwareModule addWire(WireDeclaration wire) {
+    public WireDeclaration addWire(WireDeclaration wire) {
         this.getWireDeclarationBlock().addChild(wire);
-        return this;
+        return wire;
     }
 
-    public HardwareModule addRegister(RegisterDeclaration reg) {
+    public WireDeclaration addWire(String portName, int portWidth) {
+        return addWire(new WireDeclaration(portName, portWidth));
+    }
+
+    public RegisterDeclaration addRegister(RegisterDeclaration reg) {
         this.getRegisterDeclarationBlock().addChild(reg);
-        return this;
+        return reg;
     }
 
-    public HardwareModule addStatement(HardwareStatement stat) {
-        return this.addCode(stat);
+    public HardwareStatement addStatement(HardwareStatement stat) {
+        this.addCode(stat);
+        return stat;
     }
 
-    public HardwareModule addInstance(ModuleInstance instantiatedModule) {
-        return this.addCode(instantiatedModule);
-    }
-
-    /*
-    public NewHardwareModule addInstance(NewHardawareModule instanceType, connectioons) {
-        this.addChild(stat);
-        return this;
-    }*/
-
-    // public NewHardwareModule addBlock8()
-
-    @Override
-    public String getName() {
-        return this.moduleName;
+    public ModuleInstance addInstance(ModuleInstance instantiatedModule) {
+        this.addCode(instantiatedModule);
+        return instantiatedModule;
     }
 
     /*
@@ -127,6 +126,27 @@ public class HardwareModule extends HardwareDefinition {
      */
     public VariableOperator getPort(int idx) {
         return this.getPortDeclarations().get(idx).getReference();
+    }
+
+    /*
+     * get Port by name
+     */
+    public HardwareOperator getPort(String portname) {
+        return this.getPortDeclarationBlock().getDeclaration(portname).get();
+    }
+
+    /*
+     * get Wire by name
+     */
+    public HardwareOperator getWire(String wirename) {
+        return this.getWireDeclarationBlock().getDeclaration(wirename).get();
+    }
+
+    /*
+     * get Reg by name
+     */
+    public HardwareOperator getRegister(String regname) {
+        return this.getRegisterDeclarationBlock().getDeclaration(regname).get();
     }
 
     /*
@@ -150,6 +170,19 @@ public class HardwareModule extends HardwareDefinition {
     @Override
     protected HardwareModule copyPrivate() {
         return new HardwareModule(this.moduleName);
+    }
+
+    /*
+    public NewHardwareModule addInstance(NewHardawareModule instanceType, connectioons) {
+        this.addChild(stat);
+        return this;
+    }*/
+
+    // public NewHardwareModule addBlock8()
+
+    @Override
+    public String getName() {
+        return this.moduleName;
     }
 
     @Override
