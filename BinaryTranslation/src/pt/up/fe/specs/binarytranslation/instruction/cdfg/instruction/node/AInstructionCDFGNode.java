@@ -43,12 +43,16 @@ public abstract class AInstructionCDFGNode{
         return this.reference;
     }
     
-    /** Sets the UID value for the node. This should only be used when copying nodes
+    /** Sets the UID value for the node
      * 
      * @param uid The UID for this node
      */
     public void setUID(String uid) {
         this.uid = uid;
+    }
+    
+    public void setUID(Integer uid) {
+        this.setUID(String.valueOf(uid));
     }
     
     /** Returns the UID value of the node

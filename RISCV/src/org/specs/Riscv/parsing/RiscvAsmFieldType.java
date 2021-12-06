@@ -60,6 +60,8 @@ public enum RiscvAsmFieldType implements AsmFieldType {
     // J Type
     JAL("1101111"), // I-extension
 
+    INVALID("0011111"), // This is needed for custom instruction generation, in accordance with the RISCV ISA specification, this is an invalid 32 bit opcode since it represents a 48 bit instruction
+    
     UNDEFINED("0000000");
 
     private String format;

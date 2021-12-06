@@ -19,12 +19,8 @@ package pt.up.fe.specs.binarytranslation.instruction.cdfg.segment;
 
 import java.util.List;
 
-import org.jgrapht.Graphs;
-
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.InstructionCDFGEdge;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
 
 public class SegmentCDFG extends InstructionCDFG{
 
@@ -35,42 +31,6 @@ public class SegmentCDFG extends InstructionCDFG{
         this.instructions = instructions;
     }
 
-    public void generate() {
-
-        // Merge InstructionCDFGs to this graph
-        this.instructions.forEach(instruction -> {
-            InstructionCDFGGenerator icdfg_gen = new InstructionCDFGGenerator();
-            InstructionCDFG icdfg = icdfg_gen.generate(instruction);
-            
-            Graphs.addGraph(this, icdfg);
-            
-            this.getDataOutputsMap().forEach((output, out_subgraph) -> {
-                icdfg.getDataInputsMap().forEach((input, in_subgraph) -> {
-                    
-                    System.out.println("prev:" + output.getReference() + "\tnew:" + input.getReference());
-                    
-                    if(output.getReference().equals(input.getReference())) {
-                        
-                        this.addEdge(out_subgraph, in_subgraph, new InstructionCDFGEdge());
-                    }
-                });
-            });
-            
-            this.generateInputs();
-            this.generateOutputs();
-            this.generateDataInputs();
-            this.generateDataOutputs();
-            
-        });
-        
-        //Add edges
-        
-        
-        
-        
-        
-    }
-    
     @Override
     public Instruction getInstruction() {
         return this.instructions.get(0);
