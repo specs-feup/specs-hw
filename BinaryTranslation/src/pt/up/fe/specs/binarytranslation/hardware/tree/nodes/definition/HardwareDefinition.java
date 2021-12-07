@@ -30,6 +30,14 @@ public abstract class HardwareDefinition extends HardwareNode {
     public abstract String getName();
 
     /*
+     * Acts like a block where everything inside is nested
+     */
+    @Override
+    public String getAsString() {
+        return nestContent(super.getAsString());
+    }
+
+    /*
      * 
      */
     public abstract ModuleInstance instantiate(String instanceName, HardwareOperator... connections);

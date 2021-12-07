@@ -11,21 +11,40 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
+
+import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 
-public class ModuleHeader extends HardwareDeclaration {
+public class ModuleBlock extends HardwareBlock {
 
-    /*
-     * 
-     */
     private String moduleName;
+    private List<PortDeclaration> ports;
+    // dont treat as children to prevent misformatted nesting (?)
 
-    public ModuleHeader(String moduleName) {
+    public ModuleBlock(String moduleName) {
         super(HardwareNodeType.ModuleHeader);
         this.moduleName = moduleName;
+    }
+
+    public ModuleBlock(ModuleBlock other) {
+        super(HardwareNodeType.ModuleHeader);
+        this.moduleName = other.moduleName;
+        this.ports = other.ports;
+    }
+
+    /*
+     * used only to create the string port list;
+     * NOT TO BE VISITED AS CHILDREN NODES
+     */
+    public void addPort(PortDeclaration port) {
+        this.ports.add(port);
+    }
+
+    public String getModuleName() {
+        return moduleName;
     }
 
     @Override
@@ -33,26 +52,27 @@ public class ModuleHeader extends HardwareDeclaration {
         var builder = new StringBuilder();
         builder.append("\nmodule " + this.moduleName + "(");
 
-        /*
-         * Operate under the assumption that only PortDeclarations are added as children...
-         */
-        var list = this.getChildren(PortDeclaration.class);
-        for (int i = 0; i < list.size(); i++) {
-            builder.append(list.get(i).getVariableName());
-            if (i < list.size() - 1)
+        for (int i = 0; i < this.ports.size(); i++) {
+            builder.append(ports.get(i).getVariableName());
+            if (i < this.ports.size() - 1)
                 builder.append(", ");
         }
         builder.append(");\n");
+
+        // GET ALL NESTED CONTENT IN BODY BLOCK
+        builder.append(super.getAsString());
+
+        builder.append("end //" + this.moduleName + "\n");
         return builder.toString();
     }
 
     @Override
-    protected ModuleHeader copyPrivate() {
-        return new ModuleHeader(this.moduleName);
+    protected ModuleBlock copyPrivate() {
+        return new ModuleBlock(this);
     }
 
     @Override
-    public ModuleHeader copy() {
-        return (ModuleHeader) super.copy();
+    public ModuleBlock copy() {
+        return (ModuleBlock) super.copy();
     }
 }
