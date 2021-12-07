@@ -20,6 +20,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCom
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareModule;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareTestbench;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
@@ -160,5 +161,16 @@ public class HardwareInstanceTest {
          * 
          */
         adder.emit();
+    }
+
+    @Test
+    public void testHardwareTestbenchNewFamily() {
+        var testAdder = HardwareInstanceTest.getAdder();
+        testAdder.emit();
+        // this var is HardwareModule
+
+        var tb = new HardwareTestbench("testbench1", testAdder);
+        tb.emit();
+
     }
 }

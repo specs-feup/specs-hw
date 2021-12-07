@@ -13,6 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition;
 
+import java.util.Arrays;
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
@@ -32,7 +35,14 @@ public abstract class HardwareDefinition extends HardwareNode {
     /*
      * 
      */
-    public abstract ModuleInstance instantiate(String instanceName, HardwareOperator... connections);
+    public abstract ModuleInstance instantiate(String instanceName, List<HardwareOperator> connections);
+
+    /*
+     * 
+     */
+    public final ModuleInstance instantiate(String instanceName, HardwareOperator... connections) {
+        return instantiate(instanceName, Arrays.asList(connections));
+    }
 
     // TODO: children
     // HardwareFunction
