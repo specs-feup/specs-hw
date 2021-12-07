@@ -13,12 +13,10 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
@@ -33,72 +31,12 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInst
 
 public class HardwareModule extends HardwareDefinition {
 
-    /*
-     * This type of block only makes sense inside a @HarwareModule;
-     * its ugly, but prevents @ModuleBlock from being instantiated
-     * and having children added outside the context of a @HardwareModule;
-     * the @ModuleBlock is required to nest the contents of the block 
-     * when printing, and also simplifies the hierarchy of content in the 
-     * tree
-     * 
-     * I also want to ensure that methods like getPortDeclarationBlock
-     * dont break by ensuring that the internal structure of
-     * @ModuleBlock is consistent across all instantiations, and
-     * also that @HardwareModule has functions like addPort or addWire
-     * exposed at its toplevel without need for code replication or
-     * making some methods public, as would be required with a public
-     * @ModuleBlock class 
-     */
-    private class ModuleBlock extends HardwareBlock {
-
-        private String moduleName;
-        private List<PortDeclaration> ports;
-
-        public ModuleBlock(String moduleName) {
-            super(HardwareNodeType.ModuleHeader);
-            this.moduleName = moduleName;
-            this.ports = new ArrayList<PortDeclaration>();
-
-            // children 0, 1, and 1
-            this.addChild(new DeclarationBlock("Ports")); // Port declarations
-            this.addChild(new DeclarationBlock("Wires")); // Wire declarations
-            this.addChild(new DeclarationBlock("Registers")); // register declarations
-        }
-
-        public ModuleBlock(ModuleBlock other) {
-            super(HardwareNodeType.ModuleHeader);
-            this.moduleName = other.moduleName;
-            this.ports = other.ports;
-        }
-
-        @Override
-        public String getAsString() {
-            var builder = new StringBuilder();
-            builder.append("\nmodule " + this.moduleName + "(");
-
-            for (int i = 0; i < this.ports.size(); i++) {
-                builder.append(ports.get(i).getVariableName());
-                if (i < this.ports.size() - 1)
-                    builder.append(", ");
-            }
-            builder.append(");\n");
-
-            // GET ALL NESTED CONTENT IN BODY BLOCK
-            builder.append(super.getAsString());
-
-            builder.append("end //" + this.moduleName + "\n");
-            return builder.toString();
-        }
-
-        @Override
-        protected ModuleBlock copyPrivate() {
-            return new ModuleBlock(this);
-        }
-
-        @Override
-        public ModuleBlock copy() {
-            return (ModuleBlock) super.copy();
-        }
+    protected static int MAXCHILDREN;
+    protected static String ADDCHILDERRMSG;
+    static {
+        MAXCHILDREN = 2;
+        ADDCHILDERRMSG = "HardwareModule: Expected only two children! " +
+                "Use addCode() to add content to the module body!";
     }
 
     /*
@@ -124,14 +62,14 @@ public class HardwareModule extends HardwareDefinition {
     /*
      * For copying (children are handled as usual by @ATreeNode.copy)
      */
-    private HardwareModule() {
-        super(HardwareNodeType.HardwareModule);
+    protected HardwareModule(HardwareNodeType type) {
+        super(type);
     }
 
     /* *****************************
      * Private stuff
      */
-    private ModuleBlock getBody() {
+    protected ModuleBlock getBody() {
         return this.getChild(ModuleBlock.class, 1);
     }
 
@@ -155,11 +93,8 @@ public class HardwareModule extends HardwareDefinition {
 
     @Override
     public HardwareNode addChild(HardwareNode node) {
-        if (getNumChildren() >= 2) {
-            throw new RuntimeException(
-                    "HardwareModule: Expected only two children! " +
-                            "Use addCode() to add content to the module body!");
-        }
+        if (getNumChildren() >= MAXCHILDREN)
+            throw new RuntimeException(ADDCHILDERRMSG);
         return super.addChild(node);
     }
 
@@ -167,7 +102,7 @@ public class HardwareModule extends HardwareDefinition {
      * Public stuff
      */
     @Override
-    public ModuleInstance instantiate(String instanceName, HardwareOperator... connections) {
+    public ModuleInstance instantiate(String instanceName, List<HardwareOperator> connections) {
         return new ModuleInstance(this, instanceName, connections);
     }
 
@@ -212,6 +147,14 @@ public class HardwareModule extends HardwareDefinition {
         this.addCode(instantiatedModule);
         return instantiatedModule;
     }
+
+    /*
+    public NewHardwareModule addInstance(HardawareModule instanceType, connectioons) {
+        this.addChild(stat);
+        return this;
+    }*/
+
+    // public NewHardwareModule addBlock8()
 
     /*
      * get Port as a reference
@@ -259,14 +202,6 @@ public class HardwareModule extends HardwareDefinition {
         return block.getChildrenOf(OutputPortDeclaration.class);
     }
 
-    /*
-    public NewHardwareModule addInstance(NewHardawareModule instanceType, connectioons) {
-        this.addChild(stat);
-        return this;
-    }*/
-
-    // public NewHardwareModule addBlock8()
-
     @Override
     public String getName() {
         return this.getBody().moduleName;
@@ -274,7 +209,7 @@ public class HardwareModule extends HardwareDefinition {
 
     @Override
     protected HardwareModule copyPrivate() {
-        return new HardwareModule();
+        return new HardwareModule(this.type);
     }
 
     @Override

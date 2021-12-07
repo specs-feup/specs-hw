@@ -13,28 +13,76 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition;
 
+import java.util.ArrayList;
+
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleHeader;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.TimeScaleDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
 
-public class HardwareTestbench extends HardwareDefinition {
+public class HardwareTestbench extends HardwareModule {
 
     private final String testBenchName;
     private final HardwareModule dut;
+
+    static {
+        MAXCHILDREN = 3;
+        ADDCHILDERRMSG = "HardwareTestBench: Expected only three children!"
+                + "Use addCode() to add content to the testbench body!";
+    }
+
+    /*
+     * for copying
+     */
+    private HardwareTestbench(HardwareTestbench other) {
+        super(HardwareNodeType.TestBenchDefinition);
+        this.testBenchName = other.testBenchName;
+        this.dut = other.dut;
+    }
 
     public HardwareTestbench(String testBenchName, HardwareModule dut) {
         super(HardwareNodeType.TestBenchDefinition);
         this.testBenchName = testBenchName;
         this.dut = dut;
 
-        // setup basic testbench stuff (testbenches have no ports!)
+        // child 0
         this.addChild(new FileHeader());
-        this.addChild(new ModuleHeader(testBenchName));
+
+        // child 1
         this.addChild(new TimeScaleDeclaration());
+
+        // child 2
+        this.addChild(new ModuleBlock(testBenchName));
+
+        // auto-create registers and wires based on DUT ports
+        var connections = new ArrayList<HardwareOperator>();
+
+        for (var in : dut.getInputPortDeclarations()) {
+            var reg = this.addRegister("r" + in.getVariableName(), in.getVariableWidth());
+            connections.add(reg.getReference());
+        }
+
+        for (var out : dut.getOutputPortDeclarations()) {
+            var wire = this.addWire("w" + out.getVariableName(), out.getVariableWidth());
+            connections.add(wire.getReference());
+        }
+
+        this.addInstance(dut.instantiate("dutInstance1", connections));
 
         // TODO: move all content of @HardwareTestbenchGenerator into @Verilog as a static
         // factory like method?
+    }
+
+    @Override
+    protected ModuleBlock getBody() {
+        return this.getChild(ModuleBlock.class, 2);
+    }
+
+    @Override
+    public PortDeclaration addPort(PortDeclaration port) {
+        throw new RuntimeException(
+                "HardwareTestbench: testbenches are not allowed to have ports!");
     }
 
     @Override
