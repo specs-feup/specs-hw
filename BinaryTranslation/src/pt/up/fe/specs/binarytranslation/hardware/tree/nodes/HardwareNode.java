@@ -61,6 +61,44 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
         return builder.toString();
     }
 
+    public String nestContent(String content) {
+        if (content.isEmpty())
+            return content;
+
+        content = "    " + content;
+        int lastidx = content.lastIndexOf("\n");
+        content = content.substring(0, lastidx)
+                .replace("\n", "\n    ").concat(content.substring(lastidx));
+
+        return content;
+    }
+
+    /*
+     * nest all lines up once
+     
+    public String getAsNestedString() {
+    
+        var builder = new StringBuilder();
+        for (var comp : this.getChildren()) {
+            var str = comp.getAsString();
+            if (!str.isEmpty())
+                builder.append("    " + comp.getAsString() + "\n");
+        }
+        return builder.toString();
+    */
+    /*
+    var content = this.getAsString();
+    if (content.isEmpty())
+        return content;
+    
+    content = "    " + content;
+    int lastidx = content.lastIndexOf("\n");
+    content = content.substring(0, lastidx)
+            .replace("\n", "\n    ").concat(content.substring(lastidx));
+    
+    return content;
+    }*/
+
     /*
      * 
      */

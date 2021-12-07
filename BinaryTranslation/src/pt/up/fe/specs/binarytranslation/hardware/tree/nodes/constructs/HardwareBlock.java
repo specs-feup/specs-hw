@@ -21,4 +21,9 @@ public abstract class HardwareBlock extends HardwareNode {
     public HardwareBlock(HardwareNodeType type) {
         super(type);
     }
+
+    @Override
+    public String getAsString() {
+        return nestContent(super.getAsString());
+    }
 }

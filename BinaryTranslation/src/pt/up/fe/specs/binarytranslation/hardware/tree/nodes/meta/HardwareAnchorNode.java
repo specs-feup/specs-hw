@@ -13,6 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
+import java.util.function.Function;
+
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 /**
@@ -24,9 +27,21 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
  */
 public class HardwareAnchorNode extends HardwareMetaNode {
 
+    // private Function<HardwareNode, String> toStringOverride;
+
     public HardwareAnchorNode() {
         super(HardwareNodeType.Anchor);
+        // this.toStringOverride =
     }
+
+    /* public HardwareAnchorNode(Function<HardwareNode, String> toStringOverride) {
+    
+    }
+    
+    @Override
+    public String getAsString() {
+        return this.toStringOverride.apply(this);
+    }*/
 
     @Override
     protected HardwareAnchorNode copyPrivate() {

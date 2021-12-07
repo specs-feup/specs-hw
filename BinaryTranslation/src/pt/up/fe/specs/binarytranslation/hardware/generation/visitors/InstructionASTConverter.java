@@ -64,7 +64,7 @@ public class InstructionASTConverter extends InstructionASTVisitor<HardwareNode>
         switch (this.context) {
 
         // Im at the top-level
-        case ModuleDeclaration:
+        case ModuleHeader:
             if (statements.size() > 1)
                 newleaf = new AlwaysCombBlock();
             else
@@ -125,7 +125,7 @@ public class InstructionASTConverter extends InstructionASTVisitor<HardwareNode>
 
         var generator = new HardwareAssignmentGenerator();
         try {
-            if (this.context == HardwareNodeType.ModuleDeclaration)
+            if (this.context == HardwareNodeType.ModuleHeader)
                 return generator.generateAssign(node);
 
             else if (this.context == HardwareNodeType.AlwaysComb || this.context == HardwareNodeType.AlwaysFF)

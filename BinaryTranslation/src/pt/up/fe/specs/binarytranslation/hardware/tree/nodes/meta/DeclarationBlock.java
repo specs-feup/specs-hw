@@ -47,8 +47,7 @@ public class DeclarationBlock extends HardwareMetaNode {
         return blockName;
     }
 
-    @Override
-    public HardwareNode addChild(HardwareNode child) {
+    public HardwareNode addDeclaration(HardwareNode child) {
         var declaration = (IdentifierDeclaration) child;
         this.nameMap.put(declaration.getVariableName(), declaration.getReference());
         return super.addChild(child);

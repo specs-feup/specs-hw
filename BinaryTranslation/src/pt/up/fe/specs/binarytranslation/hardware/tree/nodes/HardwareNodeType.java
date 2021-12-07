@@ -24,12 +24,12 @@ public enum HardwareNodeType {
     NegEdge,
 
     // definitions,
-    ModuleDefinition,
+    HardwareModule,
     // FunctionDefinition??
     TestBenchDefinition,
 
     // declarations
-    ModuleDeclaration, // this is the definition of a module body
+    ModuleHeader, // this is the definition of a module body
     ParameterDeclaration,
     PortDeclaration,
     RegisterDeclaration,

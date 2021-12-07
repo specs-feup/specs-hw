@@ -17,7 +17,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleHeader;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.ModuleBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
@@ -32,17 +32,30 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInst
 
 public class HardwareModule extends HardwareDefinition {
 
-    private final String moduleName;
+    private ModuleBlock body;
+    private DeclarationBlock ports, wires, registers;
 
     public HardwareModule(String moduleName) {
-        super(HardwareNodeType.ModuleDefinition);
-        this.moduleName = moduleName;
+        super(HardwareNodeType.HardwareModule);
 
+        // child 0
         this.addChild(new FileHeader());
-        this.addChild(new ModuleHeader(moduleName));
-        this.addChild(new DeclarationBlock("Ports")); // Port declarations
-        this.addChild(new DeclarationBlock("Wires")); // Wire declarations
-        this.addChild(new DeclarationBlock("Registers")); // register declarations
+
+        // child 1
+        this.body = new ModuleBlock(moduleName);
+        this.addChild(this.body);
+
+        this.ports = new DeclarationBlock("Ports"); // Port declarations
+        this.wires = new DeclarationBlock("Wires"); // Wire declarations
+        this.registers = new DeclarationBlock("Registers"); // register declarations
+
+        // children 1.0, 1.1, and 1.2
+        this.body.addChild(this.ports);
+        this.body.addChild(this.wires);
+        this.body.addChild(this.registers);
+        // contains the header and body as children nodes,
+        // those kids are fetched here for add and get operations
+        // without need for replication of code
     }
 
     public HardwareModule(String moduleName, PortDeclaration... ports) {
@@ -54,8 +67,8 @@ public class HardwareModule extends HardwareDefinition {
     /* *****************************
      * Private stuff
      */
-    private ModuleHeader getHeader() {
-        return this.getChild(ModuleHeader.class, 1);
+    private ModuleBlock getBody() {
+        return this.getChild(ModuleBlock.class, 1);
     }
 
     private DeclarationBlock getPortDeclarationBlock() {
@@ -85,7 +98,7 @@ public class HardwareModule extends HardwareDefinition {
 
     public PortDeclaration addPort(PortDeclaration port) {
         this.getHeader().addChild(port);
-        this.getPortDeclarationBlock().addChild(port);
+        this.getPortDeclarationBlock().addDeclaration(port);
         return port;
     }
 
@@ -98,7 +111,7 @@ public class HardwareModule extends HardwareDefinition {
     }
 
     public WireDeclaration addWire(WireDeclaration wire) {
-        this.getWireDeclarationBlock().addChild(wire);
+        this.getWireDeclarationBlock().addDeclaration(wire);
         return wire;
     }
 
@@ -107,8 +120,12 @@ public class HardwareModule extends HardwareDefinition {
     }
 
     public RegisterDeclaration addRegister(RegisterDeclaration reg) {
-        this.getRegisterDeclarationBlock().addChild(reg);
+        this.getRegisterDeclarationBlock().addDeclaration(reg);
         return reg;
+    }
+
+    public RegisterDeclaration addRegister(String regName, int portWidth) {
+        return addRegister(new RegisterDeclaration(regName, portWidth));
     }
 
     public HardwareStatement addStatement(HardwareStatement stat) {
@@ -169,7 +186,7 @@ public class HardwareModule extends HardwareDefinition {
 
     @Override
     protected HardwareModule copyPrivate() {
-        return new HardwareModule(this.moduleName);
+        return new HardwareModule(this.getName()); // WRONG: this will also copy children...
     }
 
     /*
@@ -182,7 +199,7 @@ public class HardwareModule extends HardwareDefinition {
 
     @Override
     public String getName() {
-        return this.moduleName;
+        return this.body.getModuleName();
     }
 
     @Override
@@ -190,11 +207,30 @@ public class HardwareModule extends HardwareDefinition {
         return (HardwareModule) super.copy();
     }
 
+    /*
     @Override
     public String getAsString() {
         var sb = new StringBuilder();
-        sb.append(super.getAsString());
+        sb.append(this.getChild(0).getAsString() + "\n"); // File Header
+        sb.append(this.getChild(1).getAsString() + "\n"); // Module Header
+    
+        // inner body (1 nest level)
+        var nest = new StringBuilder();
+        var bodyParts = this.getChildren().subList(2, this.getNumChildren());
+        for (var part : bodyParts) {
+            sb.append(part.getAsNestedString());
+        }
+    
+    //        for (var part : bodyParts) {
+    //        
+    //            // add nesting
+    //            var content = "    " + part.getAsString();
+    //            content = content.replace("\n", "\n    ");
+    //            nest.append(content);
+    //        }
+    
+        sb.append(nest.toString());
         sb.append("endmodule\n");
         return sb.toString();
-    }
+    }*/
 }
