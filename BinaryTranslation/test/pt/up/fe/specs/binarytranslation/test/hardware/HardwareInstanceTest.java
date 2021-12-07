@@ -78,7 +78,7 @@ public class HardwareInstanceTest {
         adder.addInputPort("testA", 32);
         adder.addInputPort("testB", 32);
         adder.addOutputPort("testC", 32);
-        var block = adder.addChild(new AlwaysCombBlock("additionblock"));
+        var block = adder.addCode(new AlwaysCombBlock("additionblock"));
         var refA = adder.getPort(1).addSubscript(15);
         block.addChild(Verilog.nonBlocking(adder.getPort(2), Verilog.add(refA, adder.getPort(0))));
         return adder;
