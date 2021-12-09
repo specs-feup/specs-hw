@@ -33,14 +33,10 @@ public class AlwaysCombBlock extends HardwareBlock {
     public String getAsString() {
         var builder = new StringBuilder();
 
+        builder.append("always_comb begin");
         if (!this.blockName.isBlank())
-            builder.append("always_comb : " + this.blockName + " begin\n");
-        else
-            builder.append("always_comb begin\n");
-
-        /*for (var child : this.getChildren()) {
-            builder.append("\t" + child.getAsString() + "\n");
-        }*/
+            builder.append(" : " + this.blockName);
+        builder.append("\n");
 
         builder.append(super.getAsString());
         builder.append("end //" + this.blockName + "\n");
