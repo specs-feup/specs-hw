@@ -106,6 +106,9 @@ public class HardwareModule extends HardwareDefinition {
         return new ModuleInstance(this, instanceName, connections);
     }
 
+    /*
+     * Ports
+     */
     public PortDeclaration addPort(PortDeclaration port) {
         this.getBody().ports.add(port); // this only adds to the port list in the header!
         this.getPortDeclarationBlock().addDeclaration(port);
@@ -120,6 +123,9 @@ public class HardwareModule extends HardwareDefinition {
         return (OutputPortDeclaration) addPort(new OutputPortDeclaration(portName, portWidth));
     }
 
+    /*
+     * Wires
+     */
     public WireDeclaration addWire(WireDeclaration wire) {
         this.getWireDeclarationBlock().addDeclaration(wire);
         return wire;
@@ -129,6 +135,9 @@ public class HardwareModule extends HardwareDefinition {
         return addWire(new WireDeclaration(portName, portWidth));
     }
 
+    /*
+     * registers
+     */
     public RegisterDeclaration addRegister(RegisterDeclaration reg) {
         this.getRegisterDeclarationBlock().addDeclaration(reg);
         return reg;
@@ -138,21 +147,30 @@ public class HardwareModule extends HardwareDefinition {
         return addRegister(new RegisterDeclaration(regName, portWidth));
     }
 
+    /*
+     * statements
+     */
     public HardwareStatement addStatement(HardwareStatement stat) {
         this.addCode(stat);
         return stat;
     }
 
+    /*
+     * instances of other modules
+     * (instances can only be added as direct children of the module body,
+     * i.e. first level children of the ModuleBlock)
+     */
     public ModuleInstance addInstance(ModuleInstance instantiatedModule) {
         this.addCode(instantiatedModule);
         return instantiatedModule;
     }
 
-    /*
-    public NewHardwareModule addInstance(HardawareModule instanceType, connectioons) {
-        this.addChild(stat);
-        return this;
-    }*/
+    public ModuleInstance addInstance(HardwareModule instanceType,
+            String instanceName, HardwareOperator... connections) {
+        var instance = new ModuleInstance(instanceType, instanceName, connections);
+        this.addCode(instance);
+        return instance;
+    }
 
     // public NewHardwareModule addBlock8()
 
