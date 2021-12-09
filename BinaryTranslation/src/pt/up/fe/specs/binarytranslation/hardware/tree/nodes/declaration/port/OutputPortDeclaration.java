@@ -13,27 +13,31 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
+import java.util.Arrays;
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 
 public class OutputPortDeclaration extends PortDeclaration {
 
     public OutputPortDeclaration(String portName, int portWidth) {
-        super(portName, portWidth, ModulePortDirection.output);
-        this.addChild(new WireDeclaration(portName, portWidth));
+        this(new WireDeclaration(portName, portWidth));
     }
 
     public OutputPortDeclaration(IdentifierDeclaration declared) {
-        super(declared.getVariableName(), declared.getVariableWidth(), ModulePortDirection.output);
-        this.addChild(declared.copy());
+        this(declared, Arrays.asList(ModulePortProperties.Data));
+    }
+
+    protected OutputPortDeclaration(IdentifierDeclaration declared, List<ModulePortProperties> properties) {
+        super(declared, ModulePortDirection.output, properties);
     }
 
     /*
      * Useful for private copy, to prevent copying of single child node
      */
     private OutputPortDeclaration(OutputPortDeclaration other) {
-        super(other.getVariableName(), other.getVariableWidth(), ModulePortDirection.output);
+        super(other);
     }
 
     @Override

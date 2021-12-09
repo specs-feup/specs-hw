@@ -13,21 +13,73 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
 
 public abstract class PortDeclaration extends IdentifierDeclaration {
 
-    private final ModulePortDirection direction;
+    // TODO: list of port properties
+    // isClock()
+    // isReset()
+    // is... Handshake??
 
-    protected PortDeclaration(String portName, int portWidth, ModulePortDirection direction) {
+    private final ModulePortDirection direction;
+    private final List<ModulePortProperties> properties;
+
+    /*
+    protected PortDeclaration(
+            String portName, 
+            int portWidth, 
+            ModulePortDirection direction,
+            List<ModulePortProperties> properties) {
         super(portName, portWidth, HardwareNodeType.PortDeclaration);
         this.direction = direction;
+        this.properties = properties;
+    }*/
+
+    protected PortDeclaration(IdentifierDeclaration declared,
+            ModulePortDirection direction, List<ModulePortProperties> properties) {
+
+        super(declared.getVariableName(),
+                declared.getVariableWidth(),
+                HardwareNodeType.PortDeclaration);
+        this.direction = direction;
+        this.properties = properties;
+        this.addChild(declared.copy());
+    }
+
+    protected PortDeclaration(PortDeclaration other) {
+        this(other.getIdentifier().copy(), other.getDirection(), other.cloneProperties());
+    }
+
+    protected IdentifierDeclaration getIdentifier() {
+        return this.getChild(IdentifierDeclaration.class, 0);
+    }
+
+    protected List<ModulePortProperties> cloneProperties() {
+        var ret = new ArrayList<ModulePortProperties>();
+        for (var p : this.properties)
+            ret.add(p);
+        return ret;
     }
 
     public ModulePortDirection getDirection() {
         return direction;
+    }
+
+    public boolean isClock() {
+        return this.properties.contains(ModulePortProperties.Clock);
+    }
+
+    public boolean isReset() {
+        return this.properties.contains(ModulePortProperties.Reset);
+    }
+
+    public boolean isData() {
+        return this.properties.contains(ModulePortProperties.Data);
     }
 
     @Override

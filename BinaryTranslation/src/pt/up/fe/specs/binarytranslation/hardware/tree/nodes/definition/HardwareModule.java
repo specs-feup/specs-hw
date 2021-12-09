@@ -14,14 +14,23 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysFFBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.PosEdge;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.SignalEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ClockDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ResetDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
@@ -38,6 +47,12 @@ public class HardwareModule extends HardwareDefinition {
         ADDCHILDERRMSG = "HardwareModule: Expected only two children! " +
                 "Use addCode() to add content to the module body!";
     }
+
+    // TODO: move this counter logic into @ModuleBlock
+
+    // counters used when no user specified names for blocks are given
+    private int alwaysffCounter = 0;
+    private int alwayscombCounter = 0;
 
     /*
      * Outer most node of the Hardware module definition, 
@@ -107,12 +122,34 @@ public class HardwareModule extends HardwareDefinition {
     }
 
     /*
+     * Special ports
+     */
+    // addClock
+    // addReset
+
+    /*
      * Ports
      */
     public PortDeclaration addPort(PortDeclaration port) {
         this.getBody().ports.add(port); // this only adds to the port list in the header!
         this.getPortDeclarationBlock().addDeclaration(port);
         return port;
+    }
+
+    public ClockDeclaration addClock() {
+        return addClock("clk");
+    }
+
+    public ClockDeclaration addClock(String clockName) {
+        return (ClockDeclaration) addPort(new ClockDeclaration(clockName));
+    }
+
+    public ResetDeclaration addReset() {
+        return addReset("rst");
+    }
+
+    public ResetDeclaration addReset(String rstName) {
+        return (ResetDeclaration) addPort(new ResetDeclaration(rstName));
     }
 
     public InputPortDeclaration addInputPort(String portName, int portWidth) {
@@ -148,6 +185,55 @@ public class HardwareModule extends HardwareDefinition {
     }
 
     /*
+     * always comb blocks
+     */
+    public AlwaysCombBlock addAlwaysComb(String blockName) {
+        var block = new AlwaysCombBlock(blockName);
+        this.addCode(block);
+        return block;
+    }
+
+    // create name if non given
+    public AlwaysCombBlock addAlwaysCombBlock() {
+        return addAlwaysComb("comb_" + this.alwayscombCounter++);
+        // TODO: if I manually create a block called "comb_1" or "comb_2" etc, this will break
+    }
+
+    /*
+     * always ff blocks (if no signal provided defaults to clk)
+     * (if no clock on module, adds a clock declaration to the ports)
+     */
+    public AlwaysFFBlock addAlwaysFFPosedge(
+            String blockName,
+            ClockDeclaration clk,
+            Function<VariableOperator, SignalEdge> edge) {
+
+        var block = new AlwaysFFBlock(new PosEdge(clk.getReference()), blockName);
+        this.addCode(block);
+        return block;
+    }
+
+    public AlwaysFFBlock addAlwaysFFPosedge(String blockName) {
+
+        var clks = this.getPorts(port -> port.isClock());
+
+        VariableOperator clkref = null;
+        if (!clks.isEmpty())
+            clkref = clks.get(0).getReference();
+        else {
+            clkref = this.addClock().getReference();
+        }
+
+        var block = new AlwaysFFBlock(new PosEdge(clkref), blockName);
+        this.addCode(block);
+        return block;
+    }
+
+    public AlwaysFFBlock addAlwaysFFPosedge() {
+        return addAlwaysFFPosedge("ff_" + this.alwaysffCounter++);
+    }
+
+    /*
      * statements
      */
     public HardwareStatement addStatement(HardwareStatement stat) {
@@ -172,8 +258,6 @@ public class HardwareModule extends HardwareDefinition {
         return instance;
     }
 
-    // public NewHardwareModule addBlock8()
-
     /*
      * get Port as a reference
      */
@@ -184,8 +268,16 @@ public class HardwareModule extends HardwareDefinition {
     /*
      * get Port by name
      */
-    public HardwareOperator getPort(String portname) {
-        return this.getPortDeclarationBlock().getDeclaration(portname).get();
+    public VariableOperator getPort(String portname) {
+        // NOTE: return is known to be a VariableOperator at this point
+        return (VariableOperator) this.getPortDeclarationBlock().getDeclaration(portname).get();
+    }
+
+    /*
+     * get Port via predicate
+     */
+    public List<PortDeclaration> getPorts(Predicate<PortDeclaration> predicate) {
+        return this.getPortDeclarations().stream().filter(predicate).collect(Collectors.toList());
     }
 
     /*
@@ -201,6 +293,10 @@ public class HardwareModule extends HardwareDefinition {
     public HardwareOperator getRegister(String regname) {
         return this.getRegisterDeclarationBlock().getDeclaration(regname).get();
     }
+
+    /*
+     * get block by name
+     */
 
     /*
      * 
