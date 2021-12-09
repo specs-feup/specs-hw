@@ -26,4 +26,10 @@ public abstract class HardwareBlock extends HardwareNode {
     public String getAsString() {
         return nestContent(super.getAsString());
     }
+
+    // TODO: blocks need all types of things like I put in @HardwareModule,
+    // namely, addWire, addRregister, and especially addStatement!
+    // TODO: move some of that code here, and since @HardwareModule has
+    // an internal @ModuleBlock which is a @HardwareBlock, the funcionaliy
+    // is kept!
 }
