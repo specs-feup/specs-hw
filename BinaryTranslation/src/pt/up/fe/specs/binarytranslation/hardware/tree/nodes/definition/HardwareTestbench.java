@@ -29,7 +29,7 @@ public class HardwareTestbench extends HardwareModule {
     static {
         MAXCHILDREN = 3;
         ADDCHILDERRMSG = "HardwareTestBench: Expected only three children!"
-                + "Use addCode() to add content to the testbench body!";
+                + "Use addStatement() and addBlock() to add content to the testbench body!";
     }
 
     /*

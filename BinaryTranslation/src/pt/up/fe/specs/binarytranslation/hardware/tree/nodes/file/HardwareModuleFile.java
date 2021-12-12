@@ -11,19 +11,11 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.file;
 
-import java.util.Arrays;
+public class HardwareModuleFile {
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
-
-public class ClockDeclaration extends InputPortDeclaration {
-
-    public ClockDeclaration(String clockName) {
-        super(new WireDeclaration(clockName, 1), Arrays.asList(ModulePortProperties.Clock));
-    }
-
-    public ClockDeclaration() {
-        this("clk");
-    }
+    // TODO: use this class to introduce all headers in every HardwareModule to emit prior to emission?
+    // this might make it easier to declare HardwareModule as an extension of HardwareBlock directly...
+    // instead of it using ModuleBlock as a package private class...
 }

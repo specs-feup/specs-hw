@@ -13,65 +13,71 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareAnchorNode;
 
 public class ForLoopStatement extends HardwareStatement {
 
-    public ForLoopStatement(ContinuousStatement initialization, HardwareExpression condition,
-            HardwareExpression step) {
+    /*
+     * for copying
+     */
+    private ForLoopStatement() {
+        super(HardwareNodeType.ForLoop);
+    }
+
+    public ForLoopStatement(
+            ProceduralBlockingStatement initialization,
+            HardwareExpression condition, HardwareExpression step) {
+        this(initialization, condition, step, "");
+    }
+
+    public ForLoopStatement(
+            ProceduralBlockingStatement initialization,
+            HardwareExpression condition, HardwareExpression step, String blockName) {
         super(HardwareNodeType.ForLoop);
         this.addChild(initialization);
         this.addChild(condition);
         this.addChild(step);
-        this.addChild(new HardwareAnchorNode()); // will hold children which are individual statements
-
+        this.addChild(new BeginEndBlock(blockName)); // will hold children which are individual statements
     }
 
-    public ContinuousStatement getInitialzationStatement() {
-        return (ContinuousStatement) this.getChild(0);
+    public ProceduralBlockingStatement getInitialzationStatement() {
+        return this.getChild(ProceduralBlockingStatement.class, 0);
     }
 
     public HardwareExpression getConditionExpression() {
-        return (HardwareExpression) this.getChild(1);
+        return this.getChild(HardwareExpression.class, 1);
     }
 
     public HardwareExpression getStepExpression() {
-        return (HardwareExpression) this.getChild(2);
+        return this.getChild(HardwareExpression.class, 2);
     }
 
-    public HardwareAnchorNode getStatementList() {
-        return (HardwareAnchorNode) this.getChild(3);
+    private BeginEndBlock getBeginEndBlock() {
+        return this.getChild(BeginEndBlock.class, 3);
     }
 
-    public void addStatement(HardwareNode statement) {
-        this.getStatementList().addChild(statement);
+    public HardwareStatement addStatement(HardwareStatement statement) {
+        this.getBeginEndBlock().addChild(statement);
+        return statement;
     }
 
     @Override
     public String getAsString() {
-
-        StringBuilder builder = new StringBuilder();
-
+        var builder = new StringBuilder();
         builder.append("for(");
         builder.append(this.getInitialzationStatement().getAsString());
         builder.append(this.getConditionExpression().getAsString());
         builder.append(this.getStepExpression().getAsString());
-        builder.append(") begin\n");
-
-        this.getStatementList().getChildren().forEach(statement -> builder.append(statement.getAsString() + "\n"));
-
-        builder.append("end\n");
-
+        builder.append(") ");
+        builder.append(this.getBeginEndBlock().getAsString());
         return builder.toString();
     }
 
     @Override
     protected ForLoopStatement copyPrivate() {
-        return new ForLoopStatement(this.getInitialzationStatement(), this.getConditionExpression(),
-                this.getStepExpression());
+        return new ForLoopStatement();
     }
 
     @Override

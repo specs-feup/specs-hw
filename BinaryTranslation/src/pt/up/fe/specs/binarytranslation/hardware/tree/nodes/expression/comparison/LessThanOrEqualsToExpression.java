@@ -23,9 +23,13 @@ public class LessThanOrEqualsToExpression extends ABinaryHardwareExpression {
         super("<=", HardwareNodeType.LessThanOrEqualsToExpression, varA, varB);
     }
 
+    private LessThanOrEqualsToExpression(LessThanOrEqualsToExpression other) {
+        super(other);
+    }
+
     @Override
     protected LessThanOrEqualsToExpression copyPrivate() {
-        return new LessThanOrEqualsToExpression(this.getLeft().copy(), this.getRight().copy());
+        return new LessThanOrEqualsToExpression(this);
     }
 
     @Override

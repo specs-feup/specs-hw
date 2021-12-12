@@ -22,6 +22,8 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysFFBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.NegEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.PosEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.SignalEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
@@ -33,19 +35,18 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.Por
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ResetDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 
-public class HardwareModule extends HardwareDefinition {
+public class HardwareModule extends HardwareDefinition implements ModuleBlockInterface {
 
     protected static int MAXCHILDREN;
     protected static String ADDCHILDERRMSG;
     static {
         MAXCHILDREN = 2;
         ADDCHILDERRMSG = "HardwareModule: Expected only two children! " +
-                "Use addCode() to add content to the module body!";
+                "Use addStatement() and addBlock() to add content to the module body!";
     }
 
     // TODO: move this counter logic into @ModuleBlock
@@ -84,28 +85,25 @@ public class HardwareModule extends HardwareDefinition {
     /* *****************************
      * Private stuff
      */
-    protected ModuleBlock getBody() {
+    @Override
+    public ModuleBlock getBody() {
         return this.getChild(ModuleBlock.class, 1);
     }
 
+    /*
+    
     private DeclarationBlock getPortDeclarationBlock() {
         return this.getBody().getChild(DeclarationBlock.class, 0);
     }
-
+    
     private DeclarationBlock getWireDeclarationBlock() {
         return this.getBody().getChild(DeclarationBlock.class, 1);
     }
-
+    
     private DeclarationBlock getRegisterDeclarationBlock() {
         return this.getBody().getChild(DeclarationBlock.class, 2);
     }
-
-    // TODO: enforce a more specific typing here?
-    public HardwareNode addCode(HardwareNode node) {
-        this.getBody().addChild(node);
-        return node;
-    }
-
+    */
     @Override
     public HardwareNode addChild(HardwareNode node) {
         if (getNumChildren() >= MAXCHILDREN)
@@ -124,72 +122,89 @@ public class HardwareModule extends HardwareDefinition {
     /*
      * Special ports
      */
-    // addClock
-    // addReset
+    @Override
+    public ClockDeclaration addClock() {
+        return getBody().addClock();
+    }
+
+    @Override
+    public ClockDeclaration addClock(String clockName) {
+        return getBody().addClock(clockName);
+    }
+
+    @Override
+    public ResetDeclaration addReset() {
+        return getBody().addReset();
+    }
+
+    @Override
+    public ResetDeclaration addReset(String rstName) {
+        return getBody().addReset(rstName);
+    }
 
     /*
      * Ports
      */
+    @Override
     public PortDeclaration addPort(PortDeclaration port) {
-        this.getBody().ports.add(port); // this only adds to the port list in the header!
-        this.getPortDeclarationBlock().addDeclaration(port);
-        return port;
+        return getBody().addPort(port);
     }
 
-    public ClockDeclaration addClock() {
-        return addClock("clk");
-    }
-
-    public ClockDeclaration addClock(String clockName) {
-        return (ClockDeclaration) addPort(new ClockDeclaration(clockName));
-    }
-
-    public ResetDeclaration addReset() {
-        return addReset("rst");
-    }
-
-    public ResetDeclaration addReset(String rstName) {
-        return (ResetDeclaration) addPort(new ResetDeclaration(rstName));
-    }
-
+    @Override
     public InputPortDeclaration addInputPort(String portName, int portWidth) {
-        return (InputPortDeclaration) addPort(new InputPortDeclaration(portName, portWidth));
+        return getBody().addInputPort(portName, portWidth);
     }
 
+    @Override
     public OutputPortDeclaration addOutputPort(String portName, int portWidth) {
-        return (OutputPortDeclaration) addPort(new OutputPortDeclaration(portName, portWidth));
+        return getBody().addOutputPort(portName, portWidth);
     }
 
     /*
      * Wires
      */
+    @Override
     public WireDeclaration addWire(WireDeclaration wire) {
-        this.getWireDeclarationBlock().addDeclaration(wire);
-        return wire;
+        return getBody().addWire(wire);
     }
 
+    @Override
     public WireDeclaration addWire(String portName, int portWidth) {
-        return addWire(new WireDeclaration(portName, portWidth));
+        return getBody().addWire(portName, portWidth);
     }
 
     /*
      * registers
      */
+    @Override
     public RegisterDeclaration addRegister(RegisterDeclaration reg) {
-        this.getRegisterDeclarationBlock().addDeclaration(reg);
-        return reg;
+        return getBody().addRegister(reg);
     }
 
+    @Override
     public RegisterDeclaration addRegister(String regName, int portWidth) {
-        return addRegister(new RegisterDeclaration(regName, portWidth));
+        return getBody().addRegister(regName, portWidth);
     }
 
     /*
-     * always comb blocks
+     * Add code to tier-0 body! (i.e., inside the module - endmodule, but outside any 
+     * other blocks, like always or initials)
+     */
+    public HardwareStatement addStatement(HardwareStatement stat) {
+        return getBody().addStatement(stat);
+    }
+
+    @Override
+    public HardwareBlock addBlock(HardwareBlock block) {
+        return getBody().addBlock(block);
+    }
+
+    /*
+     * add always_comb blocks
      */
     public AlwaysCombBlock addAlwaysComb(String blockName) {
         var block = new AlwaysCombBlock(blockName);
-        this.addCode(block);
+        this.getBody().addChild(block);
         return block;
     }
 
@@ -203,30 +218,40 @@ public class HardwareModule extends HardwareDefinition {
      * always ff blocks (if no signal provided defaults to clk)
      * (if no clock on module, adds a clock declaration to the ports)
      */
-    public AlwaysFFBlock addAlwaysFFPosedge(
-            String blockName,
-            ClockDeclaration clk,
+    private AlwaysFFBlock addAlwaysFF(
+            String blockName, ClockDeclaration clk,
             Function<VariableOperator, SignalEdge> edge) {
 
-        var block = new AlwaysFFBlock(new PosEdge(clk.getReference()), blockName);
-        this.addCode(block);
+        var block = new AlwaysFFBlock(edge.apply(clk.getReference()), blockName);
+        this.getBody().addChild(block);
         return block;
     }
 
-    public AlwaysFFBlock addAlwaysFFPosedge(String blockName) {
+    /*
+     * aux clock getter
+     */
+    private ClockDeclaration getClockForAlways() {
 
         var clks = this.getPorts(port -> port.isClock());
 
-        VariableOperator clkref = null;
+        ClockDeclaration clk = null;
         if (!clks.isEmpty())
-            clkref = clks.get(0).getReference();
+            clk = (ClockDeclaration) clks.get(0);
         else {
-            clkref = this.addClock().getReference();
+            clk = this.addClock();
         }
+        return clk;
+    }
 
-        var block = new AlwaysFFBlock(new PosEdge(clkref), blockName);
-        this.addCode(block);
-        return block;
+    /*
+     * Alwaysff posedge
+     */
+    public AlwaysFFBlock addAlwaysFFPosedge(String blockName, ClockDeclaration clk) {
+        return addAlwaysFF(blockName, clk, (signal) -> new PosEdge(signal));
+    }
+
+    public AlwaysFFBlock addAlwaysFFPosedge(String blockName) {
+        return addAlwaysFFPosedge(blockName, getClockForAlways());
     }
 
     public AlwaysFFBlock addAlwaysFFPosedge() {
@@ -234,11 +259,18 @@ public class HardwareModule extends HardwareDefinition {
     }
 
     /*
-     * statements
+     * Alwaysff negedge
      */
-    public HardwareStatement addStatement(HardwareStatement stat) {
-        this.addCode(stat);
-        return stat;
+    public AlwaysFFBlock addAlwaysFFNegedge(String blockName, ClockDeclaration clk) {
+        return addAlwaysFF(blockName, clk, (signal) -> new NegEdge(signal));
+    }
+
+    public AlwaysFFBlock addAlwaysFFNegedge(String blockName) {
+        return addAlwaysFFNegedge(blockName, getClockForAlways());
+    }
+
+    public AlwaysFFBlock addAlwaysFFNegedge() {
+        return addAlwaysFFNegedge("ff_" + this.alwaysffCounter++);
     }
 
     /*
@@ -247,20 +279,26 @@ public class HardwareModule extends HardwareDefinition {
      * i.e. first level children of the ModuleBlock)
      */
     public ModuleInstance addInstance(ModuleInstance instantiatedModule) {
-        this.addCode(instantiatedModule);
+        this.addChild(instantiatedModule);
         return instantiatedModule;
     }
 
     public ModuleInstance addInstance(HardwareModule instanceType,
             String instanceName, HardwareOperator... connections) {
         var instance = new ModuleInstance(instanceType, instanceName, connections);
-        this.addCode(instance);
+        this.addChild(instance);
         return instance;
+    }
+
+    @Override
+    public final List<ModuleInstance> getInstances() {
+        return this.getChildren(ModuleInstance.class);
     }
 
     /*
      * get Port as a reference
      */
+    @Override
     public VariableOperator getPort(int idx) {
         return this.getPortDeclarations().get(idx).getReference();
     }
@@ -268,6 +306,7 @@ public class HardwareModule extends HardwareDefinition {
     /*
      * get Port by name
      */
+    @Override
     public VariableOperator getPort(String portname) {
         // NOTE: return is known to be a VariableOperator at this point
         return (VariableOperator) this.getPortDeclarationBlock().getDeclaration(portname).get();
@@ -276,6 +315,7 @@ public class HardwareModule extends HardwareDefinition {
     /*
      * get Port via predicate
      */
+    @Override
     public List<PortDeclaration> getPorts(Predicate<PortDeclaration> predicate) {
         return this.getPortDeclarations().stream().filter(predicate).collect(Collectors.toList());
     }
@@ -283,6 +323,7 @@ public class HardwareModule extends HardwareDefinition {
     /*
      * get Wire by name
      */
+    @Override
     public HardwareOperator getWire(String wirename) {
         return this.getWireDeclarationBlock().getDeclaration(wirename).get();
     }
@@ -290,6 +331,7 @@ public class HardwareModule extends HardwareDefinition {
     /*
      * get Reg by name
      */
+    @Override
     public HardwareOperator getRegister(String regname) {
         return this.getRegisterDeclarationBlock().getDeclaration(regname).get();
     }
@@ -299,7 +341,7 @@ public class HardwareModule extends HardwareDefinition {
      */
 
     /*
-     * 
+     * Get port lists
      */
     public List<PortDeclaration> getPortDeclarations() {
         var block = this.getPortDeclarationBlock();
@@ -318,7 +360,7 @@ public class HardwareModule extends HardwareDefinition {
 
     @Override
     public String getName() {
-        return this.getBody().moduleName;
+        return getBody().moduleName;
     }
 
     @Override

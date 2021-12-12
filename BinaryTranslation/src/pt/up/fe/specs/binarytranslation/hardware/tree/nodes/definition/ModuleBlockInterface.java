@@ -1,0 +1,242 @@
+/**
+ * Copyright 2021 SPeCS.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License. under the License.
+ */
+
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition;
+
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ClockDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ResetDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
+
+public interface ModuleBlockInterface {
+
+    public abstract HardwareBlock getBody();
+
+    public abstract List<PortDeclaration> getPortList();
+
+    public abstract DeclarationBlock getPortDeclarationBlock();
+
+    public abstract DeclarationBlock getWireDeclarationBlock();
+
+    public abstract DeclarationBlock getRegisterDeclarationBlock();
+
+    /////////////////////////////////////////////////////////////////////////////
+    // ADDERS ///////////////////////////////////////////////////////////////////
+
+    /*
+     * Special ports
+     */
+    public default ClockDeclaration addClock() {
+        return addClock("clk");
+    }
+
+    public default ClockDeclaration addClock(String clockName) {
+        return (ClockDeclaration) addPort(new ClockDeclaration(clockName));
+    }
+
+    public default ResetDeclaration addReset() {
+        return addReset("rst");
+    }
+
+    public default ResetDeclaration addReset(String rstName) {
+        return (ResetDeclaration) addPort(new ResetDeclaration(rstName));
+    }
+
+    /*
+     * Ports
+     */
+    public default PortDeclaration addPort(PortDeclaration port) {
+        getPortList().add(port); // this only adds to the port list in the header!
+        getPortDeclarationBlock().addDeclaration(port);
+        return port;
+    }
+
+    public default InputPortDeclaration addInputPort(String portName, int portWidth) {
+        return (InputPortDeclaration) addPort(new InputPortDeclaration(portName, portWidth));
+    }
+
+    public default OutputPortDeclaration addOutputPort(String portName, int portWidth) {
+        return (OutputPortDeclaration) addPort(new OutputPortDeclaration(portName, portWidth));
+    }
+
+    /*
+     * Wires
+     */
+    public default WireDeclaration addWire(WireDeclaration wire) {
+        return (WireDeclaration) getWireDeclarationBlock().addDeclaration(wire);
+    }
+
+    public default WireDeclaration addWire(String portName, int portWidth) {
+        return addWire(new WireDeclaration(portName, portWidth));
+    }
+
+    /*
+     * registers
+     */
+    public default RegisterDeclaration addRegister(RegisterDeclaration reg) {
+        return (RegisterDeclaration) getRegisterDeclarationBlock().addDeclaration(reg);
+    }
+
+    public default RegisterDeclaration addRegister(String regName, int portWidth) {
+        return addRegister(new RegisterDeclaration(regName, portWidth));
+    }
+
+    /*
+     * The ModuleBlock is the only block type that allows other HardwareBlocks as children, 
+     * for example always_comb, initial, etc; it is also the only type of block 
+     * that allows children of type ModuleInstance
+     */
+    public default HardwareBlock addBlock(HardwareBlock block) {
+        // TODO block map
+        getBody().addChild(block);
+        return block;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////
+    // GETTERS //////////////////////////////////////////////////////////////////
+
+    /*
+     * *****************************************************************************
+     * Get port lists
+     */
+    public default List<PortDeclaration> getPorts() {
+        return getPortDeclarationBlock().getChildrenOf(PortDeclaration.class);
+    }
+
+    public default List<InputPortDeclaration> getInputPortsns() {
+        return getPortDeclarationBlock().getChildrenOf(InputPortDeclaration.class);
+    }
+
+    public default List<OutputPortDeclaration> getOutputPorts() {
+        return getPortDeclarationBlock().getChildrenOf(OutputPortDeclaration.class);
+    }
+
+    /*
+     * get Port as a index
+     */
+    public default VariableOperator getPort(int idx) {
+        return getPorts().get(idx).getReference();
+    }
+
+    /*
+     * get Port by name
+     */
+    public default VariableOperator getPort(String portname) {
+        // NOTE: return is known to be a VariableOperator at this point
+        return (VariableOperator) getPortDeclarationBlock().getDeclaration(portname).get();
+    }
+
+    /*
+     * get Port via predicate
+     */
+    public default List<PortDeclaration> getPorts(Predicate<PortDeclaration> predicate) {
+        return getPorts().stream().filter(predicate).collect(Collectors.toList());
+    }
+
+    /*
+     * *****************************************************************************
+     * Get wire lists
+     */
+    public default List<WireDeclaration> getWires() {
+        return getWireDeclarationBlock().getChildrenOf(WireDeclaration.class);
+    }
+
+    /*
+     * get Wire as a index
+     */
+    public default HardwareOperator getWire(int idx) {
+        return getWires().get(idx).getReference();
+    }
+
+    /*
+     * get Wire by name
+     */
+    public default HardwareOperator getWire(String wirename) {
+        return getWireDeclarationBlock().getDeclaration(wirename).get();
+    }
+
+    /*
+     * get wire via predicate
+     */
+    public default List<WireDeclaration> getWires(Predicate<WireDeclaration> predicate) {
+        return getWires().stream().filter(predicate).collect(Collectors.toList());
+    }
+
+    /*
+     * *****************************************************************************
+     * Get Reg lists
+     */
+    public default List<RegisterDeclaration> getRegisters() {
+        return getRegisterDeclarationBlock().getChildrenOf(RegisterDeclaration.class);
+    }
+
+    /*
+     * get Reg as a index
+     */
+    public default HardwareOperator getRegister(int idx) {
+        return getRegisters().get(idx).getReference();
+    }
+
+    /*
+     * get Reg by name
+     */
+    public default HardwareOperator getRegister(String regname) {
+        return getRegisterDeclarationBlock().getDeclaration(regname).get();
+    }
+
+    /*
+     * get Reg via predicate
+     */
+    public default List<RegisterDeclaration> getRegisters(Predicate<RegisterDeclaration> predicate) {
+        return getRegisters().stream().filter(predicate).collect(Collectors.toList());
+    }
+
+    /*
+     * *****************************************************************************
+     * get blocks list
+     */
+    public default List<HardwareBlock> getBlocks() {
+        return getBody().getChildren(HardwareBlock.class);
+    }
+
+    /*
+     * get block by index
+     */
+    public default HardwareBlock getBlock(int idx) {
+        return getBlocks().get(idx);
+    }
+
+    /*
+     * get block by name
+     // TODO: need maybe a delcaration block for different type of hardwareBlock?
+     // seems like a good idea since i can reuse the nameMaps
+    public default HardwareBlock getBlock(String regname) {
+        return getBlocks().getDeclaration(regname).get();
+    }*/
+
+    public default List<ModuleInstance> getInstances() {
+        return getBody().getChildren(ModuleInstance.class);
+    }
+}

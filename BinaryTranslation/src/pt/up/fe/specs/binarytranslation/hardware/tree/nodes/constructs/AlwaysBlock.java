@@ -15,24 +15,20 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class AlwaysBlock extends HardwareBlock {
+public class AlwaysBlock extends BeginEndBlock {
 
-    public AlwaysBlock() {
-        super(HardwareNodeType.Always);
+    public AlwaysBlock(String blockName) {
+        super(HardwareNodeType.Always, blockName);
     }
 
     @Override
     public String getAsString() {
-        var builder = new StringBuilder();
-        builder.append("always begin\n");
-        this.getChildren().forEach(child -> builder.append("\t" + child.getAsString() + "\n"));
-        builder.append("end\n");
-        return builder.toString();
+        return "always " + super.getAsString();
     }
 
     @Override
     protected AlwaysBlock copyPrivate() {
-        return new AlwaysBlock();
+        return new AlwaysBlock(this.blockName);
     }
 
     @Override

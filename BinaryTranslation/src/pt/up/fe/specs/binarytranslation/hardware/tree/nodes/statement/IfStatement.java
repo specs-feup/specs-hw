@@ -13,37 +13,40 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
-import java.util.List;
-
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareAnchorNode;
 
 public class IfStatement extends HardwareStatement {
 
     /*
-     * empty node to hold list of statements
+     * for copying
      */
-    private HardwareAnchorNode listanchor;
-
-    public IfStatement(HardwareExpression condition) {
+    private IfStatement() {
         super(HardwareNodeType.IfStatement);
-        this.listanchor = new HardwareAnchorNode();
-
-        this.addChild(condition);
-        this.addChild(listanchor);
     }
 
-    public void addStatement(HardwareStatement stat) {
-        this.listanchor.addChild(stat);
+    public IfStatement(HardwareExpression condition) {
+        this(condition, "");
+    }
+
+    public IfStatement(HardwareExpression condition, String blockName) {
+        super(HardwareNodeType.IfStatement);
+        this.addChild(condition);
+        this.addChild(new BeginEndBlock(blockName));
     }
 
     public HardwareExpression getCondition() {
-        return (HardwareExpression) this.getChild(0);
+        return this.getChild(HardwareExpression.class, 0);
     }
 
-    public List<HardwareStatement> getStatements() {
-        return listanchor.getChildren(HardwareStatement.class);
+    private BeginEndBlock getBeginEndBlock() {
+        return this.getChild(BeginEndBlock.class, 1);
+    }
+
+    public HardwareStatement addStatement(HardwareStatement statement) {
+        this.getBeginEndBlock().addChild(statement);
+        return statement;
     }
 
     @Override
@@ -54,28 +57,14 @@ public class IfStatement extends HardwareStatement {
     @Override
     public String getAsString() {
         var builder = new StringBuilder();
-
-        builder.append("if(" + this.getCondition().getAsString() + ")");
-
-        var stats = this.getStatements();
-        if (stats.size() > 1)
-            builder.append(" begin");
-        builder.append("\n");
-
-        for (var child : stats) {
-            builder.append("\t\t" + child.getAsString() + "\n");
-        }
-
-        if (this.getStatements().size() > 1)
-            builder.append("\tend");
-        builder.append("\n");
-
+        builder.append("if(" + this.getCondition().getAsString() + ") ");
+        builder.append(this.getBeginEndBlock().getAsString());
         return builder.toString();
     }
 
     @Override
     protected IfStatement copyPrivate() {
-        return new IfStatement(this.getCondition());
+        return new IfStatement();
     }
 
     @Override

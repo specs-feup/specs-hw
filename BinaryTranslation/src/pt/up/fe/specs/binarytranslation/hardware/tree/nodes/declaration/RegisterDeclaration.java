@@ -22,16 +22,11 @@ public class RegisterDeclaration extends IdentifierDeclaration {
     }
 
     @Override
-    public String getNodeName() {
-        if (this.getVariableWidth() == 1) {
-            return "reg " + this.getVariableName();
-        }
-        return "reg [" + (this.getVariableWidth() - 1) + " : 0] " + this.getVariableName();
-    }
-
-    @Override
     public String getAsString() {
-        return this.getNodeName() + ";";
+        if (this.getVariableWidth() == 1) {
+            return "reg " + this.getVariableName() + ";";
+        }
+        return "reg [" + (this.getVariableWidth() - 1) + " : 0] " + this.getVariableName() + ";";
     }
 
     @Override

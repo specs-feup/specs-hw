@@ -23,9 +23,13 @@ public class BitWiseNotExpression extends AUnaryHardwareExpression {
         super("~", HardwareNodeType.BitWiseNotExpression, varA);
     }
 
+    private BitWiseNotExpression(BitWiseNotExpression other) {
+        super(other);
+    }
+
     @Override
     protected BitWiseNotExpression copyPrivate() {
-        return new BitWiseNotExpression(this.getOperand().copy());
+        return new BitWiseNotExpression(this);
     }
 
     @Override

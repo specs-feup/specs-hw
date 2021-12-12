@@ -44,6 +44,11 @@ public abstract class HardwareDefinition extends HardwareNode {
         return instantiate(instanceName, Arrays.asList(connections));
     }
 
+    /*
+     * TODO: very important here!!
+     */
+    // public abstract ModuleInstance simulate(<List of stimuli and expected outputs>);
+
     // TODO: children
     // HardwareFunction
     // HardwareModule

@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.testbench;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.file;
 
 public class TestbenchMemoryFile {
 

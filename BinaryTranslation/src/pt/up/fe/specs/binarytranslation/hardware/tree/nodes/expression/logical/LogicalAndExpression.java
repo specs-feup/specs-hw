@@ -23,9 +23,13 @@ public class LogicalAndExpression extends ABinaryHardwareExpression {
         super("&&", HardwareNodeType.LogicalAndExpression, varA, varB);
     }
 
+    private LogicalAndExpression(LogicalAndExpression other) {
+        super(other);
+    }
+
     @Override
     protected LogicalAndExpression copyPrivate() {
-        return new LogicalAndExpression(this.getLeft().copy(), this.getRight().copy());
+        return new LogicalAndExpression(this);
     }
 
     @Override

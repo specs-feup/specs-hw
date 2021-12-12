@@ -23,9 +23,13 @@ public class LessThanExpression extends ABinaryHardwareExpression {
         super("<", HardwareNodeType.LessThanExpression, varA, varB);
     }
 
+    private LessThanExpression(LessThanExpression other) {
+        super(other);
+    }
+
     @Override
     protected LessThanExpression copyPrivate() {
-        return new LessThanExpression(this.getLeft().copy(), this.getRight().copy());
+        return new LessThanExpression(this);
     }
 
     @Override

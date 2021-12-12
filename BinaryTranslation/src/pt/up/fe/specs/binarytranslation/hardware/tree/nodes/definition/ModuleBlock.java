@@ -33,8 +33,11 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBloc
  * with a public ModuleBlock class
  * 
  * ModuleBlock is **package private.**
+ * 
+ * The ModuleBlock is the only block type that allows other HardwareBlocks as children, for example always_comb,
+ * initial, etc; it is also the only type of block that allows children of type ModuleInstance
  */
-class ModuleBlock extends HardwareBlock {
+class ModuleBlock extends HardwareBlock implements ModuleBlockInterface {
 
     protected String moduleName;
     protected List<PortDeclaration> ports;
@@ -46,8 +49,10 @@ class ModuleBlock extends HardwareBlock {
     // whenever a code block is added (i.e., an always, or initial)
     // keep it's name here, so that duplicate named blocks cannot be added
 
+    // protected Map<String, ModuleInstance> instanceMap;
+
     public ModuleBlock(String moduleName) {
-        super(HardwareNodeType.ModuleHeader);
+        super(HardwareNodeType.ModuleBlock);
         this.moduleName = moduleName;
         this.ports = new ArrayList<PortDeclaration>();
 
@@ -57,16 +62,46 @@ class ModuleBlock extends HardwareBlock {
         this.addChild(new DeclarationBlock("Registers")); // register declarations
     }
 
-    public ModuleBlock(ModuleBlock other) {
-        super(HardwareNodeType.ModuleHeader);
+    /*
+     * copy without children
+     */
+    private ModuleBlock(ModuleBlock other) {
+        super(HardwareNodeType.ModuleBlock);
         this.moduleName = other.moduleName;
-        this.ports = other.ports;
+        this.ports = new ArrayList<PortDeclaration>();
+        for (var port : other.ports)
+            this.ports.add(port.copy());
+    }
+
+    @Override
+    public HardwareBlock getBody() {
+        return this;
+    }
+
+    @Override
+    public List<PortDeclaration> getPortList() {
+        return this.ports;
+    }
+
+    @Override
+    public DeclarationBlock getPortDeclarationBlock() {
+        return getChild(DeclarationBlock.class, 0);
+    }
+
+    @Override
+    public DeclarationBlock getWireDeclarationBlock() {
+        return getChild(DeclarationBlock.class, 1);
+    }
+
+    @Override
+    public DeclarationBlock getRegisterDeclarationBlock() {
+        return getChild(DeclarationBlock.class, 2);
     }
 
     @Override
     public String getAsString() {
         var builder = new StringBuilder();
-        builder.append("\nmodule " + this.moduleName);
+        builder.append("module " + this.moduleName);
 
         if (this.ports.size() > 0) {
             builder.append("(");

@@ -21,9 +21,16 @@ public abstract class SignalEdge extends HardwareNode {
 
     private VariableOperator signal;
 
-    public SignalEdge(HardwareNodeType type, VariableOperator signal) {
+    protected SignalEdge(HardwareNodeType type, VariableOperator signal) {
+        this(type);
+        this.addChild(signal);
+    }
+
+    /*
+     * copy without children
+     */
+    protected SignalEdge(HardwareNodeType type) {
         super(type);
-        this.signal = signal;
     }
 
     public VariableOperator getSignal() {
@@ -36,9 +43,6 @@ public abstract class SignalEdge extends HardwareNode {
     public String getAsString() {
         return this.getEdge() + " " + this.getChild(0).getAsString();
     }
-
-    @Override
-    protected abstract SignalEdge copyPrivate();
 
     @Override
     public SignalEdge copy() {

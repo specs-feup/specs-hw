@@ -23,9 +23,13 @@ public class DivisionExpression extends ABinaryHardwareExpression {
         super("/", HardwareNodeType.DivisionExpression, varA, varB);
     }
 
+    private DivisionExpression(DivisionExpression other) {
+        super(other);
+    }
+
     @Override
     protected DivisionExpression copyPrivate() {
-        return new DivisionExpression(this.getLeft().copy(), this.getRight().copy());
+        return new DivisionExpression(this);
     }
 
     @Override

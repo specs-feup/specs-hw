@@ -23,6 +23,9 @@ public class WireDeclaration extends IdentifierDeclaration {
 
     @Override
     public String getAsString() {
+        if (this.getVariableWidth() == 1) {
+            return "wire " + this.getVariableName() + ";";
+        }
         return "wire [" + (this.getVariableWidth() - 1) + " : 0] " + this.getVariableName() + ";";
     }
 

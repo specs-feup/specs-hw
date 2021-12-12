@@ -15,12 +15,12 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port;
 
 import java.util.Arrays;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 
 public class ResetDeclaration extends InputPortDeclaration {
 
     public ResetDeclaration(String rstName) {
-        super(new RegisterDeclaration(rstName, 1), Arrays.asList(ModulePortProperties.Reset));
+        super(new WireDeclaration(rstName, 1), Arrays.asList(ModulePortProperties.Reset));
     }
 
     public ResetDeclaration() {

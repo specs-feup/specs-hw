@@ -23,9 +23,13 @@ public class RightArithmeticShiftExpression extends ABinaryHardwareExpression {
         super(">>>", HardwareNodeType.RightArithmeticShiftExpression, varA, varB);
     }
 
+    private RightArithmeticShiftExpression(RightArithmeticShiftExpression other) {
+        super(other);
+    }
+
     @Override
     protected RightArithmeticShiftExpression copyPrivate() {
-        return new RightArithmeticShiftExpression(this.getLeft().copy(), this.getRight().copy());
+        return new RightArithmeticShiftExpression(this);
     }
 
     @Override

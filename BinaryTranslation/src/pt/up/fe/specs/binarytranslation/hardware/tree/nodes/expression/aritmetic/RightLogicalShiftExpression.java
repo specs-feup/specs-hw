@@ -23,9 +23,13 @@ public class RightLogicalShiftExpression extends ABinaryHardwareExpression {
         super(">>", HardwareNodeType.RightLogicalShiftExpression, varA, varB);
     }
 
+    private RightLogicalShiftExpression(RightLogicalShiftExpression other) {
+        super(other);
+    }
+
     @Override
     protected RightLogicalShiftExpression copyPrivate() {
-        return new RightLogicalShiftExpression(this.getLeft().copy(), this.getRight().copy());
+        return new RightLogicalShiftExpression(this);
     }
 
     @Override

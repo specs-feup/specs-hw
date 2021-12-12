@@ -13,40 +13,37 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
-import java.util.List;
-
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareAnchorNode;
 
 public class IfElseStatement extends HardwareStatement {
 
     /*
-     * empty node to hold list of statements
+     * for copying
      */
-    private HardwareAnchorNode iflist, elselist;
+    private IfElseStatement() {
+        super(HardwareNodeType.IfElseStatement);
+    }
 
     public IfElseStatement(HardwareExpression condition) {
         super(HardwareNodeType.IfElseStatement);
-        this.iflist = new HardwareAnchorNode();
-        this.elselist = new HardwareAnchorNode();
-
         this.addChild(condition); // Condition of the if/else statement
 
         // True condition statement list
-        this.addChild(iflist); // will hold children which are individual statements
+        this.addChild(new BeginEndBlock()); // will hold children which are individual statements
 
         // False condition statement list
-        this.addChild(elselist); // will hold children which are individual statements
+        this.addChild(new BeginEndBlock()); // will hold children which are individual statements
     }
 
     public IfElseStatement addIfStatement(HardwareStatement stat) {
-        this.iflist.addChild(stat);
+        this.getIfStatements().addChild(stat);
         return this;
     }
 
     public IfElseStatement addElseStatement(HardwareStatement stat) {
-        this.elselist.addChild(stat);
+        this.getElseStatements().addChild(stat);
         return this;
     }
 
@@ -54,12 +51,12 @@ public class IfElseStatement extends HardwareStatement {
         return this.getChild(HardwareExpression.class, 0);
     }
 
-    public List<HardwareStatement> getIfStatements() {
-        return iflist.getChildren(HardwareStatement.class);
+    public BeginEndBlock getIfStatements() {
+        return this.getChild(BeginEndBlock.class, 1);
     }
 
-    public List<HardwareStatement> getElseStatements() {
-        return elselist.getChildren(HardwareStatement.class);
+    public BeginEndBlock getElseStatements() {
+        return this.getChild(BeginEndBlock.class, 2);
     }
 
     @Override
@@ -71,22 +68,33 @@ public class IfElseStatement extends HardwareStatement {
     public String getAsString() {
 
         var builder = new StringBuilder();
+        builder.append("if(" + this.getCondition().getAsString() + ") ");
+        builder.append(this.getIfStatements().getAsString());
 
-        builder.append("if(" + this.getCondition().getAsString() + ") begin\n");
-
-        this.getIfStatements().forEach(statement -> builder.append("\t\t" + statement.getAsString() + "\n"));
-
-        builder.append("\tend\n");
-
-        if (!this.getElseStatements().isEmpty()) {
-
-            builder.append("\telse begin\n");
-
-            this.getElseStatements().forEach(statement -> builder.append("\t\t" + statement.getAsString() + "\n"));
-
-            builder.append("\tend \n");
+        if (!this.getElseStatements().getStatements().isEmpty()) {
+            builder.append("else ");
+            builder.append(this.getElseStatements().getAsString());
         }
         return builder.toString();
+
+        /*
+        var builder = new StringBuilder();
+        
+        builder.append("if(" + this.getCondition().getAsString() + ") begin\n");
+        
+        this.getIfStatements().forEach(statement -> builder.append("\t\t" + statement.getAsString() + "\n"));
+        
+        builder.append("\tend\n");
+        
+        if (!this.getElseStatements().isEmpty()) {
+        
+            builder.append("\telse begin\n");
+        
+            this.getElseStatements().forEach(statement -> builder.append("\t\t" + statement.getAsString() + "\n"));
+        
+            builder.append("\tend \n");
+        }
+        return builder.toString();*/
     }
 
     @Override
