@@ -13,38 +13,25 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class AlwaysCombBlock extends HardwareBlock {
-
-    private String blockName;
+public class AlwaysCombBlock extends BeginEndBlock {
 
     public AlwaysCombBlock() {
         this("");
     }
 
-    public AlwaysCombBlock(String blockname) {
-        super(HardwareNodeType.AlwaysComb);
-        this.blockName = blockname;
+    public AlwaysCombBlock(String blockName) {
+        super(HardwareNodeType.AlwaysComb, blockName);
     }
 
     @Override
     public String getAsString() {
-        var builder = new StringBuilder();
-
-        builder.append("always_comb begin");
-        if (!this.blockName.isBlank())
-            builder.append(" : " + this.blockName);
-        builder.append("\n");
-
-        builder.append(super.getAsString());
-        builder.append("end //" + this.blockName + "\n");
-        return builder.toString();
+        return "always_comb " + super.getAsString();
     }
 
     @Override
-    protected HardwareNode copyPrivate() {
+    protected AlwaysCombBlock copyPrivate() {
         return new AlwaysCombBlock(this.blockName);
     }
 

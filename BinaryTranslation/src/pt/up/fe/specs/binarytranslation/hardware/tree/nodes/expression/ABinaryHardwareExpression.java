@@ -19,14 +19,19 @@ public abstract class ABinaryHardwareExpression extends HardwareExpression {
 
     protected String expressionOperator;
 
-    protected ABinaryHardwareExpression(String operator, HardwareNodeType type) {
-        super(type);
-        this.expressionOperator = operator;
+    /*
+     * copy without children
+     */
+    protected ABinaryHardwareExpression(ABinaryHardwareExpression other) {
+        super(other.type);
+        this.expressionOperator = other.expressionOperator;
     }
 
-    protected ABinaryHardwareExpression(String operator,
-            HardwareNodeType type, HardwareExpression varA, HardwareExpression varB) {
-        this(operator, type);
+    protected ABinaryHardwareExpression(
+            String operator, HardwareNodeType type,
+            HardwareExpression varA, HardwareExpression varB) {
+        super(type);
+        this.expressionOperator = operator;
         this.addChild(varA);
         this.addChild(varB);
     }

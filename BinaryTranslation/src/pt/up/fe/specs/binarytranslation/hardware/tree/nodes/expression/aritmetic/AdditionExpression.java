@@ -23,9 +23,13 @@ public class AdditionExpression extends ABinaryHardwareExpression {
         super("+", HardwareNodeType.AdditionExpression, varA, varB);
     }
 
+    private AdditionExpression(AdditionExpression other) {
+        super(other);
+    }
+
     @Override
     protected AdditionExpression copyPrivate() {
-        return new AdditionExpression(this.getLeft().copy(), this.getRight().copy());
+        return new AdditionExpression(this);
     }
 
     @Override

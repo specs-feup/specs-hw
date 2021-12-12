@@ -28,8 +28,11 @@ public enum HardwareNodeType {
     // FunctionDefinition??
     TestBenchDefinition,
 
+    // blocks
+    ModuleBlock, // this is the definition of a module body
+    BeginEndBlock,
+
     // declarations
-    ModuleHeader, // this is the definition of a module body
     ParameterDeclaration,
     PortDeclaration,
     RegisterDeclaration,

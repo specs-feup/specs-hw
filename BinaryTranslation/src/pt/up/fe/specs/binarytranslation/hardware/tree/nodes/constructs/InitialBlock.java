@@ -15,28 +15,24 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public class InitialBlock extends HardwareBlock {
+public class InitialBlock extends BeginEndBlock {
 
     public InitialBlock() {
-        super(HardwareNodeType.Initial);
+        this("");
+    }
+
+    public InitialBlock(String blockName) {
+        super(HardwareNodeType.Initial, blockName);
     }
 
     @Override
     public String getAsString() {
-
-        var builder = new StringBuilder();
-        builder.append("\ninitial begin\n");
-
-        for (var child : this.getChildren())
-            builder.append("\t" + child.getAsString() + "\n");
-
-        builder.append("end\n");
-        return builder.toString();
+        return "initial " + super.getAsString();
     }
 
     @Override
     protected InitialBlock copyPrivate() {
-        return new InitialBlock();
+        return new InitialBlock(this.blockName);
     }
 
     @Override

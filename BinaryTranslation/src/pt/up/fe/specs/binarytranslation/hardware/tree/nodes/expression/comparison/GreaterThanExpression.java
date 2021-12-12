@@ -23,9 +23,13 @@ public class GreaterThanExpression extends ABinaryHardwareExpression {
         super(">", HardwareNodeType.GreaterThanExpression, varA, varB);
     }
 
+    private GreaterThanExpression(GreaterThanExpression other) {
+        super(other);
+    }
+
     @Override
     protected GreaterThanExpression copyPrivate() {
-        return new GreaterThanExpression(this.getLeft().copy(), this.getRight().copy());
+        return new GreaterThanExpression(this);
     }
 
     @Override

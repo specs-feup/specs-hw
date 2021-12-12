@@ -23,9 +23,13 @@ public class EqualsToExpression extends ABinaryHardwareExpression {
         super("==", HardwareNodeType.EqualsToExpression, varA, varB);
     }
 
+    private EqualsToExpression(EqualsToExpression other) {
+        super(other);
+    }
+
     @Override
     protected EqualsToExpression copyPrivate() {
-        return new EqualsToExpression(this.getLeft().copy(), this.getRight().copy());
+        return new EqualsToExpression(this);
     }
 
     @Override

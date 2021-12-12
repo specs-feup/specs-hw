@@ -11,33 +11,32 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 
-public class NegEdge extends SignalEdge {
+public abstract class BlockStatement extends HardwareStatement {
 
-    public NegEdge(VariableOperator signal) {
-        super(HardwareNodeType.NegEdge, signal);
-    }
-
-    public NegEdge() {
-        super(HardwareNodeType.NegEdge);
+    public BlockStatement(HardwareNodeType type) {
+        super(type);
     }
 
     @Override
-    protected String getEdge() {
-        return "negedge";
+    protected HardwareNode copyPrivate() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
-    protected NegEdge copyPrivate() {
-        return new NegEdge();
+    public HardwareNode copy() {
+        // TODO Auto-generated method stub
+        return super.copy();
     }
 
     @Override
-    public NegEdge copy() {
-        return (NegEdge) super.copy();
+    public String getAsString() {
+        // TODO Auto-generated method stub
+        return super.getAsString();
     }
 }

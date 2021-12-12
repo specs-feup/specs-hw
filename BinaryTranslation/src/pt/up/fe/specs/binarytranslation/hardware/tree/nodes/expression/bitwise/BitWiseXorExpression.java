@@ -23,9 +23,13 @@ public class BitWiseXorExpression extends ABinaryHardwareExpression {
         super("^", HardwareNodeType.BitWiseXorExpression, varA, varB);
     }
 
+    private BitWiseXorExpression(BitWiseXorExpression other) {
+        super(other);
+    }
+
     @Override
     protected BitWiseXorExpression copyPrivate() {
-        return new BitWiseXorExpression(this.getLeft().copy(), this.getRight().copy());
+        return new BitWiseXorExpression(this);
     }
 
     @Override

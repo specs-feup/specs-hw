@@ -23,9 +23,13 @@ public class BitWiseAndExpression extends ABinaryHardwareExpression {
         super("&", HardwareNodeType.BitWiseAndExpression, varA, varB);
     }
 
+    private BitWiseAndExpression(BitWiseAndExpression other) {
+        super(other);
+    }
+
     @Override
     protected BitWiseAndExpression copyPrivate() {
-        return new BitWiseAndExpression(this.getLeft().copy(), this.getRight().copy());
+        return new BitWiseAndExpression(this);
     }
 
     @Override

@@ -23,9 +23,13 @@ public class MultiplicationExpression extends ABinaryHardwareExpression {
         super("*", HardwareNodeType.MultiplicationExpression, varA, varB);
     }
 
+    private MultiplicationExpression(MultiplicationExpression other) {
+        super(other);
+    }
+
     @Override
     protected MultiplicationExpression copyPrivate() {
-        return new MultiplicationExpression(this.getLeft().copy(), this.getRight().copy());
+        return new MultiplicationExpression(this);
     }
 
     @Override

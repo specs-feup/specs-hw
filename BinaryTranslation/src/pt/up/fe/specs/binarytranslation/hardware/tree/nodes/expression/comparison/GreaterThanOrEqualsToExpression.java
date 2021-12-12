@@ -23,9 +23,13 @@ public class GreaterThanOrEqualsToExpression extends ABinaryHardwareExpression {
         super(">=", HardwareNodeType.GreaterThanOrEqualsToExpression, varA, varB);
     }
 
+    private GreaterThanOrEqualsToExpression(GreaterThanOrEqualsToExpression other) {
+        super(other);
+    }
+
     @Override
     protected GreaterThanOrEqualsToExpression copyPrivate() {
-        return new GreaterThanOrEqualsToExpression(this.getLeft().copy(), this.getRight().copy());
+        return new GreaterThanOrEqualsToExpression(this);
     }
 
     @Override

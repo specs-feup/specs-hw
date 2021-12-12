@@ -23,9 +23,13 @@ public class NotEqualsToExpression extends ABinaryHardwareExpression {
         super("!=", HardwareNodeType.NotEqualsToExpression, varA, varB);
     }
 
+    private NotEqualsToExpression(NotEqualsToExpression other) {
+        super(other);
+    }
+
     @Override
     protected NotEqualsToExpression copyPrivate() {
-        return new NotEqualsToExpression(this.getLeft().copy(), this.getRight().copy());
+        return new NotEqualsToExpression(this);
     }
 
     @Override

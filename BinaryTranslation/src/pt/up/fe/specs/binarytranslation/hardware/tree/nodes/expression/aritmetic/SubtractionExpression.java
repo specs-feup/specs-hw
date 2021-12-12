@@ -23,9 +23,13 @@ public class SubtractionExpression extends ABinaryHardwareExpression {
         super("-", HardwareNodeType.SubtractionExpression, varA, varB);
     }
 
+    private SubtractionExpression(SubtractionExpression other) {
+        super(other);
+    }
+
     @Override
     protected SubtractionExpression copyPrivate() {
-        return new SubtractionExpression(this.getLeft().copy(), this.getRight().copy());
+        return new SubtractionExpression(this);
     }
 
     @Override

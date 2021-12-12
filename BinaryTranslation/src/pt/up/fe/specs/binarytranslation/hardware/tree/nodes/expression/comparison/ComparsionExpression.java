@@ -23,9 +23,13 @@ public class ComparsionExpression extends ABinaryHardwareExpression {
         super("==", HardwareNodeType.ComparsionExpression, varA, varB);
     }
 
+    private ComparsionExpression(ComparsionExpression other) {
+        super(other);
+    }
+
     @Override
     protected ComparsionExpression copyPrivate() {
-        return new ComparsionExpression(this.getLeft().copy(), this.getRight().copy());
+        return new ComparsionExpression(this);
     }
 
     @Override

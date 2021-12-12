@@ -23,9 +23,13 @@ public class LeftShiftExpression extends ABinaryHardwareExpression {
         super("<<", HardwareNodeType.LeftShiftExpression, varA, varB);
     }
 
+    private LeftShiftExpression(LeftShiftExpression other) {
+        super(other);
+    }
+
     @Override
     protected LeftShiftExpression copyPrivate() {
-        return new LeftShiftExpression(this.getLeft().copy(), this.getRight().copy());
+        return new LeftShiftExpression(this);
     }
 
     @Override

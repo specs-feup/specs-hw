@@ -38,6 +38,8 @@ public class Verilog {
         return new AdditionExpression(refA, refB);
     }
 
+    // TODO: blocking add, non blocking add... etc?
+
     public static SubtractionExpression sub(HardwareExpression refA, HardwareExpression refB) {
         return new SubtractionExpression(refA, refB);
     }

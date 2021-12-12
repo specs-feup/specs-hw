@@ -19,13 +19,18 @@ public abstract class AUnaryHardwareExpression extends HardwareExpression {
 
     protected String expressionOperator;
 
-    protected AUnaryHardwareExpression(String operator, HardwareNodeType type) {
-        super(type);
-        this.expressionOperator = operator;
+    /*
+     * copy without children
+     */
+    protected AUnaryHardwareExpression(AUnaryHardwareExpression other) {
+        super(other.type);
+        this.expressionOperator = other.expressionOperator;
     }
 
-    protected AUnaryHardwareExpression(String operator, HardwareNodeType type, HardwareExpression varA) {
-        this(operator, type);
+    protected AUnaryHardwareExpression(
+            String operator, HardwareNodeType type, HardwareExpression varA) {
+        super(type);
+        this.expressionOperator = operator;
         this.addChild(varA);
     }
 
