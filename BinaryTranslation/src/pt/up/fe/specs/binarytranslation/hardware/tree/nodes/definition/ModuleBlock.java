@@ -45,7 +45,7 @@ class ModuleBlock extends HardwareBlock implements ModuleBlockInterface {
     // counters used when no user specified names for blocks are given
     // private int alwaysffCounter = 0;
     // private int alwayscombCounter = 0;
-    protected Map<String, HardwareBlock> blockMap;
+    protected Map<Integer, HardwareBlock> blockMap;
     // whenever a code block is added (i.e., an always, or initial)
     // keep it's name here, so that duplicate named blocks cannot be added
 
@@ -81,21 +81,6 @@ class ModuleBlock extends HardwareBlock implements ModuleBlockInterface {
     @Override
     public List<PortDeclaration> getPortList() {
         return this.ports;
-    }
-
-    @Override
-    public DeclarationBlock getPortDeclarationBlock() {
-        return getChild(DeclarationBlock.class, 0);
-    }
-
-    @Override
-    public DeclarationBlock getWireDeclarationBlock() {
-        return getChild(DeclarationBlock.class, 1);
-    }
-
-    @Override
-    public DeclarationBlock getRegisterDeclarationBlock() {
-        return getChild(DeclarationBlock.class, 2);
     }
 
     @Override

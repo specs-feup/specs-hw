@@ -21,4 +21,13 @@ public abstract class HardwareStatement extends HardwareNode {
     protected HardwareStatement(HardwareNodeType type) {
         super(type);
     }
+
+    /*
+     * For statements which may contain a @BeginEndBlock, 
+     * override this with the hashcode of the name of the 
+     * block, e.g., ifStatement
+     */
+    public Integer getIdentifier() {
+        return this.hashCode();
+    }
 }
