@@ -28,6 +28,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.Res
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 
 public interface ModuleBlockInterface {
@@ -36,11 +37,17 @@ public interface ModuleBlockInterface {
 
     public abstract List<PortDeclaration> getPortList();
 
-    public abstract DeclarationBlock getPortDeclarationBlock();
+    public default DeclarationBlock getPortDeclarationBlock() {
+        return getBody().getChild(DeclarationBlock.class, 0);
+    }
 
-    public abstract DeclarationBlock getWireDeclarationBlock();
+    public default DeclarationBlock getWireDeclarationBlock() {
+        return getBody().getChild(DeclarationBlock.class, 1);
+    }
 
-    public abstract DeclarationBlock getRegisterDeclarationBlock();
+    public default DeclarationBlock getRegisterDeclarationBlock() {
+        return getBody().getChild(DeclarationBlock.class, 2);
+    }
 
     /////////////////////////////////////////////////////////////////////////////
     // ADDERS ///////////////////////////////////////////////////////////////////
@@ -104,6 +111,11 @@ public interface ModuleBlockInterface {
     }
 
     /*
+     * 
+     */
+    public HardwareStatement addStatement(HardwareStatement statement);
+
+    /*
      * The ModuleBlock is the only block type that allows other HardwareBlocks as children, 
      * for example always_comb, initial, etc; it is also the only type of block 
      * that allows children of type ModuleInstance
@@ -112,6 +124,23 @@ public interface ModuleBlockInterface {
         // TODO block map
         getBody().addChild(block);
         return block;
+    }
+
+    /*
+     * instances of other modules
+     * (instances can only be added as direct children of the module body,
+     * i.e. first level children of the ModuleBlock)
+     */
+    public default ModuleInstance addInstance(ModuleInstance instantiatedModule) {
+        getBody().addChild(instantiatedModule);
+        return instantiatedModule;
+    }
+
+    public default ModuleInstance addInstance(HardwareModule instanceType,
+            String instanceName, HardwareOperator... connections) {
+        var instance = new ModuleInstance(instanceType, instanceName, connections);
+        getBody().addChild(instance);
+        return instance;
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -215,6 +244,22 @@ public interface ModuleBlockInterface {
 
     /*
      * *****************************************************************************
+     * get statements list
+     */
+    public List<HardwareStatement> getStatements();
+
+    /*
+     * get statement by index
+     */
+    public HardwareStatement getStatement(int idx);
+
+    /*
+     * get statement via predicate
+     */
+    public List<HardwareStatement> getStatements(Predicate<HardwareStatement> predicate);
+
+    /*
+     * *****************************************************************************
      * get blocks list
      */
     public default List<HardwareBlock> getBlocks() {
@@ -226,6 +271,13 @@ public interface ModuleBlockInterface {
      */
     public default HardwareBlock getBlock(int idx) {
         return getBlocks().get(idx);
+    }
+
+    /*
+     * get block via predicate
+     */
+    public default List<HardwareBlock> getBlocks(Predicate<HardwareBlock> predicate) {
+        return getBlocks().stream().filter(predicate).collect(Collectors.toList());
     }
 
     /*

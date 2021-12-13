@@ -16,7 +16,6 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
@@ -26,13 +25,8 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareB
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.NegEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.PosEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.SignalEdge;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ClockDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ResetDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
@@ -75,40 +69,43 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
             this.addPort(port);
     }
 
-    /*
+    /* *****************************
      * For copying (children are handled as usual by @ATreeNode.copy)
      */
     protected HardwareModule(HardwareNodeType type) {
         super(type);
     }
 
-    /* *****************************
-     * Private stuff
-     */
     @Override
     public ModuleBlock getBody() {
         return this.getChild(ModuleBlock.class, 1);
     }
 
-    /*
-    
-    private DeclarationBlock getPortDeclarationBlock() {
-        return this.getBody().getChild(DeclarationBlock.class, 0);
+    @Override
+    public List<PortDeclaration> getPortList() {
+        return this.getBody().getPortList();
     }
-    
-    private DeclarationBlock getWireDeclarationBlock() {
-        return this.getBody().getChild(DeclarationBlock.class, 1);
-    }
-    
-    private DeclarationBlock getRegisterDeclarationBlock() {
-        return this.getBody().getChild(DeclarationBlock.class, 2);
-    }
-    */
+
     @Override
     public HardwareNode addChild(HardwareNode node) {
         if (getNumChildren() >= MAXCHILDREN)
             throw new RuntimeException(ADDCHILDERRMSG);
         return super.addChild(node);
+    }
+
+    @Override
+    public List<HardwareStatement> getStatements() {
+        return getBody().getStatements();
+    }
+
+    @Override
+    public HardwareStatement getStatement(int idx) {
+        return getBody().getStatement(idx);
+    }
+
+    @Override
+    public List<HardwareStatement> getStatements(Predicate<HardwareStatement> predicate) {
+        return getBody().getStatements(predicate);
     }
 
     /* *****************************
@@ -117,73 +114,6 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
     @Override
     public ModuleInstance instantiate(String instanceName, List<HardwareOperator> connections) {
         return new ModuleInstance(this, instanceName, connections);
-    }
-
-    /*
-     * Special ports
-     */
-    @Override
-    public ClockDeclaration addClock() {
-        return getBody().addClock();
-    }
-
-    @Override
-    public ClockDeclaration addClock(String clockName) {
-        return getBody().addClock(clockName);
-    }
-
-    @Override
-    public ResetDeclaration addReset() {
-        return getBody().addReset();
-    }
-
-    @Override
-    public ResetDeclaration addReset(String rstName) {
-        return getBody().addReset(rstName);
-    }
-
-    /*
-     * Ports
-     */
-    @Override
-    public PortDeclaration addPort(PortDeclaration port) {
-        return getBody().addPort(port);
-    }
-
-    @Override
-    public InputPortDeclaration addInputPort(String portName, int portWidth) {
-        return getBody().addInputPort(portName, portWidth);
-    }
-
-    @Override
-    public OutputPortDeclaration addOutputPort(String portName, int portWidth) {
-        return getBody().addOutputPort(portName, portWidth);
-    }
-
-    /*
-     * Wires
-     */
-    @Override
-    public WireDeclaration addWire(WireDeclaration wire) {
-        return getBody().addWire(wire);
-    }
-
-    @Override
-    public WireDeclaration addWire(String portName, int portWidth) {
-        return getBody().addWire(portName, portWidth);
-    }
-
-    /*
-     * registers
-     */
-    @Override
-    public RegisterDeclaration addRegister(RegisterDeclaration reg) {
-        return getBody().addRegister(reg);
-    }
-
-    @Override
-    public RegisterDeclaration addRegister(String regName, int portWidth) {
-        return getBody().addRegister(regName, portWidth);
     }
 
     /*
@@ -274,89 +204,22 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
     }
 
     /*
-     * instances of other modules
-     * (instances can only be added as direct children of the module body,
-     * i.e. first level children of the ModuleBlock)
-     */
-    public ModuleInstance addInstance(ModuleInstance instantiatedModule) {
-        this.addChild(instantiatedModule);
-        return instantiatedModule;
-    }
-
-    public ModuleInstance addInstance(HardwareModule instanceType,
-            String instanceName, HardwareOperator... connections) {
-        var instance = new ModuleInstance(instanceType, instanceName, connections);
-        this.addChild(instance);
-        return instance;
-    }
-
-    @Override
-    public final List<ModuleInstance> getInstances() {
-        return this.getChildren(ModuleInstance.class);
-    }
-
-    /*
-     * get Port as a reference
-     */
-    @Override
-    public VariableOperator getPort(int idx) {
-        return this.getPortDeclarations().get(idx).getReference();
-    }
-
-    /*
-     * get Port by name
-     */
-    @Override
-    public VariableOperator getPort(String portname) {
-        // NOTE: return is known to be a VariableOperator at this point
-        return (VariableOperator) this.getPortDeclarationBlock().getDeclaration(portname).get();
-    }
-
-    /*
-     * get Port via predicate
-     */
-    @Override
-    public List<PortDeclaration> getPorts(Predicate<PortDeclaration> predicate) {
-        return this.getPortDeclarations().stream().filter(predicate).collect(Collectors.toList());
-    }
-
-    /*
-     * get Wire by name
-     */
-    @Override
-    public HardwareOperator getWire(String wirename) {
-        return this.getWireDeclarationBlock().getDeclaration(wirename).get();
-    }
-
-    /*
-     * get Reg by name
-     */
-    @Override
-    public HardwareOperator getRegister(String regname) {
-        return this.getRegisterDeclarationBlock().getDeclaration(regname).get();
-    }
-
-    /*
-     * get block by name
-     */
-
-    /*
      * Get port lists
-     */
+     
     public List<PortDeclaration> getPortDeclarations() {
         var block = this.getPortDeclarationBlock();
         return block.getChildrenOf(PortDeclaration.class);
     }
-
+    
     public List<InputPortDeclaration> getInputPortDeclarations() {
         var block = this.getPortDeclarationBlock();
         return block.getChildrenOf(InputPortDeclaration.class);
     }
-
+    
     public List<OutputPortDeclaration> getOutputPortDeclarations() {
         var block = this.getPortDeclarationBlock();
         return block.getChildrenOf(OutputPortDeclaration.class);
-    }
+    }*/
 
     @Override
     public String getName() {

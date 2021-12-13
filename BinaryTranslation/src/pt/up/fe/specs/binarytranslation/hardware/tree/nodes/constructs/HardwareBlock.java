@@ -14,12 +14,17 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
 
 public abstract class HardwareBlock extends HardwareNode {
+
+    protected Map<Integer, HardwareStatement> statementMap;
 
     public HardwareBlock(HardwareNodeType type) {
         super(type);
@@ -35,23 +40,35 @@ public abstract class HardwareBlock extends HardwareNode {
      * only @ModuleBlock may have other @HardwareBlock s
      */
     public final HardwareStatement addStatement(HardwareStatement statement) {
+
+        var id = statement.getIdentifier();
+        if (this.statementMap.containsKey(id))
+            throw new RuntimeException("Statement with same " +
+                    " ID + (" + id + ") already added to Block!");
+
         this.addChild(statement);
         return statement;
     }
 
+    /*
+     * *****************************************************************************
+     * get statements list
+     */
     public final List<HardwareStatement> getStatements() {
-        return this.getChildren(HardwareStatement.class);
-        // TODO: children should only be statements (or is it expressions???)
+        return getChildren(HardwareStatement.class);
     }
 
-    /*public AdditionExpression add(HardwareOperator target, HardwareExpression refA, HardwareExpression refB) {
-        var add = Verilog.add(refA, refB);
-        return (AdditionExpression) this.addStatement(add);
-    }*/
+    /*
+     * get statement by index
+     */
+    public final HardwareStatement getStatement(int idx) {
+        return getStatements().get(idx);
+    }
 
-    // TODO: blocks need all types of things like I put in @HardwareModule,
-    // namely, addWire, addRregister, and especially addStatement!
-    // TODO: move some of that code here, and since @HardwareModule has
-    // an internal @ModuleBlock which is a @HardwareBlock, the funcionaliy
-    // is kept!
+    /*
+     * get statement via predicate
+     */
+    public final List<HardwareStatement> getStatements(Predicate<HardwareStatement> predicate) {
+        return getStatements().stream().filter(predicate).collect(Collectors.toList());
+    }
 }

@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 
-public class GenerateBlock extends HardwareBlock {
+public class GenerateBlock extends BeginEndBlock {
 
     @Override
     protected HardwareNode copyPrivate() {
