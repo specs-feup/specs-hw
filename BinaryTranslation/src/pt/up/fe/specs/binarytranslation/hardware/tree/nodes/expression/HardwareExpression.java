@@ -15,13 +15,18 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 
 public abstract class HardwareExpression extends HardwareNode {
 
     public HardwareExpression(HardwareNodeType type) {
         super(type);
     }
+
+    /*
+     * Evaluate the individual components of the expression
+     * and return the appropriate bit width
+     */
+    public abstract int getResultWidth();
 
     @Override
     public String toContentString() {
@@ -35,10 +40,10 @@ public abstract class HardwareExpression extends HardwareNode {
 
     /*
      * 
-     */
+     
     public AdditionExpression add(HardwareExpression other) {
         return new AdditionExpression(this, other);
-    }
+    }*/
 
     // TODO: other shorthandles to create compound expressions
 

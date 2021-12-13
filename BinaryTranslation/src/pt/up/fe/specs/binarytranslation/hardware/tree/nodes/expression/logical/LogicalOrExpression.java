@@ -11,34 +11,34 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.logical;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class AdditionExpression extends ABinaryHardwareExpression {
+public class LogicalOrExpression extends ABinaryHardwareExpression {
 
-    public AdditionExpression(HardwareExpression varA, HardwareExpression varB) {
-        super("+", HardwareNodeType.AdditionExpression, varA, varB);
+    public LogicalOrExpression(HardwareExpression varA, HardwareExpression varB) {
+        super("||", HardwareNodeType.LogicalOrExpression, varA, varB);
     }
 
-    private AdditionExpression(AdditionExpression other) {
+    private LogicalOrExpression(LogicalOrExpression other) {
         super(other);
     }
 
     @Override
     public int getResultWidth() {
-        return Integer.max(this.getLeft().getResultWidth(), this.getRight().getResultWidth()) + 1;
+        return 1;
     }
 
     @Override
-    protected AdditionExpression copyPrivate() {
-        return new AdditionExpression(this);
+    protected LogicalOrExpression copyPrivate() {
+        return new LogicalOrExpression(this);
     }
 
     @Override
-    public AdditionExpression copy() {
-        return (AdditionExpression) super.copy();
+    public LogicalOrExpression copy() {
+        return (LogicalOrExpression) super.copy();
     }
 }

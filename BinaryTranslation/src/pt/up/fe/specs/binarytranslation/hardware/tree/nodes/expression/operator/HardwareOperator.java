@@ -22,6 +22,26 @@ public abstract class HardwareOperator extends HardwareExpression {
         super(type);
     }
 
+    /*
+     * potential max value of this operand, or specific value if immediate
+     */
+    public int getMaxValue() {
+        var thisop = getThis();
+
+        // we know the value
+        if (thisop.getType() == HardwareNodeType.ImmediateOperator) {
+            var rightvals = ((ImmediateOperator) thisop).getValue();
+            return Integer.valueOf(rightvals); // TODO return this directly as int
+        }
+
+        // we can only know the max
+        else {
+            var rightval = ((VariableOperator) thisop).getResultWidth();
+            var rightBits = (int) (Math.log(rightval) / Math.log(2));
+            return (int) Math.pow(2.0, rightBits) - 1;
+        }
+    }
+
     @Override
     protected abstract HardwareOperator copyPrivate();
 

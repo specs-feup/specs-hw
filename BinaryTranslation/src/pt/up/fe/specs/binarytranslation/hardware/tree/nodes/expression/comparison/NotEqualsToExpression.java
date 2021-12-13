@@ -28,6 +28,11 @@ public class NotEqualsToExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public int getResultWidth() {
+        return 1;
+    }
+
+    @Override
     protected NotEqualsToExpression copyPrivate() {
         return new NotEqualsToExpression(this);
     }

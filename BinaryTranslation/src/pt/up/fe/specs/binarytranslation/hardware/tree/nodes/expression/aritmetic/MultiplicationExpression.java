@@ -28,6 +28,12 @@ public class MultiplicationExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public int getResultWidth() {
+        return this.getLeft().getResultWidth() + this.getRight().getResultWidth();
+        // TODO: correct??
+    }
+
+    @Override
     protected MultiplicationExpression copyPrivate() {
         return new MultiplicationExpression(this);
     }

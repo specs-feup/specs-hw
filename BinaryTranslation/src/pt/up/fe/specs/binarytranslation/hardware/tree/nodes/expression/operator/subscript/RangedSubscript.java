@@ -43,6 +43,11 @@ public class RangedSubscript extends OperatorSubscript {
     }
 
     @Override
+    public int getResultWidth() {
+        return Math.abs(this.getLeftIndex().getMaxValue() - this.getRightIndex().getMaxValue());
+    }
+
+    @Override
     protected RangedSubscript copyPrivate() {
         return new RangedSubscript(); // NOTE: children are copied by super.copy()
     }

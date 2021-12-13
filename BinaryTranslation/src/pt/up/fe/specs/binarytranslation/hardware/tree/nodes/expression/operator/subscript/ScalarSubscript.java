@@ -46,6 +46,11 @@ public class ScalarSubscript extends OperatorSubscript {
     }
 
     @Override
+    public int getResultWidth() {
+        return 1;
+    }
+
+    @Override
     protected ScalarSubscript copyPrivate() {
         return new ScalarSubscript(); // NOTE: children are copied by super.copy()
     }

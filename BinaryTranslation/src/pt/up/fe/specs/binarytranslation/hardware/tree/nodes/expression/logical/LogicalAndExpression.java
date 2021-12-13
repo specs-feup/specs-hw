@@ -28,6 +28,11 @@ public class LogicalAndExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public int getResultWidth() {
+        return 1;
+    }
+
+    @Override
     protected LogicalAndExpression copyPrivate() {
         return new LogicalAndExpression(this);
     }

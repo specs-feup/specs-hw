@@ -28,6 +28,11 @@ public class EqualsToExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public int getResultWidth() {
+        return 1;
+    }
+
+    @Override
     protected EqualsToExpression copyPrivate() {
         return new EqualsToExpression(this);
     }
