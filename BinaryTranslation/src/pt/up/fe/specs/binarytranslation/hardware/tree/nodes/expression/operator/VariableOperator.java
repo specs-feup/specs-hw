@@ -15,9 +15,12 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.OperatorSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.ScalarSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
 public class VariableOperator extends HardwareOperator {
 
@@ -111,5 +114,22 @@ public class VariableOperator extends HardwareOperator {
     public VariableOperator addSubscript(int left, int right) {
         this.addChild(new RangedSubscript(left, right));
         return this;
+    }
+
+    public static class nonBlocking {
+        public static AdditionExpression add(HardwareExpression refA, HardwareExpression refB) {
+            return new AdditionExpression(refA, refB);
+        }
+    }
+
+    /*
+     * 
+     */
+    public ProceduralNonBlockingStatement nonBlocking(HardwareExpression expression) {
+        return new ProceduralNonBlockingStatement(this, expression);
+    }
+
+    public ProceduralNonBlockingStatement nonBlocking(HardwareExpression refA, HardwareExpression refB) {
+        return new ProceduralNonBlockingStatement(this, VariableOperator.nonBlocking.add(refA, refB));// !!!
     }
 }

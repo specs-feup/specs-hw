@@ -47,10 +47,16 @@ public class DeclarationBlock extends HardwareMetaNode {
         return blockName;
     }
 
-    public HardwareNode addDeclaration(HardwareNode child) {
-        var declaration = (IdentifierDeclaration) child;
-        this.nameMap.put(declaration.getVariableName(), declaration.getReference());
-        return super.addChild(child);
+    public HardwareNode addDeclaration(IdentifierDeclaration declaration) {
+
+        var name = declaration.getVariableName();
+        var id = declaration.getID();
+        if (this.nameMap.containsKey(name))
+            throw new RuntimeException(declaration.getClass().getSimpleName() + " with same " +
+                    " ID + (" + id + ") already added to DeclarationBlock \"" + this.blockName + "\"");
+
+        this.nameMap.put(name, declaration.getReference());
+        return super.addChild(declaration);
     }
 
     /*

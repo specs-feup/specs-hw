@@ -46,7 +46,7 @@ public class ModuleInstance extends HardwareStatement {
         this.moduleDefinition = moduleDefinition;
         this.portConnections = connections;
 
-        if (this.moduleDefinition.getPortDeclarations().size() != this.portConnections.size()) {
+        if (this.moduleDefinition.getPorts().size() != this.portConnections.size()) {
             throw new IllegalArgumentException();
         }
 
@@ -65,6 +65,11 @@ public class ModuleInstance extends HardwareStatement {
             String instanceName, HardwareOperator... connections)
             throws IllegalArgumentException {
         this(moduleDefinition, instanceName, Arrays.asList(connections));
+    }
+
+    @Override
+    public Integer getID() {
+        return this.instanceName.hashCode();
     }
 
     @Override
@@ -90,7 +95,7 @@ public class ModuleInstance extends HardwareStatement {
         builder.append(this.moduleDefinition.getName() + " ");
         builder.append(this.instanceName + " (\n");
 
-        var ports = this.moduleDefinition.getPortDeclarations();
+        var ports = this.moduleDefinition.getPorts();
         for (int i = 0; i < ports.size(); i++) {
             var connection = this.portConnections.get(i).getValue();
             builder.append("\t." + ports.get(i).getVariableName() + "(" + connection + ")");

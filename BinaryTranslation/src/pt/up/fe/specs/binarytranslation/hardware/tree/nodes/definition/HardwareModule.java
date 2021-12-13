@@ -15,13 +15,11 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysFFBlock;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.NegEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.PosEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.SignalEdge;
@@ -30,7 +28,6 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.Por
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 
 public class HardwareModule extends HardwareDefinition implements ModuleBlockInterface {
@@ -42,8 +39,6 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
         ADDCHILDERRMSG = "HardwareModule: Expected only two children! " +
                 "Use addStatement() and addBlock() to add content to the module body!";
     }
-
-    // TODO: move this counter logic into @ModuleBlock
 
     // counters used when no user specified names for blocks are given
     private int alwaysffCounter = 0;
@@ -93,21 +88,6 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
         return super.addChild(node);
     }
 
-    @Override
-    public List<HardwareStatement> getStatements() {
-        return getBody().getStatements();
-    }
-
-    @Override
-    public HardwareStatement getStatement(int idx) {
-        return getBody().getStatement(idx);
-    }
-
-    @Override
-    public List<HardwareStatement> getStatements(Predicate<HardwareStatement> predicate) {
-        return getBody().getStatements(predicate);
-    }
-
     /* *****************************
      * Public stuff
      */
@@ -117,30 +97,15 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
     }
 
     /*
-     * Add code to tier-0 body! (i.e., inside the module - endmodule, but outside any 
-     * other blocks, like always or initials)
-     */
-    public HardwareStatement addStatement(HardwareStatement stat) {
-        return getBody().addStatement(stat);
-    }
-
-    @Override
-    public HardwareBlock addBlock(HardwareBlock block) {
-        return getBody().addBlock(block);
-    }
-
-    /*
      * add always_comb blocks
      */
     public AlwaysCombBlock addAlwaysComb(String blockName) {
-        var block = new AlwaysCombBlock(blockName);
-        this.getBody().addChild(block);
-        return block;
+        return (AlwaysCombBlock) this.addBlock(new AlwaysCombBlock(blockName));
     }
 
     // create name if non given
     public AlwaysCombBlock addAlwaysCombBlock() {
-        return addAlwaysComb("comb_" + this.alwayscombCounter++);
+        return (AlwaysCombBlock) this.addBlock(new AlwaysCombBlock("comb_" + this.alwayscombCounter++));
         // TODO: if I manually create a block called "comb_1" or "comb_2" etc, this will break
     }
 
@@ -202,24 +167,6 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
     public AlwaysFFBlock addAlwaysFFNegedge() {
         return addAlwaysFFNegedge("ff_" + this.alwaysffCounter++);
     }
-
-    /*
-     * Get port lists
-     
-    public List<PortDeclaration> getPortDeclarations() {
-        var block = this.getPortDeclarationBlock();
-        return block.getChildrenOf(PortDeclaration.class);
-    }
-    
-    public List<InputPortDeclaration> getInputPortDeclarations() {
-        var block = this.getPortDeclarationBlock();
-        return block.getChildrenOf(InputPortDeclaration.class);
-    }
-    
-    public List<OutputPortDeclaration> getOutputPortDeclarations() {
-        var block = this.getPortDeclarationBlock();
-        return block.getChildrenOf(OutputPortDeclaration.class);
-    }*/
 
     @Override
     public String getName() {

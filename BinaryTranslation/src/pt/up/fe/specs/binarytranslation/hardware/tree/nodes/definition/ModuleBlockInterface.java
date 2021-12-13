@@ -18,6 +18,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlockInterface;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ClockDeclaration;
@@ -28,12 +29,9 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.Res
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 
-public interface ModuleBlockInterface {
-
-    public abstract HardwareBlock getBody();
+public interface ModuleBlockInterface extends HardwareBlockInterface {
 
     public abstract List<PortDeclaration> getPortList();
 
@@ -76,8 +74,7 @@ public interface ModuleBlockInterface {
      */
     public default PortDeclaration addPort(PortDeclaration port) {
         getPortList().add(port); // this only adds to the port list in the header!
-        getPortDeclarationBlock().addDeclaration(port);
-        return port;
+        return (PortDeclaration) getPortDeclarationBlock().addDeclaration(port);
     }
 
     public default InputPortDeclaration addInputPort(String portName, int portWidth) {
@@ -111,17 +108,12 @@ public interface ModuleBlockInterface {
     }
 
     /*
-     * 
-     */
-    public HardwareStatement addStatement(HardwareStatement statement);
-
-    /*
      * The ModuleBlock is the only block type that allows other HardwareBlocks as children, 
      * for example always_comb, initial, etc; it is also the only type of block 
      * that allows children of type ModuleInstance
      */
     public default HardwareBlock addBlock(HardwareBlock block) {
-        // TODO block map
+        sanityCheck(block);
         getBody().addChild(block);
         return block;
     }
@@ -132,15 +124,13 @@ public interface ModuleBlockInterface {
      * i.e. first level children of the ModuleBlock)
      */
     public default ModuleInstance addInstance(ModuleInstance instantiatedModule) {
-        getBody().addChild(instantiatedModule);
-        return instantiatedModule;
+        sanityCheck(instantiatedModule);
+        return (ModuleInstance) getBody().addChild(instantiatedModule);
     }
 
     public default ModuleInstance addInstance(HardwareModule instanceType,
             String instanceName, HardwareOperator... connections) {
-        var instance = new ModuleInstance(instanceType, instanceName, connections);
-        getBody().addChild(instance);
-        return instance;
+        return addInstance(new ModuleInstance(instanceType, instanceName, connections));
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -154,7 +144,7 @@ public interface ModuleBlockInterface {
         return getPortDeclarationBlock().getChildrenOf(PortDeclaration.class);
     }
 
-    public default List<InputPortDeclaration> getInputPortsns() {
+    public default List<InputPortDeclaration> getInputPorts() {
         return getPortDeclarationBlock().getChildrenOf(InputPortDeclaration.class);
     }
 
@@ -241,22 +231,6 @@ public interface ModuleBlockInterface {
     public default List<RegisterDeclaration> getRegisters(Predicate<RegisterDeclaration> predicate) {
         return getRegisters().stream().filter(predicate).collect(Collectors.toList());
     }
-
-    /*
-     * *****************************************************************************
-     * get statements list
-     */
-    public List<HardwareStatement> getStatements();
-
-    /*
-     * get statement by index
-     */
-    public HardwareStatement getStatement(int idx);
-
-    /*
-     * get statement via predicate
-     */
-    public List<HardwareStatement> getStatements(Predicate<HardwareStatement> predicate);
 
     /*
      * *****************************************************************************

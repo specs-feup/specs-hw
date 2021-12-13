@@ -11,21 +11,22 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
+package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndBlock;
 
-public class GenerateBlock extends BeginEndBlock {
+public abstract class ABlockStatement extends HardwareStatement {
 
-    @Override
-    protected HardwareNode copyPrivate() {
-        // TODO Auto-generated method stub
-        return null;
+    protected ABlockStatement(HardwareNodeType type) {
+        super(type);
     }
 
-    // generate
-    // for ... begin
-    // end
-    // endgenerate
+    protected abstract BeginEndBlock getBeginEndBlock();
 
+    @Override
+    public Integer getID() {
+        return this.getBeginEndBlock().getID();
+        // TODO: not sure if this is always correct...
+    }
 }

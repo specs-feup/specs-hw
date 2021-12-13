@@ -15,6 +15,7 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 
 public abstract class HardwareExpression extends HardwareNode {
 
@@ -31,4 +32,20 @@ public abstract class HardwareExpression extends HardwareNode {
     public HardwareExpression copy() {
         return (HardwareExpression) super.copy();
     }
+
+    /*
+     * 
+     */
+    public AdditionExpression add(HardwareExpression other) {
+        return new AdditionExpression(this, other);
+    }
+
+    // TODO: other shorthandles to create compound expressions
+
+    // TODO: test putting these methods as public inner classes in HardwareNode?
+    // then i could do
+    // var result = nonBlocking.add(ref1, ref2);
+    // and the "nonBlocking.add" syntax wouldnt have to be inside
+    // HardwareOperator family, which requires:
+    // ref1.nonBlocking(... etc
 }

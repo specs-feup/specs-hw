@@ -15,7 +15,6 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlock;
@@ -41,15 +40,6 @@ class ModuleBlock extends HardwareBlock implements ModuleBlockInterface {
 
     protected String moduleName;
     protected List<PortDeclaration> ports;
-
-    // counters used when no user specified names for blocks are given
-    // private int alwaysffCounter = 0;
-    // private int alwayscombCounter = 0;
-    protected Map<Integer, HardwareBlock> blockMap;
-    // whenever a code block is added (i.e., an always, or initial)
-    // keep it's name here, so that duplicate named blocks cannot be added
-
-    // protected Map<String, ModuleInstance> instanceMap;
 
     public ModuleBlock(String moduleName) {
         super(HardwareNodeType.ModuleBlock);
@@ -86,7 +76,7 @@ class ModuleBlock extends HardwareBlock implements ModuleBlockInterface {
     @Override
     public String getAsString() {
         var builder = new StringBuilder();
-        builder.append("module " + this.moduleName);
+        builder.append("\nmodule " + this.moduleName);
 
         if (this.ports.size() > 0) {
             builder.append("(");
