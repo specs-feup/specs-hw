@@ -28,6 +28,11 @@ public class DivisionExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public int getResultWidth() {
+        return this.getLeft().getResultWidth();
+    }
+
+    @Override
     protected DivisionExpression copyPrivate() {
         return new DivisionExpression(this);
     }

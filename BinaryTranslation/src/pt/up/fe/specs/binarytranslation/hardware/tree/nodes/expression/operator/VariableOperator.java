@@ -15,16 +15,14 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.OperatorSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.ScalarSubscript;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
 public class VariableOperator extends HardwareOperator {
 
     private final String name;
+    private final int width;
 
     /*
      * Auxiliary copy constructor
@@ -32,6 +30,7 @@ public class VariableOperator extends HardwareOperator {
     private VariableOperator(VariableOperator other) {
         super(other.type);
         this.name = other.name;
+        this.width = other.width;
     }
 
     /*
@@ -44,6 +43,7 @@ public class VariableOperator extends HardwareOperator {
     public VariableOperator(IdentifierDeclaration namedIdentifier) {
         super(HardwareNodeType.VariableOperator);
         this.name = namedIdentifier.getVariableName();
+        this.width = namedIdentifier.getVariableWidth();
     }
 
     @Override
@@ -64,6 +64,11 @@ public class VariableOperator extends HardwareOperator {
     @Override
     public String getValue() {
         return this.getAsString();
+    }
+
+    @Override
+    public int getResultWidth() {
+        return this.width;
     }
 
     @Override
@@ -116,20 +121,14 @@ public class VariableOperator extends HardwareOperator {
         return this;
     }
 
-    public static class nonBlocking {
-        public static AdditionExpression add(HardwareExpression refA, HardwareExpression refB) {
-            return new AdditionExpression(refA, refB);
-        }
-    }
-
     /*
      * 
-     */
+    
     public ProceduralNonBlockingStatement nonBlocking(HardwareExpression expression) {
         return new ProceduralNonBlockingStatement(this, expression);
     }
-
+    
     public ProceduralNonBlockingStatement nonBlocking(HardwareExpression refA, HardwareExpression refB) {
-        return new ProceduralNonBlockingStatement(this, VariableOperator.nonBlocking.add(refA, refB));// !!!
-    }
+        return new ProceduralNonBlockingStatement(this, nonBlocking.add(refA, refB));// !!!
+    }*/
 }

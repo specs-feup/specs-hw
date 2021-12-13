@@ -28,6 +28,11 @@ public class GreaterThanExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public int getResultWidth() {
+        return 1;
+    }
+
+    @Override
     protected GreaterThanExpression copyPrivate() {
         return new GreaterThanExpression(this);
     }

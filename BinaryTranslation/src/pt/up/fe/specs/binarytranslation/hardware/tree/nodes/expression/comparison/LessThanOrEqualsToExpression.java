@@ -28,6 +28,11 @@ public class LessThanOrEqualsToExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public int getResultWidth() {
+        return 1;
+    }
+
+    @Override
     protected LessThanOrEqualsToExpression copyPrivate() {
         return new LessThanOrEqualsToExpression(this);
     }

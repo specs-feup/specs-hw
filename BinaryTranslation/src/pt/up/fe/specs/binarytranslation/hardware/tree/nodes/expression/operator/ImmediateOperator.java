@@ -45,6 +45,11 @@ public class ImmediateOperator extends HardwareOperator {
     }
 
     @Override
+    public int getResultWidth() {
+        return this.width;
+    }
+
+    @Override
     protected ImmediateOperator copyPrivate() {
         return new ImmediateOperator(this.value, this.width);
     }

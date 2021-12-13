@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmeti
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 
 public class LeftShiftExpression extends ABinaryHardwareExpression {
 
@@ -25,6 +26,36 @@ public class LeftShiftExpression extends ABinaryHardwareExpression {
 
     private LeftShiftExpression(LeftShiftExpression other) {
         super(other);
+    }
+
+    @Override
+    public int getResultWidth() {
+        var leftBits = this.getLeft().getResultWidth();
+        var rightop = this.getRight();
+
+        int addedBits = 0;
+        if (rightop instanceof HardwareOperator) {
+            addedBits = ((HardwareOperator) rightop).getMaxValue();
+        } else
+            addedBits = rightop.getResultWidth();
+
+        /*
+        int addedBits = 0;
+        
+        // we know the value
+        if (rightop.getType() == HardwareNodeType.ImmediateOperator) {
+            var rightvals = ((ImmediateOperator) rightop).getValue();
+            addedBits = Integer.valueOf(rightvals); // TODO return this directly as int
+        }
+        
+        // we can only know the max
+        else {
+            var rightval = rightop.getResultWidth();
+            var rightBits = (int) (Math.log(rightval) / Math.log(2));
+            addedBits = (int) Math.pow(2.0, rightBits) - 1;
+        }*/
+
+        return leftBits + addedBits;
     }
 
     @Override
