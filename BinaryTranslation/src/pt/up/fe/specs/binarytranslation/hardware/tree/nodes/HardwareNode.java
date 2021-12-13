@@ -38,6 +38,10 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
         return this;
     }
 
+    public Integer getID() {
+        return this.hashCode();
+    }
+
     /*
      * Content string should just be the text associate with this node
      */

@@ -89,9 +89,14 @@ public class HardwareInstanceTest {
     }
 
     @Test
-    public void testHardwareModuleInstanceNewFamily() {
+    public void testAdderEmit() {
         var testAdder = HardwareInstanceTest.getAdder();
         testAdder.emit();
+    }
+
+    @Test
+    public void testHardwareModuleInstanceNewFamily() {
+        var testAdder = HardwareInstanceTest.getAdder();
         // this var is HardwareModule
 
         var wrap = new HardwareModule("adderWrapper",
@@ -209,7 +214,7 @@ public class HardwareInstanceTest {
         var sigC = new WireDeclaration("outC", 8).getReference();
         var stat1 = Verilog.nonBlocking(sigC, Verilog.add(sigA, sigB));
         if1.addStatement(stat1);
-        if1.addStatement(stat1);
+        // if1.addStatement(stat1.copy());
         if1.emit();
     }
 

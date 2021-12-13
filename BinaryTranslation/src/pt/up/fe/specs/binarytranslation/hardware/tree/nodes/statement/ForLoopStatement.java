@@ -17,13 +17,17 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class ForLoopStatement extends HardwareStatement {
+public class ForLoopStatement extends ABlockStatement {
+
+    protected ForLoopStatement(HardwareNodeType type) {
+        super(type);
+    }
 
     /*
      * for copying
      */
     private ForLoopStatement() {
-        super(HardwareNodeType.ForLoop);
+        this(HardwareNodeType.ForLoop);
     }
 
     public ForLoopStatement(
@@ -54,13 +58,14 @@ public class ForLoopStatement extends HardwareStatement {
         return this.getChild(HardwareExpression.class, 2);
     }
 
-    private BeginEndBlock getBeginEndBlock() {
+    @Override
+    protected BeginEndBlock getBeginEndBlock() {
         return this.getChild(BeginEndBlock.class, 3);
     }
 
     public HardwareStatement addStatement(HardwareStatement statement) {
-        this.getBeginEndBlock().addChild(statement);
-        return statement;
+        return this.getBeginEndBlock().addStatement(statement);
+        // already does sanity check (see @HardwareBlockInterface)
     }
 
     @Override

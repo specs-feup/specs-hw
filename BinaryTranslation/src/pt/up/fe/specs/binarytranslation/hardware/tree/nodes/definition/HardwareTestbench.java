@@ -58,12 +58,12 @@ public class HardwareTestbench extends HardwareModule {
         // auto-create registers and wires based on DUT ports
         var connections = new ArrayList<HardwareOperator>();
 
-        for (var in : dut.getInputPortDeclarations()) {
+        for (var in : dut.getInputPorts()) {
             var reg = this.addRegister("r" + in.getVariableName(), in.getVariableWidth());
             connections.add(reg.getReference());
         }
 
-        for (var out : dut.getOutputPortDeclarations()) {
+        for (var out : dut.getOutputPorts()) {
             var wire = this.addWire("w" + out.getVariableName(), out.getVariableWidth());
             connections.add(wire.getReference());
         }
@@ -75,7 +75,7 @@ public class HardwareTestbench extends HardwareModule {
     }
 
     @Override
-    protected ModuleBlock getBody() {
+    public ModuleBlock getBody() {
         return this.getChild(ModuleBlock.class, 2);
     }
 

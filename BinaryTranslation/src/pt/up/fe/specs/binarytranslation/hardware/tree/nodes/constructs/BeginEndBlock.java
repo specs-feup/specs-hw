@@ -37,10 +37,26 @@ public class BeginEndBlock extends HardwareBlock {
     }
 
     @Override
+    public HardwareBlock getBody() {
+        return this;
+    }
+
+    /*
+     * Useful for sanity checks (See @ModuleBlock sanityCheck method)
+     */
+    @Override
+    public Integer getID() {
+        if (this.blockName.isEmpty())
+            return super.getID();
+        else
+            return this.blockName.hashCode();
+    }
+
+    @Override
     public String getAsString() {
         var builder = new StringBuilder();
 
-        if (this.getNumChildren() > 1) {
+        if (this.getNumChildren() > 1 || !this.blockName.isBlank()) {
             builder.append("begin ");
             if (!this.blockName.isBlank())
                 builder.append(": " + this.blockName);
@@ -49,8 +65,6 @@ public class BeginEndBlock extends HardwareBlock {
             builder.append("end\n");
 
         } else {
-            if (!this.blockName.isBlank())
-                builder.append(": " + this.blockName);
             builder.append("\n");
             builder.append(super.getAsString());
         }

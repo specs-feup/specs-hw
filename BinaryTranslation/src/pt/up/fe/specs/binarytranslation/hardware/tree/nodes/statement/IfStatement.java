@@ -17,7 +17,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class IfStatement extends HardwareStatement {
+public class IfStatement extends ABlockStatement {
 
     /*
      * for copying
@@ -40,12 +40,13 @@ public class IfStatement extends HardwareStatement {
         return this.getChild(HardwareExpression.class, 0);
     }
 
-    private BeginEndBlock getBeginEndBlock() {
+    @Override
+    protected BeginEndBlock getBeginEndBlock() {
         return this.getChild(BeginEndBlock.class, 1);
     }
 
     public HardwareStatement addStatement(HardwareStatement statement) {
-        this.getBeginEndBlock().addChild(statement);
+        this.getBeginEndBlock().addStatement(statement);
         return statement;
     }
 

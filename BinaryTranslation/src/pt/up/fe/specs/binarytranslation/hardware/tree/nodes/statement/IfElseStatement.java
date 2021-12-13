@@ -17,7 +17,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class IfElseStatement extends HardwareStatement {
+public class IfElseStatement extends ABlockStatement {
 
     /*
      * for copying
@@ -57,6 +57,11 @@ public class IfElseStatement extends HardwareStatement {
 
     public BeginEndBlock getElseStatements() {
         return this.getChild(BeginEndBlock.class, 2);
+    }
+
+    @Override
+    protected BeginEndBlock getBeginEndBlock() {
+        return this.getIfStatements();
     }
 
     @Override

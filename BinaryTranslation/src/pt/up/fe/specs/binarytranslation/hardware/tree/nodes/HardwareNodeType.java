@@ -90,6 +90,7 @@ public enum HardwareNodeType {
     ProceduralBlocking,
     ProceduralNonBlocking,
     ForLoop,
+    GenerateLoop,
     IfStatement,
     IfElseStatement,
     DelayStatement,
