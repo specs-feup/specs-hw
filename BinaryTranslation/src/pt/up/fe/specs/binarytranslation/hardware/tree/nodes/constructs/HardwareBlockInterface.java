@@ -18,10 +18,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
 public interface HardwareBlockInterface {
 
@@ -40,11 +37,11 @@ public interface HardwareBlockInterface {
     /*
      * *****************************************************************************
      * shorthandles for statements
-     */
+     
     public default ProceduralNonBlockingStatement nonBlocking(VariableOperator target, HardwareExpression expression) {
         var statement = new ProceduralNonBlockingStatement(target, expression);
         return (ProceduralNonBlockingStatement) addStatement(statement);
-    }
+    }*/
 
     // TODO: use static classes to have syntax like "nonBlocking.add(...)"
 

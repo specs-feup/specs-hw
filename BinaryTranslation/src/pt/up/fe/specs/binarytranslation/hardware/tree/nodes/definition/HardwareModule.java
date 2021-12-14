@@ -104,7 +104,7 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
     }
 
     // create name if non given
-    public AlwaysCombBlock addAlwaysCombBlock() {
+    public AlwaysCombBlock addAlwaysComb() {
         return (AlwaysCombBlock) this.addBlock(new AlwaysCombBlock("comb_" + this.alwayscombCounter++));
         // TODO: if I manually create a block called "comb_1" or "comb_2" etc, this will break
     }

@@ -36,6 +36,11 @@ public class UnimplementedExpression extends HardwareExpression {
     }
 
     @Override
+    public int getResultWidth() {
+        return 0;
+    }
+
+    @Override
     public String getAsString() {
         return this.getChild(0).getAsString();
     }
