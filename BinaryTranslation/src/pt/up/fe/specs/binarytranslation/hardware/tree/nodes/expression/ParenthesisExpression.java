@@ -27,6 +27,11 @@ public class ParenthesisExpression extends HardwareExpression {
     }
 
     @Override
+    public int getResultWidth() {
+        return this.getInner().getResultWidth();
+    }
+
+    @Override
     public String toContentString() {
         return "( )";
     }

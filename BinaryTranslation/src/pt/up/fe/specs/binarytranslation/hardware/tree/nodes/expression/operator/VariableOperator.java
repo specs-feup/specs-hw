@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator;
 
+import pt.up.fe.specs.binarytranslation.hardware.factory.nonBlockingMethods;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.OperatorSubscript;
@@ -23,6 +24,7 @@ public class VariableOperator extends HardwareOperator {
 
     private final String name;
     private final int width;
+    public nonBlockingMethods nonBlocking;
 
     /*
      * Auxiliary copy constructor
@@ -31,6 +33,7 @@ public class VariableOperator extends HardwareOperator {
         super(other.type);
         this.name = other.name;
         this.width = other.width;
+        this.nonBlocking = new nonBlockingMethods(this);
     }
 
     /*

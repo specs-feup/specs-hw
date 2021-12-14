@@ -16,6 +16,7 @@ package pt.up.fe.specs.binarytranslation.test.hardware;
 import org.junit.Test;
 
 import pt.up.fe.specs.binarytranslation.hardware.factory.Verilog;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
@@ -25,6 +26,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.ScalarSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfStatement;
 
@@ -241,5 +243,48 @@ public class HardwareInstanceTest {
         var tb = new HardwareTestbench("tb1", mod);
         tb.emit();
 
+    }
+
+    @Test
+    public void testsyntax() {
+        var block = new BeginEndBlock("testBlock");
+        // nonBlocking.add(refA, refB)
+
+        var refA = new WireDeclaration("wireA", 8).getReference();
+        var refB = new WireDeclaration("wireB", 8).getReference();
+
+        var result = block.nonBlocking.add(refA, refB);
+
+        block.emit();
+
+        // want this:
+        // var result = block.nonBlocking.add(refA, refB); !!
+    }
+
+    @Test
+    public void testsyntax2() {
+        var adder = new HardwareModule("adderDef");
+        adder.addClock();
+        adder.addReset();
+        adder.addInputPort("inA", 32);
+        adder.addInputPort("inB", 32);
+        adder.addOutputPort("outC", 32);
+
+        var block = adder.addAlwaysComb("testBlock");
+
+        var result = block.nonBlocking.add(adder.getPort("inA"), adder.getPort("inB"));
+
+        adder.addStatement(new ContinuousStatement(adder.getPort("outC"), result));
+
+        // TODO: this syntax doesnt allow for using an already declared identifier and assigning it a result...
+        // I need assign, nonBlocking, and blocking method groups in the HardwareOperator class somehow... as well as in
+        // the HardwareBlocks..
+        // maybe the "nonBlockingMethods" should be part of HardwareOperator, and they add the statement to their parent
+        // block if it exists!
+
+        adder.emit();
+
+        // want this:
+        // var result = block.nonBlocking.add(refA, refB); !!
     }
 }

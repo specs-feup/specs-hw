@@ -17,7 +17,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 /*
  * This class is not abstract since its also useful for statements which contain blocks, like for loops and if-elses,
- * which are themselves a type of @HardwareStatement, which contains a @HardwarBlock, but are not a block themselves
+ * which are themselves a type of @HardwareStatement, which contains a @HardwareBlock, but are not a block themselves
  */
 public class BeginEndBlock extends HardwareBlock {
 
