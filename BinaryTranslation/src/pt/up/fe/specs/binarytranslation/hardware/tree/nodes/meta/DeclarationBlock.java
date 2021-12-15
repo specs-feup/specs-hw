@@ -15,7 +15,6 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
@@ -62,9 +61,10 @@ public class DeclarationBlock extends HardwareMetaNode {
     /*
      * get by name
      */
-    public Optional<HardwareOperator> getDeclaration(String name) {
-        var ref = this.nameMap.get(name);
-        return Optional.ofNullable(ref);
+    public HardwareOperator getDeclaration(String name) {
+        return this.nameMap.get(name);
+        // var ref = this.nameMap.get(name);
+        // return (Optional.ofNullable(ref)).get();
     }
 
     @Override

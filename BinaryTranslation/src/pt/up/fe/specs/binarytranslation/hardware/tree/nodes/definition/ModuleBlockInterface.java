@@ -191,7 +191,7 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
      */
     public default VariableOperator getPort(String portname) {
         // NOTE: return is known to be a VariableOperator at this point
-        return (VariableOperator) getPortDeclarationBlock().getDeclaration(portname).get();
+        return (VariableOperator) getPortDeclarationBlock().getDeclaration(portname);
     }
 
     /*
@@ -220,7 +220,7 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
      * get Wire by name
      */
     public default HardwareOperator getWire(String wirename) {
-        return getWireDeclarationBlock().getDeclaration(wirename).get();
+        return getWireDeclarationBlock().getDeclaration(wirename);
     }
 
     /*
@@ -249,7 +249,7 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
      * get Reg by name
      */
     public default HardwareOperator getRegister(String regname) {
-        return getRegisterDeclarationBlock().getDeclaration(regname).get();
+        return getRegisterDeclarationBlock().getDeclaration(regname);
     }
 
     /*
@@ -257,6 +257,27 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
      */
     public default List<RegisterDeclaration> getRegisters(Predicate<RegisterDeclaration> predicate) {
         return getRegisters().stream().filter(predicate).collect(Collectors.toList());
+    }
+
+    /*
+     * *****************************************************************************
+     * Get any declaration that matches name
+     */
+    public default HardwareOperator getDeclaration(String name) {
+
+        HardwareOperator operator = null;
+
+        if ((operator = getPortDeclarationBlock().getDeclaration(name)) != null)
+            return operator;
+
+        else if ((operator = getWireDeclarationBlock().getDeclaration(name)) != null)
+            return operator;
+
+        else if ((operator = getRegisterDeclarationBlock().getDeclaration(name)) != null)
+            return operator;
+
+        else
+            return null;
     }
 
     /*
