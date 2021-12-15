@@ -17,6 +17,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class ImmediateOperator extends HardwareOperator {
 
+    private static int immcounter = 0;
     private int width;
     private final Number value;
     // TODO: private final VariableDeclaration declaration;
@@ -28,11 +29,17 @@ public class ImmediateOperator extends HardwareOperator {
         super(HardwareNodeType.ImmediateOperator);
         this.value = value;
         this.width = width;
+        immcounter++;
     }
 
     @Override
     public String getAsString() {
         return Integer.toString(this.width) + "'d" + this.value;
+    }
+
+    @Override
+    public ImmediateOperator getThis() {
+        return this;
     }
 
     /*
@@ -42,6 +49,11 @@ public class ImmediateOperator extends HardwareOperator {
     @Override
     public String getValue() {
         return String.valueOf(this.value.intValue());
+    }
+
+    @Override
+    public String getResultName() {
+        return "imm_" + this.width + "_" + immcounter;
     }
 
     @Override

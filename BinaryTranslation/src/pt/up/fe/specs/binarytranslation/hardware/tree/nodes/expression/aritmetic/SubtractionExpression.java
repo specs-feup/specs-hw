@@ -28,6 +28,11 @@ public class SubtractionExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public SubtractionExpression getThis() {
+        return this;
+    }
+
+    @Override
     public int getResultWidth() {
         return Integer.max(this.getLeft().getResultWidth(), this.getRight().getResultWidth()) + 1;
     }

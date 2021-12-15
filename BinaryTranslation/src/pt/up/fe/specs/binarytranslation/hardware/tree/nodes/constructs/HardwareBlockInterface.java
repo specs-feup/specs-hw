@@ -18,11 +18,19 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
 public interface HardwareBlockInterface {
 
     public abstract HardwareBlock getBody();
+
+    // public abstract void updateTree(HardwareBlock myself); // handles structure updates when sugar methods are used
+    // (?)
 
     public default void sanityCheck(HardwareNode newNode) {
         var addedNodes = getBody().getChildrenOf(newNode.getClass());
@@ -79,5 +87,31 @@ public interface HardwareBlockInterface {
      */
     public default List<HardwareStatement> getStatements(Predicate<HardwareStatement> predicate) {
         return getStatements().stream().filter(predicate).collect(Collectors.toList());
+    }
+
+    /*
+     * *****************************************************************************
+     * sugar methods
+     */
+    /*public default ContinuousStatement assign(String targetName, HardwareExpression expr) {
+        
+    }*/
+
+    public default ContinuousStatement assign(VariableOperator target, HardwareExpression expr) {
+        var stat = new ContinuousStatement(target, expr);
+        getBody().addChild(stat); // TODO: will this handle adding the variable operator to the declaration block? no
+        return stat;
+    }
+
+    public default ProceduralNonBlockingStatement nonBlocking(VariableOperator target, HardwareExpression expr) {
+        var stat = new ProceduralNonBlockingStatement(target, expr);
+        getBody().addChild(stat);
+        return stat;
+    }
+
+    public default ProceduralBlockingStatement blocking(VariableOperator target, HardwareExpression expr) {
+        var stat = new ProceduralBlockingStatement(target, expr);
+        getBody().addChild(stat);
+        return stat;
     }
 }

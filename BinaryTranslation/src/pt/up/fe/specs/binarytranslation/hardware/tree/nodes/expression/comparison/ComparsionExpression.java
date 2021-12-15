@@ -28,6 +28,11 @@ public class ComparsionExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public ComparsionExpression getThis() {
+        return this;
+    }
+
+    @Override
     public int getResultWidth() {
         return 1;
     }

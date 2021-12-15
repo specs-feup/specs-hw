@@ -21,4 +21,15 @@ public abstract class OperatorSubscript extends HardwareExpression {
     protected OperatorSubscript(HardwareNodeType type) {
         super(type);
     }
+
+    @Override
+    public OperatorSubscript getThis() {
+        return this;
+    }
+
+    @Override
+    public String getResultName() {
+        return "";
+    }
+    // TODO: how to do naming properly if operator has a subscript child?
 }

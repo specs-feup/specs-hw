@@ -28,6 +28,16 @@ public class BitWiseNotExpression extends AUnaryHardwareExpression {
     }
 
     @Override
+    public BitWiseNotExpression getThis() {
+        return this;
+    }
+
+    @Override
+    public String getResultName() {
+        return getOperand().getResultName();
+    }
+
+    @Override
     public int getResultWidth() {
         return this.getOperand().getResultWidth();
     }

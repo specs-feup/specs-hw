@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlockInterface;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ClockDeclaration;
@@ -49,6 +50,32 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
 
     /////////////////////////////////////////////////////////////////////////////
     // ADDERS ///////////////////////////////////////////////////////////////////
+
+    public default IdentifierDeclaration addDeclaration(IdentifierDeclaration id) {
+        if (id instanceof PortDeclaration)
+            return addDeclaration((PortDeclaration) id);
+
+        else if (id instanceof WireDeclaration)
+            return addDeclaration((WireDeclaration) id);
+
+        else if (id instanceof RegisterDeclaration)
+            return addDeclaration((RegisterDeclaration) id);
+
+        else
+            return id;
+    }
+
+    public default PortDeclaration addDeclaration(PortDeclaration port) {
+        return this.addPort(port);
+    }
+
+    public default WireDeclaration addDeclaration(WireDeclaration wire) {
+        return this.addWire(wire);
+    }
+
+    public default RegisterDeclaration addDeclaration(RegisterDeclaration reg) {
+        return this.addRegister(reg);
+    }
 
     /*
      * Special ports

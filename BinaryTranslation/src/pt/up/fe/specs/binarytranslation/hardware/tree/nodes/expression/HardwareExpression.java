@@ -13,10 +13,11 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression;
 
+import pt.up.fe.specs.binarytranslation.hardware.factory.HardwareOperationsInterface;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
-public abstract class HardwareExpression extends HardwareNode {
+public abstract class HardwareExpression extends HardwareNode implements HardwareOperationsInterface {
 
     public HardwareExpression(HardwareNodeType type) {
         super(type);
@@ -27,6 +28,17 @@ public abstract class HardwareExpression extends HardwareNode {
      * and return the appropriate bit width
      */
     public abstract int getResultWidth();
+
+    /*
+     * Evaluate the individual components of the expression
+     * and return the wire/reg name
+     */
+    public abstract String getResultName();
+
+    @Override
+    public HardwareExpression getThis() {
+        return this;
+    }
 
     @Override
     public String toContentString() {

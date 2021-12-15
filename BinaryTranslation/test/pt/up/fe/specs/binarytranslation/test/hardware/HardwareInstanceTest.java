@@ -26,7 +26,6 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.ScalarSubscript;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfStatement;
 
@@ -270,17 +269,50 @@ public class HardwareInstanceTest {
         adder.addInputPort("inB", 32);
         adder.addOutputPort("outC", 32);
 
+        // adder.getPort("outC").assign(adder.getPort("inA").add(adder.getPort("inB")));
+
         var block = adder.addAlwaysComb("testBlock");
 
-        var result = block.nonBlocking.add(adder.getPort("inA"), adder.getPort("inB"));
+        block.nonBlocking(adder.getPort("outC"), adder.getPort("inA").add(adder.getPort("inB")));
 
-        adder.addStatement(new ContinuousStatement(adder.getPort("outC"), result));
+        // TODO
+        // what if
+        // adder.assign("outC", getPort("inA").add(adder.getPort("inB"));
+        // the adder is the block, the statement goes into the block
+        // the "outC" is fetched by name, getPort("inA").add(adder.getPort("inB") the returns
+        // a parentless addition expression
+
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+
+        // var block = adder.addAlwaysComb("testBlock");
+        // var result = block.nonBlocking.add(adder.getPort("inA"), adder.getPort("inB"));
+
+        // var newresult = adder.assign.add(adder.getPort("outC"), result);
+        // works, but not what I want!
+
+        // this syntax for an assign doesnt make much sense...
+        // its the sme problem from before.. how do I perform syntax over an already declared identifier?
+        // ideally:
+        // adder.getPort("outC").assign(result);
+
+        // adder.addStatement(new ContinuousStatement(adder.getPort("outC"), result));
 
         // TODO: this syntax doesnt allow for using an already declared identifier and assigning it a result...
         // I need assign, nonBlocking, and blocking method groups in the HardwareOperator class somehow... as well as in
         // the HardwareBlocks..
         // maybe the "nonBlockingMethods" should be part of HardwareOperator, and they add the statement to their parent
         // block if it exists!
+        // no, the parent block of any declared identifier will always be the ModuleBlock (specifically the
+        // DeclarationsBlock)..
 
         adder.emit();
 

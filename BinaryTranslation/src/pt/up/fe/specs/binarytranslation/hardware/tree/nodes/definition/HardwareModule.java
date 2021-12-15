@@ -44,6 +44,8 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
     private int alwaysffCounter = 0;
     private int alwayscombCounter = 0;
 
+    // public assignMethods assign;
+
     /*
      * Outer most node of the Hardware module definition, 
      * which includes copyright, header and body
@@ -56,6 +58,8 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
 
         // child 1
         this.addChild(new ModuleBlock(moduleName));
+
+        // this.assign = new assignMethods(this.getBody());
     }
 
     public HardwareModule(String moduleName, PortDeclaration... ports) {

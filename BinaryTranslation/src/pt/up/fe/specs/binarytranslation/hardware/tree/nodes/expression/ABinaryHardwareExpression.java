@@ -36,12 +36,27 @@ public abstract class ABinaryHardwareExpression extends HardwareExpression {
         this.addChild(varB);
     }
 
+    @Override
+    public String getResultName() {
+        var l = getLeft().getResultName();
+        var r = getRight().getResultName();
+        var llen = l.length();
+        var rlen = r.length();
+        return l.substring(0, Math.min(4, llen))
+                + "_" + r.substring(0, Math.min(4, rlen));
+    }
+
     protected HardwareExpression getLeft() {
         return (HardwareExpression) this.getChild(0);
     }
 
     protected HardwareExpression getRight() {
         return (HardwareExpression) this.getChild(1);
+    }
+
+    @Override
+    public ABinaryHardwareExpression getThis() {
+        return this;
     }
 
     @Override

@@ -28,6 +28,11 @@ public class LogicalOrExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public LogicalOrExpression getThis() {
+        return this;
+    }
+
+    @Override
     public int getResultWidth() {
         return 1;
     }
