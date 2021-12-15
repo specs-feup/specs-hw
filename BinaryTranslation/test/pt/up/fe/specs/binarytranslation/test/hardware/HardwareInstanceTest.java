@@ -273,7 +273,16 @@ public class HardwareInstanceTest {
 
         var block = adder.addAlwaysComb("testBlock");
 
-        block.nonBlocking(adder.getPort("outC"), adder.getPort("inA").add(adder.getPort("inB")));
+        // block.nonBlocking(adder.getPort("outC"), adder.getPort("inA").add(adder.getPort("inB")));
+
+        block.assign("auxA", adder.getPort("inA").add(adder.getPort("inB")));
+
+        // block.assign("auxA", adder.getPort("inA").add("inB"));
+        // TODO: how to support string named fetching in HardwareOperationsInterface??
+
+        // adder.assign("outC", adder.getWire("auxA"));
+
+        adder.assign("outC", "auxA");
 
         // TODO
         // what if

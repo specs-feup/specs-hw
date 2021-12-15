@@ -18,7 +18,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
@@ -93,9 +95,61 @@ public interface HardwareBlockInterface {
      * *****************************************************************************
      * sugar methods
      */
-    /*public default ContinuousStatement assign(String targetName, HardwareExpression expr) {
+    public default HardwareModule getAncestor() {
+
+        var moduleParent = getBody().getAncestorTry(HardwareModule.class).orElseGet(null);
+        if (moduleParent == null) {
+            throw new RuntimeException("HardwareBlockInterface: cannot perform assign via"
+                    + " targetName on a HardwareBlock without a HardwareModule ancestor!");
+        }
+        return moduleParent;
+    }
+
+    public default HardwareOperator resolveIdentifier(String targetName) {
+        var moduleParent = getAncestor();
+        return moduleParent.getDeclaration(targetName);
+    }
+
+    public default ContinuousStatement assign(String targetName, HardwareExpression expr) {
+
+        var reference = resolveIdentifier(targetName);
+        if (reference != null)
+            return assign((VariableOperator) reference, expr);
+        else {
+            var wire = getAncestor().addWire(targetName, 32);
+            return assign((VariableOperator) wire.getReference(), expr);
+        }
+
+        /*
+        // if name given, try and look up declaration block in parent
+        HardwareOperator target = null;
+        var moduleParent = getBody().getAncestorTry(HardwareModule.class).orElseGet(null);
+        if (moduleParent == null) {
+            throw new RuntimeException("HardwareBlockInterface: cannot perform assign via"
+                    + " targetName on a HardwareBlock without a HardwareModule ancestor!");
+        }
         
-    }*/
+        if ((target = moduleParent.getDeclaration(targetName)) != null) {
+            return assign((VariableOperator) target, expr);
+        }
+        
+        else {
+            var wire = moduleParent.addWire(targetName, 32);
+            return assign((VariableOperator) wire.getReference(), expr);
+        }*/
+    }
+
+    public default ContinuousStatement assign(String targetName, String sourceName) {
+
+        var sink = resolveIdentifier(targetName);
+        var source = resolveIdentifier(sourceName);
+        if (sink != null)
+            return assign((VariableOperator) sink, source);
+        else {
+            var wire = getAncestor().addWire(targetName, 32);
+            return assign((VariableOperator) wire.getReference(), source);
+        }
+    }
 
     public default ContinuousStatement assign(VariableOperator target, HardwareExpression expr) {
         var stat = new ContinuousStatement(target, expr);
