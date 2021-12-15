@@ -28,6 +28,11 @@ public class GreaterThanOrEqualsToExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public GreaterThanOrEqualsToExpression getThis() {
+        return this;
+    }
+
+    @Override
     public int getResultWidth() {
         return 1;
     }

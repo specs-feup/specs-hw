@@ -43,6 +43,11 @@ public abstract class HardwareOperator extends HardwareExpression {
     }
 
     @Override
+    public HardwareOperator getThis() {
+        return this;
+    }
+
+    @Override
     protected abstract HardwareOperator copyPrivate();
 
     @Override

@@ -41,6 +41,11 @@ public class ScalarSubscript extends OperatorSubscript {
         this(new ImmediateOperator(idx, 32));
     }
 
+    @Override
+    public ScalarSubscript getThis() {
+        return this;
+    }
+
     public HardwareOperator getIndex() {
         return this.getChild(HardwareOperator.class, 0);
     }

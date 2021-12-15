@@ -29,6 +29,11 @@ public class RightArithmeticShiftExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public RightArithmeticShiftExpression getThis() {
+        return this;
+    }
+
+    @Override
     public int getResultWidth() {
         var leftBits = this.getLeft().getResultWidth();
         var rightop = this.getRight();
@@ -39,22 +44,6 @@ public class RightArithmeticShiftExpression extends ABinaryHardwareExpression {
         } else
             removedBits = rightop.getResultWidth();
 
-        /*
-                int removedBits = 0;
-        
-                // we know the value
-                if (rightop.getType() == HardwareNodeType.ImmediateOperator) {
-        var rightvals = ((ImmediateOperator) rightop).getValue();
-        removedBits = Integer.valueOf(rightvals); // TODO return this directly as int
-                }
-        
-                // we can only know the max
-                else {
-        var rightval = rightop.getResultWidth();
-        var rightBits = (int) (Math.log(rightval) / Math.log(2));
-        removedBits = (int) Math.pow(2.0, rightBits) - 1;
-                }
-        */
         return Math.max(leftBits - removedBits, 1); // leave at least 1 bit for a 0 or 1
     }
 

@@ -39,6 +39,11 @@ public abstract class AUnaryHardwareExpression extends HardwareExpression {
     }
 
     @Override
+    public AUnaryHardwareExpression getThis() {
+        return this;
+    }
+
+    @Override
     public String toContentString() {
         return this.expressionOperator;
     }

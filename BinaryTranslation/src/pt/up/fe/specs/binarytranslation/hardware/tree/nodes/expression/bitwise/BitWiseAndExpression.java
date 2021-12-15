@@ -28,6 +28,11 @@ public class BitWiseAndExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public BitWiseAndExpression getThis() {
+        return this;
+    }
+
+    @Override
     public int getResultWidth() {
         return Integer.max(this.getLeft().getResultWidth(), this.getRight().getResultWidth()) + 1;
     }

@@ -36,6 +36,16 @@ public class UnimplementedExpression extends HardwareExpression {
     }
 
     @Override
+    public UnimplementedExpression getThis() {
+        return this;
+    }
+
+    @Override
+    public String getResultName() {
+        return "";
+    }
+
+    @Override
     public int getResultWidth() {
         return 0;
     }

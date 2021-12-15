@@ -30,11 +30,11 @@ public abstract class ASingleStatement extends HardwareStatement {
         this.addChild(expression);
     }
 
-    protected VariableOperator getTarget() {
+    public VariableOperator getTarget() {
         return this.getChild(VariableOperator.class, 0);
     }
 
-    protected HardwareExpression getExpression() {
+    public HardwareExpression getExpression() {
         return this.getChild(HardwareExpression.class, 1);
     }
 }

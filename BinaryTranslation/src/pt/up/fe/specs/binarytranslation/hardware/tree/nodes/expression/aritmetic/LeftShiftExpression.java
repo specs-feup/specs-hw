@@ -29,6 +29,11 @@ public class LeftShiftExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public LeftShiftExpression getThis() {
+        return this;
+    }
+
+    @Override
     public int getResultWidth() {
         var leftBits = this.getLeft().getResultWidth();
         var rightop = this.getRight();
@@ -38,22 +43,6 @@ public class LeftShiftExpression extends ABinaryHardwareExpression {
             addedBits = ((HardwareOperator) rightop).getMaxValue();
         } else
             addedBits = rightop.getResultWidth();
-
-        /*
-        int addedBits = 0;
-        
-        // we know the value
-        if (rightop.getType() == HardwareNodeType.ImmediateOperator) {
-            var rightvals = ((ImmediateOperator) rightop).getValue();
-            addedBits = Integer.valueOf(rightvals); // TODO return this directly as int
-        }
-        
-        // we can only know the max
-        else {
-            var rightval = rightop.getResultWidth();
-            var rightBits = (int) (Math.log(rightval) / Math.log(2));
-            addedBits = (int) Math.pow(2.0, rightBits) - 1;
-        }*/
 
         return leftBits + addedBits;
     }

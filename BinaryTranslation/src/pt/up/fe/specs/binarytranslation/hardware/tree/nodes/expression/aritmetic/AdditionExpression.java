@@ -28,6 +28,11 @@ public class AdditionExpression extends ABinaryHardwareExpression {
     }
 
     @Override
+    public AdditionExpression getThis() {
+        return this;
+    }
+
+    @Override
     public int getResultWidth() {
         return Integer.max(this.getLeft().getResultWidth(), this.getRight().getResultWidth()) + 1;
     }

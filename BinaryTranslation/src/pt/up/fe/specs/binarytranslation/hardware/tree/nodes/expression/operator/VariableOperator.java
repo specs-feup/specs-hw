@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator;
 
-import pt.up.fe.specs.binarytranslation.hardware.factory.nonBlockingMethods;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.OperatorSubscript;
@@ -24,7 +23,8 @@ public class VariableOperator extends HardwareOperator {
 
     private final String name;
     private final int width;
-    public nonBlockingMethods nonBlocking;
+    private IdentifierDeclaration associatedIdentifier;
+    // public nonBlockingMethods nonBlocking;
 
     /*
      * Auxiliary copy constructor
@@ -33,7 +33,12 @@ public class VariableOperator extends HardwareOperator {
         super(other.type);
         this.name = other.name;
         this.width = other.width;
-        this.nonBlocking = new nonBlockingMethods(this);
+        // this.nonBlocking = new nonBlockingMethods(this);
+    }
+
+    @Override
+    public VariableOperator getThis() {
+        return this;
     }
 
     /*
@@ -47,6 +52,7 @@ public class VariableOperator extends HardwareOperator {
         super(HardwareNodeType.VariableOperator);
         this.name = namedIdentifier.getVariableName();
         this.width = namedIdentifier.getVariableWidth();
+        this.associatedIdentifier = namedIdentifier;
     }
 
     @Override
@@ -67,6 +73,11 @@ public class VariableOperator extends HardwareOperator {
     @Override
     public String getValue() {
         return this.getAsString();
+    }
+
+    @Override
+    public String getResultName() {
+        return this.name;
     }
 
     @Override
@@ -116,22 +127,62 @@ public class VariableOperator extends HardwareOperator {
         return this;
     }
 
-    /*
-     * 
-     */
     public VariableOperator addSubscript(int left, int right) {
         this.addChild(new RangedSubscript(left, right));
         return this;
     }
 
     /*
-     * 
+     * only allow users of type HardwareBlock for now
+     
+    private void updateTree(ASingleStatement stat) {
     
-    public ProceduralNonBlockingStatement nonBlocking(HardwareExpression expression) {
-        return new ProceduralNonBlockingStatement(this, expression);
+        // TODO: this parentage check isnt going to work because the
+        // VariableOperator is a Child of the ContinuousStatement being created!
+        // when I do getPort, it returns a reference of an indentifier,
+        // but that reference has no parent!
+    
+        var beblock = this.parent.getAncestorTry(BeginEndBlock.class).orElse(null);
+        var hwmod = this.parent.getAncestorTry(HardwareModule.class).orElse(null);
+    
+        // check if statement is in BeginEndBlock
+        if (beblock != null) {
+            beblock.addStatement(stat);
+        }
+    
+        else if (hwmod != null) {
+            hwmod.addStatement(stat);
+        }
+    
+        // if the BeginEndBlock is inside a ModuleBlock, see if declared
+        if (hwmod != null) {
+            if (hwmod.indexOfChild(this.associatedIdentifier) == -1)
+                hwmod.addDeclaration(this.associatedIdentifier);
+        }
+    }*/
+
+    /*
+     * 
+     
+    public ContinuousStatement assign(HardwareExpression refB) {
+        var stat = new ContinuousStatement(this, refB);
+        updateTree(stat);
+        return stat;
     }
     
-    public ProceduralNonBlockingStatement nonBlocking(HardwareExpression refA, HardwareExpression refB) {
+    public ProceduralNonBlockingStatement nonBlocking(HardwareExpression expression) {
+        var stat = new ProceduralNonBlockingStatement(this, expression);
+        updateTree(stat);
+        return stat;
+    }
+    
+    public ProceduralBlockingStatement blocking(HardwareExpression expression) {
+        var stat = new ProceduralBlockingStatement(this, expression);
+        updateTree(stat);
+        return stat;
+    }*/
+
+    /*    public ProceduralNonBlockingStatement nonBlocking(HardwareExpression refA, HardwareExpression refB) {
         return new ProceduralNonBlockingStatement(this, nonBlocking.add(refA, refB));// !!!
     }*/
 }
