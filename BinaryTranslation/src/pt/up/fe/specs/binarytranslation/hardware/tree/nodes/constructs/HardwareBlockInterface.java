@@ -14,20 +14,22 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
-public interface HardwareBlockInterface {
+public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
 
     public abstract HardwareBlock getBody();
 
@@ -97,7 +99,7 @@ public interface HardwareBlockInterface {
      */
     public default HardwareModule getAncestor() {
 
-        var moduleParent = getBody().getAncestorTry(HardwareModule.class).orElseGet(null);
+        var moduleParent = getBody().getAncestorTry(HardwareModule.class).orElse(null);
         if (moduleParent == null) {
             throw new RuntimeException("HardwareBlockInterface: cannot perform assign via"
                     + " targetName on a HardwareBlock without a HardwareModule ancestor!");
@@ -110,57 +112,70 @@ public interface HardwareBlockInterface {
         return moduleParent.getDeclaration(targetName);
     }
 
-    public default ContinuousStatement assign(String targetName, HardwareExpression expr) {
-
-        var reference = resolveIdentifier(targetName);
-        if (reference != null)
-            return assign((VariableOperator) reference, expr);
-        else {
-            var wire = getAncestor().addWire(targetName, 32);
-            return assign((VariableOperator) wire.getReference(), expr);
-        }
-
-        /*
-        // if name given, try and look up declaration block in parent
-        HardwareOperator target = null;
-        var moduleParent = getBody().getAncestorTry(HardwareModule.class).orElseGet(null);
-        if (moduleParent == null) {
-            throw new RuntimeException("HardwareBlockInterface: cannot perform assign via"
-                    + " targetName on a HardwareBlock without a HardwareModule ancestor!");
-        }
-        
-        if ((target = moduleParent.getDeclaration(targetName)) != null) {
-            return assign((VariableOperator) target, expr);
-        }
-        
-        else {
-            var wire = moduleParent.addWire(targetName, 32);
-            return assign((VariableOperator) wire.getReference(), expr);
-        }*/
+    // based on which block type (i.e., alwaysff, a new result variable may have
+    // to be a register!)
+    public default IdentifierDeclaration resolveNewDeclaration(String newName) {
+        return new WireDeclaration(newName, 32);
     }
 
-    public default ContinuousStatement assign(String targetName, String sourceName) {
+    public default HardwareStatement createAssigment(String targetName, String sourceName,
+            BiFunction<VariableOperator, HardwareExpression, HardwareStatement> supplier) {
 
         var sink = resolveIdentifier(targetName);
         var source = resolveIdentifier(sourceName);
         if (sink != null)
-            return assign((VariableOperator) sink, source);
+            return supplier.apply((VariableOperator) sink, source);
         else {
-            var wire = getAncestor().addWire(targetName, 32);
-            return assign((VariableOperator) wire.getReference(), source);
+            // var wire = getAncestor().addWire(targetName, 32);
+            var newTarget = getAncestor().addDeclaration(resolveNewDeclaration(targetName));
+            return supplier.apply(newTarget, source);
         }
     }
 
-    public default ContinuousStatement assign(VariableOperator target, HardwareExpression expr) {
-        var stat = new ContinuousStatement(target, expr);
-        getBody().addChild(stat); // TODO: will this handle adding the variable operator to the declaration block? no
-        return stat;
+    public default HardwareStatement createAssigment(String targetName, HardwareExpression expr,
+            BiFunction<VariableOperator, HardwareExpression, HardwareStatement> supplier) {
+
+        var reference = resolveIdentifier(targetName);
+        if (reference != null)
+            return supplier.apply((VariableOperator) reference, expr);
+        else {
+            // var wire = getAncestor().addWire(targetName, 32);
+            var newTarget = getAncestor().addDeclaration(resolveNewDeclaration(targetName));
+            return supplier.apply(newTarget, expr);
+        }
+    }
+
+    /*
+     * nonBlocking
+     */
+    public default ProceduralNonBlockingStatement nonBlocking(HardwareExpression expr) {
+        return (ProceduralNonBlockingStatement) createAssigment(expr.getResultName(), expr,
+                (t, u) -> nonBlocking(t, u));
+    }
+
+    public default ProceduralNonBlockingStatement nonBlocking(String targetName, String sourceName) {
+        return (ProceduralNonBlockingStatement) createAssigment(targetName, sourceName, (t, u) -> nonBlocking(t, u));
+    }
+
+    public default ProceduralNonBlockingStatement nonBlocking(String targetName, HardwareExpression expr) {
+        return (ProceduralNonBlockingStatement) createAssigment(targetName, expr, (t, u) -> nonBlocking(t, u));
     }
 
     public default ProceduralNonBlockingStatement nonBlocking(VariableOperator target, HardwareExpression expr) {
         var stat = new ProceduralNonBlockingStatement(target, expr);
         getBody().addChild(stat);
         return stat;
+    }
+
+    /*
+     * blocking
+     */
+    public default ProceduralBlockingStatement blocking(String targetName, String sourceName) {
+        return (ProceduralBlockingStatement) createAssigment(targetName, sourceName, (t, u) -> blocking(t, u));
+    }
+
+    public default ProceduralBlockingStatement blocking(String targetName, HardwareExpression expr) {
+        return (ProceduralBlockingStatement) createAssigment(targetName, expr, (t, u) -> blocking(t, u));
     }
 
     public default ProceduralBlockingStatement blocking(VariableOperator target, HardwareExpression expr) {

@@ -14,6 +14,8 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 
 public class AlwaysFFBlock extends BeginEndBlock {
 
@@ -34,6 +36,11 @@ public class AlwaysFFBlock extends BeginEndBlock {
     private AlwaysFFBlock(AlwaysFFBlock other) {
         super(HardwareNodeType.AlwaysFF, other.blockName);
         this.signalEdge = other.signalEdge;
+    }
+
+    @Override
+    public IdentifierDeclaration resolveNewDeclaration(String newName) {
+        return new RegisterDeclaration(newName, 32);
     }
 
     @Override

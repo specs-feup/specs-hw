@@ -13,20 +13,18 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs;
 
-import pt.up.fe.specs.binarytranslation.hardware.factory.blockingMethods;
-import pt.up.fe.specs.binarytranslation.hardware.factory.nonBlockingMethods;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public abstract class HardwareBlock extends HardwareNode implements HardwareBlockInterface {
 
-    public nonBlockingMethods nonBlocking;
-    public blockingMethods blocking;
+    // public nonBlockingMethods nonBlocking;
+    // public blockingMethods blocking;
 
     protected HardwareBlock(HardwareNodeType type) {
         super(type);
-        this.nonBlocking = new nonBlockingMethods(this);
-        this.blocking = new blockingMethods(this);
+        // this.nonBlocking = new nonBlockingMethods(this);
+        // this.blocking = new blockingMethods(this);
     }
 
     @Override

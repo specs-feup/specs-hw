@@ -19,6 +19,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.TimeScaleDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
 
 public class HardwareTestbench extends HardwareModule {
@@ -58,15 +59,11 @@ public class HardwareTestbench extends HardwareModule {
         // auto-create registers and wires based on DUT ports
         var connections = new ArrayList<HardwareOperator>();
 
-        for (var in : dut.getInputPorts()) {
-            var reg = this.addRegister("r" + in.getVariableName(), in.getVariableWidth());
-            connections.add(reg.getReference());
-        }
+        for (var in : dut.getInputPorts())
+            connections.add(this.addRegister("r" + in.getVariableName(), in.getVariableWidth()));
 
-        for (var out : dut.getOutputPorts()) {
-            var wire = this.addWire("w" + out.getVariableName(), out.getVariableWidth());
-            connections.add(wire.getReference());
-        }
+        for (var out : dut.getOutputPorts())
+            connections.add(this.addWire("w" + out.getVariableName(), out.getVariableWidth()));
 
         this.addInstance(dut.instantiate("dutInstance1", connections));
 
@@ -80,7 +77,7 @@ public class HardwareTestbench extends HardwareModule {
     }
 
     @Override
-    public PortDeclaration addPort(PortDeclaration port) {
+    public VariableOperator addPort(PortDeclaration port) {
         throw new RuntimeException(
                 "HardwareTestbench: testbenches are not allowed to have ports!");
     }

@@ -27,9 +27,11 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.Inp
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ResetDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 
 public interface ModuleBlockInterface extends HardwareBlockInterface {
@@ -51,7 +53,7 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
     /////////////////////////////////////////////////////////////////////////////
     // ADDERS ///////////////////////////////////////////////////////////////////
 
-    public default IdentifierDeclaration addDeclaration(IdentifierDeclaration id) {
+    public default VariableOperator addDeclaration(IdentifierDeclaration id) {
         if (id instanceof PortDeclaration)
             return addDeclaration((PortDeclaration) id);
 
@@ -62,75 +64,75 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
             return addDeclaration((RegisterDeclaration) id);
 
         else
-            return id;
+            return id.getReference();
     }
 
-    public default PortDeclaration addDeclaration(PortDeclaration port) {
+    public default VariableOperator addDeclaration(PortDeclaration port) {
         return this.addPort(port);
     }
 
-    public default WireDeclaration addDeclaration(WireDeclaration wire) {
+    public default VariableOperator addDeclaration(WireDeclaration wire) {
         return this.addWire(wire);
     }
 
-    public default RegisterDeclaration addDeclaration(RegisterDeclaration reg) {
+    public default VariableOperator addDeclaration(RegisterDeclaration reg) {
         return this.addRegister(reg);
     }
 
     /*
      * Special ports
      */
-    public default ClockDeclaration addClock() {
+    public default VariableOperator addClock() {
         return addClock("clk");
     }
 
-    public default ClockDeclaration addClock(String clockName) {
-        return (ClockDeclaration) addPort(new ClockDeclaration(clockName));
+    public default VariableOperator addClock(String clockName) {
+        return addPort(new ClockDeclaration(clockName));
     }
 
-    public default ResetDeclaration addReset() {
+    public default VariableOperator addReset() {
         return addReset("rst");
     }
 
-    public default ResetDeclaration addReset(String rstName) {
-        return (ResetDeclaration) addPort(new ResetDeclaration(rstName));
+    public default VariableOperator addReset(String rstName) {
+        return addPort(new ResetDeclaration(rstName));
     }
 
     /*
      * Ports
      */
-    public default PortDeclaration addPort(PortDeclaration port) {
+    public default VariableOperator addPort(PortDeclaration port) {
         getPortList().add(port); // this only adds to the port list in the header!
-        return (PortDeclaration) getPortDeclarationBlock().addDeclaration(port);
+        return ((PortDeclaration) getPortDeclarationBlock().addDeclaration(port)).getReference();
     }
 
-    public default InputPortDeclaration addInputPort(String portName, int portWidth) {
-        return (InputPortDeclaration) addPort(new InputPortDeclaration(portName, portWidth));
+    public default VariableOperator addInputPort(String portName, int portWidth) {
+        return addPort(new InputPortDeclaration(portName, portWidth));
     }
 
-    public default OutputPortDeclaration addOutputPort(String portName, int portWidth) {
-        return (OutputPortDeclaration) addPort(new OutputPortDeclaration(portName, portWidth));
+    public default VariableOperator addOutputPort(String portName, int portWidth) {
+        return addPort(new OutputPortDeclaration(portName, portWidth));
     }
 
     /*
      * Wires
      */
-    public default WireDeclaration addWire(WireDeclaration wire) {
-        return (WireDeclaration) getWireDeclarationBlock().addDeclaration(wire);
+    public default VariableOperator addWire(WireDeclaration wire) {
+        return ((WireDeclaration) getWireDeclarationBlock().addDeclaration(wire)).getReference();
     }
 
-    public default WireDeclaration addWire(String portName, int portWidth) {
+    public default VariableOperator addWire(String portName, int portWidth) {
         return addWire(new WireDeclaration(portName, portWidth));
     }
 
     /*
      * registers
      */
-    public default RegisterDeclaration addRegister(RegisterDeclaration reg) {
-        return (RegisterDeclaration) getRegisterDeclarationBlock().addDeclaration(reg);
+    public default VariableOperator addRegister(RegisterDeclaration reg) {
+        return ((RegisterDeclaration) getRegisterDeclarationBlock().addDeclaration(reg)).getReference();
     }
 
-    public default RegisterDeclaration addRegister(String regName, int portWidth) {
+    public default VariableOperator addRegister(String regName, int portWidth) {
         return addRegister(new RegisterDeclaration(regName, portWidth));
     }
 
@@ -158,6 +160,23 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
     public default ModuleInstance addInstance(HardwareModule instanceType,
             String instanceName, HardwareOperator... connections) {
         return addInstance(new ModuleInstance(instanceType, instanceName, connections));
+    }
+
+    /*
+     * assign
+     */
+    public default ContinuousStatement assign(String targetName, String sourceName) {
+        return (ContinuousStatement) createAssigment(targetName, sourceName, (t, u) -> assign(t, u));
+    }
+
+    public default ContinuousStatement assign(String targetName, HardwareExpression expr) {
+        return (ContinuousStatement) createAssigment(targetName, expr, (t, u) -> assign(t, u));
+    }
+
+    public default ContinuousStatement assign(VariableOperator target, HardwareExpression expr) {
+        var stat = new ContinuousStatement(target, expr);
+        getBody().addChild(stat); // TODO: will this handle adding the variable operator to the declaration block? no
+        return stat;
     }
 
     /////////////////////////////////////////////////////////////////////////////
