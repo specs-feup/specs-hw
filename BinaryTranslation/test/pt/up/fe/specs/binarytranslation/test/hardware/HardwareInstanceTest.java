@@ -15,8 +15,9 @@ package pt.up.fe.specs.binarytranslation.test.hardware;
 
 import org.junit.Test;
 
+import pt.up.fe.specs.binarytranslation.hardware.coarse.Adder;
+import pt.up.fe.specs.binarytranslation.hardware.coarse.Mux2to1;
 import pt.up.fe.specs.binarytranslation.hardware.factory.Verilog;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
@@ -78,18 +79,12 @@ public class HardwareInstanceTest {
     }
 
     private static HardwareModule getAdder() {
-
         var adder = new HardwareModule("testAdder");
         adder.addInputPort("testA", 32);
         adder.addInputPort("testB", 32);
         adder.addOutputPort("testC", 32);
-        // var block = adder.addBlock(new AlwaysCombBlock("additionblock"));
-        var block = adder.addAlwaysComb("additionBlock");
-        var refA = adder.getPort(1).addSubscript(15);
-
-        // block.addChild(Verilog.nonBlocking(adder.getPort(2), Verilog.add(refA, adder.getPort(0))));
-        block.nonBlocking("testC", refA.add("testA"));
-
+        var block = adder.alwayscomb("additionBlock");
+        block.nonBlocking("testC", adder.getPort(0).add(adder.getPort(1)));
         return adder;
     }
 
@@ -101,25 +96,24 @@ public class HardwareInstanceTest {
 
     @Test
     public void testHardwareModuleInstanceNewFamily() {
+
+        // previously defined HardwareModule
         var testAdder = HardwareInstanceTest.getAdder();
-        // this var is HardwareModule
 
         var wrap = new HardwareModule("adderWrapper",
                 new InputPortDeclaration("winA", 32),
                 new InputPortDeclaration("winB", 32),
                 new OutputPortDeclaration("woutC", 32));
 
+        // new wire
         var wire = wrap.addWire("tmp", 32);
 
+        // new adder instance
         wrap.addInstance(testAdder.instantiate("adder1",
                 wrap.getPort(0), wrap.getPort(1), wire));
 
-        // wrap.addStatement(Verilog.nonBlocking(wrap.getPort(2),
-        // Verilog.add(wire, ImmediateOperator.Ones(15))));
-
+        // connect output of adder instance +1 to output port woutC
         wrap.nonBlocking("woutC", wire.add(ImmediateOperator.Ones(15)));
-
-        // TODO: add checks if assignemnts are attempted on input ports!!
 
         /*
          * Test module instantiation inside other module
@@ -182,13 +176,11 @@ public class HardwareInstanceTest {
 
     @Test
     public void testHardwareTestbenchNewFamily() {
-        var testAdder = HardwareInstanceTest.getAdder();
-        testAdder.emit();
-        // this var is HardwareModule
 
+        // previously defined HardwareModule
+        var testAdder = HardwareInstanceTest.getAdder();
         var tb = new HardwareTestbench("testbench1", testAdder);
         tb.emit();
-
     }
 
     @Test
@@ -200,7 +192,7 @@ public class HardwareInstanceTest {
         adder.addInputPort("inB", 32);
         adder.addOutputPort("outC", 32);
 
-        var ff1 = adder.addAlwaysFFPosedge("testBlock");
+        var ff1 = adder.alwaysposedge("testBlock");
         var stat1 = Verilog.nonBlocking(adder.getPort(4), Verilog.add(adder.getPort(2), adder.getPort(3)));
         var stat2 = Verilog.nonBlocking(adder.getPort(4), new ImmediateOperator(0, 32));
 
@@ -222,7 +214,7 @@ public class HardwareInstanceTest {
         var sigB = new WireDeclaration("inB", 8).getReference();
         var sigC = new WireDeclaration("outC", 8).getReference();
 
-        if1.getIfBlock().nonBlocking(sigC, sigA.add(sigB));
+        if1.then().nonBlocking(sigC, sigA.add(sigB));
 
         // var stat1 = Verilog.nonBlocking(sigC, Verilog.add(sigA, sigB));
         // if1.addStatement(stat1);
@@ -241,7 +233,7 @@ public class HardwareInstanceTest {
         var refB = mod.addInputPort("inB", 8);
         var refC = mod.addOutputPort("outC", 8);
 
-        var block = mod.addAlwaysComb("comb1");
+        var block = mod.alwayscomb("comb1");
 
         // var stat = Verilog.nonBlocking(refC, Verilog.add(refA, refB));
         // block.addStatement(stat);
@@ -260,19 +252,78 @@ public class HardwareInstanceTest {
 
     @Test
     public void testBlocksyntax() {
-        var block = new BeginEndBlock("testBlock");
-        // nonBlocking.add(refA, refB)
+        var adder = new HardwareModule("adderDef");
+        var inA = adder.addInputPort("inA", 32);
+        var inB = adder.addInputPort("inB", 32);
+        var outC = adder.addOutputPort("outC", 32);
+        var block = adder.alwayscomb("testBlock");
+        var result = block.nonBlocking(inA.add(inB));
+        adder.assign("outC", result);
 
-        var refA = new WireDeclaration("wireA", 8).getReference();
-        var refB = new WireDeclaration("wireB", 8).getReference();
+        /*
+         * 
+         */
+        adder.emit();
+    }
 
-        // var result = block.nonBlocking.add(refA, refB);
-        var result = block.nonBlocking(refA.addSubscript(refB));
-        System.out.println(result.getTarget().getResultName());
-        block.emit();
+    @Test
+    public void testModuleAlwaysFF() {
+        var adder = new HardwareModule("adderDef");
+        var inA = adder.addInputPort("inA", 32);
+        var inB = adder.addInputPort("inB", 32);
+        var outC = adder.addOutputPort("outC", 32);
+        adder.alwaysposedge().nonBlocking(outC, inA.add(inB));
+        adder.emit();
+    }
 
-        // want this:
-        // var result = block.nonBlocking.add(refA, refB); !!
+    @Test
+    public void testModuleAlwaysFFWithReset() {
+        var adder = new HardwareModule("adderDef");
+        var clk = adder.addClock();
+        var rst = adder.addReset();
+        var inA = adder.addInputPort("inA", 8);
+        var inB = adder.addInputPort("inB", 8);
+        var outC = adder.addOutputPort("outC", 8);
+
+        var ifelse1 = adder.alwaysposedge()._ifelse(rst);
+        ifelse1.then().nonBlocking(outC, 0);
+        ifelse1.orElse().nonBlocking(outC, inA.add(inB));
+
+        adder.emit();
+    }
+
+    @Test
+    public void testCoarseModule() {
+
+        var adder1 = new Adder(32);
+        adder1.emit();
+    }
+
+    @Test
+    public void testCoarseModule2() {
+
+        var mux1 = new Mux2to1(8);
+        mux1.emit();
+    }
+
+    @Test
+    public void testCoarseModuleWrapper() {
+
+        var adder = new Adder(32);
+
+        var wrap = new HardwareModule("adderWrapper",
+                new InputPortDeclaration("winA", 32),
+                new InputPortDeclaration("winB", 32),
+                new OutputPortDeclaration("woutC", 32));
+
+        var clk = wrap.addRegister(new RegisterDeclaration("clk", 1));
+        var rst = wrap.addRegister(new RegisterDeclaration("rst", 1));
+
+        // new adder instance
+        wrap.addInstance(adder.instantiate("adder1", clk, rst,
+                wrap.getPort(0), wrap.getPort(1), wrap.getPort(2)));
+
+        wrap.emit();
     }
 
     @Test
@@ -288,7 +339,7 @@ public class HardwareInstanceTest {
 
         // var block = adder.addAlwaysComb("testBlock");
 
-        var block = adder.addAlwaysFFPosedge("testBlock");
+        var block = adder.alwaysposedge("testBlock");
 
         // block.nonBlocking(adder.getPort("outC"), adder.getPort("inA").add(adder.getPort("inB")));
 

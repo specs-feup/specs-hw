@@ -41,6 +41,10 @@ class ModuleBlock extends HardwareBlock implements ModuleBlockInterface {
     protected String moduleName;
     protected List<PortDeclaration> ports;
 
+    // counters used when no user specified names for blocks are given
+    private int alwaysffCounter = 0;
+    private int alwayscombCounter = 0;
+
     public ModuleBlock(String moduleName) {
         super(HardwareNodeType.ModuleBlock);
         this.moduleName = moduleName;
@@ -71,6 +75,16 @@ class ModuleBlock extends HardwareBlock implements ModuleBlockInterface {
     @Override
     public List<PortDeclaration> getPortList() {
         return this.ports;
+    }
+
+    @Override
+    public int incrementCombCounter() {
+        return this.alwayscombCounter++;
+    }
+
+    @Override
+    public int incrementFFCounter() {
+        return this.alwaysffCounter++;
     }
 
     @Override

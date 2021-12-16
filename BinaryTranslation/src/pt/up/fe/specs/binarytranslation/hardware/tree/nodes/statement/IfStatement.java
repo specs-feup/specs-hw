@@ -45,8 +45,8 @@ public class IfStatement extends ABlockStatement {
         return this.getChild(BeginEndBlock.class, 1);
     }
 
-    public BeginEndBlock getIfBlock() {
-        return this.getBeginEndBlock();
+    public BeginEndBlock then() {
+        return this.getChild(BeginEndBlock.class, 1);
     }
 
     public HardwareStatement addStatement(HardwareStatement statement) {

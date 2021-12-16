@@ -14,11 +14,17 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysFFBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlockInterface;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.NegEdge;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.PosEdge;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.SignalEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.IdentifierDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
@@ -29,6 +35,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.Por
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ResetDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
@@ -148,6 +155,72 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
     }
 
     /*
+     * 
+     */
+    public abstract int incrementCombCounter();
+
+    /*
+     * 
+     */
+    public abstract int incrementFFCounter();
+
+    /*
+     * add always_comb blocks
+     */
+    public default AlwaysCombBlock alwayscomb(String blockName) {
+        return (AlwaysCombBlock) addBlock(new AlwaysCombBlock(blockName));
+    }
+
+    // create name if non given
+    public default AlwaysCombBlock alwayscomb() {
+        return (AlwaysCombBlock) addBlock(new AlwaysCombBlock("comb_" + incrementCombCounter()));
+        // TODO: if I manually create a block called "comb_1" or "comb_2" etc, this will break
+    }
+
+    /*
+     * always ff blocks (if no signal provided defaults to clk)
+     * (if no clock on module, adds a clock declaration to the ports)
+     */
+    public default AlwaysFFBlock alwaysff(
+            String blockName, ClockDeclaration clk,
+            Function<VariableOperator, SignalEdge> edge) {
+
+        var block = new AlwaysFFBlock(edge.apply(clk.getReference()), blockName);
+        getBody().addChild(block);
+        return block;
+    }
+
+    /*
+     * Alwaysff posedge
+     */
+    public default AlwaysFFBlock alwaysposedge(String blockName, ClockDeclaration clk) {
+        return alwaysff(blockName, clk, (signal) -> new PosEdge(signal));
+    }
+
+    public default AlwaysFFBlock alwaysposedge(String blockName) {
+        return alwaysposedge(blockName, getClock());
+    }
+
+    public default AlwaysFFBlock alwaysposedge() {
+        return alwaysposedge("ff_" + incrementFFCounter());
+    }
+
+    /*
+     * Alwaysff negedge
+     */
+    public default AlwaysFFBlock alwaysnegedge(String blockName, ClockDeclaration clk) {
+        return alwaysff(blockName, clk, (signal) -> new NegEdge(signal));
+    }
+
+    public default AlwaysFFBlock alwaysnegedge(String blockName) {
+        return alwaysnegedge(blockName, getClock());
+    }
+
+    public default AlwaysFFBlock alwaysnegedge() {
+        return alwaysnegedge("ff_" + incrementFFCounter());
+    }
+
+    /*
      * instances of other modules
      * (instances can only be added as direct children of the module body,
      * i.e. first level children of the ModuleBlock)
@@ -165,22 +238,39 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
     /*
      * assign
      */
-    public default ContinuousStatement assign(String targetName, String sourceName) {
-        return (ContinuousStatement) createAssigment(targetName, sourceName, (t, u) -> assign(t, u));
+    public default VariableOperator assign(String targetName, String sourceName) {
+        return createAssigment(targetName, sourceName, (t, u) -> assign(t, u));
     }
 
-    public default ContinuousStatement assign(String targetName, HardwareExpression expr) {
-        return (ContinuousStatement) createAssigment(targetName, expr, (t, u) -> assign(t, u));
+    public default VariableOperator assign(String targetName, HardwareExpression expr) {
+        return createAssigment(targetName, expr, (t, u) -> assign(t, u));
     }
 
-    public default ContinuousStatement assign(VariableOperator target, HardwareExpression expr) {
-        var stat = new ContinuousStatement(target, expr);
-        getBody().addChild(stat); // TODO: will this handle adding the variable operator to the declaration block? no
-        return stat;
+    public default VariableOperator assign(VariableOperator target, int literalConstant) {
+        return assign(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
+    }
+
+    public default VariableOperator assign(VariableOperator target, HardwareExpression expr) {
+        getBody().addChild(new ContinuousStatement(target, expr));
+        // TODO: will this handle adding the variable operator to the declaration block if it doesnt exist? NO
+        return target;
     }
 
     /////////////////////////////////////////////////////////////////////////////
     // GETTERS //////////////////////////////////////////////////////////////////
+
+    public default ClockDeclaration getClock() {
+
+        var clks = getPorts(port -> port.isClock());
+
+        ClockDeclaration clk = null;
+        if (!clks.isEmpty())
+            clk = (ClockDeclaration) clks.get(0);
+        else {
+            clk = (ClockDeclaration) addClock().getAssociatedIdentifier();
+        }
+        return clk;
+    }
 
     /*
      * *****************************************************************************

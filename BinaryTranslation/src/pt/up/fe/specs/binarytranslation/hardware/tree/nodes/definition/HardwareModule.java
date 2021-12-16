@@ -14,19 +14,11 @@
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition;
 
 import java.util.List;
-import java.util.function.Function;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysFFBlock;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.NegEdge;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.PosEdge;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.SignalEdge;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.ClockDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
 
@@ -39,10 +31,6 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
         ADDCHILDERRMSG = "HardwareModule: Expected only two children! " +
                 "Use addStatement() and addBlock() to add content to the module body!";
     }
-
-    // counters used when no user specified names for blocks are given
-    private int alwaysffCounter = 0;
-    private int alwayscombCounter = 0;
 
     // public assignMethods assign;
 
@@ -81,6 +69,16 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
     }
 
     @Override
+    public int incrementCombCounter() {
+        return getBody().incrementCombCounter();
+    }
+
+    @Override
+    public int incrementFFCounter() {
+        return getBody().incrementFFCounter();
+    }
+
+    @Override
     public List<PortDeclaration> getPortList() {
         return this.getBody().getPortList();
     }
@@ -98,78 +96,6 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
     @Override
     public ModuleInstance instantiate(String instanceName, List<HardwareOperator> connections) {
         return new ModuleInstance(this, instanceName, connections);
-    }
-
-    /*
-     * add always_comb blocks
-     */
-    public AlwaysCombBlock addAlwaysComb(String blockName) {
-        return (AlwaysCombBlock) this.addBlock(new AlwaysCombBlock(blockName));
-    }
-
-    // create name if non given
-    public AlwaysCombBlock addAlwaysComb() {
-        return (AlwaysCombBlock) this.addBlock(new AlwaysCombBlock("comb_" + this.alwayscombCounter++));
-        // TODO: if I manually create a block called "comb_1" or "comb_2" etc, this will break
-    }
-
-    /*
-     * always ff blocks (if no signal provided defaults to clk)
-     * (if no clock on module, adds a clock declaration to the ports)
-     */
-    private AlwaysFFBlock addAlwaysFF(
-            String blockName, ClockDeclaration clk,
-            Function<VariableOperator, SignalEdge> edge) {
-
-        var block = new AlwaysFFBlock(edge.apply(clk.getReference()), blockName);
-        this.getBody().addChild(block);
-        return block;
-    }
-
-    /*
-     * aux clock getter
-     */
-    private ClockDeclaration getClockForAlways() {
-
-        var clks = this.getPorts(port -> port.isClock());
-
-        ClockDeclaration clk = null;
-        if (!clks.isEmpty())
-            clk = (ClockDeclaration) clks.get(0);
-        else {
-            clk = (ClockDeclaration) this.addClock().getAssociatedIdentifier();
-        }
-        return clk;
-    }
-
-    /*
-     * Alwaysff posedge
-     */
-    public AlwaysFFBlock addAlwaysFFPosedge(String blockName, ClockDeclaration clk) {
-        return addAlwaysFF(blockName, clk, (signal) -> new PosEdge(signal));
-    }
-
-    public AlwaysFFBlock addAlwaysFFPosedge(String blockName) {
-        return addAlwaysFFPosedge(blockName, getClockForAlways());
-    }
-
-    public AlwaysFFBlock addAlwaysFFPosedge() {
-        return addAlwaysFFPosedge("ff_" + this.alwaysffCounter++);
-    }
-
-    /*
-     * Alwaysff negedge
-     */
-    public AlwaysFFBlock addAlwaysFFNegedge(String blockName, ClockDeclaration clk) {
-        return addAlwaysFF(blockName, clk, (signal) -> new NegEdge(signal));
-    }
-
-    public AlwaysFFBlock addAlwaysFFNegedge(String blockName) {
-        return addAlwaysFFNegedge(blockName, getClockForAlways());
-    }
-
-    public AlwaysFFBlock addAlwaysFFNegedge() {
-        return addAlwaysFFNegedge("ff_" + this.alwaysffCounter++);
     }
 
     @Override

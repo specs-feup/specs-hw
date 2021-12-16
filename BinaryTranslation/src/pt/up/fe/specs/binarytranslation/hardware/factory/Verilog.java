@@ -28,6 +28,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.Procedural
  * @author nuno
  *
  */
+@Deprecated
 public class Verilog {
 
     // public static
