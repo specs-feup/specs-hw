@@ -24,8 +24,11 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDecl
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
@@ -118,8 +121,8 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
         return new WireDeclaration(newName, 32);
     }
 
-    public default HardwareStatement createAssigment(String targetName, String sourceName,
-            BiFunction<VariableOperator, HardwareExpression, HardwareStatement> supplier) {
+    public default VariableOperator createAssigment(String targetName, String sourceName,
+            BiFunction<VariableOperator, HardwareExpression, VariableOperator> supplier) {
 
         var sink = resolveIdentifier(targetName);
         var source = resolveIdentifier(sourceName);
@@ -132,8 +135,8 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
         }
     }
 
-    public default HardwareStatement createAssigment(String targetName, HardwareExpression expr,
-            BiFunction<VariableOperator, HardwareExpression, HardwareStatement> supplier) {
+    public default VariableOperator createAssigment(String targetName, HardwareExpression expr,
+            BiFunction<VariableOperator, HardwareExpression, VariableOperator> supplier) {
 
         var reference = resolveIdentifier(targetName);
         if (reference != null)
@@ -148,39 +151,63 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
     /*
      * nonBlocking
      */
-    public default ProceduralNonBlockingStatement nonBlocking(HardwareExpression expr) {
-        return (ProceduralNonBlockingStatement) createAssigment(expr.getResultName(), expr,
-                (t, u) -> nonBlocking(t, u));
+    public default VariableOperator nonBlocking(HardwareExpression expr) {
+        return createAssigment(expr.getResultName(), expr, (t, u) -> nonBlocking(t, u));
     }
 
-    public default ProceduralNonBlockingStatement nonBlocking(String targetName, String sourceName) {
-        return (ProceduralNonBlockingStatement) createAssigment(targetName, sourceName, (t, u) -> nonBlocking(t, u));
+    public default VariableOperator nonBlocking(String targetName, String sourceName) {
+        return createAssigment(targetName, sourceName, (t, u) -> nonBlocking(t, u));
     }
 
-    public default ProceduralNonBlockingStatement nonBlocking(String targetName, HardwareExpression expr) {
-        return (ProceduralNonBlockingStatement) createAssigment(targetName, expr, (t, u) -> nonBlocking(t, u));
+    public default VariableOperator nonBlocking(String targetName, HardwareExpression expr) {
+        return createAssigment(targetName, expr, (t, u) -> nonBlocking(t, u));
     }
 
-    public default ProceduralNonBlockingStatement nonBlocking(VariableOperator target, HardwareExpression expr) {
-        var stat = new ProceduralNonBlockingStatement(target, expr);
-        getBody().addChild(stat);
-        return stat;
+    public default VariableOperator nonBlocking(VariableOperator target, int literalConstant) {
+        return nonBlocking(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
     }
+
+    public default VariableOperator nonBlocking(VariableOperator target, HardwareExpression expr) {
+        getBody().addChild(new ProceduralNonBlockingStatement(target, expr));
+        // TODO: will this handle adding the variable operator to the declaration block if it doesnt exist? NO
+        return target;
+    }
+
+    // TODO: add checks if assignemnts are attempted on input ports!!
 
     /*
      * blocking
      */
-    public default ProceduralBlockingStatement blocking(String targetName, String sourceName) {
-        return (ProceduralBlockingStatement) createAssigment(targetName, sourceName, (t, u) -> blocking(t, u));
+    public default VariableOperator blocking(HardwareExpression expr) {
+        return createAssigment(expr.getResultName(), expr, (t, u) -> blocking(t, u));
     }
 
-    public default ProceduralBlockingStatement blocking(String targetName, HardwareExpression expr) {
-        return (ProceduralBlockingStatement) createAssigment(targetName, expr, (t, u) -> blocking(t, u));
+    public default VariableOperator blocking(String targetName, String sourceName) {
+        return createAssigment(targetName, sourceName, (t, u) -> blocking(t, u));
     }
 
-    public default ProceduralBlockingStatement blocking(VariableOperator target, HardwareExpression expr) {
-        var stat = new ProceduralBlockingStatement(target, expr);
-        getBody().addChild(stat);
-        return stat;
+    public default VariableOperator blocking(String targetName, HardwareExpression expr) {
+        return createAssigment(targetName, expr, (t, u) -> blocking(t, u));
+    }
+
+    public default VariableOperator blocking(VariableOperator target, int literalConstant) {
+        return nonBlocking(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
+    }
+
+    public default VariableOperator blocking(VariableOperator target, HardwareExpression expr) {
+        getBody().addChild(new ProceduralBlockingStatement(target, expr));
+        // TODO: will this handle adding the variable operator to the declaration block if it doesnt exist? NO
+        return target;
+    }
+
+    /*
+     * if-else
+     */
+    public default IfStatement _if(HardwareExpression condition) {
+        return (IfStatement) getBody().addChild(new IfStatement(condition));
+    }
+
+    public default IfElseStatement _ifelse(HardwareExpression condition) {
+        return (IfElseStatement) getBody().addChild(new IfElseStatement(condition));
     }
 }
