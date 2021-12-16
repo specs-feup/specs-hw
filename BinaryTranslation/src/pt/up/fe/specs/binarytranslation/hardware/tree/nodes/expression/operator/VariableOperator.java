@@ -70,6 +70,10 @@ public class VariableOperator extends HardwareOperator {
         return sb.toString();
     }
 
+    public IdentifierDeclaration getAssociatedIdentifier() {
+        return associatedIdentifier;
+    }
+
     @Override
     public String getValue() {
         return this.getAsString();

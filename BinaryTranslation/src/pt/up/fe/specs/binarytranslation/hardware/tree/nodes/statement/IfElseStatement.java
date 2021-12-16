@@ -38,12 +38,12 @@ public class IfElseStatement extends ABlockStatement {
     }
 
     public IfElseStatement addIfStatement(HardwareStatement stat) {
-        this.getIfStatements().addChild(stat);
+        this.getIfBlock().addChild(stat);
         return this;
     }
 
     public IfElseStatement addElseStatement(HardwareStatement stat) {
-        this.getElseStatements().addChild(stat);
+        this.getElseBlock().addChild(stat);
         return this;
     }
 
@@ -51,17 +51,17 @@ public class IfElseStatement extends ABlockStatement {
         return this.getChild(HardwareExpression.class, 0);
     }
 
-    public BeginEndBlock getIfStatements() {
+    public BeginEndBlock getIfBlock() {
         return this.getChild(BeginEndBlock.class, 1);
     }
 
-    public BeginEndBlock getElseStatements() {
+    public BeginEndBlock getElseBlock() {
         return this.getChild(BeginEndBlock.class, 2);
     }
 
     @Override
     protected BeginEndBlock getBeginEndBlock() {
-        return this.getIfStatements();
+        return this.getIfBlock();
     }
 
     @Override
@@ -74,11 +74,11 @@ public class IfElseStatement extends ABlockStatement {
 
         var builder = new StringBuilder();
         builder.append("if(" + this.getCondition().getAsString() + ") ");
-        builder.append(this.getIfStatements().getAsString());
+        builder.append(this.getIfBlock().getAsString());
 
-        if (!this.getElseStatements().getStatements().isEmpty()) {
+        if (!this.getElseBlock().getStatements().isEmpty()) {
             builder.append("else ");
-            builder.append(this.getElseStatements().getAsString());
+            builder.append(this.getElseBlock().getAsString());
         }
         return builder.toString();
 

@@ -20,6 +20,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndB
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.RegisterDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareTestbench;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
@@ -85,7 +86,10 @@ public class HardwareInstanceTest {
         // var block = adder.addBlock(new AlwaysCombBlock("additionblock"));
         var block = adder.addAlwaysComb("additionBlock");
         var refA = adder.getPort(1).addSubscript(15);
-        block.addChild(Verilog.nonBlocking(adder.getPort(2), Verilog.add(refA, adder.getPort(0))));
+
+        // block.addChild(Verilog.nonBlocking(adder.getPort(2), Verilog.add(refA, adder.getPort(0))));
+        block.nonBlocking("testC", refA.add("testA"));
+
         return adder;
     }
 
@@ -103,15 +107,19 @@ public class HardwareInstanceTest {
         var wrap = new HardwareModule("adderWrapper",
                 new InputPortDeclaration("winA", 32),
                 new InputPortDeclaration("winB", 32),
-                new InputPortDeclaration("woutC", 32));
+                new OutputPortDeclaration("woutC", 32));
 
-        var wire = wrap.addWire("tmp", 32).getReference();
+        var wire = wrap.addWire("tmp", 32);
 
         wrap.addInstance(testAdder.instantiate("adder1",
                 wrap.getPort(0), wrap.getPort(1), wire));
 
-        wrap.addStatement(Verilog.nonBlocking(wrap.getPort(2),
-                Verilog.add(wire, ImmediateOperator.Ones(15))));
+        // wrap.addStatement(Verilog.nonBlocking(wrap.getPort(2),
+        // Verilog.add(wire, ImmediateOperator.Ones(15))));
+
+        wrap.nonBlocking("woutC", wire.add(ImmediateOperator.Ones(15)));
+
+        // TODO: add checks if assignemnts are attempted on input ports!!
 
         /*
          * Test module instantiation inside other module
@@ -213,9 +221,13 @@ public class HardwareInstanceTest {
         var sigA = new WireDeclaration("inA", 8).getReference();
         var sigB = new WireDeclaration("inB", 8).getReference();
         var sigC = new WireDeclaration("outC", 8).getReference();
-        var stat1 = Verilog.nonBlocking(sigC, Verilog.add(sigA, sigB));
-        if1.addStatement(stat1);
+
+        if1.getIfBlock().nonBlocking(sigC, sigA.add(sigB));
+
+        // var stat1 = Verilog.nonBlocking(sigC, Verilog.add(sigA, sigB));
+        // if1.addStatement(stat1);
         // if1.addStatement(stat1.copy());
+
         if1.emit();
     }
 
@@ -225,14 +237,16 @@ public class HardwareInstanceTest {
         var mod = new HardwareModule("testMod");
         mod.addClock();
         mod.addReset();
-        var refA = mod.addInputPort("inA", 8).getReference();
-        var refB = mod.addInputPort("inB", 8).getReference();
-        var refC = mod.addOutputPort("outC", 8).getReference();
+        var refA = mod.addInputPort("inA", 8);
+        var refB = mod.addInputPort("inB", 8);
+        var refC = mod.addOutputPort("outC", 8);
 
         var block = mod.addAlwaysComb("comb1");
 
-        var stat = Verilog.nonBlocking(refC, Verilog.add(refA, refB));
-        block.addStatement(stat);
+        // var stat = Verilog.nonBlocking(refC, Verilog.add(refA, refB));
+        // block.addStatement(stat);
+
+        block.nonBlocking(refC, refA.add(refB));
 
         mod.emit();
 
@@ -245,15 +259,16 @@ public class HardwareInstanceTest {
     }
 
     @Test
-    public void testsyntax() {
+    public void testBlocksyntax() {
         var block = new BeginEndBlock("testBlock");
         // nonBlocking.add(refA, refB)
 
         var refA = new WireDeclaration("wireA", 8).getReference();
         var refB = new WireDeclaration("wireB", 8).getReference();
 
-        var result = block.nonBlocking.add(refA, refB);
-
+        // var result = block.nonBlocking.add(refA, refB);
+        var result = block.nonBlocking(refA.addSubscript(refB));
+        System.out.println(result.getTarget().getResultName());
         block.emit();
 
         // want this:
@@ -261,21 +276,26 @@ public class HardwareInstanceTest {
     }
 
     @Test
-    public void testsyntax2() {
+    public void testModuleSyntax() {
         var adder = new HardwareModule("adderDef");
         adder.addClock();
         adder.addReset();
-        adder.addInputPort("inA", 32);
-        adder.addInputPort("inB", 32);
-        adder.addOutputPort("outC", 32);
+        var inA = adder.addInputPort("inA", 32);
+        var inB = adder.addInputPort("inB", 32);
+        var outC = adder.addOutputPort("outC", 32);
 
         // adder.getPort("outC").assign(adder.getPort("inA").add(adder.getPort("inB")));
 
-        var block = adder.addAlwaysComb("testBlock");
+        // var block = adder.addAlwaysComb("testBlock");
+
+        var block = adder.addAlwaysFFPosedge("testBlock");
 
         // block.nonBlocking(adder.getPort("outC"), adder.getPort("inA").add(adder.getPort("inB")));
 
-        block.assign("auxA", adder.getPort("inA").add(adder.getPort("inB")));
+        // var stat = auxA.assign(inA.add(inB);
+        // adder.addStatement(stat); ???
+
+        block.nonBlocking("auxA", inA.add(inB).add(inA));
 
         // block.assign("auxA", adder.getPort("inA").add("inB"));
         // TODO: how to support string named fetching in HardwareOperationsInterface??

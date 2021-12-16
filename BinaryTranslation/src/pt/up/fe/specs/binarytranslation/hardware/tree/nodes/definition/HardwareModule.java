@@ -137,7 +137,7 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
         if (!clks.isEmpty())
             clk = (ClockDeclaration) clks.get(0);
         else {
-            clk = this.addClock();
+            clk = (ClockDeclaration) this.addClock().getAssociatedIdentifier();
         }
         return clk;
     }
