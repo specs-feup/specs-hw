@@ -50,6 +50,7 @@ public abstract class AUnaryHardwareExpression extends HardwareExpression {
 
     @Override
     public String getAsString() {
-        return this.toContentString() + " " + this.getOperand().getAsString();
+        // return this.toContentString() + " " + this.getOperand().getAsString();
+        return this.toContentString() + this.getOperand().getAsString();
     }
 }

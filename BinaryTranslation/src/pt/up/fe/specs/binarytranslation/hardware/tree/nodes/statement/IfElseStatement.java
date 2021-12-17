@@ -13,6 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
+import java.util.Arrays;
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
@@ -27,41 +30,91 @@ public class IfElseStatement extends ABlockStatement {
     }
 
     public IfElseStatement(HardwareExpression condition) {
+        this("", condition);
+    }
+
+    public IfElseStatement(String blockName, HardwareExpression condition) {
         super(HardwareNodeType.IfElseStatement);
         this.addChild(condition); // Condition of the if/else statement
 
         // True condition statement list
-        this.addChild(new BeginEndBlock()); // will hold children which are individual statements
+        this.addChild(new BeginEndBlock(blockName)); // will hold children which are individual statements
 
         // False condition statement list
         this.addChild(new BeginEndBlock()); // will hold children which are individual statements
     }
 
+    public IfElseStatement(String blockName,
+            HardwareExpression condition, List<HardwareStatement> statements) {
+        this(blockName, condition);
+        for (var s : statements)
+            this.then().addStatement(s);
+    }
+
+    public IfElseStatement(HardwareExpression condition, List<HardwareStatement> statements) {
+        this("", condition, statements);
+    }
+
+    public IfElseStatement(String blockName, HardwareExpression condition, HardwareStatement... statement) {
+        this(blockName, condition, Arrays.asList(statement));
+    }
+
+    public IfElseStatement(HardwareExpression condition, HardwareStatement... statement) {
+        this(condition, Arrays.asList(statement));
+    }
+
+    /*
     public IfElseStatement addIfStatement(HardwareStatement stat) {
         this.then().addChild(stat);
         return this;
     }
-
+    
     public IfElseStatement addElseStatement(HardwareStatement stat) {
         this.orElse().addChild(stat);
         return this;
-    }
+    }*/
 
     public HardwareExpression getCondition() {
         return this.getChild(HardwareExpression.class, 0);
     }
 
-    public BeginEndBlock then() {
+    @Override
+    protected BeginEndBlock getBeginEndBlock() {
         return this.getChild(BeginEndBlock.class, 1);
     }
 
-    public BeginEndBlock orElse() {
+    private BeginEndBlock then() {
+        return this.getChild(BeginEndBlock.class, 1);
+    }
+
+    public IfElseStatement then(HardwareStatement... statements) {
+        return then(Arrays.asList(statements));
+    }
+
+    public IfElseStatement then(List<HardwareStatement> statements) {
+        for (var s : statements)
+            this.then().addStatement(s);
+
+        // return this.then();
+        return this; // DELIBERATE, this way i can chain then(...).orElse(...);
+    }
+
+    private BeginEndBlock orElse() {
         return this.getChild(BeginEndBlock.class, 2);
     }
 
-    @Override
-    protected BeginEndBlock getBeginEndBlock() {
-        return this.then();
+    public BeginEndBlock orElse(HardwareStatement... statements) {
+        return orElse(Arrays.asList(statements));
+    }
+
+    public BeginEndBlock orElse(List<HardwareStatement> statements) {
+        for (var s : statements)
+            this.orElse().addStatement(s);
+
+        // TODO: on @IfStatement and here, theres no guarantee that the
+        // targets of these statements are declared in the parent ModuleBlock
+
+        return this.orElse();
     }
 
     @Override
@@ -81,25 +134,6 @@ public class IfElseStatement extends ABlockStatement {
             builder.append(this.orElse().getAsString());
         }
         return builder.toString();
-
-        /*
-        var builder = new StringBuilder();
-        
-        builder.append("if(" + this.getCondition().getAsString() + ") begin\n");
-        
-        this.getIfStatements().forEach(statement -> builder.append("\t\t" + statement.getAsString() + "\n"));
-        
-        builder.append("\tend\n");
-        
-        if (!this.getElseStatements().isEmpty()) {
-        
-            builder.append("\telse begin\n");
-        
-            this.getElseStatements().forEach(statement -> builder.append("\t\t" + statement.getAsString() + "\n"));
-        
-            builder.append("\tend \n");
-        }
-        return builder.toString();*/
     }
 
     @Override

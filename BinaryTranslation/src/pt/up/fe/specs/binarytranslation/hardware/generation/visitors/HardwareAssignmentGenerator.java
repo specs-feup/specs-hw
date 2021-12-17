@@ -23,7 +23,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.MultiplicationExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.SubtractionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.BitWiseAndExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.ComparsionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.ComparisonExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
@@ -121,7 +121,7 @@ public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareN
             finalexpr = new BitWiseAndExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
             break;
         case "==":
-            finalexpr = new ComparsionExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
+            finalexpr = new ComparisonExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
             break;
         default:
             // finalexpr = new UnimplementedExpression((HardwareExpression) lnode, (HardwareExpression) rnode, op);

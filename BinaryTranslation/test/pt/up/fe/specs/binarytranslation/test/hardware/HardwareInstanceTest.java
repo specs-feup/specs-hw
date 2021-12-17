@@ -28,7 +28,6 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.subscript.ScalarSubscript;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfStatement;
 
 public class HardwareInstanceTest {
@@ -187,20 +186,26 @@ public class HardwareInstanceTest {
     public void testAddingBlocksNewFamily() {
         var adder = new HardwareModule("adderDef");
         adder.addClock();
-        adder.addReset();
-        adder.addInputPort("inA", 32);
-        adder.addInputPort("inB", 32);
-        adder.addOutputPort("outC", 32);
+        var rst = adder.addReset();
+        var a = adder.addInputPort("inA", 32);
+        var b = adder.addInputPort("inB", 32);
+        var c = adder.addOutputPort("outC", 32);
 
+        var ff1 = adder.alwaysposedge("testBlock");
+        ff1._ifelse(rst,
+                c.nonBlocking(0))
+                .orElse(c.nonBlocking(a.add(b)));
+
+        /*
         var ff1 = adder.alwaysposedge("testBlock");
         var stat1 = Verilog.nonBlocking(adder.getPort(4), Verilog.add(adder.getPort(2), adder.getPort(3)));
         var stat2 = Verilog.nonBlocking(adder.getPort(4), new ImmediateOperator(0, 32));
-
+        
         var ifelstat = new IfElseStatement(adder.getPort("rst"));
         ifelstat.addIfStatement(stat2);
         ifelstat.addElseStatement(stat1);
-
-        ff1.addChild(ifelstat);
+        
+        ff1.addChild(ifelstat);*/
 
         adder.emit();
     }
@@ -208,13 +213,19 @@ public class HardwareInstanceTest {
     @Test
     public void testIfElse() {
         var sig = new WireDeclaration("testWire", 1);
-        var if1 = new IfStatement(sig.getReference(), "block1");
+        var if1 = new IfStatement("block1", sig.getReference());
 
         var sigA = new WireDeclaration("inA", 8).getReference();
         var sigB = new WireDeclaration("inB", 8).getReference();
         var sigC = new WireDeclaration("outC", 8).getReference();
 
-        if1.then().nonBlocking(sigC, sigA.add(sigB));
+        // if1.then().nonBlocking(sigC, sigA.add(sigB));
+        if1.then(sigC.nonBlocking(sigA.add(sigB)));
+        // NOTE: both syntaxes are currently valid! (17-12-2021)
+
+        // TODO: now i need that VariableOperator also implements a "nonBlocking" method etc
+        // so that I can do
+        // if1.then(sigC.nonBlocking(sigA.add(sigB));
 
         // var stat1 = Verilog.nonBlocking(sigC, Verilog.add(sigA, sigB));
         // if1.addStatement(stat1);
@@ -285,9 +296,13 @@ public class HardwareInstanceTest {
         var inB = adder.addInputPort("inB", 8);
         var outC = adder.addOutputPort("outC", 8);
 
+        var if1 = adder.alwaysposedge()._if(rst.not(), outC.nonBlocking(0));
+        // TODO: assignemnt interfaces on VariableOperator!!!
+
+        /*
         var ifelse1 = adder.alwaysposedge()._ifelse(rst);
         ifelse1.then().nonBlocking(outC, 0);
-        ifelse1.orElse().nonBlocking(outC, inA.add(inB));
+        ifelse1.orElse().nonBlocking(outC, inA.add(inB));*/
 
         adder.emit();
     }

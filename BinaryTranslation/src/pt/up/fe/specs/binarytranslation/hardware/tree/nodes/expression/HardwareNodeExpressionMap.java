@@ -33,9 +33,9 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.B
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.BitWiseXorExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.EqualsToExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.GreaterThanExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.GreaterThanOrEqualsToExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.GreaterThanOrEqualsExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.LessThanExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.LessThanOrEqualsToExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.LessThanOrEqualsExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.NotEqualsToExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.logical.LogicalAndExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
@@ -133,8 +133,8 @@ public class HardwareNodeExpressionMap {
         map.put(InstructionCDFGNotEqualsToNode.class, NotEqualsToExpression.class);
         map.put(InstructionCDFGLessThanNode.class, LessThanExpression.class);
         map.put(InstructionCDFGGreaterThanNode.class, GreaterThanExpression.class);
-        map.put(InstructionCDFGLessThanOrEqualsToNode.class, LessThanOrEqualsToExpression.class);
-        map.put(InstructionCDFGGreaterThanOrEqualsToNode.class, GreaterThanOrEqualsToExpression.class);
+        map.put(InstructionCDFGLessThanOrEqualsToNode.class, LessThanOrEqualsExpression.class);
+        map.put(InstructionCDFGGreaterThanOrEqualsToNode.class, GreaterThanOrEqualsExpression.class);
 
         MAP = Collections.unmodifiableMap(map);
     }

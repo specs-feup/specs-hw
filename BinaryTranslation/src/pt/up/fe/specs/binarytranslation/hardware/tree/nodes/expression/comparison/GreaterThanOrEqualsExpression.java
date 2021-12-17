@@ -17,18 +17,18 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class GreaterThanOrEqualsToExpression extends ABinaryHardwareExpression {
+public class GreaterThanOrEqualsExpression extends ABinaryHardwareExpression {
 
-    public GreaterThanOrEqualsToExpression(HardwareExpression varA, HardwareExpression varB) {
+    public GreaterThanOrEqualsExpression(HardwareExpression varA, HardwareExpression varB) {
         super(">=", HardwareNodeType.GreaterThanOrEqualsToExpression, varA, varB);
     }
 
-    private GreaterThanOrEqualsToExpression(GreaterThanOrEqualsToExpression other) {
+    private GreaterThanOrEqualsExpression(GreaterThanOrEqualsExpression other) {
         super(other);
     }
 
     @Override
-    public GreaterThanOrEqualsToExpression getThis() {
+    public GreaterThanOrEqualsExpression getThis() {
         return this;
     }
 
@@ -38,12 +38,12 @@ public class GreaterThanOrEqualsToExpression extends ABinaryHardwareExpression {
     }
 
     @Override
-    protected GreaterThanOrEqualsToExpression copyPrivate() {
-        return new GreaterThanOrEqualsToExpression(this);
+    protected GreaterThanOrEqualsExpression copyPrivate() {
+        return new GreaterThanOrEqualsExpression(this);
     }
 
     @Override
-    public GreaterThanOrEqualsToExpression copy() {
-        return (GreaterThanOrEqualsToExpression) super.copy();
+    public GreaterThanOrEqualsExpression copy() {
+        return (GreaterThanOrEqualsExpression) super.copy();
     }
 }
