@@ -50,13 +50,6 @@ public abstract class HardwareExpression extends HardwareNode implements Hardwar
         return (HardwareExpression) super.copy();
     }
 
-    /*
-     * 
-     
-    public AdditionExpression add(HardwareExpression other) {
-        return new AdditionExpression(this, other);
-    }*/
-
     // TODO: other shorthandles to create compound expressions
 
     // TODO: test putting these methods as public inner classes in HardwareNode?

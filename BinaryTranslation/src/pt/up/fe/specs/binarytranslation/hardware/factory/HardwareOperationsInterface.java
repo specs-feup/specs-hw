@@ -15,7 +15,30 @@ package pt.up.fe.specs.binarytranslation.hardware.factory;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.DivisionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.LeftShiftExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.MultiplicationExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.RightArithmeticShiftExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.RightLogicalShiftExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.SubtractionExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.BitWiseAndExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.BitWiseNotExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.BitWiseOrExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.BitWiseXorExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.ComparisonExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.EqualsToExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.GreaterThanExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.GreaterThanOrEqualsExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.LessThanExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.LessThanOrEqualsExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.NotEqualsToExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.logical.LogicalAndExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.logical.LogicalOrExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 
 /**
  * a generic interface that classes like VariableOperator and HardwareBlock may inherit, in order to obtain some sugar
@@ -27,21 +50,120 @@ public interface HardwareOperationsInterface {
     // this would entail node replacement...
     public abstract HardwareExpression getThis();
 
-    // public abstract HardwareNode updateStatus(HardwareExpression myself, HardwareExpression newExpr);
-
     /*
      * 
      */
     public default AdditionExpression add(HardwareExpression refB) {
-        var expr = new AdditionExpression(getThis(), refB);
-        // updateStatus(getThis(), expr);
-        return expr;
+        return new AdditionExpression(getThis(), refB);
+    }
+
+    public default DivisionExpression div(HardwareExpression refB) {
+        return new DivisionExpression(getThis(), refB);
+    }
+
+    public default MultiplicationExpression mul(HardwareExpression refB) {
+        return new MultiplicationExpression(getThis(), refB);
+    }
+
+    public default LeftShiftExpression lsl(HardwareExpression refB) {
+        return new LeftShiftExpression(getThis(), refB);
+    }
+
+    public default RightLogicalShiftExpression rsl(HardwareExpression refB) {
+        return new RightLogicalShiftExpression(getThis(), refB);
+    }
+
+    public default RightArithmeticShiftExpression rsa(HardwareExpression refB) {
+        return new RightArithmeticShiftExpression(getThis(), refB);
     }
 
     public default SubtractionExpression sub(HardwareExpression refB) {
-        var expr = new SubtractionExpression(getThis(), refB);
-        // updateStatus(getThis(), expr);
-        return expr;
+        return new SubtractionExpression(getThis(), refB);
+    }
+
+    public default BitWiseAndExpression and(HardwareExpression refB) {
+        return new BitWiseAndExpression(getThis(), refB);
+    }
+
+    public default BitWiseNotExpression not() {
+        return new BitWiseNotExpression(getThis());
+    }
+
+    public default BitWiseOrExpression or(HardwareExpression refB) {
+        return new BitWiseOrExpression(getThis(), refB);
+    }
+
+    public default BitWiseXorExpression xor(HardwareExpression refB) {
+        return new BitWiseXorExpression(getThis(), refB);
+    }
+
+    public default ComparisonExpression cmp(HardwareExpression refB) {
+        return new ComparisonExpression(getThis(), refB);
+    }
+
+    public default EqualsToExpression eq(HardwareExpression refB) {
+        return new EqualsToExpression(getThis(), refB);
+    }
+
+    public default GreaterThanExpression gt(HardwareExpression refB) {
+        return new GreaterThanExpression(getThis(), refB);
+    }
+
+    public default GreaterThanOrEqualsExpression geqt(HardwareExpression refB) {
+        return new GreaterThanOrEqualsExpression(getThis(), refB);
+    }
+
+    public default LessThanExpression lt(HardwareExpression refB) {
+        return new LessThanExpression(getThis(), refB);
+    }
+
+    public default LessThanOrEqualsExpression leqt(HardwareExpression refB) {
+        return new LessThanOrEqualsExpression(getThis(), refB);
+    }
+
+    public default NotEqualsToExpression noteq(HardwareExpression refB) {
+        return new NotEqualsToExpression(getThis(), refB);
+    }
+
+    public default LogicalAndExpression land(HardwareExpression refB) {
+        return new LogicalAndExpression(getThis(), refB);
+    }
+
+    public default LogicalOrExpression lor(HardwareExpression refB) {
+        return new LogicalOrExpression(getThis(), refB);
+    }
+
+    /*
+     * nonBlocking
+     */
+    public default ProceduralNonBlockingStatement nonBlocking(int literalConstant) {
+        return nonBlocking(new ImmediateOperator(literalConstant, getThis().getResultWidth()));
+    }
+
+    public default ProceduralNonBlockingStatement nonBlocking(HardwareExpression expr) {
+        return new ProceduralNonBlockingStatement((VariableOperator) getThis(), expr);
+    }
+
+    /*
+     * blocking
+     */
+    public default ProceduralBlockingStatement blocking(int literalConstant) {
+        return blocking(new ImmediateOperator(literalConstant, getThis().getResultWidth()));
+    }
+
+    public default ProceduralBlockingStatement blocking(HardwareExpression expr) {
+        return new ProceduralBlockingStatement((VariableOperator) getThis(), expr);
+    }
+
+    /*
+     * assign
+     */
+    public default ContinuousStatement assign(int literalConstant) {
+        return assign(new ImmediateOperator(literalConstant, getThis().getResultWidth()));
+    }
+
+    public default ContinuousStatement assign(HardwareExpression expr) {
+        return new ContinuousStatement((VariableOperator) getThis(), expr);
     }
 
     /*

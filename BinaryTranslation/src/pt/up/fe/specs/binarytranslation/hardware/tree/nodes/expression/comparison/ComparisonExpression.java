@@ -17,18 +17,18 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class ComparsionExpression extends ABinaryHardwareExpression {
+public class ComparisonExpression extends ABinaryHardwareExpression {
 
-    public ComparsionExpression(HardwareExpression varA, HardwareExpression varB) {
+    public ComparisonExpression(HardwareExpression varA, HardwareExpression varB) {
         super("==", HardwareNodeType.ComparsionExpression, varA, varB);
     }
 
-    private ComparsionExpression(ComparsionExpression other) {
+    private ComparisonExpression(ComparisonExpression other) {
         super(other);
     }
 
     @Override
-    public ComparsionExpression getThis() {
+    public ComparisonExpression getThis() {
         return this;
     }
 
@@ -38,12 +38,12 @@ public class ComparsionExpression extends ABinaryHardwareExpression {
     }
 
     @Override
-    protected ComparsionExpression copyPrivate() {
-        return new ComparsionExpression(this);
+    protected ComparisonExpression copyPrivate() {
+        return new ComparisonExpression(this);
     }
 
     @Override
-    public ComparsionExpression copy() {
-        return (ComparsionExpression) super.copy();
+    public ComparisonExpression copy() {
+        return (ComparisonExpression) super.copy();
     }
 }

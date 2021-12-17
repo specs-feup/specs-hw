@@ -17,18 +17,18 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ABinaryHardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 
-public class LessThanOrEqualsToExpression extends ABinaryHardwareExpression {
+public class LessThanOrEqualsExpression extends ABinaryHardwareExpression {
 
-    public LessThanOrEqualsToExpression(HardwareExpression varA, HardwareExpression varB) {
+    public LessThanOrEqualsExpression(HardwareExpression varA, HardwareExpression varB) {
         super("<=", HardwareNodeType.LessThanOrEqualsToExpression, varA, varB);
     }
 
-    private LessThanOrEqualsToExpression(LessThanOrEqualsToExpression other) {
+    private LessThanOrEqualsExpression(LessThanOrEqualsExpression other) {
         super(other);
     }
 
     @Override
-    public LessThanOrEqualsToExpression getThis() {
+    public LessThanOrEqualsExpression getThis() {
         return this;
     }
 
@@ -38,12 +38,12 @@ public class LessThanOrEqualsToExpression extends ABinaryHardwareExpression {
     }
 
     @Override
-    protected LessThanOrEqualsToExpression copyPrivate() {
-        return new LessThanOrEqualsToExpression(this);
+    protected LessThanOrEqualsExpression copyPrivate() {
+        return new LessThanOrEqualsExpression(this);
     }
 
     @Override
-    public LessThanOrEqualsToExpression copy() {
-        return (LessThanOrEqualsToExpression) super.copy();
+    public LessThanOrEqualsExpression copy() {
+        return (LessThanOrEqualsExpression) super.copy();
     }
 }

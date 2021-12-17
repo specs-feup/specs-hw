@@ -124,25 +124,33 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
     public default VariableOperator createAssigment(String targetName, String sourceName,
             BiFunction<VariableOperator, HardwareExpression, VariableOperator> supplier) {
 
+    }
+
+    public default VariableOperator createAssigment(String targetName, String sourceName,
+            BiFunction<VariableOperator, HardwareExpression, VariableOperator> supplier) {
+
         var sink = resolveIdentifier(targetName);
         var source = resolveIdentifier(sourceName);
         if (sink != null)
             return supplier.apply((VariableOperator) sink, source);
         else {
-            // var wire = getAncestor().addWire(targetName, 32);
             var newTarget = getAncestor().addDeclaration(resolveNewDeclaration(targetName));
             return supplier.apply(newTarget, source);
         }
     }
 
+    public default VariableOperator createAssigment(VariableOperator target, HardwareExpression expr,
+            BiFunction<VariableOperator, HardwareExpression, VariableOperator> supplier) {
+        return createAssigment(target.getResultName(), expr, supplier);
+    }
+
     public default VariableOperator createAssigment(String targetName, HardwareExpression expr,
             BiFunction<VariableOperator, HardwareExpression, VariableOperator> supplier) {
 
-        var reference = resolveIdentifier(targetName);
-        if (reference != null)
-            return supplier.apply((VariableOperator) reference, expr);
+        var sink = resolveIdentifier(targetName);
+        if (sink != null)
+            return supplier.apply((VariableOperator) sink, expr);
         else {
-            // var wire = getAncestor().addWire(targetName, 32);
             var newTarget = getAncestor().addDeclaration(resolveNewDeclaration(targetName));
             return supplier.apply(newTarget, expr);
         }
@@ -164,7 +172,8 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
     }
 
     public default VariableOperator nonBlocking(VariableOperator target, int literalConstant) {
-        return nonBlocking(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
+        // return nonBlocking(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
+        return createAssigment(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
     }
 
     public default VariableOperator nonBlocking(VariableOperator target, HardwareExpression expr) {
@@ -191,7 +200,7 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
     }
 
     public default VariableOperator blocking(VariableOperator target, int literalConstant) {
-        return nonBlocking(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
+        return blocking(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
     }
 
     public default VariableOperator blocking(VariableOperator target, HardwareExpression expr) {
@@ -207,7 +216,23 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
         return (IfStatement) getBody().addChild(new IfStatement(condition));
     }
 
+    public default IfStatement _if(HardwareExpression condition, HardwareStatement... stats) {
+        return (IfStatement) getBody().addChild(new IfStatement(condition, stats));
+    }
+
+    public default IfStatement _if(HardwareExpression condition, List<HardwareStatement> stats) {
+        return (IfStatement) getBody().addChild(new IfStatement(condition, stats));
+    }
+
     public default IfElseStatement _ifelse(HardwareExpression condition) {
         return (IfElseStatement) getBody().addChild(new IfElseStatement(condition));
+    }
+
+    public default IfElseStatement _ifelse(HardwareExpression condition, HardwareStatement... stats) {
+        return (IfElseStatement) getBody().addChild(new IfElseStatement(condition, stats));
+    }
+
+    public default IfElseStatement _ifelse(HardwareExpression condition, List<HardwareStatement> stats) {
+        return (IfElseStatement) getBody().addChild(new IfElseStatement(condition, stats));
     }
 }

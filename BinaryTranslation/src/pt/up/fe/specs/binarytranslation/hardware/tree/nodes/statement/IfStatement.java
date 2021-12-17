@@ -13,6 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement;
 
+import java.util.Arrays;
+import java.util.List;
+
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.BeginEndBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
@@ -27,13 +30,32 @@ public class IfStatement extends ABlockStatement {
     }
 
     public IfStatement(HardwareExpression condition) {
-        this(condition, "");
+        this("", condition);
     }
 
-    public IfStatement(HardwareExpression condition, String blockName) {
+    public IfStatement(String blockName, HardwareExpression condition) {
         super(HardwareNodeType.IfStatement);
         this.addChild(condition);
         this.addChild(new BeginEndBlock(blockName));
+    }
+
+    public IfStatement(String blockName,
+            HardwareExpression condition, List<HardwareStatement> statements) {
+        this(blockName, condition);
+        for (var s : statements)
+            this.then().addStatement(s);
+    }
+
+    public IfStatement(HardwareExpression condition, List<HardwareStatement> statements) {
+        this("", condition, statements);
+    }
+
+    public IfStatement(String blockName, HardwareExpression condition, HardwareStatement... statement) {
+        this(blockName, condition, Arrays.asList(statement));
+    }
+
+    public IfStatement(HardwareExpression condition, HardwareStatement... statement) {
+        this(condition, Arrays.asList(statement));
     }
 
     public HardwareExpression getCondition() {
@@ -45,14 +67,22 @@ public class IfStatement extends ABlockStatement {
         return this.getChild(BeginEndBlock.class, 1);
     }
 
-    public BeginEndBlock then() {
-        return this.getChild(BeginEndBlock.class, 1);
+    public BeginEndBlock then(HardwareStatement... statements) {
+        return then(Arrays.asList(statements));
     }
 
+    public BeginEndBlock then(List<HardwareStatement> statements) {
+        for (var s : statements)
+            this.getBeginEndBlock().addStatement(s);
+
+        return this.getBeginEndBlock();
+    }
+
+    /*-
     public HardwareStatement addStatement(HardwareStatement statement) {
         this.getBeginEndBlock().addStatement(statement);
         return statement;
-    }
+    }*/
 
     @Override
     public String toContentString() {

@@ -13,35 +13,29 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.coarse;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+
 public class Mux2to1 extends CoarseGrainedUnit {
 
-    /*
-    public VariableOperator i0 = addInputPort("I0", 32);
-    public VariableOperator i1 = addInputPort("I1", 32);
-    public VariableOperator select = addInputPort("select", 1);
-    public VariableOperator out = addOutputPort("Out", 32);
-    
-    IfElseStatement ie1 = alwayscomb("muxBlock")._ifelse(select);
-         
-        
-        ie1.then().nonBlocking(out, i1);
-        ie1.orElse().nonBlocking(out, i0);
-    
-    public Mux2to1() {
-        super(Mux2to1.class.getSimpleName());
-    };*/
+    public VariableOperator i0;
+    public VariableOperator i1;
+    public VariableOperator sel;
+    public VariableOperator out;
 
     public Mux2to1(int bitwidth) {
         super(Mux2to1.class.getSimpleName());
 
-        var i0 = addInputPort("IO", bitwidth);
-        var i1 = addInputPort("I1", bitwidth);
-        var sel = addInputPort("select", 1);
-        var out = addOutputPort("Out", bitwidth);
+        i0 = addInputPort("i0", bitwidth);
+        i1 = addInputPort("i1", bitwidth);
+        sel = addInputPort("sel", 1);
+        out = addOutputPort("out", bitwidth);
 
-        var block = alwayscomb("muxBlock");
+        alwayscomb("muxBlock")._ifelse(sel.not(),
+                out.nonBlocking(i0)).orElse(out.nonBlocking(i1));
+
+        /*var block = alwayscomb("muxBlock");
         var ie1 = block._ifelse(sel);
         ie1.then().nonBlocking(out, i1);
-        ie1.orElse().nonBlocking(out, i0);
+        ie1.orElse().nonBlocking(out, i0);*/
     }
 }

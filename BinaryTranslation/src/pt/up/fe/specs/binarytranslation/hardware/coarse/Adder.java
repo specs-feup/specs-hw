@@ -16,6 +16,12 @@ package pt.up.fe.specs.binarytranslation.hardware.coarse;
 public class Adder extends CoarseGrainedUnit { // implements CoarseGrainFunctionalUnit , OR extends
                                                // ACorseGrainFunctionalUnit<T>
 
+    // TODO: implement an "io" public member just like Chisel3!
+    // and have that member be part of all CoarseGrainedUnit
+    // can "io" just be a list?? no, it has to be a type of simple class
+    // that only holds some members... but each arbitrarily named member
+    // needs to be public too...
+
     /*
      * pre-built adder FU
      */
@@ -23,13 +29,18 @@ public class Adder extends CoarseGrainedUnit { // implements CoarseGrainFunction
         super(Adder.class.getSimpleName());
 
         addClock();
-        addReset();
+        var rst = addReset();
         var a = addInputPort("inA", bitwidth);
         var b = addInputPort("inB", bitwidth);
         var c = addOutputPort("outA", bitwidth + 1);
 
+        alwaysposedge()._ifelse(rst,
+                c.nonBlocking(0))
+                .orElse(c.nonBlocking(a.add(b)));
+
+        /*
         var ie1 = alwaysposedge()._ifelse(getPort("rst"));
         ie1.then().nonBlocking(c, 0);
-        ie1.orElse().nonBlocking(c, a.add(b));
+        ie1.orElse().nonBlocking(c, a.add(b));*/
     }
 }
