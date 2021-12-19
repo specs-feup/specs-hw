@@ -14,6 +14,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.factory;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ParenthesisExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.DivisionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.LeftShiftExpression;
@@ -131,6 +132,10 @@ public interface HardwareOperationsInterface {
 
     public default LogicalOrExpression lor(HardwareExpression refB) {
         return new LogicalOrExpression(getThis(), refB);
+    }
+
+    public default ParenthesisExpression paren() {
+        return new ParenthesisExpression(getThis());
     }
 
     /*

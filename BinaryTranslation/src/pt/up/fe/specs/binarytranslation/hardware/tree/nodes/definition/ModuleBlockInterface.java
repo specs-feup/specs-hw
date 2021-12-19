@@ -239,21 +239,20 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
      * assign
      */
     public default VariableOperator assign(String targetName, String sourceName) {
-        return createAssigment(targetName, sourceName, (t, u) -> assign(t, u));
+        return createAssigment(targetName, sourceName, (t, u) -> new ContinuousStatement(t, u));
     }
 
     public default VariableOperator assign(String targetName, HardwareExpression expr) {
-        return createAssigment(targetName, expr, (t, u) -> assign(t, u));
+        return createAssigment(targetName, expr, (t, u) -> new ContinuousStatement(t, u));
     }
 
     public default VariableOperator assign(VariableOperator target, int literalConstant) {
-        return assign(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
+        var imm = new ImmediateOperator(literalConstant, target.getResultWidth());
+        return createAssigment(target, imm, (t, u) -> new ContinuousStatement(t, u));
     }
 
     public default VariableOperator assign(VariableOperator target, HardwareExpression expr) {
-        getBody().addChild(new ContinuousStatement(target, expr));
-        // TODO: will this handle adding the variable operator to the declaration block if it doesnt exist? NO
-        return target;
+        return createAssigment(target, expr, (t, u) -> new ContinuousStatement(t, u));
     }
 
     /////////////////////////////////////////////////////////////////////////////

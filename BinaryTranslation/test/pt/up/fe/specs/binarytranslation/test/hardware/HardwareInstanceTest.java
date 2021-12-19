@@ -112,7 +112,7 @@ public class HardwareInstanceTest {
                 wrap.getPort(0), wrap.getPort(1), wire));
 
         // connect output of adder instance +1 to output port woutC
-        wrap.nonBlocking("woutC", wire.add(ImmediateOperator.Ones(15)));
+        wrap.nonBlocking("woutC", wire.add(ImmediateOperator.Ones(15)).paren());
 
         /*
          * Test module instantiation inside other module
@@ -296,8 +296,9 @@ public class HardwareInstanceTest {
         var inB = adder.addInputPort("inB", 8);
         var outC = adder.addOutputPort("outC", 8);
 
-        var if1 = adder.alwaysposedge()._if(rst.not(), outC.nonBlocking(0));
-        // TODO: assignemnt interfaces on VariableOperator!!!
+        adder.alwaysposedge()._ifelse(rst,
+                outC.nonBlocking(0))
+                .orElse(outC.nonBlocking(inA.add(inB)));
 
         /*
         var ifelse1 = adder.alwaysposedge()._ifelse(rst);

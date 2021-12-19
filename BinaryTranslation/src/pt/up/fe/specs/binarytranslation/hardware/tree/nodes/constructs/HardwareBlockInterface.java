@@ -23,7 +23,6 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.Identifi
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.WireDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareModule;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
@@ -110,76 +109,72 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
         return moduleParent;
     }
 
-    public default HardwareOperator resolveIdentifier(String targetName) {
-        var moduleParent = getAncestor();
-        return moduleParent.getDeclaration(targetName);
-    }
-
     // based on which block type (i.e., alwaysff, a new result variable may have
     // to be a register!)
     public default IdentifierDeclaration resolveNewDeclaration(String newName) {
         return new WireDeclaration(newName, 32);
     }
 
-    public default VariableOperator createAssigment(String targetName, String sourceName,
-            BiFunction<VariableOperator, HardwareExpression, VariableOperator> supplier) {
+    public default VariableOperator resolveIdentifier(String targetName) {
+        var moduleParent = getAncestor();
+        return (VariableOperator) moduleParent.getDeclaration(targetName);
+    }
 
+    public default VariableOperator resolveSink(String targetName) {
+
+        var sink = resolveIdentifier(targetName);
+        if (sink != null)
+            return sink;
+        else {
+            return getAncestor().addDeclaration(resolveNewDeclaration(targetName));
+        }
     }
 
     public default VariableOperator createAssigment(String targetName, String sourceName,
-            BiFunction<VariableOperator, HardwareExpression, VariableOperator> supplier) {
-
-        var sink = resolveIdentifier(targetName);
+            BiFunction<VariableOperator, HardwareExpression, HardwareStatement> supplier) {
+        // var sink = resolveSink(targetName);
         var source = resolveIdentifier(sourceName);
-        if (sink != null)
-            return supplier.apply((VariableOperator) sink, source);
-        else {
-            var newTarget = getAncestor().addDeclaration(resolveNewDeclaration(targetName));
-            return supplier.apply(newTarget, source);
-        }
+        // return (VariableOperator) getBody().addChild(supplier.apply(sink, source));
+        return createAssigment(targetName, source, supplier);
     }
 
     public default VariableOperator createAssigment(VariableOperator target, HardwareExpression expr,
-            BiFunction<VariableOperator, HardwareExpression, VariableOperator> supplier) {
+            BiFunction<VariableOperator, HardwareExpression, HardwareStatement> supplier) {
         return createAssigment(target.getResultName(), expr, supplier);
+
+        // var sink = resolveSink(target.getResultName());
+        // return (VariableOperator) getBody().addChild(supplier.apply(sink, expr));
     }
 
     public default VariableOperator createAssigment(String targetName, HardwareExpression expr,
-            BiFunction<VariableOperator, HardwareExpression, VariableOperator> supplier) {
-
-        var sink = resolveIdentifier(targetName);
-        if (sink != null)
-            return supplier.apply((VariableOperator) sink, expr);
-        else {
-            var newTarget = getAncestor().addDeclaration(resolveNewDeclaration(targetName));
-            return supplier.apply(newTarget, expr);
-        }
+            BiFunction<VariableOperator, HardwareExpression, HardwareStatement> supplier) {
+        var sink = resolveSink(targetName);
+        getBody().addChild(supplier.apply(sink, expr));
+        return sink;
     }
 
     /*
      * nonBlocking
      */
     public default VariableOperator nonBlocking(HardwareExpression expr) {
-        return createAssigment(expr.getResultName(), expr, (t, u) -> nonBlocking(t, u));
+        return createAssigment(expr.getResultName(), expr, (t, u) -> new ProceduralNonBlockingStatement(t, u));
     }
 
     public default VariableOperator nonBlocking(String targetName, String sourceName) {
-        return createAssigment(targetName, sourceName, (t, u) -> nonBlocking(t, u));
+        return createAssigment(targetName, sourceName, (t, u) -> new ProceduralNonBlockingStatement(t, u));
     }
 
     public default VariableOperator nonBlocking(String targetName, HardwareExpression expr) {
-        return createAssigment(targetName, expr, (t, u) -> nonBlocking(t, u));
+        return createAssigment(targetName, expr, (t, u) -> new ProceduralNonBlockingStatement(t, u));
     }
 
     public default VariableOperator nonBlocking(VariableOperator target, int literalConstant) {
-        // return nonBlocking(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
-        return createAssigment(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
+        var imm = new ImmediateOperator(literalConstant, target.getResultWidth());
+        return createAssigment(target, imm, (t, u) -> new ProceduralNonBlockingStatement(t, u));
     }
 
     public default VariableOperator nonBlocking(VariableOperator target, HardwareExpression expr) {
-        getBody().addChild(new ProceduralNonBlockingStatement(target, expr));
-        // TODO: will this handle adding the variable operator to the declaration block if it doesnt exist? NO
-        return target;
+        return createAssigment(target, expr, (t, u) -> new ProceduralNonBlockingStatement(t, u));
     }
 
     // TODO: add checks if assignemnts are attempted on input ports!!
@@ -188,25 +183,24 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
      * blocking
      */
     public default VariableOperator blocking(HardwareExpression expr) {
-        return createAssigment(expr.getResultName(), expr, (t, u) -> blocking(t, u));
+        return createAssigment(expr.getResultName(), expr, (t, u) -> new ProceduralBlockingStatement(t, u));
     }
 
     public default VariableOperator blocking(String targetName, String sourceName) {
-        return createAssigment(targetName, sourceName, (t, u) -> blocking(t, u));
+        return createAssigment(targetName, sourceName, (t, u) -> new ProceduralBlockingStatement(t, u));
     }
 
     public default VariableOperator blocking(String targetName, HardwareExpression expr) {
-        return createAssigment(targetName, expr, (t, u) -> blocking(t, u));
+        return createAssigment(targetName, expr, (t, u) -> new ProceduralBlockingStatement(t, u));
     }
 
     public default VariableOperator blocking(VariableOperator target, int literalConstant) {
-        return blocking(target, new ImmediateOperator(literalConstant, target.getResultWidth()));
+        var imm = new ImmediateOperator(literalConstant, target.getResultWidth());
+        return createAssigment(target, imm, (t, u) -> new ProceduralBlockingStatement(t, u));
     }
 
     public default VariableOperator blocking(VariableOperator target, HardwareExpression expr) {
-        getBody().addChild(new ProceduralBlockingStatement(target, expr));
-        // TODO: will this handle adding the variable operator to the declaration block if it doesnt exist? NO
-        return target;
+        return createAssigment(target, expr, (t, u) -> new ProceduralBlockingStatement(t, u));
     }
 
     /*
