@@ -13,14 +13,14 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.coarse;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.Port;
 
 public class Mux2to1 extends CoarseGrainedUnit {
 
-    public VariableOperator i0;
-    public VariableOperator i1;
-    public VariableOperator sel;
-    public VariableOperator out;
+    public Port i0;
+    public Port i1;
+    public Port sel;
+    public Port out;
 
     public Mux2to1(int bitwidth) {
         super(Mux2to1.class.getSimpleName());

@@ -21,6 +21,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.InitialBl
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.TimeScaleDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.Port;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.FileHeader;
 
@@ -131,7 +132,7 @@ public class HardwareTestbench extends HardwareModule {
     }
 
     @Override
-    public VariableOperator addPort(PortDeclaration port) {
+    public Port addPort(PortDeclaration port) {
         throw new RuntimeException(
                 "HardwareTestbench: testbenches are not allowed to have ports!");
     }

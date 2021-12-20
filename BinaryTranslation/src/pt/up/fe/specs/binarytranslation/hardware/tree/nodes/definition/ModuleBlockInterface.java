@@ -38,7 +38,10 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.Res
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.Port;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.Register;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.Wire;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.DeclarationBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ModuleInstance;
@@ -76,72 +79,72 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
             return id.getReference();
     }
 
-    public default VariableOperator addDeclaration(PortDeclaration port) {
+    public default Port addDeclaration(PortDeclaration port) {
         return this.addPort(port);
     }
 
-    public default VariableOperator addDeclaration(WireDeclaration wire) {
+    public default Wire addDeclaration(WireDeclaration wire) {
         return this.addWire(wire);
     }
 
-    public default VariableOperator addDeclaration(RegisterDeclaration reg) {
+    public default Register addDeclaration(RegisterDeclaration reg) {
         return this.addRegister(reg);
     }
 
     /*
      * Special ports
      */
-    public default VariableOperator addClock() {
+    public default Port addClock() {
         return addClock("clk");
     }
 
-    public default VariableOperator addClock(String clockName) {
+    public default Port addClock(String clockName) {
         return addPort(new ClockDeclaration(clockName));
     }
 
-    public default VariableOperator addReset() {
+    public default Port addReset() {
         return addReset("rst");
     }
 
-    public default VariableOperator addReset(String rstName) {
+    public default Port addReset(String rstName) {
         return addPort(new ResetDeclaration(rstName));
     }
 
     /*
      * Ports
      */
-    public default VariableOperator addPort(PortDeclaration port) {
+    public default Port addPort(PortDeclaration port) {
         getPortList().add(port); // this only adds to the port list in the header!
-        return ((PortDeclaration) getPortDeclarationBlock().addDeclaration(port)).getReference();
+        return (Port) ((PortDeclaration) getPortDeclarationBlock().addDeclaration(port)).getReference();
     }
 
-    public default VariableOperator addInputPort(String portName, int portWidth) {
+    public default Port addInputPort(String portName, int portWidth) {
         return addPort(new InputPortDeclaration(portName, portWidth));
     }
 
-    public default VariableOperator addOutputPort(String portName, int portWidth) {
+    public default Port addOutputPort(String portName, int portWidth) {
         return addPort(new OutputPortDeclaration(portName, portWidth));
     }
 
     /*
      * Wires
      */
-    public default VariableOperator addWire(WireDeclaration wire) {
-        return ((WireDeclaration) getWireDeclarationBlock().addDeclaration(wire)).getReference();
+    public default Wire addWire(WireDeclaration wire) {
+        return (Wire) ((WireDeclaration) getWireDeclarationBlock().addDeclaration(wire)).getReference();
     }
 
-    public default VariableOperator addWire(String portName, int portWidth) {
+    public default Wire addWire(String portName, int portWidth) {
         return addWire(new WireDeclaration(portName, portWidth));
     }
 
     /*
      * registers
      */
-    public default VariableOperator addRegister(RegisterDeclaration reg) {
-        return ((RegisterDeclaration) getRegisterDeclarationBlock().addDeclaration(reg)).getReference();
+    public default Register addRegister(RegisterDeclaration reg) {
+        return (Register) ((RegisterDeclaration) getRegisterDeclarationBlock().addDeclaration(reg)).getReference();
     }
 
-    public default VariableOperator addRegister(String regName, int portWidth) {
+    public default Register addRegister(String regName, int portWidth) {
         return addRegister(new RegisterDeclaration(regName, portWidth));
     }
 
