@@ -70,6 +70,14 @@ public abstract class PortDeclaration extends IdentifierDeclaration {
         return direction;
     }
 
+    public boolean isInput() {
+        return this.direction == ModulePortDirection.input;
+    }
+
+    public boolean isOutput() {
+        return this.direction == ModulePortDirection.output;
+    }
+
     public boolean isClock() {
         return this.properties.contains(ModulePortProperties.Clock);
     }

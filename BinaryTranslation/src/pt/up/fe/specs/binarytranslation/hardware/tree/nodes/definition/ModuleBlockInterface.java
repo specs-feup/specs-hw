@@ -18,10 +18,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysFFBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.HardwareBlockInterface;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.InitialBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.NegEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.PosEdge;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.SignalEdge;
@@ -154,6 +156,18 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
         return block;
     }
 
+    public default HardwareBlock addBlockBefore(HardwareBlock block, HardwareNode other) {
+        sanityCheck(block);
+        getBody().addChildLeftOf(other, block);
+        return block;
+    }
+
+    public default HardwareBlock addBlockAfter(HardwareBlock block, HardwareNode other) {
+        sanityCheck(block);
+        getBody().addChildRightOf(other, block);
+        return block;
+    }
+
     /*
      * 
      */
@@ -218,6 +232,19 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
 
     public default AlwaysFFBlock alwaysnegedge() {
         return alwaysnegedge("ff_" + incrementFFCounter());
+    }
+
+    /*
+     * initial
+     */
+    public default InitialBlock initial() {
+        return initial("");
+    }
+
+    public default InitialBlock initial(String blockName) {
+        var block = new InitialBlock(blockName);
+        getBody().addChild(block);
+        return block;
     }
 
     /*

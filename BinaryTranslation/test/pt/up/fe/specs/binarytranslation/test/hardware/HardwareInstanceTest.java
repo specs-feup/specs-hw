@@ -179,6 +179,7 @@ public class HardwareInstanceTest {
         // previously defined HardwareModule
         var testAdder = HardwareInstanceTest.getAdder();
         var tb = new HardwareTestbench("testbench1", testAdder);
+        tb.setClockFrequency(100);
         tb.emit();
     }
 
@@ -362,14 +363,14 @@ public class HardwareInstanceTest {
         // var stat = auxA.assign(inA.add(inB);
         // adder.addStatement(stat); ???
 
-        block.nonBlocking("auxA", inA.add(inB).add(inA));
+        var auxA = block.nonBlocking("auxA", inA.add(inB).add(inA));
 
         // block.assign("auxA", adder.getPort("inA").add("inB"));
         // TODO: how to support string named fetching in HardwareOperationsInterface??
 
         // adder.assign("outC", adder.getWire("auxA"));
 
-        adder.assign("outC", "auxA");
+        adder.assign("outC", auxA);
 
         // TODO
         // what if
