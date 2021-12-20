@@ -1,7 +1,6 @@
 package pt.up.fe.specs.binarytranslation.utils;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,8 +8,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -21,9 +18,9 @@ import com.google.gson.JsonParseException;
 import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
 import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.processes.ProcessRun;
+import pt.up.fe.specs.specshw.SpecsHwUtils;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsSystem;
-import pt.up.fe.specs.util.utilities.Replacer;
 
 public class BinaryTranslationUtils {
 
@@ -152,143 +149,6 @@ public class BinaryTranslationUtils {
     /*
      * 
      */
-    public static Process newProcess(ProcessBuilder builder) {
-
-        // start gdb
-        Process proc = null;
-        try {
-            builder.directory(new File("."));
-            builder.redirectErrorStream(true); // redirects stderr to stdout
-            proc = builder.start();
-
-        } catch (IOException e) {
-            throw new RuntimeException("Could not run process: " + builder.command());
-        }
-
-        return proc;
-    }
-
-    /*
-     * 
-     */
-    private static BufferedReader getOutputStreamReader(ProcessBuilder pb) {
-
-        // call program
-        Process proc = null;
-        try {
-            pb.directory(new File("."));
-            pb.redirectErrorStream(true); // redirects stderr to stdout
-            proc = pb.start();
-
-        } catch (IOException e) {
-            throw new RuntimeException("Could not run process bin with name: " + pb.command());
-        }
-
-        try {
-            proc.waitFor();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-        return reader;
-    }
-
-    /*
-     * 
-     */
-    private static String getSingleOutputLine(ProcessBuilder pb) {
-
-        String output = null;
-        BufferedReader reader = getOutputStreamReader(pb);
-        try {
-            output = reader.readLine();
-            reader.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return output;
-    }
-
-    /*
-     * 
-     */
-    private static String getAllOutput(ProcessBuilder pb) {
-
-        String output = "";
-        BufferedReader reader = getOutputStreamReader(pb);
-        try {
-            while (reader.ready())
-                output += reader.readLine() + "\n";
-            reader.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return output;
-    }
-
-    /*
-     * Gets "git describe" result for .. which project?? (could be BinaryTranslation, MicroBlaze...)
-     */
-    public static String getCommitDescription() {
-
-        // call git describe
-        var arguments = Arrays.asList("git", "describe");
-        ProcessBuilder pb = new ProcessBuilder(arguments);
-        return BinaryTranslationUtils.getSingleOutputLine(pb);
-    }
-
-    /*
-     * Get contact info and github repo stuff
-     */
-    public static String getContactInfo() {
-        var info = new StringBuilder();
-        info.append("Available on GitHub at https://github.com/specs-feup/specs-hw\n");
-        info.append("Contacts:\n\tNuno Paulino (nuno.m.paulino@inesctec.pt)\n\tJoão Bispo (jbispo@fe.up.pt)");
-        return info.toString();
-    }
-
-    /*.
-     * Output compilation flags for a given elf, using a given variant of a GNU based "readelf"
-     
-    public static String getCompilationInfo(File elfname, String readelbinary) {
-    
-        // assume that windows doesnt have tools
-        // if (BinaryTranslationUtils.IS_WINDOWS)
-        // return "GNU tools unavailable to extract compilation information!";
-    
-        // call readelf
-        List<String> arguments = null;
-        if (IS_WINDOWS) {
-            readelbinary += ".exe";
-            var internalcmd = readelbinary + " -wi "
-                    + elfname.getAbsolutePath() + "| findstr /irc:DW_AT_producer";
-            arguments = Arrays.asList("cmd.exe", "/C", internalcmd);
-    
-        } else {
-            var internalcmd = readelbinary + " -wi "
-                    + elfname.getAbsolutePath() + " | grep -i compilation -A6";
-            arguments = Arrays.asList("/bin/bash", "-c", internalcmd);
-        }
-    
-        ProcessBuilder pb = new ProcessBuilder(arguments);
-        var output = BinaryTranslationUtils.getAllOutput(pb);
-        Pattern pat = Pattern.compile("GNU.*");
-        Matcher mat = pat.matcher(output);
-        if (mat.find())
-            return mat.group(0);
-        else
-            return "Could not retrieve build information!";
-    }*/
-
-    /*
-     * 
-     */
     public static void renderDotty(String pngName, String dottyContents) {
         var dotfile = new File(pngName.replace(".png", ".dot"));
         dotfile.deleteOnExit();
@@ -309,18 +169,8 @@ public class BinaryTranslationUtils {
                 "-Tpng", dotfile.getAbsolutePath(), "-o", pngpath);
 
         // dot -Tps filename.dot -o outfile.ps
-        ProcessBuilder pb = new ProcessBuilder(arguments);
-        BinaryTranslationUtils.newProcess(pb);
-    }
-
-    /*
-     * Get SPeCS copyright text with current year
-     */
-    public static String getSPeCSCopyright() {
-        var crtext = BinaryTranslationResource.SPECS_COPYRIGHT_TEXT;
-        var crreplacer = new Replacer(crtext);
-        crreplacer.replace("<THEYEAR>", LocalDateTime.now().getYear());
-        return crreplacer.toString();
+        var pb = new ProcessBuilder(arguments);
+        SpecsHwUtils.newProcess(pb);
     }
 
     /*
