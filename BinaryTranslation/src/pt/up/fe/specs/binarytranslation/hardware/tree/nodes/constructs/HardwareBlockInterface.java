@@ -25,6 +25,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition.HardwareM
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.DelayStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfStatement;
@@ -70,6 +71,18 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
     public default HardwareStatement addStatement(HardwareStatement statement) {
         sanityCheck(statement);
         getBody().addChild(statement);
+        return statement;
+    }
+
+    public default HardwareStatement addStatementBefore(HardwareStatement statement, HardwareNode other) {
+        sanityCheck(statement);
+        getBody().addChildLeftOf(other, statement);
+        return statement;
+    }
+
+    public default HardwareStatement addStatementAfter(HardwareStatement statement, HardwareNode other) {
+        sanityCheck(statement);
+        getBody().addChildRightOf(other, statement);
         return statement;
     }
 
@@ -132,18 +145,16 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
 
     public default VariableOperator createAssigment(String targetName, String sourceName,
             BiFunction<VariableOperator, HardwareExpression, HardwareStatement> supplier) {
-        // var sink = resolveSink(targetName);
         var source = resolveIdentifier(sourceName);
-        // return (VariableOperator) getBody().addChild(supplier.apply(sink, source));
+        if (source == null) {
+            throw new RuntimeException("HardwareBlockInterface: undeclared source name!");
+        }
         return createAssigment(targetName, source, supplier);
     }
 
     public default VariableOperator createAssigment(VariableOperator target, HardwareExpression expr,
             BiFunction<VariableOperator, HardwareExpression, HardwareStatement> supplier) {
         return createAssigment(target.getResultName(), expr, supplier);
-
-        // var sink = resolveSink(target.getResultName());
-        // return (VariableOperator) getBody().addChild(supplier.apply(sink, expr));
     }
 
     public default VariableOperator createAssigment(String targetName, HardwareExpression expr,
@@ -201,6 +212,13 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
 
     public default VariableOperator blocking(VariableOperator target, HardwareExpression expr) {
         return createAssigment(target, expr, (t, u) -> new ProceduralBlockingStatement(t, u));
+    }
+
+    /*
+     * delay
+     */
+    public default DelayStatement delay(double delay) {
+        return (DelayStatement) getBody().addChild(new DelayStatement(delay));
     }
 
     /*

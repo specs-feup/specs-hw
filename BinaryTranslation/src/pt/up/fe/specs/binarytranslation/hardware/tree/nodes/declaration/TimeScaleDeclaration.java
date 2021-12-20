@@ -17,18 +17,35 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 
 public class TimeScaleDeclaration extends HardwareDeclaration {
 
-    public TimeScaleDeclaration() {
+    // NOTE: presumed to be in nanoseconds
+    private final int timeUnit, timePrecision;
+
+    public TimeScaleDeclaration(int timeUnit, int timePrecision) {
         super(HardwareNodeType.TimeScaleDeclaration);
+        this.timeUnit = timeUnit;
+        this.timePrecision = timePrecision;
+    }
+
+    public TimeScaleDeclaration() {
+        this(10, 1);
     }
 
     @Override
     protected TimeScaleDeclaration copyPrivate() {
-        return new TimeScaleDeclaration();
+        return new TimeScaleDeclaration(this.timeUnit, this.timePrecision);
     }
 
     @Override
     public TimeScaleDeclaration copy() {
         return (TimeScaleDeclaration) super.copy();
+    }
+
+    public int getTimePrecision() {
+        return timePrecision;
+    }
+
+    public int getTimeUnit() {
+        return timeUnit;
     }
 
     @Override
@@ -38,10 +55,10 @@ public class TimeScaleDeclaration extends HardwareDeclaration {
         builder.append("\n`timescale ");
 
         // put time unit
-        builder.append("1ns");
+        builder.append(this.timeUnit + "ns");
         builder.append("/");
         // put time precision
-        builder.append("10ps;\n");
+        builder.append(this.timePrecision + "ns;\n");
 
         return builder.toString();
     }

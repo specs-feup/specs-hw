@@ -16,6 +16,8 @@ package pt.up.fe.specs.binarytranslation.hardware.tree.nodes.definition;
 import java.util.ArrayList;
 
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysBlock;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.InitialBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.TimeScaleDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.HardwareOperator;
@@ -51,7 +53,7 @@ public class HardwareTestbench extends HardwareModule {
         this.addChild(new FileHeader());
 
         // child 1
-        this.addChild(new TimeScaleDeclaration());
+        this.addChild(new TimeScaleDeclaration(100, 10));
 
         // child 2
         this.addChild(new ModuleBlock(testBenchName));
@@ -69,6 +71,58 @@ public class HardwareTestbench extends HardwareModule {
 
         // TODO: move all content of @HardwareTestbenchGenerator into @Verilog as a static
         // factory like method?
+    }
+
+    private InitialBlock getInitialBlock() {
+        InitialBlock ini = null;
+        var initials = getBody().getChildrenOf(InitialBlock.class);
+        if (initials.isEmpty()) {
+            ini = this.initial("initBlock");
+            var time = getChild(TimeScaleDeclaration.class, 1).getTimeUnit();
+            ini.delay(time * 10);
+        } else
+            ini = initials.get(0);
+
+        return ini;
+    }
+
+    // TODO: add one initial block for each call of setInit,
+    // have two different types of set init, one with 1 value
+    // and one with 1 value, a delay, and another value
+    // after, prior to emission, consolidate all init blocks
+    // into less block, based on content
+
+    public HardwareTestbench setInit(VariableOperator op, int value) {
+
+        // check if declaration exists in ModuleBlock
+        if (getDeclaration(op.getResultName()) == null)
+            this.addDeclaration(op.getAssociatedIdentifier());
+
+        // set init
+        getInitialBlock().nonBlocking(op, value);
+
+        return this;
+    }
+
+    public HardwareTestbench setClockFrequency(int mhz) {
+        var time = getChild(TimeScaleDeclaration.class, 1);
+        var period = (((1.0 / mhz) / Math.pow(10, -9)) / time.getTimeUnit());
+        var clockBlock = new AlwaysBlock("clockBlock");
+        this.addBlockAfter(clockBlock, getRegisterDeclarationBlock());
+
+        VariableOperator clk = null;
+        if ((clk = (VariableOperator) this.getRegister("clk")) == null)
+            clk = this.addRegister("clk", 1);
+
+        clockBlock.blocking(clk, clk.not());
+        clockBlock.delay(period);
+
+        // add to initial
+        this.setInit(clk, 0);
+        // this.initial.blocking(clk, 0);
+        // this.initial.delay(period * 10);
+
+        return this;
     }
 
     @Override
