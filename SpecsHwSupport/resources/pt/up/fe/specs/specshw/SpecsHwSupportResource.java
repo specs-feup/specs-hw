@@ -17,7 +17,7 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 public enum SpecsHwSupportResource implements ResourceProvider {
 
-    SPECS_COPYRIGHT_TEXT("pt/up/fe/specs/binarytranslation/specs_cr_text.txt");
+    SPECS_COPYRIGHT_TEXT("pt/up/fe/specs/specshw/specs_cr_text.txt");
 
     private final String resource;
 
