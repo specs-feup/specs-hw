@@ -21,6 +21,8 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.
 
 public class VariableOperator extends HardwareOperator {
 
+    // TODO: make abstract
+
     private final String name;
     private final int width;
     private IdentifierDeclaration associatedIdentifier;

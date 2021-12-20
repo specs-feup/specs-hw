@@ -16,6 +16,13 @@ package pt.up.fe.specs.binarytranslation.hardware.coarse;
 public class Adder extends CoarseGrainedUnit { // implements CoarseGrainFunctionalUnit , OR extends
                                                // ACorseGrainFunctionalUnit<T>
 
+    /*public interface IOBundle {
+    };
+    
+    public IOBundle io = new IOBundle() {
+        public InputPortDeclaration inA = new InputPortDeclaration("test", 32);
+    };*/
+
     // TODO: implement an "io" public member just like Chisel3!
     // and have that member be part of all CoarseGrainedUnit
     // can "io" just be a list?? no, it has to be a type of simple class
