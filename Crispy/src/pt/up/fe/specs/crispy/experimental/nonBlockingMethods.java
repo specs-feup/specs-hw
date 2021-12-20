@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.support;
+package pt.up.fe.specs.crispy.experimental;
 
 import pt.up.fe.specs.crispy.ast.constructs.HardwareBlock;
 import pt.up.fe.specs.crispy.ast.statement.ProceduralNonBlockingStatement;

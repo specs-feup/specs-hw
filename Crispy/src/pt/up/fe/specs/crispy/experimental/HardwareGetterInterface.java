@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.hardware;
+package pt.up.fe.specs.crispy.experimental;
 
 import java.util.List;
 import java.util.function.Predicate;

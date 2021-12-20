@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.crispy.support;
+package pt.up.fe.specs.crispy.experimental;
 
 public interface HardwareAssignmentMethods {
 

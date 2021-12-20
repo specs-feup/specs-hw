@@ -28,7 +28,6 @@ import pt.up.fe.specs.crispy.ast.expression.operator.subscript.ScalarSubscript;
 import pt.up.fe.specs.crispy.ast.statement.IfStatement;
 import pt.up.fe.specs.crispy.coarse.Adder;
 import pt.up.fe.specs.crispy.coarse.Mux2to1;
-import pt.up.fe.specs.crispy.support.Verilog;
 
 public class HardwareInstanceTest {
 
@@ -165,7 +164,9 @@ public class HardwareInstanceTest {
         adder.addInputPort("inA", 32);
         adder.addInputPort("inB", 32);
         adder.addOutputPort("outC", 32);
-        adder.addStatement(Verilog.nonBlocking(adder.getPort(2), Verilog.add(adder.getPort(0), adder.getPort(1))));
+        adder.nonBlocking(adder.getPort(2), adder.getPort(0).add(adder.getPort(1)));
+
+        // adder.addStatement(Verilog.nonBlocking(adder.getPort(2), Verilog.add(adder.getPort(0), adder.getPort(1))));
 
         /*
          * 
