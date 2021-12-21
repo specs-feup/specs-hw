@@ -11,31 +11,21 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.coarse;
+package pt.up.fe.specs.crispy.lib;
 
+import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
+import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 
-public class Mux2to1 extends CoarseGrainedUnit {
+public class DecoderNxM extends HardwareModule {
 
-    public Port i0;
-    public Port i1;
-    public Port sel;
+    public Port in;
     public Port out;
 
-    public Mux2to1(int bitwidth) {
-        super(Mux2to1.class.getSimpleName());
-
-        i0 = addInputPort("i0", bitwidth);
-        i1 = addInputPort("i1", bitwidth);
-        sel = addInputPort("sel", 1);
-        out = addOutputPort("out", bitwidth);
-
-        alwayscomb("muxBlock")._ifelse(sel.not(),
-                out.nonBlocking(i0)).orElse(out.nonBlocking(i1));
-
-        /*var block = alwayscomb("muxBlock");
-        var ie1 = block._ifelse(sel);
-        ie1.then().nonBlocking(out, i1);
-        ie1.orElse().nonBlocking(out, i0);*/
+    public DecoderNxM(int n) {
+        super("DecoderNxM" + n + "x" + (int) Math.pow(n, 2));
+        in = addInputPort("in", n);
+        out = addOutputPort("out", (int) Math.pow(n, 2));
+        assign(out, Immediate.Ones(1).lsl(in));
     }
 }

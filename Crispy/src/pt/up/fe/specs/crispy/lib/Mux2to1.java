@@ -11,25 +11,27 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.coarse;
+package pt.up.fe.specs.crispy.lib;
 
 import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 
-public abstract class CoarseGrainedUnit extends HardwareModule {
+public class Mux2to1 extends HardwareModule {
 
-    // TODO: parametrize this with a generic that specifies the interface of the module??
+    public Port i0;
+    public Port i1;
+    public Port sel;
+    public Port out;
 
-    // todo methods for single line connections of modules with equivalent interfaces
+    public Mux2to1(int bitwidth) {
+        super(Mux2to1.class.getSimpleName());
 
-    public Port inA;
-    public Port inB;
-    public Port outC;
+        i0 = addInputPort("i0", bitwidth);
+        i1 = addInputPort("i1", bitwidth);
+        sel = addInputPort("sel", 1);
+        out = addOutputPort("out", bitwidth);
 
-    public CoarseGrainedUnit(String name, int bitwidth) {
-        super(name);
-        inA = addInputPort("inA", bitwidth);
-        inB = addInputPort("inB", bitwidth);
-        outC = addOutputPort("outA", bitwidth + 1);
+        alwayscomb("muxBlock")._ifelse(sel.not(),
+                out.nonBlocking(i0)).orElse(out.nonBlocking(i1));
     }
 }

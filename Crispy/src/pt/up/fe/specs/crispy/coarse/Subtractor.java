@@ -13,11 +13,10 @@
 
 package pt.up.fe.specs.crispy.coarse;
 
-public class Adder extends CoarseGrainedUnit { // implements CoarseGrainFunctionalUnit , OR extends
-                                               // ACorseGrainFunctionalUnit<T>
+public class Subtractor extends CoarseGrainedUnit {
 
-    public Adder(int bitwidth) {
-        super(Adder.class.getSimpleName(), bitwidth);
-        this.outC.nonBlocking(this.inA.add(this.inB));
+    public Subtractor(int bitwidth) {
+        super(Subtractor.class.getSimpleName(), bitwidth);
+        this.outC.nonBlocking(this.inA.sub(this.inB));
     }
 }

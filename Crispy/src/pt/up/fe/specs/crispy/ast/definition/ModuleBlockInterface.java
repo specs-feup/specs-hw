@@ -37,7 +37,7 @@ import pt.up.fe.specs.crispy.ast.declaration.port.PortDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.ResetDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
-import pt.up.fe.specs.crispy.ast.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 import pt.up.fe.specs.crispy.ast.expression.operator.Register;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
@@ -268,6 +268,10 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
     /*
      * assign
      */
+    public default VariableOperator assign(HardwareExpression expr) {
+        return createAssigment(expr.getResultName(), expr, (t, u) -> new ContinuousStatement(t, u));
+    }
+
     public default VariableOperator assign(String targetName, String sourceName) {
         return createAssigment(targetName, sourceName, (t, u) -> new ContinuousStatement(t, u));
     }
@@ -277,7 +281,7 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
     }
 
     public default VariableOperator assign(VariableOperator target, int literalConstant) {
-        var imm = new ImmediateOperator(literalConstant, target.getResultWidth());
+        var imm = new Immediate(literalConstant, target.getResultWidth());
         return createAssigment(target, imm, (t, u) -> new ContinuousStatement(t, u));
     }
 

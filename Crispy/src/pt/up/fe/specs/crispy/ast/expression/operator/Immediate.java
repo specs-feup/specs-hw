@@ -15,7 +15,7 @@ package pt.up.fe.specs.crispy.ast.expression.operator;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 
-public class ImmediateOperator extends HardwareOperator {
+public class Immediate extends HardwareOperator {
 
     private static int immcounter = 0;
     private int width;
@@ -25,7 +25,7 @@ public class ImmediateOperator extends HardwareOperator {
     /*
      * Note: for now, all immediates are represented as decimals
      */
-    public ImmediateOperator(Number value, int width) {
+    public Immediate(Number value, int width) {
         super(HardwareNodeType.ImmediateOperator);
         this.value = value;
         this.width = width;
@@ -38,7 +38,7 @@ public class ImmediateOperator extends HardwareOperator {
     }
 
     @Override
-    public ImmediateOperator getThis() {
+    public Immediate getThis() {
         return this;
     }
 
@@ -62,20 +62,20 @@ public class ImmediateOperator extends HardwareOperator {
     }
 
     @Override
-    protected ImmediateOperator copyPrivate() {
-        return new ImmediateOperator(this.value, this.width);
+    protected Immediate copyPrivate() {
+        return new Immediate(this.value, this.width);
     }
 
     @Override
-    public ImmediateOperator copy() {
-        return (ImmediateOperator) super.copy();
+    public Immediate copy() {
+        return (Immediate) super.copy();
     }
 
-    public static ImmediateOperator Zeroes(int numbits) {
-        return new ImmediateOperator(0, numbits);
+    public static Immediate Zeroes(int numbits) {
+        return new Immediate(0, numbits);
     }
 
-    public static ImmediateOperator Ones(int numbits) {
-        return new ImmediateOperator(1, numbits);
+    public static Immediate Ones(int numbits) {
+        return new Immediate(1, numbits);
     }
 }

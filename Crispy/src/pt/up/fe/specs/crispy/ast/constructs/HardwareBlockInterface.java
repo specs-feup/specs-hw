@@ -23,7 +23,7 @@ import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
-import pt.up.fe.specs.crispy.ast.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.statement.DelayStatement;
 import pt.up.fe.specs.crispy.ast.statement.HardwareStatement;
@@ -180,7 +180,7 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
     }
 
     public default VariableOperator nonBlocking(VariableOperator target, int literalConstant) {
-        var imm = new ImmediateOperator(literalConstant, target.getResultWidth());
+        var imm = new Immediate(literalConstant, target.getResultWidth());
         return createAssigment(target, imm, (t, u) -> new ProceduralNonBlockingStatement(t, u));
     }
 
@@ -206,7 +206,7 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
     }
 
     public default VariableOperator blocking(VariableOperator target, int literalConstant) {
-        var imm = new ImmediateOperator(literalConstant, target.getResultWidth());
+        var imm = new Immediate(literalConstant, target.getResultWidth());
         return createAssigment(target, imm, (t, u) -> new ProceduralBlockingStatement(t, u));
     }
 

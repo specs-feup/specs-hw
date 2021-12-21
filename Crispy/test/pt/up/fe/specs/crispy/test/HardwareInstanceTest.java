@@ -21,13 +21,17 @@ import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
 import pt.up.fe.specs.crispy.ast.definition.HardwareTestbench;
-import pt.up.fe.specs.crispy.ast.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.ScalarSubscript;
 import pt.up.fe.specs.crispy.ast.statement.IfStatement;
 import pt.up.fe.specs.crispy.coarse.Adder;
-import pt.up.fe.specs.crispy.coarse.Mux2to1;
+import pt.up.fe.specs.crispy.lib.CrossBarNxM;
+import pt.up.fe.specs.crispy.lib.DecoderNxM;
+import pt.up.fe.specs.crispy.lib.Mux2to1;
+import pt.up.fe.specs.crispy.lib.MuxNto1;
+import pt.up.fe.specs.crispy.lib.RegisterBank;
 
 public class HardwareInstanceTest {
 
@@ -37,7 +41,7 @@ public class HardwareInstanceTest {
         var decl1 = new RegisterDeclaration("testReg", 32);
         decl1.emit();
 
-        var imm = new ImmediateOperator(14, 32);
+        var imm = new Immediate(14, 32);
         imm.emit();
 
         var ref1 = new VariableOperator(decl1);
@@ -111,7 +115,7 @@ public class HardwareInstanceTest {
                 wrap.getPort(0), wrap.getPort(1), wire));
 
         // connect output of adder instance +1 to output port woutC
-        wrap.nonBlocking("woutC", wire.add(ImmediateOperator.Ones(15)).paren());
+        wrap.nonBlocking("woutC", wire.add(Immediate.Ones(15)).paren());
 
         /*
          * Test module instantiation inside other module
@@ -322,6 +326,34 @@ public class HardwareInstanceTest {
 
         var mux1 = new Mux2to1(8);
         mux1.emit();
+    }
+
+    @Test
+    public void testMuxNto1() {
+
+        var mux = new MuxNto1(12, 8);
+        mux.emit();
+    }
+
+    @Test
+    public void testCrossBarNxM() {
+
+        var mux = new CrossBarNxM(4, 4, 8);
+        mux.emit();
+    }
+
+    @Test
+    public void testDecoderNxM() {
+
+        var decoder = new DecoderNxM(2);
+        decoder.emit();
+    }
+
+    @Test
+    public void testRegisterBank() {
+
+        var bank = new RegisterBank(4, 8);
+        bank.emit();
     }
 
     @Test
