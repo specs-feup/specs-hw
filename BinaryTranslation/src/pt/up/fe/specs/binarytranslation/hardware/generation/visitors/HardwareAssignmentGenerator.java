@@ -23,9 +23,9 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.MultiplicationExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.SubtractionExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.BitWiseAndExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.ComparsionExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateReference;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.ComparisonExpression;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
@@ -79,19 +79,19 @@ public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareN
     public ContinuousStatement generateAssign(AssignmentExpressionASTNode node)
             throws HardwareGenerationException {
 
-        return new ContinuousStatement(new VariableReference(node.getTarget().getAsString()),
+        return new ContinuousStatement(new VariableOperator(node.getTarget().getAsString()),
                 convertExpression(node));
     }
 
     public ProceduralBlockingStatement generateBlocking(AssignmentExpressionASTNode node)
             throws HardwareGenerationException {
-        return new ProceduralBlockingStatement(new VariableReference(node.getTarget().getAsString()),
+        return new ProceduralBlockingStatement(new VariableOperator(node.getTarget().getAsString()),
                 convertExpression(node));
     }
 
     public ProceduralNonBlockingStatement generateNonBlocking(AssignmentExpressionASTNode node)
             throws HardwareGenerationException {
-        return new ProceduralNonBlockingStatement(new VariableReference(node.getTarget().getAsString()),
+        return new ProceduralNonBlockingStatement(new VariableOperator(node.getTarget().getAsString()),
                 convertExpression(node));
     }
 
@@ -121,7 +121,7 @@ public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareN
             finalexpr = new BitWiseAndExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
             break;
         case "==":
-            finalexpr = new ComparsionExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
+            finalexpr = new ComparisonExpression((HardwareExpression) lnode, (HardwareExpression) rnode);
             break;
         default:
             // finalexpr = new UnimplementedExpression((HardwareExpression) lnode, (HardwareExpression) rnode, op);
@@ -166,22 +166,22 @@ public class HardwareAssignmentGenerator extends InstructionASTVisitor<HardwareN
 
         // TODO: otherwise create
 
-        return new VariableReference(variablename);
+        return new VariableOperator(variablename);
     }
 
     @Override
     protected HardwareNode visit(MetaOperandASTNode node) throws Exception {
-        return new VariableReference(node.getAsString());
+        return new VariableOperator(node.getAsString());
     }
 
     @Override
     protected HardwareNode visit(ImmediateOperandASTNode node) {
-        return new ImmediateReference(node.getValue(), node.getWidth());
+        return new ImmediateOperator(node.getValue(), node.getWidth());
     }
 
     @Override
     protected HardwareNode visit(LiteralOperandASTNode node) {
-        return new ImmediateReference(node.getValue(), 32);
+        return new ImmediateOperator(node.getValue(), 32);
         // TODO: support in g4 grammar for specifying bitwidth (?)
         // not sure if good idea, since i already have bitwidth info in the encoding parsing and instruction/operand
         // classes...

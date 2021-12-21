@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareNodeExpressionMap;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.ImmediateReference;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.reference.VariableReference;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.selection.RangeSelection;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.RangedSelection;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfStatement;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
@@ -51,9 +51,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.da
 public class InstructionCDFGConverter {
 
     public static void convert(InstructionCDFG icdfg, HardwareNode parent) {
-
         icdfg.getInputs().forEach(i -> InstructionCDFGConverter.visit(icdfg, parent, i));
-        
     }
     
     public static boolean allOperandsResolved(AInstructionCDFGSubgraph dfg, AInstructionCDFGNode node, Map<AInstructionCDFGNode, HardwareExpression> signal_map) {
@@ -81,8 +79,8 @@ public class InstructionCDFGConverter {
         
         Map<AInstructionCDFGNode, HardwareExpression> signal_map = new HashMap<>();
         
-        dfg.getInputs().forEach(i -> signal_map.put(i, (i instanceof InstructionCDFGLiteralNode) ?  new ImmediateReference(((InstructionCDFGLiteralNode)i).getValue(), 32) : new VariableReference(i.getUID())));
-        dfg.getOutputs().forEach(o -> signal_map.put(o, new VariableReference(o.getUID())));
+        dfg.getInputs().forEach(i -> signal_map.put(i, (i instanceof InstructionCDFGLiteralNode) ?  new ImmediateOperator(((InstructionCDFGLiteralNode)i).getValue(), 32) : new VariableOperator(i.getUID())));
+        dfg.getOutputs().forEach(o -> signal_map.put(o, new VariableOperator(o.getUID())));
         
         return signal_map;
     }
@@ -124,8 +122,8 @@ public class InstructionCDFGConverter {
 
                 if(modifier instanceof InstructionCDFGRangeSubscript) {
                     
-                    RangeSelection rangeSelection = new RangeSelection(
-                            (VariableReference) signalMap.get(operand), 
+                    RangedSelection rangeSelection = new RangedSelection(
+                            (VariableOperator) signalMap.get(operand), 
                             ((InstructionCDFGRangeSubscript)modifier).getLowerBound().intValue(),
                             ((InstructionCDFGRangeSubscript)modifier).getUpperBound().intValue()
                             );
@@ -139,17 +137,19 @@ public class InstructionCDFGConverter {
 
     }
     
-    public static List<HardwareExpression> getExpressionSignals(AInstructionCDFGSubgraph dfg, AInstructionCDFGNode expression, Map<AInstructionCDFGNode, HardwareExpression> signalMap) {
+    public static List<HardwareExpression> getExpressionSignals(AInstructionCDFGSubgraph dfg, AInstructionCDFGNode expression, Map<AInstructionCDFGNode, HardwareExpression> signalMap) throws IllegalArgumentException{
         
         List<HardwareExpression> signals = new ArrayList<>();
         
-        if(dfg.getOperandsOf(expression).size() == 2) {
-            
-            signals.add(InstructionCDFGConverter.addSignal(dfg.getLeftOperand(expression), dfg.getLeftOperandEdge(expression).getModifiers(), signalMap));
-            signals.add(InstructionCDFGConverter.addSignal(dfg.getRightOperand(expression), dfg.getRightOperandEdge(expression).getModifiers(), signalMap));
-  
-        }else {
-            dfg.getOperandsOf(expression).forEach(op -> signals.add(signalMap.get(op)));
+        switch(dfg.getOperandsOf(expression).size()) {
+            case 1:
+                dfg.getOperandsOf(expression).forEach(op -> signals.add(signalMap.get(op)));
+                break;
+            case 2:
+                signals.add(InstructionCDFGConverter.addSignal(dfg.getLeftOperand(expression), dfg.getLeftOperandEdge(expression).getModifiers(), signalMap));
+                signals.add(InstructionCDFGConverter.addSignal(dfg.getRightOperand(expression), dfg.getRightOperandEdge(expression).getModifiers(), signalMap));
+                break;
+            default:    throw new IllegalArgumentException();
         }
         
         return signals;  
@@ -166,27 +166,18 @@ public class InstructionCDFGConverter {
             
             validCandidates.forEach(v -> {
 
-                VariableReference expr_var = (VariableReference) signal_map.getOrDefault(InstructionCDFGConverter.nextNodeisDataNode(dfg, v), new VariableReference(v.getUID()));
+                VariableOperator expr_var = (VariableOperator) signal_map.getOrDefault(InstructionCDFGConverter.nextNodeisDataNode(dfg, v), new VariableOperator(v.getUID()));
                 signal_map.putIfAbsent(v, expr_var);
                 
                 HardwareExpression expr = HardwareNodeExpressionMap.generate(v.getClass(), InstructionCDFGConverter.getExpressionSignals(dfg, v, signal_map));   // Generates a new hardware expression for the vertex
                 
-                
                 parent.addChild(new ProceduralBlockingStatement(expr_var, expr));// Adds it to the dfg parent node
-
             });
         
             InstructionCDFGConverter.getNextCandidates(dfg, nodes_being_resolved, validCandidates);
-            
         }
         
-        icdfg.getVerticesAfter(dfg).forEach(next -> {
-            
-            if(!(next instanceof InstructionCDFGControlFlowMerge)) {
-                InstructionCDFGConverter.visit(icdfg, parent, next);
-            }
-
-        });
+        icdfg.getVerticesAfter(dfg).stream().filter(next -> !(next instanceof InstructionCDFGControlFlowMerge)).forEach(next -> InstructionCDFGConverter.visit(icdfg, parent, next));
 
     }
     
@@ -208,7 +199,6 @@ public class InstructionCDFGConverter {
         return signal_map.get(dfg.getVerticesBefore((AInstructionCDFGNode) dfg.getOutputs().toArray()[0]).toArray()[0]);
     }
 
-    
     public static void visitControlFlowMergeNode(InstructionCDFG icdfg, HardwareNode parent, InstructionCDFGControlFlowMerge node) {
         icdfg.getVerticesAfter(node).forEach(v -> InstructionCDFGConverter.visit(icdfg, parent, v));  
     }
@@ -226,12 +216,10 @@ public class InstructionCDFGConverter {
         
         IfElseStatement conditional = new IfElseStatement((HardwareExpression) InstructionCDFGConverter.visitControlFlowConditionalSubgraph(icdfg, node));
         parent.addChild(conditional);
-        
+
         InstructionCDFGConverter.visit(icdfg, conditional.getChild(1), icdfg.getTruePath(node));
         InstructionCDFGConverter.visit(icdfg, conditional.getChild(2), icdfg.getFalsePath(node));
         InstructionCDFGConverter.visitControlFlowMergeNode(icdfg, parent, node.getMerge());
     }
-    
-    
     
 }

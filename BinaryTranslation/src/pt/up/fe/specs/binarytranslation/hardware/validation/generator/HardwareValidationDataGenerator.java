@@ -92,6 +92,27 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
         return validationData;
     }
     
+    @SuppressWarnings("unchecked")
+    public static Map<Map<String, Number>, Map<String, Number>> generateValidationData(PseudoInstructionContext instruction, Set<String> inputRegisters, int samples) {
+        
+        Map<Map<String, Number>, Map<String, Number>> validationData = new HashMap<>();
+        
+        Random randomInputData = new Random();
+        
+        for(int i = 0; i < samples; i++) {
+            HardwareValidationDataGenerator validationDataGenerator = new HardwareValidationDataGenerator();
+            
+            inputRegisters.forEach(input -> validationDataGenerator.getInputMap().put(input, randomInputData.nextInt()));
+            
+            validationDataGenerator.getValueMap().putAll(validationDataGenerator.getInputMap());
+            
+            validationDataGenerator.visitPseudoInstruction(instruction); 
+            validationData.put(validationDataGenerator.getInputMap(), validationDataGenerator.getOutputMap());
+   
+        }
+        return validationData;
+    }
+    
     public static String generateHexMemFile(Collection<Map<String,Number>> data) {
         
         StringBuilder fileBuilder = new StringBuilder();

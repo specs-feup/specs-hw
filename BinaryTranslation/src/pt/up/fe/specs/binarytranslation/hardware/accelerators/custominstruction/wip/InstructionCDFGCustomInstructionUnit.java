@@ -17,10 +17,10 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip;
 
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 
-public class InstructionCDFGCustomInstructionUnit extends AHardwareInstance {
+public class InstructionCDFGCustomInstructionUnit extends AHardwareArchitecture {
 
     // private List<Port> inputs, outputs;
     // Port is template class??

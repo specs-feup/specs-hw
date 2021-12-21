@@ -10,10 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.instruction.ast;
 
 import java.util.ArrayList;
+
+import org.antlr.v4.runtime.ParserRuleContext;
 
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.OperatorASTNode;
@@ -25,7 +27,6 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.Function
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.BareOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.LiteralOperandASTNode;
-import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.MetaOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.RangeSubscriptOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.ScalarSubscriptOperandASTNode;
@@ -34,20 +35,22 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfS
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.PlainStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.StatementASTNode;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmFieldContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AssignmentExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.BinaryExprContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.DoublevalContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.EncodedfieldContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.FunctionExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfElseStatementContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfStatementContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.MetaFieldContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IntegervalContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.MetafieldContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.OperatorContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ParenExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PlainStmtContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.RangesubscriptOperandContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ScalarsubscriptOperandContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.SignednumberContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.UnaryExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.VariableExprContext;
 
@@ -88,7 +91,7 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
     public InstructionASTNode visitIfStatement(IfStatementContext ctx) {
 
         var stats = new ArrayList<StatementASTNode>();
-        for (var stat : ctx.ifsats) {
+        for (var stat : ctx.ifsats.statement()) {
             stats.add((StatementASTNode) this.visit(stat));
         }
 
@@ -99,12 +102,12 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
     public InstructionASTNode visitIfElseStatement(IfElseStatementContext ctx) {
 
         var stats = new ArrayList<StatementASTNode>();
-        for (var stat : ctx.ifsats) {
+        for (var stat : ctx.ifsats.statement()) {
             stats.add((StatementASTNode) this.visit(stat));
         }
 
         var estats = new ArrayList<StatementASTNode>();
-        for (var estat : ctx.elsestats) {
+        for (var estat : ctx.elsestats.statement()) {
             stats.add((StatementASTNode) this.visit(estat));
         }
 
@@ -165,32 +168,56 @@ public class InstructionASTGenerator extends PseudoInstructionBaseVisitor<Instru
 
     // Operand level //////////////////////////////////////////////////////////
     @Override
-    public BareOperandASTNode visitAsmField(AsmFieldContext ctx) {
+    public InstructionASTNode visitEncodedfield(EncodedfieldContext ctx) {
         return new BareOperandASTNode(ctx.getText());
     }
 
     @Override
-    public LiteralOperandASTNode visitLiteral(LiteralContext ctx) {
+    public InstructionASTNode visitMetafield(MetafieldContext ctx) {
+        return new BareOperandASTNode(ctx.getText());
+    }
+
+    @Override
+    public InstructionASTNode visitSignednumber(SignednumberContext ctx) {
+
+        ParserRuleContext nctx = null;
+        if (ctx.integerval() != null)
+            nctx = ctx.integerval();
+        else if (ctx.doubleval() != null)
+            nctx = ctx.doubleval();
+
+        var unsignedNode = (LiteralOperandASTNode) this.visit(nctx);
+        var uvalue = unsignedNode.getValue();
+        if (uvalue instanceof Integer)
+            return new LiteralOperandASTNode(Integer.valueOf(-uvalue.intValue()));
+        else if (uvalue instanceof Double)
+            return new LiteralOperandASTNode(Double.valueOf(-uvalue.doubleValue()));
+        else
+            return super.visitSignednumber(ctx);
+    }
+
+    @Override
+    public InstructionASTNode visitIntegerval(IntegervalContext ctx) {
         return new LiteralOperandASTNode(Integer.valueOf(ctx.getText()));
     }
 
     @Override
-    public MetaOperandASTNode visitMetaField(MetaFieldContext ctx) {
-        return new MetaOperandASTNode(ctx.meta_field().processorRegister.getText());
+    public InstructionASTNode visitDoubleval(DoublevalContext ctx) {
+        return new LiteralOperandASTNode(Double.valueOf(ctx.getText()));
     }
 
     @Override
     public RangeSubscriptOperandASTNode visitRangesubscriptOperand(RangesubscriptOperandContext ctx) {
-        var loidx = Integer.valueOf(ctx.loidx.getText());
-        var hiidx = Integer.valueOf(ctx.hiidx.getText());
+        var loidx = Integer.valueOf(ctx.rangesubscript().loidx.getText());
+        var hiidx = Integer.valueOf(ctx.rangesubscript().hiidx.getText());
         return new RangeSubscriptOperandASTNode(
-                (OperandASTNode) this.visit(ctx.operand()), loidx, hiidx);
+                (OperandASTNode) this.visit(ctx.rangesubscript().asmfield()), loidx, hiidx);
     }
 
     @Override
     public ScalarSubscriptOperandASTNode visitScalarsubscriptOperand(ScalarsubscriptOperandContext ctx) {
-        var idx = Integer.valueOf(ctx.idx.getText());
+        var idx = Integer.valueOf(ctx.scalarsubscript().idx.getText());
         return new ScalarSubscriptOperandASTNode(
-                (OperandASTNode) this.visit(ctx.operand()), idx);
+                (OperandASTNode) this.visit(ctx.scalarsubscript().asmfield()), idx);
     }
 }

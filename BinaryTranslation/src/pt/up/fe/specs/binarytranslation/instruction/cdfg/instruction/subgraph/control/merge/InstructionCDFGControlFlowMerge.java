@@ -27,4 +27,9 @@ public class InstructionCDFGControlFlowMerge extends AInstructionCDFGControlFlow
         super(uid_map, new InstructionCDFGControlMergeNode());
     }
 
+    @Override
+    public String toString() {
+        return "InstructionCDFGControlFlowMerge_" + this.hashCode();
+    }
+    
 }

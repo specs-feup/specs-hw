@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.MicroBlaze.test.processes;
 
 import java.util.Arrays;
@@ -18,6 +18,7 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.specs.MicroBlaze.asm.MicroBlazeELFDump;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
+import org.specs.MicroBlaze.provider.MicroBlazeRosetta;
 
 import pt.up.fe.specs.binarytranslation.test.processes.GDBRunTester;
 
@@ -56,6 +57,15 @@ public class MicroBlazeGDBRunTester extends GDBRunTester {
     public void testRunToKernelStart() {
         var elfs = MicroBlazeLivermoreN100.values();
         testRunToKernelStart(Arrays.asList(elfs));
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testRunToKernelStartOne() {
+        var elf = MicroBlazeRosetta.facedetection;
+        testRunToKernelStart(Arrays.asList(elf));
     }
 
     /**

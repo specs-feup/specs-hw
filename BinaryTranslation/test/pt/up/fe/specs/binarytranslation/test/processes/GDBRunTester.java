@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.test.processes;
 
 import java.util.List;
@@ -44,6 +44,9 @@ public class GDBRunTester {
             System.out.println("Testing run to end of " + elf.getELFName());
             var app = elf.toApplication();
             try (var gdb = GDBRun.newInstanceInteractive(app)) {
+
+                // these are the launch arguments
+                gdb.printQEMULaunchArguments();
 
                 // launch QEMU, then GDB (on localhost:1234)
                 gdb.start();

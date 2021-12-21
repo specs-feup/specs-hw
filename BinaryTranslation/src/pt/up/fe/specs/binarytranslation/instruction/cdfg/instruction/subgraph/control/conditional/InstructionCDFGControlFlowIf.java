@@ -26,4 +26,9 @@ public class InstructionCDFGControlFlowIf extends AInstructionCDFGControlFlowCon
     public InstructionCDFGControlFlowIf(InstructionCDFGControlFlowMerge merge, Map<String, Integer> uid_map) {
         super(merge, uid_map);
     }
+    
+    @Override
+    public String toString() {
+        return "InstructionCDFGControlFlowIf_" + this.hashCode() ;
+    }
 }

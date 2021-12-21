@@ -19,7 +19,7 @@ import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareAnchorNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareErrorMessage;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.task.HardwareErrorMessage;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfElseStatementASTNode;
@@ -64,7 +64,7 @@ public class InstructionASTConverter extends InstructionASTVisitor<HardwareNode>
         switch (this.context) {
 
         // Im at the top-level
-        case ModuleDeclaration:
+        case ModuleBlock:
             if (statements.size() > 1)
                 newleaf = new AlwaysCombBlock();
             else
@@ -125,7 +125,7 @@ public class InstructionASTConverter extends InstructionASTVisitor<HardwareNode>
 
         var generator = new HardwareAssignmentGenerator();
         try {
-            if (this.context == HardwareNodeType.ModuleDeclaration)
+            if (this.context == HardwareNodeType.ModuleBlock)
                 return generator.generateAssign(node);
 
             else if (this.context == HardwareNodeType.AlwaysComb || this.context == HardwareNodeType.AlwaysFF)

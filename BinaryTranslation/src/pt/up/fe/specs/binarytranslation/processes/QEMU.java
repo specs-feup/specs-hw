@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.processes;
 
 import java.util.ArrayList;
@@ -53,13 +53,18 @@ public class QEMU implements AutoCloseable {
         this.args = QEMU.getArgsList(app, this.port);
     }
 
-    public void start() {
+    public List<String> getLaunchArguments() {
         var newArgs = new ArrayList<String>();
         newArgs.add("bash");
         newArgs.add("-l");
         newArgs.add("-c");
         newArgs.add(args.stream().collect(Collectors.joining(" ")));
-        this.proc = BinaryTranslationUtils.newProcess(new ProcessBuilder(newArgs));
+        return newArgs;
+    }
+
+    public void start() {
+        this.proc = BinaryTranslationUtils.newProcess(
+                new ProcessBuilder(this.getLaunchArguments()));
     }
 
     public int getPort() {

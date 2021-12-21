@@ -34,15 +34,18 @@ public class HardwareFolderGenerator {
     private static final String directorySeparator = IS_WINDOWS ? "\\" : "/";
     
     public static final String folderHW = "hw";
+    public static final String folderBTF = "btf";
+    public static final String folderSYSTEM = "system";
+    
     public static final String folderHW_HDL = folderHW + directorySeparator + "hdl";
     public static final String folderHW_TESTBENCHES = folderHW + directorySeparator + "tb";
     public static final String folderHW_SYNTHESIS = folderHW + directorySeparator + "syn";
     public static final String folderHW_REPORTS = folderHW + directorySeparator + "reports";
     
-    private static final List<String> folders = List.of(folderHW, folderHW_HDL, folderHW_TESTBENCHES, folderHW_SYNTHESIS, folderHW_REPORTS); 
+    private static final List<String> subFolders = List.of(folderHW, folderBTF, folderSYSTEM, folderHW_HDL, folderHW_TESTBENCHES, folderHW_SYNTHESIS, folderHW_REPORTS); 
     
     public static void generate(String path) {
-
+        
         try {
             Files.createDirectory(Paths.get(path));
         }catch(FileAlreadyExistsException e) {
@@ -51,7 +54,7 @@ public class HardwareFolderGenerator {
             SpecsLogs.msgWarn("Error message:\n", e);
         }
         
-        HardwareFolderGenerator.folders.forEach(folder -> {
+        HardwareFolderGenerator.subFolders.forEach(folder -> {
             try {
                 Files.createDirectory(Paths.get(path + directorySeparator + folder));
             }catch(FileAlreadyExistsException e) {
@@ -71,11 +74,19 @@ public class HardwareFolderGenerator {
         return path + directorySeparator + folderHW;
     }
     
+    public static String getBTFFolder(String path) {
+        return path + directorySeparator + folderBTF;
+    }
+    
+    public static String getSystemFolder(String path) {
+        return path + directorySeparator + folderSYSTEM;
+    }
+    
     public static String getHardwareHDLFolder(String path) {
         return path + directorySeparator + folderHW_HDL;
     }
     
-    private static FileOutputStream newFile(String path, String fileName, String format) throws IOException {
+    public static FileOutputStream newFile(String path, String fileName, String format) throws IOException {
         File newFile = new File(path + directorySeparator + fileName + "." + format); 
         
         if(!newFile.createNewFile()) {

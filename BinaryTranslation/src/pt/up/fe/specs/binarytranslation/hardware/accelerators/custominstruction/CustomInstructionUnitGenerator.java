@@ -10,29 +10,28 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.graph.GraphNode;
-import pt.up.fe.specs.binarytranslation.graph.edge.GraphInput;
-import pt.up.fe.specs.binarytranslation.graph.edge.GraphOutput;
-import pt.up.fe.specs.binarytranslation.hardware.HardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.HardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionASTConverter;
-import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.MetaFieldFetcher;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModulePortDirection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.PortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareCommentNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareErrorMessage;
+import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.task.HardwareErrorMessage;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
+import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.OperandASTNodeSide;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplySSAPass;
+import pt.up.fe.specs.binarytranslation.instruction.ast.passes.MetaFieldFetcherPass;
 
 /**
  * Generates a single dedicated verilog module for a single binary segment
@@ -79,7 +78,7 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
     // then it should be possible to walk an entire combined AST to generate verilog!
 
     @Override
-    public HardwareInstance generateHardware(BinarySegmentGraph graph) {
+    public HardwareArchitecture generateHardware(BinarySegmentGraph graph) {
 
         // The VerilogModuleTree
         var name = graph.getSegment().getSegmentType().toString().toLowerCase() + "_" + graph.hashCode();
@@ -96,18 +95,22 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
 
         // clk and rst ports if module is registered
         if (this.isClocked) {
-            moduletree.addDeclaration(new PortDeclaration("clk", 1, ModulePortDirection.input));
-            moduletree.addDeclaration(new PortDeclaration("rst", 1, ModulePortDirection.input));
+            moduletree.addPort(new InputPortDeclaration("clk", 1));
+            moduletree.addPort(new InputPortDeclaration("rst", 1));
         }
 
         // top level graph liveins
-        for (GraphInput n : graph.getLiveins()) {
-            moduletree.addDeclaration(PortDeclaration.newInputPort(n));
+        for (var livein : graph.getLiveins()) {
+            var liveinname = livein.getRepresentation();
+            // TODO: replace symbolic names?
+            moduletree.addPort(new InputPortDeclaration(liveinname, livein.getWidth()));
         }
 
         // top level graph liveouts
-        for (GraphOutput n : graph.getLiveouts()) {
-            moduletree.addDeclaration(PortDeclaration.newOutputPort(n));
+        for (var liveout : graph.getLiveouts()) {
+            var liveoutname = liveout.getRepresentation();
+            // TODO: replace symbolic names?
+            moduletree.addPort(new OutputPortDeclaration(liveoutname, liveout.getWidth()));
         }
 
         /*
@@ -142,9 +145,26 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
                 var ast = new InstructionAST(n.getInst());
 
                 // quick hack
-                var mf = new MetaFieldFetcher();
-                var metas = mf.fetchMetaFields((PseudoInstructionASTNode) ast.getRootnode());
-                moduletree.getDeclarations().addChild(metas);
+                var mf = new MetaFieldFetcherPass(ast.getRootnode());
+                var metafieldlist = mf.getMetaFields();
+                for (var metafield : metafieldlist) {
+
+                    /*
+                     * Reminder: Any inheritor of @OperandASTNode
+                     * can query if it is either LHS or RSH with
+                     * getSide(), which returns @OperandASTNodeSide
+                     */
+                    var side = metafield.getSide();
+                    var newport = (side == OperandASTNodeSide.LeftHandSide)
+                            ? new InputPortDeclaration(metafield.getAsString(), 32)
+                            : new OutputPortDeclaration(metafield.getAsString(), 32);
+
+                    // TODO: to know the real width, we have to consult the @RegisterProperties
+                    // of the respective source ISA; assuming 32 bits for now
+
+                    moduletree.addPort(newport);
+
+                }
 
                 // Apply first pass (attaches executed instruction information to the AST of the instruction)
                 ast.accept(new ApplyInstructionPass());
@@ -222,97 +242,4 @@ public class CustomInstructionUnitGenerator extends AHardwareGenerator {
 
         return new CustomInstructionUnit(graph, Integer.toString(graph.hashCode()), moduletree);
     }
-
-    /*
-    private static final Map<GraphEdgeType, String> PREFIXNAMES;
-    static {
-        Map<GraphEdgeType, String> aMap = new LinkedHashMap<GraphEdgeType, String>();
-        aMap.put(GraphEdgeType.livein, "in");
-        aMap.put(GraphEdgeType.liveout, "out");
-        aMap.put(GraphEdgeType.immediate, "imm");
-        aMap.put(GraphEdgeType.noderesult, "w");
-        aMap.put(GraphEdgeType.control, "en");
-        PREFIXNAMES = Collections.unmodifiableMap(aMap);
-    }
-    
-    @Override
-    public HardwareInstance generateHardware(BinarySegmentGraph graph) {
-    
-    
-        /*
-         * Map of counters per edge type
-         
-        Map<GraphEdgeType, Integer> counters = new LinkedHashMap<GraphEdgeType, Integer>();
-        for (GraphEdgeType type : GraphEdgeType.values()) {
-            counters.put(type, 0);
-        }
-    
-        /*
-         * Map to remap names of edges into HW signal names
-         
-        Map<GraphEdge, String> renameMap = new LinkedHashMap<GraphEdge, String>();
-    
-        for (GraphNode n : graph.getNodes()) {
-            for (GraphEdge ed : n.getEdges()) {
-                if (!renameMap.containsKey(ed)) {
-                    var type = ed.getType();
-                    int nr = counters.get(type);
-                    renameMap.put(ed, PREFIXNAMES.get(type) + Integer.toString(nr));
-                    counters.put(type, nr + 1);
-                }
-            }
-        }
-    
-        // all lines of code
-        List<String> code = new ArrayList<String>();
-    
-        // put declaration
-        int uniqueid = graph.getSegment().getUniqueId();
-        String segtype = graph.getSegment().getSegmentType().toString().toLowerCase();
-        code.add("module " + segtype + "_" + uniqueid + ";\n\n");
-    
-        // inputs
-        for (GraphInput gi : graph.getLiveins()) {
-            code.add("\tinput [" + gi.getWidth()
-                    + "-1:0" + "] " + renameMap.get(gi)
-                    + ";\t//" + gi.getRepresentation() + "\n");
-        }
-        code.add("\n");
-    
-        // outputs
-        for (GraphOutput go : graph.getLiveouts()) {
-            code.add("\toutput [" + go.getWidth()
-                    + "-1:0" + "] " + renameMap.get(go)
-                    + ";\t//" + go.getRepresentation() + "\n");
-        }
-        code.add("\n");
-    
-        // if number of contexts is 1, then imms
-        // can be a static value, otherwise they are inputs
-        var sz = graph.getSegment().getContexts().size();
-        String datatype = (sz == 1) ? "localparam" : "input";
-        for (GraphNode n : graph.getNodes()) {
-            for (GraphEdge ed : n.getEdges()) {
-                if (ed.getType() == GraphEdgeType.immediate) {
-                    code.add("\t" + datatype + "[" + go.getWidth()
-                            + "-1:0" + "] " + renameMap.get(ed)
-                            + ";\t//" + ed.getRepresentation() + "\n");
-                }
-            }
-        }
-    
-        // put body
-        // TODO a way to transform generic algorithm erxpressions into code...
-        // i might need to transform segmenst into graphs first after all...
-        // for (Instruction i : segment.getInstructions()) {
-        // String line = "assign " +
-        // ??
-        // }
-    
-        // end module
-        code.add("endmodule; //" + segtype + "_" + uniqueid + "\n\n");
-    
-        return new CustomInstructionUnit(graph, code);
-    }
-    */
 }
