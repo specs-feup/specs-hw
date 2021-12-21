@@ -70,10 +70,13 @@ public class ListScheduler {
                         availableAlus++;
                         fullSched.dequeueAluOp(op);
                     }
+                    if (op.getType() == BtfVertexType.AGU) {
+                        fullSched.dequeueAGU(op);
+                    }
                     done.add(op);
 
                     for (var s : Graphs.successorListOf(graph, op)) {
-                        if (s.getType() == BtfVertexType.MEMORY || s.getType() == BtfVertexType.OPERATION) {
+                        if (s.getType() == BtfVertexType.MEMORY || s.getType() == BtfVertexType.OPERATION || s.getType() == BtfVertexType.AGU) {
                             var pred = Graphs.predecessorListOf(graph, s);
                             var allAncestorsDone = true;
                             for (var p : pred) {
@@ -125,6 +128,13 @@ public class ListScheduler {
                         // Add to an available discrete resource
                         fullSched.enqueueAluOp(op);
                     }
+                }
+                if (op.getType() == BtfVertexType.AGU) {
+                    toRemove.add(op);
+                    sched.put(op, cycle);
+                    active.add(op);
+
+                    fullSched.enqueueAGU(op);
                 }
             }
             ready.removeAll(toRemove);

@@ -78,19 +78,20 @@ operator : PLUS | MINUS | TIMES | DIV | GT | GET | LT | LET | EQUALS | NEQUALS |
 integerval: INT;
 doubleval: DOUBLE;
 unsignednumber: (integerval | doubleval);
-signednumber: MINUS (integerval | doubleval);
+signednumber: MINUS(integerval | doubleval);
 number: unsignednumber | signednumber;
+encodedfield: ASMFIELD;
 metafield: METASYMBOL processorRegister=ASMFIELD;
+asmfield: encodedfield | metafield;
 
-rangesubscript: ASMFIELD LBRACK loidx=integerval SEMI hiidx=integerval RBRACK;
-scalarsubscript : ASMFIELD LBRACK idx=integerval RBRACK;
+rangesubscript: asmfield LBRACK loidx=integerval SEMI hiidx=integerval RBRACK;
+scalarsubscript : asmfield LBRACK idx=integerval RBRACK;
  
 operand:
-	ASMFIELD 			# Field
-   | (metafield)		# metaFieldOperand
-   | (number)			# Literal
-   | scalarsubscript 	# scalarsubscriptOperand
-   | rangesubscript 	# rangesubscriptOperand; 
+	asmfield 			# AsmFieldOperand
+   | number				# LiteralOperand
+   | scalarsubscript 	# ScalarsubscriptOperand
+   | rangesubscript 	# RangesubscriptOperand; 
 
 /************************************************************
  * Lexing

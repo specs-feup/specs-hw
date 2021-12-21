@@ -13,6 +13,9 @@
 
 package pt.up.fe.specs.binarytranslation.analysis.graphs.templates;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
@@ -55,5 +58,25 @@ public enum GraphTemplateType {
         for (var type : GraphTemplateType.values())
             templates.append(type.getTemplate().toString()).append("\n");
         return templates.toString();
+    }
+    
+    public static List<GraphTemplateType> getAguTemplates() {
+        var res = new ArrayList<GraphTemplateType>();
+        res.add(TYPE_7);
+        res.add(TYPE_6);
+        res.add(TYPE_2);
+        res.add(TYPE_3);
+        res.add(TYPE_4);
+        res.add(TYPE_12);
+        res.add(TYPE_15);
+        res.add(TYPE_13);
+        res.add(TYPE_14);
+        res.add(TYPE_10);
+        res.add(TYPE_11);
+        res.add(TYPE_1);
+        res.add(TYPE_8);
+        res.add(TYPE_5);
+        res.add(TYPE_9);
+        return res;
     }
 }

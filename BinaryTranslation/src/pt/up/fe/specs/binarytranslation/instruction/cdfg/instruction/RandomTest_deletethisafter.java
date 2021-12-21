@@ -27,7 +27,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.analysis.timing.TimingAnalysisRun;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
@@ -40,6 +40,7 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
@@ -83,16 +84,18 @@ public class RandomTest_deletethisafter {
         
     }
     
-    private FakeInstruction instruction = new FakeInstruction("fakeInstructionTest",  "RD = RA + RB;");
+    private FakeInstruction instruction = new FakeInstruction("addTest",  
+            "if(RA == 3) {RD = RA + RB;} RG = RS + RB;"
+            );
     
     private String systemPath = "C:\\Users\\joaom\\Desktop\\" + "btf_" + instruction.getName();
     private String wslPath = "/mnt/c/Users/joaom/Desktop/" + "btf_" + instruction.getName();
     
     private InstructionCDFG icdfg;
     
-    private AHardwareInstance generatedModule;
+    private AHardwareArchitecture generatedModule;
     
-    private final int moduleTestbenchSamples = 1000000;
+    private final int moduleTestbenchSamples = 1000;
     
     public void generateFolderStructures() {
         HardwareFolderGenerator.generate(systemPath);
@@ -104,20 +107,28 @@ public class RandomTest_deletethisafter {
         System.out.println("\tDONE");
     }
     
-    public void exportInstructionCDFGAsDOT() {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void exportInstructionCDFGAsDOT() throws IOException {
         System.out.print("Exporting InstructionCDFG as DOT...");
         InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
         Writer writer = new StringWriter();
         exp.exportGraph((GeneralFlowGraph)this.icdfg, this.instruction.getName(), writer);
         System.out.println("\t" + InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
+        InstructionCDFGDOTExporter.generateGraphvizFile(HardwareFolderGenerator.getBTFFolder(systemPath), this.instruction.getName(), writer.toString());
+        exp.emit((GeneralFlowGraph)this.icdfg, this.instruction.getName(), writer, HardwareFolderGenerator.newFile(HardwareFolderGenerator.getBTFFolder(systemPath), this.instruction.getName(), "dot"));
         
     }
 
+    public void resolveInstructionCDFGNames() {
+        InstructionCDFGNameResolver.resolve(icdfg);
+    }
+    
     public void generateHardwareModule() throws IOException {
         System.out.print("Generating HW module...");
         InstructionCDFGCustomInstructionUnitGenerator moduleGenerator = new InstructionCDFGCustomInstructionUnitGenerator();
-        this.generatedModule = moduleGenerator.generateHardware(icdfg, "add_test");
+        this.generatedModule = moduleGenerator.generateHardware(icdfg, this.instruction.getName());
         this.generatedModule.emit(HardwareFolderGenerator.newHardwareHDLFile(systemPath, this.generatedModule.getName(), "sv"));
+        
         System.out.println("\tDONE");
     }
     
@@ -142,21 +153,22 @@ public class RandomTest_deletethisafter {
     
     public void generateVerilatorTestbench() throws IOException {
         System.out.print("Generating HW module Verilator testbench...");
-        VerilatorTestbenchGenerator.emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, generatedModule.getName() + "_tb", "cpp"), generatedModule.getName(), moduleTestbenchSamples);
+        VerilatorTestbenchGenerator.emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, this.instruction.getName() + "_tb", "cpp"), generatedModule.getName(), moduleTestbenchSamples);
         System.out.println("\tDONE");
     }
     
-    public void runVerilatorTestbench() throws IOException {
+    public boolean runVerilatorTestbench() throws IOException {
         System.out.print("Running Verilator testbench...");
-        if(!VerilatorRun.start(wslPath+"/hw/tb", "add_test")) {
+        if(!VerilatorRun.start(wslPath+"/hw/tb", this.instruction.getName())) {
             System.out.println("ERROR: Validation failed !!!");
-            return;
+            return false;
         }
+        return true;
     }
     
     public void performIcetimeTimingAnalysis() throws IOException {
         System.out.print("Performing timing analysis (icetime) on generated module...");
-        TimingAnalysisRun.start(wslPath, "add_test");
+        TimingAnalysisRun.start(wslPath, this.instruction.getName());
         System.out.println("\tDONE");
     }
     
@@ -166,11 +178,15 @@ public class RandomTest_deletethisafter {
         this.generateFolderStructures();
         this.generateInstructionCDFG();
         this.exportInstructionCDFGAsDOT();
+        this.resolveInstructionCDFGNames();
+        this.exportInstructionCDFGAsDOT();
         this.generateHardwareModule();
+   
         this.generateHardwareModuleValidationData();
         this.generateHardwareModuleTestbench();
         this.generateVerilatorTestbench();
-        this.runVerilatorTestbench();
+        if(!this.runVerilatorTestbench())
+            return;
         this.performIcetimeTimingAnalysis();
         
     }

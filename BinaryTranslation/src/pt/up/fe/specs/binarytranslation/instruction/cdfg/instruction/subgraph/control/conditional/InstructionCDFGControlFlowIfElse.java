@@ -27,4 +27,9 @@ public class InstructionCDFGControlFlowIfElse extends AInstructionCDFGControlFlo
         super(merge, uid_map);
     }
     
+    @Override
+    public String toString() {
+        return "InstructionCDFGControlFlowIfElse_" + this.hashCode() ;
+    }
+    
 }

@@ -16,13 +16,13 @@ package pt.up.fe.specs.binarytranslation.hardware.accelerators.cla;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
 
 /**
  * This type of accelerator is only composed of a parameter list to support the synthesis of a legacy CLA design (see
  * https://bitbucket.org/nmcp88/cla-ipcores)
  */
-public class CustomizedLoopAccelerator extends AHardwareInstance {
+public class CustomizedLoopAccelerator extends AHardwareArchitecture {
 
     /*
      * Should represent a Basic Block or Megablock loop

@@ -45,8 +45,13 @@ public class VerilatorRun{
             processCommands.append("\"");
         
         ProcessBuilder processBuilder = new ProcessBuilder();
+
         
-        Process process = processBuilder.command("cmd.exe", "/c", processCommands.toString()).start();
+        Process process;
+        if(VerilatorRun.IS_WINDOWS)
+            process = processBuilder.command("cmd.exe", "/c", processCommands.toString()).start();
+        else
+            process = processBuilder.command("bash", "-c", processCommands.toString()).start();
 
         try {
             process.waitFor();
@@ -74,7 +79,11 @@ public class VerilatorRun{
         
         ProcessBuilder processBuilder = new ProcessBuilder();
         
-        Process process = processBuilder.command("cmd.exe", "/c", processCommands.toString()).start();
+        Process process;
+        if(VerilatorRun.IS_WINDOWS)
+            process = processBuilder.command("cmd.exe", "/c", processCommands.toString()).start();
+        else
+            process = processBuilder.command("bash", "-c", processCommands.toString()).start();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         

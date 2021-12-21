@@ -58,7 +58,7 @@ public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<Gene
     protected String getVertexID(AInstructionCDFGNode vertex){
         
         String vertexId = validatedSubgraphIds.get(vertex);
-           
+        
         if (vertexId == null) {
     
             vertexId = vertex.getUID();

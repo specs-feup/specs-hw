@@ -32,4 +32,8 @@ public class InstructionCDFGDataFlowSubgraph extends AInstructionCDFGSubgraph{
         
     }
     
+    @Override
+    public String toString() {
+        return "InstructionCDFGDataFlowSubgraph_" + this.hashCode();
+    }
 }

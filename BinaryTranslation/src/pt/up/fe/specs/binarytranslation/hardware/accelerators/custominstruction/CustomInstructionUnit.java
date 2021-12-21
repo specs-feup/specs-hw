@@ -14,10 +14,10 @@
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction;
 
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareInstance;
+import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
 
-public class CustomInstructionUnit extends AHardwareInstance {
+public class CustomInstructionUnit extends AHardwareArchitecture {
 
     // private List<Port> inputs, outputs;
     // Port is template class??

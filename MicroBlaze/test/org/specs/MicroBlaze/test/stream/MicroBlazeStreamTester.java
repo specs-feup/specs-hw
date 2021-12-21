@@ -10,12 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.asm.MicroBlazeRegister;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
+import org.specs.MicroBlaze.provider.MicroBlazeRosetta;
+import org.specs.MicroBlaze.provider.MicroBlazeZippedELFProvider;
 
 import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
 
@@ -28,15 +28,11 @@ import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
  */
 public class MicroBlazeStreamTester extends InstructionStreamTester {
 
-    @Test
-    public void testB() {
-
-        var enumreg = MicroBlazeRegister.valueOf("R1");
-    }
+    final MicroBlazeZippedELFProvider elfUnderTest = MicroBlazeRosetta.rendering3d;
 
     @Test
     public void testA() {
-        try (var stream = MicroBlazeLivermoreN100.matmul.toTraceStream()) {
+        try (var stream = elfUnderTest.toTraceStream()) {
             stream.runUntil(stream.getApp().getKernelStart());
 
             // 1st
@@ -73,48 +69,27 @@ public class MicroBlazeStreamTester extends InstructionStreamTester {
 
     @Test
     public void testStatic() {
-
-        /*
-        var elf = MicroBlazeLivermoreN100.matmul;
-        
-        var app = elf.toApplication();
-        var istream = elf.toTraceStream();
-        
-        var s = app.get(Application.GCC);
-        
-        istream.getApp().*/
-
-        printStream(MicroBlazeLivermoreN100.matmul.toStaticStream());
+        printStream(elfUnderTest.toStaticStream());
     }
 
     @Test
     public void testStaticRaw() {
-        rawDump(MicroBlazeLivermoreN100.innerprod.toStaticStream());
+        rawDump(elfUnderTest.toStaticStream());
     }
 
     @Test
     public void testStaticRawFromTxtDump() {
-        rawDump(MicroBlazeLivermoreN100.innerprod.asTxtDump().toStaticStream());
+        rawDump(elfUnderTest.asTxtDump().toStaticStream());
     }
 
     @Test
     public void testTrace() {
-        printStream(MicroBlazeLivermoreN100.matmul.toTraceStream());
+        printStream(elfUnderTest.toTraceStream());
     }
 
     @Test
     public void testTraceRaw() {
-        // for (var elf : MicroBlazePolyBenchMiniInt.values())
-        // for (var elf : MicroBlazeLivermoreN100.values())
-        // rawDump(elf.toTraceStream());
-
-        // rawDump(MicroBlazeRosetta.facedetection.toTraceStream());
-
-        // rawDump(MicroBlazeLivermoreN100.cholesky.toTraceStream());
-
-        // rawDump(MicroBlazePolyBenchMiniInt.floydwarshall.toTraceStream());
-
-        rawDump(MicroBlazeLivermoreN100.matmul.toTraceStream());
+        rawDump(elfUnderTest.toTraceStream());
 
         // TODO:
         /*0xd8 <precise_random_f32+216>:  0x30606b20
@@ -125,15 +100,6 @@ public class MicroBlazeStreamTester extends InstructionStreamTester {
 
     @Test
     public void testTraceRawFromTxtDump() {
-
-        /*
-        var elf = MicroBlazeLivermoreN100.matmul.asTraceTxtDump();
-        
-        var app = elf.toApplication();
-        var istream = elf.toTraceStream();
-        
-        var s = app.get(Application.GCC);*/
-
-        rawDump(MicroBlazeLivermoreN100.innerprod.asTraceTxtDump().toTraceStream());
+        rawDump(elfUnderTest.asTraceTxtDump().toTraceStream());
     }
 }

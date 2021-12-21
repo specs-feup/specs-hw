@@ -121,4 +121,14 @@ public class Schedule {
     public int getMemPortCount() {
         return resourcesMemPorts.size();
     }
+
+    public void dequeueAGU(BtfVertex op) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void enqueueAGU(BtfVertex op) {
+        // TODO Auto-generated method stub
+        
+    }
 }
