@@ -30,7 +30,7 @@ public abstract class HardwareOperator extends HardwareExpression {
 
         // we know the value
         if (thisop.getType() == HardwareNodeType.ImmediateOperator) {
-            var rightvals = ((ImmediateOperator) thisop).getValue();
+            var rightvals = ((Immediate) thisop).getValue();
             return Integer.valueOf(rightvals); // TODO return this directly as int
         }
 

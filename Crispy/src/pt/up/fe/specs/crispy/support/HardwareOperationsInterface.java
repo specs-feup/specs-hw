@@ -35,7 +35,8 @@ import pt.up.fe.specs.crispy.ast.expression.comparison.LessThanOrEqualsExpressio
 import pt.up.fe.specs.crispy.ast.expression.comparison.NotEqualsToExpression;
 import pt.up.fe.specs.crispy.ast.expression.logical.LogicalAndExpression;
 import pt.up.fe.specs.crispy.ast.expression.logical.LogicalOrExpression;
-import pt.up.fe.specs.crispy.ast.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.crispy.ast.expression.logical.ReplicationExpression;
+import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.statement.ContinuousStatement;
 import pt.up.fe.specs.crispy.ast.statement.ProceduralBlockingStatement;
@@ -134,6 +135,10 @@ public interface HardwareOperationsInterface {
         return new LogicalOrExpression(getThis(), refB);
     }
 
+    public default ReplicationExpression rep(int replicateCount) {
+        return new ReplicationExpression(replicateCount, getThis());
+    }
+
     public default ParenthesisExpression paren() {
         return new ParenthesisExpression(getThis());
     }
@@ -142,7 +147,7 @@ public interface HardwareOperationsInterface {
      * nonBlocking
      */
     public default ProceduralNonBlockingStatement nonBlocking(int literalConstant) {
-        return nonBlocking(new ImmediateOperator(literalConstant, getThis().getResultWidth()));
+        return nonBlocking(new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default ProceduralNonBlockingStatement nonBlocking(HardwareExpression expr) {
@@ -153,7 +158,7 @@ public interface HardwareOperationsInterface {
      * blocking
      */
     public default ProceduralBlockingStatement blocking(int literalConstant) {
-        return blocking(new ImmediateOperator(literalConstant, getThis().getResultWidth()));
+        return blocking(new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default ProceduralBlockingStatement blocking(HardwareExpression expr) {
@@ -164,28 +169,10 @@ public interface HardwareOperationsInterface {
      * assign
      */
     public default ContinuousStatement assign(int literalConstant) {
-        return assign(new ImmediateOperator(literalConstant, getThis().getResultWidth()));
+        return assign(new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default ContinuousStatement assign(HardwareExpression expr) {
         return new ContinuousStatement((VariableOperator) getThis(), expr);
     }
-
-    /*
-    // TODO: more
-    
-    private T getResult(HardwareExpression expr) {
-    
-        var resultBits = expr.getResultWidth();
-        var newresult = new WireDeclaration(expr.getResultName(), resultBits); // TODO: auto-gen name
-        var stat = this.supplier.apply(newresult.getReference(), expr);
-    
-        var parenthwmodule = user.getAncestorTry(HardwareModule.class).orElse(null);
-        if (parenthwmodule != null) {
-            parenthwmodule.addWire(newresult); // add new wire to declaration block
-        }
-        user.addStatement(stat);
-    
-        return newresult.getReference();
-    }*/
 }

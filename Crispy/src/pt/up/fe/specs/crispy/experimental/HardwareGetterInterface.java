@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.HardwareStatement;
+import pt.up.fe.specs.crispy.ast.statement.HardwareStatement;
 
 public interface HardwareGetterInterface<T> {
 

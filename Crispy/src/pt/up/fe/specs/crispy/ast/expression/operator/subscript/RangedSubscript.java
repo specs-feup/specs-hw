@@ -15,7 +15,7 @@ package pt.up.fe.specs.crispy.ast.expression.operator.subscript;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
-import pt.up.fe.specs.crispy.ast.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 
 public class RangedSubscript extends OperatorSubscript {
 
@@ -39,7 +39,7 @@ public class RangedSubscript extends OperatorSubscript {
      * Helper to pass primitive integer index
      */
     public RangedSubscript(int leftidx, int rightidx) {
-        this(new ImmediateOperator(leftidx, 32), new ImmediateOperator(rightidx, 32));
+        this(new Immediate(leftidx, 32), new Immediate(rightidx, 32));
     }
 
     @Override

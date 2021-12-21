@@ -15,7 +15,7 @@ package pt.up.fe.specs.crispy.ast.expression.operator.subscript;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
-import pt.up.fe.specs.crispy.ast.expression.operator.ImmediateOperator;
+import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 
 public class ScalarSubscript extends OperatorSubscript {
 
@@ -38,7 +38,7 @@ public class ScalarSubscript extends OperatorSubscript {
      * Helper to pass primitive integer index
      */
     public ScalarSubscript(int idx) {
-        this(new ImmediateOperator(idx, 32));
+        this(new Immediate(idx, 32));
     }
 
     @Override
