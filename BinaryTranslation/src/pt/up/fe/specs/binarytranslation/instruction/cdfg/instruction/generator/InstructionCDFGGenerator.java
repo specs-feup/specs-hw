@@ -68,16 +68,6 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
         this.icdfg.generateDataOutputs();
     }
     
-    public static void generateUID(Map<String, Integer> uidMap, AInstructionCDFGNode vertex) {
-        
-        uidMap.put(vertex.getReference(), (uidMap.containsKey(vertex.getReference())) ? uidMap.get(vertex.getReference()) + 1 : 0);
- 
-        vertex.setUID(String.valueOf(uidMap.get(vertex.getReference())));
-    }
-    
-    public static void setUID(Map<String, Integer> uidMap, AInstructionCDFGNode vertex) {
-        vertex.setUID(String.valueOf(uidMap.get(vertex.getReference())));
-    }
     
     public InstructionCDFG generate(Instruction instruction) {
 
@@ -107,13 +97,15 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
             return null;
         }
         
-        InstructionCDFGDataFlowSubgraph new_dfg = (InstructionCDFGDataFlowSubgraph) this.subgraphGenerator.generate(new InstructionCDFGDataFlowSubgraph(this.uidMap), ctx);
+        InstructionCDFGDataFlowSubgraph new_dfg = (InstructionCDFGDataFlowSubgraph) this.subgraphGenerator.generate(new InstructionCDFGDataFlowSubgraph(), this.uidMap, ctx);
         this.icdfg.addVertex(new_dfg);
         
         this.addPreviousStatementEdge(new_dfg);
         
         this.last_node = new_dfg;
         this.last_node_edge = new InstructionCDFGEdge();
+        
+        this.uidMap = new_dfg.getCurrentUIDMap();
         
         ctx.clear();
         
@@ -174,10 +166,10 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
     @Override
     public AInstructionCDFGSubgraph visitIfStatement(IfStatementContext ctx) {
              
-        InstructionCDFGControlFlowMerge merge = new InstructionCDFGControlFlowMerge(this.uidMap);
+        InstructionCDFGControlFlowMerge merge = new InstructionCDFGControlFlowMerge();
         this.icdfg.addVertex(merge);
         
-        InstructionCDFGControlFlowIfElse condition =  (InstructionCDFGControlFlowIfElse) this.subgraphGenerator.generate(new InstructionCDFGControlFlowIfElse(merge, this.uidMap), ctx.condition);
+        InstructionCDFGControlFlowIf condition =  (InstructionCDFGControlFlowIf) this.subgraphGenerator.generate(new InstructionCDFGControlFlowIf(merge), this.uidMap, ctx.condition);
         this.icdfg.addVertex(condition);
        
         this.addPreviousStatementEdge(condition);
@@ -194,10 +186,10 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
     @Override
     public AInstructionCDFGSubgraph visitIfElseStatement(IfElseStatementContext ctx) {
        
-        InstructionCDFGControlFlowMerge merge = new InstructionCDFGControlFlowMerge(this.uidMap);
+        InstructionCDFGControlFlowMerge merge = new InstructionCDFGControlFlowMerge();
         this.icdfg.addVertex(merge);
         
-        InstructionCDFGControlFlowIfElse condition = (InstructionCDFGControlFlowIfElse) this.subgraphGenerator.generate(new InstructionCDFGControlFlowIfElse(merge, this.uidMap), ctx.condition);
+        InstructionCDFGControlFlowIfElse condition = (InstructionCDFGControlFlowIfElse) this.subgraphGenerator.generate(new InstructionCDFGControlFlowIfElse(merge), this.uidMap, ctx.condition);
         this.icdfg.addVertex(condition);
         this.addPreviousStatementEdge(condition); 
 
@@ -213,7 +205,7 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
     @Override
     public AInstructionCDFGSubgraph visitPlainStmt(PlainStmtContext ctx) {
         
-        InstructionCDFGDataFlowSubgraph dfg = (InstructionCDFGDataFlowSubgraph) this.subgraphGenerator.generate(new InstructionCDFGDataFlowSubgraph(this.uidMap), ctx);
+        InstructionCDFGDataFlowSubgraph dfg = (InstructionCDFGDataFlowSubgraph) this.subgraphGenerator.generate(new InstructionCDFGDataFlowSubgraph(), this.uidMap, ctx);
         this.icdfg.addVertex(dfg);
         
         return dfg;

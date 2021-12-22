@@ -15,20 +15,10 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional;
+package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.ternary.subscript;
 
-import java.util.Map;
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.ternary.AHardwareValidationTernaryOperation;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
+public abstract class AHardwareValidationTernarySubscript extends AHardwareValidationTernaryOperation{
 
-public class InstructionCDFGControlFlowIf extends AInstructionCDFGControlFlowConditionalSubgraph{
-    
-    public InstructionCDFGControlFlowIf(InstructionCDFGControlFlowMerge merge) {
-        super(merge);
-    }
-    
-    @Override
-    public String toString() {
-        return "InstructionCDFGControlFlowIf_" + this.hashCode() ;
-    }
 }

@@ -24,8 +24,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.co
 
 public class AInstructionCDFGControlFlowMergeSubgraph extends AInstructionCDFGControlFlowSubgraph{
 
-    public AInstructionCDFGControlFlowMergeSubgraph(Map<String, Integer> uid_map, AInstructionCDFGControlNode vertex) {
-        super(uid_map);
+    public AInstructionCDFGControlFlowMergeSubgraph(AInstructionCDFGControlNode vertex) {
         this.setControlVertex(vertex);
     }
 

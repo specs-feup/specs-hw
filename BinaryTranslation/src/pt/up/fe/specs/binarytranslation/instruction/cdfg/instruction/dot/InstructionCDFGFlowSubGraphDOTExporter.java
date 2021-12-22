@@ -54,14 +54,10 @@ public class InstructionCDFGFlowSubGraphDOTExporter extends GeneralFlowGraphDOTE
             
             edgeBuilder.append(INDENT_BASE + INDENT_INNER);
             edgeBuilder.append(this.getVertexID(g.getEdgeSource(e)));
-            if(e instanceof AInstructionCDFGOperandEdge) {
-                edgeBuilder.append(":s");
-            }else {
-                edgeBuilder.append(":s");
-            }
-            
+            edgeBuilder.append(":s");
             edgeBuilder.append(connector);
             edgeBuilder.append(this.getVertexID(g.getEdgeTarget(e)));
+            
             if(e instanceof InstructionCDFGRightOperandEdge) {
                 edgeBuilder.append(":e");
             }else if (e instanceof InstructionCDFGLeftOperandEdge) {
@@ -69,6 +65,7 @@ public class InstructionCDFGFlowSubGraphDOTExporter extends GeneralFlowGraphDOTE
             }else {
                 edgeBuilder.append(":n");
             }
+            
             getEdgeAttributes(e).ifPresent(m -> { edgeBuilder.append(renderAttributes(m));});
     
             edgeBuilder.append(";\n");
@@ -84,6 +81,7 @@ public class InstructionCDFGFlowSubGraphDOTExporter extends GeneralFlowGraphDOTE
         
         
         this.setVertexAttributeProvider((v) -> {
+            
             Map<String, Attribute> map = new LinkedHashMap<>();
  
             map.put("shape", v.getDOTShape());
@@ -97,11 +95,10 @@ public class InstructionCDFGFlowSubGraphDOTExporter extends GeneralFlowGraphDOTE
         
         for (AInstructionCDFGNode vertex : g.vertexSet()) {
          
-                vertexesBuilder.append(INDENT_BASE);
-                vertexesBuilder.append(INDENT_INNER);
+                vertexesBuilder.append(INDENT_BASE + INDENT_INNER);
                 vertexesBuilder.append(this.getVertexID(vertex));
         
-                getVertexAttributes(vertex).ifPresent(m -> {vertexesBuilder.append(this.renderAttributes(m));});
+                getVertexAttributes(vertex).ifPresent(m -> vertexesBuilder.append(this.renderAttributes(m)));
         
                 vertexesBuilder.append(";\n");
             }
@@ -114,11 +111,8 @@ public class InstructionCDFGFlowSubGraphDOTExporter extends GeneralFlowGraphDOTE
     {
         StringBuilder headerBuilder = new StringBuilder();
         
-        headerBuilder.append(INDENT_BASE);
-
-        headerBuilder.append(SUBGRAPH_KEYWORD);
+        headerBuilder.append(INDENT_BASE + SUBGRAPH_KEYWORD);
         headerBuilder.append(" cluster_").append(this.computeGraphId(name)).append(" {\n");
-        
         headerBuilder.append(INDENT_BASE + INDENT_INNER + "label=\""+ this.graph_name +"\"\n");
         
         if(g instanceof AInstructionCDFGControlFlowSubgraph) {

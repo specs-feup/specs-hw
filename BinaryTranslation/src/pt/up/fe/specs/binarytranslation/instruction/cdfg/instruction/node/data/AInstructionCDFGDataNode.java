@@ -58,10 +58,7 @@ public class AInstructionCDFGDataNode extends AInstructionCDFGNode{
         return this.modifier;
     }
     
-    @Override
-    public Attribute getDOTLabel() {
-        return DefaultAttribute.createAttribute(super.getReference());
-    }
+
     
     
     

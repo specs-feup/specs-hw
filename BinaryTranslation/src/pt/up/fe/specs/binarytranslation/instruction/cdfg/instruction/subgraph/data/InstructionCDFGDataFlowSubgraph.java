@@ -26,11 +26,6 @@ public class InstructionCDFGDataFlowSubgraph extends AInstructionCDFGSubgraph{
     public InstructionCDFGDataFlowSubgraph() {
         super();
     }
-
-    public InstructionCDFGDataFlowSubgraph(Map<String, Integer> uid_map) {
-        super(uid_map);
-        
-    }
     
     @Override
     public String toString() {

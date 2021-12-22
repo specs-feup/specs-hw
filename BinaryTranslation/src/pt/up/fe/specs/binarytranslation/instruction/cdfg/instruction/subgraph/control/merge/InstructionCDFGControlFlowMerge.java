@@ -23,8 +23,8 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.contro
 
 public class InstructionCDFGControlFlowMerge extends AInstructionCDFGControlFlowMergeSubgraph{
 
-    public InstructionCDFGControlFlowMerge(Map<String, Integer> uid_map) {
-        super(uid_map, new InstructionCDFGControlMergeNode());
+    public InstructionCDFGControlFlowMerge() {
+        super(new InstructionCDFGControlMergeNode());
     }
 
     @Override

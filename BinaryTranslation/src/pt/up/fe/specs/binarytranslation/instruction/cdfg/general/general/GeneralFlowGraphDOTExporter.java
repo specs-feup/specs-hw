@@ -17,14 +17,11 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general;
 
-
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -52,7 +49,8 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
     
     public String INDENT_BASE = "";
     protected String INDENT_INNER = "  ";
-    protected final Map<V, String> validatedIds;
+    protected final Map<V, Integer> validatedIds;
+    protected int lastId;
     protected String graph_name;
     
     /** Keyword for representing strict graphs. */
@@ -78,16 +76,27 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
         return ALPHA_DIG.matcher(idCandidate).matches() || DOUBLE_QUOTE.matcher(idCandidate).matches() || DOT_NUMBER.matcher(idCandidate).matches()  || HTML.matcher(idCandidate).matches();
     }
         
-
     public GeneralFlowGraphDOTExporter() {
         super(new IntegerIdProvider<>());
         
         this.validatedIds = new HashMap<>();
+        this.lastId = -1;
+    }
+    
+    public GeneralFlowGraphDOTExporter(int offset) {
+        super(new IntegerIdProvider<>());
+        
+        this.validatedIds = new HashMap<>();
+        this.lastId = offset - 1;
+    }
+    
+    protected int getLastId() {
+        return this.lastId;
     }
     
     public static String generateGraphURL(String dotGraph) {
         try {
-            URI uri = new URI("https://dreampuf.github.io/GraphvizOnline/#",dotGraph,null);
+            URI uri = new URI("https://dreampuf.github.io/GraphvizOnline/#", dotGraph, null);
             return uri.toASCIIString().replace("#:", "#");
         } catch (URISyntaxException e) {
             SpecsLogs.warn("Error message:\n", e);
@@ -129,8 +138,7 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
             bw.close();
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            SpecsLogs.msgWarn("Error message:\n", e);
         }
 
     }
@@ -142,7 +150,6 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
         this.graph_name = name;
         
         out.print(this.exportGraph(g, name));
-        
         out.flush();
     }
     
@@ -153,13 +160,9 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
         this.graph_name = name;
         
         graphBuilder.append(this.exportHeader(g, name));
-        
-        graphBuilder.append(this.exportGraphAttributes(g));
-        
-        graphBuilder.append(this.exportVertexes(g));   
-    
-        graphBuilder.append(this.exportEdges(g));
-    
+        graphBuilder.append(this.exportGraphAttributes(g));        
+        graphBuilder.append(this.exportVertexes(g));      
+        graphBuilder.append(this.exportEdges(g));   
         graphBuilder.append(this.exportFooter());
         
         return graphBuilder.toString();
@@ -170,8 +173,7 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
         StringBuilder graphAttributes = new StringBuilder();
         
         for (Entry<String, Attribute> attr : graphAttributeProvider.orElse(Collections::emptyMap).get().entrySet()){
-                graphAttributes.append(INDENT_BASE);
-                graphAttributes.append(INDENT_INNER);
+                graphAttributes.append(INDENT_BASE + INDENT_INNER);
                 graphAttributes.append(attr.getKey());
                 graphAttributes.append('=');
                 graphAttributes.append(attr.getValue());
@@ -187,8 +189,7 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
         
         for (V vertex : g.vertexSet()) {
          
-                vertexesBuilder.append(INDENT_BASE);
-                vertexesBuilder.append(INDENT_INNER);
+                vertexesBuilder.append(INDENT_BASE + INDENT_INNER);
                 vertexesBuilder.append(this.getVertexID(vertex));
         
                 getVertexAttributes(vertex).ifPresent(m -> {vertexesBuilder.append(this.renderAttributes(m));});
@@ -256,22 +257,14 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
     }
     
     protected String getVertexID(V vertex) {
-        String vertexId = validatedIds.get(vertex);
-        
-        
-        if (vertexId == null) {
+
+        validatedIds.putIfAbsent(vertex, ++this.lastId);
+
+        return "v" + String.valueOf(validatedIds.get(vertex).intValue());
+    }
     
-            vertexId = getVertexId(vertex);
-    
-            
-            /*
-            if (!isValidID(vertexId)) {
-                throw new ExportException("Generated id '" + vertexId + "'for vertex '" + vertex + "' is not valid with respect to the .dot language");
-            }
-            */
-            validatedIds.put(vertex, vertexId);
-        }
-        return vertexId;
+    public Map<V, Integer> getVertexIDMap(){
+        return this.validatedIds;
     }
     
     protected String renderAttributes(Map<String, Attribute> attributes) {
@@ -280,7 +273,7 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
         
         attributesBuilder.append(" [ ");
         
-        attributes.entrySet().forEach((entry) -> {attributesBuilder.append(renderAttribute(entry.getKey(), entry.getValue()));});
+        attributes.entrySet().forEach(entry -> attributesBuilder.append(renderAttribute(entry.getKey(), entry.getValue())));
              
         attributesBuilder.append("]");
         
@@ -309,13 +302,10 @@ public class GeneralFlowGraphDOTExporter<V, E> extends BaseExporter<V, E> implem
         return labelName.replaceAll("\"", Matcher.quoteReplacement("\\\""));
     }
 
-
     @Override
     @Deprecated
     public void exportGraph(Graph<V, E> g, Writer writer) {
-        
         System.out.println("IGNORE THIS METHOD!!!");
-        
     }
     
 }

@@ -17,7 +17,6 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control;
 
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -31,9 +30,8 @@ public class AInstructionCDFGControlFlowSubgraph extends AInstructionCDFGSubgrap
     
     public static Predicate<AInstructionCDFGSubgraph> predicate = s -> s instanceof AInstructionCDFGControlFlowSubgraph;
     
-    public AInstructionCDFGControlFlowSubgraph(Map<String, Integer> uid_map) {
-        super(uid_map);
-        
+    public AInstructionCDFGControlFlowSubgraph() {
+        super();  
     }
  
     public void setControlVertex(AInstructionCDFGControlNode control_vertex) {

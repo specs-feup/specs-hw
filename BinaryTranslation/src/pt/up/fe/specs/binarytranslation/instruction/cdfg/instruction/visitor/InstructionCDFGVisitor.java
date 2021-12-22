@@ -17,82 +17,137 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.visitor;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIf;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIfElse;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.AInstructionCDFGControlFlowMergeSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
-public class InstructionCDFGVisitor<R> {
-
-    protected final InstructionCDFG icdfg;
+public class InstructionCDFGVisitor {
+    
+    protected InstructionCDFG icdfg;
+    protected Collection<AInstructionCDFGSubgraph> subgraphsResolved;
     
     public InstructionCDFGVisitor(InstructionCDFG icdfg) {
-        this.icdfg = icdfg;
+        this.icdfg = icdfg;      
+        this.subgraphsResolved = new ArrayList<>();
     }
     
     public void begin() {
         this.icdfg.getInputs().forEach(input -> this.visit(input));
     }
     
-    protected R visit(AInstructionCDFGSubgraph subgraph) throws IllegalArgumentException{
+    /** Checks if the argument subgraph can be visited<br>
+     *  A subgraph can be visited if all of the vertices before it have been visited before
+     * 
+     * @param subgraph Subgraph to check
+     * @return True if the argument subgraph can be visited
+     */
+    protected boolean canVisitSubgraph(AInstructionCDFGSubgraph subgraph) {   
+        
+        if(this.icdfg.getVerticesBefore(subgraph).size() == 0) {
+            return true;
+        }
+        
+
+        return !this.icdfg.getVerticesBefore(subgraph).stream().anyMatch(subgraphBefore -> !this.subgraphsResolved.contains(subgraphBefore));
+    }
+    
+    /** Checks if the argument subgraph is a simple vertex<br>
+     * A simple vertex has only a single vertex before and a single vertex after
+     * 
+     * @param subgraph Subgraph to check
+     * @return True if the argument subgraph is a simple vertex
+     */
+    protected boolean isSimpleVertex(AInstructionCDFGSubgraph subgraph) {    
+        return (!this.isSplitVertex(subgraph)) && (!this.isMergeVertex(subgraph));
+    }
+    
+    /** Checks if the argument subgraph is a complex vertex<br>
+     * A complex vertex has more than one vertex before and more than one vertex after, so it is both a split vertex and a merge vertex
+     * 
+     * @param subgraph Subgraph to check
+     * @return True if the argument subgraph is a complex vertex
+     */
+    protected boolean isComplexVertex(AInstructionCDFGSubgraph subgraph) {
+        return this.isSplitVertex(subgraph) && this.isMergeVertex(subgraph);
+    }
+    
+    /** Checks if the argument subgraph is a split vertex<br>
+     *  A split vertex has more than one vertex after
+     * @param subgraph Subgraph to check
+     * @return True if the argument subgraph is a split vertex
+     */
+    protected boolean isSplitVertex(AInstructionCDFGSubgraph subgraph) {
+        return (this.icdfg.getVerticesAfter(subgraph).size() != 1);
+    }
+    
+    /** Checks if the argument subgraph is a merge vertex<br>
+     *  A merge vertex has more than one vertex before
+     * 
+     * @param subgraph Subgraph to check
+     * @return True if the argument subgraph is a merge vertex
+     */
+    protected boolean isMergeVertex(AInstructionCDFGSubgraph subgraph) {
+        return (this.icdfg.getVerticesBefore(subgraph).size() != 1);
+    }
+    
+    protected void visit(AInstructionCDFGSubgraph subgraph) throws IllegalArgumentException{
+        
+            if(!this.canVisitSubgraph(subgraph)) {
+                return;
+            }else {
+                this.subgraphsResolved.add(subgraph);
+            }
 
             if(subgraph instanceof AInstructionCDFGControlFlowConditionalSubgraph) {
-                return this.visitAInstructionCDFGControlFlowConditionalSubgraph((AInstructionCDFGControlFlowConditionalSubgraph) subgraph);
+                 this.visitAInstructionCDFGControlFlowConditionalSubgraph((AInstructionCDFGControlFlowConditionalSubgraph) subgraph);
             }else if(subgraph instanceof InstructionCDFGControlFlowMerge) {
-                return this.visitControlMergeSubgraph((InstructionCDFGControlFlowMerge) subgraph);
+                 this.visitControlMergeSubgraph((InstructionCDFGControlFlowMerge) subgraph);
             }else if(subgraph instanceof InstructionCDFGDataFlowSubgraph) {
-                return this.visitDataFlowSubgraph((InstructionCDFGDataFlowSubgraph) subgraph);
+                 this.visitDataFlowSubgraph((InstructionCDFGDataFlowSubgraph) subgraph);
             }else {
                 throw new IllegalArgumentException(subgraph.getClass().toString() + " is an invalid node to visit!");
             }
 
     }
     
-
-    
-    protected R visitDataFlowSubgraph(InstructionCDFGDataFlowSubgraph subgraph) {
-        
-        AInstructionCDFGSubgraph next;
-        
-        if(this.icdfg.hasVerticesAfter(subgraph))
-            next = (AInstructionCDFGSubgraph) this.icdfg.getVerticesAfter(subgraph).toArray()[0];
-        else
-            return null;
-        
-        return (next instanceof AInstructionCDFGControlFlowMergeSubgraph) ? null : this.visit(next);   
+    protected void visitDataFlowSubgraph(InstructionCDFGDataFlowSubgraph subgraph) {
+        this.icdfg.getVerticesAfter(subgraph).forEach(subgraphAfter -> this.visit(subgraphAfter));
     }
     
-    protected R visitAInstructionCDFGControlFlowConditionalSubgraph(AInstructionCDFGControlFlowConditionalSubgraph subgraph) {
+    protected void visitAInstructionCDFGControlFlowConditionalSubgraph(AInstructionCDFGControlFlowConditionalSubgraph subgraph) throws IllegalArgumentException{
 
         if(subgraph instanceof InstructionCDFGControlFlowIf) {
-            return this.visitControlIfSubgraph((InstructionCDFGControlFlowIf) subgraph);
+             this.visitControlIfSubgraph((InstructionCDFGControlFlowIf) subgraph);
         }else if(subgraph instanceof InstructionCDFGControlFlowIfElse) {
-            return this.visitControlIfElseSubgraph((InstructionCDFGControlFlowIfElse) subgraph);
+             this.visitControlIfElseSubgraph((InstructionCDFGControlFlowIfElse) subgraph);
         }else {
             throw new IllegalArgumentException(subgraph.getClass().toString() + " is an invalid node to visit!");
         }
         
     }
     
-    protected R visitControlIfSubgraph(InstructionCDFGControlFlowIf subgraph) {  
+    protected void visitControlIfSubgraph(InstructionCDFGControlFlowIf subgraph) {  
+        
         this.visit(this.icdfg.getTruePath(subgraph));
-        return this.visit(subgraph.getMerge());
+        this.visit(subgraph.getMerge());
     }
     
-    protected R visitControlIfElseSubgraph(InstructionCDFGControlFlowIfElse subgraph) {
+    protected void visitControlIfElseSubgraph(InstructionCDFGControlFlowIfElse subgraph) {
         
         this.visit(this.icdfg.getTruePath(subgraph));
         this.visit(this.icdfg.getFalsePath(subgraph));
-        
-        return this.visit(subgraph.getMerge());
+        this.visit(subgraph.getMerge());
     }
     
-    protected R visitControlMergeSubgraph(InstructionCDFGControlFlowMerge subgraph) {
-        return (!this.icdfg.hasVerticesAfter(subgraph)) ?  null : this.visit((AInstructionCDFGSubgraph) this.icdfg.getVerticesAfter(subgraph).toArray()[0]);
+    protected void visitControlMergeSubgraph(InstructionCDFGControlFlowMerge subgraph) {
+         this.icdfg.getVerticesAfter(subgraph).forEach(subgraphAfter -> this.visit(subgraphAfter));
     }
     
 }

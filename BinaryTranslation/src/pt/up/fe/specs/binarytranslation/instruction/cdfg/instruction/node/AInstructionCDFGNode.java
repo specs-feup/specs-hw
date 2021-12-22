@@ -81,7 +81,7 @@ public abstract class AInstructionCDFGNode{
      * @return The Attribute of the DOT node label
      */
     public Attribute getDOTLabel() {
-        return DefaultAttribute.createAttribute(this.getReference());
+        return DefaultAttribute.createAttribute(this.getReference() + "\\n" + this.getUID());
     }
     
     /** Returns an Attribute, an object type required by the DOT exporter <br>

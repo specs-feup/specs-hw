@@ -27,22 +27,26 @@ import org.antlr.v4.runtime.ParserRuleContext;
 
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.AHardwareValidationBinaryOperation;
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.HardwareValidationBinaryOperationMap;
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.subscript.HardwareValidationScalarSubscript;
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.ternary.subscript.HardwareValidationRangeSubscript;
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.AHardwareValidationUnaryOperation;
 import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.HardwareValidationUnaryOperationMap;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmFieldOperandContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AssignmentExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.BinaryExprContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.FieldContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.FunctionExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfElseStatementContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfStatementContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.MetaFieldOperandContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralOperandContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.MetafieldContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.OperatorContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ParenExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PlainStmtContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.RangesubscriptContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ScalarsubscriptContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.StatementlistContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.UnaryExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.VariableExprContext;
@@ -212,27 +216,26 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
     }
     
     @Override
-    public Object visitVariableExpr(VariableExprContext ctx) {
-        
-        String operand = (String) this.visit(ctx.operand());
-        
-        this.getValueMap().putIfAbsent(operand, 0);
-        
-        return operand;
+    public Object visitVariableExpr(VariableExprContext ctx) {     
+        return this.visit(ctx.operand());
     }
     
+
     @Override
-    public Object visitLiteral(LiteralContext ctx) {
+    public Object visitLiteralOperand(LiteralOperandContext ctx) {
         
         this.getValueMap().putIfAbsent(ctx.getText(), Integer.valueOf(ctx.getText()));
         
         return ctx.getText();
     }
     
-    
+
     @Override
-    public Object visitField(FieldContext ctx) {
-        return ctx.getText();
+    public Object visitAsmFieldOperand(AsmFieldOperandContext ctx) {
+        
+        this.getValueMap().putIfAbsent(ctx.getText(), 0);
+        
+        return this.getValueMap().get(ctx.getText());
     }
     
     @Override
@@ -240,9 +243,20 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
         return super.visitFunctionExpr(ctx);
     }
     
+    
     @Override
-    public Object visitMetaFieldOperand(MetaFieldOperandContext ctx) {
+    public Object visitMetafield(MetafieldContext ctx) {
         return "meta" + ctx.getText().replace("$", "");
     }
     
+    
+    @Override
+    public Object visitScalarsubscript(ScalarsubscriptContext ctx) {
+        return (new HardwareValidationScalarSubscript()).apply(this.getValueMap().get(ctx.getText().substring(0, ctx.getText().indexOf("["))), Integer.valueOf(ctx.idx.getText()));
+    }
+    
+    @Override
+    public Object visitRangesubscript(RangesubscriptContext ctx) {
+        return (new HardwareValidationRangeSubscript()).apply(this.getValueMap().get(ctx.getText().substring(0, ctx.getText().indexOf("["))), Integer.valueOf(ctx.hiidx.getText()), Integer.valueOf(ctx.loidx.getText()));
+    }
 }

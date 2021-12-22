@@ -44,14 +44,14 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.co
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ArgumentsContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmFieldOperandContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AssignmentExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.BinaryExprContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.FieldContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.FunctionExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.FunctionNameContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfElseStatementContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfStatementContext;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.LiteralOperandContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.MetafieldContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.OperatorContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ParenExprContext;
@@ -64,10 +64,12 @@ public class InstructionCDFGSubgraphGenerator extends PseudoInstructionBaseVisit
     private AInstructionCDFGSubgraph subgraph;
     
     private Map<String, AInstructionCDFGNode> current_outputs;
+    private Map<String, Integer> seedUIDMap;
 
-    private void setup(AInstructionCDFGSubgraph dfg){
+    private void setup(AInstructionCDFGSubgraph dfg, Map<String, Integer> seedUIDMap){
         this.subgraph = dfg;
         this.current_outputs = new HashMap<>();
+        this.seedUIDMap = new HashMap<>();
     }
 
     private AInstructionCDFGSubgraph finish(){
@@ -75,12 +77,15 @@ public class InstructionCDFGSubgraphGenerator extends PseudoInstructionBaseVisit
         this.subgraph.generateInputs();
         this.subgraph.generateOutputs();
 
+        this.subgraph.setInputUIDMap(this.seedUIDMap);
+        this.subgraph.setOutputUIDMap(this.subgraph.getInputUIDMap());
+        
         return this.subgraph;
     }
 
-    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, PseudoInstructionParser.ExpressionContext ctx){
+    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, Map<String, Integer> seedUIDMap, PseudoInstructionParser.ExpressionContext ctx){
         
-        this.setup(dfg);
+        this.setup(dfg, seedUIDMap);
         
         AInstructionCDFGNode output = this.visit(ctx);
 
@@ -98,27 +103,27 @@ public class InstructionCDFGSubgraphGenerator extends PseudoInstructionBaseVisit
         return this.finish();
     }
 
-    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, PseudoInstructionParser.PlainStmtContext ctx){
+    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, Map<String, Integer> seedUIDMap, PseudoInstructionParser.PlainStmtContext ctx){
         
-        this.setup(dfg);
+        this.setup(dfg, seedUIDMap);
         
         this.visit(ctx.expression());
 
         return this.finish();
     }
     
-    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, AssignmentExprContext ctx){
+    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, Map<String, Integer> seedUIDMap, AssignmentExprContext ctx){
         
-        this.setup(dfg);
+        this.setup(dfg, seedUIDMap);
         
         this.visit(ctx);
 
         return this.finish();
     }
     
-    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, List<PseudoInstructionParser.StatementContext> ctx){
+    public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, Map<String, Integer> seedUIDMap, List<PseudoInstructionParser.StatementContext> ctx){
         
-        this.setup(dfg);
+        this.setup(dfg, seedUIDMap);
 
         ctx.forEach(statement -> this.visit(statement));
 
@@ -134,8 +139,7 @@ public class InstructionCDFGSubgraphGenerator extends PseudoInstructionBaseVisit
         
         if(this.current_outputs.containsKey(output.getReference())) {
 
-            this.subgraph.incomingEdgesOf(this.current_outputs.get(output.getReference()))
-            .stream()
+            this.subgraph.incomingEdgesOf(this.current_outputs.get(output.getReference())).stream()
             .filter(e -> (this.subgraph.getEdgeSource(e) instanceof InstructionCDFGAssignmentNode))
             .collect(Collectors.toSet()).forEach(e -> this.subgraph.suppressVertex(this.subgraph.getEdgeSource(e)));;
 
@@ -211,13 +215,16 @@ public class InstructionCDFGSubgraphGenerator extends PseudoInstructionBaseVisit
         return InstructionCDFGOperationNodeMap.generate(ctx.getText());
     }
     
+ 
     @Override
-    public AInstructionCDFGNode visitLiteral(LiteralContext ctx) {
+    public AInstructionCDFGNode visitLiteralOperand(LiteralOperandContext ctx) {
         return new InstructionCDFGLiteralNode(ctx.number().getText());
     }
     
+ 
+    
     @Override
-    public AInstructionCDFGNode visitField(FieldContext ctx) {
+    public AInstructionCDFGNode visitAsmFieldOperand(AsmFieldOperandContext ctx) {
         return new InstructionCDFGVariableNode(ctx.getText());
     }
     
@@ -260,13 +267,15 @@ public class InstructionCDFGSubgraphGenerator extends PseudoInstructionBaseVisit
     @Override
     public AInstructionCDFGNode visitFunctionName(FunctionNameContext ctx) {
         
-        if(ctx.getText().equals("signed")) {
+        String ctxText = ctx.getText();
+        
+        if(ctxText.equals("signed")) {
             return new InstructionCDFGSignedCastModifier();
-        }else if(ctx.getText().equals("unsigned")) {
+        }else if(ctxText.equals("unsigned")) {
             return new InstructionCDFGUnsignedCastModifier();
-        }else if (ctx.getText().equals("float")) {
+        }else if (ctxText.equals("float")) {
             return new InstructionCDFGFloatCastModifier();
-        }else if (ctx.getText().equals("sext")) {
+        }else if (ctxText.equals("sext")) {
             return new InstructionCDFGSignExtendModifier();
         }else {
             return null;
