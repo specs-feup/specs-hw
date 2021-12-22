@@ -20,21 +20,13 @@ package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Map;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
-import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.analysis.timing.TimingAnalysisRun;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorRun;
-import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorTestbenchGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationDataGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
@@ -85,7 +77,7 @@ public class RandomTest_deletethisafter {
     }
     
     private FakeInstruction instruction = new FakeInstruction("addTest",  
-            "if(RA == 3) {RD = RA + RB;} RG = RS + RB;"
+            "RA = RA + RF;if(RA == 0){RA = RA + 2;}RF = RA * 2;"
             );
     
     private String systemPath = "C:\\Users\\joaom\\Desktop\\" + "btf_" + instruction.getName();
@@ -93,7 +85,7 @@ public class RandomTest_deletethisafter {
     
     private InstructionCDFG icdfg;
     
-    private AHardwareArchitecture generatedModule;
+    //private AHardwareArchitecture generatedModule;
     
     private final int moduleTestbenchSamples = 1000;
     
@@ -123,6 +115,7 @@ public class RandomTest_deletethisafter {
         InstructionCDFGNameResolver.resolve(icdfg);
     }
     
+    /*
     public void generateHardwareModule() throws IOException {
         System.out.print("Generating HW module...");
         InstructionCDFGCustomInstructionUnitGenerator moduleGenerator = new InstructionCDFGCustomInstructionUnitGenerator();
@@ -147,7 +140,7 @@ public class RandomTest_deletethisafter {
     
     public void generateHardwareModuleTestbench() throws IOException {
         System.out.print("Generating HW module testbench...");
-        HardwareTestbenchGenerator.generate(generatedModule, moduleTestbenchSamples,  "input.mem", "output.mem").emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, generatedModule.getName() + "_tb", "sv"));
+       // HardwareTestbenchGenerator.generate(generatedModule, moduleTestbenchSamples,  "input.mem", "output.mem").emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, generatedModule.getName() + "_tb", "sv"));
         System.out.println("\tDONE");
     }
     
@@ -171,15 +164,19 @@ public class RandomTest_deletethisafter {
         TimingAnalysisRun.start(wslPath, this.instruction.getName());
         System.out.println("\tDONE");
     }
-    
+    */
     @Test
     public void testFullFlow() throws IOException {
+        
+        //this.instruction.printParseTree();
         
         this.generateFolderStructures();
         this.generateInstructionCDFG();
         this.exportInstructionCDFGAsDOT();
         this.resolveInstructionCDFGNames();
         this.exportInstructionCDFGAsDOT();
+        
+        /*this.exportInstructionCDFGAsDOT();
         this.generateHardwareModule();
    
         this.generateHardwareModuleValidationData();
@@ -188,7 +185,7 @@ public class RandomTest_deletethisafter {
         if(!this.runVerilatorTestbench())
             return;
         this.performIcetimeTimingAnalysis();
-        
+        */
     }
    
 }

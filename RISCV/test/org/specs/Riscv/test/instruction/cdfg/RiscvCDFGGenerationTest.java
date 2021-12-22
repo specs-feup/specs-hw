@@ -45,6 +45,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.reso
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
+import pt.up.fe.specs.crispy.ast.statement.ModuleInstance;
 
 public class RiscvCDFGGenerationTest {
 
@@ -58,7 +59,7 @@ public class RiscvCDFGGenerationTest {
     
     private InstructionCDFG icdfg;
     
-    private AHardwareInstance generatedModule;
+    private ModuleInstance generatedModule;
    
     private RiscvPseudocode instructionPseudoCode = RiscvPseudocode.add;
     private String instructionName = "";

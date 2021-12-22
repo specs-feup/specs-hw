@@ -15,20 +15,18 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional;
+package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.ternary;
 
-import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
+@FunctionalInterface
+interface TriFunction<A,B,C,R> {
 
-public class InstructionCDFGControlFlowIf extends AInstructionCDFGControlFlowConditionalSubgraph{
-    
-    public InstructionCDFGControlFlowIf(InstructionCDFGControlFlowMerge merge) {
-        super(merge);
-    }
-    
-    @Override
-    public String toString() {
-        return "InstructionCDFGControlFlowIf_" + this.hashCode() ;
+    R apply(A a, B b, C c);
+
+    default <V> TriFunction<A, B, C, V> andThen(Function<? super R, ? extends V> after) {
+        Objects.requireNonNull(after);
+        return (A a, B b, C c) -> after.apply(apply(a, b, c));
     }
 }

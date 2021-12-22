@@ -35,30 +35,80 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.I
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.AInstructionCDFGOperationNode;
 
 public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>{
- 
-    private Map<String, Integer> uid_map;
+
+    private Map<String, Integer> UIDMap;
     
     public AInstructionCDFGSubgraph() {
         super(AInstructionCDFGDataNode.class, AInstructionCDFGOperationNode.class, AInstructionCDFGEdge.class);
-        this.uid_map = new HashMap<>();
+        
+        this.UIDMap = new HashMap<>();
+    }
+ 
+    private Map<String, Integer> generateUIDMap(Set<AInstructionCDFGNode> vertexSet) {
+        
+        Map<String,Integer> uidMap = new HashMap<>();
+        
+        vertexSet.forEach(vertex -> uidMap.put(vertex.getReference(), Integer.valueOf(vertex.getUIDVal())));
+        
+        return uidMap;
+    }
+    
+    private void setUIDMap(Set<AInstructionCDFGNode> vertexSet, Map<String, Integer> uidMap, int increment) {
+        
+        vertexSet.forEach(vertex -> {
+            if(uidMap.containsKey(vertex.getReference())) {
+                vertex.setUID(uidMap.get(vertex.getReference()).intValue() + increment);
+            }else {
+                this.UIDMap.put(vertex.getReference(),uidMap.get(vertex.getReference()));
+            }
+        });
+        
+    }
+    
+    private void updateInternalUIDMap(Map<String, Integer> UIDMap) {
+        UIDMap.forEach((reference, uid) -> {
+            if(this.UIDMap.putIfAbsent(reference, uid) != null) {
+                if(this.UIDMap.get(reference).intValue() < UIDMap.get(reference).intValue()) {
+                    this.UIDMap.replace(reference, uid);
+                }
+            }
+            
+        });
+    }
+    
+    public Map<String, Integer> getCurrentUIDMap(){
+        return this.UIDMap;
+    }
+    
+    public void setInputUIDMap(Map<String, Integer> inputUIDMap) {
+        
+        //this.setUIDMap(this.getInputs(), this.generateUIDMap(this.getInputs()), 0);
+        
+        this.setUIDMap(this.getInputs(), inputUIDMap, 0);
+        
+        this.UIDMap = inputUIDMap;
+    }
+    
+    public Map<String, Integer> getInputUIDMap(){
+        return this.generateUIDMap(this.getInputs());
+    }
+    
+    public Map<String, Integer> generateOutputUIDMap(Map<String, Integer> UIDMap) {
+        
+        this.setUIDMap(this.getOutputs(), UIDMap, 1);
+        this.updateInternalUIDMap(this.getOutputUIDMap());
+        return this.getOutputUIDMap();
+    }
+    
+    public void setOutputUIDMap(Map<String, Integer> outputUIDMap) {
+        this.setUIDMap(this.getOutputs(), outputUIDMap, 0);
+        this.updateInternalUIDMap(outputUIDMap);
+    }
+    
+    public Map<String, Integer> getOutputUIDMap(){
+        return this.generateUIDMap(this.getOutputs());
     }
 
-    public AInstructionCDFGSubgraph(Map<String, Integer> uid_map) {
-        super(AInstructionCDFGDataNode.class, AInstructionCDFGOperationNode.class, AInstructionCDFGEdge.class);
-        this.uid_map = uid_map;
-    }
-    
-    public void setUIDMap(Map<String, Integer> uid_map) {
-        this.uid_map = uid_map;
-    }
-    
-    /** Returns the UID Map of this graph's nodes
-     * 
-     * @return UID Map of this graph's node
-     */
-    public Map<String, Integer> getUIDMap(){
-        return this.uid_map;
-    }
     
    /* @Override
     public void generateInputs() {
@@ -71,8 +121,10 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
     }
     
     public void setVertexUID(AInstructionCDFGNode vertex) {
-        uid_map.put(vertex.getReference(), (uid_map.containsKey(vertex.getReference())) ? uid_map.get(vertex.getReference()) + 1 : 0);    
-        vertex.setUID(String.valueOf(uid_map.get(vertex.getReference())));
+        
+        Map<String, Integer> currentUIDMap = this.getCurrentUIDMap();
+
+        vertex.setUID(currentUIDMap.containsKey(vertex.getReference()) ? currentUIDMap.get(vertex.getReference()) + 1 : 0);
     }
     
     @Override

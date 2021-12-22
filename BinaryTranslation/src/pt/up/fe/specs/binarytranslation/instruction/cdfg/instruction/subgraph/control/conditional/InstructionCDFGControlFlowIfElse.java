@@ -23,8 +23,8 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.co
 
 public class InstructionCDFGControlFlowIfElse extends AInstructionCDFGControlFlowConditionalSubgraph{
 
-    public InstructionCDFGControlFlowIfElse(InstructionCDFGControlFlowMerge merge, Map<String, Integer> uid_map) {
-        super(merge, uid_map);
+    public InstructionCDFGControlFlowIfElse(InstructionCDFGControlFlowMerge merge) {
+        super(merge);
     }
     
     @Override

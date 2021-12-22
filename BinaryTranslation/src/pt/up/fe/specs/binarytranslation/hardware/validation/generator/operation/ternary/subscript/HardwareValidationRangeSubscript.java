@@ -15,20 +15,24 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional;
+package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.ternary.subscript;
 
-import java.util.Map;
+public class HardwareValidationRangeSubscript extends AHardwareValidationTernarySubscript{
 
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
-
-public class InstructionCDFGControlFlowIf extends AInstructionCDFGControlFlowConditionalSubgraph{
-    
-    public InstructionCDFGControlFlowIf(InstructionCDFGControlFlowMerge merge) {
-        super(merge);
+    private Number generateMask(Number upper, Number lower) {
+        
+        Integer mask = 0;
+        
+        for(int i = lower.intValue(); i < upper.intValue(); i++) {
+            mask += (1<<i);
+        }
+        
+        return mask;
     }
     
     @Override
-    public String toString() {
-        return "InstructionCDFGControlFlowIf_" + this.hashCode() ;
+    public Number apply(Number variable, Number upper, Number lower) {
+        return variable.intValue() & this.generateMask(upper, lower).intValue();
     }
+
 }

@@ -33,48 +33,29 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.condit
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGControlConditionalNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.InstructionCDFGControlMergeNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
 
-public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>, AInstructionCDFGEdge>{
+public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<AInstructionCDFGSubgraph, AInstructionCDFGEdge>{
 
     private InstructionCDFGFlowSubGraphDOTExporter subgraph_dot_exporter;
     
     private int dfg_uid = 0;
     private int cfn_uid = 0;
     
-    private final Map<AInstructionCDFGNode, String> validatedSubgraphIds;
+    private final Map<AInstructionCDFGNode, Integer> cdfgUIDMap;
     
     public InstructionCDFGDOTExporter() {
-        
         this.subgraph_dot_exporter = new InstructionCDFGFlowSubGraphDOTExporter();
-        this.validatedSubgraphIds = new HashMap<>();
-        
+        this.cdfgUIDMap = new HashMap<>();
         this.subgraph_dot_exporter.INDENT_BASE = this.INDENT_INNER;
     }
-    
-    protected String getVertexID(AInstructionCDFGNode vertex){
-        
-        String vertexId = validatedSubgraphIds.get(vertex);
-        
-        if (vertexId == null) {
-    
-            vertexId = vertex.getUID();
-            
-            if (!isValidID(vertexId)) {
-                throw new ExportException("Generated id '" + vertexId + "'for vertex '" + vertex + "' is not valid with respect to the .dot language");
-            }
-            
-            validatedSubgraphIds.put(vertex, vertexId);
-        }
-        
-        return vertexId;
-    }
-    
+
     @Override
-    protected String exportEdges(GeneralFlowGraph<GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>, AInstructionCDFGEdge> g) {
+    protected String exportEdges(GeneralFlowGraph<AInstructionCDFGSubgraph, AInstructionCDFGEdge> g) {
         
         String connector = this.computeConnector(g);
         StringBuilder edgeBuilder = new StringBuilder();
@@ -101,7 +82,7 @@ public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<Gene
            
                 if(source instanceof AInstructionCDFGControlFlowSubgraph) {
                     AInstructionCDFGNode control = ((AInstructionCDFGControlFlowSubgraph) source).getControlVertex();
-                    edgeBuilder.append(this.getVertexID(control));
+                    edgeBuilder.append("v" + this.cdfgUIDMap.get(control));
                     
                     if(control instanceof InstructionCDFGControlConditionalNode) {    
                         edgeBuilder.append((edge instanceof InstructionCDFGTrueEdge) ? ":se" : ((edge instanceof InstructionCDFGFalseEdge) ? ":sw" : ""));
@@ -109,21 +90,21 @@ public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<Gene
                         edgeBuilder.append(":s");
                     }
                 }else if(source instanceof InstructionCDFGDataFlowSubgraph){
-                    edgeBuilder.append(this.getVertexID((AInstructionCDFGNode) source.getOutputs().toArray()[0]).toString() + ":s");
+                    edgeBuilder.append("v" + this.cdfgUIDMap.get((AInstructionCDFGNode) source.getOutputs().toArray()[0]).toString() + ":s");
                 }
                 
                 edgeBuilder.append(connector);
                 
                 if (target instanceof InstructionCDFGControlFlowMerge){
                     AInstructionCDFGNode control = ((AInstructionCDFGControlFlowSubgraph)target).getControlVertex();
-                    edgeBuilder.append(this.getVertexID(control));
+                    edgeBuilder.append("v" + this.cdfgUIDMap.get(control));
                     
                     edgeBuilder.append(((control instanceof InstructionCDFGControlMergeNode) || (control instanceof InstructionCDFGControlConditionalNode)) ? ":n" : "");
                 }else if((target instanceof InstructionCDFGDataFlowSubgraph) || (target instanceof AInstructionCDFGControlFlowConditionalSubgraph)){
-                    edgeBuilder.append(this.getVertexID((AInstructionCDFGNode) target.getInputs().toArray()[0]).toString() + ":n");    
+                    edgeBuilder.append("v" + this.cdfgUIDMap.get((AInstructionCDFGNode) target.getInputs().toArray()[0]).toString() + ":n");    
                 } 
         
-                getEdgeAttributes(edge).ifPresent(m -> { edgeBuilder.append(renderAttributes(m));});
+                getEdgeAttributes(edge).ifPresent(m -> edgeBuilder.append(renderAttributes(m)));
         
                 edgeBuilder.append(";\n");
             }
@@ -134,11 +115,13 @@ public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<Gene
     
     @SuppressWarnings("unchecked")
     @Override
-    protected String exportVertexes(GeneralFlowGraph<GeneralFlowGraph<AInstructionCDFGNode, AInstructionCDFGEdge>, AInstructionCDFGEdge> g) {
+    protected String exportVertexes(GeneralFlowGraph<AInstructionCDFGSubgraph, AInstructionCDFGEdge> g) {
      
         StringBuilder vertexSubgraphsBuilder = new StringBuilder();
 
         g.vertexSet().forEach(vertex -> vertexSubgraphsBuilder.append(this.subgraph_dot_exporter.exportGraph(vertex, (vertex instanceof AInstructionCDFGControlFlowSubgraph) ? "cfn" + String.valueOf(this.cfn_uid++) : "dfg" + String.valueOf(this.dfg_uid++))));
+        
+        this.cdfgUIDMap.putAll(this.subgraph_dot_exporter.getVertexIDMap());
         
         return vertexSubgraphsBuilder.toString();
     }

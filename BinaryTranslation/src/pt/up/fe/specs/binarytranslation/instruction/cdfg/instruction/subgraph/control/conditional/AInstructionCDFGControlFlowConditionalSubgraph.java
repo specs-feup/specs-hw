@@ -30,8 +30,8 @@ public class AInstructionCDFGControlFlowConditionalSubgraph extends AInstruction
     
     public static Predicate<AInstructionCDFGSubgraph> predicate = s -> s instanceof AInstructionCDFGControlFlowConditionalSubgraph;
     
-    public AInstructionCDFGControlFlowConditionalSubgraph(InstructionCDFGControlFlowMerge merge, Map<String, Integer> uid_map) {
-        super(uid_map);
+    public AInstructionCDFGControlFlowConditionalSubgraph(InstructionCDFGControlFlowMerge merge) {
+        super();
         this.merge = merge;
     }
     
