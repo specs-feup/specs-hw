@@ -52,11 +52,9 @@ public class RegisterBank extends HardwareModule {
             var addrval = new Immediate(i, addr.getResultWidth());
             var reg = regBank.get(i);
 
-            // syntax 1, explicit addStatment calls with chained methods
             alwaysblock._ifelse(rst)
                     .then()
                     ._do(reg.nonBlocking(0))
-                    ._do(reg.nonBlocking(1))
                     .orElse()
                     ._if(write.and(addr.eq(addrval)))
                     .then()
