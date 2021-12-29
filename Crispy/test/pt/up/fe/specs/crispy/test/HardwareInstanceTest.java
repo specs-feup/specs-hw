@@ -111,8 +111,8 @@ public class HardwareInstanceTest {
         var wire = wrap.addWire("tmp", 32);
 
         // new adder instance
-        wrap.addInstance(testAdder.instantiate("adder1",
-                wrap.getPort(0), wrap.getPort(1), wire));
+        wrap.addInstance(testAdder,
+                wrap.getPort(0), wrap.getPort(1), wire);
 
         // connect output of adder instance +1 to output port woutC
         wrap.nonBlocking("woutC", wire.add(Immediate.Ones(15)).paren());
@@ -198,9 +198,11 @@ public class HardwareInstanceTest {
         var c = adder.addOutputPort("outC", 32);
 
         var ff1 = adder.alwaysposedge("testBlock");
-        ff1._ifelse(rst,
-                c.nonBlocking(0))
-                .orElse(c.nonBlocking(a.add(b)));
+        ff1._ifelse(rst)
+                .then()
+                ._do(c.nonBlocking(0))
+                .orElse()
+                ._do(c.nonBlocking(a.add(b)));
 
         /*
         var ff1 = adder.alwaysposedge("testBlock");
@@ -302,9 +304,9 @@ public class HardwareInstanceTest {
         var inB = adder.addInputPort("inB", 8);
         var outC = adder.addOutputPort("outC", 8);
 
-        adder.alwaysposedge()._ifelse(rst,
-                outC.nonBlocking(0))
-                .orElse(outC.nonBlocking(inA.add(inB)));
+        adder.alwaysposedge()._ifelse(rst)
+                .then()._do(outC.nonBlocking(0))
+                .orElse()._do(outC.nonBlocking(inA.add(inB)));
 
         /*
         var ifelse1 = adder.alwaysposedge()._ifelse(rst);
@@ -353,7 +355,11 @@ public class HardwareInstanceTest {
     public void testRegisterBank() {
 
         var bank = new RegisterBank(4, 8);
-        bank.emit();
+        // bank.emit();
+
+        var tb = new HardwareTestbench("tbTest", bank);
+        tb.setClockFrequency(100);
+        tb.emit();
     }
 
     @Test
@@ -369,9 +375,11 @@ public class HardwareInstanceTest {
         var clk = wrap.addRegister(new RegisterDeclaration("clk", 1));
         var rst = wrap.addRegister(new RegisterDeclaration("rst", 1));
 
+        // wrap.getPorts(); TODO make this return List<Port> instead of List<PortDeclaration>
+
         // new adder instance
-        wrap.addInstance(adder.instantiate("adder1", clk, rst,
-                wrap.getPort(0), wrap.getPort(1), wrap.getPort(2)));
+        wrap.addInstance(adder, clk, rst,
+                wrap.getPort(0), wrap.getPort(1), wrap.getPort(2));
 
         wrap.emit();
     }

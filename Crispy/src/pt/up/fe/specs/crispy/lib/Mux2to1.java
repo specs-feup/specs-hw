@@ -32,7 +32,8 @@ public class Mux2to1 extends HardwareModule {
         sel = addInputPort("sel", 1);
         out = addOutputPort("out", bitwidth);
 
-        alwayscomb("muxBlock")._ifelse(sel.not(),
-                out.nonBlocking(i0)).orElse(out.nonBlocking(i1));
+        alwayscomb("muxBlock")._ifelse(sel.not())
+                .then()._do(out.nonBlocking(i0))
+                .orElse()._do(out.nonBlocking(i1));
     }
 }

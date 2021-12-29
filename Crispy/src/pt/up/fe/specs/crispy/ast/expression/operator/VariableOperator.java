@@ -105,37 +105,42 @@ public class VariableOperator extends HardwareOperator {
      * 
      */
     public VariableOperator addSubscript(OperatorSubscript subs) {
-        this.addChild(subs);
-        return this;
+        var copy = this.copy();
+        copy.addChild(subs);
+        return copy;
     }
 
     /*
      * 
      */
     public VariableOperator addSubscript(HardwareOperator idx) {
-        this.addChild(new ScalarSubscript(idx));
-        return this;
+        var copy = this.copy();
+        copy.addChild(new ScalarSubscript(idx));
+        return copy;
     }
 
     /*
      * 
      */
     public VariableOperator addSubscript(int idx) {
-        this.addChild(new ScalarSubscript(idx));
-        return this;
+        var copy = this.copy();
+        copy.addChild(new ScalarSubscript(idx));
+        return copy;
     }
 
     /*
      * 
      */
     public VariableOperator addSubscript(HardwareOperator left, HardwareOperator right) {
-        this.addChild(new RangedSubscript(left, right));
-        return this;
+        var copy = this.copy();
+        copy.addChild(new RangedSubscript(left, right));
+        return copy;
     }
 
     public VariableOperator addSubscript(int left, int right) {
-        this.addChild(new RangedSubscript(left, right));
-        return this;
+        var copy = this.copy();
+        copy.addChild(new RangedSubscript(left, right));
+        return copy;
     }
 
     /*

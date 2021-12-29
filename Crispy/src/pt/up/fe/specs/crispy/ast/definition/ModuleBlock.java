@@ -106,7 +106,7 @@ class ModuleBlock extends HardwareBlock implements ModuleBlockInterface {
         // GET ALL NESTED CONTENT IN BODY BLOCK
         builder.append(super.getAsString());
 
-        builder.append("end //" + this.moduleName + "\n");
+        builder.append("endmodule //" + this.moduleName + "\n");
         return builder.toString();
     }
 

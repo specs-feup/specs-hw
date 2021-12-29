@@ -16,11 +16,14 @@ package pt.up.fe.specs.crispy.lib;
 import java.util.ArrayList;
 
 import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
+<<<<<<< HEAD
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
+=======
+import pt.up.fe.specs.crispy.ast.expression.operator.Port;
+>>>>>>> branch 'master' of https://github.com/specs-feup/specs-hw.git
 import pt.up.fe.specs.crispy.ast.expression.operator.Register;
-import pt.up.fe.specs.crispy.ast.statement.IfStatement;
 
 public class RegisterBank extends HardwareModule {
 
@@ -50,23 +53,37 @@ public class RegisterBank extends HardwareModule {
         // logic (write block)
         var alwaysblock = alwaysposedge();
         for (int i = 0; i < numberRegister; i++) {
-            var addrval = new Immediate(i, addr.getResultWidth());
-            var reg = regBank.get(i);
-            alwaysblock._ifelse(rst,
-                    reg.nonBlocking(0))
-                    .orElse(new IfStatement(write.and(addr.eq(addrval)), reg.nonBlocking(din)));
-
-            // TODO: invoking _if inside the orElse not only adds the _if to the else clause, but to the body of the
-            // ModuleBlock....
-
-            // CRITICAL FIX
+            alwaysblock._ifelse(rst)
+                    .then()._do(regBank.get(i).nonBlocking(0))
+                    .orElse()
+                    ._if(write.and(addr.eq(i)))
+                    .then()._do(regBank.get(i).nonBlocking(din));
         }
 
         // logic (read block, just use a Mux!, plus a decoder since the mux is hot bit)
-        var decoder = new DecoderNxM(numberRegister);
-        var mux = new MuxNto1(numberRegister, numberRegister);
-
         var decoderoutput = addWire("decoOutput", registerWidth);
+        addInstance(new DecoderNxM(addr.getResultWidth()), addr, decoderoutput);
+
+        var muxoutput = addWire("muxOutput", registerWidth);
+        addInstance(new MuxNto1(numberRegister, registerWidth), regBank, decoderoutput, muxoutput);
+
+        // TODO:
+        // assign(dout, mux.out);
+        // this kind of assignment will require that the "assign" function
+        // fetch the parent of "mux.out", fetch its instantiation,
+        // and add the connection in the port list
+
+        assign(dout, muxoutput);
+
+        // TODO: method like mux.in.connect(addr);
+        // and this method will have to seek the parent ModuleBlock of the HardwareModule
+        // find the respective ModuleInstance node, and set the connection in the port list!
+
+        /*var decoder = new DecoderNxM(numberRegister);
+        var mux = new MuxNto1(numberRegister, numberRegister);
+        
+        var decoderoutput = addWire("decoOutput", registerWidth);
+//<<<<<<< HEAD
         // var deco1 = addInstance(decoder.instantiate("deco1", addr, decoderoutput));
         addInstance(decoder, "deco1", addr, decoderoutput);
 
@@ -83,6 +100,17 @@ public class RegisterBank extends HardwareModule {
 
         // TODO: can I do it like chisel or spinal, where assigning a module to an InputPort
         // basically means that i connect the output of the module to that input port?
+//=======
+        addInstance(decoder.instantiate("deco1", addr, decoderoutput));
+        
+        var connections = new ArrayList<HardwareOperator>();
+        var muxoutput = addWire("muxOutput", registerWidth);
+        connections.addAll(regBank);
+        connections.add(decoderoutput);
+        connections.add(muxoutput);
+        addInstance(mux.instantiate("mux1", connections));
+        assign(dout, muxoutput);*/
+//>>>>>>> branch 'master' of https://github.com/specs-feup/specs-hw.git
 
         // TODO: re-think the ModuleInstance class so that ports can be accessed by name after
         // instantiation...

@@ -29,7 +29,7 @@ import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.graph.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graph.edge.GraphOutput;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.specshw.SpecsHwUtils;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;
 
@@ -241,7 +241,7 @@ public class BinarySegmentGraphOutputUtils {
         htmlplage.replace("<IMAGEFILE>", bitmapfilename);
 
         // git commit
-        htmlplage.replace("<GITDESCRIPTION>", BinaryTranslationUtils.getCommitDescription());
+        htmlplage.replace("<GITDESCRIPTION>", SpecsHwUtils.getCommitDescription());
 
         // date of generation
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
