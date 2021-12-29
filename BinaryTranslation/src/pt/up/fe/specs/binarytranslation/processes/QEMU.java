@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.NullResource;
 import pt.up.fe.specs.binarytranslation.asm.Application;
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.specshw.SpecsHwUtils;
 import pt.up.fe.specs.util.utilities.Replacer;
 
 /**
@@ -63,7 +63,7 @@ public class QEMU implements AutoCloseable {
     }
 
     public void start() {
-        this.proc = BinaryTranslationUtils.newProcess(
+        this.proc = SpecsHwUtils.newProcess(
                 new ProcessBuilder(this.getLaunchArguments()));
     }
 
