@@ -70,7 +70,7 @@ public class HardwareTestbench extends HardwareModule {
             connections.add(this.addWire("w" + out.getVariableName(), out.getVariableWidth()));
 
         // this.addInstance(dut.instantiate("dutInstance1", connections));
-        this.addInstance(dut, "dutInstance1", connections);
+        this.addInstance(dut, connections);
 
         // TODO: move all content of @HardwareTestbenchGenerator into @Verilog as a static
         // factory like method?

@@ -247,23 +247,23 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
         return (IfStatement) getBody().addChild(new IfStatement(condition));
     }
 
-    public default IfStatement _if(HardwareExpression condition, HardwareStatement... stats) {
+    /*public default IfStatement _if(HardwareExpression condition, HardwareStatement... stats) {
         return (IfStatement) getBody().addChild(new IfStatement(condition, stats));
     }
-
+    
     public default IfStatement _if(HardwareExpression condition, List<HardwareStatement> stats) {
         return (IfStatement) getBody().addChild(new IfStatement(condition, stats));
-    }
+    }*/
 
     public default IfElseStatement _ifelse(HardwareExpression condition) {
         return (IfElseStatement) getBody().addChild(new IfElseStatement(condition));
     }
 
-    public default IfElseStatement _ifelse(HardwareExpression condition, HardwareStatement... stats) {
+    /* public default IfElseStatement _ifelse(HardwareExpression condition, HardwareStatement... stats) {
         return (IfElseStatement) getBody().addChild(new IfElseStatement(condition, stats));
     }
-
+    
     public default IfElseStatement _ifelse(HardwareExpression condition, List<HardwareStatement> stats) {
         return (IfElseStatement) getBody().addChild(new IfElseStatement(condition, stats));
-    }
+    }*/
 }

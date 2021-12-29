@@ -44,7 +44,8 @@ public class CrossBarNxM extends HardwareModule {
             outputs.add(addOutputPort("out" + i, dataWidth));
 
         // parametrize module
-        var baseMux = new MuxNto1(n, dataWidth);
+        var baseMux = new MuxNto1(n, dataWidth); // TODO: how to force this call to be in a wrapper of type
+                                                 // "addInstance" ??
 
         // M instances
         for (int i = 0; i < m; i++) {
@@ -52,7 +53,7 @@ public class CrossBarNxM extends HardwareModule {
             connections.addAll(inputs);
             connections.add(sel.get(i));
             connections.add(outputs.get(i));
-            addInstance(baseMux.instantiate("mux" + i, connections));
+            addInstance(baseMux, connections);
         }
     }
 }

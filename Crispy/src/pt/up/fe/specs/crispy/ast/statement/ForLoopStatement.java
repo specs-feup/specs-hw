@@ -15,6 +15,7 @@ package pt.up.fe.specs.crispy.ast.statement;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.constructs.BeginEndBlock;
+import pt.up.fe.specs.crispy.ast.constructs.HardwareBlock;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 
 public class ForLoopStatement extends ABlockStatement {
@@ -63,8 +64,9 @@ public class ForLoopStatement extends ABlockStatement {
         return this.getChild(BeginEndBlock.class, 3);
     }
 
-    public HardwareStatement addStatement(HardwareStatement statement) {
-        return this.getBeginEndBlock()._do(statement);
+    public HardwareBlock addStatement(HardwareStatement statement) {
+        this.getBeginEndBlock()._do(statement);
+        return this.getBeginEndBlock();
         // already does sanity check (see @HardwareBlockInterface)
     }
 

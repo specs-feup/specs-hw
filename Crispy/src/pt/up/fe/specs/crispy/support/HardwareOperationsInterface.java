@@ -55,90 +55,231 @@ public interface HardwareOperationsInterface {
     /*
      * 
      */
+    public default AdditionExpression add(int literalConstant) {
+        return new AdditionExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+    }
+
     public default AdditionExpression add(HardwareExpression refB) {
         return new AdditionExpression(getThis(), refB);
+    }
+
+    /*
+     * 
+     */
+    public default DivisionExpression div(int literalConstant) {
+        return new DivisionExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default DivisionExpression div(HardwareExpression refB) {
         return new DivisionExpression(getThis(), refB);
     }
 
+    /*
+     * 
+     */
+    public default MultiplicationExpression mul(int literalConstant) {
+        return new MultiplicationExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+    }
+
     public default MultiplicationExpression mul(HardwareExpression refB) {
         return new MultiplicationExpression(getThis(), refB);
+    }
+
+    /*
+     * 
+     */
+    public default LeftShiftExpression lsl(int literalConstant) {
+        return new LeftShiftExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default LeftShiftExpression lsl(HardwareExpression refB) {
         return new LeftShiftExpression(getThis(), refB);
     }
 
+    /*
+     * 
+     */
+    public default RightLogicalShiftExpression rsl(int literalConstant) {
+        return new RightLogicalShiftExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+    }
+
     public default RightLogicalShiftExpression rsl(HardwareExpression refB) {
         return new RightLogicalShiftExpression(getThis(), refB);
+    }
+
+    /*
+     * 
+     */
+    public default RightArithmeticShiftExpression rsa(int literalConstant) {
+        return new RightArithmeticShiftExpression(getThis(),
+                new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default RightArithmeticShiftExpression rsa(HardwareExpression refB) {
         return new RightArithmeticShiftExpression(getThis(), refB);
     }
 
+    /*
+     * 
+     */
+    public default RightArithmeticShiftExpression sub(int literalConstant) {
+        return new RightArithmeticShiftExpression(getThis(),
+                new Immediate(literalConstant, getThis().getResultWidth()));
+    }
+
     public default SubtractionExpression sub(HardwareExpression refB) {
         return new SubtractionExpression(getThis(), refB);
+    }
+
+    /*
+     * 
+     */
+    public default BitWiseAndExpression and(int literalConstant) {
+        return new BitWiseAndExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default BitWiseAndExpression and(HardwareExpression refB) {
         return new BitWiseAndExpression(getThis(), refB);
     }
 
+    /*
+     * 
+     */
     public default BitWiseNotExpression not() {
         return new BitWiseNotExpression(getThis());
+    }
+
+    /*
+     * 
+     */
+    public default BitWiseOrExpression or(int literalConstant) {
+        return new BitWiseOrExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default BitWiseOrExpression or(HardwareExpression refB) {
         return new BitWiseOrExpression(getThis(), refB);
     }
 
+    /*
+     * 
+     */
+    public default BitWiseXorExpression xor(int literalConstant) {
+        return new BitWiseXorExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+    }
+
     public default BitWiseXorExpression xor(HardwareExpression refB) {
         return new BitWiseXorExpression(getThis(), refB);
+    }
+
+    /*
+     * 
+     */
+    public default ComparisonExpression cmp(int literalConstant) {
+        return new ComparisonExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default ComparisonExpression cmp(HardwareExpression refB) {
         return new ComparisonExpression(getThis(), refB);
     }
 
+    /*
+     * 
+     */
+    public default EqualsToExpression eq(int literalConstant) {
+        return new EqualsToExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+    }
+
     public default EqualsToExpression eq(HardwareExpression refB) {
         return new EqualsToExpression(getThis(), refB);
+    }
+
+    /*
+     * 
+     */
+    public default GreaterThanExpression gt(int literalConstant) {
+        return new GreaterThanExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default GreaterThanExpression gt(HardwareExpression refB) {
         return new GreaterThanExpression(getThis(), refB);
     }
 
+    /*
+     * 
+     */
+    public default GreaterThanOrEqualsExpression geqt(int literalConstant) {
+        return new GreaterThanOrEqualsExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+    }
+
     public default GreaterThanOrEqualsExpression geqt(HardwareExpression refB) {
         return new GreaterThanOrEqualsExpression(getThis(), refB);
+    }
+
+    /*
+     * 
+     */
+    public default LessThanExpression lt(int literalConstant) {
+        return new LessThanExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default LessThanExpression lt(HardwareExpression refB) {
         return new LessThanExpression(getThis(), refB);
     }
 
+    /*
+     * 
+     */
+    public default LessThanOrEqualsExpression leqt(int literalConstant) {
+        return new LessThanOrEqualsExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+    }
+
     public default LessThanOrEqualsExpression leqt(HardwareExpression refB) {
         return new LessThanOrEqualsExpression(getThis(), refB);
+    }
+
+    /*
+     * 
+     */
+    public default NotEqualsToExpression noteq(int literalConstant) {
+        return new NotEqualsToExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default NotEqualsToExpression noteq(HardwareExpression refB) {
         return new NotEqualsToExpression(getThis(), refB);
     }
 
+    /*
+     * 
+     */
+    public default LogicalAndExpression land(int literalConstant) {
+        return new LogicalAndExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+    }
+
     public default LogicalAndExpression land(HardwareExpression refB) {
         return new LogicalAndExpression(getThis(), refB);
+    }
+
+    /*
+     * 
+     */
+    public default LogicalOrExpression lor(int literalConstant) {
+        return new LogicalOrExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
     }
 
     public default LogicalOrExpression lor(HardwareExpression refB) {
         return new LogicalOrExpression(getThis(), refB);
     }
 
+    /*
+     * 
+     */
     public default ReplicationExpression rep(int replicateCount) {
         return new ReplicationExpression(replicateCount, getThis());
     }
 
+    /*
+     * 
+     */
     public default ParenthesisExpression paren() {
         return new ParenthesisExpression(getThis());
     }
