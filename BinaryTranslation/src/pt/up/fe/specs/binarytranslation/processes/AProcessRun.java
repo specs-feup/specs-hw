@@ -10,14 +10,14 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.processes;
 
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.specshw.SpecsHwUtils;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
 
 public abstract class AProcessRun implements ProcessRun, AutoCloseable {
@@ -37,7 +37,7 @@ public abstract class AProcessRun implements ProcessRun, AutoCloseable {
 
     @Override
     public Process start() {
-        this.proc = BinaryTranslationUtils.newProcess(new ProcessBuilder(args));
+        this.proc = SpecsHwUtils.newProcess(new ProcessBuilder(args));
         this.attachThreads();
         return this.proc;
     }

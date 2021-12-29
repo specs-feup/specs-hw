@@ -28,7 +28,7 @@ public class MuxNto1 extends HardwareModule {
     public OutputPort out;
 
     public MuxNto1(int n, int dataWidth) {
-        super(MuxNto1.class.getSimpleName());
+        super("Mux" + n + "to1");
 
         // ports
         inputs = new ArrayList<InputPort>();
@@ -42,7 +42,7 @@ public class MuxNto1 extends HardwareModule {
         var auxWires = new ArrayList<Wire>();
         for (int i = 0; i < n; i++) {
             auxWires.add(addWire("aux" + i, dataWidth));
-            var auxsel = sel.copy().rep(dataWidth); // TODO: fix this syntax so a copy isnt required...
+            var auxsel = sel.addSubscript(i).rep(dataWidth);
             var selbit = auxsel;
             assign(auxWires.get(i), inputs.get(i).and(selbit));
         }
@@ -50,8 +50,8 @@ public class MuxNto1 extends HardwareModule {
         // OR all
         // var finalWire = addWire("finalOR", dataWidth);
         var prevWire = auxWires.get(0);
-        for (int i = 1; i < n - 1; i++)
-            prevWire = (Wire) assign(prevWire.or(auxWires.get(i + 1))); // TODO: fix this typechecking
+        for (int i = 1; i < n; i++)
+            prevWire = (Wire) assign(prevWire.or(auxWires.get(i))); // TODO: fix this typechecking
 
         // final assign
         assign(out, prevWire);

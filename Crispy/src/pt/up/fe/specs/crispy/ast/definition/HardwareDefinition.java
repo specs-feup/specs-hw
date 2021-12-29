@@ -40,10 +40,10 @@ public abstract class HardwareDefinition extends HardwareNode {
 
     /*
      * 
-     */
+     
     public final ModuleInstance instantiate(String instanceName, HardwareOperator... connections) {
         return instantiate(instanceName, Arrays.asList(connections));
-    }
+    }*/
 
     /*
      * 
