@@ -19,6 +19,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.crispy.ast.HardwareNode;
+import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
@@ -68,23 +69,41 @@ public interface HardwareBlockInterface { // extends HardwareOperatorMethods?
      * All block types are supposed to have statements inside;
      * only @ModuleBlock may have other @HardwareBlock s
      */
-    public default HardwareStatement addStatement(HardwareStatement statement) {
+    public default HardwareBlock _do(HardwareStatement statement) {
         sanityCheck(statement);
         getBody().addChild(statement);
-        return statement;
+        return getBody();
     }
 
-    public default HardwareStatement addStatementBefore(HardwareStatement statement, HardwareNode other) {
+    // implemented if the block is a IfElse only, otherwise exception is thrown
+    // this method is meant to be used as sugar when im in the BeginEndBlock
+    // which corresponds to the If clause, and want to switch to the else
+    // after im done adding statements with _do, but dont want to
+    // get the reference to the parent explicitly
+    public default BeginEndBlock orElse() {
+
+        var parent = getBody().getParent();
+        if (parent.getType() != HardwareNodeType.IfElseStatement)
+            throw new RuntimeException("HardwareBlockInterface: cannot fetch \"then\" "
+                    + "clause of a block which is not an IfElse block!");
+
+        else {
+            return ((IfElseStatement) parent).orElse();
+        }
+    }
+
+    /*
+    public default HardwareStatement _doBefore(HardwareStatement statement, HardwareNode other) {
         sanityCheck(statement);
         getBody().addChildLeftOf(other, statement);
         return statement;
     }
-
-    public default HardwareStatement addStatementAfter(HardwareStatement statement, HardwareNode other) {
+    
+    public default HardwareStatement _doAfter(HardwareStatement statement, HardwareNode other) {
         sanityCheck(statement);
         getBody().addChildRightOf(other, statement);
         return statement;
-    }
+    }*/
 
     /*
      * *****************************************************************************

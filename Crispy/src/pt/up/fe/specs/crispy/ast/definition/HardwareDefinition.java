@@ -13,13 +13,8 @@
 
 package pt.up.fe.specs.crispy.ast.definition;
 
-import java.util.Arrays;
-import java.util.List;
-
 import pt.up.fe.specs.crispy.ast.HardwareNode;
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
-import pt.up.fe.specs.crispy.ast.statement.ModuleInstance;
 
 public abstract class HardwareDefinition extends HardwareNode {
 
@@ -34,15 +29,15 @@ public abstract class HardwareDefinition extends HardwareNode {
 
     /*
      * 
-     */
-    public abstract ModuleInstance instantiate(String instanceName, List<HardwareOperator> connections);
+     
+    public abstract ModuleInstance instantiate(String instanceName, List<HardwareOperator> connections);*/
 
     /*
      * 
-     */
+     
     public final ModuleInstance instantiate(String instanceName, HardwareOperator... connections) {
         return instantiate(instanceName, Arrays.asList(connections));
-    }
+    }*/
 
     /*
      * TODO: very important here!!

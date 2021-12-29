@@ -64,7 +64,7 @@ public abstract class HardwareExpressionMethods<T extends HardwareStatement> {
         if (parenthwmodule != null) {
             parenthwmodule.addWire(newresult); // add new wire to declaration block
         }
-        user.addStatement(stat);
+        user._do(stat);
 
         return newresult.getReference();
 

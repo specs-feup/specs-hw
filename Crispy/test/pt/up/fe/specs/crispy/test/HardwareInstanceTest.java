@@ -111,8 +111,8 @@ public class HardwareInstanceTest {
         var wire = wrap.addWire("tmp", 32);
 
         // new adder instance
-        wrap.addInstance(testAdder.instantiate("adder1",
-                wrap.getPort(0), wrap.getPort(1), wire));
+        wrap.addInstance(testAdder, "adder1",
+                wrap.getPort(0), wrap.getPort(1), wire);
 
         // connect output of adder instance +1 to output port woutC
         wrap.nonBlocking("woutC", wire.add(Immediate.Ones(15)).paren());
@@ -353,7 +353,11 @@ public class HardwareInstanceTest {
     public void testRegisterBank() {
 
         var bank = new RegisterBank(4, 8);
-        bank.emit();
+        // bank.emit();
+
+        var tb = new HardwareTestbench("tbTest", bank);
+        tb.setClockFrequency(100);
+        tb.emit();
     }
 
     @Test
@@ -369,9 +373,11 @@ public class HardwareInstanceTest {
         var clk = wrap.addRegister(new RegisterDeclaration("clk", 1));
         var rst = wrap.addRegister(new RegisterDeclaration("rst", 1));
 
+        // wrap.getPorts(); TODO make this return List<Port> instead of List<PortDeclaration>
+
         // new adder instance
-        wrap.addInstance(adder.instantiate("adder1", clk, rst,
-                wrap.getPort(0), wrap.getPort(1), wrap.getPort(2)));
+        wrap.addInstance(adder, "adder1", clk, rst,
+                wrap.getPort(0), wrap.getPort(1), wrap.getPort(2));
 
         wrap.emit();
     }

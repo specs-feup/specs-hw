@@ -43,7 +43,7 @@ public class IfStatement extends ABlockStatement {
             HardwareExpression condition, List<HardwareStatement> statements) {
         this(blockName, condition);
         for (var s : statements)
-            this.then().addStatement(s);
+            this.then()._do(s);
     }
 
     public IfStatement(HardwareExpression condition, List<HardwareStatement> statements) {
@@ -73,7 +73,7 @@ public class IfStatement extends ABlockStatement {
 
     public BeginEndBlock then(List<HardwareStatement> statements) {
         for (var s : statements)
-            this.getBeginEndBlock().addStatement(s);
+            this.getBeginEndBlock()._do(s);
 
         return this.getBeginEndBlock();
     }
