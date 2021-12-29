@@ -64,7 +64,7 @@ public class ForLoopStatement extends ABlockStatement {
     }
 
     public HardwareStatement addStatement(HardwareStatement statement) {
-        return this.getBeginEndBlock().addStatement(statement);
+        return this.getBeginEndBlock()._do(statement);
         // already does sanity check (see @HardwareBlockInterface)
     }
 

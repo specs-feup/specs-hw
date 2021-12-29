@@ -72,6 +72,10 @@ public class ModuleInstance extends HardwareStatement {
         return this.instanceName.hashCode();
     }
 
+    public HardwareModule getModuleDefinition() {
+        return moduleDefinition;
+    }
+
     @Override
     protected ModuleInstance copyPrivate() {
         return new ModuleInstance(this.moduleDefinition, this.instanceName, this.portConnections);

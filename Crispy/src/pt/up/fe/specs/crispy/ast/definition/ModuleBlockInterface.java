@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.crispy.ast.definition;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -115,7 +116,7 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
      */
     public default Port addPort(PortDeclaration port) {
         getPortList().add(port); // this only adds to the port list in the header!
-        return (Port) ((PortDeclaration) getPortDeclarationBlock().addDeclaration(port)).getReference();
+        return ((PortDeclaration) getPortDeclarationBlock().addDeclaration(port)).getReference();
     }
 
     public default Port addInputPort(String portName, int portWidth) {
@@ -130,7 +131,7 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
      * Wires
      */
     public default Wire addWire(WireDeclaration wire) {
-        return (Wire) ((WireDeclaration) getWireDeclarationBlock().addDeclaration(wire)).getReference();
+        return ((WireDeclaration) getWireDeclarationBlock().addDeclaration(wire)).getReference();
     }
 
     public default Wire addWire(String portName, int portWidth) {
@@ -141,7 +142,7 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
      * registers
      */
     public default Register addRegister(RegisterDeclaration reg) {
-        return (Register) ((RegisterDeclaration) getRegisterDeclarationBlock().addDeclaration(reg)).getReference();
+        return ((RegisterDeclaration) getRegisterDeclarationBlock().addDeclaration(reg)).getReference();
     }
 
     public default Register addRegister(String regName, int portWidth) {
@@ -255,14 +256,21 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
      * (instances can only be added as direct children of the module body,
      * i.e. first level children of the ModuleBlock)
      */
-    public default ModuleInstance addInstance(ModuleInstance instantiatedModule) {
+    /*public default ModuleInstance addInstance(ModuleInstance instantiatedModule) {
         sanityCheck(instantiatedModule);
         return (ModuleInstance) getBody().addChild(instantiatedModule);
+    }*/
+
+    public default HardwareModule addInstance(HardwareModule instance,
+            String instanceName, List<HardwareOperator> connections) {
+        getBody()._do(new ModuleInstance(instance, instanceName, connections));
+        return instance;
     }
 
-    public default ModuleInstance addInstance(HardwareModule instanceType,
+    public default HardwareModule addInstance(HardwareModule instance,
             String instanceName, HardwareOperator... connections) {
-        return addInstance(new ModuleInstance(instanceType, instanceName, connections));
+        return addInstance(instance, instanceName, Arrays.asList(connections));
+        // return addInstance(new ModuleInstance(instanceType, instanceName, connections));
     }
 
     /*

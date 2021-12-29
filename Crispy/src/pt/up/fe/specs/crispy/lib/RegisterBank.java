@@ -20,7 +20,6 @@ import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 import pt.up.fe.specs.crispy.ast.expression.operator.Register;
-import pt.up.fe.specs.crispy.ast.statement.IfStatement;
 
 public class RegisterBank extends HardwareModule {
 
@@ -52,9 +51,29 @@ public class RegisterBank extends HardwareModule {
         for (int i = 0; i < numberRegister; i++) {
             var addrval = new Immediate(i, addr.getResultWidth());
             var reg = regBank.get(i);
-            alwaysblock._ifelse(rst,
-                    reg.nonBlocking(0))
-                    .orElse(new IfStatement(write.and(addr.eq(addrval)), reg.nonBlocking(din)));
+
+            // syntax 1, explicit addStatment calls with chained methods
+            alwaysblock._ifelse(rst)
+                    .then()
+                    ._do(reg.nonBlocking(0))
+                    ._do(reg.nonBlocking(1))
+                    .orElse()
+                    ._if(write.and(addr.eq(addrval)))
+                    .then()
+                    ._do(reg.nonBlocking(din));
+
+            /*
+            ifel.then()._do(reg.nonBlocking(0));
+            ifel.orElse()._if(write.and(addr.eq(addrval))).then()._do(reg.nonBlocking(din));
+            
+            ifel.then(new BeginEndBlock() {
+            
+            });*/
+
+            // syntax 2.. more sugar, but breaks on context for where the ifs and ifelses are added...
+            // alwaysblock._ifelse(rst,
+            // reg.nonBlocking(0))
+            // .orElse(new IfStatement(write.and(addr.eq(addrval)), reg.nonBlocking(din)));
 
             // TODO: invoking _if inside the orElse not only adds the _if to the else clause, but to the body of the
             // ModuleBlock....
@@ -63,19 +82,37 @@ public class RegisterBank extends HardwareModule {
         }
 
         // logic (read block, just use a Mux!, plus a decoder since the mux is hot bit)
-        var decoder = new DecoderNxM(numberRegister);
-        var mux = new MuxNto1(numberRegister, numberRegister);
+        var decoderoutput = addWire("decoOutput", registerWidth);
+        addInstance(new DecoderNxM(addr.getResultWidth()), "deco1", addr, decoderoutput);
 
+        var muxoutput = addWire("muxOutput", registerWidth);
+
+        var connections = new ArrayList<HardwareOperator>();
+        connections.addAll(regBank);
+        connections.add(decoderoutput);
+        connections.add(muxoutput);
+
+        addInstance(new MuxNto1(numberRegister, registerWidth), "mux1", connections);
+
+        assign(dout, muxoutput);
+
+        // TODO: method like mux.in.connect(addr);
+        // and this method will have to seek the parent ModuleBlock of the HardwareModule
+        // find the respective ModuleInstance node, and set the connection in the port list!
+
+        /*var decoder = new DecoderNxM(numberRegister);
+        var mux = new MuxNto1(numberRegister, numberRegister);
+        
         var decoderoutput = addWire("decoOutput", registerWidth);
         addInstance(decoder.instantiate("deco1", addr, decoderoutput));
-
+        
         var connections = new ArrayList<HardwareOperator>();
         var muxoutput = addWire("muxOutput", registerWidth);
         connections.addAll(regBank);
         connections.add(decoderoutput);
         connections.add(muxoutput);
         addInstance(mux.instantiate("mux1", connections));
-        assign(dout, muxoutput);
+        assign(dout, muxoutput);*/
 
         // TODO: re-think the ModuleInstance class so that ports can be accessed by name after
         // instantiation...

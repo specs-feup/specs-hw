@@ -23,7 +23,7 @@ public class DecoderNxM extends HardwareModule {
     public Port out;
 
     public DecoderNxM(int n) {
-        super("DecoderNxM" + n + "x" + (int) Math.pow(n, 2));
+        super("Decoder" + n + "x" + (int) Math.pow(n, 2));
         in = addInputPort("in", n);
         out = addOutputPort("out", (int) Math.pow(n, 2));
         assign(out, Immediate.Ones(1).lsl(in));

@@ -48,7 +48,7 @@ public class IfElseStatement extends ABlockStatement {
             HardwareExpression condition, List<HardwareStatement> statements) {
         this(blockName, condition);
         for (var s : statements)
-            this.then().addStatement(s);
+            this.then()._do(s);
     }
 
     public IfElseStatement(HardwareExpression condition, List<HardwareStatement> statements) {
@@ -83,39 +83,41 @@ public class IfElseStatement extends ABlockStatement {
         return this.getChild(BeginEndBlock.class, 1);
     }
 
-    private BeginEndBlock then() {
+    public BeginEndBlock then() {
         return this.getChild(BeginEndBlock.class, 1);
     }
 
+    /*
     public IfElseStatement then(HardwareStatement... statements) {
         return then(Arrays.asList(statements));
     }
-
+    
     public IfElseStatement then(List<HardwareStatement> statements) {
         for (var s : statements)
             this.then().addStatement(s);
-
+    
         // return this.then();
         return this; // DELIBERATE, this way i can chain then(...).orElse(...);
-    }
+    }*/
 
-    private BeginEndBlock orElse() {
+    public BeginEndBlock orElse() {
         return this.getChild(BeginEndBlock.class, 2);
     }
 
+    /*
     public BeginEndBlock orElse(HardwareStatement... statements) {
         return orElse(Arrays.asList(statements));
     }
-
+    
     public BeginEndBlock orElse(List<HardwareStatement> statements) {
         for (var s : statements)
             this.orElse().addStatement(s);
-
+    
         // TODO: on @IfStatement and here, theres no guarantee that the
         // targets of these statements are declared in the parent ModuleBlock
-
+    
         return this.orElse();
-    }
+    }*/
 
     @Override
     public String toContentString() {
