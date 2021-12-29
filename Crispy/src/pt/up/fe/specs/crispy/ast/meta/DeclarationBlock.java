@@ -16,7 +16,6 @@ package pt.up.fe.specs.crispy.ast.meta;
 import java.util.HashMap;
 import java.util.Map;
 
-import pt.up.fe.specs.crispy.ast.HardwareNode;
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
@@ -46,7 +45,7 @@ public class DeclarationBlock extends HardwareMetaNode {
         return blockName;
     }
 
-    public HardwareNode addDeclaration(IdentifierDeclaration declaration) {
+    public IdentifierDeclaration addDeclaration(IdentifierDeclaration declaration) {
 
         var name = declaration.getVariableName();
         var id = declaration.getID();
@@ -55,7 +54,8 @@ public class DeclarationBlock extends HardwareMetaNode {
                     " ID + (" + id + ") already added to DeclarationBlock \"" + this.blockName + "\"");
 
         this.nameMap.put(name, declaration.getReference());
-        return super.addChild(declaration);
+        super.addChild(declaration);
+        return declaration;
     }
 
     /*

@@ -24,14 +24,14 @@ public class ModuleInstance extends HardwareStatement {
 
     private final HardwareModule moduleDefinition;
     private final String instanceName;
-    private final List<HardwareOperator> portConnections;
+    private final List<? extends HardwareOperator> portConnections;
 
     /*
      * TODO: Maybe use a map to pass the child port - parent module signal relation ?
      */
 
     public ModuleInstance(HardwareModule moduleDefinition,
-            String instanceName, List<HardwareOperator> connections)
+            String instanceName, List<? extends HardwareOperator> connections)
             throws IllegalArgumentException {
 
         // "connections" must be single name operators,

@@ -13,16 +13,21 @@
 
 package pt.up.fe.specs.crispy.ast.expression.operator;
 
-import pt.up.fe.specs.crispy.ast.declaration.port.PortDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
 
-public abstract class Port extends VariableOperator {
+public class InputPort extends Port {
 
-    public Port(PortDeclaration portDec) {
+    public InputPort(InputPortDeclaration portDec) {
         super(portDec);
     }
 
     @Override
-    public Port copy() {
-        return (Port) super.copy();
+    public InputPort copy() {
+        return (InputPort) super.copy();
+    }
+
+    @Override
+    protected InputPort copyPrivate() {
+        return new InputPort((InputPortDeclaration) this.getAssociatedIdentifier());
     }
 }

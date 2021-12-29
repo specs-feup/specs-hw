@@ -38,6 +38,8 @@ import pt.up.fe.specs.crispy.ast.declaration.port.ResetDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
+import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 import pt.up.fe.specs.crispy.ast.expression.operator.Register;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
@@ -79,51 +81,71 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
             return id.getReference();
     }
 
+    /*
     public default Port addDeclaration(PortDeclaration port) {
         return this.addPort(port);
     }
-
+    
     public default Wire addDeclaration(WireDeclaration wire) {
         return this.addWire(wire);
     }
-
+    
     public default Register addDeclaration(RegisterDeclaration reg) {
         return this.addRegister(reg);
-    }
+    }*/
 
     /*
      * Special ports
      */
-    public default Port addClock() {
+    public default InputPort addClock() {
         return addClock("clk");
     }
 
-    public default Port addClock(String clockName) {
-        return addPort(new ClockDeclaration(clockName));
+    public default InputPort addClock(String clockName) {
+        return addInputPort(new ClockDeclaration(clockName));
     }
 
-    public default Port addReset() {
+    public default InputPort addReset() {
         return addReset("rst");
     }
 
-    public default Port addReset(String rstName) {
-        return addPort(new ResetDeclaration(rstName));
+    public default InputPort addReset(String rstName) {
+        return addInputPort(new ResetDeclaration(rstName));
     }
 
     /*
      * Ports
      */
     public default Port addPort(PortDeclaration port) {
-        getPortList().add(port); // this only adds to the port list in the header!
-        return (Port) ((PortDeclaration) getPortDeclarationBlock().addDeclaration(port)).getReference();
+        if (port instanceof InputPortDeclaration)
+            return addInputPort((InputPortDeclaration) port);
+
+        else if (port instanceof OutputPortDeclaration)
+            return addOutputPort((OutputPortDeclaration) port);
+
+        else
+            return null;
+
+        // getPortList().add(port); // this only adds to the port list in the header!
+        // return (Port) ((PortDeclaration) getPortDeclarationBlock().addDeclaration(port)).getReference();
     }
 
-    public default Port addInputPort(String portName, int portWidth) {
-        return addPort(new InputPortDeclaration(portName, portWidth));
+    public default InputPort addInputPort(InputPortDeclaration inputdeclaration) {
+        getPortList().add(inputdeclaration); // this only adds to the port list in the header!
+        return (InputPort) getPortDeclarationBlock().addDeclaration(inputdeclaration).getReference();
     }
 
-    public default Port addOutputPort(String portName, int portWidth) {
-        return addPort(new OutputPortDeclaration(portName, portWidth));
+    public default InputPort addInputPort(String portName, int portWidth) {
+        return (InputPort) addInputPort(new InputPortDeclaration(portName, portWidth));
+    }
+
+    public default OutputPort addOutputPort(OutputPortDeclaration outputdeclaration) {
+        getPortList().add(outputdeclaration); // this only adds to the port list in the header!
+        return (OutputPort) getPortDeclarationBlock().addDeclaration(outputdeclaration).getReference();
+    }
+
+    public default OutputPort addOutputPort(String portName, int portWidth) {
+        return (OutputPort) addOutputPort(new OutputPortDeclaration(portName, portWidth));
     }
 
     /*
@@ -262,7 +284,12 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
 
     public default ModuleInstance addInstance(HardwareModule instanceType,
             String instanceName, HardwareOperator... connections) {
-        return addInstance(new ModuleInstance(instanceType, instanceName, connections));
+        return addInstance(instanceType.instantiate(instanceName, connections));
+    }
+
+    public default ModuleInstance addInstance(HardwareModule instanceType,
+            String instanceName, List<? extends HardwareOperator> connections, HardwareOperator... vararg) {
+        return addInstance(instanceType.instantiate(instanceName, connections, vararg));
     }
 
     /*

@@ -13,11 +13,25 @@
 
 package pt.up.fe.specs.crispy.coarse;
 
-public class Adder extends CoarseGrainedUnit { // implements CoarseGrainFunctionalUnit , OR extends
-                                               // ACorseGrainFunctionalUnit<T>
+import java.util.List;
+
+import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
+import pt.up.fe.specs.crispy.ast.statement.ModuleInstance;
+
+public class Adder extends CoarseGrainedUnit implements UInlineApply<Adder> { // implements CoarseGrainFunctionalUnit ,
+                                                                              // OR extends
+    // ACorseGrainFunctionalUnit<T>
 
     public Adder(int bitwidth) {
         super(Adder.class.getSimpleName(), bitwidth);
         this.outC.nonBlocking(this.inA.add(this.inB));
+    }
+
+    @Override
+    public ModuleInstance newInstance(int bitWidth, String instanceName,
+            List<HardwareOperator> connections,
+            HardwareOperator output) {
+
+        return (new Adder(bitWidth)).instantiate(instanceName, connections, output);
     }
 }

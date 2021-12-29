@@ -95,7 +95,7 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
      * Public stuff
      */
     @Override
-    public ModuleInstance instantiate(String instanceName, List<HardwareOperator> connections) {
+    public ModuleInstance instantiate(String instanceName, List<? extends HardwareOperator> connections) {
         return new ModuleInstance(this, instanceName, connections);
     }
 
