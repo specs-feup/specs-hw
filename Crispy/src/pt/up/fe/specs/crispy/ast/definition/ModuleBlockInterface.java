@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.crispy.ast.definition;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -260,17 +261,23 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
         sanityCheck(instantiatedModule);
         return (ModuleInstance) getBody().addChild(instantiatedModule);
     }*/
-
-    public default HardwareModule addInstance(HardwareModule instance,
-            String instanceName, List<HardwareOperator> connections) {
-        getBody()._do(new ModuleInstance(instance, instanceName, connections));
+    public default HardwareModule addInstance(HardwareModule instance, List<? extends HardwareOperator> connections) {
+        getBody()._do(new ModuleInstance(instance,
+                instance.getName() + Integer.toString(instance.hashCode()).substring(0, 4), connections));
         return instance;
     }
 
     public default HardwareModule addInstance(HardwareModule instance,
-            String instanceName, HardwareOperator... connections) {
-        return addInstance(instance, instanceName, Arrays.asList(connections));
-        // return addInstance(new ModuleInstance(instanceType, instanceName, connections));
+            List<? extends HardwareOperator> connections1,
+            HardwareOperator... connections2) {
+        var connections = new ArrayList<HardwareOperator>();
+        connections.addAll(connections1);
+        connections.addAll(Arrays.asList(connections2));
+        return addInstance(instance, connections);
+    }
+
+    public default HardwareModule addInstance(HardwareModule instance, HardwareOperator... connections) {
+        return addInstance(instance, Arrays.asList(connections));
     }
 
     /*
@@ -461,6 +468,6 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
     }*/
 
     public default List<ModuleInstance> getInstances() {
-        return getBody().getChildren(ModuleInstance.class);
+        return getBody().getChildrenOf(ModuleInstance.class);
     }
 }

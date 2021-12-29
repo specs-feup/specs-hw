@@ -19,7 +19,6 @@ import pt.up.fe.specs.crispy.ast.HardwareNode;
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.declaration.port.PortDeclaration;
 import pt.up.fe.specs.crispy.ast.meta.FileHeader;
-import pt.up.fe.specs.crispy.ast.statement.ModuleInstance;
 import pt.up.fe.specs.specshw.SpecsHwUtils;
 
 public class HardwareModule extends HardwareDefinition implements ModuleBlockInterface {
@@ -31,8 +30,6 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
         ADDCHILDERRMSG = "HardwareModule: Expected only two children! " +
                 "Use addStatement() and addBlock() to add content to the module body!";
     }
-
-    // public assignMethods assign;
 
     /*
      * Outer most node of the Hardware module definition, 
@@ -119,7 +116,7 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
         // emit this
         super.emit();
 
-        var childrenModules = this.getBody().getChildrenOf(ModuleInstance.class);
+        var childrenModules = this.getInstances();
         for (var mod : childrenModules) {
             var def = mod.getModuleDefinition();
             def.emit();
