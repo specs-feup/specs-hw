@@ -14,7 +14,7 @@ CFLAGS=-L./lib/standalone_microblaze_0/bsp/microblaze_0/lib -Wl,--build-id=none 
 %.o: %.c
 	$(CROSS_PREFIX)gcc $(FLAGS) $(CCFLAGS) $< -o $@
 
-dotprod.elf: $(OBJS)
+dotprod.elf: $(OBJS) lib
 	$(CROSS_PREFIX)gcc $(FLAGS) $(CFLAGS) $^ -o $@
 
 clean:
