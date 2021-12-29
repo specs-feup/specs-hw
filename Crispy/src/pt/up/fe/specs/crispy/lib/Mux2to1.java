@@ -14,14 +14,15 @@
 package pt.up.fe.specs.crispy.lib;
 
 import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
-import pt.up.fe.specs.crispy.ast.expression.operator.Port;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
+import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 
 public class Mux2to1 extends HardwareModule {
 
-    public Port i0;
-    public Port i1;
-    public Port sel;
-    public Port out;
+    public InputPort i0;
+    public InputPort i1;
+    public InputPort sel;
+    public OutputPort out;
 
     public Mux2to1(int bitwidth) {
         super(Mux2to1.class.getSimpleName());
