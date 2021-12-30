@@ -36,6 +36,8 @@ import pt.up.fe.specs.crispy.ast.declaration.port.ResetDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
+import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 import pt.up.fe.specs.crispy.ast.expression.operator.Register;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
@@ -197,36 +199,37 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
     /*
      * Special ports
      */
-    public Port addClock() {
+    public InputPort addClock() {
         return addClock("clk");
     }
 
-    public Port addClock(String clockName) {
-        return addPort(new ClockDeclaration(clockName));
+    public InputPort addClock(String clockName) {
+        return (InputPort) addPort(new ClockDeclaration(clockName));
     }
 
-    public Port addReset() {
+    public InputPort addReset() {
         return addReset("rst");
     }
 
-    public Port addReset(String rstName) {
-        return addPort(new ResetDeclaration(rstName));
+    public InputPort addReset(String rstName) {
+        return (InputPort) addPort(new ResetDeclaration(rstName));
     }
 
     /*
      * Ports
      */
-    public Port addPort(PortDeclaration port) {
+    protected Port addPort(PortDeclaration port) {
         getPortList().add(port); // this only adds to the port list in the header!
-        return ((PortDeclaration) getPortDeclarationBlock().addDeclaration(port)).getReference();
+        getPortDeclarationBlock().addDeclaration(port);
+        return (Port) port.getReference();
     }
 
-    public Port addInputPort(String portName, int portWidth) {
-        return addPort(new InputPortDeclaration(portName, portWidth));
+    public InputPort addInputPort(String portName, int portWidth) {
+        return (InputPort) addPort(new InputPortDeclaration(portName, portWidth));
     }
 
-    public Port addOutputPort(String portName, int portWidth) {
-        return addPort(new OutputPortDeclaration(portName, portWidth));
+    public OutputPort addOutputPort(String portName, int portWidth) {
+        return (OutputPort) addPort(new OutputPortDeclaration(portName, portWidth));
     }
 
     /*
@@ -356,23 +359,23 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
         sanityCheck(instantiatedModule);
         return (ModuleInstance) getBody().addChild(instantiatedModule);
     }*/
-    public HardwareModule addInstance(HardwareModule instance, List<? extends HardwareOperator> connections) {
+    public HardwareModule instantiate(HardwareModule instance, List<? extends HardwareOperator> connections) {
         getBody()._do(new ModuleInstance(instance,
                 instance.getName() + Integer.toString(instance.hashCode()).substring(0, 4), connections));
         return instance;
     }
 
-    public HardwareModule addInstance(HardwareModule instance,
+    public HardwareModule instantiate(HardwareModule instance,
             List<? extends HardwareOperator> connections1,
             HardwareOperator... connections2) {
         var connections = new ArrayList<HardwareOperator>();
         connections.addAll(connections1);
         connections.addAll(Arrays.asList(connections2));
-        return addInstance(instance, connections);
+        return instantiate(instance, connections);
     }
 
-    public HardwareModule addInstance(HardwareModule instance, HardwareOperator... connections) {
-        return addInstance(instance, Arrays.asList(connections));
+    public HardwareModule instantiate(HardwareModule instance, HardwareOperator... connections) {
+        return instantiate(instance, Arrays.asList(connections));
     }
 
     /*

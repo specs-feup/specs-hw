@@ -16,16 +16,17 @@ package pt.up.fe.specs.crispy.lib;
 import java.util.ArrayList;
 
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
-import pt.up.fe.specs.crispy.ast.expression.operator.Port;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
+import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.Register;
 
 public class RegisterBank extends HardwareModule {
 
-    public Port clk, rst;
-    public Port addr;
-    public Port write;
-    public Port din;
-    public Port dout;
+    public InputPort clk, rst;
+    public InputPort addr;
+    public InputPort write;
+    public InputPort din;
+    public OutputPort dout;
 
     public RegisterBank(int numberRegister, int registerWidth) {
         super(RegisterBank.class.getSimpleName()
@@ -56,10 +57,10 @@ public class RegisterBank extends HardwareModule {
 
         // logic (read block, just use a Mux!, plus a decoder since the mux is hot bit)
         var decoderoutput = addWire("decoOutput", registerWidth);
-        addInstance(new DecoderNxM(addr.getWidth()), addr, decoderoutput);
+        instantiate(new DecoderNxM(addr.getWidth()), addr, decoderoutput);
 
         var muxoutput = addWire("muxOutput", registerWidth);
-        addInstance(new MuxNto1(numberRegister, registerWidth), regBank, decoderoutput, muxoutput);
+        instantiate(new MuxNto1(numberRegister, registerWidth), regBank, decoderoutput, muxoutput);
 
         // TODO:
         // assign(dout, mux.out);
@@ -77,6 +78,24 @@ public class RegisterBank extends HardwareModule {
         var mux = new MuxNto1(numberRegister, numberRegister);
         
         var decoderoutput = addWire("decoOutput", registerWidth);
+        //<<<<<<< HEAD
+        // var deco1 = addInstance(decoder.instantiate("deco1", addr, decoderoutput));
+        addInstance(decoder, "deco1", addr, decoderoutput);
+        
+        // instantiate(instanceName, connections)
+        // TODO: this would allow the method to create an instance inside itself!!
+        // how to prevent??
+        
+        // how to get output connection wire into and out of instances??
+        // see my own implementation of
+        // https://github.com/specs-feup/specs-chisel/blob/main/FunctionalUnits/main/pt/inesctec/modules/functionalUnit/InlineApply.scala
+        // its basically a functional interface
+        
+        addInstance(mux.instantiate("mux1", regBank, decoderoutput, dout));
+        
+        // TODO: can I do it like chisel or spinal, where assigning a module to an InputPort
+        // basically means that i connect the output of the module to that input port?
+        //=======
         addInstance(decoder.instantiate("deco1", addr, decoderoutput));
         
         var connections = new ArrayList<HardwareOperator>();
@@ -86,6 +105,7 @@ public class RegisterBank extends HardwareModule {
         connections.add(muxoutput);
         addInstance(mux.instantiate("mux1", connections));
         assign(dout, muxoutput);*/
+        // >>>>>>> branch 'master' of https://github.com/specs-feup/specs-hw.git
 
         // TODO: re-think the ModuleInstance class so that ports can be accessed by name after
         // instantiation...

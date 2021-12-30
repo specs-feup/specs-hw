@@ -17,20 +17,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
-import pt.up.fe.specs.crispy.ast.expression.operator.Port;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
+import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.Wire;
 
 public class MuxNto1 extends HardwareModule {
 
-    public List<Port> inputs;
-    public Port sel;
-    public Port out;
+    public List<InputPort> inputs;
+    public InputPort sel;
+    public OutputPort out;
 
     public MuxNto1(int n, int dataWidth) {
         super("Mux" + n + "to1");
 
         // ports
-        inputs = new ArrayList<Port>();
+        inputs = new ArrayList<InputPort>();
         for (int i = 0; i < n; i++)
             inputs.add(addInputPort("in" + i, dataWidth));
 

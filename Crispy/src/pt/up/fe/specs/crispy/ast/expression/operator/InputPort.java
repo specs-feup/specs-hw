@@ -11,18 +11,23 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.coarse;
+package pt.up.fe.specs.crispy.ast.expression.operator;
 
-public class Adder extends CoarseGrainedUnit {// implements UInlineApply { // implements CoarseGrainFunctionalUnit ,
-                                              // OR extends
-    // ACorseGrainFunctionalUnit<T>
+import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
 
-    static {
-        constr = (i) -> new Adder(i);
+public class InputPort extends Port {
+
+    public InputPort(InputPortDeclaration portDec) {
+        super(portDec);
     }
 
-    public Adder(int bitwidth) {
-        super(Adder.class.getSimpleName(), bitwidth);
-        this._do(outC.nonBlocking(inA.add(inB)));
+    @Override
+    public InputPort copy() {
+        return (InputPort) super.copy();
+    }
+
+    @Override
+    protected InputPort copyPrivate() {
+        return new InputPort((InputPortDeclaration) this.getAssociatedIdentifier());
     }
 }

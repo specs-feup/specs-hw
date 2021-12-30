@@ -17,29 +17,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
-import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
-import pt.up.fe.specs.crispy.ast.expression.operator.Port;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
+import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 
 // public class CrossBarNxM<T extends HardwareInterface> extends HardwareModule {
 public class CrossBarNxM extends HardwareModule {
 
-    public List<Port> inputs;
-    public List<Port> sel;
-    public List<Port> outputs;
+    public List<InputPort> inputs;
+    public List<InputPort> sel;
+    public List<OutputPort> outputs;
 
     public CrossBarNxM(int n, int m, int dataWidth) {
         super("CrossBar" + n + "x" + m);
 
         // ports
-        inputs = new ArrayList<Port>();
+        inputs = new ArrayList<InputPort>();
         for (int i = 0; i < n; i++)
             inputs.add(addInputPort("in" + i, dataWidth));
 
-        sel = new ArrayList<Port>();
+        sel = new ArrayList<InputPort>();
         for (int i = 0; i < m; i++)
             sel.add(addInputPort("sel" + i, inputs.size())); // hot bit encoding
 
-        outputs = new ArrayList<Port>();
+        outputs = new ArrayList<OutputPort>();
         for (int i = 0; i < m; i++)
             outputs.add(addOutputPort("out" + i, dataWidth));
 
@@ -48,12 +48,7 @@ public class CrossBarNxM extends HardwareModule {
                                                  // "addInstance" ??
 
         // M instances
-        for (int i = 0; i < m; i++) {
-            var connections = new ArrayList<HardwareOperator>();
-            connections.addAll(inputs);
-            connections.add(sel.get(i));
-            connections.add(outputs.get(i));
-            addInstance(baseMux, connections);
-        }
+        for (int i = 0; i < m; i++)
+            instantiate(baseMux, inputs, sel.get(i), outputs.get(i));
     }
 }
