@@ -14,16 +14,16 @@
 package pt.up.fe.specs.crispy.ast.task;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.declaration.ArrayDeclaration;
+import pt.up.fe.specs.crispy.ast.expression.operator.VArray;
 
 public class ReadMemoryHexadecimalTask extends AReadMemoryTask {
 
     public ReadMemoryHexadecimalTask(String fileName,
-            ArrayDeclaration array, Number startAddress, Number endAddress) {
+            VArray array, Number startAddress, Number endAddress) {
         super(fileName, array, startAddress, endAddress, HardwareNodeType.ReadMemoryHexTask);
     }
 
-    public ReadMemoryHexadecimalTask(String fileName, ArrayDeclaration array) {
+    public ReadMemoryHexadecimalTask(String fileName, VArray array) {
         this(fileName, array, null, null);
     }
 

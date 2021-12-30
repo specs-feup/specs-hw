@@ -14,20 +14,20 @@
 package pt.up.fe.specs.crispy.ast.task;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.declaration.ArrayDeclaration;
+import pt.up.fe.specs.crispy.ast.expression.operator.VArray;
 
 public abstract class AReadMemoryTask extends HardwareTask {
 
+    // TODO: make children??
     private String fileName;
-    private ArrayDeclaration array;
-
+    private VArray array;
     private Number startAddress;
     private Number endAddress;
 
     // TODO: memory file should be passed as a File which is verified to exist
     // and not as a String
 
-    protected AReadMemoryTask(String fileName, ArrayDeclaration array,
+    protected AReadMemoryTask(String fileName, VArray array,
             Number startAddress, Number endAddress, HardwareNodeType type) {
         super(type);
         this.fileName = fileName;
@@ -36,7 +36,7 @@ public abstract class AReadMemoryTask extends HardwareTask {
         this.endAddress = endAddress;
     }
 
-    protected AReadMemoryTask(String fileName, ArrayDeclaration array, HardwareNodeType type) {
+    protected AReadMemoryTask(String fileName, VArray array, HardwareNodeType type) {
         this(fileName, array, null, null, type);
     }
 
@@ -44,7 +44,7 @@ public abstract class AReadMemoryTask extends HardwareTask {
         return this.fileName;
     }
 
-    public ArrayDeclaration getArray() {
+    public VArray getArray() {
         return this.array;
     }
 
@@ -66,7 +66,7 @@ public abstract class AReadMemoryTask extends HardwareTask {
         var builder = new StringBuilder();
         builder.append("(");
         builder.append("\"" + this.getFileName() + "\",");
-        builder.append(this.getArray().getVariable().getVariableName());
+        builder.append(this.getArray().getAssociatedIdentifier().getVariableName());
 
         if (this.hasBoundaries()) {
             builder.append("," + String.valueOf(this.getStartAddress()));

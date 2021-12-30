@@ -14,7 +14,7 @@
 package pt.up.fe.specs.crispy.ast.declaration;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
+import pt.up.fe.specs.crispy.ast.expression.operator.Parameter;
 
 public class ParameterDeclaration extends IdentifierDeclaration {
 
@@ -31,10 +31,9 @@ public class ParameterDeclaration extends IdentifierDeclaration {
                 + this.getVariableName() + "= {" + this.initializer + "};\n";
     }
 
-    // TODO: replace with return type "Parameter"
     @Override
-    public VariableOperator getReference() {
-        return new VariableOperator(this);
+    public Parameter getReference() {
+        return new Parameter(this);
     }
 
     @Override

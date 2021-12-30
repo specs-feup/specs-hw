@@ -42,7 +42,7 @@ public class MuxNto1 extends HardwareModule {
         var auxWires = new ArrayList<Wire>();
         for (int i = 0; i < n; i++) {
             auxWires.add(addWire("aux" + i, dataWidth));
-            var auxsel = sel.addSubscript(i).rep(dataWidth);
+            var auxsel = sel.idx(i).rep(dataWidth);
             var selbit = auxsel;
             assign(auxWires.get(i), inputs.get(i).and(selbit));
         }

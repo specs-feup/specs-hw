@@ -19,14 +19,11 @@ import pt.up.fe.specs.crispy.ast.expression.operator.subscript.OperatorSubscript
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.ScalarSubscript;
 
-public class VariableOperator extends HardwareOperator {
-
-    // TODO: make abstract
+public abstract class VariableOperator extends HardwareOperator {
 
     private final String name;
     private final int width;
     private IdentifierDeclaration associatedIdentifier;
-    // public nonBlockingMethods nonBlocking;
 
     /*
      * Auxiliary copy constructor
@@ -35,7 +32,6 @@ public class VariableOperator extends HardwareOperator {
         super(other.type);
         this.name = other.name;
         this.width = other.width;
-        // this.nonBlocking = new nonBlockingMethods(this);
     }
 
     @Override
@@ -50,8 +46,8 @@ public class VariableOperator extends HardwareOperator {
      * (I've also added a "getReference()" method to
      * any class which inherits from @VariableDeclaration)
      */
-    public VariableOperator(IdentifierDeclaration namedIdentifier) {
-        super(HardwareNodeType.VariableOperator);
+    protected VariableOperator(HardwareNodeType type, IdentifierDeclaration namedIdentifier) {
+        super(type);
         this.name = namedIdentifier.getVariableName();
         this.width = namedIdentifier.getVariableWidth();
         this.associatedIdentifier = namedIdentifier;
@@ -91,10 +87,10 @@ public class VariableOperator extends HardwareOperator {
         return this.width;
     }
 
-    @Override
+    /*@Override
     protected VariableOperator copyPrivate() {
         return new VariableOperator(this);
-    }
+    }*/
 
     @Override
     public VariableOperator copy() {
@@ -104,7 +100,7 @@ public class VariableOperator extends HardwareOperator {
     /*
      * 
      */
-    public VariableOperator addSubscript(OperatorSubscript subs) {
+    public VariableOperator idx(OperatorSubscript subs) {
         var copy = this.copy();
         copy.addChild(subs);
         return copy;
@@ -113,7 +109,7 @@ public class VariableOperator extends HardwareOperator {
     /*
      * 
      */
-    public VariableOperator addSubscript(HardwareOperator idx) {
+    public VariableOperator idx(HardwareOperator idx) {
         var copy = this.copy();
         copy.addChild(new ScalarSubscript(idx));
         return copy;
@@ -122,7 +118,7 @@ public class VariableOperator extends HardwareOperator {
     /*
      * 
      */
-    public VariableOperator addSubscript(int idx) {
+    public VariableOperator idx(int idx) {
         var copy = this.copy();
         copy.addChild(new ScalarSubscript(idx));
         return copy;
@@ -131,69 +127,15 @@ public class VariableOperator extends HardwareOperator {
     /*
      * 
      */
-    public VariableOperator addSubscript(HardwareOperator left, HardwareOperator right) {
+    public VariableOperator idx(HardwareOperator left, HardwareOperator right) {
         var copy = this.copy();
         copy.addChild(new RangedSubscript(left, right));
         return copy;
     }
 
-    public VariableOperator addSubscript(int left, int right) {
+    public VariableOperator idx(int left, int right) {
         var copy = this.copy();
         copy.addChild(new RangedSubscript(left, right));
         return copy;
     }
-
-    /*
-     * only allow users of type HardwareBlock for now
-     
-    private void updateTree(ASingleStatement stat) {
-    
-        // TODO: this parentage check isnt going to work because the
-        // VariableOperator is a Child of the ContinuousStatement being created!
-        // when I do getPort, it returns a reference of an indentifier,
-        // but that reference has no parent!
-    
-        var beblock = this.parent.getAncestorTry(BeginEndBlock.class).orElse(null);
-        var hwmod = this.parent.getAncestorTry(HardwareModule.class).orElse(null);
-    
-        // check if statement is in BeginEndBlock
-        if (beblock != null) {
-            beblock.addStatement(stat);
-        }
-    
-        else if (hwmod != null) {
-            hwmod.addStatement(stat);
-        }
-    
-        // if the BeginEndBlock is inside a ModuleBlock, see if declared
-        if (hwmod != null) {
-            if (hwmod.indexOfChild(this.associatedIdentifier) == -1)
-                hwmod.addDeclaration(this.associatedIdentifier);
-        }
-    }*/
-
-    /*
-     * 
-     
-    public ContinuousStatement assign(HardwareExpression refB) {
-        var stat = new ContinuousStatement(this, refB);
-        updateTree(stat);
-        return stat;
-    }
-    
-    public ProceduralNonBlockingStatement nonBlocking(HardwareExpression expression) {
-        var stat = new ProceduralNonBlockingStatement(this, expression);
-        updateTree(stat);
-        return stat;
-    }
-    
-    public ProceduralBlockingStatement blocking(HardwareExpression expression) {
-        var stat = new ProceduralBlockingStatement(this, expression);
-        updateTree(stat);
-        return stat;
-    }*/
-
-    /*    public ProceduralNonBlockingStatement nonBlocking(HardwareExpression refA, HardwareExpression refB) {
-        return new ProceduralNonBlockingStatement(this, nonBlocking.add(refA, refB));// !!!
-    }*/
 }

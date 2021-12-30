@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.crispy.coarse;
 
-import java.util.Arrays;
 import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
@@ -31,21 +30,12 @@ public abstract class CoarseGrainedUnit extends HardwareModule {
     public Port inA;
     public Port inB;
     public Port outC;
-    protected static FunctionalUnitInstantiator constr;
 
     protected CoarseGrainedUnit(String name, int bitwidth) {
         super(name);
         inA = addInputPort("inA", bitwidth);
         inB = addInputPort("inB", bitwidth);
         outC = addOutputPort("outA", bitwidth + 1);
-    }
-
-    public static Wire _do(HardwareOperator... inputs) {
-        return _do(Arrays.asList(inputs));
-    }
-
-    public static Wire _do(List<HardwareOperator> inputs) {
-        return apply(constr, inputs);
     }
 
     protected interface FunctionalUnitInstantiator {

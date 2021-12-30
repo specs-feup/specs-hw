@@ -13,16 +13,26 @@
 
 package pt.up.fe.specs.crispy.coarse;
 
+import java.util.Arrays;
+import java.util.List;
+
+import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
+import pt.up.fe.specs.crispy.ast.expression.operator.Wire;
+
 public class Adder extends CoarseGrainedUnit {// implements UInlineApply { // implements CoarseGrainFunctionalUnit ,
                                               // OR extends
     // ACorseGrainFunctionalUnit<T>
 
-    static {
-        constr = (i) -> new Adder(i);
-    }
-
     public Adder(int bitwidth) {
         super(Adder.class.getSimpleName(), bitwidth);
         this._do(outC.nonBlocking(inA.add(inB)));
+    }
+
+    public static Wire _do(HardwareOperator... inputs) {
+        return _do(Arrays.asList(inputs));
+    }
+
+    public static Wire _do(List<HardwareOperator> inputs) {
+        return apply((i) -> new Adder(i), inputs);
     }
 }

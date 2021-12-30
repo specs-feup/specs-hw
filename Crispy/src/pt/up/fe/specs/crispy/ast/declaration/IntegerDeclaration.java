@@ -14,7 +14,7 @@
 package pt.up.fe.specs.crispy.ast.declaration;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
+import pt.up.fe.specs.crispy.ast.expression.operator.VInteger;
 
 public class IntegerDeclaration extends IdentifierDeclaration {
 
@@ -32,10 +32,9 @@ public class IntegerDeclaration extends IdentifierDeclaration {
         return new IntegerDeclaration(this.getVariableName());
     }
 
-    // TODO: replace with return type "Parameter"
     @Override
-    public VariableOperator getReference() {
-        return new VariableOperator(this);
+    public VInteger getReference() {
+        return new VInteger(this);
     }
 
     @Override
