@@ -13,12 +13,13 @@
 
 package pt.up.fe.specs.crispy.ast.expression.operator;
 
+import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
 
 public class Wire extends VariableOperator {
 
     public Wire(WireDeclaration wireDec) {
-        super(wireDec);
+        super(HardwareNodeType.Wire, wireDec);
     }
 
     @Override

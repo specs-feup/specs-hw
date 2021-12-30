@@ -13,12 +13,13 @@
 
 package pt.up.fe.specs.crispy.ast.expression.operator;
 
+import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
 
 public class InputPort extends Port {
 
     public InputPort(InputPortDeclaration portDec) {
-        super(portDec);
+        super(HardwareNodeType.InputPort, portDec);
     }
 
     @Override

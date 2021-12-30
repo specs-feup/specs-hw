@@ -13,10 +13,10 @@
 
 package pt.up.fe.specs.crispy.ast.task;
 
-import pt.up.fe.specs.crispy.ast.HardwareNode;
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
+import pt.up.fe.specs.crispy.ast.statement.HardwareStatement;
 
-public abstract class HardwareTask extends HardwareNode {
+public abstract class HardwareTask extends HardwareStatement {
 
     public HardwareTask(HardwareNodeType type) {
         super(type);

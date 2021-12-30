@@ -41,6 +41,21 @@ public enum HardwareNodeType {
     ArrayDeclaration,
     TimeScaleDeclaration,
 
+    // references!!
+    ImmediateOperator,
+    VariableOperator,
+    Port,
+    InputPort,
+    OutputPort,
+    Wire,
+    Register,
+    Integer,
+    Parameter,
+    Array, // TODO: makes sense??
+
+    RangeSelection,
+    IndexSelection,
+
     // expressions,
     UnimplementedExpression,
     AdditionExpression,
@@ -69,12 +84,6 @@ public enum HardwareNodeType {
 
     ComparsionExpression,
     ParenthesisExpression,
-
-    // operators
-    ImmediateOperator,
-    VariableOperator,
-    RangeSelection,
-    IndexSelection,
 
     // meta
     DeclarationBlock,

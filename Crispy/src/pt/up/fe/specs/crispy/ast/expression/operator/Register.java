@@ -13,12 +13,13 @@
 
 package pt.up.fe.specs.crispy.ast.expression.operator;
 
+import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.declaration.RegisterDeclaration;
 
 public class Register extends VariableOperator {
 
     public Register(RegisterDeclaration regDec) {
-        super(regDec);
+        super(HardwareNodeType.Register, regDec);
     }
 
     @Override

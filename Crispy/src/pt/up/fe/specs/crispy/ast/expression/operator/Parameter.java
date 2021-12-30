@@ -14,16 +14,21 @@
 package pt.up.fe.specs.crispy.ast.expression.operator;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.declaration.port.PortDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.ParameterDeclaration;
 
-public abstract class Port extends VariableOperator {
+public class Parameter extends VariableOperator {
 
-    public Port(HardwareNodeType type, PortDeclaration portDec) {
-        super(type, portDec);
+    public Parameter(ParameterDeclaration intDec) {
+        super(HardwareNodeType.Parameter, intDec);
     }
 
     @Override
-    public Port copy() {
-        return (Port) super.copy();
+    public Parameter copy() {
+        return (Parameter) super.copy();
+    }
+
+    @Override
+    protected Parameter copyPrivate() {
+        return new Parameter((ParameterDeclaration) this.getAssociatedIdentifier());
     }
 }

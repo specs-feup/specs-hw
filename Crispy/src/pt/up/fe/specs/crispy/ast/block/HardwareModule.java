@@ -25,6 +25,7 @@ import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.constructs.NegEdge;
 import pt.up.fe.specs.crispy.ast.constructs.PosEdge;
 import pt.up.fe.specs.crispy.ast.constructs.SignalEdge;
+import pt.up.fe.specs.crispy.ast.declaration.ArrayDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.RegisterDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
@@ -40,6 +41,7 @@ import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 import pt.up.fe.specs.crispy.ast.expression.operator.Register;
+import pt.up.fe.specs.crispy.ast.expression.operator.VArray;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Wire;
 import pt.up.fe.specs.crispy.ast.meta.DeclarationBlock;
@@ -91,22 +93,6 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
     public ModuleBlock getBody() {
         return this.getChild(ModuleBlock.class, 1);
     }
-
-    /*
-    @Override
-    public int incrementCombCounter() {
-        return getBody().incrementCombCounter();
-    }
-    
-    @Override
-    public int incrementFFCounter() {
-        return getBody().incrementFFCounter();
-    }
-    
-    @Override
-    public List<PortDeclaration> getPortList() {
-        return this.getBody().getPortList();
-    }*/
 
     @Override
     public HardwareNode addChild(HardwareNode node) {
@@ -257,6 +243,20 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
     /*
      * Arrays??
      */
+    public VArray addArray(ArrayDeclaration array) {
+        var type = array.getVariable().getType();
+
+        if (type == HardwareNodeType.Wire) {
+            getWireDeclarationBlock().addDeclaration(array);
+
+        } else if (type == HardwareNodeType.Register) {
+            getRegisterDeclarationBlock().addDeclaration(array);
+        }
+
+        // TODO: other array types
+
+        return array.getReference();
+    }
 
     /*
      * The ModuleBlock is the only block type that allows other HardwareBlocks as children, 
@@ -299,10 +299,10 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
      * (if no clock on module, adds a clock declaration to the ports)
      */
     public AlwaysFFBlock alwaysff(
-            String blockName, ClockDeclaration clk,
+            String blockName, VariableOperator clk,
             Function<VariableOperator, SignalEdge> edge) {
 
-        var block = new AlwaysFFBlock(edge.apply(clk.getReference()), blockName);
+        var block = new AlwaysFFBlock(edge.apply(clk), blockName);
         getBody().addChild(block);
         return block;
     }
@@ -310,7 +310,7 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
     /*
      * Alwaysff posedge
      */
-    public AlwaysFFBlock alwaysposedge(String blockName, ClockDeclaration clk) {
+    public AlwaysFFBlock alwaysposedge(String blockName, VariableOperator clk) {
         return alwaysff(blockName, clk, (signal) -> new PosEdge(signal));
     }
 
@@ -325,7 +325,7 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
     /*
      * Alwaysff negedge
      */
-    public AlwaysFFBlock alwaysnegedge(String blockName, ClockDeclaration clk) {
+    public AlwaysFFBlock alwaysnegedge(String blockName, VariableOperator clk) {
         return alwaysff(blockName, clk, (signal) -> new NegEdge(signal));
     }
 
@@ -355,10 +355,6 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
      * (instances can only be added as direct children of the module body,
      * i.e. first level children of the ModuleBlock)
      */
-    /*public ModuleInstance addInstance(ModuleInstance instantiatedModule) {
-        sanityCheck(instantiatedModule);
-        return (ModuleInstance) getBody().addChild(instantiatedModule);
-    }*/
     public HardwareModule instantiate(HardwareModule instance, List<? extends HardwareOperator> connections) {
         getBody()._do(new ModuleInstance(instance,
                 instance.getName() + Integer.toString(instance.hashCode()).substring(0, 4), connections));
@@ -405,7 +401,7 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
     /////////////////////////////////////////////////////////////////////////////
     // GETTERS //////////////////////////////////////////////////////////////////
 
-    public ClockDeclaration getClock() {
+    public InputPort getClock() {
 
         var clks = getPorts(port -> port.isClock());
 
@@ -415,7 +411,7 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
         else {
             clk = (ClockDeclaration) addClock().getAssociatedIdentifier();
         }
-        return clk;
+        return clk.getReference();
     }
 
     /*

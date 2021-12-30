@@ -14,13 +14,14 @@
 package pt.up.fe.specs.crispy.ast.declaration;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
+import pt.up.fe.specs.crispy.ast.expression.operator.VArray;
 
-public class ArrayDeclaration extends HardwareDeclaration {
+public class ArrayDeclaration extends IdentifierDeclaration {
 
     private int size;
 
     private ArrayDeclaration(IdentifierDeclaration variable) {
-        super(HardwareNodeType.ArrayDeclaration);
+        super(variable.getVariableName(), variable.getVariableWidth(), HardwareNodeType.ArrayDeclaration);
         this.addChild(variable);
     }
 
@@ -36,19 +37,43 @@ public class ArrayDeclaration extends HardwareDeclaration {
      * just too prevent instantiating ArrayDeclaration as an
      * array of type PortDeclaration (not permitted in Verilog)
      */
-    public ArrayDeclaration(WireDeclaration variable, int size) {
+    private ArrayDeclaration(WireDeclaration variable, int size) {
         this(variable);
         this.size = size;
     }
 
-    public ArrayDeclaration(RegisterDeclaration variable, int size) {
+    private ArrayDeclaration(RegisterDeclaration variable, int size) {
         this(variable);
         this.size = size;
     }
 
-    public ArrayDeclaration(IntegerDeclaration variable, int size) {
+    private ArrayDeclaration(IntegerDeclaration variable, int size) {
         this(variable);
         this.size = size;
+    }
+
+    private ArrayDeclaration(IdentifierDeclaration variable, int size) {
+        this(variable);
+        this.size = size;
+    }
+
+    /*
+     * 
+     */
+    public static ArrayDeclaration of(IdentifierDeclaration decl, int arraySize) {
+        return new ArrayDeclaration(decl, arraySize);
+    }
+
+    public static ArrayDeclaration ofWires(String wireName, int numBits, int arraySize) {
+        return ArrayDeclaration.of(new WireDeclaration(wireName, numBits), arraySize);
+    }
+
+    public static ArrayDeclaration ofRegisters(String regName, int numBits, int arraySize) {
+        return ArrayDeclaration.of(new RegisterDeclaration(regName, numBits), arraySize);
+    }
+
+    public static ArrayDeclaration ofInteger(String intName, int arraySize) {
+        return ArrayDeclaration.of(new IntegerDeclaration(intName), arraySize);
     }
 
     public IdentifierDeclaration getVariable() {
@@ -62,6 +87,11 @@ public class ArrayDeclaration extends HardwareDeclaration {
     @Override
     public String getAsString() {
         return this.getChild(0).getNodeName() + " [" + (this.getSize() - 1) + " : 0];";
+    }
+
+    @Override
+    public VArray getReference() {
+        return new VArray(this);
     }
 
     @Override

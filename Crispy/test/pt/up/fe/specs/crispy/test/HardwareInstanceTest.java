@@ -22,7 +22,6 @@ import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
-import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.ScalarSubscript;
 import pt.up.fe.specs.crispy.ast.statement.IfStatement;
@@ -44,11 +43,11 @@ public class HardwareInstanceTest {
         var imm = new Immediate(14, 32);
         imm.emit();
 
-        var ref1 = new VariableOperator(decl1);
-        ref1.emit();
+        // var ref1 = new VariableOperator(decl1);
+        // ref1.emit();
 
-        var ref1b = decl1.getReference();
-        ref1b.emit();
+        var ref1 = decl1.getReference();
+        ref1.emit();
 
         // index1
         var index = new ScalarSubscript(1);
@@ -57,10 +56,10 @@ public class HardwareInstanceTest {
         var index2 = new RangedSubscript(4, 8);
         index2.emit();
 
-        var opWithSubscript = ref1.copy().addSubscript(index).addSubscript(index2);
+        var opWithSubscript = ref1.copy().idx(index).idx(index2);
         opWithSubscript.emit();
 
-        var opWithSubscript2 = ref1.copy().addSubscript(7).addSubscript(4, 7);
+        var opWithSubscript2 = ref1.copy().idx(7).idx(4, 7);
         opWithSubscript2.emit();
 
         /*

@@ -228,4 +228,9 @@ public abstract class HardwareBlock extends HardwareNode {// implements Hardware
     public DelayStatement delay(double delay) {
         return (DelayStatement) getBody().addChild(new DelayStatement(delay));
     }
+
+    /*
+     * readmem
+     */
+
 }
