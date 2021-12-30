@@ -20,6 +20,7 @@ package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -33,6 +34,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.General
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.SegmentCDFG;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
@@ -78,6 +80,7 @@ public class RandomTest_deletethisafter {
     
     private FakeInstruction instruction = new FakeInstruction("addTest",  
             "RA = RA + RF;if(RA == 0){RA = RA + 2;}RF = RA * 2;"
+            //"if(RA == 0) {RD = RA + RB;}else{RD = RA - RB;}"
             );
     
     private String systemPath = "C:\\Users\\joaom\\Desktop\\" + "btf_" + instruction.getName();
@@ -187,5 +190,7 @@ public class RandomTest_deletethisafter {
         this.performIcetimeTimingAnalysis();
         */
     }
-   
+ 
+
+    
 }

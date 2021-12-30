@@ -51,16 +51,18 @@ public abstract class AInstructionCDFGNode{
         this.uid = uid;
     }
     
-    public void setUID(Integer uid) {
+    public Integer setUID(Integer uid) {
         this.setUID(String.valueOf(uid));
+        
+        return uid;
     }
     
     /** Returns the UID value of the node
      * 
      * @return The UID value
      */
-    public String getUIDVal() {
-        return this.uid;
+    public Integer getUIDVal() {
+        return Integer.valueOf(this.uid);
     }
     
     /** Returns the unique reference of the node, that is composed by the node's reference and UID
