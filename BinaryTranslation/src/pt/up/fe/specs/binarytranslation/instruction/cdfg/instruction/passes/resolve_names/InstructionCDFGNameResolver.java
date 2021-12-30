@@ -20,11 +20,13 @@ package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.res
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIf;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIfElse;
@@ -62,14 +64,12 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
         
         this.setVertexInputs(subgraph, this.retrivePreviousUIDMap(subgraph)); // sets the subgraph inputs using the uid map calculated from the previous ones
         this.calculateVertexOutputs(subgraph, subgraph.getInputUIDMap());  // calculates the subgraph outputs from the input uid map
-        System.out.println(subgraph.getCurrentUIDMap());
         super.visitDataFlowSubgraph(subgraph);
     }
     
     @Override
     protected void visitControlIfSubgraph(InstructionCDFGControlFlowIf subgraph) {
-        
-        
+           
         this.setVertexInputs(subgraph, this.retrivePreviousUIDMap(subgraph));
         
         super.visitControlIfSubgraph(subgraph);
@@ -133,7 +133,7 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
      * @param currentUIDMap UIDMap of the outputs
      */
     protected void calculateVertexOutputs(AInstructionCDFGSubgraph subgraph, Map<String, Integer> currentUIDMap) {
-        subgraph.generateOutputUIDMap(currentUIDMap);
+        subgraph.generateOutputUIDMap();
     }
     
     /** Calculates the outputs of a collection of subgraphs
@@ -144,13 +144,62 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
     protected void calculateVerticesOutputs(Collection<AInstructionCDFGSubgraph> subgraphs, Map<String, Integer> currentUIDMap) {
         subgraphs.forEach(subgraph -> this.calculateVertexOutputs(subgraph, currentUIDMap));
     }
-   
+  
+    protected void addAssignments(AInstructionCDFGSubgraph subgraph, Map<String, Integer> divergenceMap) {
+        
+        
+        
+    }
+    
+    protected Map<String, Integer> retriveDivergentUIDs(Collection<Map<String, Integer>> previousUIDMaps){
+        
+        Map<String, Integer> divergentUIDsMap = new HashMap<>();
+        List<Integer> referenceUIDs = new ArrayList<>();
+        Set<String> candidateReferences = new HashSet<>();
+        
+        previousUIDMaps.forEach(previousUIDMap-> candidateReferences.addAll(previousUIDMap.keySet()));  // populates all of the references of the previo
+        
+       candidateReferences.forEach(reference -> {
+         
+           referenceUIDs.clear();
+           
+           boolean isDivergent = false;
+
+           for(Map<String, Integer> previousMap : previousUIDMaps) {
+  
+               if(previousMap.containsKey(reference)) {
+                   referenceUIDs.add(previousMap.get(reference));
+               }else {
+                   isDivergent = true;
+               }
+           }
+           
+           int largestUID = referenceUIDs.get(0).intValue();
+           
+           for(Integer uid : referenceUIDs) {
+               if(largestUID < uid.intValue() ) {
+                   largestUID = uid.intValue();
+                   isDivergent = true;
+               }
+           }
+           
+           
+           if(isDivergent) {
+               divergentUIDsMap.put(reference, largestUID);
+           }
+
+           
+       });
+        
+        return divergentUIDsMap;
+    }
     
     protected Map<String, Integer> retrivePreviousUIDMap(AInstructionCDFGSubgraph subgraph){
         
         Collection<Map<String, Integer>> previousSubgraphsUIDMaps = new ArrayList<>();
         
         this.icdfg.getVerticesBefore(subgraph).forEach(subgraphBefore -> {
+            
             if(subgraphBefore instanceof AInstructionCDFGControlFlowConditionalSubgraph) {
                 previousSubgraphsUIDMaps.add(subgraphBefore.getCurrentUIDMap());
             }else if(subgraphBefore instanceof AInstructionCDFGControlFlowMergeSubgraph){
@@ -166,9 +215,15 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
             }
             });
         
-        Map<String, Integer> currentUIDMap = this.calculateCurrentUIDMap(previousSubgraphsUIDMaps);
+        Map<String, Integer> currentUIDMap;
         
-        this.setVerticesOutputs(this.icdfg.getVerticesBefore(subgraph), currentUIDMap);
+        if(previousSubgraphsUIDMaps.isEmpty()) {
+            currentUIDMap = subgraph.generateInputUIDMap();
+        }else {
+            currentUIDMap = this.calculateCurrentUIDMap(previousSubgraphsUIDMaps);
+            this.setVerticesOutputs(this.icdfg.getVerticesBefore(subgraph), currentUIDMap);
+        }
+        
         
         return currentUIDMap;
     }
