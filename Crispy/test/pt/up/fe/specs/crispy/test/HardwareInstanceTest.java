@@ -93,6 +93,9 @@ public class HardwareInstanceTest {
     @Test
     public void testAdderEmit() {
         var testAdder = HardwareInstanceTest.getAdder();
+
+        // testAdder.test(); // test get fields hash
+
         testAdder.emit();
     }
 
@@ -111,7 +114,7 @@ public class HardwareInstanceTest {
         var wire = wrap.addWire("tmp", 32);
 
         // new adder instance
-        wrap.addInstance(testAdder,
+        wrap.instantiate(testAdder,
                 wrap.getPort(0), wrap.getPort(1), wire);
 
         // connect output of adder instance +1 to output port woutC
@@ -324,6 +327,20 @@ public class HardwareInstanceTest {
     }
 
     @Test
+    public void testUlineApply() {
+
+        var adder = new HardwareModule("adder2");
+        var inA = adder.addInputPort("inA", 8);
+        var inB = adder.addInputPort("inB", 8);
+        var outC = adder.addOutputPort("outC", 8);
+
+        var out = Adder._do(Adder._do(inA, inB), inA);
+        outC.assign(out);
+
+        adder.emit();
+    }
+
+    @Test
     public void testCoarseModule2() {
 
         var mux1 = new Mux2to1(8);
@@ -378,7 +395,7 @@ public class HardwareInstanceTest {
         // wrap.getPorts(); TODO make this return List<Port> instead of List<PortDeclaration>
 
         // new adder instance
-        wrap.addInstance(adder, clk, rst,
+        wrap.instantiate(adder, clk, rst,
                 wrap.getPort(0), wrap.getPort(1), wrap.getPort(2));
 
         wrap.emit();

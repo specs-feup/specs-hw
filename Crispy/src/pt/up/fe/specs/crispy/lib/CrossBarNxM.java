@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
-import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 
@@ -49,12 +48,7 @@ public class CrossBarNxM extends HardwareModule {
                                                  // "addInstance" ??
 
         // M instances
-        for (int i = 0; i < m; i++) {
-            var connections = new ArrayList<HardwareOperator>();
-            connections.addAll(inputs);
-            connections.add(sel.get(i));
-            connections.add(outputs.get(i));
-            addInstance(baseMux, connections);
-        }
+        for (int i = 0; i < m; i++)
+            instantiate(baseMux, inputs, sel.get(i), outputs.get(i));
     }
 }

@@ -17,6 +17,6 @@ public class Subtractor extends CoarseGrainedUnit {
 
     public Subtractor(int bitwidth) {
         super(Subtractor.class.getSimpleName(), bitwidth);
-        this.outC.nonBlocking(this.inA.sub(this.inB));
+        this._do(outC.nonBlocking(inA.sub(inB)));
     }
 }

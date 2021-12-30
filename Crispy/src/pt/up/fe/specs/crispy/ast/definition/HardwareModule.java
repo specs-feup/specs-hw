@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.crispy.ast.definition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.HardwareNode;
@@ -46,6 +47,16 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
 
         // this.assign = new assignMethods(this.getBody());
     }
+
+    /*
+    public int test() {
+        var fields = this.getClass().getDeclaredFields();
+        int hash = 0;
+        for (var f : fields)
+            hash += f.hashCode();
+    
+        return hash;
+    }*/
 
     public HardwareModule(String moduleName, PortDeclaration... ports) {
         this(moduleName);
@@ -116,9 +127,14 @@ public class HardwareModule extends HardwareDefinition implements ModuleBlockInt
         // emit this
         super.emit();
 
+        // TODO: how to define ids for hardwaremodules...
+        // sometimes i treat them as definitions, some other times as instances...
+
+        var emittedDefinitionsIDs = new ArrayList<Integer>();
         var childrenModules = this.getInstances();
         for (var mod : childrenModules) {
             var def = mod.getModuleDefinition();
+            emittedDefinitionsIDs.add(def.getID());
             def.emit();
         }
     }
