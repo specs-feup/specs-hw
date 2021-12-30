@@ -17,127 +17,91 @@ import java.io.File;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
-import pt.up.fe.specs.binarytranslation.hardware.HardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
-import pt.up.fe.specs.crispy.ast.HardwareNode;
-import pt.up.fe.specs.crispy.ast.constructs.AlwaysFFBlock;
-import pt.up.fe.specs.crispy.ast.constructs.NegEdge;
-import pt.up.fe.specs.crispy.ast.constructs.PosEdge;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
+import pt.up.fe.specs.crispy.ast.block.HardwareTestbench;
 import pt.up.fe.specs.crispy.ast.declaration.ArrayDeclaration;
-import pt.up.fe.specs.crispy.ast.declaration.RegisterDeclaration;
-import pt.up.fe.specs.crispy.ast.declaration.TimeScaleDeclaration;
-import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
-import pt.up.fe.specs.crispy.ast.definition.HardwareTestbench;
-import pt.up.fe.specs.crispy.ast.expression.aritmetic.AdditionExpression;
-import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
-import pt.up.fe.specs.crispy.ast.statement.ModuleInstance;
-import pt.up.fe.specs.crispy.ast.statement.ProceduralBlockingStatement;
-import pt.up.fe.specs.crispy.ast.statement.ProceduralNonBlockingStatement;
+import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 import pt.up.fe.specs.crispy.ast.task.ReadMemoryHexadecimalTask;
 
 public class HardwareTestbenchGenerator extends AHardwareGenerator {
 
-    private static final String verificationStartInputSignal = "verify";
-    private static final String verificationOutputSignal = "verifyResults";
-    // private static final String validationInputs = "inputs";
-    // private static final String validationOutputs = "outputs";
-    // private static final String moduleOutputs = "moduleOutputs";
-    // private static final String validationCurrentIndex = "index";
-
-    public static HardwareTestbench generate(HardwareArchitecture module, int validationDataSize,
+    public static HardwareTestbench generate(HardwareModule module, int validationDataSize,
             File inputValidationFile, File outputValidationFile) throws NoSuchFileException {
 
         if (!inputValidationFile.exists()) {
-            throw new NoSuchFileException("File " + inputValidationFile.getName() + " does not exist!");
+            throw new NoSuchFileException("File "
+                    + inputValidationFile.getName() + " does not exist!");
         }
 
         if (!outputValidationFile.exists()) {
-            throw new NoSuchFileException("File " + outputValidationFile.getName() + " does not exist!");
+            throw new NoSuchFileException("File "
+                    + outputValidationFile.getName() + " does not exist!");
         }
 
         /*
-         * Top level
+         * Top level wrapper for verilator compliance (??)
+         * (Dynamically generated module, i.e., not from defined class)
          */
         var testbenchModule = new HardwareModule(module.getName() + "_tb");
-        testbenchModule.addChild(new TimeScaleDeclaration());
 
         /*
-         * Registers which are ports, and their ports
+         * Ports
          */
-
-        var verificationStartInputSignal = testbenchModule
-                .addInputPort(HardwareTestbenchGenerator.verificationStartInputSignal, 1);
-        var verificationOutputSignal = testbenchModule
-                .addOutputPort(HardwareTestbenchGenerator.verificationOutputSignal, 1);
+        var verifStart = testbenchModule.addInputPort("verify", 1);
+        var verifOutput = testbenchModule.addOutputPort("verifyResults", 1);
 
         /*
-         * Registers & Wires
+         * Registers
+         */
+        var index = testbenchModule.addRegister("index", 32);
+        var inputs = testbenchModule.addArray(
+                ArrayDeclaration.ofRegisters("inputs",
+                        32 * module.getInputPorts().size(), validationDataSize));
+        var outputs = testbenchModule.addArray(
+                ArrayDeclaration.ofRegisters("outputs",
+                        32 * module.getOutputPorts().size(), validationDataSize));
+
+        /*
+         * Wires
          */
         var moduleOutputs = testbenchModule.addWire("moduleOutputs", 32 * module.getOutputPorts().size());
-        var validationCurrentIndex = testbenchModule.addRegister("validationCurrentIndex", 32);
-
-        /*
-         * Register arrays (TODO: correct??)
-         */
-
-        var validationInputs = new RegisterDeclaration("inputs", 32 * module.getInputPorts().size());
-        var validationOutputs = new RegisterDeclaration("outputs", 32 * module.getOutputPorts().size());
-        var validation_inputs = new ArrayDeclaration(validationInputs, validationDataSize);
-        var validation_outputs = new ArrayDeclaration(validationOutputs, validationDataSize);
 
         /*
          * Initial block
          */
-
-        var initialBlock = testbenchModule.initial("");
-
-        // initial block for loading the validation array files
-
-        initialBlock.addChild(new ProceduralBlockingStatement(validationCurrentIndex, new Immediate(0, 32)));
-        initialBlock.addChild(new ReadMemoryHexadecimalTask(inputValidationFile.getName(), validation_inputs));
-        initialBlock.addChild(new ReadMemoryHexadecimalTask(outputValidationFile.getName(), validation_outputs));
-        initialBlock.addChild(new ProceduralBlockingStatement(verificationOutputSignal, new Immediate(0, 1)));
+        testbenchModule.initial("")
+                ._do(index.blocking(0))
+                ._do(new ReadMemoryHexadecimalTask(inputValidationFile.getName(), inputs))
+                ._do(new ReadMemoryHexadecimalTask(outputValidationFile.getName(), outputs))
+                ._do(verifOutput.blocking(0));
 
         /*
          * Always block
          */
-
-        testbenchModule.addBlock(new AlwaysFFBlock(new PosEdge(verificationStartInputSignal)))
-                ._do(new ProceduralNonBlockingStatement(validationCurrentIndex,
-                        new AdditionExpression(validationCurrentIndex, new Immediate(0xFFFFFFFF, 32))));
+        testbenchModule.alwaysposedge("block0", verifStart)
+                ._do(index.nonBlocking(index.add(1)));
 
         /*
          * Always block
          */
-        var negedge1 = new NegEdge(verificationStartInputSignal);
-        var alwaysblock2 = new AlwaysFFBlock(negedge1); // TODO: AlwaysFFBlock.atNegEdge(signal) --> static method?
+        testbenchModule.alwaysnegedge("block1", verifStart)
+                ._ifelse(moduleOutputs.noteq(outputs.idx(index).idx(0, 32)))
+                .then()._do(verifOutput.nonBlocking(0))
+                .orElse()._do(verifOutput.nonBlocking(1));
 
-        var ref1 = validationOutputs.getReference();
-        ref1.addSubscript(validationCurrentIndex).addSubscript(0, 32);
+        var subInputs = new ArrayList<HardwareOperator>();
 
-        testbenchModule._ifelse(moduleOutputs.noteq(ref1))
-                .then()._do(verificationOutputSignal.nonBlocking(0))
-                .orElse()._do(verificationOutputSignal.nonBlocking(1));
+        for (int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32)
+            subInputs.add(inputs.idx(index).idx(i, i + 32));
 
-        var subInputs = new ArrayList<HardwareNode>();
-
-        for (int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32) {
-            var ref = validationInputs.getReference();
-            ref.addSubscript(validationCurrentIndex).addSubscript(i, i + 32);
-            subInputs.add(ref);
-        }
-
-        for (int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32) {
-            subInputs.add(moduleOutputs.addSubscript(i, i + 32));
-
-            // subInputs.add(new RangedSelection(new VariableOperator(moduleOutputs), i, i + 32));
-        }
+        for (int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32)
+            subInputs.add(moduleOutputs.idx(i, i + 32));
 
         /*
-         * Instantiate the Design Under Test (DUT)
+         * Place the Design Under Test (DUT) into the body of this wrapper
          */
-
-        testbenchModule.addInstance(new ModuleInstance(module, module.getName() + "_test", subInputs));
+        testbenchModule.instantiate(module, subInputs);
 
         return new HardwareTestbench(module.getName() + "_tb", testbenchModule);
     }
