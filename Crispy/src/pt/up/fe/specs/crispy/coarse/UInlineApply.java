@@ -17,29 +17,50 @@ import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
+import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Wire;
-import pt.up.fe.specs.crispy.ast.statement.ModuleInstance;
 
-public interface UInlineApply<T extends CoarseGrainedUnit> {
+public interface UInlineApply {
 
     /*
      * must be implemented by the hardware module where we want this interface to work in (?) 
      */
-    public HardwareModule getParent();
+    // public HardwareModule getParent();
 
     /*
      * Should declare the new instance into the ModuleBlock, and return an output port (?)
-     */
-    public ModuleInstance newInstance(int bitWidth, String instanceName,
-            List<HardwareOperator> inputs,
-            HardwareOperator output);
+     
+    public static <T> T getInstance(int bitWidth) {
+        var c = Class<T>.get
+    }*/
 
-    public default Wire apply(List<HardwareOperator> inputs) {
+    public interface FunctionalUnitInstantiator {
+        public HardwareModule apply(int bitWidth);
+    };
+
+    public default Wire apply(FunctionalUnitInstantiator constr,
+            List<HardwareOperator> inputs) {
+
+        // TODO: fetch parent module via the operators themselves??
+        // TODO: maybe every declared node should have a reference to a kind of singleton node
+        // that keeps all generation context?
+        var parentmodule = ((VariableOperator) inputs.get(0)).getAssociatedIdentifier()
+                .getAncestorTry(HardwareModule.class).get();
+        if (parentmodule == null)
+            throw new RuntimeException("UInlineApply"
+                    + ": cannot apply interface method without parent HardwareModule context!");
+
+        // TODO: problem, any HardwareOperator is a node that is not attached to a parent ModuleBlock, or HarwareBlock
+        // since its a reference to a declaration; however, I might create a meta declaration block to hold all
+        // generated
+        // references, and then not emit that content during emit()
+        // alterantively, every reference may hold a backreference to its identifier? which it already does, duh
+        // UNLESS, its an immediate...
 
         var opA = inputs.get(0);
         var auxname = opA.getResultName() + inputs.get(1).getResultName();
-        var output = getParent().addWire(auxname, opA.getResultWidth());
-        getParent().addInstance(newInstance(opA.getResultWidth() + 1, auxname, inputs, output));
+        var output = parentmodule.addWire(auxname, opA.getResultWidth());
+        parentmodule.instantiate(constr.apply(opA.getResultWidth() + 1), inputs, output);
         return output;
 
         /*var outputwire = (new WireDeclaration(auxname, opA.getResultWidth())).getReference();

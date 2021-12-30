@@ -283,23 +283,23 @@ public interface ModuleBlockInterface extends HardwareBlockInterface {
         sanityCheck(instantiatedModule);
         return (ModuleInstance) getBody().addChild(instantiatedModule);
     }*/
-    public default HardwareModule addInstance(HardwareModule instance, List<? extends HardwareOperator> connections) {
+    public default HardwareModule instantiate(HardwareModule instance, List<? extends HardwareOperator> connections) {
         getBody()._do(new ModuleInstance(instance,
                 instance.getName() + Integer.toString(instance.hashCode()).substring(0, 4), connections));
         return instance;
     }
 
-    public default HardwareModule addInstance(HardwareModule instance,
+    public default HardwareModule instantiate(HardwareModule instance,
             List<? extends HardwareOperator> connections1,
             HardwareOperator... connections2) {
         var connections = new ArrayList<HardwareOperator>();
         connections.addAll(connections1);
         connections.addAll(Arrays.asList(connections2));
-        return addInstance(instance, connections);
+        return instantiate(instance, connections);
     }
 
-    public default HardwareModule addInstance(HardwareModule instance, HardwareOperator... connections) {
-        return addInstance(instance, Arrays.asList(connections));
+    public default HardwareModule instantiate(HardwareModule instance, HardwareOperator... connections) {
+        return instantiate(instance, Arrays.asList(connections));
     }
 
     /*
