@@ -73,14 +73,7 @@ public class InstructionCDFGSubgraphGenerator extends PseudoInstructionBaseVisit
     }
 
     private AInstructionCDFGSubgraph finish(){
-        
-        this.subgraph.generateInputs();
-        this.subgraph.generateOutputs();
-
-        this.subgraph.setInputUIDMap(this.seedUIDMap);
-        this.subgraph.setOutputUIDMap(this.subgraph.getInputUIDMap());
-        
-        return this.subgraph;
+        return this.subgraph.resolveAll(this.seedUIDMap);
     }
 
     public AInstructionCDFGSubgraph generate(AInstructionCDFGSubgraph dfg, Map<String, Integer> seedUIDMap, PseudoInstructionParser.ExpressionContext ctx){
@@ -220,9 +213,7 @@ public class InstructionCDFGSubgraphGenerator extends PseudoInstructionBaseVisit
     public AInstructionCDFGNode visitLiteralOperand(LiteralOperandContext ctx) {
         return new InstructionCDFGLiteralNode(ctx.number().getText());
     }
-    
- 
-    
+
     @Override
     public AInstructionCDFGNode visitAsmFieldOperand(AsmFieldOperandContext ctx) {
         return new InstructionCDFGVariableNode(ctx.getText());
