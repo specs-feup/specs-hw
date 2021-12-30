@@ -11,13 +11,12 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.ast.definition;
+package pt.up.fe.specs.crispy.ast.block;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.constructs.HardwareBlock;
 import pt.up.fe.specs.crispy.ast.declaration.port.PortDeclaration;
 import pt.up.fe.specs.crispy.ast.meta.DeclarationBlock;
 
@@ -36,14 +35,14 @@ import pt.up.fe.specs.crispy.ast.meta.DeclarationBlock;
  * The ModuleBlock is the only block type that allows other HardwareBlocks as children, for example always_comb,
  * initial, etc; it is also the only type of block that allows children of type ModuleInstance
  */
-class ModuleBlock extends HardwareBlock implements ModuleBlockInterface {
+class ModuleBlock extends HardwareBlock {
 
     protected String moduleName;
     protected List<PortDeclaration> ports;
 
     // counters used when no user specified names for blocks are given
-    private int alwaysffCounter = 0;
-    private int alwayscombCounter = 0;
+    protected int alwaysffCounter = 0;
+    protected int alwayscombCounter = 0;
 
     public ModuleBlock(String moduleName) {
         super(HardwareNodeType.ModuleBlock);
@@ -68,23 +67,8 @@ class ModuleBlock extends HardwareBlock implements ModuleBlockInterface {
     }
 
     @Override
-    public HardwareBlock getBody() {
+    protected HardwareBlock getBody() {
         return this;
-    }
-
-    @Override
-    public List<PortDeclaration> getPortList() {
-        return this.ports;
-    }
-
-    @Override
-    public int incrementCombCounter() {
-        return this.alwayscombCounter++;
-    }
-
-    @Override
-    public int incrementFFCounter() {
-        return this.alwaysffCounter++;
     }
 
     @Override
@@ -104,7 +88,7 @@ class ModuleBlock extends HardwareBlock implements ModuleBlockInterface {
         builder.append(";\n\n");
 
         // GET ALL NESTED CONTENT IN BODY BLOCK
-        builder.append(super.getAsString());
+        builder.append(nestContent(super.getAsString()));
 
         builder.append("endmodule //" + this.moduleName + "\n");
         return builder.toString();

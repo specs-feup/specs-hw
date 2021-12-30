@@ -36,7 +36,7 @@ public abstract class HardwareOperator extends HardwareExpression {
 
         // we can only know the max
         else {
-            var rightval = ((VariableOperator) thisop).getResultWidth();
+            var rightval = ((VariableOperator) thisop).getWidth();
             var rightBits = (int) (Math.log(rightval) / Math.log(2));
             return (int) Math.pow(2.0, rightBits) - 1;
         }

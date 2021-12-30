@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.constructs.BeginEndBlock;
+import pt.up.fe.specs.crispy.ast.block.BeginEndBlock;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 
 public class IfStatement extends ABlockStatement {

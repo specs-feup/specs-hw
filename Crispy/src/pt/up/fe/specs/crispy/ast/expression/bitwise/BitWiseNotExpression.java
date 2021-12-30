@@ -33,13 +33,13 @@ public class BitWiseNotExpression extends AUnaryHardwareExpression {
     }
 
     @Override
-    public String getResultName() {
-        return getOperand().getResultName();
+    public String getName() {
+        return getOperand().getName();
     }
 
     @Override
-    public int getResultWidth() {
-        return this.getOperand().getResultWidth();
+    public int getWidth() {
+        return this.getOperand().getWidth();
     }
 
     @Override

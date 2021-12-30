@@ -37,9 +37,9 @@ public abstract class ABinaryHardwareExpression extends HardwareExpression {
     }
 
     @Override
-    public String getResultName() {
-        var l = getLeft().getResultName();
-        var r = getRight().getResultName();
+    public String getName() {
+        var l = getLeft().getName();
+        var r = getRight().getName();
         var llen = l.length();
         var rlen = r.length();
         return l.substring(0, Math.min(4, llen))

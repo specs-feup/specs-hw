@@ -27,13 +27,13 @@ public abstract class HardwareExpression extends HardwareNode implements Hardwar
      * Evaluate the individual components of the expression
      * and return the appropriate bit width
      */
-    public abstract int getResultWidth();
+    public abstract int getWidth();
 
     /*
      * Evaluate the individual components of the expression
      * and return the wire/reg name
      */
-    public abstract String getResultName();
+    public abstract String getName();
 
     @Override
     public HardwareExpression getThis() {
@@ -49,13 +49,4 @@ public abstract class HardwareExpression extends HardwareNode implements Hardwar
     public HardwareExpression copy() {
         return (HardwareExpression) super.copy();
     }
-
-    // TODO: other shorthandles to create compound expressions
-
-    // TODO: test putting these methods as public inner classes in HardwareNode?
-    // then i could do
-    // var result = nonBlocking.add(ref1, ref2);
-    // and the "nonBlocking.add" syntax wouldnt have to be inside
-    // HardwareOperator family, which requires:
-    // ref1.nonBlocking(... etc
 }

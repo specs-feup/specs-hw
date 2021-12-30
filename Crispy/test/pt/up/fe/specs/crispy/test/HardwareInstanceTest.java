@@ -15,12 +15,12 @@ package pt.up.fe.specs.crispy.test;
 
 import org.junit.Test;
 
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
+import pt.up.fe.specs.crispy.ast.block.HardwareTestbench;
 import pt.up.fe.specs.crispy.ast.declaration.RegisterDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.OutputPortDeclaration;
-import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
-import pt.up.fe.specs.crispy.ast.definition.HardwareTestbench;
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.RangedSubscript;
