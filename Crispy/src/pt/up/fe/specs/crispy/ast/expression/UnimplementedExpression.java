@@ -41,12 +41,12 @@ public class UnimplementedExpression extends HardwareExpression {
     }
 
     @Override
-    public String getResultName() {
+    public String getName() {
         return "";
     }
 
     @Override
-    public int getResultWidth() {
+    public int getWidth() {
         return 0;
     }
 

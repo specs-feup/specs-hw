@@ -48,7 +48,7 @@ public class RangedSubscript extends OperatorSubscript {
     }
 
     @Override
-    public int getResultWidth() {
+    public int getWidth() {
         return Math.abs(this.getLeftIndex().getMaxValue() - this.getRightIndex().getMaxValue());
     }
 

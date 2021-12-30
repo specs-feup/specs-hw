@@ -11,13 +11,11 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.ast.definition;
+package pt.up.fe.specs.crispy.ast.block;
 
 import java.util.ArrayList;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.constructs.AlwaysBlock;
-import pt.up.fe.specs.crispy.ast.constructs.InitialBlock;
 import pt.up.fe.specs.crispy.ast.declaration.TimeScaleDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.PortDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
@@ -76,6 +74,11 @@ public class HardwareTestbench extends HardwareModule {
         // factory like method?
     }
 
+    @Override
+    public ModuleBlock getBody() {
+        return this.getChild(ModuleBlock.class, 2);
+    }
+
     private InitialBlock getInitialBlock() {
         InitialBlock ini = null;
         var initials = getBody().getChildrenOf(InitialBlock.class);
@@ -98,7 +101,7 @@ public class HardwareTestbench extends HardwareModule {
     public HardwareTestbench setInit(VariableOperator op, int value) {
 
         // check if declaration exists in ModuleBlock
-        if (getDeclaration(op.getResultName()) == null)
+        if (getDeclaration(op.getName()) == null)
             this.addDeclaration(op.getAssociatedIdentifier());
 
         // set init
@@ -126,11 +129,6 @@ public class HardwareTestbench extends HardwareModule {
         // this.initial.delay(period * 10);
 
         return this;
-    }
-
-    @Override
-    public ModuleBlock getBody() {
-        return this.getChild(ModuleBlock.class, 2);
     }
 
     @Override

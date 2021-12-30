@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.crispy.lib;
 
-import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 
 public class Mux2to1 extends HardwareModule {

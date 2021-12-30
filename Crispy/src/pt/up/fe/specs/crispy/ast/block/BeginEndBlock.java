@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.ast.constructs;
+package pt.up.fe.specs.crispy.ast.block;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 
@@ -61,7 +61,7 @@ public class BeginEndBlock extends HardwareBlock {
             if (!this.blockName.isBlank())
                 builder.append(": " + this.blockName);
             builder.append("\n");
-            builder.append(super.getAsString());
+            builder.append(nestContent(super.getAsString()));
             builder.append("end\n");
 
         } else {

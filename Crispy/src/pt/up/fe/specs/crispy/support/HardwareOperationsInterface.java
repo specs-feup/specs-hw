@@ -43,7 +43,7 @@ import pt.up.fe.specs.crispy.ast.statement.ProceduralBlockingStatement;
 import pt.up.fe.specs.crispy.ast.statement.ProceduralNonBlockingStatement;
 
 /**
- * a generic interface that classes like VariableOperator and HardwareBlock may inherit, in order to obtain some sugar
+ * An interface inheritable by @HardwareExpression
  */
 public interface HardwareOperationsInterface {
 
@@ -56,7 +56,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default AdditionExpression add(int literalConstant) {
-        return new AdditionExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new AdditionExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default AdditionExpression add(HardwareExpression refB) {
@@ -67,7 +67,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default DivisionExpression div(int literalConstant) {
-        return new DivisionExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new DivisionExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default DivisionExpression div(HardwareExpression refB) {
@@ -78,7 +78,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default MultiplicationExpression mul(int literalConstant) {
-        return new MultiplicationExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new MultiplicationExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default MultiplicationExpression mul(HardwareExpression refB) {
@@ -89,7 +89,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default LeftShiftExpression lsl(int literalConstant) {
-        return new LeftShiftExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new LeftShiftExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default LeftShiftExpression lsl(HardwareExpression refB) {
@@ -100,7 +100,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default RightLogicalShiftExpression rsl(int literalConstant) {
-        return new RightLogicalShiftExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new RightLogicalShiftExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default RightLogicalShiftExpression rsl(HardwareExpression refB) {
@@ -112,7 +112,7 @@ public interface HardwareOperationsInterface {
      */
     public default RightArithmeticShiftExpression rsa(int literalConstant) {
         return new RightArithmeticShiftExpression(getThis(),
-                new Immediate(literalConstant, getThis().getResultWidth()));
+                new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default RightArithmeticShiftExpression rsa(HardwareExpression refB) {
@@ -124,7 +124,7 @@ public interface HardwareOperationsInterface {
      */
     public default RightArithmeticShiftExpression sub(int literalConstant) {
         return new RightArithmeticShiftExpression(getThis(),
-                new Immediate(literalConstant, getThis().getResultWidth()));
+                new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default SubtractionExpression sub(HardwareExpression refB) {
@@ -135,7 +135,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default BitWiseAndExpression and(int literalConstant) {
-        return new BitWiseAndExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new BitWiseAndExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default BitWiseAndExpression and(HardwareExpression refB) {
@@ -153,7 +153,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default BitWiseOrExpression or(int literalConstant) {
-        return new BitWiseOrExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new BitWiseOrExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default BitWiseOrExpression or(HardwareExpression refB) {
@@ -164,7 +164,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default BitWiseXorExpression xor(int literalConstant) {
-        return new BitWiseXorExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new BitWiseXorExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default BitWiseXorExpression xor(HardwareExpression refB) {
@@ -175,7 +175,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default ComparisonExpression cmp(int literalConstant) {
-        return new ComparisonExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new ComparisonExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default ComparisonExpression cmp(HardwareExpression refB) {
@@ -186,7 +186,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default EqualsToExpression eq(int literalConstant) {
-        return new EqualsToExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new EqualsToExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default EqualsToExpression eq(HardwareExpression refB) {
@@ -197,7 +197,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default GreaterThanExpression gt(int literalConstant) {
-        return new GreaterThanExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new GreaterThanExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default GreaterThanExpression gt(HardwareExpression refB) {
@@ -208,7 +208,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default GreaterThanOrEqualsExpression geqt(int literalConstant) {
-        return new GreaterThanOrEqualsExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new GreaterThanOrEqualsExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default GreaterThanOrEqualsExpression geqt(HardwareExpression refB) {
@@ -219,7 +219,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default LessThanExpression lt(int literalConstant) {
-        return new LessThanExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new LessThanExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default LessThanExpression lt(HardwareExpression refB) {
@@ -230,7 +230,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default LessThanOrEqualsExpression leqt(int literalConstant) {
-        return new LessThanOrEqualsExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new LessThanOrEqualsExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default LessThanOrEqualsExpression leqt(HardwareExpression refB) {
@@ -241,7 +241,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default NotEqualsToExpression noteq(int literalConstant) {
-        return new NotEqualsToExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new NotEqualsToExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default NotEqualsToExpression noteq(HardwareExpression refB) {
@@ -252,7 +252,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default LogicalAndExpression land(int literalConstant) {
-        return new LogicalAndExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new LogicalAndExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default LogicalAndExpression land(HardwareExpression refB) {
@@ -263,7 +263,7 @@ public interface HardwareOperationsInterface {
      * 
      */
     public default LogicalOrExpression lor(int literalConstant) {
-        return new LogicalOrExpression(getThis(), new Immediate(literalConstant, getThis().getResultWidth()));
+        return new LogicalOrExpression(getThis(), new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default LogicalOrExpression lor(HardwareExpression refB) {
@@ -288,7 +288,7 @@ public interface HardwareOperationsInterface {
      * nonBlocking
      */
     public default ProceduralNonBlockingStatement nonBlocking(int literalConstant) {
-        return nonBlocking(new Immediate(literalConstant, getThis().getResultWidth()));
+        return nonBlocking(new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default ProceduralNonBlockingStatement nonBlocking(HardwareExpression expr) {
@@ -299,7 +299,7 @@ public interface HardwareOperationsInterface {
      * blocking
      */
     public default ProceduralBlockingStatement blocking(int literalConstant) {
-        return blocking(new Immediate(literalConstant, getThis().getResultWidth()));
+        return blocking(new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default ProceduralBlockingStatement blocking(HardwareExpression expr) {
@@ -310,7 +310,7 @@ public interface HardwareOperationsInterface {
      * assign
      */
     public default ContinuousStatement assign(int literalConstant) {
-        return assign(new Immediate(literalConstant, getThis().getResultWidth()));
+        return assign(new Immediate(literalConstant, getThis().getWidth()));
     }
 
     public default ContinuousStatement assign(HardwareExpression expr) {

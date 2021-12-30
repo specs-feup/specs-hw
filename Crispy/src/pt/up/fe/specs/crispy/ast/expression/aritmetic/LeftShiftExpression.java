@@ -34,15 +34,15 @@ public class LeftShiftExpression extends ABinaryHardwareExpression {
     }
 
     @Override
-    public int getResultWidth() {
-        var leftBits = this.getLeft().getResultWidth();
+    public int getWidth() {
+        var leftBits = this.getLeft().getWidth();
         var rightop = this.getRight();
 
         int addedBits = 0;
         if (rightop instanceof HardwareOperator) {
             addedBits = ((HardwareOperator) rightop).getMaxValue();
         } else
-            addedBits = rightop.getResultWidth();
+            addedBits = rightop.getWidth();
 
         return leftBits + addedBits;
     }

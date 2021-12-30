@@ -33,8 +33,8 @@ public class MultiplicationExpression extends ABinaryHardwareExpression {
     }
 
     @Override
-    public int getResultWidth() {
-        return this.getLeft().getResultWidth() + this.getRight().getResultWidth();
+    public int getWidth() {
+        return this.getLeft().getWidth() + this.getRight().getWidth();
         // TODO: correct??
     }
 
