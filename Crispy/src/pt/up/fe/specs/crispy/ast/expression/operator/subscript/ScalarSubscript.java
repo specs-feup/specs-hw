@@ -51,7 +51,7 @@ public class ScalarSubscript extends OperatorSubscript {
     }
 
     @Override
-    public int getResultWidth() {
+    public int getWidth() {
         return 1;
     }
 

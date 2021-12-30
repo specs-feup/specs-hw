@@ -82,12 +82,12 @@ public class VariableOperator extends HardwareOperator {
     }
 
     @Override
-    public String getResultName() {
+    public String getName() {
         return this.name;
     }
 
     @Override
-    public int getResultWidth() {
+    public int getWidth() {
         return this.width;
     }
 

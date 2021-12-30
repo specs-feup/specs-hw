@@ -32,8 +32,8 @@ public class ReplicationExpression extends AUnaryHardwareExpression {
     }
 
     @Override
-    public String getResultName() {
-        return "rep" + this.replicateCount + "_" + this.getOperand().getResultName();
+    public String getName() {
+        return "rep" + this.replicateCount + "_" + this.getOperand().getName();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ReplicationExpression extends AUnaryHardwareExpression {
     }
 
     @Override
-    public int getResultWidth() {
+    public int getWidth() {
         return 1;
     }
 

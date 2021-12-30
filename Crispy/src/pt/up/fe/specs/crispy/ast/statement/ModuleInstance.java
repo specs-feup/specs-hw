@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 
 public class ModuleInstance extends HardwareStatement {

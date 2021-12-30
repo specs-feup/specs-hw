@@ -16,7 +16,7 @@ package pt.up.fe.specs.crispy.lib;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 

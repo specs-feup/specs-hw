@@ -33,7 +33,7 @@ public class LogicalAndExpression extends ABinaryHardwareExpression {
     }
 
     @Override
-    public int getResultWidth() {
+    public int getWidth() {
         return 1;
     }
 

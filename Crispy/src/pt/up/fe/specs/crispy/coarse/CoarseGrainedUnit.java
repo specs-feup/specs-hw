@@ -16,7 +16,7 @@ package pt.up.fe.specs.crispy.coarse;
 import java.util.Arrays;
 import java.util.List;
 
-import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
@@ -72,9 +72,9 @@ public abstract class CoarseGrainedUnit extends HardwareModule {
         // UNLESS, its an immediate...
 
         var opA = inputs.get(0);
-        var auxname = opA.getResultName() + inputs.get(1).getResultName();
-        var output = parentmodule.addWire(auxname, opA.getResultWidth());
-        parentmodule.instantiate(constr.apply(opA.getResultWidth() + 1), inputs, output);
+        var auxname = opA.getName() + inputs.get(1).getName();
+        var output = parentmodule.addWire(auxname, opA.getWidth());
+        parentmodule.instantiate(constr.apply(opA.getWidth() + 1), inputs, output);
         return output;
 
         /*var outputwire = (new WireDeclaration(auxname, opA.getResultWidth())).getReference();

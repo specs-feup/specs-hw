@@ -52,12 +52,12 @@ public class Immediate extends HardwareOperator {
     }
 
     @Override
-    public String getResultName() {
+    public String getName() {
         return "imm_" + this.width + "_" + immcounter;
     }
 
     @Override
-    public int getResultWidth() {
+    public int getWidth() {
         return this.width;
     }
 

@@ -28,7 +28,7 @@ public abstract class OperatorSubscript extends HardwareExpression {
     }
 
     @Override
-    public String getResultName() {
+    public String getName() {
         return "";
     }
     // TODO: how to do naming properly if operator has a subscript child?

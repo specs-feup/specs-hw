@@ -11,28 +11,32 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.ast.constructs;
+package pt.up.fe.specs.crispy.ast.block;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 
-public class AlwaysBlock extends BeginEndBlock {
+public class InitialBlock extends BeginEndBlock {
 
-    public AlwaysBlock(String blockName) {
-        super(HardwareNodeType.Always, blockName);
+    public InitialBlock() {
+        this("");
+    }
+
+    public InitialBlock(String blockName) {
+        super(HardwareNodeType.Initial, blockName);
     }
 
     @Override
     public String getAsString() {
-        return "always " + super.getAsString();
+        return "initial " + super.getAsString();
     }
 
     @Override
-    protected AlwaysBlock copyPrivate() {
-        return new AlwaysBlock(this.blockName);
+    protected InitialBlock copyPrivate() {
+        return new InitialBlock(this.blockName);
     }
 
     @Override
-    public AlwaysBlock copy() {
-        return (AlwaysBlock) super.copy();
+    public InitialBlock copy() {
+        return (InitialBlock) super.copy();
     }
 }

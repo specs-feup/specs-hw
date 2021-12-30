@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.crispy.experimental;
 
-import pt.up.fe.specs.crispy.ast.constructs.HardwareBlock;
+import pt.up.fe.specs.crispy.ast.block.HardwareBlock;
 import pt.up.fe.specs.crispy.ast.statement.ContinuousStatement;
 
 public class assignMethods

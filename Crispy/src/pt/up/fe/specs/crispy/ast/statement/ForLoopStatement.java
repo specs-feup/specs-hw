@@ -14,8 +14,8 @@
 package pt.up.fe.specs.crispy.ast.statement;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.constructs.BeginEndBlock;
-import pt.up.fe.specs.crispy.ast.constructs.HardwareBlock;
+import pt.up.fe.specs.crispy.ast.block.BeginEndBlock;
+import pt.up.fe.specs.crispy.ast.block.HardwareBlock;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 
 public class ForLoopStatement extends ABlockStatement {
