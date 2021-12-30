@@ -18,6 +18,7 @@ import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
 
 public class InputPortDeclaration extends PortDeclaration {
 
@@ -38,6 +39,11 @@ public class InputPortDeclaration extends PortDeclaration {
      */
     private InputPortDeclaration(InputPortDeclaration other) {
         super(other);
+    }
+
+    @Override
+    public InputPort getReference() {
+        return new InputPort(this);
     }
 
     @Override

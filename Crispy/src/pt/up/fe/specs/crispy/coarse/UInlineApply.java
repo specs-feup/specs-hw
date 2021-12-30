@@ -13,46 +13,32 @@
 
 package pt.up.fe.specs.crispy.coarse;
 
-import java.util.Arrays;
 import java.util.List;
 
-import pt.up.fe.specs.crispy.ast.block.HardwareModule;
+import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
-import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Wire;
 
-public abstract class CoarseGrainedUnit extends HardwareModule {
+public interface UInlineApply {
 
-    // TODO: parametrize this with a generic that specifies the interface of the module??
+    /*
+     * must be implemented by the hardware module where we want this interface to work in (?) 
+     */
+    // public HardwareModule getParent();
 
-    // todo methods for single line connections of modules with equivalent interfaces
+    /*
+     * Should declare the new instance into the ModuleBlock, and return an output port (?)
+     
+    public static <T> T getInstance(int bitWidth) {
+        var c = Class<T>.get
+    }*/
 
-    public Port inA;
-    public Port inB;
-    public Port outC;
-    protected static FunctionalUnitInstantiator constr;
-
-    protected CoarseGrainedUnit(String name, int bitwidth) {
-        super(name);
-        inA = addInputPort("inA", bitwidth);
-        inB = addInputPort("inB", bitwidth);
-        outC = addOutputPort("outA", bitwidth + 1);
-    }
-
-    public static Wire _do(HardwareOperator... inputs) {
-        return _do(Arrays.asList(inputs));
-    }
-
-    public static Wire _do(List<HardwareOperator> inputs) {
-        return apply(constr, inputs);
-    }
-
-    protected interface FunctionalUnitInstantiator {
+    public interface FunctionalUnitInstantiator {
         public HardwareModule apply(int bitWidth);
     };
 
-    protected static Wire apply(FunctionalUnitInstantiator constr,
+    public default Wire apply(FunctionalUnitInstantiator constr,
             List<HardwareOperator> inputs) {
 
         // TODO: fetch parent module via the operators themselves??
@@ -72,9 +58,9 @@ public abstract class CoarseGrainedUnit extends HardwareModule {
         // UNLESS, its an immediate...
 
         var opA = inputs.get(0);
-        var auxname = opA.getName() + inputs.get(1).getName();
-        var output = parentmodule.addWire(auxname, opA.getWidth());
-        parentmodule.instantiate(constr.apply(opA.getWidth() + 1), inputs, output);
+        var auxname = opA.getResultName() + inputs.get(1).getResultName();
+        var output = parentmodule.addWire(auxname, opA.getResultWidth());
+        parentmodule.instantiate(constr.apply(opA.getResultWidth() + 1), inputs, output);
         return output;
 
         /*var outputwire = (new WireDeclaration(auxname, opA.getResultWidth())).getReference();

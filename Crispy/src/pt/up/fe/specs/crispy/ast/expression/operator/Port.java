@@ -15,7 +15,7 @@ package pt.up.fe.specs.crispy.ast.expression.operator;
 
 import pt.up.fe.specs.crispy.ast.declaration.port.PortDeclaration;
 
-public class Port extends VariableOperator {
+public abstract class Port extends VariableOperator {
 
     public Port(PortDeclaration portDec) {
         super(portDec);
@@ -24,10 +24,5 @@ public class Port extends VariableOperator {
     @Override
     public Port copy() {
         return (Port) super.copy();
-    }
-
-    @Override
-    protected Port copyPrivate() {
-        return new Port((PortDeclaration) this.getAssociatedIdentifier());
     }
 }

@@ -15,12 +15,13 @@ package pt.up.fe.specs.crispy.lib;
 
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
-import pt.up.fe.specs.crispy.ast.expression.operator.Port;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
+import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 
 public class DecoderNxM extends HardwareModule {
 
-    public Port in;
-    public Port out;
+    public InputPort in;
+    public OutputPort out;
 
     public DecoderNxM(int n) {
         super("Decoder" + n + "x" + (int) Math.pow(n, 2));

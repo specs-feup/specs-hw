@@ -97,11 +97,6 @@ public abstract class PortDeclaration extends IdentifierDeclaration {
     }
 
     @Override
-    public Port getReference() {
-        return new Port(this);
-    }
-
-    @Override
     protected abstract PortDeclaration copyPrivate();
 
     @Override
