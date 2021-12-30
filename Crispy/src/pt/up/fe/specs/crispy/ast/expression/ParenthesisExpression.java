@@ -32,13 +32,13 @@ public class ParenthesisExpression extends HardwareExpression {
     }
 
     @Override
-    public String getResultName() {
-        return this.getInner().getResultName();
+    public String getName() {
+        return this.getInner().getName();
     }
 
     @Override
-    public int getResultWidth() {
-        return this.getInner().getResultWidth();
+    public int getWidth() {
+        return this.getInner().getWidth();
     }
 
     @Override

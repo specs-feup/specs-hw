@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.crispy.coarse;
 
-import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 
 public abstract class CoarseGrainedUnit extends HardwareModule {

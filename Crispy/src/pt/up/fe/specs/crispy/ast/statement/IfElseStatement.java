@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.constructs.BeginEndBlock;
+import pt.up.fe.specs.crispy.ast.block.BeginEndBlock;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 
 public class IfElseStatement extends ABlockStatement {
@@ -63,17 +63,6 @@ public class IfElseStatement extends ABlockStatement {
         this(condition, Arrays.asList(statement));
     }
 
-    /*
-    public IfElseStatement addIfStatement(HardwareStatement stat) {
-        this.then().addChild(stat);
-        return this;
-    }
-    
-    public IfElseStatement addElseStatement(HardwareStatement stat) {
-        this.orElse().addChild(stat);
-        return this;
-    }*/
-
     public HardwareExpression getCondition() {
         return this.getChild(HardwareExpression.class, 0);
     }
@@ -87,37 +76,9 @@ public class IfElseStatement extends ABlockStatement {
         return this.getChild(BeginEndBlock.class, 1);
     }
 
-    /*
-    public IfElseStatement then(HardwareStatement... statements) {
-        return then(Arrays.asList(statements));
-    }
-    
-    public IfElseStatement then(List<HardwareStatement> statements) {
-        for (var s : statements)
-            this.then().addStatement(s);
-    
-        // return this.then();
-        return this; // DELIBERATE, this way i can chain then(...).orElse(...);
-    }*/
-
     public BeginEndBlock orElse() {
         return this.getChild(BeginEndBlock.class, 2);
     }
-
-    /*
-    public BeginEndBlock orElse(HardwareStatement... statements) {
-        return orElse(Arrays.asList(statements));
-    }
-    
-    public BeginEndBlock orElse(List<HardwareStatement> statements) {
-        for (var s : statements)
-            this.orElse().addStatement(s);
-    
-        // TODO: on @IfStatement and here, theres no guarantee that the
-        // targets of these statements are declared in the parent ModuleBlock
-    
-        return this.orElse();
-    }*/
 
     @Override
     public String toContentString() {

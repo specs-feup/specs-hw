@@ -33,8 +33,8 @@ public class SubtractionExpression extends ABinaryHardwareExpression {
     }
 
     @Override
-    public int getResultWidth() {
-        return Integer.max(this.getLeft().getResultWidth(), this.getRight().getResultWidth()) + 1;
+    public int getWidth() {
+        return Integer.max(this.getLeft().getWidth(), this.getRight().getWidth()) + 1;
     }
 
     @Override

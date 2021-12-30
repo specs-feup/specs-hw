@@ -15,9 +15,9 @@ package pt.up.fe.specs.crispy.experimental;
 
 import java.util.function.BiFunction;
 
-import pt.up.fe.specs.crispy.ast.constructs.HardwareBlock;
+import pt.up.fe.specs.crispy.ast.block.HardwareBlock;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
-import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 import pt.up.fe.specs.crispy.ast.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.crispy.ast.expression.aritmetic.SubtractionExpression;
@@ -56,8 +56,8 @@ public abstract class HardwareExpressionMethods<T extends HardwareStatement> {
      */
     private VariableOperator getResult(HardwareBlock user, HardwareExpression expr) {
 
-        var resultBits = expr.getResultWidth();
-        var newresult = new WireDeclaration(expr.getResultName(), resultBits); // TODO: auto-gen name
+        var resultBits = expr.getWidth();
+        var newresult = new WireDeclaration(expr.getName(), resultBits); // TODO: auto-gen name
         var stat = this.supplier.apply(newresult.getReference(), expr);
 
         var parenthwmodule = user.getAncestorTry(HardwareModule.class).orElse(null);

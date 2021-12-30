@@ -34,15 +34,15 @@ public class RightArithmeticShiftExpression extends ABinaryHardwareExpression {
     }
 
     @Override
-    public int getResultWidth() {
-        var leftBits = this.getLeft().getResultWidth();
+    public int getWidth() {
+        var leftBits = this.getLeft().getWidth();
         var rightop = this.getRight();
 
         int removedBits = 0;
         if (rightop instanceof HardwareOperator) {
             removedBits = ((HardwareOperator) rightop).getMaxValue();
         } else
-            removedBits = rightop.getResultWidth();
+            removedBits = rightop.getWidth();
 
         return Math.max(leftBits - removedBits, 1); // leave at least 1 bit for a 0 or 1
     }

@@ -14,7 +14,7 @@
 package pt.up.fe.specs.crispy.ast.statement;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.constructs.BeginEndBlock;
+import pt.up.fe.specs.crispy.ast.block.BeginEndBlock;
 
 public abstract class ABlockStatement extends HardwareStatement {
 

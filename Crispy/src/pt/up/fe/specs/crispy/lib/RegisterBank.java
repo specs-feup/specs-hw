@@ -15,7 +15,7 @@ package pt.up.fe.specs.crispy.lib;
 
 import java.util.ArrayList;
 
-import pt.up.fe.specs.crispy.ast.definition.HardwareModule;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 import pt.up.fe.specs.crispy.ast.expression.operator.Register;
 
@@ -56,7 +56,7 @@ public class RegisterBank extends HardwareModule {
 
         // logic (read block, just use a Mux!, plus a decoder since the mux is hot bit)
         var decoderoutput = addWire("decoOutput", registerWidth);
-        addInstance(new DecoderNxM(addr.getResultWidth()), addr, decoderoutput);
+        addInstance(new DecoderNxM(addr.getWidth()), addr, decoderoutput);
 
         var muxoutput = addWire("muxOutput", registerWidth);
         addInstance(new MuxNto1(numberRegister, registerWidth), regBank, decoderoutput, muxoutput);

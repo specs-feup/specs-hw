@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.ast.constructs;
+package pt.up.fe.specs.crispy.ast.block;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 
