@@ -56,4 +56,8 @@ public class MuxNto1 extends HardwareModule {
         // final assign
         assign(out, prevWire);
     }
+
+    public int getSelectionCount() {
+        return this.inputs.size();
+    }
 }

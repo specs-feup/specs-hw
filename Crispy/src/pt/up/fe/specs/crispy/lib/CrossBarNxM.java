@@ -44,11 +44,11 @@ public class CrossBarNxM extends HardwareModule {
             outputs.add(addOutputPort("out" + i, dataWidth));
 
         // parametrize module
-        var baseMux = new MuxNto1(n, dataWidth); // TODO: how to force this call to be in a wrapper of type
-                                                 // "addInstance" ??
+        // var baseMux = new MuxNto1(n, dataWidth); // TODO: how to force this call to be in a wrapper of type
+        // "addInstance" ??
 
         // M instances
         for (int i = 0; i < m; i++)
-            instantiate(baseMux, inputs, sel.get(i), outputs.get(i));
+            instantiate(new MuxNto1(n, dataWidth), inputs, sel.get(i), outputs.get(i));
     }
 }

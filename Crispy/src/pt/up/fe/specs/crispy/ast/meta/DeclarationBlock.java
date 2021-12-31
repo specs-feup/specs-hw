@@ -80,7 +80,7 @@ public class DeclarationBlock extends HardwareMetaNode {
     @Override
     public String getAsString() {
         if (this.getNumChildren() > 1)
-            return super.getAsString();
+            return "\n" + super.getAsString();
         return "";
     }
 }

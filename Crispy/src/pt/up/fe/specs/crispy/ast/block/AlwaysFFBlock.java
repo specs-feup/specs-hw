@@ -46,7 +46,7 @@ public class AlwaysFFBlock extends BeginEndBlock {
 
     @Override
     public String getAsString() {
-        return "always_ff @ ( " + this.signalEdge.getAsString() + " ) " + super.getAsString();
+        return "\nalways_ff @ ( " + this.signalEdge.getAsString() + " ) " + super.getAsString();
     }
 
     @Override

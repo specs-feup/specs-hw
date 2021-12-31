@@ -23,7 +23,7 @@ public class AlwaysBlock extends BeginEndBlock {
 
     @Override
     public String getAsString() {
-        return "always " + super.getAsString();
+        return "\nalways " + super.getAsString();
     }
 
     @Override

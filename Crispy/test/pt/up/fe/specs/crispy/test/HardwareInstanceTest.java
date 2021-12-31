@@ -31,6 +31,7 @@ import pt.up.fe.specs.crispy.lib.DecoderNxM;
 import pt.up.fe.specs.crispy.lib.Mux2to1;
 import pt.up.fe.specs.crispy.lib.MuxNto1;
 import pt.up.fe.specs.crispy.lib.RegisterBank;
+import pt.up.fe.specs.crispy.lib.ShiftRegister;
 
 public class HardwareInstanceTest {
 
@@ -230,7 +231,7 @@ public class HardwareInstanceTest {
         var sigC = new WireDeclaration("outC", 8).getReference();
 
         // if1.then().nonBlocking(sigC, sigA.add(sigB));
-        if1.then(sigC.nonBlocking(sigA.add(sigB)));
+        if1.then()._do(sigC.nonBlocking(sigA.add(sigB)));
         // NOTE: both syntaxes are currently valid! (17-12-2021)
 
         // TODO: now i need that VariableOperator also implements a "nonBlocking" method etc
@@ -363,7 +364,7 @@ public class HardwareInstanceTest {
     @Test
     public void testDecoderNxM() {
 
-        var decoder = new DecoderNxM(2);
+        var decoder = new DecoderNxM(3);
         decoder.emit();
     }
 
@@ -376,6 +377,12 @@ public class HardwareInstanceTest {
         var tb = new HardwareTestbench("tbTest", bank);
         tb.setClockFrequency(100);
         tb.emit();
+    }
+
+    @Test
+    public void testShiftRegister() {
+        var sreg = new ShiftRegister(10, 4);
+        sreg.emit();
     }
 
     @Test

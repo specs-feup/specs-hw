@@ -57,11 +57,25 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
     public String getAsString() {
 
         var builder = new StringBuilder();
+        var it = this.getChildren().iterator();
+        while (it.hasNext()) {
+            var child = it.next();
+            var str = child.getAsString();
+            if (!str.isEmpty())
+                builder.append(str);
+            if (it.hasNext())
+                builder.append("\n");
+        }
+        /*
         for (var comp : this.getChildren()) {
             var str = comp.getAsString();
+            // if (str.indexOf("\n") == -1)
+            // str += "\n";
+        
             if (!str.isEmpty())
-                builder.append(comp.getAsString() + "\n");
-        }
+                builder.append(str + "\n");
+        }*/
+
         return builder.toString();
     }
 
@@ -70,10 +84,7 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
             return content;
 
         content = "    " + content;
-        int lastidx = content.lastIndexOf("\n");
-        content = content.substring(0, lastidx)
-                .replace("\n", "\n    ").concat(content.substring(lastidx));
-
+        content = content.substring(0, content.length()).replace("\n", "\n    ");
         return content;
     }
 
@@ -97,6 +108,6 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
      * 
      */
     public void emit() {
-        System.out.println(this.getAsString());
+        System.out.print(this.getAsString());
     }
 }

@@ -17,21 +17,22 @@ import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
-import pt.up.fe.specs.crispy.ast.expression.operator.Port;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
+import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Wire;
 
-public abstract class CoarseGrainedUnit extends HardwareModule {
+public abstract class CoarseGrainUnit extends HardwareModule {
 
     // TODO: parametrize this with a generic that specifies the interface of the module??
 
     // todo methods for single line connections of modules with equivalent interfaces
 
-    public Port inA;
-    public Port inB;
-    public Port outC;
+    public InputPort inA;
+    public InputPort inB;
+    public OutputPort outC;
 
-    protected CoarseGrainedUnit(String name, int bitwidth) {
+    protected CoarseGrainUnit(String name, int bitwidth) {
         super(name);
         inA = addInputPort("inA", bitwidth);
         inB = addInputPort("inB", bitwidth);

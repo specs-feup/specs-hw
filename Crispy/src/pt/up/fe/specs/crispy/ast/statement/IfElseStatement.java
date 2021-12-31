@@ -90,7 +90,7 @@ public class IfElseStatement extends ABlockStatement {
 
         var builder = new StringBuilder();
         builder.append("if(" + this.getCondition().getAsString() + ") ");
-        builder.append(this.then().getAsString());
+        builder.append(this.then().getAsString() + "\n");
 
         if (!this.orElse().getStatements().isEmpty()) {
             builder.append("else ");
