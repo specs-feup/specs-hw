@@ -13,10 +13,24 @@
 
 package pt.up.fe.specs.crispy.coarse;
 
-public class Subtractor extends CoarseGrainedUnit {
+import java.util.Arrays;
+import java.util.List;
+
+import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
+import pt.up.fe.specs.crispy.ast.expression.operator.Wire;
+
+public class Subtractor extends CoarseGrainUnit {
 
     public Subtractor(int bitwidth) {
         super(Subtractor.class.getSimpleName(), bitwidth);
         this._do(outC.nonBlocking(inA.sub(inB)));
+    }
+
+    public static Wire _do(HardwareOperator... inputs) {
+        return _do(Arrays.asList(inputs));
+    }
+
+    public static Wire _do(List<HardwareOperator> inputs) {
+        return apply((i) -> new Subtractor(i), inputs);
     }
 }

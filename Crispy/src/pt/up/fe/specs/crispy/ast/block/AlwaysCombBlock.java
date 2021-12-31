@@ -27,7 +27,7 @@ public class AlwaysCombBlock extends BeginEndBlock {
 
     @Override
     public String getAsString() {
-        return "always_comb " + super.getAsString();
+        return "\nalways_comb " + super.getAsString();
     }
 
     @Override

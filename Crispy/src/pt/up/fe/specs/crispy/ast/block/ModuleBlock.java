@@ -85,12 +85,12 @@ class ModuleBlock extends HardwareBlock {
             }
             builder.append(")");
         }
-        builder.append(";\n\n");
+        builder.append(";\n");
 
         // GET ALL NESTED CONTENT IN BODY BLOCK
         builder.append(nestContent(super.getAsString()));
 
-        builder.append("endmodule //" + this.moduleName + "\n");
+        builder.append("\nendmodule //" + this.moduleName + "\n");
         return builder.toString();
     }
 

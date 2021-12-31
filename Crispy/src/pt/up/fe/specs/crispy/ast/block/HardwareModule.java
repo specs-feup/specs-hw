@@ -357,7 +357,7 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
      */
     public HardwareModule instantiate(HardwareModule instance, List<? extends HardwareOperator> connections) {
         getBody()._do(new ModuleInstance(instance,
-                instance.getName() + Integer.toString(instance.hashCode()).substring(0, 4), connections));
+                instance.getName() + "_" + Integer.toString(instance.hashCode()).substring(0, 4), connections));
         return instance;
     }
 

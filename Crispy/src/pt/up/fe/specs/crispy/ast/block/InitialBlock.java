@@ -27,7 +27,7 @@ public class InitialBlock extends BeginEndBlock {
 
     @Override
     public String getAsString() {
-        return "initial " + super.getAsString();
+        return "\ninitial " + super.getAsString();
     }
 
     @Override

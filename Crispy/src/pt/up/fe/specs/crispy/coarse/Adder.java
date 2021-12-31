@@ -19,7 +19,7 @@ import java.util.List;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Wire;
 
-public class Adder extends CoarseGrainedUnit {// implements UInlineApply { // implements CoarseGrainFunctionalUnit ,
+public class Adder extends CoarseGrainUnit {// implements UInlineApply { // implements CoarseGrainFunctionalUnit ,
                                               // OR extends
     // ACorseGrainFunctionalUnit<T>
 

@@ -67,16 +67,21 @@ public class IfStatement extends ABlockStatement {
         return this.getChild(BeginEndBlock.class, 1);
     }
 
+    public BeginEndBlock then() {
+        return this.getChild(BeginEndBlock.class, 1);
+    }
+
+    /*
     public BeginEndBlock then(HardwareStatement... statements) {
         return then(Arrays.asList(statements));
     }
-
+    
     public BeginEndBlock then(List<HardwareStatement> statements) {
         for (var s : statements)
             this.getBeginEndBlock()._do(s);
-
+    
         return this.getBeginEndBlock();
-    }
+    }*/
 
     /*-
     public HardwareStatement addStatement(HardwareStatement statement) {
@@ -93,7 +98,7 @@ public class IfStatement extends ABlockStatement {
     public String getAsString() {
         var builder = new StringBuilder();
         builder.append("if(" + this.getCondition().getAsString() + ") ");
-        builder.append(this.getBeginEndBlock().getAsString());
+        builder.append(this.then().getAsString());// + "\n");
         return builder.toString();
     }
 

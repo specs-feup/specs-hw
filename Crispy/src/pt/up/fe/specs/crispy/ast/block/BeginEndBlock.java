@@ -62,11 +62,11 @@ public class BeginEndBlock extends HardwareBlock {
                 builder.append(": " + this.blockName);
             builder.append("\n");
             builder.append(nestContent(super.getAsString()));
-            builder.append("end\n");
+            builder.append("\nend");
 
         } else {
             builder.append("\n");
-            builder.append(super.getAsString());
+            builder.append(nestContent(super.getAsString()));
         }
 
         return builder.toString();
