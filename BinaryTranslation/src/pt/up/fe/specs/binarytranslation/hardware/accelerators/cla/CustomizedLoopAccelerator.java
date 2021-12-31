@@ -10,24 +10,24 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.cla;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
+import pt.up.fe.specs.crispy.coarse.CoarseGrainUnit;
 
 /**
  * This type of accelerator is only composed of a parameter list to support the synthesis of a legacy CLA design (see
  * https://bitbucket.org/nmcp88/cla-ipcores)
  */
-public class CustomizedLoopAccelerator extends AHardwareArchitecture {
+public class CustomizedLoopAccelerator extends HardwareModule {
 
     /*
      * Should represent a Basic Block or Megablock loop
      */
-    private BinarySegmentGraph graph;
+    // private BinarySegmentGraph graph;
 
     /*
      * Modulo reservation table
@@ -44,8 +44,7 @@ public class CustomizedLoopAccelerator extends AHardwareArchitecture {
      * @param code
      * @return
      */
-    protected CustomizedLoopAccelerator(BinarySegmentGraph graph) {
-        super(null, null); // quick fix
-        this.graph = graph;
+    protected CustomizedLoopAccelerator(String name, List<CoarseGrainUnit> row) {
+        super(name);
     }
 }
