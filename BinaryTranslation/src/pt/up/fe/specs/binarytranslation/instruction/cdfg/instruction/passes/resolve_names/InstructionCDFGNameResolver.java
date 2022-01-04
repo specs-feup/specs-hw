@@ -63,7 +63,7 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
     protected void visitDataFlowSubgraph(InstructionCDFGDataFlowSubgraph subgraph) {
         
         this.setVertexInputs(subgraph, this.retrivePreviousUIDMap(subgraph)); // sets the subgraph inputs using the uid map calculated from the previous ones
-        this.calculateVertexOutputs(subgraph, subgraph.getInputUIDMap());  // calculates the subgraph outputs from the input uid map
+        this.calculateVertexOutputs(subgraph, subgraph.getCurrentUIDMap());  // calculates the subgraph outputs from the input uid map
         super.visitDataFlowSubgraph(subgraph);
     }
     
@@ -201,7 +201,9 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
         this.icdfg.getVerticesBefore(subgraph).forEach(subgraphBefore -> {
             
             if(subgraphBefore instanceof AInstructionCDFGControlFlowConditionalSubgraph) {
+                
                 previousSubgraphsUIDMaps.add(subgraphBefore.getCurrentUIDMap());
+                
             }else if(subgraphBefore instanceof AInstructionCDFGControlFlowMergeSubgraph){
                 
                 Collection<Map<String, Integer>> beforeMergeUIDMaps = new ArrayList<>();
@@ -209,23 +211,16 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
                 this.icdfg.getVerticesBefore(subgraph).forEach(subgraphBeforeMerge -> beforeMergeUIDMaps.add(this.retrivePreviousUIDMap(subgraphBeforeMerge)));
 
                 previousSubgraphsUIDMaps.add(this.calculateCurrentUIDMap(beforeMergeUIDMaps));
+                
             }
             else {
+                
                 previousSubgraphsUIDMaps.add(subgraphBefore.getCurrentUIDMap());
+                
             }
-            });
+        });
         
-        Map<String, Integer> currentUIDMap;
-        
-        if(previousSubgraphsUIDMaps.isEmpty()) {
-            currentUIDMap = subgraph.generateInputUIDMap();
-        }else {
-            currentUIDMap = this.calculateCurrentUIDMap(previousSubgraphsUIDMaps);
-            this.setVerticesOutputs(this.icdfg.getVerticesBefore(subgraph), currentUIDMap);
-        }
-        
-        
-        return currentUIDMap;
+        return (previousSubgraphsUIDMaps.isEmpty()) ? subgraph.generateInputUIDMap() : this.calculateCurrentUIDMap(previousSubgraphsUIDMaps);
     }
     
     /** Calculates the current UIDMap from a Collection of candidate UIDMaps<br>

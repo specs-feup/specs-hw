@@ -17,10 +17,9 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip;
 
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
-import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 
-public class InstructionCDFGCustomInstructionUnit extends AHardwareArchitecture {
+public class InstructionCDFGCustomInstructionUnit extends HardwareModule {
 
     // private List<Port> inputs, outputs;
     // Port is template class??
@@ -53,8 +52,8 @@ public class InstructionCDFGCustomInstructionUnit extends AHardwareArchitecture 
      * @param code
      * @return
      */
-    protected InstructionCDFGCustomInstructionUnit(String instanceName, VerilogModuleTree tree) {
-        super(instanceName, tree);
+    protected InstructionCDFGCustomInstructionUnit(String instanceName) {
+        super(instanceName);
     }
       
     }

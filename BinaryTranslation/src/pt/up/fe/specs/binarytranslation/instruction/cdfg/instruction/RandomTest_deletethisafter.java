@@ -17,28 +17,35 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.List;
+import java.util.Map;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
+import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.analysis.timing.TimingAnalysisRun;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorTestbenchGenerator;
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationDataGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.SegmentCDFG;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
+import pt.up.fe.specs.binarytranslation.processes.VerilatorRun;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 
 public class RandomTest_deletethisafter {
 
@@ -79,7 +86,7 @@ public class RandomTest_deletethisafter {
     }
     
     private FakeInstruction instruction = new FakeInstruction("addTest",  
-            "RA = RA + RF;if(RA == 0){RA = RA + 2;}RF = RA * 2;"
+            "RD = RA + RB;"
             //"if(RA == 0) {RD = RA + RB;}else{RD = RA - RB;}"
             );
     
@@ -88,7 +95,7 @@ public class RandomTest_deletethisafter {
     
     private InstructionCDFG icdfg;
     
-    //private AHardwareArchitecture generatedModule;
+    private HardwareModule generatedModule;
     
     private final int moduleTestbenchSamples = 1000;
     
@@ -118,11 +125,11 @@ public class RandomTest_deletethisafter {
         InstructionCDFGNameResolver.resolve(icdfg);
     }
     
-    /*
+    
     public void generateHardwareModule() throws IOException {
         System.out.print("Generating HW module...");
-        InstructionCDFGCustomInstructionUnitGenerator moduleGenerator = new InstructionCDFGCustomInstructionUnitGenerator();
-        this.generatedModule = moduleGenerator.generateHardware(icdfg, this.instruction.getName());
+        InstructionCDFGCustomInstructionUnitGenerator moduleGenerator = new InstructionCDFGCustomInstructionUnitGenerator(icdfg, this.instruction.getName());
+        this.generatedModule = moduleGenerator.generateHardware();
         this.generatedModule.emit(HardwareFolderGenerator.newHardwareHDLFile(systemPath, this.generatedModule.getName(), "sv"));
         
         System.out.println("\tDONE");
@@ -143,7 +150,7 @@ public class RandomTest_deletethisafter {
     
     public void generateHardwareModuleTestbench() throws IOException {
         System.out.print("Generating HW module testbench...");
-       // HardwareTestbenchGenerator.generate(generatedModule, moduleTestbenchSamples,  "input.mem", "output.mem").emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, generatedModule.getName() + "_tb", "sv"));
+        HardwareTestbenchGenerator.generate(generatedModule, moduleTestbenchSamples, new File(this.systemPath + "\\hw\\tb\\input.mem") , new File(this.systemPath + "\\hw\\tb\\output.mem")).emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, generatedModule.getName() + "_tb", "sv"));
         System.out.println("\tDONE");
     }
     
@@ -155,7 +162,12 @@ public class RandomTest_deletethisafter {
     
     public boolean runVerilatorTestbench() throws IOException {
         System.out.print("Running Verilator testbench...");
-        if(!VerilatorRun.start(wslPath+"/hw/tb", this.instruction.getName())) {
+        
+        VerilatorRun verilator = new VerilatorRun(wslPath+"/hw/tb", this.instruction.getName());
+        
+        verilator.start();
+        
+        if(!verilator.simulate()) {
             System.out.println("ERROR: Validation failed !!!");
             return false;
         }
@@ -167,7 +179,7 @@ public class RandomTest_deletethisafter {
         TimingAnalysisRun.start(wslPath, this.instruction.getName());
         System.out.println("\tDONE");
     }
-    */
+    
     @Test
     public void testFullFlow() throws IOException {
         
@@ -179,16 +191,15 @@ public class RandomTest_deletethisafter {
         this.resolveInstructionCDFGNames();
         this.exportInstructionCDFGAsDOT();
         
-        /*this.exportInstructionCDFGAsDOT();
         this.generateHardwareModule();
-   
+        
         this.generateHardwareModuleValidationData();
         this.generateHardwareModuleTestbench();
         this.generateVerilatorTestbench();
         if(!this.runVerilatorTestbench())
             return;
         this.performIcetimeTimingAnalysis();
-        */
+        
     }
  
 

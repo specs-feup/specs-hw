@@ -19,26 +19,16 @@ package pt.up.fe.specs.binarytranslation.hardware.generation.visitors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareNodeExpressionMap;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.RangedSelection;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfElseStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.IfStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
+import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareNodeExpressionMap;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.AInstructionCDFGSubscriptModifier;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGRangeSubscript;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
@@ -47,11 +37,40 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.co
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIfElse;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
+import pt.up.fe.specs.crispy.ast.HardwareNode;
+import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
+import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
+import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
+import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
+import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
+import pt.up.fe.specs.crispy.ast.statement.IfElseStatement;
+import pt.up.fe.specs.crispy.ast.statement.IfStatement;
+import pt.up.fe.specs.crispy.ast.statement.ProceduralBlockingStatement;
 
 public class InstructionCDFGConverter {
 
+    private Map<String, IdentifierDeclaration> declaredSignals;
+    
+    private List<InputPort> inputPortsDeclarations;
+    private List<OutputPort> outputPortsDeclarations;
+
+    
+    private InstructionCDFGConverter() {
+        this.declaredSignals = new HashMap<>();
+    }
+    
     public static void convert(InstructionCDFG icdfg, HardwareNode parent) {
         icdfg.getInputs().forEach(i -> InstructionCDFGConverter.visit(icdfg, parent, i));
+    }
+    
+    public void convert(InstructionCDFG icdfg, HardwareNode parent, List<InputPort> inputPortsDeclarations, List<OutputPort> outputPortsDeclarations) {
+        
+        this.inputPortsDeclarations = inputPortsDeclarations;
+        this.outputPortsDeclarations = outputPortsDeclarations;
+        
+        
+        
     }
     
     public static boolean allOperandsResolved(AInstructionCDFGSubgraph dfg, AInstructionCDFGNode node, Map<AInstructionCDFGNode, HardwareExpression> signal_map) {
@@ -79,7 +98,7 @@ public class InstructionCDFGConverter {
         
         Map<AInstructionCDFGNode, HardwareExpression> signal_map = new HashMap<>();
         
-        dfg.getInputs().forEach(i -> signal_map.put(i, (i instanceof InstructionCDFGLiteralNode) ?  new ImmediateOperator(((InstructionCDFGLiteralNode)i).getValue(), 32) : new VariableOperator(i.getUID())));
+        dfg.getInputs().forEach(i -> signal_map.put(i, (i instanceof InstructionCDFGLiteralNode) ?  new Immediate(((InstructionCDFGLiteralNode)i).getValue(), 32) : new VariableOperator(i.getUID())));
         dfg.getOutputs().forEach(o -> signal_map.put(o, new VariableOperator(o.getUID())));
         
         return signal_map;
@@ -216,9 +235,11 @@ public class InstructionCDFGConverter {
         
         IfElseStatement conditional = new IfElseStatement((HardwareExpression) InstructionCDFGConverter.visitControlFlowConditionalSubgraph(icdfg, node));
         parent.addChild(conditional);
-
-        InstructionCDFGConverter.visit(icdfg, conditional.getChild(1), icdfg.getTruePath(node));
-        InstructionCDFGConverter.visit(icdfg, conditional.getChild(2), icdfg.getFalsePath(node));
+        
+        
+        
+        InstructionCDFGConverter.visit(icdfg, conditional.then(), icdfg.getTruePath(node));
+        InstructionCDFGConverter.visit(icdfg, conditional.orElse(), icdfg.getFalsePath(node));
         InstructionCDFGConverter.visitControlFlowMergeNode(icdfg, parent, node.getMerge());
     }
     

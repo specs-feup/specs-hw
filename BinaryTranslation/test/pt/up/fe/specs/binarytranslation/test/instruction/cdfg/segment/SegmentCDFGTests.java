@@ -84,7 +84,8 @@ public class SegmentCDFGTests {
     @Test
     public void generateSegmentCDFG() throws IOException {
         
-        SegmentCDFG scdfg = SegmentCDFGGenerator.generate(this.instructions);
+        SegmentCDFG scdfg = new SegmentCDFG(this.instructions);
+        scdfg.generate();
         
         this.exportSegmentCDFGAsDOT(scdfg);
         
