@@ -30,8 +30,8 @@ public class CLAFunctionalUnit extends HardwareModule {
     public InputPort rst = addReset();
     public InputPort enable = addInputPort("en", 1);
 
-    public InputPort ins;
-    public InputPort sels;
+    public List<InputPort> ins = new ArrayList<InputPort>();
+    public List<InputPort> sels = new ArrayList<InputPort>();
     public OutputPort out;
 
     public CLAFunctionalUnit(CoarseGrainUnit functionalUnit,
@@ -39,34 +39,24 @@ public class CLAFunctionalUnit extends HardwareModule {
 
         super(functionalUnit.getName() + String.valueOf(functionalUnit.hashCode()).substring(0, 3));
 
-        int totalselBits = 0;
-        int totalInputBits = 0;
-        for (int i = 0; i < inmuxes.size(); i++) {
-            var selcount = inmuxes.get(i).getSelectionCount();
-            var portSize = functionalUnit.getPort(i).getWidth();
-            totalInputBits += selcount * portSize;
-            totalselBits += selcount;
-        }
+        for (int i = 0; i < inmuxes.size(); i++)
+            for (int j = 0; j < inmuxes.get(i).getSelectionCount(); j++)
+                ins.add(addInputPort("in" + i + "ch" + j, functionalUnit.getPort(i).getWidth()));
 
-        ins = addInputPort("ins", totalInputBits);
-        sels = addInputPort("sels", totalselBits);
+        for (int i = 0; i < inmuxes.size(); i++)
+            sels.add(addInputPort("sel" + i, inmuxes.get(i).getSelectionCount()));
+
+        out = addOutputPort("out", functionalUnit.outC.getWidth());
 
         var auxIns = new ArrayList<Wire>();
-        auxIns.add(addWire("auxA", functionalUnit.inA.getWidth()));
-        auxIns.add(addWire("auxB", functionalUnit.inB.getWidth()));
+        for (int i = 0; i < inmuxes.size(); i++)
+            auxIns.add(addWire("aux" + i, functionalUnit.inA.getWidth()));
 
-        int lastIdx = 0;
-        int lastSelIdx = 0;
+        int prevIdx = 0;
         for (int i = 0; i < inmuxes.size(); i++) {
-            var selcount = inmuxes.get(i).getSelectionCount();
-            var portSize = functionalUnit.getPort(i).getWidth();
-            var totalBits = selcount * portSize;
-            instantiate(inmuxes.get(i),
-                    ins.idx(totalBits + lastIdx, lastIdx),
-                    sels.idx(selcount + lastSelIdx, lastSelIdx),
-                    auxIns.get(i));
-            lastIdx += totalBits;
-            lastSelIdx += selcount;
+            var selCount = inmuxes.get(i).getSelectionCount();
+            instantiate(inmuxes.get(i), ins.subList(prevIdx, prevIdx + selCount), sels.get(i), auxIns.get(i));
+            prevIdx += selCount;
         }
 
         var auxOut = addWire("fu_to_sreg", functionalUnit.outC.getWidth());
