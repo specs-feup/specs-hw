@@ -76,18 +76,19 @@ public class SegmentCDFGTester {
     public void test() {
         
         List<Instruction> instructions = List.of(
-                new FakeInstruction("fakeInstructionTest", "RD = RA + RC;"),
-                new FakeInstruction("fakeInstructionTest", "RZ = RC - RF;")
+                new FakeInstruction("fakeInstructionTest", "RA = RA + RA;"),
+                new FakeInstruction("fakeInstructionTest", "RA = RA - RA;")
                 );
         
         SegmentCDFG scdfg = new SegmentCDFG(instructions);
         
         scdfg.generate();
+        scdfg.refresh();
         
         InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
         Writer writer = new StringWriter();
         exp.exportGraph(scdfg, "test", writer);
-        System.out.println("\t" + InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
+        System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
     
     }
     

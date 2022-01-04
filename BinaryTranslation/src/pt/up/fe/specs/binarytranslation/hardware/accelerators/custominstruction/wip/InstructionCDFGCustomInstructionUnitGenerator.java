@@ -13,47 +13,84 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip;
 
-import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
-import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionCDFGConverter;
-import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.ModuleHeader;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
+import java.util.ArrayList;
+import java.util.List;
+
+import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.wip.InstructionCDFGConverter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
+import pt.up.fe.specs.crispy.ast.HardwareNode;
+import pt.up.fe.specs.crispy.ast.block.HardwareModule;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
+import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 
-public class InstructionCDFGCustomInstructionUnitGenerator extends AHardwareGenerator {
+public class InstructionCDFGCustomInstructionUnitGenerator{
 
-    private VerilogModuleTree moduletree;
-    private ModuleHeader module;
+    private HardwareModule module;
+    private String moduleName;
+    
+    private InstructionCDFG icdfg;
+    
+    private List<InputPort> inputPorts;
+    private List<OutputPort> outputPorts;
+    
+    public InstructionCDFGCustomInstructionUnitGenerator(InstructionCDFG icdfg, String moduleName) {
+        
+        this.icdfg = icdfg;
 
-    public AHardwareArchitecture generateHardware(InstructionCDFG icdfg, String moduleName) {
+        this.moduleName = moduleName;
+        
+        this.inputPorts = new ArrayList<>();
+        this.outputPorts = new ArrayList<>();
+        
+    }
+    
+    public InstructionCDFG getInstructionCDFG() {
+        return this.icdfg;
+    }
+    
+    public HardwareModule getHardwareModule() {
+        return this.module;
+    }
+    
+    public String getHardwareModuleName() {
+        return this.moduleName;
+    }
+    
+    public List<InputPort> getInputPorts(){
+        return this.inputPorts;
+    }
+    
+    public List<OutputPort> getOutputPorts(){
+        return this.outputPorts;
+    }
+    
+    private void initializeModule() {
+        
+        this.module = new InstructionCDFGCustomInstructionUnit(moduleName);
+        
+        this.inputPorts.clear();
+        this.outputPorts.clear();
+        
+    }
 
-        this.moduletree = new VerilogModuleTree(moduleName);
-        this.module = moduletree.getModule();
+    private void generatePorts() {
+        
+        icdfg.getDataInputsNames().forEach(inputPortName -> this.inputPorts.add(this.module.addInputPort(inputPortName, 32)));
+        icdfg.getDataOutputsNames().forEach(outputPortName -> this.outputPorts.add(this.module.addOutputPort(outputPortName, 32)));
+        
+    }
+    
+    private void generateLogic(HardwareNode blockHardwareNode) {
+        InstructionCDFGConverter.convert(icdfg, this.module, blockHardwareNode);
+    }
+    
+    public HardwareModule generateHardware() {
+        
+        this.initializeModule();
+        this.generatePorts();
+        this.generateLogic(this.module.alwayscomb());
 
-        /*
-         * don't pass this.module_tree into the constructor of PortDeclarations; 
-         * you should be able to construct a port, and then associate it with something
-         * when its returned
-         * 
-         * nmcp
-         */
-        for (var in : icdfg.getDataInputsNames())
-            moduletree.addPort(new InputPortDeclaration(in, 32));
-
-        for (var out : icdfg.getDataOutputsNames())
-            moduletree.addPort(new OutputPortDeclaration(out, 32));
-
-        /*
-        icdfg.getDataInputsNames().forEach(inputName ->  new InputPortDeclaration(new WireDeclaration(inputName, 32), this.module_tree));
-        icdfg.getDataOutputsNames().forEach(outputName -> new OutputPortDeclaration(new RegisterDeclaration(outputName, 32), this.module_tree));
-        */
-
-        InstructionCDFGConverter.convert(icdfg, this.module.addChild(new AlwaysCombBlock()));
-
-        return new InstructionCDFGCustomInstructionUnit(moduleName, moduletree);
+        return this.module;
     }
 
 }
