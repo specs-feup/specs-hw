@@ -50,7 +50,7 @@ public class InstructionCDFGConverter extends InstructionCDFGVisitor<HardwareNod
        
         InstructionCDFGDataFlowSubgraphConverter.convert(subgraph, module, parentHardwareNode);
         
-        super.visitDataFlowSubgraph(subgraph, parentHardwareNode);
+        this.icdfg.getVerticesAfter(subgraph).forEach(subgraphAfter -> this.visit(subgraphAfter, parentHardwareNode));
     }
     
     @Override

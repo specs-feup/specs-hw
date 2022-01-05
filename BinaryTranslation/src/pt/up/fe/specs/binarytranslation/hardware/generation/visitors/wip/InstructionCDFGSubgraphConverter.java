@@ -19,21 +19,27 @@ package pt.up.fe.specs.binarytranslation.hardware.generation.visitors.wip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGRangeSubscript;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGScalarSubscript;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.AInstructionCDFGOperandEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.visitor.wip.InstructionCDFGSubgraphVisitor;
 import pt.up.fe.specs.crispy.ast.HardwareNode;
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
+import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.Wire;
-import pt.up.fe.specs.crispy.ast.expression.operator.subscript.RangedSubscript;
-import pt.up.fe.specs.crispy.ast.expression.operator.subscript.ScalarSubscript;
 
+/** Generates a Cripsy AST from a AInstructionCDFGSubgraph
+ * 
+ * @author João Conceição
+ *
+ */
 public class InstructionCDFGSubgraphConverter extends InstructionCDFGSubgraphVisitor<HardwareNode>{
 
     protected final HardwareModule module;
@@ -42,30 +48,53 @@ public class InstructionCDFGSubgraphConverter extends InstructionCDFGSubgraphVis
         super(subgraph);
 
         this.module = module;
-        
-        subgraph.getInputs().stream().filter(input -> (this.module.getWire(input.getUID()) != null)).forEach(input -> this.module.addWire(input.getUID(), 32));
-    
-    }
 
+        subgraph.getInputs().stream().filter(input -> (this.module.getWire(input.getUID()) == null)).filter(input -> !(input instanceof InstructionCDFGLiteralNode)).forEach(input -> this.module.addWire(input.getUID(), 32));
+       
+    }
+    
+    
+    protected boolean nextVerticesNot(Predicate<AInstructionCDFGNode> notPredicate, AInstructionCDFGNode vertex) {
+        return this.subgraph.getVerticesAfter(vertex).stream().anyMatch(notPredicate);
+    }
+    
+    /** Gets a List of the operands Cripsy AST vertices of the operation described by the argument vertex<br>
+     * This functions assumes that all nodes that the operation depends on have been resolved previously.  
+     * 
+     * @param vertex AInstructionCDFGOperationNode to check the operands of
+     * @return A List of HardwareExpression (currently Wire) of the operands of the operation decribed by the argument vertex 
+     */
     protected List<HardwareExpression> getOperationOperandsSignals(AInstructionCDFGNode vertex){
         
         List<HardwareExpression> operandSignals = new ArrayList<>();
         
+        
         this.subgraph.getVerticesBefore(vertex).forEach(vertexBefore -> {
             
-            Wire operandSignal = (Wire) this.module.getWire(vertexBefore.getUID());
-
-           for(AInstructionCDFGModifier modifier : ((AInstructionCDFGOperandEdge)this.subgraph.getEdge(vertex, vertexBefore)).getModifiers()){
-                if(modifier instanceof InstructionCDFGRangeSubscript) {
-                    operandSignal = (Wire) operandSignal.idx(((InstructionCDFGRangeSubscript)modifier).getUpperBound(), ((InstructionCDFGRangeSubscript)modifier).getLowerBound());
-                }else if(modifier instanceof InstructionCDFGScalarSubscript) {
-                    operandSignal = (Wire) operandSignal.idx(((InstructionCDFGScalarSubscript)modifier).getUpperBound());
+            if(vertexBefore instanceof InstructionCDFGLiteralNode) {
+                operandSignals.add(new Immediate(((InstructionCDFGLiteralNode)vertexBefore).getValue(), 32));
+            }else {
+            
+                Wire operandSignal = (Wire) this.module.getWire(vertexBefore.getUID());
+                
+                if((this.subgraph.getEdge(vertexBefore, vertex) instanceof AInstructionCDFGOperandEdge)) {
+           
+                   for(AInstructionCDFGModifier modifier : ((AInstructionCDFGOperandEdge)this.subgraph.getEdge(vertexBefore, vertex)).getModifiers()){
+                       
+                       
+                        if(modifier instanceof InstructionCDFGRangeSubscript) {
+                            operandSignal = (Wire) operandSignal.idx(((InstructionCDFGRangeSubscript)modifier).getUpperBound(), ((InstructionCDFGRangeSubscript)modifier).getLowerBound());
+                        }else if(modifier instanceof InstructionCDFGScalarSubscript) {
+                            operandSignal = (Wire) operandSignal.idx(((InstructionCDFGScalarSubscript)modifier).getUpperBound());
+                        }
+                    }
                 }
+                operandSignals.add(operandSignal);
             }
             
-            operandSignals.add(operandSignal);
             
             });
+
         
         return operandSignals;
     }

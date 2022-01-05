@@ -48,7 +48,7 @@ public class InstructionCDFGVisitor<A> {
     }
     
     protected boolean canVisitSubgraph(AInstructionCDFGSubgraph subgraph) {   
-        return (this.icdfg.getVerticesBefore(subgraph).size() == 0) ? true : !this.icdfg.getVerticesBefore(subgraph).stream().anyMatch(subgraphBefore -> !this.subgraphsResolved.contains(subgraphBefore));
+        return (this.icdfg.getVerticesBefore(subgraph).size() == 0) ? true : this.icdfg.getVerticesBefore(subgraph).stream().allMatch(subgraphBefore -> this.subgraphsResolved.contains(subgraphBefore));
     }
     
     protected void visit(AInstructionCDFGSubgraph subgraph, A visitArgument) throws IllegalArgumentException{
@@ -61,7 +61,7 @@ public class InstructionCDFGVisitor<A> {
 
         if(subgraph instanceof InstructionCDFGControlFlowIf) {
              this.visitControlFlowIfSubgraph((InstructionCDFGControlFlowIf) subgraph, visitArgument);
-        }else if(subgraph instanceof InstructionCDFGControlFlowMerge) {
+        }else if(subgraph instanceof InstructionCDFGControlFlowIfElse) {
             this.visitControlFlowIfElseSubgraph((InstructionCDFGControlFlowIfElse) subgraph, visitArgument);
         }else if(subgraph instanceof InstructionCDFGControlFlowMerge) {
              this.visitControlFlowMergeSubgraph((InstructionCDFGControlFlowMerge) subgraph, visitArgument);

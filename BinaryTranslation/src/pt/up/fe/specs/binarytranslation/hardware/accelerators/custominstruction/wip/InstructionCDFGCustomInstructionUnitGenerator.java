@@ -75,7 +75,7 @@ public class InstructionCDFGCustomInstructionUnitGenerator{
 
     private void generatePorts() {
         
-        icdfg.getDataInputsNames().forEach(inputPortName -> this.inputPorts.add(this.module.addInputPort(inputPortName, 32)));
+        icdfg.getDataInputsNames().forEach(inputPortName -> this.inputPorts.add(this.module.addInputPort(inputPortName, 32)));        
         icdfg.getDataOutputsNames().forEach(outputPortName -> this.outputPorts.add(this.module.addOutputPort(outputPortName, 32)));
         
     }

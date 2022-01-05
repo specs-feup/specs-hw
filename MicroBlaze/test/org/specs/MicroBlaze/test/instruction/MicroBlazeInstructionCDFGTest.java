@@ -28,6 +28,7 @@ import org.specs.MicroBlaze.instruction.MicroBlazePseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.fullflow.InstructionCDFGFullFlow;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
@@ -36,6 +37,10 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.Ps
 
 public class MicroBlazeInstructionCDFGTest {
 
+    private final String systemPath = "C:\\Users\\joaom\\Desktop\\microblazeTest\\";
+    private final String wslPath = "/mnt/c/Users/joaom/Desktop/microblazeTest/";
+    private final int moduleTestbenchSamples = 1000;
+    
     public PseudoInstructionContext getParseTree(String pseudocode) {
         var parser = new PseudoInstructionParser(new CommonTokenStream(new PseudoInstructionLexer(new ANTLRInputStream(pseudocode))));
         return parser.pseudoInstruction();
@@ -49,6 +54,7 @@ public class MicroBlazeInstructionCDFGTest {
         for(var instruction : MicroBlazePseudocode.values()) {
             InstructionCDFGGenerator icdfg_generator = new InstructionCDFGGenerator();
             InstructionCDFG icdfg;
+            
             try {
                 icdfg = icdfg_generator.generate(instruction.getParseTree());
             }catch(Exception e){
@@ -68,5 +74,18 @@ public class MicroBlazeInstructionCDFGTest {
             System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
             System.out.println();
         }
+    }
+    
+    @Test
+    public void testFullFlow() {
+        
+        System.out.println("Testing full flow on currently implemented instructions ...\n\n\n");
+        
+        for(var instruction : MicroBlazePseudocode.values()) {
+            InstructionCDFGFullFlow fullFlow = new InstructionCDFGFullFlow(instruction, this.moduleTestbenchSamples, this.systemPath, this.wslPath);
+            
+            
+        }
+        
     }
 }

@@ -17,14 +17,21 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
+
 public abstract class AInstructionCDFGEdge extends DefaultEdge {
 
-    public Attribute getDOTLabel() {
-        return DefaultAttribute.createAttribute("");
+    protected List<AInstructionCDFGModifier> source_modifier;
+    
+    public AInstructionCDFGEdge() {
+        this.source_modifier = new ArrayList<>();
     }
     
     public Attribute getDOTArrowHead() {
@@ -37,4 +44,26 @@ public abstract class AInstructionCDFGEdge extends DefaultEdge {
     
     public abstract AInstructionCDFGEdge duplicate();
     
+    public void setModifier(AInstructionCDFGModifier modifier) {
+        this.source_modifier.add(modifier);
+    }
+    
+    
+    public List<AInstructionCDFGModifier> getModifiers() {
+        return this.source_modifier;
+    }
+    
+    public Attribute getDOTLabel() {
+        
+        if(!this.source_modifier.isEmpty()) {
+            
+            StringBuilder modifiers = new StringBuilder();
+            
+            this.source_modifier.forEach(m -> modifiers.append(m.toString()+"\\n"));
+            
+            return DefaultAttribute.createAttribute(modifiers.toString());
+        }
+        
+        return DefaultAttribute.createAttribute("");
+    }
 }
