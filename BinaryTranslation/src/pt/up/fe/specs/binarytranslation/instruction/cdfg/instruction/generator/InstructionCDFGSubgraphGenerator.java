@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.InstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.data_type.InstructionCDFGFloatCastModifier;
@@ -158,7 +159,13 @@ public class InstructionCDFGSubgraphGenerator extends PseudoInstructionBaseVisit
            return assignment; 
         }
         
-        this.subgraph.addEdge(operand, output, new InstructionCDFGEdge());
+        AInstructionCDFGEdge edge = new InstructionCDFGEdge();
+        
+        if(!((InstructionCDFGVariableNode)output).getModifiers().isEmpty()) {
+            edge.setModifier(((InstructionCDFGVariableNode)output).getModifiers().get(0));
+        }
+        
+        this.subgraph.addEdge(operand, output, edge);
         
         return output;
        

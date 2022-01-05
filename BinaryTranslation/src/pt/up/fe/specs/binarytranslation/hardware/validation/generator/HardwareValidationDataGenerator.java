@@ -176,7 +176,7 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
     @Override
     public Object visitAssignmentExpr(AssignmentExprContext ctx) {
         
-        String output = (String) this.visit(ctx.left);
+        String output = ctx.left.getText();
         Number value = (Number) this.visit(ctx.right);
         
         this.outputs.put(output, value);
@@ -194,7 +194,7 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
         if((ctx instanceof BinaryExprContext) || (ctx instanceof UnaryExprContext) || (ctx instanceof ParenExprContext)) {
             return (Number) this.visit(ctx);
         }else if(ctx instanceof VariableExprContext) {
-            return this.getValueMap().get(this.visit(ctx));
+            return this.getValueMap().get(ctx.getText());
         }
         
         throw new IllegalArgumentException();
@@ -202,6 +202,7 @@ public class HardwareValidationDataGenerator extends PseudoInstructionBaseVisito
 
     @Override
     public Object visitBinaryExpr(BinaryExprContext ctx) {
+        
         return ((AHardwareValidationBinaryOperation)this.visit(ctx.operator())).apply(this.visitOperand(ctx.left), this.visitOperand(ctx.right));
     }
     

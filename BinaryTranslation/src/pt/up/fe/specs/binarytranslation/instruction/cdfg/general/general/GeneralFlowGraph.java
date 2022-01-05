@@ -24,6 +24,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
+
 public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
 
     private Set<V> inputs;

@@ -18,6 +18,7 @@
 package pt.up.fe.specs.binarytranslation.hardware.generation.visitors.wip;
 
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareNodeExpressionMap;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGRangeSubscript;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGScalarSubscript;
@@ -31,15 +32,27 @@ import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.Wire;
 import pt.up.fe.specs.crispy.ast.statement.ProceduralBlockingStatement;
 
+/** Converts a InstructionCDFGDataFlowSubgraph into a Cripsy AST
+ * 
+ * @author João Conceição
+ *
+ */
+
 public class InstructionCDFGDataFlowSubgraphConverter extends InstructionCDFGSubgraphConverter{
     
     public InstructionCDFGDataFlowSubgraphConverter(AInstructionCDFGSubgraph subgraph, HardwareModule module) {
         super(subgraph, module);
         
-        this.subgraph.getOutputs().stream().filter(output -> (this.module.getWire(output.getUID()) != null)).forEach(output -> this.module.addWire(output.getUID(), 32));
+        this.subgraph.getOutputs().stream().filter(output -> (this.module.getWire(output.getUID()) == null)).forEach(output -> this.module.addWire(output.getUID(), 32));   // generates all of the output wires, if they were not already present in the module
         
     }
     
+    /** Converts the subgraph to a Cripsy AST and adds it to the parentHardwareNode
+     * 
+     * @param subgraph InstructionCDFGDataFlowSubgraph to be converted
+     * @param module Top level module
+     * @param parentHardwareNode Parent of the generated Cripsy AST
+     */
     public static void convert(AInstructionCDFGSubgraph subgraph, HardwareModule module, HardwareNode parentHardwareNode) {
         
         InstructionCDFGDataFlowSubgraphConverter converter = new InstructionCDFGDataFlowSubgraphConverter(subgraph, module);
@@ -53,12 +66,14 @@ public class InstructionCDFGDataFlowSubgraphConverter extends InstructionCDFGSub
         Wire operationSignal;
         
         for(AInstructionCDFGNode nextVertex : this.subgraph.getVerticesAfter(vertex)) {
-            
+          
             if(nextVertex instanceof AInstructionCDFGDataNode) {
                 
                 operationSignal = (Wire) this.module.getWire(nextVertex.getUID());
-
-                for(AInstructionCDFGModifier modifier : ((AInstructionCDFGOperandEdge)this.subgraph.getEdge(vertex, nextVertex)).getModifiers()){
+                
+                AInstructionCDFGEdge operandEdge =  this.subgraph.getEdge(vertex, nextVertex);
+                
+                for(AInstructionCDFGModifier modifier : operandEdge.getModifiers()){
                      if(modifier instanceof InstructionCDFGRangeSubscript) {
                          return (Wire) operationSignal.idx(((InstructionCDFGRangeSubscript)modifier).getUpperBound(), ((InstructionCDFGRangeSubscript)modifier).getLowerBound());
                      }else if(modifier instanceof InstructionCDFGScalarSubscript) {

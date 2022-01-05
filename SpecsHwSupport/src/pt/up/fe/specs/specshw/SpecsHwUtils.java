@@ -142,11 +142,13 @@ public class SpecsHwUtils {
      * Helper
      */
     public static String generateFileHeader() {
-        var commentText = new StringBuilder();
+        return "";
+       /*var commentText = new StringBuilder();
         commentText.append(SpecsHwUtils.getSPeCSCopyright() + "\n\n");
         commentText.append("Generated using CrispyHDL "
                 + "(a part of the specs-hw GitHub Repo " + SpecsHwUtils.getCommitDescription() + ")\n");
         commentText.append(SpecsHwUtils.getContactInfo());
         return commentText.toString();
+        */
     }
 }

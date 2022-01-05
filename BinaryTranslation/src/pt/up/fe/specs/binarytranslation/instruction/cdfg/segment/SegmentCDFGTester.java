@@ -17,6 +17,7 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.segment;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.junit.Test;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.fullflow.SegmentCDFGFullFlow;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
@@ -72,12 +74,17 @@ public class SegmentCDFGTester {
         
     }
     
+ 
+ private final String systemPath = "C:\\Users\\joaom\\Desktop\\" + "btf_";
+ private final String wslPath = "/mnt/c/Users/joaom/Desktop/" + "btf_";
+ private final int moduleTestbenchSamples = 1000;
+ 
     @Test
     public void test() {
         
         List<Instruction> instructions = List.of(
-                new FakeInstruction("fakeInstructionTest", "RA = RA + RA;"),
-                new FakeInstruction("fakeInstructionTest", "RA = RA - RA;")
+                new FakeInstruction("fakeInstructionTest", "RD = RA + RB;"),
+                new FakeInstruction("fakeInstructionTest", "RF = RE - RD;")
                 );
         
         SegmentCDFG scdfg = new SegmentCDFG(instructions);
@@ -90,6 +97,18 @@ public class SegmentCDFGTester {
         exp.exportGraph(scdfg, "test", writer);
         System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
     
+    }
+    
+    @Test
+    public void fullFlowTest() throws IOException {
+        List<Instruction> instructions = List.of(
+                new FakeInstruction("fakeInstructionTest", "RD = RA + RB;"),
+                new FakeInstruction("fakeInstructionTest", "RF = RE - RH;")
+                );
+        
+        SegmentCDFGFullFlow fullFlow = new SegmentCDFGFullFlow(instructions, "test", this.moduleTestbenchSamples, this.systemPath, this.wslPath);
+        
+        fullFlow.runAll();
     }
     
 }

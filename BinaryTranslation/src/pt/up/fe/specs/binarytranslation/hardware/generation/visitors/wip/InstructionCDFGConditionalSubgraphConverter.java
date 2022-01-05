@@ -19,6 +19,7 @@ package pt.up.fe.specs.binarytranslation.hardware.generation.visitors.wip;
 
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareNodeExpressionMap;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.AInstructionCDFGControlNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.crispy.ast.HardwareNode;
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
@@ -31,6 +32,7 @@ public class InstructionCDFGConditionalSubgraphConverter extends InstructionCDFG
     
     public InstructionCDFGConditionalSubgraphConverter(AInstructionCDFGSubgraph subgraph, HardwareModule module) {
         super(subgraph, module);
+        
     }
     
     public static HardwareExpression convert(AInstructionCDFGSubgraph subgraph, HardwareModule module) {
@@ -44,8 +46,11 @@ public class InstructionCDFGConditionalSubgraphConverter extends InstructionCDFG
     @Override
     protected void visitOperationVertex(AInstructionCDFGNode vertex, HardwareNode childHardwareNode) {
         
-        Wire operationSignal = this.module.addWire(vertex.getUID(), 32);
         
+        if(!this.subgraph.getVerticesAfter(vertex).stream().allMatch(vertexAfter -> (vertexAfter instanceof AInstructionCDFGControlNode))) {
+            this.module.addWire(vertex.getUID(), 32);
+        }
+
         HardwareExpression operationExpression = HardwareNodeExpressionMap.generate(vertex.getClass(), this.getOperationOperandsSignals(vertex));
         
         this.rootNode = operationExpression;

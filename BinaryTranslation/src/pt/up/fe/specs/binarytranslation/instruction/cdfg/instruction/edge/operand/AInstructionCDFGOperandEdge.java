@@ -29,8 +29,6 @@ public abstract class AInstructionCDFGOperandEdge extends AInstructionCDFGEdge{
 
     private String side;
     
-    private List<AInstructionCDFGModifier> source_modifier;
-    
     protected AInstructionCDFGOperandEdge(String side) {
         this.side = side;
         this.source_modifier = new ArrayList<>();
