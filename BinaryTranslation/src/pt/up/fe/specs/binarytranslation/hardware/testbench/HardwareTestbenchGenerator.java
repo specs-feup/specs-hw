@@ -19,14 +19,13 @@ import java.util.ArrayList;
 
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
-import pt.up.fe.specs.crispy.ast.block.HardwareTestbench;
 import pt.up.fe.specs.crispy.ast.declaration.ArrayDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 import pt.up.fe.specs.crispy.ast.task.ReadMemoryHexadecimalTask;
 
 public class HardwareTestbenchGenerator extends AHardwareGenerator {
 
-    public static HardwareTestbench generate(HardwareModule module, int validationDataSize,
+    public static HardwareModule generate(HardwareModule module, int validationDataSize,
             File inputValidationFile, File outputValidationFile) throws NoSuchFileException {
 
         if (!inputValidationFile.exists()) {
@@ -103,6 +102,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
          */
         testbenchModule.instantiate(module, subInputs);
 
-        return new HardwareTestbench(module.getName() + "_tb", testbenchModule);
+        return testbenchModule;
+        // return new HardwareTestbench(module.getName() + "_tb", testbenchModule);
     }
 }
