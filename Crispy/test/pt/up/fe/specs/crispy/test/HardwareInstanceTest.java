@@ -372,7 +372,7 @@ public class HardwareInstanceTest {
     public void testRegisterBank() {
 
         var bank = new RegisterBank(4, 8);
-        // bank.emit();
+        bank.emit();
 
         var tb = new HardwareTestbench("tbTest", bank);
         tb.setClockFrequency(100);
