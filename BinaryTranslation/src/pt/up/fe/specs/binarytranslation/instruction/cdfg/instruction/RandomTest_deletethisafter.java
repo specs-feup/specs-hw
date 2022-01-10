@@ -72,8 +72,9 @@ public class RandomTest_deletethisafter {
     }
     
     private FakeInstruction instruction = new FakeInstruction("addTest",  
-            //"RD = RA + 2;RE = RD + 3;RD = RA + 5;"
-            "if(RA == 0) {RD = RA + RB;}else{RD = RA - RB;}RD = RA + 3;"
+            "RD = RA + RB;"
+            //"if(RA == 0) {RD = RA + RB;}RD = RA + RB;if(RA == 0) {RD = RA + RB;}"
+            //"if(RA == 0) {RD = RA + RB; if(RA == 0){RD = RA + RB;}else{RD = RA + RB;}}"
             );
     
     private final String systemPath = "C:\\Users\\joaom\\Desktop\\" + "btf_";
@@ -82,6 +83,7 @@ public class RandomTest_deletethisafter {
     
     @Test
     public void testFullFlow() throws IOException {
+        
         InstructionCDFGFullFlow fullFlow = new InstructionCDFGFullFlow(this.instruction, this.moduleTestbenchSamples, this.systemPath, this.wslPath);
         
         fullFlow.runAll();

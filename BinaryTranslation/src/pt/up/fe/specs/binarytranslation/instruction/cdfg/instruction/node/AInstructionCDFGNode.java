@@ -17,6 +17,9 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 
@@ -92,6 +95,16 @@ public abstract class AInstructionCDFGNode{
      */
     public Attribute getDOTShape() {
         return DefaultAttribute.createAttribute("circle");
+    }
+    
+    public Map<String, Attribute> getDOTAttributeMap(){
+
+        Map<String, Attribute> map = new LinkedHashMap<>();
+
+        map.put("shape", this.getDOTShape());
+        map.put("label", this.getDOTLabel());
+
+        return map;
     }
     
     /*
