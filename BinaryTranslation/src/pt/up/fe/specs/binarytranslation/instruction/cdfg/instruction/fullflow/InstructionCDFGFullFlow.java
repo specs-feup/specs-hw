@@ -34,8 +34,9 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.General
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableFunctionNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.processes.VerilatorRun;
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 
@@ -51,10 +52,23 @@ public class InstructionCDFGFullFlow {
     private HardwareModule generatedModule;
     private int moduleTestbenchSamples;
     
+    /** Applies the full flow of the toolchain on a single instruction (linux only)
+     * 
+     * @param instruction Instruction to apply the full flow on
+     * @param testbenchSamples Number of samples to generate for the testbench
+     * @param systemPath The path for the folder in your main OS 
+     */
     public InstructionCDFGFullFlow(Instruction instruction, int testbenchSamples, String systemPath) {
         this(instruction, testbenchSamples, systemPath, systemPath);
     }
     
+    /** <b>Use this constructor only if you are using WSL, otherwise use the single path constructor</b>
+     * <br><br>Applies the full flow of the toolchain on a single instruction (windows only)
+     * @param instruction Instruction to apply the full flow on
+     * @param testbenchSamples Number of samples to generate for the testbench
+     * @param systemPath The path for the folder in your main OS (windows in wsl)
+     * @param wslPath The path for the folder in you guest OS (linux in wsl)
+     */
     public InstructionCDFGFullFlow(Instruction instruction, int testbenchSamples, String systemPath, String wslPath) {
         
         this.instruction = instruction;
@@ -155,7 +169,7 @@ public class InstructionCDFGFullFlow {
 
         this.generateFolderStructures();
         this.generateInstructionCDFG();
-        this.exportInstructionCDFGAsDOT();
+        
         this.resolveInstructionCDFGNames();
         this.exportInstructionCDFGAsDOT();
         

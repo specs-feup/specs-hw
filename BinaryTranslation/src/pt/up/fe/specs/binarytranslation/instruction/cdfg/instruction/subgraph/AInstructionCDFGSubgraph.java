@@ -30,7 +30,9 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operan
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.InstructionCDFGRightOperandEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.InstructionCDFGUnaryOperandEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.AInstructionCDFGControlNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.AInstructionCDFGDataNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.AInstructionCDFGOperationNode;
 
@@ -38,9 +40,12 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
 
     private Map<String, Integer> UIDMap;
     
+
+    
     public AInstructionCDFGSubgraph() {
         super(AInstructionCDFGDataNode.class, AInstructionCDFGOperationNode.class, AInstructionCDFGEdge.class);
         this.UIDMap = new HashMap<>();
+
     }
     
     /** Generates the inputs and the outputs of the graph*/
@@ -68,7 +73,11 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
         
         Map<String, Integer> generatedUIDMap = new HashMap<>();
         
-        vertices.forEach(vertex -> generatedUIDMap.put(vertex.getReference(), vertex.getUIDVal()));
+        vertices.forEach(vertex -> {
+            if(!(vertex instanceof AInstructionCDFGControlNode) && !(vertex instanceof InstructionCDFGLiteralNode)) {
+                generatedUIDMap.put(vertex.getReference(), vertex.getUIDVal());
+            }
+        });
         
         return generatedUIDMap;
     }
@@ -77,7 +86,11 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
         
         Map<String, Integer> generatedUIDMap = new HashMap<>();
         
-        vertices.forEach(vertex -> generatedUIDMap.put(vertex.getReference(), vertex.setUID(UIDMap.containsKey(vertex.getReference()) ? UIDMap.get(vertex.getReference()) + increment : 0)));
+        vertices.forEach(vertex -> {
+            if(!(vertex instanceof AInstructionCDFGControlNode) && !(vertex instanceof InstructionCDFGLiteralNode)) {
+                generatedUIDMap.put(vertex.getReference(), vertex.setUID(UIDMap.containsKey(vertex.getReference()) ? UIDMap.get(vertex.getReference()) + increment : 0));
+            }
+        });
         
         return generatedUIDMap;
     }
@@ -150,8 +163,8 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
     @Override
     public void suppressVertex(AInstructionCDFGNode vertex) {
         
-        this.incomingEdgesOf(vertex).forEach((in_edge) -> {
-            this.outgoingEdgesOf(vertex).forEach((out_edge) -> {
+        this.incomingEdgesOf(vertex).forEach(in_edge -> {
+            this.outgoingEdgesOf(vertex).forEach(out_edge -> {
                 this.addEdge(this.getEdgeSource(in_edge), this.getEdgeTarget(out_edge), out_edge.duplicate());
             });
         });

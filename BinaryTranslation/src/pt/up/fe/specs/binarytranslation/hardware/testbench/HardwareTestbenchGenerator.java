@@ -85,17 +85,17 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
          * Always block
          */
         testbenchModule.alwaysnegedge("block1", verifStart)
-                ._ifelse(moduleOutputs.noteq(outputs.idx(index).idx(0, 32)))
+                ._ifelse(moduleOutputs.noteq(outputs.idx(index).idx(0, 31)))
                 .then()._do(verifOutput.nonBlocking(0))
                 .orElse()._do(verifOutput.nonBlocking(1));
 
         var subInputs = new ArrayList<HardwareOperator>();
 
         for (int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32)
-            subInputs.add(inputs.idx(index).idx(i, i + 32));
+            subInputs.add(inputs.idx(index).idx(i, i + 31));
 
         for (int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32)
-            subInputs.add(moduleOutputs.idx(i, i + 32));
+            subInputs.add(moduleOutputs.idx(i, i + 31));
 
         /*
          * Place the Design Under Test (DUT) into the body of this wrapper
