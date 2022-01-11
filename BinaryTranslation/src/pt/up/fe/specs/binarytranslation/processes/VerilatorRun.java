@@ -29,7 +29,7 @@ public class VerilatorRun extends StringProcessRun {
     private static List<String> getArgs(String directory, String testbenchName) {
 
         var args = new ArrayList<String>();
-        var compileddesignexe = testbenchName + "_tb";
+        var compileddesignexe =  testbenchName + "_tb";
         if (IS_WINDOWS)
             compileddesignexe += ".exe"; // TODO: required??
         args.add("./obj_dir/" + compileddesignexe);

@@ -72,13 +72,14 @@ public class RandomTest_deletethisafter {
     }
     
     private FakeInstruction instruction = new FakeInstruction("addTest",  
-            "RD = RA + RB;"
+            //"RD = RA + RB;"
             //"if(RA == 0) {RD = RA + RB;}RD = RA + RB;if(RA == 0) {RD = RA + RB;}"
             //"if(RA == 0) {RD = RA + RB; if(RA == 0){RD = RA + RB;}else{RD = RA + RB;}}"
+            "if(RA == 0) {RD = RA - RB; RA =  RG + 3;}"
             );
     
-    private final String systemPath = "C:\\Users\\joaom\\Desktop\\" + "btf_";
-    private final String wslPath = "/mnt/c/Users/joaom/Desktop/" + "btf_";
+    private final String systemPath = "/home/soiboi/Desktop/" + "btf_";
+    private final String wslPath = "/home/soiboi/Desktop/" + "btf_";
     private final int moduleTestbenchSamples = 1000;
     
     @Test
