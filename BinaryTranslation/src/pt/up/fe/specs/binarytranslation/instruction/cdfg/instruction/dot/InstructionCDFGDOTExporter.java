@@ -89,7 +89,7 @@ public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<AIns
                 edgeBuilder.append("v" + this.cdfgUIDMap.get(control));
                 
                 edgeBuilder.append(((control instanceof InstructionCDFGControlMergeNode) || (control instanceof InstructionCDFGControlConditionalNode)) ? ":n" : "");
-            }else if((target instanceof InstructionCDFGDataFlowSubgraph) || (target instanceof AInstructionCDFGControlFlowConditionalSubgraph)){
+            }else if((target instanceof InstructionCDFGDataFlowSubgraph) || (target instanceof AInstructionCDFGControlFlowConditionalSubgraph)){          
                 edgeBuilder.append("v" + this.cdfgUIDMap.get((AInstructionCDFGNode) target.getInputs().toArray()[0]).toString() + ":n");    
             } 
     

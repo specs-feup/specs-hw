@@ -49,7 +49,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.visitor.Ins
  *      - Variables cannot assign themselves (this will be problematic if there is a jump instruction inside a DFG, but for now I think it's ok)<br>
  *      - In a conditonal, all the outputs before the merge need to have the same variable name, and if they are missing an assignment needs to be placed (needed for respecting the previous rule and to ensure proper coverage of conditionals (important for HDL design))<br>
  * 
- * @author João Conceição
+ * @author Joao Conceicao
  *
  */
 public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
@@ -100,11 +100,22 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
         
         Map<String, Integer> divergentUIDMap = this.retriveDivergentUIDs(previousUIDMaps);
 
+        
         this.icdfg.getVerticesBefore(subgraph).forEach(vertexBefore -> {
             if(vertexBefore instanceof InstructionCDFGControlFlowIf) {
-                this.addAssignments(this.icdfg.getFalsePath(this.icdfg.convertIfToIfElse((InstructionCDFGControlFlowIf) vertexBefore)), divergentUIDMap);
+                
+                InstructionCDFGControlFlowIfElse newIfElse = this.icdfg.convertIfToIfElse((InstructionCDFGControlFlowIf) vertexBefore);
+                
+                this.addAssignments(this.icdfg.getFalsePath(newIfElse), divergentUIDMap);
+                
+                newIfElse.generateIO();
+                
             }else if (!(vertexBefore instanceof InstructionCDFGControlFlowMerge)) {
                 this.addAssignments(vertexBefore, divergentUIDMap);
+                
+                vertexBefore.generateIO();
+            }else {
+                
             }
         });
         
@@ -175,10 +186,10 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
     protected void addAssignments(AInstructionCDFGSubgraph subgraph, Map<String, Integer> divergenceMap) {
         
         Map<String, Integer> previousUIDMap = subgraph.getCurrentUIDMap();
-        
+
         divergenceMap.forEach((reference, uid) -> {
 
-            if((subgraph.getOutputs().isEmpty()) ||(!subgraph.getOutputs().stream().anyMatch(outputVertex -> outputVertex.getReference().equals(reference)))) {
+            if(!subgraph.getOutputs().stream().anyMatch(outputVertex -> outputVertex.getReference().equals(reference))) {
                 
                 AInstructionCDFGNode newInput = new InstructionCDFGVariableNode(reference);
                 AInstructionCDFGNode newAssignment = new InstructionCDFGAssignmentNode();
@@ -192,11 +203,14 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
                 newOutput.setUID(uid);
                 
                 subgraph.addEdge(newAssignment, newOutput, new InstructionCDFGEdge());
-                   
+ 
             }
         });
 
+        
+        
         subgraph.generateIO();
+        
     }
     
     

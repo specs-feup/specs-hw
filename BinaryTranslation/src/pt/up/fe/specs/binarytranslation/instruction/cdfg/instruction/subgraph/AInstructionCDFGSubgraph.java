@@ -40,12 +40,14 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
 
     private Map<String, Integer> UIDMap;
     
+    private int subgraph_uid;
+    static private int subgraph_uid_counter = 0;
 
     
     public AInstructionCDFGSubgraph() {
         super(AInstructionCDFGDataNode.class, AInstructionCDFGOperationNode.class, AInstructionCDFGEdge.class);
         this.UIDMap = new HashMap<>();
-
+        this.subgraph_uid = (AInstructionCDFGSubgraph.subgraph_uid_counter++);
     }
     
     /** Generates the inputs and the outputs of the graph*/
@@ -54,6 +56,11 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
         this.generateInputs();
         this.generateOutputs();
         
+    }
+    
+    @Override
+    public int hashCode() {
+        return subgraph_uid;
     }
     
     /** Generates the inputs and the outputs of the graph and sets the input UIDs and generates the outputs UIDs

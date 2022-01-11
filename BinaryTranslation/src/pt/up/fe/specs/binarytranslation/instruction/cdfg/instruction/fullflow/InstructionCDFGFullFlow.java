@@ -131,7 +131,7 @@ public class InstructionCDFGFullFlow {
     
     public void generateHardwareModuleTestbench() throws IOException {
         System.out.print("Generating HW module testbench...");
-        HardwareTestbenchGenerator.generate(generatedModule, moduleTestbenchSamples, new File(this.systemPath + "\\hw\\tb\\input.mem") , new File(this.systemPath + "\\hw\\tb\\output.mem")).emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, generatedModule.getName() + "_tb", "sv"));
+        HardwareTestbenchGenerator.generate(generatedModule, moduleTestbenchSamples, new File(this.systemPath + "/hw/tb/input.mem") , new File(this.systemPath + "/hw/tb/output.mem")).emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, generatedModule.getName() + "_tb", "sv"));
         System.out.println("\tDONE");
     }
     
@@ -170,12 +170,15 @@ public class InstructionCDFGFullFlow {
         this.generateFolderStructures();
         this.generateInstructionCDFG();
         
+this.exportInstructionCDFGAsDOT();
+        
+        
         this.resolveInstructionCDFGNames();
         this.exportInstructionCDFGAsDOT();
         
         this.generateHardwareModule();
         
-        this.generateHardwareModuleValidationData();
+        //this.generateHardwareModuleValidationData();
         this.generateHardwareModuleTestbench();
         this.generateVerilatorTestbench();
         

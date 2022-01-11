@@ -34,7 +34,7 @@ import pt.up.fe.specs.crispy.ast.statement.ProceduralBlockingStatement;
 
 /** Converts a InstructionCDFGDataFlowSubgraph into a Cripsy AST
  * 
- * @author João Conceição
+ * @author Joï¿½o Conceiï¿½ï¿½o
  *
  */
 
@@ -97,6 +97,8 @@ public class InstructionCDFGDataFlowSubgraphConverter extends InstructionCDFGSub
         Wire operationSignal = this.getOperationSignal(vertex);
         
         HardwareExpression operationExpression = HardwareNodeExpressionMap.generate(vertex.getClass(), this.getOperationOperandsSignals(vertex));
+        
+        System.out.println(parentHardwareNode.toContentString());
         
         parentHardwareNode.addChild(new ProceduralBlockingStatement(operationSignal, operationExpression));
         
