@@ -17,11 +17,13 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.bitwise;
 
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationRegister;
+
 public class HardwareValidationBitwiseXor extends AHardwareValidationBinaryBitwiseOperation{
 
     @Override
-    public Number apply(Number operandLeft, Number operandRight) {
-        return Integer.valueOf(operandLeft.intValue() ^ operandRight.intValue());
+    public Number apply(HardwareValidationRegister operandLeft, HardwareValidationRegister operandRight) {
+        return Integer.valueOf(operandLeft.getValue().intValue() ^ operandRight.getValue().intValue());
     }
 
 }

@@ -37,6 +37,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.I
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableFunctionNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
+import pt.up.fe.specs.binarytranslation.processes.VerilatorCompile;
 import pt.up.fe.specs.binarytranslation.processes.VerilatorRun;
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 
@@ -117,15 +118,16 @@ public class InstructionCDFGFullFlow {
     }
     
     public void generateHardwareModuleValidationData() throws IOException {
+        
         HardwareValidationDataGenerator validation = new HardwareValidationDataGenerator();
-        Map<Map<String, Number>, Map<String, Number>> validationData = HardwareValidationDataGenerator.generateValidationData(instruction, icdfg.getDataInputsReferences(), moduleTestbenchSamples);
-
+        
+        validation.generateValidationData(instruction, this.icdfg.getDataInputsReferences(), moduleTestbenchSamples);
         System.out.print("Generating HW module testbench validation input memory file...");
-        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "input", "mem").write(HardwareValidationDataGenerator.generateHexMemFile(validationData.keySet()).getBytes());
+        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "input", "mem").write(validation.buildInputHexMemFile().getBytes());
         System.out.println("\tDONE");
         
         System.out.print("Generating HW module testbench validation output memory file...");
-        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "output", "mem").write(HardwareValidationDataGenerator.generateHexMemFile(validationData.values()).getBytes());
+        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "output", "mem").write(validation.buildOutputHexMemFile().getBytes());
         System.out.println("\tDONE");
     }
     
@@ -143,6 +145,10 @@ public class InstructionCDFGFullFlow {
     
     public boolean runVerilatorTestbench() throws IOException {
         System.out.print("Running Verilator testbench...");
+        
+        VerilatorCompile verilator_compile = new VerilatorCompile(wslPath, this.instruction.getName());
+        
+        verilator_compile.start();
         
         VerilatorRun verilator = new VerilatorRun(wslPath+"/hw/tb", this.instruction.getName());
         
@@ -178,7 +184,7 @@ this.exportInstructionCDFGAsDOT();
         
         this.generateHardwareModule();
         
-        //this.generateHardwareModuleValidationData();
+        this.generateHardwareModuleValidationData();
         this.generateHardwareModuleTestbench();
         this.generateVerilatorTestbench();
         

@@ -17,15 +17,17 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.logical;
 
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationRegister;
+
 public class HardwareValidationLogicalNot extends AHardwareValidationUnaryLogicalOperation{
 
     @Override
-    public Number apply(Number operand) throws IllegalArgumentException{
+    public Number apply(HardwareValidationRegister operand) throws IllegalArgumentException{
         
         if(super.integerOperand(operand)) {
-            return Integer.valueOf(operand.intValue() == 0 ? 1 : 0);
+            return Integer.valueOf(operand.getValue().intValue() == 0 ? 1 : 0);
         }else if (super.floatOperand(operand)) {
-            return Float.valueOf((float) (Float.floatToIntBits(operand.floatValue()) == 0 ? 1 : 0));
+            return Float.valueOf((float) (Float.floatToIntBits(operand.getValue().floatValue()) == 0 ? 1 : 0));
         }
         
         throw new IllegalArgumentException();

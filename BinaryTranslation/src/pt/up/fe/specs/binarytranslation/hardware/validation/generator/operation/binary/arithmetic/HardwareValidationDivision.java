@@ -17,15 +17,17 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.arithmetic;
 
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationRegister;
+
 public class HardwareValidationDivision extends AHardwareValidationArithmeticOperation{
 
     @Override
-    public Number apply(Number operandLeft, Number operandRight) throws IllegalArgumentException{
+    public Number apply(HardwareValidationRegister operandLeft, HardwareValidationRegister operandRight) throws IllegalArgumentException{
         
         if(super.integerOperands(operandLeft, operandRight)) {
-            return Integer.valueOf(operandLeft.intValue() / operandRight.intValue());
+            return Integer.valueOf(operandLeft.getValue().intValue() / operandRight.getValue().intValue());
         }else if(super.floatOperands(operandLeft, operandRight)) {
-            return Float.valueOf(operandLeft.floatValue() / operandRight.floatValue());
+            return Float.valueOf(operandLeft.getValue().floatValue() / operandRight.getValue().floatValue());
         }
         
         throw new IllegalArgumentException();

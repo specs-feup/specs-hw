@@ -32,6 +32,9 @@ public class VerilatorRun extends StringProcessRun {
         var compileddesignexe =  testbenchName + "_tb";
         if (IS_WINDOWS)
             compileddesignexe += ".exe"; // TODO: required??
+        
+        args.add("cd" + directory);
+        args.add("&&");
         args.add("./obj_dir/" + compileddesignexe);
         return args;
     }

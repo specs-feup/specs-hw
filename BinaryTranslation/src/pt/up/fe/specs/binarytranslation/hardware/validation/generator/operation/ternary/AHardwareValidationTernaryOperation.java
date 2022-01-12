@@ -17,6 +17,8 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.ternary;
 
-public abstract class AHardwareValidationTernaryOperation implements TriFunction<Number, Number, Number, Number>{
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.AHardwareValidationOperation;
+
+public abstract class AHardwareValidationTernaryOperation extends AHardwareValidationOperation implements TriFunction<Number, Number, Number, Number>{
 
 }
