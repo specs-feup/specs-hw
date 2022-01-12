@@ -28,8 +28,8 @@ import pt.up.fe.specs.binarytranslation.hardware.analysis.timing.TimingAnalysisR
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorTestbenchGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationDataGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.calculator.generator.PseudoInstructionCalculatorGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
@@ -119,7 +119,7 @@ public class InstructionCDFGFullFlow {
     
     public void generateHardwareModuleValidationData() throws IOException {
         
-        HardwareValidationDataGenerator validation = new HardwareValidationDataGenerator();
+        PseudoInstructionCalculatorGenerator validation = new PseudoInstructionCalculatorGenerator();
         
         validation.generateValidationData(instruction, this.icdfg.getDataInputsReferences(), moduleTestbenchSamples);
         System.out.print("Generating HW module testbench validation input memory file...");

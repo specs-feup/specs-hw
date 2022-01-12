@@ -14,7 +14,9 @@
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.wip.InstructionCDFGConverter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
@@ -30,8 +32,8 @@ public class InstructionCDFGCustomInstructionUnitGenerator{
     
     private InstructionCDFG icdfg;
     
-    private List<InputPort> inputPorts;
-    private List<OutputPort> outputPorts;
+    private Set<InputPort> inputPorts;
+    private Set<OutputPort> outputPorts;
     
     public InstructionCDFGCustomInstructionUnitGenerator(InstructionCDFG icdfg, String moduleName) {
         
@@ -39,8 +41,8 @@ public class InstructionCDFGCustomInstructionUnitGenerator{
 
         this.moduleName = moduleName;
         
-        this.inputPorts = new ArrayList<>();
-        this.outputPorts = new ArrayList<>();
+        this.inputPorts = new HashSet<>();
+        this.outputPorts = new HashSet<>();
         
     }
     
@@ -56,11 +58,11 @@ public class InstructionCDFGCustomInstructionUnitGenerator{
         return this.moduleName;
     }
     
-    public List<InputPort> getInputPorts(){
+    public Set<InputPort> getInputPorts(){
         return this.inputPorts;
     }
     
-    public List<OutputPort> getOutputPorts(){
+    public Set<OutputPort> getOutputPorts(){
         return this.outputPorts;
     }
     
@@ -72,11 +74,15 @@ public class InstructionCDFGCustomInstructionUnitGenerator{
         this.outputPorts.clear();
         
     }
-
+    
     private void generatePorts() {
         
-        icdfg.getDataInputsNames().forEach(inputPortName -> this.inputPorts.add(this.module.addInputPort(inputPortName, 32)));        
-        icdfg.getDataOutputsNames().forEach(outputPortName -> this.outputPorts.add(this.module.addOutputPortRegister(outputPortName, 32)));
+        this.icdfg.getDataInputsNames()
+            .stream()
+            .filter(name -> !this.icdfg.getDataOutputsNames().contains(name))
+            .forEach(inputPortName -> this.inputPorts.add(this.module.addInputPort(inputPortName, 32)));      
+        
+        this.icdfg.getDataOutputsNames().forEach(outputPortName -> this.outputPorts.add(this.module.addOutputPortRegister(outputPortName, 32)));
         
     }
     

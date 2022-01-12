@@ -22,19 +22,19 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstr
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.AInstructionCDFGModifier;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGRangeSubscript;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.modifier.subscript.InstructionCDFGScalarSubscript;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.operand.AInstructionCDFGOperandEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.AInstructionCDFGDataNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.operation.arithmetic.InstructionCDFGAssignmentNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.crispy.ast.HardwareNode;
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
-import pt.up.fe.specs.crispy.ast.expression.operator.Wire;
+import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.statement.ProceduralBlockingStatement;
 
 /** Converts a InstructionCDFGDataFlowSubgraph into a Cripsy AST
  * 
- * @author Jo�o Concei��o
+ * @author Joao Conceicao
  *
  */
 
@@ -43,7 +43,9 @@ public class InstructionCDFGDataFlowSubgraphConverter extends InstructionCDFGSub
     public InstructionCDFGDataFlowSubgraphConverter(AInstructionCDFGSubgraph subgraph, HardwareModule module) {
         super(subgraph, module);
         
-        this.subgraph.getOutputs().stream().filter(output -> (this.module.getWire(output.getUID()) == null)).forEach(output -> this.module.addWire(output.getUID(), 32));   // generates all of the output wires, if they were not already present in the module
+        this.subgraph.getOutputs().stream()
+            .filter(output -> (this.module.getDeclaration(output.getUID()) == null))
+            .forEach(output -> this.module.addRegister(output.getUID(), 32));   // generates all of the output wires, if they were not already present in the module
         
     }
     
@@ -61,46 +63,50 @@ public class InstructionCDFGDataFlowSubgraphConverter extends InstructionCDFGSub
         
     }
     
-    private Wire getOperationSignal(AInstructionCDFGNode vertex) {
+    private VariableOperator getOperationSignal(AInstructionCDFGNode vertex) {
         
-        Wire operationSignal;
+        VariableOperator operationSignal;
         
         for(AInstructionCDFGNode nextVertex : this.subgraph.getVerticesAfter(vertex)) {
           
             if(nextVertex instanceof AInstructionCDFGDataNode) {
                 
-                operationSignal = (Wire) this.module.getWire(nextVertex.getUID());
-                
+                operationSignal = (VariableOperator) this.module.getDeclaration(nextVertex.getUID());
+
                 AInstructionCDFGEdge operandEdge =  this.subgraph.getEdge(vertex, nextVertex);
                 
                 for(AInstructionCDFGModifier modifier : operandEdge.getModifiers()){
                      if(modifier instanceof InstructionCDFGRangeSubscript) {
-                         return (Wire) operationSignal.idx(((InstructionCDFGRangeSubscript)modifier).getUpperBound(), ((InstructionCDFGRangeSubscript)modifier).getLowerBound());
+                         return operationSignal.idx(((InstructionCDFGRangeSubscript)modifier).getUpperBound(), ((InstructionCDFGRangeSubscript)modifier).getLowerBound());
                      }else if(modifier instanceof InstructionCDFGScalarSubscript) {
-                         return (Wire) operationSignal.idx(((InstructionCDFGScalarSubscript)modifier).getUpperBound());
+                         return operationSignal.idx(((InstructionCDFGScalarSubscript)modifier).getUpperBound());
                      }
                  }
 
-                return (Wire) operationSignal;
+                return operationSignal;
             }
             
         }
         
-        return this.module.addWire(vertex.getUID(), 32);
+        return this.module.addRegister(vertex.getUID(), 32);
     }
-
-    
     
     @Override
     protected void visitOperationVertex(AInstructionCDFGNode vertex, HardwareNode parentHardwareNode) {
         
-        Wire operationSignal = this.getOperationSignal(vertex);
+        VariableOperator operationSignal = this.getOperationSignal(vertex);
         
-        HardwareExpression operationExpression = HardwareNodeExpressionMap.generate(vertex.getClass(), this.getOperationOperandsSignals(vertex));
-        
-        System.out.println(parentHardwareNode.toContentString());
-        
-        parentHardwareNode.addChild(new ProceduralBlockingStatement(operationSignal, operationExpression));
+        if(vertex instanceof InstructionCDFGAssignmentNode) {
+            
+            this.getOperationOperandsSignals(vertex).forEach(operand -> parentHardwareNode.addChild(new ProceduralBlockingStatement(operationSignal, operand)));
+ 
+        }else {
+            
+            HardwareExpression operationExpression = HardwareNodeExpressionMap.generate(vertex.getClass(), this.getOperationOperandsSignals(vertex));
+            
+            parentHardwareNode.addChild(new ProceduralBlockingStatement(operationSignal, operationExpression));
+            
+        }
         
         super.visitOperationVertex(vertex, parentHardwareNode);
     }
