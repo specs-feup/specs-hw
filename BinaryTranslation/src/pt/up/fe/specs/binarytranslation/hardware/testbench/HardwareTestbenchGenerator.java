@@ -48,7 +48,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
          * Ports
          */
         var verifStart = testbenchModule.addInputPort("verify", 1);
-        var verifOutput = testbenchModule.addOutputPortRegister("verifyResults", 1);
+        var verifOutput = testbenchModule.addOutputRegisterPort("verifyResults", 1);
 
         /*
          * Registers
