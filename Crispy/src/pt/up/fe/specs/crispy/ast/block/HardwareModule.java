@@ -218,7 +218,7 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
         return (OutputPort) addPort(new OutputPortDeclaration(portName, portWidth));
     }
     
-    public OutputPort addOutputPortRegister(String portName, int portWidth) {
+    public OutputPort addOutputRegisterPort(String portName, int portWidth) {
         return (OutputPort) addPort(new OutputPortDeclaration(portName, portWidth, true));
     }
 

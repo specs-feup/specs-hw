@@ -82,7 +82,7 @@ public class InstructionCDFGCustomInstructionUnitGenerator{
             .filter(name -> !this.icdfg.getDataOutputsNames().contains(name))
             .forEach(inputPortName -> this.inputPorts.add(this.module.addInputPort(inputPortName, 32)));      
         
-        this.icdfg.getDataOutputsNames().forEach(outputPortName -> this.outputPorts.add(this.module.addOutputPortRegister(outputPortName, 32)));
+        this.icdfg.getDataOutputsNames().forEach(outputPortName -> this.outputPorts.add(this.module.addOutputRegisterPort(outputPortName, 32)));
         
     }
     

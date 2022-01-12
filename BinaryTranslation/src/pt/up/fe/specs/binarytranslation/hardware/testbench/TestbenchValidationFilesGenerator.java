@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package pt.up.fe.specs.binarytranslation.instruction.calculator;
+package pt.up.fe.specs.binarytranslation.hardware.testbench;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
