@@ -31,24 +31,32 @@ public class VerilatorCompile extends StringProcessRun {
 
         var args = new ArrayList<String>();
         var verilatorexe = "verilator";
-        var filepath_partial = "./" + directory + "/" + testbenchName;
+        var filepath_partial = directory + "/" + testbenchName;
+        
+        var filepath_module =  "../hdl/";
+        var filepath_testbench = directory + "/hw/tb/"; 
 
         if (IS_WINDOWS)
             verilatorexe += ".exe";
-
+        
+        args.add("cd " + filepath_testbench);
+        args.add("&&");
         args.add(verilatorexe);
         args.add("-cc");
-        args.add(filepath_partial + "_tb.sv");
-        args.add("./hdl/" + testbenchName + ".sv"); // TODO: whats this argument for?
+        args.add("./" + testbenchName + "_tb.sv");
+        args.add(filepath_module + testbenchName + ".sv"); // TODO: whats this argument for?
         args.add("-exe");
-        args.add(filepath_partial + "_tb.cpp");
+        args.add("./" + testbenchName + "_tb.cpp");
         args.add("&&");
         args.add("make");
         args.add("-C");
-        args.add("obj_dir");
+        args.add("./obj_dir");
         args.add("-f");
         args.add("V" + testbenchName + "_tb.mk");
         args.add("V" + testbenchName + "_tb");
+        
+        System.out.println(args);
+        
         return args;
     }
 

@@ -17,17 +17,19 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.function.math;
 
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationRegister;
+
 public class HardwareValidationSignExtend extends AHardwareValidationMathOperation{
 
     @Override
-    public Number apply(Number operand) throws IllegalArgumentException{
+    public Number apply(HardwareValidationRegister operand) throws IllegalArgumentException{
         
         if(!super.integerOperand(operand)) 
             throw new IllegalArgumentException();
         
-        int operandInt = operand.intValue();
+        int operandInt = operand.getValue().intValue();
         
-        return operand;
+        return operandInt;
     }
 
 }

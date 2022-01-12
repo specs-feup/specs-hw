@@ -17,15 +17,17 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.comparison;
 
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationRegister;
+
 public class HardwareValidationNotEqualsTo extends AHardwareValidationComparisonOperation{
 
     @Override
-    public Number apply(Number operandLeft, Number operandRight) throws IllegalArgumentException{
+    public Number apply(HardwareValidationRegister operandLeft, HardwareValidationRegister operandRight) throws IllegalArgumentException{
         
         if(super.integerOperands(operandLeft, operandRight)) {
-            return Integer.valueOf(operandLeft.intValue() != operandRight.intValue() ? 1 : 0);
+            return Integer.valueOf(operandLeft.getValue().intValue() != operandRight.getValue().intValue() ? 1 : 0);
         }else if(super.floatOperands(operandLeft, operandRight)) {
-            return Integer.valueOf(Float.compare(operandLeft.floatValue(), operandRight.floatValue()) != 0 ? 1 : 0);
+            return Integer.valueOf(Float.compare(operandLeft.getValue().floatValue(), operandRight.getValue().floatValue()) != 0 ? 1 : 0);
         }
         
         throw new IllegalArgumentException();

@@ -17,11 +17,13 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.subscript;
 
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationRegister;
+
 public class HardwareValidationScalarSubscript extends AHardwareValidationSubscript{
 
     @Override
-    public Number apply(Number variable, Number bit) {
-        return variable.intValue() & (1<<bit.intValue());
+    public Number apply(HardwareValidationRegister variable, HardwareValidationRegister bit) {
+        return variable.getValue().intValue() & (1<<bit.getValue().intValue());
     }
 
 }

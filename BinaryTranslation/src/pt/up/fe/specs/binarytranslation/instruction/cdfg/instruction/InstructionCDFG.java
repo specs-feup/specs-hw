@@ -182,10 +182,6 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         return this.instruction.getName();
     }
     
-    public void splitSubgraph(AInstructionCDFGSubgraph subgraph, Set<AInstructionCDFGNode> vertices) {
-        
-    }
-    
     @Override
     public void replaceVertex(AInstructionCDFGSubgraph current, AInstructionCDFGSubgraph replacement) {
         
@@ -213,8 +209,7 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         target.addVertices(source.vertexSet());
 
         Graphs.addAllEdges(target, source, source.edgeSet());
-        
-        
+
         target.generateInputs();
         target.generateOutputs();
         

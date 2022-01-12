@@ -19,14 +19,17 @@ package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation
 
 import java.util.function.BiFunction;
 
-public abstract class AHardwareValidationBinaryOperation implements BiFunction<Number, Number, Number>{
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationRegister;
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.AHardwareValidationOperation;
 
-    protected boolean integerOperands(Number operandLeft, Number operandRight) {
-        return ((operandLeft instanceof Integer) && (operandRight instanceof Integer));
+public abstract class AHardwareValidationBinaryOperation extends AHardwareValidationOperation implements BiFunction<HardwareValidationRegister, HardwareValidationRegister, Number>{
+
+    protected boolean integerOperands(HardwareValidationRegister operandLeft, HardwareValidationRegister operandRight) {
+        return ((operandLeft.getValue() instanceof Integer) && (operandRight.getValue() instanceof Integer));
     }
     
-    protected boolean floatOperands(Number operandLeft, Number operandRight) {
-        return ((operandLeft instanceof Float) && (operandRight instanceof Float));
+    protected boolean floatOperands(HardwareValidationRegister operandLeft, HardwareValidationRegister operandRight) {
+        return ((operandLeft.getValue() instanceof Float) && (operandRight.getValue() instanceof Float));
     }
     
 }

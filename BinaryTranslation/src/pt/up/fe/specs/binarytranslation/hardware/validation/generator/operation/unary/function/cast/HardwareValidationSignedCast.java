@@ -17,11 +17,13 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.function.cast;
 
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationRegister;
+
 public class HardwareValidationSignedCast extends AHardwareValidationCastFunctionOperation{
 
     @Override
-    public Number apply(Number operand) {
-       return operand;
+    public Number apply(HardwareValidationRegister operand) {
+       return operand.getValue();
     }
 
 }

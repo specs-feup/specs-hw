@@ -72,19 +72,19 @@ public class RandomTest_deletethisafter {
     }
     
     private FakeInstruction instruction = new FakeInstruction("addTest",  
-            //"RD = RA + RB;"
+            "RD = RA + RB;"
             //"if(RA == 0) {RD = RA + RB;}RD = RA + RB;if(RA == 0) {RD = RA + RB;}"
             //"if(RA == 0) {RD = RA + RB; if(RA == 0){RD = RA + RB;}else{RD = RA + RB;}}"
-            "if(RA == 0) {RD = RA - RB; RA =  RG + 3;}"
+            //"if(RA == 0) {RD = RA - RB; RA =  RG + 3;}"
             );
     
     private final String systemPath = "/home/soiboi/Desktop/" + "btf_";
     private final String wslPath = "/home/soiboi/Desktop/" + "btf_";
-    private final int moduleTestbenchSamples = 1000;
+    private final int moduleTestbenchSamples = 1;
     
     @Test
     public void testFullFlow() throws IOException {
-        
+
         InstructionCDFGFullFlow fullFlow = new InstructionCDFGFullFlow(this.instruction, this.moduleTestbenchSamples, this.systemPath, this.wslPath);
         
         fullFlow.runAll();

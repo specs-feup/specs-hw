@@ -19,14 +19,17 @@ package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation
 
 import java.util.function.Function;
 
-public abstract class AHardwareValidationUnaryOperation implements Function<Number, Number>{
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationRegister;
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.AHardwareValidationOperation;
 
-    protected boolean integerOperand(Number operand) {
-        return (operand instanceof Integer);
+public abstract class AHardwareValidationUnaryOperation extends AHardwareValidationOperation implements Function<HardwareValidationRegister, Number>{
+
+    protected boolean integerOperand(HardwareValidationRegister operand) {
+        return (operand.getValue() instanceof Integer);
     }
     
-    protected boolean floatOperand(Number operand) {
-        return (operand instanceof Float);
+    protected boolean floatOperand(HardwareValidationRegister operand) {
+        return (operand.getValue() instanceof Float);
     }
     
 }

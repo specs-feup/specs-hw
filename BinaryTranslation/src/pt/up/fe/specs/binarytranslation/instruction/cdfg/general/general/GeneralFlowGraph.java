@@ -167,7 +167,8 @@ public class GeneralFlowGraph<V,E> extends SimpleDirectedGraph<V,E>{
      * The parameter's vertices must have been already added to the graph
      * @param vertices New List of outputs
      */
-    public void setOutputs(Set<V> vertices) {      
+    public void setOutputs(Set<V> vertices) {  
+        this.getOutputs().clear();
         this.getOutputs().addAll(vertices);
     }
     

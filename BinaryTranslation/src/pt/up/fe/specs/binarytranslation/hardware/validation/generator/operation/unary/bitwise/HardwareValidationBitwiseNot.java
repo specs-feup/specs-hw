@@ -17,15 +17,17 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.unary.bitwise;
 
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationRegister;
+
 public class HardwareValidationBitwiseNot extends AHardwareValidationUnaryBitwiseOperation{
 
     @Override
-    public Number apply(Number operand) throws IllegalArgumentException{
+    public Number apply(HardwareValidationRegister operand) throws IllegalArgumentException{
         
         if(super.integerOperand(operand)) {
-            return Integer.valueOf(~operand.intValue());
+            return Integer.valueOf(~operand.getValue().intValue());
         }else if (super.floatOperand(operand)) {
-            return Float.valueOf((float) ~Float.floatToIntBits(operand.floatValue()));
+            return Float.valueOf((float) ~Float.floatToIntBits(operand.getValue().floatValue()));
         }
         
         throw new IllegalArgumentException();

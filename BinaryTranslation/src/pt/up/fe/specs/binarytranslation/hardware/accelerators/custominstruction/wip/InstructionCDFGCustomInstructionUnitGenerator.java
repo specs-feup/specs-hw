@@ -76,7 +76,7 @@ public class InstructionCDFGCustomInstructionUnitGenerator{
     private void generatePorts() {
         
         icdfg.getDataInputsNames().forEach(inputPortName -> this.inputPorts.add(this.module.addInputPort(inputPortName, 32)));        
-        icdfg.getDataOutputsNames().forEach(outputPortName -> this.outputPorts.add(this.module.addOutputPort(outputPortName, 32)));
+        icdfg.getDataOutputsNames().forEach(outputPortName -> this.outputPorts.add(this.module.addOutputPortRegister(outputPortName, 32)));
         
     }
     
@@ -86,6 +86,7 @@ public class InstructionCDFGCustomInstructionUnitGenerator{
     
     public HardwareModule generateHardware() {
         
+        this.icdfg.refresh();
         this.initializeModule();
         this.generatePorts();
         this.generateLogic(this.module.alwayscomb());

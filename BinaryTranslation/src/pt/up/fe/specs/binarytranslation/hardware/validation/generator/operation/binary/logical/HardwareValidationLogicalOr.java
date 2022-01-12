@@ -17,11 +17,13 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.validation.generator.operation.binary.logical;
 
+import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationRegister;
+
 public class HardwareValidationLogicalOr extends AHardwareValidationBinaryLogicalOperation{
 
     @Override
-    public Number apply(Number operandLeft, Number operandRight) {
-        return Integer.valueOf(((operandLeft.intValue() != 0) || (operandRight.intValue() != 0)) ? 1 : 0);
+    public Number apply(HardwareValidationRegister operandLeft, HardwareValidationRegister operandRight) {
+        return Integer.valueOf(((operandLeft.getValue().intValue() != 0) || (operandRight.getValue().intValue() != 0)) ? 1 : 0);
     }
 
 }
