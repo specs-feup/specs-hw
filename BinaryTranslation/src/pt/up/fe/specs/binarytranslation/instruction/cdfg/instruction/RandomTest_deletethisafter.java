@@ -72,9 +72,9 @@ public class RandomTest_deletethisafter {
     }
     
     private FakeInstruction instruction = new FakeInstruction("addTest",  
-            "RD = RA + RB;"
+            //"RD = RA + RB;"
             //"if(RA == 0) {RD = RA + RB;}RD = RA + RB;if(RA == 0) {RD = RA + RB;}"
-            //"if(RA == 0) {RD = RA + RB; if(RA == 0){RD = RA + RB;}else{RD = RA + RB;}}"
+            "if(RA == 0) {RD = RA + RB + RC; if(RA == 0){RD = RA + RB;}else{RD = RA + RB;}}"
             //"if(RA == 0) {RD = RA - RB; RA =  RG + 3;}"
             );
     

@@ -29,8 +29,8 @@ import pt.up.fe.specs.binarytranslation.hardware.analysis.timing.TimingAnalysisR
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorTestbenchGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationDataGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.calculator.generator.PseudoInstructionCalculatorGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
@@ -109,15 +109,15 @@ public class SegmentCDFGFullFlow {
     }
     
     public void generateHardwareModuleValidationData() throws IOException {
-        HardwareValidationDataGenerator validation = new HardwareValidationDataGenerator();
-        Map<Map<String, Number>, Map<String, Number>> validationData = HardwareValidationDataGenerator.generateValidationData(instruction, icdfg.getDataInputsReferences(), moduleTestbenchSamples);
+        PseudoInstructionCalculatorGenerator validation = new PseudoInstructionCalculatorGenerator();
+        Map<Map<String, Number>, Map<String, Number>> validationData = PseudoInstructionCalculatorGenerator.generateValidationData(instruction, icdfg.getDataInputsReferences(), moduleTestbenchSamples);
 
         System.out.print("Generating HW module testbench validation input memory file...");
-        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "input", "mem").write(HardwareValidationDataGenerator.generateHexMemFile(validationData.keySet()).getBytes());
+        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "input", "mem").write(PseudoInstructionCalculatorGenerator.generateHexMemFile(validationData.keySet()).getBytes());
         System.out.println("\tDONE");
         
         System.out.print("Generating HW module testbench validation output memory file...");
-        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "output", "mem").write(HardwareValidationDataGenerator.generateHexMemFile(validationData.values()).getBytes());
+        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "output", "mem").write(PseudoInstructionCalculatorGenerator.generateHexMemFile(validationData.values()).getBytes());
         System.out.println("\tDONE");
     }
     

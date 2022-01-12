@@ -38,6 +38,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstr
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.control.AInstructionCDFGControlNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGGeneratedVariable;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.AInstructionCDFGControlFlowSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
@@ -220,15 +221,24 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
 
         InstructionCDFGControlFlowIfElse newIfElse = new InstructionCDFGControlFlowIfElse(ifSubgraph.getMerge());
         
-        newIfElse.setInputUIDMap(ifSubgraph.getInputUIDMap());
         
+        
+        newIfElse.setInputUIDMap(ifSubgraph.getInputUIDMap());
+
         ifSubgraph.vertexSet().forEach(vertex -> {
+
+            
             newIfElse.addVertex(vertex);
+            
+            if(vertex instanceof InstructionCDFGVariableNode) {
+                vertex.setUID(vertex.getUIDVal() - 1);
+            }
+            
             if(ifSubgraph.outgoingEdgesOf(vertex).isEmpty()) {
                 newIfElse.setControlVertex((AInstructionCDFGControlNode) vertex);
             }
         });
-        
+;
         ifSubgraph.edgeSet().forEach(edge -> newIfElse.addEdge(ifSubgraph.getEdgeSource(edge), ifSubgraph.getEdgeTarget(edge), edge.duplicate()));
 
         this.addVertex(newIfElse);
@@ -238,6 +248,7 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         InstructionCDFGDataFlowSubgraph newDFG = new InstructionCDFGDataFlowSubgraph();
         
         newDFG.setInputUIDMap(ifSubgraph.getInputUIDMap());
+        
         newDFG.generateOutputUIDMap();
         
         this.addVertex(newDFG);
