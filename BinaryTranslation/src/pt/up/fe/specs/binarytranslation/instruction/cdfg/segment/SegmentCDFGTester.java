@@ -83,7 +83,7 @@ public class SegmentCDFGTester {
     public void test() {
         
         List<Instruction> instructions = List.of(
-                new FakeInstruction("fakeInstructionTest", "RD = RA + RB;"),
+                new FakeInstruction("fakeInstructionTest", "if(RA == 0) {RD = RA - RB;}"),
                 new FakeInstruction("fakeInstructionTest", "RF = RE - RD;")
                 );
         
@@ -102,8 +102,9 @@ public class SegmentCDFGTester {
     @Test
     public void fullFlowTest() throws IOException {
         List<Instruction> instructions = List.of(
-                new FakeInstruction("fakeInstructionTest", "RD = RA + RB;"),
-                new FakeInstruction("fakeInstructionTest", "RF = RE - RH;")
+                new FakeInstruction("fakeInstructionTest", "if(RA == 0) {RD = RA - RB;}"),
+                new FakeInstruction("fakeInstructionTest", "RA = RE - RD;"),
+                new FakeInstruction("fakeInstructionTest", "if(RA == 0) {RD = RA - RB;}")
                 );
         
         SegmentCDFGFullFlow fullFlow = new SegmentCDFGFullFlow(instructions, "test", this.moduleTestbenchSamples, this.systemPath, this.wslPath);
