@@ -221,8 +221,6 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
 
         InstructionCDFGControlFlowIfElse newIfElse = new InstructionCDFGControlFlowIfElse(ifSubgraph.getMerge());
         
-        
-        
         newIfElse.setInputUIDMap(ifSubgraph.getInputUIDMap());
 
         ifSubgraph.vertexSet().forEach(vertex -> {
@@ -230,9 +228,12 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
             
             newIfElse.addVertex(vertex);
             
+            
             if(vertex instanceof InstructionCDFGVariableNode) {
                 vertex.setUID(vertex.getUIDVal() - 1);
             }
+            
+       
             
             if(ifSubgraph.outgoingEdgesOf(vertex).isEmpty()) {
                 newIfElse.setControlVertex((AInstructionCDFGControlNode) vertex);
@@ -247,9 +248,17 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         
         InstructionCDFGDataFlowSubgraph newDFG = new InstructionCDFGDataFlowSubgraph();
         
-        newDFG.setInputUIDMap(ifSubgraph.getInputUIDMap());
+        newDFG.generateIO();
         
-        newDFG.generateOutputUIDMap();
+        newDFG.setInputUIDMap(ifSubgraph.getCurrentUIDMap());
+        
+       
+        
+        //newDFG.forceInputUIDMap(ifSubgraph.getInputUIDMap());
+        
+        //newDFG.setOutputUIDMap(ifSubgraph.getInputUIDMap());
+        
+        //newDFG.generateOutputUIDMap();
         
         this.addVertex(newDFG);
         

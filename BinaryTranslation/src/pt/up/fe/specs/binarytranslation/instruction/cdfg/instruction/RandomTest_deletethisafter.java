@@ -74,8 +74,8 @@ public class RandomTest_deletethisafter {
     private FakeInstruction instruction = new FakeInstruction("addTest",  
             //"RD = RA + RB;"
             //"if(RA == 0) {RD = RA + RB;}RD = RA + RB;if(RA == 0) {RD = RA + RB;}"
-            "if(RA == 0) {RD = RA + RB + RC; if(RA == 0){RD = RA + RB;}else{RD = RA + RB;}}"
-            //"if(RA == 0) {RD = RA - RB; RA =  RG + 3;}"
+            //"if(RA == 0) {RD = RA + RB + RC; if(RA == 0){RD = RA + RB;}else{RD = RA + RB;}}"
+            "if(RA == 0) {RD = RA - RB; RA =  RG + 3;}RA = RE - RD;if(RA == 0) {RD = RA - RB; RA =  RG + 3;}"
             );
     
     private final String systemPath = "/home/soiboi/Desktop/" + "btf_";

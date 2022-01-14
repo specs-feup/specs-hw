@@ -186,7 +186,7 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
     protected void addAssignments(AInstructionCDFGSubgraph subgraph, Map<String, Integer> divergenceMap) {
         
         Map<String, Integer> previousUIDMap = subgraph.getCurrentUIDMap();
-
+        
         divergenceMap.forEach((reference, uid) -> {
 
             if(!subgraph.getOutputs().stream().anyMatch(outputVertex -> outputVertex.getReference().equals(reference))) {
@@ -194,11 +194,11 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
                 AInstructionCDFGNode newInput = new InstructionCDFGVariableNode(reference);
                 AInstructionCDFGNode newAssignment = new InstructionCDFGAssignmentNode();
                 AInstructionCDFGNode newOutput = new InstructionCDFGVariableNode(reference);
-                
-                newInput.setUID(previousUIDMap.get(reference));
-                
+
                 subgraph.addOperation(newAssignment, newInput);
                 
+                newInput.setUID(previousUIDMap.getOrDefault(reference, 0));
+
                 subgraph.addVertex(newOutput);
                 newOutput.setUID(uid);
                 

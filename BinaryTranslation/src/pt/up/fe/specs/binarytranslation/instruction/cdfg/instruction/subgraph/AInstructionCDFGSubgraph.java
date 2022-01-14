@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.dataflowgraph.DataFlowGraph;
@@ -42,6 +43,8 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
     
     private int subgraph_uid;
     static private int subgraph_uid_counter = 0;
+    
+    private final Predicate<AInstructionCDFGNode> isValidUIDVertex = (vertex -> !(vertex instanceof AInstructionCDFGControlNode) && !(vertex instanceof InstructionCDFGLiteralNode));
 
     
     public AInstructionCDFGSubgraph() {
@@ -93,12 +96,10 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
         
         Map<String, Integer> generatedUIDMap = new HashMap<>();
         
-        vertices.forEach(vertex -> {
-            if(!(vertex instanceof AInstructionCDFGControlNode) && !(vertex instanceof InstructionCDFGLiteralNode)) {
-                generatedUIDMap.put(vertex.getReference(), vertex.setUID(UIDMap.containsKey(vertex.getReference()) ? UIDMap.get(vertex.getReference()) + increment : 0));
-            }
-        });
-        
+        vertices.stream()
+            .filter(this.isValidUIDVertex)
+            .forEach(vertex -> generatedUIDMap.put(vertex.getReference(), vertex.setUID(UIDMap.containsKey(vertex.getReference()) ? UIDMap.get(vertex.getReference()) + increment : 0)));
+
         return generatedUIDMap;
     }
     
@@ -106,6 +107,12 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
         
         vertices.stream().filter(vertex -> UIDMap.containsKey(vertex.getReference())).forEach(vertex -> vertex.setUID(UIDMap.get(vertex.getReference())));
         
+        return UIDMap;
+    }
+    
+    private Map<String, Integer> setUIDMap(Collection<AInstructionCDFGNode> vertices, Map<String, Integer> UIDMap, int offset) {
+        
+        vertices.stream().filter(vertex -> UIDMap.containsKey(vertex.getReference())).forEach(vertex -> vertex.setUID(UIDMap.get(vertex.getReference()) + offset));
         return UIDMap;
     }
     
@@ -140,6 +147,10 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
     
     public void setInputUIDMap(Map<String, Integer> inputUIDMap) {
         this.updateInternalUIDMap(this.setUIDMap(this.getInputs(), inputUIDMap));
+    }
+    
+    public void forceInputUIDMap(Map<String, Integer> inputUIDMap) {
+        this.updateInternalUIDMap(this.setUIDMap(this.getInputs(), inputUIDMap, -1));
     }
     
     public Map<String, Integer> getInputUIDMap(){
