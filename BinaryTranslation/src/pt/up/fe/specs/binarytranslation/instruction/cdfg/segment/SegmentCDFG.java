@@ -61,6 +61,11 @@ public class SegmentCDFG extends InstructionCDFG{
         
     }
     
+    protected void mergeDFGs(AInstructionCDFGSubgraph first, AInstructionCDFGSubgraph second) {
+        
+        
+        
+    }
     
     
     public List<Instruction> getInstructions() {

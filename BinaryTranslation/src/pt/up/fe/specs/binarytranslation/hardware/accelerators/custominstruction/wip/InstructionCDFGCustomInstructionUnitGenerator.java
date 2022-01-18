@@ -13,9 +13,7 @@
 
 package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.wip.InstructionCDFGConverter;
@@ -77,11 +75,7 @@ public class InstructionCDFGCustomInstructionUnitGenerator{
     
     private void generatePorts() {
         
-        this.icdfg.getDataInputsNames()
-            .stream()
-            .filter(name -> !this.icdfg.getDataOutputsNames().contains(name))
-            .forEach(inputPortName -> this.inputPorts.add(this.module.addInputPort(inputPortName, 32)));      
-        
+        this.icdfg.getDataInputsNames().forEach(inputPortName -> this.inputPorts.add(this.module.addInputPort(inputPortName, 32)));      
         this.icdfg.getDataOutputsNames().forEach(outputPortName -> this.outputPorts.add(this.module.addOutputRegisterPort(outputPortName, 32)));
         
     }

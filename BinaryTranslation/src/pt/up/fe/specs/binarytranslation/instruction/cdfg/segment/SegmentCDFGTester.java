@@ -75,36 +75,16 @@ public class SegmentCDFGTester {
     }
     
  
- private final String systemPath = "C:\\Users\\joaom\\Desktop\\" + "btf_";
- private final String wslPath = "/mnt/c/Users/joaom/Desktop/" + "btf_";
- private final int moduleTestbenchSamples = 1000;
- 
-    @Test
-    public void test() {
-        
-        List<Instruction> instructions = List.of(
-                new FakeInstruction("fakeInstructionTest", "if(RA == 0) {RD = RA - RB;}"),
-                new FakeInstruction("fakeInstructionTest", "RF = RE - RD;")
-                );
-        
-        SegmentCDFG scdfg = new SegmentCDFG(instructions);
-        
-        scdfg.generate();
-        scdfg.refresh();
-        
-        InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
-        Writer writer = new StringWriter();
-        exp.exportGraph(scdfg, "test", writer);
-        System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
-    
-    }
+ private final String systemPath = "/home/soiboi/Desktop/" + "btf_";
+ private final String wslPath = "/home/soiboi/Desktop/" + "btf_";
+ private final int moduleTestbenchSamples = 1;
+
     
     @Test
     public void fullFlowTest() throws IOException {
         List<Instruction> instructions = List.of(
-                new FakeInstruction("fakeInstructionTest", "if(RA == 0) {RD = RA - RB;}"),
-                new FakeInstruction("fakeInstructionTest", "RA = RE - RD;"),
-                new FakeInstruction("fakeInstructionTest", "if(RA == 0) {RD = RA - RB;}")
+                new FakeInstruction("fakeInstructionTest", "RC = RA + RB;"),
+                new FakeInstruction("fakeInstructionTest", "RD = RC + RE;")
                 );
         
         SegmentCDFGFullFlow fullFlow = new SegmentCDFGFullFlow(instructions, "test", this.moduleTestbenchSamples, this.systemPath, this.wslPath);

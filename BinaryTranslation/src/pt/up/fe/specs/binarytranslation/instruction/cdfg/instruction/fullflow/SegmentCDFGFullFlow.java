@@ -33,9 +33,11 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.calculator.generator.PseudoInstructionCalculatorGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.validation.InstructionCDFGHardwareValidationDataGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.SegmentCDFG;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.passes.validation.SegmentCDFGHardwareValidationDataGenerator;
+import pt.up.fe.specs.binarytranslation.processes.VerilatorCompile;
 import pt.up.fe.specs.binarytranslation.processes.VerilatorRun;
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 
@@ -109,32 +111,37 @@ public class SegmentCDFGFullFlow {
     }
     
     public void generateHardwareModuleValidationData() throws IOException {
-        PseudoInstructionCalculatorGenerator validation = new PseudoInstructionCalculatorGenerator();
-        Map<Map<String, Number>, Map<String, Number>> validationData = PseudoInstructionCalculatorGenerator.generateValidationData(instruction, icdfg.getDataInputsReferences(), moduleTestbenchSamples);
-
+        
+        SegmentCDFGHardwareValidationDataGenerator validation = new SegmentCDFGHardwareValidationDataGenerator();
+        
+        validation.generateValidationData(this.scdfg, moduleTestbenchSamples);
         System.out.print("Generating HW module testbench validation input memory file...");
-        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "input", "mem").write(PseudoInstructionCalculatorGenerator.generateHexMemFile(validationData.keySet()).getBytes());
+        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "input", "mem").write(validation.buildInputHexMemFile().getBytes());
         System.out.println("\tDONE");
         
         System.out.print("Generating HW module testbench validation output memory file...");
-        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "output", "mem").write(PseudoInstructionCalculatorGenerator.generateHexMemFile(validationData.values()).getBytes());
+        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "output", "mem").write(validation.buildOutputHexMemFile().getBytes());
         System.out.println("\tDONE");
     }
     
     public void generateHardwareModuleTestbench() throws IOException {
         System.out.print("Generating HW module testbench...");
-        HardwareTestbenchGenerator.generate(generatedModule, moduleTestbenchSamples, new File(this.systemPath + "\\hw\\tb\\input.mem") , new File(this.systemPath + "\\hw\\tb\\output.mem")).emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, generatedModule.getName() + "_tb", "sv"));
+        HardwareTestbenchGenerator.generate(generatedModule, moduleTestbenchSamples, new File(this.systemPath + "/hw/tb/input.mem") , new File(this.systemPath + "/hw/tb/output.mem")).emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, generatedModule.getName() + "_tb", "sv"));
         System.out.println("\tDONE");
     }
     
     public void generateVerilatorTestbench() throws IOException {
         System.out.print("Generating HW module Verilator testbench...");
-        VerilatorTestbenchGenerator.emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, this.segmentName + "_tb", "cpp"), generatedModule.getName(), moduleTestbenchSamples);
+        VerilatorTestbenchGenerator.emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath,this.segmentName + "_tb", "cpp"), generatedModule.getName(), moduleTestbenchSamples);
         System.out.println("\tDONE");
     }
     
     public boolean runVerilatorTestbench() throws IOException {
         System.out.print("Running Verilator testbench...");
+        
+        VerilatorCompile verilator_compile = new VerilatorCompile(wslPath, this.segmentName);
+        
+        verilator_compile.start();
         
         VerilatorRun verilator = new VerilatorRun(wslPath+"/hw/tb", this.segmentName);
         
@@ -161,12 +168,15 @@ public class SegmentCDFGFullFlow {
 
         this.generateFolderStructures();
         this.generateCDFG();
+        
+        
+        
         this.exportInstructionCDFGAsDOT();
         this.resolveInstructionCDFGNames();
         this.exportInstructionCDFGAsDOT();
         
         this.generateHardwareModule();
-        /*
+ 
         this.generateHardwareModuleValidationData();
         this.generateHardwareModuleTestbench();
         this.generateVerilatorTestbench();
@@ -175,7 +185,7 @@ public class SegmentCDFGFullFlow {
             return;
         
         this.performIcetimeTimingAnalysis();
-        */
+        
     }
  
 
