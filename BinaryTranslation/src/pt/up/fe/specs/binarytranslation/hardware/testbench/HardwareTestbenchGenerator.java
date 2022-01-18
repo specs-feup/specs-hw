@@ -86,7 +86,7 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
          * Always block
          */
         testbenchModule.alwaysnegedge("block1", verifStart)
-                ._ifelse(moduleOutputs.noteq(outputs.idx(index).idx(31, 0)))
+                ._ifelse(moduleOutputs.noteq(outputs.idx(index)))
                 .then()._do(verifOutput.nonBlocking(0))
                 .orElse()._do(verifOutput.nonBlocking(1));
 

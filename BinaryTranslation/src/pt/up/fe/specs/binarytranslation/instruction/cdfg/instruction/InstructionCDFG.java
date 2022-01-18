@@ -21,9 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import org.jgrapht.Graphs;
 
@@ -45,6 +43,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.co
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIf;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIfElse;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
 
 public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSubgraph, AInstructionCDFGEdge>{
 
@@ -70,6 +69,10 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         return this.instruction;
     }
     
+    public PseudoInstructionContext getInstructionParseTree() {
+        return this.getInstruction().getPseudocode().getParseTree();
+    }
+    
     public void refresh() {
         this.generateInputs();
         this.generateOutputs();
@@ -82,9 +85,13 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
     }
     
     public void generateDataInputs() {
-        this.vertexSet().forEach(g -> g.getInputs().stream()
+        
+        this.dataInputs.clear();
+        
+        this.vertexSet().forEach(subgraph -> subgraph.getInputs().stream()
                 .filter(InstructionCDFG.notLiteralNode.and(InstructionCDFG.notGeneratedVariableNode))
-                .forEach(i -> this.dataInputs.put(i, g))
+                .filter(input -> (input.getUIDVal() == 0))
+                .forEach(input -> this.dataInputs.put(input, subgraph))
                 );
     }
     
@@ -97,26 +104,39 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
     }
     
     public Set<String> getDataInputsNames(){
+
+        Set<String> names = new HashSet<>();  
         
-        Set<String> names = new HashSet<>();
-        
-        this.getDataInputs().forEach(name -> names.add(name.getUID()));
-        
+        this.getDataInputs().stream()
+            .filter(input -> (input.getUIDVal() == 0))
+            .forEach(input -> names.add(input.getUID())
+            );
+
         return names;
     }
     
     public Set<String> getDataInputsReferences(){
-        Set<String> names = new HashSet<>();
         
-        this.getDataInputs().forEach(name -> names.add(name.getReference()));
+        Set<String> inputReferences = new HashSet<String>();
         
-        return names;
+       // List<String> names = new ArrayList<>();
+        
+        this.getDataInputs().forEach(name -> inputReferences.add(name.getReference()));
+        
+        //Collections.sort(names);
+        
+        
+        return inputReferences;
+        //return new HashSet<String>(names);
     }
     
     public void generateDataOutputs() {    
+        
+        this.dataOutputs.clear();
+        
         this.vertexSet().forEach(g -> g.getOutputs().stream()
-                .filter(InstructionCDFG.notGeneratedVariableNode.and(InstructionCDFG.notControlNode))
-                .forEach(o -> this.dataOutputs.put(o, g))
+            .filter(InstructionCDFG.notGeneratedVariableNode.and(InstructionCDFG.notControlNode))
+            .forEach(o -> this.dataOutputs.put(o, g))
             );
     }
     
@@ -131,14 +151,23 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
     
     public Set<String> getDataOutputsNames(){
         
+        Map<String, Integer> referenceUIDMap = new HashMap<>();
+        
+        this.getDataOutputs().stream()
+            .filter(output -> (referenceUIDMap.putIfAbsent(output.getReference(), output.getUIDVal()) != null))
+            .filter(output -> (output.getUIDVal() > referenceUIDMap.get(output.getReference())))
+            .forEach(output -> referenceUIDMap.replace(output.getReference(), output.getUIDVal())
+            );
+  
         Set<String> names = new HashSet<>();    
         
-        this.getDataOutputs().forEach(name -> names.add(name.getUID()));
+        referenceUIDMap.forEach((reference, uid) -> names.add(reference + String.valueOf(uid)));
         
         return names;
     }
   
     public Set<String> getDataOutputsReferences(){
+        
         Set<String> names = new HashSet<>();
         
         this.getDataOutputs().forEach(name -> names.add(name.getReference()));
@@ -148,6 +177,7 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
     
     @Override
     public AInstructionCDFGEdge addEdge(AInstructionCDFGSubgraph sourceVertex, AInstructionCDFGSubgraph targetVertex) {
+        
         AInstructionCDFGEdge edge = new InstructionCDFGEdge();
         this.addEdge(sourceVertex, targetVertex, edge);
         return edge;
@@ -193,14 +223,8 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         
         this.addVertex(replacement);
         
-        this.getVerticesBefore(current).forEach(before -> {
-            this.addEdge(before, replacement, this.getEdge(before, current).duplicate());
-        });
-        
-        this.getVerticesAfter(current).forEach(after -> {
-            this.addEdge(replacement, after, this.getEdge(current, after).duplicate());
-        });
-        
+        this.getVerticesBefore(current).forEach(before -> this.addEdge(before, replacement, this.getEdge(before, current).duplicate()));
+        this.getVerticesAfter(current).forEach(after -> this.addEdge(replacement, after, this.getEdge(current, after).duplicate()));
         
         this.removeVertex(current);
     }
@@ -216,7 +240,6 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         
     }
    
-    
     public InstructionCDFGControlFlowIfElse convertIfToIfElse(InstructionCDFGControlFlowIf ifSubgraph) {
 
         InstructionCDFGControlFlowIfElse newIfElse = new InstructionCDFGControlFlowIfElse(ifSubgraph.getMerge());
@@ -224,22 +247,18 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         newIfElse.setInputUIDMap(ifSubgraph.getInputUIDMap());
 
         ifSubgraph.vertexSet().forEach(vertex -> {
-
-            
+ 
             newIfElse.addVertex(vertex);
-            
             
             if(vertex instanceof InstructionCDFGVariableNode) {
                 vertex.setUID(vertex.getUIDVal() - 1);
             }
             
-       
-            
             if(ifSubgraph.outgoingEdgesOf(vertex).isEmpty()) {
                 newIfElse.setControlVertex((AInstructionCDFGControlNode) vertex);
             }
         });
-;
+
         ifSubgraph.edgeSet().forEach(edge -> newIfElse.addEdge(ifSubgraph.getEdgeSource(edge), ifSubgraph.getEdgeTarget(edge), edge.duplicate()));
 
         this.addVertex(newIfElse);
@@ -252,19 +271,10 @@ public class InstructionCDFG extends ControlAndDataFlowGraph<AInstructionCDFGSub
         
         newDFG.setInputUIDMap(ifSubgraph.getCurrentUIDMap());
         
-       
-        
-        //newDFG.forceInputUIDMap(ifSubgraph.getInputUIDMap());
-        
-        //newDFG.setOutputUIDMap(ifSubgraph.getInputUIDMap());
-        
-        //newDFG.generateOutputUIDMap();
-        
         this.addVertex(newDFG);
         
         this.addEdge(newIfElse, this.getTruePath(ifSubgraph), new InstructionCDFGTrueEdge());
         this.addEdge(newIfElse, newDFG, new InstructionCDFGFalseEdge());
-
         this.addEdge(newDFG, ifSubgraph.getMerge(), new InstructionCDFGEdge());
         
         this.removeVertex(ifSubgraph);

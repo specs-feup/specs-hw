@@ -51,21 +51,35 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.Va
 
 public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseVisitor<PseudoInstructionCalculatorWrapper>{
     
-    private Map<Map<String, Number>, Map<String, Number>> validationData;
-    private Map<String, PseudoInstructionCalculatorRegister> registerMap;
-    private Map<String, Number> outputValuesMap;
+    protected Map<String, PseudoInstructionCalculatorRegister> registerMap;
+    protected Map<String, Number> outputValuesMap;
 
     public PseudoInstructionCalculatorGenerator() {
         
-        this.validationData = new HashMap<>();
         this.registerMap = new HashMap<>();
-        
         this.outputValuesMap = new HashMap<>();
+        
     }
     
-    private void clearCache() {
+    public Map<String, Number> calculate(PseudoInstructionContext instructionContext, Map<String, Number> inputs){
         
-        this.validationData.clear();
+        this.clearCache();
+        
+        inputs.forEach((uid, value) -> 
+            this.getCurrentRegisterMap().put(uid, new PseudoInstructionCalculatorRegister(uid, value))
+        );
+        
+        this.visit(instructionContext);
+        
+        return this.getOutputValuesMap();
+    }
+    
+    public Map<String, Number> calculate(Instruction instruction, Map<String, Number> inputs){
+        return this.calculate(instruction.getPseudocode().getParseTree(), inputs);
+    }
+    
+    protected void clearCache() {
+        
         this.registerMap.clear();
         this.outputValuesMap.clear();
         
@@ -75,49 +89,11 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
         return this.registerMap;
     }
     
-    private Map<String, Number> getOutputValuesMap(){
+    protected Map<String, Number> getOutputValuesMap(){
         return this.outputValuesMap;
     }
     
-    public Map<Map<String, Number>, Map<String, Number>> getValidationData(){
-        return this.validationData;
-    }
-    
-    public Collection<Map<String, Number>> getValidationInputData(){
-        return this.validationData.keySet();
-    }
-    
-    public Collection<Map<String, Number>> getValidationOutputData(){
-        return this.validationData.values();
-    }
-    
-    public void generateValidationData(PseudoInstructionContext instructionContext, Set<String> inputRegisters, int samples) {
-        
-        Random inputDataGenerator = new Random();
-
-        Map<String, PseudoInstructionCalculatorRegister> inputRegisterMap = new HashMap<>();
-        inputRegisters.forEach(input -> inputRegisterMap.put(input, new PseudoInstructionCalculatorRegister(input, 0)));
-        
-        for(int i = 0; i < samples; i++) {
-            
-            this.clearCache();
-            
-            inputRegisters.forEach(input -> inputRegisterMap.get(input).setValue(inputDataGenerator.nextInt()));
-            
-            this.getCurrentRegisterMap().putAll(inputRegisterMap);
-            
-            this.visit(instructionContext);
-
-            this.getValidationData().put(this.convertRegisterMap(inputRegisterMap), this.getOutputValuesMap());
-            
-        }
-    }
-    
-    public void generateValidationData(Instruction instruction, Set<String> inputRegisters, int samples) {
-        this.generateValidationData(instruction.getPseudocode().getParseTree(), inputRegisters, samples);
-    }
-    
-    private Map<String, Number> convertRegisterMap(Map<String, PseudoInstructionCalculatorRegister> registerMap){
+    protected Map<String, Number> convertRegisterMap(Map<String, PseudoInstructionCalculatorRegister> registerMap){
         
         Map<String, Number> newMap = new HashMap<>();
         
@@ -125,34 +101,6 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
         
         return newMap;
     }
-    
-    public String buildInputHexMemFile() {
-        return this.buildHexMemFile(this.getValidationInputData());
-    }
-    
-    public String buildOutputHexMemFile() {
-        return this.buildHexMemFile(this.getValidationOutputData());
-    }
-    
-    private String buildHexMemFile(Collection<Map<String, Number>> validationData) {
-        
-        StringBuilder fileBuilder = new StringBuilder();
-        
-        validationData.forEach(valueMap -> {
-            valueMap.values().forEach(value -> {
-                if(value instanceof Float)
-                    fileBuilder.append(Float.toHexString((Float) value));
-                else if (value instanceof Integer)
-                    fileBuilder.append(String.format("%08X", value.intValue()));
-            });
-            
-            fileBuilder.append("\n");
-  
-        });
- 
-        return fileBuilder.toString();
-    }
-
     
     @Override
     public PseudoInstructionCalculatorRegister visitPseudoInstruction(PseudoInstructionContext ctx) {
@@ -191,7 +139,7 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
     public PseudoInstructionCalculatorRegister visitIfElseStatement(IfElseStatementContext ctx) {
         
         PseudoInstructionCalculatorRegister condition = (PseudoInstructionCalculatorRegister) this.visit(ctx.condition);
-        
+
         this.visit((condition.getValue().intValue() != 0) ? ctx.ifsats : ctx.elsestats);
         
         return null;
@@ -225,7 +173,7 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
         
         PseudoInstructionCalculatorRegister operandLeft = (PseudoInstructionCalculatorRegister) this.visit(ctx.left);
         PseudoInstructionCalculatorRegister operandRight = (PseudoInstructionCalculatorRegister) this.visit(ctx.right);
-        
+            
         return new PseudoInstructionCalculatorRegister(ctx.operator().getText(), operation.apply(operandLeft, operandRight));
     }
     

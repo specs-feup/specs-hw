@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Map;
 
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.analysis.timing.TimingAnalysisRun;
@@ -29,14 +28,12 @@ import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenera
 import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
-import pt.up.fe.specs.binarytranslation.instruction.calculator.generator.PseudoInstructionCalculatorGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGVariableFunctionNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.validation.InstructionCDFGHardwareValidationDataGenerator;
 import pt.up.fe.specs.binarytranslation.processes.VerilatorCompile;
 import pt.up.fe.specs.binarytranslation.processes.VerilatorRun;
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
@@ -119,9 +116,9 @@ public class InstructionCDFGFullFlow {
     
     public void generateHardwareModuleValidationData() throws IOException {
         
-        PseudoInstructionCalculatorGenerator validation = new PseudoInstructionCalculatorGenerator();
+        InstructionCDFGHardwareValidationDataGenerator validation = new InstructionCDFGHardwareValidationDataGenerator();
         
-        validation.generateValidationData(instruction, this.icdfg.getDataInputsReferences(), moduleTestbenchSamples);
+        validation.generateValidationData(this.icdfg, moduleTestbenchSamples);
         System.out.print("Generating HW module testbench validation input memory file...");
         HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "input", "mem").write(validation.buildInputHexMemFile().getBytes());
         System.out.println("\tDONE");
@@ -173,6 +170,8 @@ public class InstructionCDFGFullFlow {
     
     public void runAll() throws IOException {
 
+       
+        
         this.generateFolderStructures();
         this.generateInstructionCDFG();
         

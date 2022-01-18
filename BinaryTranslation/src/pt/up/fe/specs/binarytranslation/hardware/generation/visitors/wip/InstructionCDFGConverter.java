@@ -32,6 +32,7 @@ public class InstructionCDFGConverter extends InstructionCDFGVisitor<HardwareNod
 
     private HardwareModule module;
     
+    
     public InstructionCDFGConverter(InstructionCDFG icdfg, HardwareModule module) {
         super(icdfg);
         

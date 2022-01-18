@@ -44,8 +44,7 @@ public class InstructionCDFGConditionalSubgraphConverter extends InstructionCDFG
     }
     
     @Override
-    protected void visitOperationVertex(AInstructionCDFGNode vertex, HardwareNode childHardwareNode) {
-        
+    protected void visitOperationVertex(AInstructionCDFGNode vertex, HardwareNode childHardwareNode) { 
         
         if(!this.subgraph.getVerticesAfter(vertex).stream().allMatch(vertexAfter -> (vertexAfter instanceof AInstructionCDFGControlNode))) {
             this.module.addWire(vertex.getUID(), 32);
