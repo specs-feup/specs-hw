@@ -21,9 +21,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.concurrent.ExecutionException;
 
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.analysis.timing.TimingAnalysisRun;
+import pt.up.fe.specs.binarytranslation.hardware.analysis.timing.TimingVerificationVivado;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorTestbenchGenerator;
@@ -162,13 +164,25 @@ public class InstructionCDFGFullFlow {
         return true;
     }
     
+    public void runVivadoTCL() throws IOException, InterruptedException, ExecutionException{
+        System.out.print("Performing timing analysis (vivado) on generated module...");
+        
+        TimingVerificationVivado verificator = new TimingVerificationVivado(wslPath, this.instruction.getName());
+        
+        Process verificatorProcess = verificator.start();
+        
+        verificatorProcess.waitFor();
+        
+        System.out.println("\tDONE");
+    }
+    
     public void performIcetimeTimingAnalysis() throws IOException {
         System.out.print("Performing timing analysis (icetime) on generated module...");
         TimingAnalysisRun.start(wslPath, this.instruction.getName());
         System.out.println("\tDONE");
     }
     
-    public void runAll() throws IOException {
+    public void runAll() throws IOException, InterruptedException, ExecutionException {
 
        
         
@@ -187,11 +201,16 @@ this.exportInstructionCDFGAsDOT();
         this.generateHardwareModuleTestbench();
         this.generateVerilatorTestbench();
         
+        System.out.println(TimingVerificationVivado.getVerificationResultsParsed(wslPath, this.instruction.getName()));
+        
+        //this.runVivadoTCL();
+        
+        /*
         if(!this.runVerilatorTestbench())
             return;
         
         this.performIcetimeTimingAnalysis();
-        
+        */
     }
  
     

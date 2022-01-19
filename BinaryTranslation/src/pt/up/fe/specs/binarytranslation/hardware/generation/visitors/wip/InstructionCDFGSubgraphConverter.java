@@ -78,8 +78,6 @@ public class InstructionCDFGSubgraphConverter extends InstructionCDFGSubgraphVis
      */
     protected List<HardwareExpression> getOperationOperandsSignals(AInstructionCDFGNode vertex){
         
-        System.out.println(this.subgraph.incomingEdgesOf(vertex));
-        
         if(this.subgraph.incomingEdgesOf(vertex).size() == 1) {
             return List.of(this.getOperandHardwareDeclaration((AInstructionCDFGNode)this.subgraph.getVerticesBefore(vertex).toArray()[0], vertex));
         }else {
