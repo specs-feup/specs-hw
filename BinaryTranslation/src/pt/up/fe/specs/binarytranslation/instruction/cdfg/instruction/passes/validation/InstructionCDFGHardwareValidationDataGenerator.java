@@ -1,7 +1,9 @@
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.validation;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -29,12 +31,12 @@ public class InstructionCDFGHardwareValidationDataGenerator extends PseudoInstru
         return this.validationData;
     }
     
-    public Collection<Map<String, Number>> getValidationInputData(){
-        return this.validationData.keySet();
+    public List<Map<String, Number>> getValidationInputData(){
+        return new ArrayList<Map<String, Number>>(this.validationData.keySet());
     }
     
-    public Collection<Map<String, Number>> getValidationOutputData(){
-        return this.validationData.values();
+    public List<Map<String, Number>> getValidationOutputData(){
+        return new ArrayList<Map<String, Number>>(this.validationData.values());
     }
     
     public String buildInputHexMemFile() {
@@ -45,7 +47,7 @@ public class InstructionCDFGHardwareValidationDataGenerator extends PseudoInstru
         return this.buildHexMemFile(this.getValidationOutputData());
     }
     
-    private String buildHexMemFile(Collection<Map<String, Number>> validationData) {
+    private String buildHexMemFile(List<Map<String, Number>> validationData) {
         
         StringBuilder fileBuilder = new StringBuilder();
         
@@ -53,8 +55,9 @@ public class InstructionCDFGHardwareValidationDataGenerator extends PseudoInstru
             
             Map<String, Number> validationDataSorted = new TreeMap<>(valueMap);
             
+            
             validationDataSorted.forEach((uid, value) -> {
-                
+
                 if(value instanceof Float)
                     fileBuilder.append(Float.toHexString((Float) value));
                 else if (value instanceof Integer)
@@ -71,7 +74,7 @@ public class InstructionCDFGHardwareValidationDataGenerator extends PseudoInstru
     public void generateValidationData(InstructionCDFG instruction, int samples) {
         
         Random inputDataGenerator = new Random();
-        Map<String, Number> validationInputs = new HashMap<>();
+        Map<String, Number> validationInputs = new LinkedHashMap<>();
         
         for(int i = 0; i < samples; i++) {
             
@@ -79,7 +82,7 @@ public class InstructionCDFGHardwareValidationDataGenerator extends PseudoInstru
             
             instruction.getDataInputsReferences().forEach(input -> validationInputs.put(input, inputDataGenerator.nextInt()));
             
-            this.calculate(instruction.getInstructionParseTree(), validationInputs);
+            this.calculate(instruction.getInstruction(), validationInputs);
             this.getValidationData().put(validationInputs, this.getOutputValuesMap());
             
         }

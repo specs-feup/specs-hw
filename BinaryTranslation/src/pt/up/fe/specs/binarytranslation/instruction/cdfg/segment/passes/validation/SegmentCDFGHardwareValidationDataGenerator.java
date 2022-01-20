@@ -1,16 +1,34 @@
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.passes.validation;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.validation.InstructionCDFGHardwareValidationDataGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.SegmentCDFG;
 
 public class SegmentCDFGHardwareValidationDataGenerator extends InstructionCDFGHardwareValidationDataGenerator{
 
+    private static final Map<String, String> operandNameToPseudoCodeName = Map.of("RD","RD", "RS1", "RA", "RS2", "RB");
+    
+    private void resolveFieldNames(Instruction instruction, Map<String, Number> unresolvedFieldNamesMap) {
+            
+            if(instruction.getData() == null) {
+                return;
+            }
+            
+            instruction.getData().getOperands().forEach(operand -> {
+                
+                
+                
+            });
+            
+        }
+    
     public void generateValidationData(SegmentCDFG segment, int samples) {
         
         Random inputDataGenerator = new Random();
@@ -25,31 +43,37 @@ public class SegmentCDFGHardwareValidationDataGenerator extends InstructionCDFGH
             validationInputs = new TreeMap<>();
             allInstructionsOutput = new TreeMap<>();
             
-            for(String reference : segment.getDataInputsReferences()) {
+            int j = 1;
+            
+            for(String reference : new TreeSet<String>(segment.getDataInputsReferences())) {
                 validationInputs.put(reference, inputDataGenerator.nextInt());
+                
+                //validationInputs.put(reference, j++);
             }
+            
+            
             
             previousInstructionOutput = new TreeMap<>(validationInputs);
             
             for(Instruction instruction : segment.getInstructions()) {
    
-                this.calculate(instruction.getPseudocode().getParseTree(), previousInstructionOutput);
-
+                // resolve names of input registers
                 
-                //previousInstructionOutput = new HashMap<>(this.getOutputValuesMap());
-                //allInstructionsOutput.putAll(this.getOutputValuesMap());
-                //previousInstructionOutput = new HashMap<>(validationInputs);
-                //previousInstructionOutput.putAll(allInstructionsOutput);
-                previousInstructionOutput.putAll(this.getOutputValuesMap());
-                allInstructionsOutput.putAll(this.getOutputValuesMap());
-  
+                Map<String, Number> calculationOutput = this.calculate(instruction, previousInstructionOutput);
+                
+                
+                
+                //resolve names of output registers
+                
+                previousInstructionOutput.putAll(calculationOutput);
+                allInstructionsOutput.putAll(calculationOutput);
+                
+               
                 
             }
             
             this.clearCache();
-            
-            System.out.println(validationInputs);
-            
+
             this.getValidationData().put(validationInputs, allInstructionsOutput);
             
         }

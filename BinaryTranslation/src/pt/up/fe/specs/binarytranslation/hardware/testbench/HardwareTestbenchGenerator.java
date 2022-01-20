@@ -92,11 +92,11 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
 
         var subInputs = new ArrayList<HardwareOperator>();
 
-        for (int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32)
-            subInputs.add(inputs.idx(index).idx(i + 31, i));
+        for (int i = (module.getInputPorts().size() * 32) - 1; i >= 0; i = i - 32) 
+            subInputs.add(inputs.idx(index).idx(i, i - 31));
 
-        for (int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32)
-            subInputs.add(moduleOutputs.idx(i + 31, i));
+        for (int i = (module.getOutputPorts().size() * 32) - 1; i >= 0; i = i - 32)
+            subInputs.add(moduleOutputs.idx(i, i - 31));
 
         /*
          * Place the Design Under Test (DUT) into the body of this wrapper

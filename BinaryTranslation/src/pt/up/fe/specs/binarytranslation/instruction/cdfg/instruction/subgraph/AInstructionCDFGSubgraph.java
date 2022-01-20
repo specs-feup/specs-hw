@@ -287,4 +287,23 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
         destinationSubgraph.generateOutputs();
         
     }
+    
+    @Override
+    public void replaceVertex(AInstructionCDFGNode current, AInstructionCDFGNode replacement) {
+        
+        this.assertVertexExist(current);
+        
+        this.addVertex(replacement);
+        
+        this.incomingEdgesOf(current).forEach(edge -> 
+            this.addEdge(this.getEdgeSource(edge), replacement, edge.duplicate())
+        );
+        
+        this.outgoingEdgesOf(current).forEach(edge -> 
+            this.addEdge(replacement, this.getEdgeTarget(edge), edge.duplicate())
+        );
+
+        this.removeVertex(current);
+        
+    }
 }

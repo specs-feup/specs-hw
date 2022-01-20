@@ -16,6 +16,8 @@ package pt.up.fe.specs.binarytranslation.processes;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
+
 public class VerilatorCompile extends StringProcessRun {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
@@ -30,21 +32,15 @@ public class VerilatorCompile extends StringProcessRun {
     private static List<String> getArgs(String directory, String testbenchName) {
 
         var args = new ArrayList<String>();
-        var verilatorexe = "verilator";
-        var filepath_partial = directory + "/" + testbenchName;
+        var verilatorexe = IS_WINDOWS ? "verilator.exe" : "verilator";
         
-        var filepath_module =  "../hdl/";
-        var filepath_testbench = directory + "/hw/tb/"; 
-
-        if (IS_WINDOWS)
-            verilatorexe += ".exe";
-        
-        args.add("cd " + filepath_testbench);
+        args.add("cd");
+        args.add(HardwareFolderGenerator.getHardwareTestbenchesFolder(directory));
         args.add("&&");
         args.add(verilatorexe);
         args.add("-cc");
         args.add("./" + testbenchName + "_tb.sv");
-        args.add(filepath_module + testbenchName + ".sv"); // TODO: whats this argument for?
+        args.add("../hdl/" + testbenchName + ".sv"); // TODO: whats this argument for?
         args.add("-exe");
         args.add("./" + testbenchName + "_tb.cpp");
         args.add("&&");
@@ -54,8 +50,11 @@ public class VerilatorCompile extends StringProcessRun {
         args.add("-f");
         args.add("V" + testbenchName + "_tb.mk");
         args.add("V" + testbenchName + "_tb");
-        
-        System.out.println(args);
+
+        System.out.println();
+        System.out.print("Executed command:");
+        args.forEach(arg -> System.out.print(arg + " "));
+        System.out.println();
         
         return args;
     }

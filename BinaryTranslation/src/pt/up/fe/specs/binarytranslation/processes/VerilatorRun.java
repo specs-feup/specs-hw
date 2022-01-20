@@ -16,6 +16,8 @@ package pt.up.fe.specs.binarytranslation.processes;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
+
 public class VerilatorRun extends StringProcessRun {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
@@ -33,9 +35,16 @@ public class VerilatorRun extends StringProcessRun {
         if (IS_WINDOWS)
             compileddesignexe += ".exe"; // TODO: required??
         
-        args.add("cd" + directory);
+        args.add("cd");
+        args.add(HardwareFolderGenerator.getHardwareTestbenchesFolder(directory));
         args.add("&&");
-        args.add("./obj_dir/" + compileddesignexe);
+        args.add("./obj_dir/V" + compileddesignexe);
+        
+        System.out.println();
+        System.out.print("Executed command:");
+        args.forEach(arg -> System.out.print(arg + " "));
+        System.out.println();
+        
         return args;
     }
 

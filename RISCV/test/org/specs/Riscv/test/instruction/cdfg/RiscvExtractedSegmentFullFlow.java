@@ -1,8 +1,5 @@
 package org.specs.Riscv.test.instruction.cdfg;
 
-import java.io.StringWriter;
-import java.io.Writer;
-
 import org.junit.Test;
 import org.specs.Riscv.provider.RiscvLivermoreN100im;
 
@@ -10,15 +7,16 @@ import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguratio
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentBundle;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.SegmentCDFG;
+import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.fullflow.SegmentCDFGFullFlow;
 import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
 
 public class RiscvExtractedSegmentFullFlow {
 
+    private int numberOfSamples = 10000;
+    private String pathToDirectory = "/home/soiboi/Desktop/RISCV_FULLFLOW/";
+    
     protected DetectorConfigurationBuilder getConfig(InstructionStream istream) {
         var builder = new DetectorConfigurationBuilder();
         builder.withSkipToAddr(istream.getApp().getKernelStart());
@@ -36,36 +34,36 @@ public class RiscvExtractedSegmentFullFlow {
     
     protected  SegmentBundle getFrequentStaticSequences(StaticInstructionStream istream) {
         
-        var detector = new FrequentStaticSequenceDetector(getConfig(istream).withMaxWindow(3).build());
+        var detector = new FrequentStaticSequenceDetector(getConfig(istream).withMaxWindow(2).build());
         
         return detector.detectSegments(istream);
+    }
+    
+    public void work(StaticInstructionStream istream) {
+        
+        SegmentBundle bundle = this.getFrequentStaticSequences(istream);
+        
+       bundle.getSegments().forEach(segment -> {
+            
+           
+            segment.printSegment();
+            
+            SegmentCDFGFullFlow fullFlow = new SegmentCDFGFullFlow(segment.getInstructions(), segment.getJSONName().replace(".json", ""), numberOfSamples, pathToDirectory);
+
+   
+            fullFlow.runAll();
+   
+            
+        });
     }
     
     @Test
     public void initialTest() {
         
-        SegmentBundle bundle = this.getFrequentStaticSequences(RiscvLivermoreN100im.cholesky.toStaticStream());
-        
-        
-        
-        bundle.getSegments().forEach(segment -> {
-            
-            SegmentCDFG scdfg = new SegmentCDFG(segment.getInstructions());
-            scdfg.generate();
-            
-            InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
-            Writer writer = new StringWriter();
-            exp.exportGraph((GeneralFlowGraph)scdfg, "test", writer);
-            
-            InstructionCDFGNameResolver.resolve(scdfg);
-            
-            segment.printSegment();
-            
-            scdfg.refresh();
-            
-            System.out.println(InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
-            
-        });
-        
+        for(var benchmark : RiscvLivermoreN100im.values()) {
+            this.work(benchmark.toStaticStream());
+            break;
+        }
+
     }
 }
