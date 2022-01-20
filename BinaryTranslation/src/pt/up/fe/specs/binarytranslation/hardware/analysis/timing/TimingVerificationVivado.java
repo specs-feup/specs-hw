@@ -95,6 +95,12 @@ public class TimingVerificationVivado extends StringProcessRun{
         args.add("cd " + HardwareFolderGenerator.getHardwareSynthesisFolder(directory));
         args.add("&&");
         args.add("vivado -mode tcl -source " + vivadoTclScriptName);
+        
+        System.out.println();
+        System.out.print("Executed command:");
+        args.forEach(arg -> System.out.print(arg + " "));
+        System.out.println();
+        
         return args;
     }
 
