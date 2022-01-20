@@ -189,19 +189,28 @@ public class InstructionCDFGFullFlow {
         this.generateFolderStructures();
         this.generateInstructionCDFG();
         
-this.exportInstructionCDFGAsDOT();
+//this.exportInstructionCDFGAsDOT();
         
         
         this.resolveInstructionCDFGNames();
         this.exportInstructionCDFGAsDOT();
         
         this.generateHardwareModule();
-        
+        /*
         this.generateHardwareModuleValidationData();
         this.generateHardwareModuleTestbench();
         this.generateVerilatorTestbench();
         
-        System.out.println(TimingVerificationVivado.getVerificationResultsParsed(wslPath, this.instruction.getName()));
+        
+        System.out.println("\nTiming verification results from Vivado:\n");
+        TimingVerificationVivado.getVerificationResultsParsed(wslPath, this.instruction.getName())
+            .forEach((deviceName, ListOfResults) -> {
+                System.out.println("\tDevice: " + deviceName);
+                System.out.println("\t\tTotal delay " + ListOfResults.get(0) + "ns ");
+                System.out.println("\t\t\tModule delay only " + ListOfResults.get(1)+" ("+ListOfResults.get(2)+"%)");
+                System.out.println("\t\t\tDelay due to routing " + ListOfResults.get(3)+" ("+ListOfResults.get(4)+"%)\n");
+                        
+            });
         
         //this.runVivadoTCL();
         

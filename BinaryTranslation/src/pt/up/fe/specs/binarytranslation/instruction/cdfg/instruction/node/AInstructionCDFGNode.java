@@ -25,7 +25,7 @@ import org.jgrapht.nio.DefaultAttribute;
 
 /** Class that is the parent of all nodes of an InstructionCDFG. Because of some weirdness, also the Modifiers of the edges are nodes (this will probably change)
  * 
- * @author João Conceição
+ * @author Joï¿½o Conceiï¿½ï¿½o
  *
  */
 public abstract class AInstructionCDFGNode{
@@ -44,6 +44,10 @@ public abstract class AInstructionCDFGNode{
      */
     public String getReference() {
         return this.reference;
+    }
+    
+    public void setReference(String reference) {
+        this.reference = reference;
     }
     
     /** Sets the UID value for the node
@@ -73,7 +77,7 @@ public abstract class AInstructionCDFGNode{
      * @return The unique reference of the node
      */
     public String getUID() {
-        return this.getReference() + this.uid;
+        return this.getReference() +  this.uid;
     }
     
     @Override

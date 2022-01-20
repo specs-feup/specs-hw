@@ -27,6 +27,7 @@ import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.calculator.generator.operation.binary.APseudoInstructionCalculatorBinaryOperation;
 import pt.up.fe.specs.binarytranslation.instruction.calculator.generator.operation.unary.APseudoInstructionCalculatorUnaryOperation;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ArgumentsContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AsmFieldOperandContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.AssignmentExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.BinaryExprContext;
@@ -54,6 +55,9 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
     protected Map<String, PseudoInstructionCalculatorRegister> registerMap;
     protected Map<String, Number> outputValuesMap;
 
+    private static final Map<String, String> pseudoCodeName2operandName = Map.of("RD","RD", "RA", "RS1", "RB", "RS2", "IMM", "IMMTWELVE");
+    private static final Map<String, String> operandName2pseudoCodeName = Map.of("RD","RD", "RS1", "RA", "RS2", "RB", "IMMTWELVE", "IMM");
+    
     public PseudoInstructionCalculatorGenerator() {
         
         this.registerMap = new HashMap<>();
@@ -75,7 +79,45 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
     }
     
     public Map<String, Number> calculate(Instruction instruction, Map<String, Number> inputs){
-        return this.calculate(instruction.getPseudocode().getParseTree(), inputs);
+        
+        // vou buscar aos inputs o valor (atraves do nome do registo verdadeiro
+        
+        Map<String, Number> resolvedInputs = new HashMap<>();
+        
+        inputs.forEach((reference, value) -> {
+            
+            instruction.getData().getOperands().forEach(operand -> {
+                
+                if(reference.equals(operand.getRepresentation()) && !operand.getAsmField().toString().equals("RD")) {
+                    resolvedInputs.put(PseudoInstructionCalculatorGenerator.operandName2pseudoCodeName.get(operand.getAsmField().toString()), value);
+                }else if(operand.getAsmField().toString().startsWith("IMM")) {
+                    resolvedInputs.put("IMM", Integer.valueOf(operand.getRepresentation().substring(2), 16));
+                }
+                
+            });
+            
+            
+        });
+        
+        
+        
+        Map<String, Number> rawOutputs = this.calculate(instruction.getPseudocode().getParseTree(), resolvedInputs);
+        
+        Map<String, Number> resolvedOutputs = new HashMap<>();
+        
+        rawOutputs.forEach((reference, value) -> {
+            
+            instruction.getData().getOperands().forEach(operand -> {
+                
+                if(operand.getAsmField().toString().startsWith(PseudoInstructionCalculatorGenerator.pseudoCodeName2operandName.get(reference)) && operand.getAsmField().toString().startsWith("RD")) {
+                    resolvedOutputs.put(operand.getRepresentation(), value);
+                }
+                
+            });
+            
+        });
+        
+        return resolvedOutputs;
     }
     
     protected void clearCache() {
@@ -173,7 +215,7 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
         
         PseudoInstructionCalculatorRegister operandLeft = (PseudoInstructionCalculatorRegister) this.visit(ctx.left);
         PseudoInstructionCalculatorRegister operandRight = (PseudoInstructionCalculatorRegister) this.visit(ctx.right);
-            
+
         return new PseudoInstructionCalculatorRegister(ctx.operator().getText(), operation.apply(operandLeft, operandRight));
     }
     
@@ -216,7 +258,7 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
     }
 
     @Override
-    public PseudoInstructionCalculatorRegister visitLiteralOperand(LiteralOperandContext ctx) {
+    public PseudoInstructionCalculatorRegister visitLiteralOperand(LiteralOperandContext ctx) {        
         return new PseudoInstructionCalculatorRegister("IMM", Integer.valueOf(ctx.getText()));
     }
     
@@ -228,9 +270,14 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
     
     @Override
     public PseudoInstructionCalculatorWrapper visitFunctionExpr(FunctionExprContext ctx) {
-        return super.visitFunctionExpr(ctx);
+        return this.visit(ctx.arguments());
     }
     
+    
+    @Override
+    public PseudoInstructionCalculatorWrapper visitArguments(ArgumentsContext ctx) {
+        return this.visit(ctx.getChild(0));
+    }
     
     @Override
     public PseudoInstructionCalculatorRegister visitMetafield(MetafieldContext ctx) {

@@ -76,18 +76,17 @@ public class SegmentCDFGTester {
     
  
  private final String systemPath = "/home/soiboi/Desktop/" + "btf_";
- private final String wslPath = "/home/soiboi/Desktop/" + "btf_";
  private final int moduleTestbenchSamples = 1;
 
-    
     @Test
     public void fullFlowTest() throws IOException {
         List<Instruction> instructions = List.of(
-                new FakeInstruction("fakeInstructionTest", "RC = RA + RB;"),
-                new FakeInstruction("fakeInstructionTest", "RD = RC + RE;")
+                new FakeInstruction("fakeInstructionTest", "RC = RA + RB;")
+                ,new FakeInstruction("fakeInstructionTest", "RD = RC + RE;")
+                ,new FakeInstruction("fakeInstructionTest", "RF = RC + RD;")
                 );
         
-        SegmentCDFGFullFlow fullFlow = new SegmentCDFGFullFlow(instructions, "test", this.moduleTestbenchSamples, this.systemPath, this.wslPath);
+        SegmentCDFGFullFlow fullFlow = new SegmentCDFGFullFlow(instructions, "test", this.moduleTestbenchSamples, this.systemPath);
         
         fullFlow.runAll();
     }
