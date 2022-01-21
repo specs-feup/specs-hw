@@ -105,14 +105,19 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
     
     private Map<String, Integer> setUIDMap(Collection<AInstructionCDFGNode> vertices, Map<String, Integer> UIDMap) {
         
-        vertices.stream().filter(vertex -> UIDMap.containsKey(vertex.getReference())).forEach(vertex -> vertex.setUID(UIDMap.get(vertex.getReference())));
+        vertices.stream()
+            .filter(vertex -> UIDMap.containsKey(vertex.getReference()))
+            .forEach(vertex -> vertex.setUID(UIDMap.get(vertex.getReference())));
         
         return UIDMap;
     }
     
     private Map<String, Integer> setUIDMap(Collection<AInstructionCDFGNode> vertices, Map<String, Integer> UIDMap, int offset) {
         
-        vertices.stream().filter(vertex -> UIDMap.containsKey(vertex.getReference())).forEach(vertex -> vertex.setUID(UIDMap.get(vertex.getReference()) + offset));
+        vertices.stream()
+            .filter(vertex -> UIDMap.containsKey(vertex.getReference()))
+            .forEach(vertex -> vertex.setUID(UIDMap.get(vertex.getReference()) + offset));
+        
         return UIDMap;
     }
     
@@ -141,11 +146,17 @@ public abstract class AInstructionCDFGSubgraph extends DataFlowGraph<AInstructio
         return this.UIDMap;
     }
     
+    public void clearCurrentUIDMap() {
+        this.UIDMap.clear();
+    }
+    
     public Map<String, Integer> generateInputUIDMap(){
         return this.updateInternalUIDMap(this.generateUIDMapFromVertices(this.getInputs()));
     }
     
     public void setInputUIDMap(Map<String, Integer> inputUIDMap) {
+        
+        this.updateInternalUIDMap(this.getInputUIDMap());
         this.updateInternalUIDMap(this.setUIDMap(this.getInputs(), inputUIDMap));
     }
     

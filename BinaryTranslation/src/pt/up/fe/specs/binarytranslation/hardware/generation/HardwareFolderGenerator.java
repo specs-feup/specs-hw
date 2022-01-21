@@ -63,7 +63,7 @@ public class HardwareFolderGenerator {
                 SpecsLogs.msgWarn("Error message:\n", e);
             }
         });
-        
+      
     }
     
     public static String getDirectorySeparator() {

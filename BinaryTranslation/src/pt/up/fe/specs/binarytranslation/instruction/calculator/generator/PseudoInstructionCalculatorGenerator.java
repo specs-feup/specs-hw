@@ -40,6 +40,8 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.Op
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ParenExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PlainStmtContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.RangesubscriptContext;
+import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.ScalarsubscriptContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.StatementlistContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.UnaryExprContext;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.VariableExprContext;
@@ -67,7 +69,7 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
     
     public Map<String, Number> calculate(PseudoInstructionContext instructionContext, Map<String, Number> inputs){
         
-        this.clearCache();
+        //this.clearCache();
         
         inputs.forEach((uid, value) -> 
             this.getCurrentRegisterMap().put(uid, new PseudoInstructionCalculatorRegister(uid, value))
@@ -98,7 +100,6 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
             
             
         });
-        
         
         
         Map<String, Number> rawOutputs = this.calculate(instruction.getPseudocode().getParseTree(), resolvedInputs);
@@ -283,15 +284,29 @@ public class PseudoInstructionCalculatorGenerator extends PseudoInstructionBaseV
     public PseudoInstructionCalculatorRegister visitMetafield(MetafieldContext ctx) {
         return this.resolveOperand("meta" + ctx.getText().replace("$", ""));
     }
-     /*
+
     @Override
-    public HardwareValidationRegister visitScalarsubscript(ScalarsubscriptContext ctx) {
-        return (new HardwareValidationScalarSubscript()).apply(this.getValueMap().get(ctx.getText().substring(0, ctx.getText().indexOf("["))), Integer.valueOf(ctx.idx.getText()));
+    public PseudoInstructionCalculatorRegister visitScalarsubscript(ScalarsubscriptContext ctx) {
+        
+        PseudoInstructionCalculatorRegister AsmField = this.resolveOperand(ctx.asmfield().getText());
+        
+        Integer subscript = Integer.valueOf(ctx.idx.getText());
+        
+        return new PseudoInstructionCalculatorRegister(AsmField.getName(), AsmField.getValue().intValue() & (1 << subscript.intValue()));      
     }
     
     @Override
-    public HardwareValidationRegister visitRangesubscript(RangesubscriptContext ctx) {
-        return (new HardwareValidationRangeSubscript()).apply(this.getValueMap().get(ctx.getText().substring(0, ctx.getText().indexOf("["))), Integer.valueOf(ctx.hiidx.getText()), Integer.valueOf(ctx.loidx.getText()));
+    public PseudoInstructionCalculatorRegister visitRangesubscript(RangesubscriptContext ctx) {
+        
+        PseudoInstructionCalculatorRegister AsmField = this.resolveOperand(ctx.asmfield().getText());
+        
+        int mask = 0;
+        
+        for(int i = Integer.valueOf(ctx.loidx.getText()); i < Integer.valueOf(ctx.hiidx.getText()); i++) {
+            mask += (1<<i);
+        }
+
+        return new PseudoInstructionCalculatorRegister(AsmField.getName(), AsmField.getValue().intValue() & mask);   
     }
-    */
+    
 }

@@ -15,20 +15,6 @@ public class SegmentCDFGHardwareValidationDataGenerator extends InstructionCDFGH
 
     private static final Map<String, String> operandNameToPseudoCodeName = Map.of("RD","RD", "RS1", "RA", "RS2", "RB");
     
-    private void resolveFieldNames(Instruction instruction, Map<String, Number> unresolvedFieldNamesMap) {
-            
-            if(instruction.getData() == null) {
-                return;
-            }
-            
-            instruction.getData().getOperands().forEach(operand -> {
-                
-                
-                
-            });
-            
-        }
-    
     public void generateValidationData(SegmentCDFG segment, int samples) {
         
         Random inputDataGenerator = new Random();
@@ -43,15 +29,9 @@ public class SegmentCDFGHardwareValidationDataGenerator extends InstructionCDFGH
             validationInputs = new TreeMap<>();
             allInstructionsOutput = new TreeMap<>();
             
-            int j = 1;
-            
             for(String reference : new TreeSet<String>(segment.getDataInputsReferences())) {
                 validationInputs.put(reference, inputDataGenerator.nextInt());
-                
-                //validationInputs.put(reference, j++);
             }
-            
-            
             
             previousInstructionOutput = new TreeMap<>(validationInputs);
             
@@ -72,11 +52,14 @@ public class SegmentCDFGHardwareValidationDataGenerator extends InstructionCDFGH
                 
             }
             
-            this.clearCache();
-
-            this.getValidationData().put(validationInputs, allInstructionsOutput);
+            
+            
+           
+           this.putInValidationData(allInstructionsOutput,validationInputs);
             
         }
+        
+   
     }
     
 }

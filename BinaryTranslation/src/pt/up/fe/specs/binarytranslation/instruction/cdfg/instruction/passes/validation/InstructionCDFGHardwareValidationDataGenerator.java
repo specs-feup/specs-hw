@@ -31,12 +31,16 @@ public class InstructionCDFGHardwareValidationDataGenerator extends PseudoInstru
         return this.validationData;
     }
     
+    public void putInValidationData(Map<String,Number> key, Map<String, Number> value) {
+        this.validationData.put(key, value);
+    }
+    
     public List<Map<String, Number>> getValidationInputData(){
-        return new ArrayList<Map<String, Number>>(this.validationData.keySet());
+        return new ArrayList<Map<String, Number>>(this.validationData.values());
     }
     
     public List<Map<String, Number>> getValidationOutputData(){
-        return new ArrayList<Map<String, Number>>(this.validationData.values());
+        return new ArrayList<Map<String, Number>>(this.validationData.keySet());
     }
     
     public String buildInputHexMemFile() {
@@ -82,7 +86,7 @@ public class InstructionCDFGHardwareValidationDataGenerator extends PseudoInstru
             
             instruction.getDataInputsReferences().forEach(input -> validationInputs.put(input, inputDataGenerator.nextInt()));
             
-            this.calculate(instruction.getInstruction(), validationInputs);
+            this.calculate(instruction.getInstruction().getPseudocode().getParseTree(), validationInputs);
             this.getValidationData().put(validationInputs, this.getOutputValuesMap());
             
         }

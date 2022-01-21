@@ -33,7 +33,7 @@ public abstract class AInstructionCDFGModifier extends AInstructionCDFGNode{
         this.reference = reference;
     }
     
-    protected void setReference(String reference) {
+    public void setReference(String reference) {
         this.reference = reference;
     }
     
