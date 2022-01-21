@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
@@ -30,7 +29,6 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.AInstr
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.InstructionCDFGEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGFalseEdge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge.conditional.InstructionCDFGTrueEdge;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.AInstructionCDFGNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node.data.InstructionCDFGLiteralNode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.AInstructionCDFGSubgraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.AInstructionCDFGControlFlowConditionalSubgraph;
@@ -38,6 +36,7 @@ import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.co
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional.InstructionCDFGControlFlowIfElse;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.data.InstructionCDFGDataFlowSubgraph;
+import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionBaseVisitor;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.IfElseStatementContext;
@@ -77,19 +76,28 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
             return;
         }
         
-        this.icdfg.getInstruction().getData().getOperands().forEach(operand -> {
+        this.icdfg.getDataInputsMap().forEach((register, subgraph) -> {
             
-            this.icdfg.getDataInputsMap().forEach((inputRegister, subgraph) -> {
-                
-                if(inputRegister.getReference().equals(InstructionCDFGGenerator.operandNameToPseudoCodeName.get(operand.getAsmField().toString()))) {
-                    
-                    if(inputRegister.getReference().equals("IMM")) {
-                        subgraph.replaceVertex(inputRegister, new InstructionCDFGLiteralNode(operand.getDataValue()));
-                    }else {
-                        inputRegister.setReference(operand.getRepresentation().toString());
-                    }
-                }
+            String registerReference = register.getReference();
+
+            this.icdfg.getInstruction().getData().getOperands().stream()
+                .filter(operand -> !operand.getAsmField().toString().equals("RD"))
+                .filter(operand -> registerReference.equals(operandNameToPseudoCodeName.get(operand.getAsmField().toString())))
+                .forEach(operand -> {
+
+                        if(registerReference.equals("IMM")) {
+                            subgraph.replaceVertex(register, new InstructionCDFGLiteralNode(operand.getDataValue()));
+                        }else {
+                            register.setReference(operand.getRepresentation().toString());
+                        }
+
             });
+            
+        });
+        
+        this.icdfg.vertexSet().forEach(subgraph -> subgraph.clearCurrentUIDMap());
+
+        this.icdfg.getInstruction().getData().getOperands().forEach(operand -> {
             
             this.icdfg.getDataOutputs().forEach(outputRegister -> {
                 if(outputRegister.getReference().equals(InstructionCDFGGenerator.operandNameToPseudoCodeName.get(operand.getAsmField().toString()))) {
@@ -99,6 +107,9 @@ public class InstructionCDFGGenerator extends PseudoInstructionBaseVisitor<AInst
             
         });
         
+        
+        this.icdfg.refresh();
+
     }
     
     public InstructionCDFG generate(Instruction instruction) {

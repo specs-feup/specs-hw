@@ -13,6 +13,7 @@ import java.util.Scanner;
 import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
 import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
+import pt.up.fe.specs.binarytranslation.processes.VerilatorCompile;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.utilities.Replacer;
 
@@ -82,6 +83,8 @@ public class TimingVerificationVivado extends StringProcessRun{
 
                 verificationResults.put(deviceName, verificationNumerical);
             });
+            
+            verificationScanner.close();
         }
         
         return verificationResults;
@@ -92,14 +95,11 @@ public class TimingVerificationVivado extends StringProcessRun{
         var args = new ArrayList<String>();
         String vivadoTclScriptName = moduleName + ".tcl";
         
-        args.add("cd " + HardwareFolderGenerator.getHardwareSynthesisFolder(directory));
-        args.add("&&");
-        args.add("vivado -mode tcl -source " + vivadoTclScriptName);
-        
-        System.out.println();
-        System.out.print("Executed command:");
-        args.forEach(arg -> System.out.print(arg + " "));
-        System.out.println();
+        args.add("vivado");
+        args.add("-mode");
+        args.add("tcl");
+        args.add("-source");
+        args.add(HardwareFolderGenerator.getHardwareSynthesisFolder(directory) + "/" +vivadoTclScriptName);
         
         return args;
     }
@@ -113,7 +113,20 @@ public class TimingVerificationVivado extends StringProcessRun{
             return null;
         }
         
-        return super.start();
+        ProcessBuilder builder = new ProcessBuilder(TimingVerificationVivado.getArgs(this.directory, this.moduleName));
+        builder.directory(new File(HardwareFolderGenerator.getHardwareSynthesisFolder(directory)));
+        
+        try {
+            this.proc = builder.start();
+        } catch (IOException e) {
+            return null;
+        }
+        
+        //this.proc = SpecsHwUtils.newProcess(builder);
+ 
+        this.attachThreads();
+        
+        return this.proc;
     }
     
     /** Generates the TCL script used to run Vivado in TCL non project mode

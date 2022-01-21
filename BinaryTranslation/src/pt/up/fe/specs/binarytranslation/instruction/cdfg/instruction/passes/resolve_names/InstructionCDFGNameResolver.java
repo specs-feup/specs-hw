@@ -69,7 +69,7 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
     
     @Override
     protected void visitDataFlowSubgraph(InstructionCDFGDataFlowSubgraph subgraph) {
-        
+
         this.setVertexInputs(subgraph, this.retrivePreviousUIDMap(subgraph)); // sets the subgraph inputs using the uid map calculated from the previous ones
         this.calculateVertexOutputs(subgraph, subgraph.getCurrentUIDMap());  // calculates the subgraph outputs from the input uid map
         super.visitDataFlowSubgraph(subgraph);
@@ -282,7 +282,7 @@ public class InstructionCDFGNameResolver extends InstructionCDFGVisitor{
                 previousSubgraphsUIDMaps.add(this.calculateCurrentUIDMap(beforeMergeUIDMaps));
                 
             }else {        
-                previousSubgraphsUIDMaps.add(subgraphBefore.getCurrentUIDMap());   
+               previousSubgraphsUIDMaps.add(subgraphBefore.getCurrentUIDMap());   
             }
         });
         

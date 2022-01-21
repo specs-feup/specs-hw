@@ -77,8 +77,8 @@ public class RandomTest_deletethisafter {
             //"if(RA == RC){RD = RA + RB;}else{RD = RA - RB;}RD = RD + RB;"
             //"if(RA == 0) {RD = RA + RB;}RD = RA + RB;if(RA == 0) {RD = RA + RB;}"
             //"if(RA == 0) {RD = RA + RB + RC; if(RA == 0){RD = RA + RB;}else{RD = RA + RB;}}"
-            "if(RA == 0) {RD = RA - RB; RA =  RG + 3;}RA = RE - RD;if(RA == 0) {RD = RA - RB; RA =  RG + 3;}"
-            //"RD = RA + RB;"
+            //"if(RA == 0) {RD = RA - RB; RA =  RG + 3;}RA = RE - RD;if(RA == 0) {RD = RA - RB; RA =  RG + 3;}"
+            "RD = RA[0:2] + RB[0:2];"
             );
     
     private final String systemPath = "/home/soiboi/Desktop/" + "btf_";

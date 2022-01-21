@@ -196,9 +196,9 @@ public class InstructionCDFGFullFlow {
         this.exportInstructionCDFGAsDOT();
         
         this.generateHardwareModule();
-        /*
+        
         this.generateHardwareModuleValidationData();
-        this.generateHardwareModuleTestbench();
+        /*this.generateHardwareModuleTestbench();
         this.generateVerilatorTestbench();
         
         
