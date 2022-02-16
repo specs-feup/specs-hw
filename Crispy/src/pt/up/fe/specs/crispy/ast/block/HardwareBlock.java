@@ -88,7 +88,8 @@ public abstract class HardwareBlock extends HardwareNode {// implements Hardware
 
     protected VariableOperator createAssigment(VariableOperator target, HardwareExpression expr,
             BiFunction<VariableOperator, HardwareExpression, HardwareStatement> supplier) {
-        return createAssigment(target.getName(), expr, supplier);
+        // return createAssigment(target.getName(), expr, supplier);
+        return createAssigment(target.getAsString(), expr, supplier);
     }
 
     protected VariableOperator createAssigment(String targetName, HardwareExpression expr,
@@ -176,7 +177,8 @@ public abstract class HardwareBlock extends HardwareNode {// implements Hardware
      * nonBlocking
      */
     public VariableOperator nonBlocking(HardwareExpression expr) {
-        return createAssigment(expr.getName(), expr, (t, u) -> new ProceduralNonBlockingStatement(t, u));
+        // return createAssigment(expr.getName(), expr, (t, u) -> new ProceduralNonBlockingStatement(t, u));
+        return createAssigment(expr.getAsString(), expr, (t, u) -> new ProceduralNonBlockingStatement(t, u));
     }
 
     public VariableOperator nonBlocking(String targetName, String sourceName) {
@@ -202,7 +204,8 @@ public abstract class HardwareBlock extends HardwareNode {// implements Hardware
      * blocking
      */
     public VariableOperator blocking(HardwareExpression expr) {
-        return createAssigment(expr.getName(), expr, (t, u) -> new ProceduralBlockingStatement(t, u));
+        // return createAssigment(expr.getName(), expr, (t, u) -> new ProceduralBlockingStatement(t, u));
+        return createAssigment(expr.getAsString(), expr, (t, u) -> new ProceduralBlockingStatement(t, u));
     }
 
     public VariableOperator blocking(String targetName, String sourceName) {
