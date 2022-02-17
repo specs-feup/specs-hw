@@ -37,7 +37,7 @@ statementlist
 	| LBRACE statement* RBRACE;
 
 statement 
-	: expression STATEMENTEND 																										# plainStmt
+	: expression STATEMENTEND 																		# plainStmt
 	| 'if' LPAREN condition=expression RPAREN ifsats=statementlist 									# ifStatement
 	| 'if' LPAREN condition=expression RPAREN ifsats=statementlist ('else' elsestats=statementlist)	# ifElseStatement;	
 
