@@ -17,8 +17,6 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.conditional;
 
-import java.util.Map;
-
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.subgraph.control.merge.InstructionCDFGControlFlowMerge;
 
 public class InstructionCDFGControlFlowIf extends AInstructionCDFGControlFlowConditionalSubgraph{
@@ -26,7 +24,7 @@ public class InstructionCDFGControlFlowIf extends AInstructionCDFGControlFlowCon
     public InstructionCDFGControlFlowIf(InstructionCDFGControlFlowMerge merge) {
         super(merge);
     }
-    
+
     @Override
     public String toString() {
         return "InstructionCDFGControlFlowIf_" + this.hashCode() ;

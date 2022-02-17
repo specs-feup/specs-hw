@@ -13,8 +13,13 @@
 
 package pt.up.fe.specs.binarytranslation.processes;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
+import pt.up.fe.specs.specshw.SpecsHwUtils;
 
 public class VerilatorCompile extends StringProcessRun {
 
@@ -27,33 +32,51 @@ public class VerilatorCompile extends StringProcessRun {
      * Arguments to call Verilator on a particular
      * testbench and then call "make" on the resulting cpp code
      */
+    
+    private String directory;
+    private String testbenchName;
+    
     private static List<String> getArgs(String directory, String testbenchName) {
-
+        
         var args = new ArrayList<String>();
-        var verilatorexe = "verilator";
-        var filepath_partial = "./" + directory + "/" + testbenchName;
-
-        if (IS_WINDOWS)
-            verilatorexe += ".exe";
+        var verilatorexe = IS_WINDOWS ? "verilator.exe" : "verilator";
 
         args.add(verilatorexe);
         args.add("-cc");
-        args.add(filepath_partial + "_tb.sv");
-        args.add("./hdl/" + testbenchName + ".sv"); // TODO: whats this argument for?
+        args.add(HardwareFolderGenerator.getHardwareTestbenchesFolder(directory) + "/" + testbenchName + "_tb.sv");
+        args.add(HardwareFolderGenerator.getHardwareHDLFolder(directory) + "/" + testbenchName + ".sv"); // TODO: whats this argument for?
         args.add("-exe");
-        args.add(filepath_partial + "_tb.cpp");
-        args.add("&&");
-        args.add("make");
-        args.add("-C");
-        args.add("obj_dir");
-        args.add("-f");
-        args.add("V" + testbenchName + "_tb.mk");
-        args.add("V" + testbenchName + "_tb");
+        args.add(HardwareFolderGenerator.getHardwareTestbenchesFolder(directory) + "/" + testbenchName + "_tb.cpp");
+   
         return args;
     }
 
     // TODO: remove the need for directory specification
     public VerilatorCompile(String directory, String testbenchName) {
         super(VerilatorCompile.getArgs(directory, testbenchName));
+        
+        this.directory = directory;
+        this.testbenchName = testbenchName;
+        
     }
+    
+    @Override
+    public Process start() {
+        
+        ProcessBuilder builder = new ProcessBuilder(VerilatorCompile.getArgs(this.directory, this.testbenchName));
+        builder.directory(new File(HardwareFolderGenerator.getHardwareTestbenchesFolder(directory)));
+        
+        try {
+            this.proc = builder.start();
+        } catch (IOException e) {
+            return null;
+        }
+        
+        //this.proc = SpecsHwUtils.newProcess(builder);
+ 
+        this.attachThreads();
+        
+        return this.proc;
+    }
+    
 }

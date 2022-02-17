@@ -45,20 +45,30 @@ public class SegmentCDFG extends InstructionCDFG{
             InstructionCDFGGenerator icdfgGenerator = new InstructionCDFGGenerator();
             InstructionCDFG icdfg = icdfgGenerator.generate(instruction);
            
-            Set<AInstructionCDFGSubgraph> outputSubgraphs = this.getOutputs();
+            
+            
+            this.generateOutputs();
             
             Graphs.addGraph(this, icdfg);
             
-            outputSubgraphs.forEach(segmentOutputsSubgraph -> {
-                icdfg.getInputs().forEach(icdfgIntputSubgraph -> {     
+            this.getOutputs().forEach(segmentOutputsSubgraph -> {
+                icdfg.getInputs().forEach(icdfgIntputSubgraph -> {
                     this.addEdge(segmentOutputsSubgraph, icdfgIntputSubgraph, new InstructionCDFGEdge());
                 });
             });
-            
-            this.refresh();
+
         }
         
+        this.refresh();
+        
     }
+    
+    protected void mergeDFGs(AInstructionCDFGSubgraph first, AInstructionCDFGSubgraph second) {
+        
+        
+        
+    }
+    
     
     public List<Instruction> getInstructions() {
         return this.instructions;

@@ -55,7 +55,7 @@ public class InstructionCDFGVisitor {
         }
         
 
-        return !this.icdfg.getVerticesBefore(subgraph).stream().anyMatch(subgraphBefore -> !this.subgraphsResolved.contains(subgraphBefore));
+        return this.icdfg.getVerticesBefore(subgraph).stream().allMatch(subgraphBefore -> this.subgraphsResolved.contains(subgraphBefore));
     }
     
     /** Checks if the argument subgraph is a simple vertex<br>
@@ -99,6 +99,7 @@ public class InstructionCDFGVisitor {
     
     protected void visit(AInstructionCDFGSubgraph subgraph) throws IllegalArgumentException{
         
+  
             if(!this.canVisitSubgraph(subgraph)) {
                 return;
             }else {
@@ -136,14 +137,14 @@ public class InstructionCDFGVisitor {
     protected void visitControlIfSubgraph(InstructionCDFGControlFlowIf subgraph) {  
         
         this.visit(this.icdfg.getTruePath(subgraph));
-        this.visit(subgraph.getMerge());
+        //this.visit(subgraph.getMerge());
     }
     
     protected void visitControlIfElseSubgraph(InstructionCDFGControlFlowIfElse subgraph) {
         
         this.visit(this.icdfg.getTruePath(subgraph));
         this.visit(this.icdfg.getFalsePath(subgraph));
-        this.visit(subgraph.getMerge());
+       // this.visit(subgraph.getMerge());
     }
     
     protected void visitControlMergeSubgraph(InstructionCDFGControlFlowMerge subgraph) {

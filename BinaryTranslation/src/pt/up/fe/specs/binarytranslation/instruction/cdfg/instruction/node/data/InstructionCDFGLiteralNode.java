@@ -22,6 +22,10 @@ public class InstructionCDFGLiteralNode extends AInstructionCDFGDataNode{
     public InstructionCDFGLiteralNode(String reference) {
         super(reference);
     }
+    
+    public InstructionCDFGLiteralNode(Number reference) {
+        super(String.valueOf(reference));
+    }
 
     public Number getValue() {
         return Integer.valueOf(super.getReference());

@@ -32,6 +32,7 @@ import pt.up.fe.specs.crispy.lib.CrossBarNxM;
 import pt.up.fe.specs.crispy.lib.DecoderNxM;
 import pt.up.fe.specs.crispy.lib.Mux2to1;
 import pt.up.fe.specs.crispy.lib.MuxNto1;
+import pt.up.fe.specs.crispy.lib.RAMemory;
 import pt.up.fe.specs.crispy.lib.RegisterBank;
 import pt.up.fe.specs.crispy.lib.ShiftRegister;
 import pt.up.fe.specs.crispy.test.workshop.Add3;
@@ -437,6 +438,13 @@ public class HardwareInstanceTest {
         // var tb = new HardwareTestbench("tbTest", bank);
         // tb.setClockFrequency(100);
         // tb.emit();
+    }
+
+    @Test
+    public void testRAMemory() {
+
+        var ram = new RAMemory(1024, 4);
+        ram.emit();
     }
 
     @Test

@@ -18,6 +18,7 @@
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -72,16 +73,23 @@ public class RandomTest_deletethisafter {
     }
     
     private FakeInstruction instruction = new FakeInstruction("addTest",  
-            //"RD = RA + 2;RE = RD + 3;RD = RA + 5;"
-            "if(RA == 0) {RD = RA + RB;}else{RD = RA - RB;}RD = RA + 3;"
+            //"if(RA < RB){ RD = 1;}else{ RD = 1;}"
+            //"if(RA == RC){RD = RA + RB;}else{RD = RA - RB;}RD = RD + RB;"
+            //"if(RA == 0) {RD = RA + RB;}RD = RA + RB;if(RA == 0) {RD = RA + RB;}"
+            //"if(RA == 0) {RD = RA + RB + RC; if(RA == 0){RD = RA + RB;}else{RD = RA + RB;}}"
+            //"if(RA == 0) {RD = RA - RB; RA =  RG + 3;}RA = RE - RD;if(RA == 0) {RD = RA - RB; RA =  RG + 3;}"
+            "RD = RA[0:2] + RB[0:2];"
             );
     
-    private final String systemPath = "C:\\Users\\joaom\\Desktop\\" + "btf_";
-    private final String wslPath = "/mnt/c/Users/joaom/Desktop/" + "btf_";
-    private final int moduleTestbenchSamples = 1000;
+    private final String systemPath = "/home/soiboi/Desktop/" + "btf_";
+    private final String wslPath = "/home/soiboi/Desktop/" + "btf_";
+    private final int moduleTestbenchSamples = 1;
     
     @Test
-    public void testFullFlow() throws IOException {
+    public void testFullFlow() throws IOException, InterruptedException, ExecutionException {
+
+            this.instruction.printParseTree();
+        
         InstructionCDFGFullFlow fullFlow = new InstructionCDFGFullFlow(this.instruction, this.moduleTestbenchSamples, this.systemPath, this.wslPath);
         
         fullFlow.runAll();

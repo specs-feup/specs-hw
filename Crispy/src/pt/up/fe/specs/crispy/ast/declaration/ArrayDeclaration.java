@@ -86,7 +86,7 @@ public class ArrayDeclaration extends IdentifierDeclaration {
 
     @Override
     public String getAsString() {
-        return this.getChild(0).getNodeName() + " [" + (this.getSize() - 1) + " : 0];";
+        return this.getChild(0).getAsString().replace(";", "") + " [" + (this.getSize() - 1) + " : 0];";
     }
 
     @Override

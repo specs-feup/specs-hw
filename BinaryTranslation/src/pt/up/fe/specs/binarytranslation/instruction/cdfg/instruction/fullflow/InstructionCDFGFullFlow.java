@@ -21,21 +21,22 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction.wip.InstructionCDFGCustomInstructionUnitGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.analysis.timing.TimingAnalysisRun;
+import pt.up.fe.specs.binarytranslation.hardware.analysis.timing.TimingVerificationVivado;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.HardwareTestbenchGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.testbench.VerilatorTestbenchGenerator;
-import pt.up.fe.specs.binarytranslation.hardware.validation.generator.HardwareValidationDataGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.InstructionCDFG;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.generator.InstructionCDFGGenerator;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.resolve_names.InstructionCDFGNameResolver;
-import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
+import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.passes.validation.InstructionCDFGHardwareValidationDataGenerator;
+import pt.up.fe.specs.binarytranslation.processes.VerilatorCompile;
 import pt.up.fe.specs.binarytranslation.processes.VerilatorRun;
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 
@@ -51,10 +52,23 @@ public class InstructionCDFGFullFlow {
     private HardwareModule generatedModule;
     private int moduleTestbenchSamples;
     
+    /** Applies the full flow of the toolchain on a single instruction (linux only)
+     * 
+     * @param instruction Instruction to apply the full flow on
+     * @param testbenchSamples Number of samples to generate for the testbench
+     * @param systemPath The path for the folder in your main OS 
+     */
     public InstructionCDFGFullFlow(Instruction instruction, int testbenchSamples, String systemPath) {
         this(instruction, testbenchSamples, systemPath, systemPath);
     }
     
+    /** <b>Use this constructor only if you are using WSL, otherwise use the single path constructor</b>
+     * <br><br>Applies the full flow of the toolchain on a single instruction (windows only)
+     * @param instruction Instruction to apply the full flow on
+     * @param testbenchSamples Number of samples to generate for the testbench
+     * @param systemPath The path for the folder in your main OS (windows in wsl)
+     * @param wslPath The path for the folder in you guest OS (linux in wsl)
+     */
     public InstructionCDFGFullFlow(Instruction instruction, int testbenchSamples, String systemPath, String wslPath) {
         
         this.instruction = instruction;
@@ -103,21 +117,22 @@ public class InstructionCDFGFullFlow {
     }
     
     public void generateHardwareModuleValidationData() throws IOException {
-        HardwareValidationDataGenerator validation = new HardwareValidationDataGenerator();
-        Map<Map<String, Number>, Map<String, Number>> validationData = HardwareValidationDataGenerator.generateValidationData(instruction, icdfg.getDataInputsReferences(), moduleTestbenchSamples);
-
+        
+        InstructionCDFGHardwareValidationDataGenerator validation = new InstructionCDFGHardwareValidationDataGenerator();
+        
+        validation.generateValidationData(this.icdfg, moduleTestbenchSamples);
         System.out.print("Generating HW module testbench validation input memory file...");
-        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "input", "mem").write(HardwareValidationDataGenerator.generateHexMemFile(validationData.keySet()).getBytes());
+        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "input", "mem").write(validation.buildInputHexMemFile().getBytes());
         System.out.println("\tDONE");
         
         System.out.print("Generating HW module testbench validation output memory file...");
-        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "output", "mem").write(HardwareValidationDataGenerator.generateHexMemFile(validationData.values()).getBytes());
+        HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, "output", "mem").write(validation.buildOutputHexMemFile().getBytes());
         System.out.println("\tDONE");
     }
     
     public void generateHardwareModuleTestbench() throws IOException {
         System.out.print("Generating HW module testbench...");
-        HardwareTestbenchGenerator.generate(generatedModule, moduleTestbenchSamples, new File(this.systemPath + "\\hw\\tb\\input.mem") , new File(this.systemPath + "\\hw\\tb\\output.mem")).emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, generatedModule.getName() + "_tb", "sv"));
+        HardwareTestbenchGenerator.generate(generatedModule, moduleTestbenchSamples, new File(this.systemPath + "/hw/tb/input.mem") , new File(this.systemPath + "/hw/tb/output.mem")).emit(HardwareFolderGenerator.newHardwareTestbenchFile(systemPath, generatedModule.getName() + "_tb", "sv"));
         System.out.println("\tDONE");
     }
     
@@ -129,6 +144,10 @@ public class InstructionCDFGFullFlow {
     
     public boolean runVerilatorTestbench() throws IOException {
         System.out.print("Running Verilator testbench...");
+        
+        VerilatorCompile verilator_compile = new VerilatorCompile(wslPath, this.instruction.getName());
+        
+        verilator_compile.start();
         
         VerilatorRun verilator = new VerilatorRun(wslPath+"/hw/tb", this.instruction.getName());
         
@@ -145,31 +164,62 @@ public class InstructionCDFGFullFlow {
         return true;
     }
     
+    public void runVivadoTCL() throws IOException, InterruptedException, ExecutionException{
+        System.out.print("Performing timing analysis (vivado) on generated module...");
+        
+        TimingVerificationVivado verificator = new TimingVerificationVivado(wslPath, this.instruction.getName());
+        
+        Process verificatorProcess = verificator.start();
+        
+        verificatorProcess.waitFor();
+        
+        System.out.println("\tDONE");
+    }
+    
     public void performIcetimeTimingAnalysis() throws IOException {
         System.out.print("Performing timing analysis (icetime) on generated module...");
         TimingAnalysisRun.start(wslPath, this.instruction.getName());
         System.out.println("\tDONE");
     }
     
-    public void runAll() throws IOException {
+    public void runAll() throws IOException, InterruptedException, ExecutionException {
 
+       
+        
         this.generateFolderStructures();
         this.generateInstructionCDFG();
-        this.exportInstructionCDFGAsDOT();
+        
+//this.exportInstructionCDFGAsDOT();
+        
+        
         this.resolveInstructionCDFGNames();
         this.exportInstructionCDFGAsDOT();
         
         this.generateHardwareModule();
         
         this.generateHardwareModuleValidationData();
-        this.generateHardwareModuleTestbench();
+        /*this.generateHardwareModuleTestbench();
         this.generateVerilatorTestbench();
         
+        
+        System.out.println("\nTiming verification results from Vivado:\n");
+        TimingVerificationVivado.getVerificationResultsParsed(wslPath, this.instruction.getName())
+            .forEach((deviceName, ListOfResults) -> {
+                System.out.println("\tDevice: " + deviceName);
+                System.out.println("\t\tTotal delay " + ListOfResults.get(0) + "ns ");
+                System.out.println("\t\t\tModule delay only " + ListOfResults.get(1)+" ("+ListOfResults.get(2)+"%)");
+                System.out.println("\t\t\tDelay due to routing " + ListOfResults.get(3)+" ("+ListOfResults.get(4)+"%)\n");
+                        
+            });
+        
+        //this.runVivadoTCL();
+        
+        /*
         if(!this.runVerilatorTestbench())
             return;
         
         this.performIcetimeTimingAnalysis();
-        
+        */
     }
  
     

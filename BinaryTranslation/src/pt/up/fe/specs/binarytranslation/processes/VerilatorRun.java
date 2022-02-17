@@ -13,15 +13,22 @@
 
 package pt.up.fe.specs.binarytranslation.processes;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
+import pt.up.fe.specs.specshw.SpecsHwUtils;
 
 public class VerilatorRun extends StringProcessRun {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
-
-    private boolean started = false;
-
+    
+    private String directory;
+    private String testbenchName;
+    
+    
     /*
      * TODO: this class should receive a VerilatorCompiledDesign as an argument
      * to initialize its own argument list
@@ -29,27 +36,43 @@ public class VerilatorRun extends StringProcessRun {
     private static List<String> getArgs(String directory, String testbenchName) {
 
         var args = new ArrayList<String>();
-        var compileddesignexe = testbenchName + "_tb";
+        var compileddesignexe =  testbenchName + "_tb";
         if (IS_WINDOWS)
             compileddesignexe += ".exe"; // TODO: required??
-        args.add("./obj_dir/" + compileddesignexe);
+        
+        args.add(HardwareFolderGenerator.getHardwareTestbenchesFolder(directory) + "/obj_dir/V" + compileddesignexe);
+        
         return args;
     }
 
     public VerilatorRun(String directory, String testbenchName) {
         super(VerilatorRun.getArgs(directory, testbenchName));
+        
+        
+        this.directory = directory;
+        this.testbenchName = testbenchName;
     }
 
     @Override
     public Process start() {
-        this.started = true;
-        return super.start();
+        
+        ProcessBuilder builder = new ProcessBuilder(VerilatorRun.getArgs(this.directory, this.testbenchName));
+        builder.directory(new File(HardwareFolderGenerator.getHardwareTestbenchesFolder(directory)));
+        
+        try {
+            this.proc = builder.start();
+        } catch (IOException e) {
+            return null;
+        }
+        
+        //this.proc = SpecsHwUtils.newProcess(builder);
+ 
+        this.attachThreads();
+        
+        return this.proc;
     }
 
     public boolean simulate() {
-
-        if (this.started == false)
-            this.start();
 
         String rline, result = null;
         while ((rline = this.receive()) != null) {
