@@ -21,6 +21,18 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 public class RiscvPseudoInstructionGraphTest {
 
     @Test
+    public void testFast() {
+        var i = RiscvInstruction.newInstance("80000948", "08060793");
+        System.out.println(i);
+
+        var ops = i.getData().getOperands();
+        for (var o : ops) {
+            System.out.println(o.getContainerRegister().getAsmField());
+            System.out.println(o.getRepresentation());
+        }
+    }
+
+    @Test
     public void testPseudoInstructionAST() {
         // 80000948: 08060793 addi a5,a2,128
         var i = RiscvInstruction.newInstance("80000948", "08060793");
