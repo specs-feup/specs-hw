@@ -26,6 +26,7 @@ import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
 import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
+import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class TestLex {
 
@@ -90,6 +91,11 @@ public class TestLex {
         }
     }
 
+    @Test
+    public void testSimpleAST() {
+        _testASTConvert("RD = RA + RB + getCarry();");
+    }
+
     private PseudoInstructionContext getTreeRoot(String statement) {
 
         // create a lexer that feeds off of input CharStream
@@ -132,7 +138,7 @@ public class TestLex {
         var ast = astgenerator.visit(tree);
 
         // System.out.println(ast.getAsString());
-        System.out.println(ast.toString());
-        // System.out.println(DottyGenerator.buildDotty(ast));
+        // System.out.println(ast.toString());
+        System.out.println(DottyGenerator.buildDotty(ast));
     }
 }
