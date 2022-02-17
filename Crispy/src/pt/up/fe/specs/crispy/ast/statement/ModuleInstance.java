@@ -22,6 +22,9 @@ import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 
 public class ModuleInstance extends HardwareStatement {
 
+    // TODO: this "HardwareModule" should be replaced with something that is immutable
+    // i.e, instead of being a reference, it should be an immutable copy of
+    // the module definition the moment it was instantiated (best way?)
     private final HardwareModule moduleDefinition;
     private final String instanceName;
     private final List<? extends HardwareOperator> portConnections;
