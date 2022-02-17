@@ -21,9 +21,11 @@ import pt.up.fe.specs.crispy.ast.declaration.RegisterDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.OutputPortDeclaration;
+import pt.up.fe.specs.crispy.ast.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.ScalarSubscript;
+import pt.up.fe.specs.crispy.ast.statement.ContinuousStatement;
 import pt.up.fe.specs.crispy.ast.statement.IfStatement;
 import pt.up.fe.specs.crispy.coarse.Adder;
 import pt.up.fe.specs.crispy.lib.CrossBarNxM;
@@ -32,8 +34,65 @@ import pt.up.fe.specs.crispy.lib.Mux2to1;
 import pt.up.fe.specs.crispy.lib.MuxNto1;
 import pt.up.fe.specs.crispy.lib.RegisterBank;
 import pt.up.fe.specs.crispy.lib.ShiftRegister;
+import pt.up.fe.specs.crispy.test.workshop.Add3;
+import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class HardwareInstanceTest {
+
+    @Test
+    public void workshopExample1() {
+
+        var a = (new RegisterDeclaration("regA", 8)).getReference();
+        var b = (new RegisterDeclaration("regB", 8)).getReference();
+        var c = (new RegisterDeclaration("regC", 8)).getReference();
+
+        var r = new ContinuousStatement(c, new AdditionExpression(a, b));
+        r.emit();
+
+        System.out.println(DottyGenerator.buildDotty(r));
+    }
+
+    @Test
+    public void workshopExample2() {
+        var adder = new HardwareModule("testAdder");
+        var a = adder.addInputPort("testA", 32);
+        var b = adder.addInputPort("testB", 32);
+        var c = adder.addOutputPort("testC", 32);
+        adder.alwayscomb()._do(c.nonBlocking(a.add(b)));
+
+        adder.emit();
+
+        System.out.println(DottyGenerator.buildDotty(adder));
+    }
+
+    @Test
+    public void workshopExample3() {
+
+        var add3 = new Add3();
+        add3.emit();
+    }
+
+    @Test
+    public void workshopExample4() {
+
+        // create a class which inherits the
+        // syntax (wrapper methods)
+        var ex = new HardwareModule("example");
+
+        // creates a "WireDeclaration", but returns
+        // a "Wire", which is a reference to the
+        // declared name (same for Registers and Ports)
+        var wire = ex.addWire("ex1", 8);
+
+        // new port
+        var a = ex.addInputPort("pA", 8);
+
+        // create an assign at the level of the module body
+        ex.assign(a, wire.lsl(2));
+
+        // emit to stdout (eventually, to files)
+        ex.emit();
+    }
 
     @Test
     public void testOperatorReferences() {
@@ -82,11 +141,10 @@ public class HardwareInstanceTest {
 
     private static HardwareModule getAdder() {
         var adder = new HardwareModule("testAdder");
-        adder.addInputPort("testA", 32);
-        adder.addInputPort("testB", 32);
-        adder.addOutputPort("testC", 32);
-        var block = adder.alwayscomb("additionBlock");
-        block.nonBlocking("testC", adder.getPort(0).add(adder.getPort(1)));
+        var a = adder.addInputPort("testA", 32);
+        var b = adder.addInputPort("testB", 32);
+        var c = adder.addOutputPort("testC", 32);
+        adder.alwayscomb()._do(c.nonBlocking(a.add(b)));
         return adder;
     }
 
@@ -97,6 +155,8 @@ public class HardwareInstanceTest {
         // testAdder.test(); // test get fields hash
 
         testAdder.emit();
+
+        System.out.println(DottyGenerator.buildDotty(testAdder));
     }
 
     @Test
@@ -371,12 +431,12 @@ public class HardwareInstanceTest {
     @Test
     public void testRegisterBank() {
 
-        var bank = new RegisterBank(4, 8);
+        var bank = new RegisterBank(2, 2);
         bank.emit();
 
-        var tb = new HardwareTestbench("tbTest", bank);
-        tb.setClockFrequency(100);
-        tb.emit();
+        // var tb = new HardwareTestbench("tbTest", bank);
+        // tb.setClockFrequency(100);
+        // tb.emit();
     }
 
     @Test

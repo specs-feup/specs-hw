@@ -370,6 +370,9 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
         return instantiate(instance, connections);
     }
 
+    // TODO: make it so that instantiation creates an immutable copy of the HardwareModule
+    // this will allow for further modifying the module definition programmatically, without
+    // changing previous instantiations (??)
     public HardwareModule instantiate(HardwareModule instance, HardwareOperator... connections) {
         return instantiate(instance, Arrays.asList(connections));
     }
