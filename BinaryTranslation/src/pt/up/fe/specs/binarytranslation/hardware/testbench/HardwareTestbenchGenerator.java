@@ -48,19 +48,20 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
          * Ports
          */
         var verifStart = testbenchModule.addInputPort("verify", 1);
-        var verifOutput = testbenchModule.addOutputPort("verifyResults", 1);
+        var verifOutput = testbenchModule.addOutputRegisterPort("verifyResults", 1);
 
         /*
          * Registers
          */
         var index = testbenchModule.addRegister("index", 32);
+        
         var inputs = testbenchModule.addArray(
                 ArrayDeclaration.ofRegisters("inputs",
                         32 * module.getInputPorts().size(), validationDataSize));
         var outputs = testbenchModule.addArray(
                 ArrayDeclaration.ofRegisters("outputs",
                         32 * module.getOutputPorts().size(), validationDataSize));
-
+        
         /*
          * Wires
          */
@@ -85,17 +86,17 @@ public class HardwareTestbenchGenerator extends AHardwareGenerator {
          * Always block
          */
         testbenchModule.alwaysnegedge("block1", verifStart)
-                ._ifelse(moduleOutputs.noteq(outputs.idx(index).idx(0, 32)))
+                ._ifelse(moduleOutputs.noteq(outputs.idx(index)))
                 .then()._do(verifOutput.nonBlocking(0))
                 .orElse()._do(verifOutput.nonBlocking(1));
 
         var subInputs = new ArrayList<HardwareOperator>();
 
-        for (int i = 0; i < (module.getInputPorts().size() * 32); i = i + 32)
-            subInputs.add(inputs.idx(index).idx(i, i + 32));
+        for (int i = (module.getInputPorts().size() * 32) - 1; i >= 0; i = i - 32) 
+            subInputs.add(inputs.idx(index).idx(i, i - 31));
 
-        for (int i = 0; i < (module.getOutputPorts().size() * 32); i = i + 32)
-            subInputs.add(moduleOutputs.idx(i, i + 32));
+        for (int i = (module.getOutputPorts().size() * 32) - 1; i >= 0; i = i - 32)
+            subInputs.add(moduleOutputs.idx(i, i - 31));
 
         /*
          * Place the Design Under Test (DUT) into the body of this wrapper

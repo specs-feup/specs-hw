@@ -21,7 +21,12 @@ public class InstructionCDFGEdge extends AInstructionCDFGEdge{
 
     @Override
     public AInstructionCDFGEdge duplicate() {
-        return new InstructionCDFGEdge();
+        
+        InstructionCDFGEdge newEdge = new InstructionCDFGEdge();
+        
+        this.getModifiers().forEach(modifier -> newEdge.setModifier(modifier));
+        
+        return newEdge;
     }
 
 }

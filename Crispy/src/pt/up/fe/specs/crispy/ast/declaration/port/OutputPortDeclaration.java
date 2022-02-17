@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.RegisterDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.operator.OutputPort;
 
@@ -25,7 +26,11 @@ public class OutputPortDeclaration extends PortDeclaration {
     public OutputPortDeclaration(String portName, int portWidth) {
         this(new WireDeclaration(portName, portWidth));
     }
-
+    
+    public OutputPortDeclaration(String portName, int portWidth, boolean register) {
+        this(new RegisterDeclaration(portName, portWidth));
+    }
+    
     public OutputPortDeclaration(IdentifierDeclaration declared) {
         this(declared, Arrays.asList(ModulePortProperties.Data));
     }

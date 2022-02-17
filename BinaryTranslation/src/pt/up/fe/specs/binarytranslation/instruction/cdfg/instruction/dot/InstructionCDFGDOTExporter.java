@@ -60,60 +60,47 @@ public class InstructionCDFGDOTExporter extends GeneralFlowGraphDOTExporter<AIns
         String connector = this.computeConnector(g);
         StringBuilder edgeBuilder = new StringBuilder();
         
-        this.setEdgeAttributeProvider((e) -> {
-            Map<String, Attribute> map = new LinkedHashMap<>();
-            
-            map.put("label", e.getDOTLabel()); 
-            map.put("arrowhead", e.getDOTArrowHead());
-            map.put("arrowtail", e.getDOTArrowTail());
-            map.put("dir", DefaultAttribute.createAttribute("both"));
+        this.setEdgeAttributeProvider(edge -> edge.getDOTAttributeMap());
         
-            return map;
-        });
-        
-        g.edgeSet().forEach((edge) -> {
+        g.edgeSet().forEach(edge -> {
             
             edgeBuilder.append(INDENT_BASE + INDENT_INNER);
             
             GeneralFlowGraph<AInstructionCDFGNode,AInstructionCDFGEdge> source = g.getEdgeSource(edge);
             GeneralFlowGraph<AInstructionCDFGNode,AInstructionCDFGEdge> target = g.getEdgeTarget(edge); 
             
-            if(source != null && target != null){
-           
-                if(source instanceof AInstructionCDFGControlFlowSubgraph) {
-                    AInstructionCDFGNode control = ((AInstructionCDFGControlFlowSubgraph) source).getControlVertex();
-                    edgeBuilder.append("v" + this.cdfgUIDMap.get(control));
-                    
-                    if(control instanceof InstructionCDFGControlConditionalNode) {    
-                        edgeBuilder.append((edge instanceof InstructionCDFGTrueEdge) ? ":se" : ((edge instanceof InstructionCDFGFalseEdge) ? ":sw" : ""));
-                    }else if(control instanceof InstructionCDFGControlMergeNode) {
-                        edgeBuilder.append(":s");
-                    }
-                }else if(source instanceof InstructionCDFGDataFlowSubgraph){
-                    edgeBuilder.append("v" + this.cdfgUIDMap.get((AInstructionCDFGNode) source.getOutputs().toArray()[0]).toString() + ":s");
+            if(source instanceof AInstructionCDFGControlFlowSubgraph) {
+                AInstructionCDFGNode control = ((AInstructionCDFGControlFlowSubgraph) source).getControlVertex();
+                edgeBuilder.append("v" + this.cdfgUIDMap.get(control));
+                
+                if(control instanceof InstructionCDFGControlConditionalNode) {    
+                    edgeBuilder.append((edge instanceof InstructionCDFGTrueEdge) ? ":se" : ((edge instanceof InstructionCDFGFalseEdge) ? ":sw" : ""));
+                }else if(control instanceof InstructionCDFGControlMergeNode) {
+                    edgeBuilder.append(":s");
                 }
-                
-                edgeBuilder.append(connector);
-                
-                if (target instanceof InstructionCDFGControlFlowMerge){
-                    AInstructionCDFGNode control = ((AInstructionCDFGControlFlowSubgraph)target).getControlVertex();
-                    edgeBuilder.append("v" + this.cdfgUIDMap.get(control));
-                    
-                    edgeBuilder.append(((control instanceof InstructionCDFGControlMergeNode) || (control instanceof InstructionCDFGControlConditionalNode)) ? ":n" : "");
-                }else if((target instanceof InstructionCDFGDataFlowSubgraph) || (target instanceof AInstructionCDFGControlFlowConditionalSubgraph)){
-                    edgeBuilder.append("v" + this.cdfgUIDMap.get((AInstructionCDFGNode) target.getInputs().toArray()[0]).toString() + ":n");    
-                } 
-        
-                getEdgeAttributes(edge).ifPresent(m -> edgeBuilder.append(renderAttributes(m)));
-        
-                edgeBuilder.append(";\n");
+            }else if(source instanceof InstructionCDFGDataFlowSubgraph){
+                edgeBuilder.append("v" + this.cdfgUIDMap.get((AInstructionCDFGNode) source.getOutputs().toArray()[0]).toString() + ":s");
             }
+            
+            edgeBuilder.append(connector);
+            
+            if (target instanceof InstructionCDFGControlFlowMerge){
+                AInstructionCDFGNode control = ((AInstructionCDFGControlFlowSubgraph)target).getControlVertex();
+                edgeBuilder.append("v" + this.cdfgUIDMap.get(control));
+                
+                edgeBuilder.append(((control instanceof InstructionCDFGControlMergeNode) || (control instanceof InstructionCDFGControlConditionalNode)) ? ":n" : "");
+            }else if((target instanceof InstructionCDFGDataFlowSubgraph) || (target instanceof AInstructionCDFGControlFlowConditionalSubgraph)){          
+                edgeBuilder.append("v" + this.cdfgUIDMap.get((AInstructionCDFGNode) target.getInputs().toArray()[0]).toString() + ":n");    
+            } 
+    
+            getEdgeAttributes(edge).ifPresent(m -> edgeBuilder.append(renderAttributes(m)));
+            edgeBuilder.append(";\n");
+            
         });
         
         return edgeBuilder.toString();
     }
     
-    @SuppressWarnings("unchecked")
     @Override
     protected String exportVertexes(GeneralFlowGraph<AInstructionCDFGSubgraph, AInstructionCDFGEdge> g) {
      

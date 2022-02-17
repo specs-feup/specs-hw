@@ -217,6 +217,10 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
     public OutputPort addOutputPort(String portName, int portWidth) {
         return (OutputPort) addPort(new OutputPortDeclaration(portName, portWidth));
     }
+    
+    public OutputPort addOutputRegisterPort(String portName, int portWidth) {
+        return (OutputPort) addPort(new OutputPortDeclaration(portName, portWidth, true));
+    }
 
     /*
      * Wires
@@ -246,10 +250,9 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
     public VArray addArray(ArrayDeclaration array) {
         var type = array.getVariable().getType();
 
-        if (type == HardwareNodeType.Wire) {
+        if (type == HardwareNodeType.WireDeclaration) {
             getWireDeclarationBlock().addDeclaration(array);
-
-        } else if (type == HardwareNodeType.Register) {
+        } else if (type == HardwareNodeType.RegisterDeclaration) {
             getRegisterDeclarationBlock().addDeclaration(array);
         }
 

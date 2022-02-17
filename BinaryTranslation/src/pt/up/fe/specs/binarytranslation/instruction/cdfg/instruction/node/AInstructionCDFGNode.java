@@ -17,12 +17,15 @@
 
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.node;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 
 /** Class that is the parent of all nodes of an InstructionCDFG. Because of some weirdness, also the Modifiers of the edges are nodes (this will probably change)
  * 
- * @author João Conceição
+ * @author Joï¿½o Conceiï¿½ï¿½o
  *
  */
 public abstract class AInstructionCDFGNode{
@@ -41,6 +44,10 @@ public abstract class AInstructionCDFGNode{
      */
     public String getReference() {
         return this.reference;
+    }
+    
+    public void setReference(String reference) {
+        this.reference = reference;
     }
     
     /** Sets the UID value for the node
@@ -70,7 +77,7 @@ public abstract class AInstructionCDFGNode{
      * @return The unique reference of the node
      */
     public String getUID() {
-        return this.getReference() + this.uid;
+        return this.getReference() +  this.uid;
     }
     
     @Override
@@ -92,6 +99,16 @@ public abstract class AInstructionCDFGNode{
      */
     public Attribute getDOTShape() {
         return DefaultAttribute.createAttribute("circle");
+    }
+    
+    public Map<String, Attribute> getDOTAttributeMap(){
+
+        Map<String, Attribute> map = new LinkedHashMap<>();
+
+        map.put("shape", this.getDOTShape());
+        map.put("label", this.getDOTLabel());
+
+        return map;
     }
     
     /*

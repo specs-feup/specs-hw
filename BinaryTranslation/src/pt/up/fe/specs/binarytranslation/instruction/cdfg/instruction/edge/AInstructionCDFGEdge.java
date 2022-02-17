@@ -18,7 +18,9 @@
 package pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.edge;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.nio.Attribute;
@@ -40,6 +42,17 @@ public abstract class AInstructionCDFGEdge extends DefaultEdge {
     
     public Attribute getDOTArrowTail() {
         return DefaultAttribute.createAttribute("none");
+    }
+    
+    public Map<String, Attribute> getDOTAttributeMap(){
+        Map<String, Attribute> map = new LinkedHashMap<>();
+        
+        map.put("label", this.getDOTLabel()); 
+        map.put("arrowhead", this.getDOTArrowHead());
+        map.put("arrowtail", this.getDOTArrowTail());
+        map.put("dir", DefaultAttribute.createAttribute("both"));
+    
+        return map;
     }
     
     public abstract AInstructionCDFGEdge duplicate();
