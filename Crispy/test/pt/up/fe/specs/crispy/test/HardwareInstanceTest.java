@@ -35,10 +35,18 @@ import pt.up.fe.specs.crispy.lib.MuxNto1;
 import pt.up.fe.specs.crispy.lib.RAMemory;
 import pt.up.fe.specs.crispy.lib.RegisterBank;
 import pt.up.fe.specs.crispy.lib.ShiftRegister;
+import pt.up.fe.specs.crispy.lib.riscv.ALUI32;
 import pt.up.fe.specs.crispy.test.workshop.Add3;
 import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class HardwareInstanceTest {
+
+    @Test
+    public void testALU() {
+
+        var alu = new ALUI32();
+        alu.emit();
+    }
 
     @Test
     public void workshopExample1() {
