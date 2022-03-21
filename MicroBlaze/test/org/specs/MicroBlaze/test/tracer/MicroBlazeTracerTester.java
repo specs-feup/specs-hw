@@ -10,12 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.MicroBlaze.test.tracer;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 
 import pt.up.fe.specs.binarytranslation.test.tracer.TraceGraphTestUtils;
 
@@ -26,8 +25,7 @@ public class MicroBlazeTracerTester {
         /*for (var file : MicroBlazeLivermoreELFN100.values()) {
             TraceGraphTestUtils.testTraceStreamGraph(file, MicroBlazeTraceStream.class);
         }*/
-        TraceGraphTestUtils.testTraceStreamGraph(
-                MicroBlazeLivermoreN10.innerprod, MicroBlazeTraceStream.class);
+        TraceGraphTestUtils.testTraceStreamGraph(MicroBlazeLivermoreN100.innerprod.toTraceStream());
     }
 
     /*
@@ -35,7 +33,6 @@ public class MicroBlazeTracerTester {
      */
     @Test
     public void testBasicBlockTraceUnit() {
-        TraceGraphTestUtils.testBasicBlockTraceUnit(
-                MicroBlazeLivermoreN10.innerprod, MicroBlazeTraceStream.class);
+        TraceGraphTestUtils.testBasicBlockTraceUnit(MicroBlazeLivermoreN100.innerprod.toTraceStream());
     }
 }
