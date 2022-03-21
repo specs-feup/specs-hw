@@ -10,13 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.Arm.test.tracer;
 
 import org.junit.Test;
 import org.specs.Arm.provider.ArmLivermoreN10;
 import org.specs.Arm.provider.ArmLivermoreN100;
-import org.specs.Arm.stream.ArmTraceStream;
 
 import pt.up.fe.specs.binarytranslation.test.tracer.TraceGraphTestUtils;
 
@@ -28,7 +27,7 @@ public class ARMTracerTester {
             TraceGraphTestUtils.testTraceStreamGraph(file, ArmTraceStream.class);
         }*/
         TraceGraphTestUtils.testTraceStreamGraph(
-                ArmLivermoreN100.hydro, ArmTraceStream.class);
+                ArmLivermoreN100.hydro.toTraceStream());
     }
 
     /*
@@ -37,6 +36,6 @@ public class ARMTracerTester {
     @Test
     public void testBasicBlockTraceUnit() {
         TraceGraphTestUtils.testBasicBlockTraceUnit(
-                ArmLivermoreN10.innerprod, ArmTraceStream.class);
+                ArmLivermoreN10.innerprod.toTraceStream());
     }
 }
