@@ -151,7 +151,7 @@ public class BinaryTranslationUtils {
      */
     public static void renderDotty(String pngName, String dottyContents) {
         var dotfile = new File(pngName.replace(".png", ".dot"));
-        dotfile.deleteOnExit();
+        // dotfile.deleteOnExit();
         SpecsIo.write(dotfile, dottyContents);
         BinaryTranslationUtils.renderDotty(dotfile);
     }

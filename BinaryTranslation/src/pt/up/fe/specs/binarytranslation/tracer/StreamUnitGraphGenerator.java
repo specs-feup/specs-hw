@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.tracer;
 
 import java.util.function.Function;
@@ -102,11 +102,13 @@ public class StreamUnitGraphGenerator {
         if (startAddr.longValue() > 0)
             this.skipTo(startAddr);
 
+        // int maxsize = 20; // NOTE: only for tests
         while (tracer.hasNext()) {
             var next = unitGetter.apply(this.tracer);
             tgraph.insert(next);
-            if (next.getEnd().getAddress().longValue() == stopAddr.longValue())
+            if (next.getEnd().getAddress().longValue() == stopAddr.longValue()) // || maxsize == 0)
                 break;
+            // maxsize--;
         }
 
         return tgraph;

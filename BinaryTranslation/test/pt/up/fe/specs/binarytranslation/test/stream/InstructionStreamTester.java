@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.test.stream;
 
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
@@ -21,6 +21,7 @@ public class InstructionStreamTester {
     protected static void printStream(InstructionStream el) {
         // el.advanceTo(el.getApp().getKernelStart());
         // el.advanceTo(0x1600);
+        el.runUntil(el.getApp().getKernelStart());
         try {
             Instruction inst = null;
             while ((inst = el.nextInstruction()) != null) {

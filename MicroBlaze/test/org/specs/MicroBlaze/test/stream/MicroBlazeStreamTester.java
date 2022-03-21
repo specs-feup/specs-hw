@@ -14,7 +14,7 @@
 package org.specs.MicroBlaze.test.stream;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.provider.MicroBlazeRosetta;
+import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 import org.specs.MicroBlaze.provider.MicroBlazeZippedELFProvider;
 
 import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
@@ -28,7 +28,7 @@ import pt.up.fe.specs.binarytranslation.test.stream.InstructionStreamTester;
  */
 public class MicroBlazeStreamTester extends InstructionStreamTester {
 
-    final MicroBlazeZippedELFProvider elfUnderTest = MicroBlazeRosetta.rendering3d;
+    final MicroBlazeZippedELFProvider elfUnderTest = MicroBlazeLivermoreN100.innerprod; // MicroBlazeRosetta.rendering3d;
 
     @Test
     public void testA() {
