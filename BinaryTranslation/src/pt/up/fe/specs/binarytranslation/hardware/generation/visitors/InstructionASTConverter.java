@@ -15,16 +15,16 @@ package pt.up.fe.specs.binarytranslation.hardware.generation.visitors;
 
 import pt.up.fe.specs.binarytranslation.hardware.generation.exception.UnimplementedExpressionException;
 import pt.up.fe.specs.binarytranslation.hardware.generation.exception.UnimplementedStatementException;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNodeType;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareAnchorNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.task.HardwareErrorMessage;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfElseStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.statement.IfStatementASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.InstructionASTVisitor;
+import pt.up.fe.specs.crispy.ast.HardwareNode;
+import pt.up.fe.specs.crispy.ast.HardwareNodeType;
+import pt.up.fe.specs.crispy.ast.block.AlwaysCombBlock;
+import pt.up.fe.specs.crispy.ast.meta.HardwareAnchorNode;
+import pt.up.fe.specs.crispy.ast.task.HardwareErrorMessage;
 
 /**
  * Receives a {@PseudoInstructionASTNode} (top-level node) and converts it to an appropriate Verilog block

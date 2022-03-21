@@ -1,18 +1,14 @@
 /**
- *  Copyright 2021 SPeCS.
+ * Copyright 2021 SPeCS.
  * 
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  * 
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *  under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License. under the License.
  */
 
 package pt.up.fe.specs.binarytranslation.test.instruction.cdfg.segment;
@@ -32,7 +28,6 @@ import pt.up.fe.specs.binarytranslation.instruction.InstructionPseudocode;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.general.general.GeneralFlowGraph;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.instruction.dot.InstructionCDFGDOTExporter;
 import pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.SegmentCDFG;
-import pt.up.fe.specs.binarytranslation.instruction.cdfg.segment.generator.SegmentCDFGGenerator;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionLexer;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser;
 import pt.up.fe.specs.binarytranslation.lex.generated.PseudoInstructionParser.PseudoInstructionContext;
@@ -40,20 +35,22 @@ import pt.up.fe.specs.binarytranslation.lex.listeners.TreeDumper;
 
 public class SegmentCDFGTests {
 
-    private class FakeInstruction implements Instruction, InstructionPseudocode{
-        
+    private class FakeInstruction implements Instruction, InstructionPseudocode {
+
         private String name;
         private String pseudocode;
-        
+
         public FakeInstruction(String name, String pseudocode) {
             this.name = name;
             this.pseudocode = pseudocode;
         }
-        
+
         public PseudoInstructionContext getParseTree() {
-            return (new PseudoInstructionParser(new CommonTokenStream(new PseudoInstructionLexer(new ANTLRInputStream(this.pseudocode))))).pseudoInstruction();
+            return (new PseudoInstructionParser(
+                    new CommonTokenStream(new PseudoInstructionLexer(new ANTLRInputStream(this.pseudocode)))))
+                            .pseudoInstruction();
         }
-        
+
         public String getName() {
             return this.name;
         }
@@ -62,42 +59,41 @@ public class SegmentCDFGTests {
         public String getCode() {
             return this.pseudocode;
         }
-        
+
         @Override
         public InstructionPseudocode getPseudocode() {
             return this;
         }
-        
+
         public void printParseTree() {
             PseudoInstructionContext parse = this.getParseTree();
             var walker = new ParseTreeWalker();
             walker.walk(new TreeDumper(), parse);
         }
-        
+
     }
-    
+
     private final List<Instruction> instructions = List.of(
             new FakeInstruction("addTest", "RC = RA + RB;"),
-            new FakeInstruction("subTest", "RD = RC - RA;")
-            );
-    
+            new FakeInstruction("subTest", "RD = RC - RA;"));
+
     @Test
     public void generateSegmentCDFG() throws IOException {
-        
+
         SegmentCDFG scdfg = new SegmentCDFG(this.instructions);
         scdfg.generate();
-        
+
         this.exportSegmentCDFGAsDOT(scdfg);
-        
+
     }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void exportSegmentCDFGAsDOT(SegmentCDFG scdfg) throws IOException {
         System.out.print("Exporting InstructionCDFG as DOT...");
         InstructionCDFGDOTExporter exp = new InstructionCDFGDOTExporter();
         Writer writer = new StringWriter();
-        exp.exportGraph((GeneralFlowGraph)scdfg, "test", writer);
+        exp.exportGraph((GeneralFlowGraph) scdfg, "test", writer);
         System.out.println("\t" + InstructionCDFGDOTExporter.generateGraphURL(writer.toString()));
     }
-    
+
 }

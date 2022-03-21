@@ -10,25 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.hardware.generation.visitors;
 
 import pt.up.fe.specs.binarytranslation.hardware.generation.exception.HardwareGenerationException;
 import pt.up.fe.specs.binarytranslation.hardware.generation.exception.UnimplementedExpressionException;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.HardwareExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.ParenthesisExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.AdditionExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.LeftShiftExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.MultiplicationExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.aritmetic.SubtractionExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.bitwise.BitWiseAndExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.comparison.ComparisonExpression;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.VariableOperator;
 import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ContinuousStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralBlockingStatement;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.statement.ProceduralNonBlockingStatement;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.BinaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
@@ -37,6 +24,19 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.MetaO
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.ImmediateOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.transformed.VariableOperandASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.InstructionASTVisitor;
+import pt.up.fe.specs.crispy.ast.HardwareNode;
+import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
+import pt.up.fe.specs.crispy.ast.expression.ParenthesisExpression;
+import pt.up.fe.specs.crispy.ast.expression.aritmetic.AdditionExpression;
+import pt.up.fe.specs.crispy.ast.expression.aritmetic.LeftShiftExpression;
+import pt.up.fe.specs.crispy.ast.expression.aritmetic.MultiplicationExpression;
+import pt.up.fe.specs.crispy.ast.expression.aritmetic.SubtractionExpression;
+import pt.up.fe.specs.crispy.ast.expression.bitwise.BitWiseAndExpression;
+import pt.up.fe.specs.crispy.ast.expression.comparison.ComparisonExpression;
+import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
+import pt.up.fe.specs.crispy.ast.statement.ContinuousStatement;
+import pt.up.fe.specs.crispy.ast.statement.ProceduralBlockingStatement;
+import pt.up.fe.specs.crispy.ast.statement.ProceduralNonBlockingStatement;
 
 /**
  * Converts a single {@AssignmentExpressionASTNode} into a single corresponding hardware expression
