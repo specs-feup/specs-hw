@@ -18,17 +18,14 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformHexToDecimal;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveTemporaryVertices;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
-import pt.up.fe.specs.binarytranslation.asm.RegisterProperties;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class MemoryAddressAnalyzer extends ASegmentAnalyzer {
-    private RegisterProperties isaProps;
 
     public MemoryAddressAnalyzer(ATraceInstructionStream stream,
-            ZippedELFProvider elf, RegisterProperties isaProps, int window) {
+            ZippedELFProvider elf, int window) {
         super(stream, elf, window);
-        this.isaProps = isaProps;
     }
 
     public void analyze() {
