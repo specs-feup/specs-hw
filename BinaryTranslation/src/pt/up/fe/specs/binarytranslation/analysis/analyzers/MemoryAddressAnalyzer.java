@@ -3,6 +3,7 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -24,14 +25,15 @@ import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 public class MemoryAddressAnalyzer extends ASegmentAnalyzer {
     private RegisterProperties isaProps;
 
-    public MemoryAddressAnalyzer(ATraceInstructionStream stream, ZippedELFProvider elf, RegisterProperties isaProps, int window) {
+    public MemoryAddressAnalyzer(ATraceInstructionStream stream,
+            ZippedELFProvider elf, RegisterProperties isaProps, int window) {
         super(stream, elf, window);
         this.isaProps = isaProps;
     }
 
     public void analyze() {
         var segs = getSegments();
-        
+
         for (var bb : segs) {
             // Print BB instructions
             handleBasicBlockSummary(bb);
@@ -40,7 +42,7 @@ public class MemoryAddressAnalyzer extends ASegmentAnalyzer {
             var inouts = handleInOuts(bb);
 
             // Prologue dependencies
-            //var prologueDeps = handlePrologueDependencies(tracker);
+            // var prologueDeps = handlePrologueDependencies(tracker);
 
             // Memory graphs
             var graphs = handleMemoryGraphs(bb);
@@ -52,7 +54,7 @@ public class MemoryAddressAnalyzer extends ASegmentAnalyzer {
             var indVars = handleInductionVariables(bb, graphs);
 
             // Check alias for every RAW dependency
-            //handleMemoryComparison(prologueDeps, graphs, indVars, inouts);
+            // handleMemoryComparison(prologueDeps, graphs, indVars, inouts);
         }
     }
 

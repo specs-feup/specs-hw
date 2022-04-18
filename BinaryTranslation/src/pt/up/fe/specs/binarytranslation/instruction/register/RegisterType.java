@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.instruction.register;
 
 public enum RegisterType {
@@ -19,12 +19,16 @@ public enum RegisterType {
     GENERALPURPOSE,
     TEMPORARY,
     STACKPOINTER,
+    FRAMEPOINTER,
 
-    RETURNADDR,
+    // TODO: INTEGER, FIXED, and FLOAT types??
+
+    RETURNADDR, // TODO: same as link register??
     GLOBALPOINTER, // specific to riscv?
     THREADPOINTER,
-    SAVED, // "saved registers" in riscv...
+    SAVED, // "saved registers" in riscv... TODO: what does that mean??
 
+    SYSCALL, // only applicable to aarch64???
     RETURNVALUE,
     PARAMETER,
     HARDZERO,

@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.fe.specs.binarytranslation.instruction.operand;
 
 public enum OperandDataType {
@@ -26,5 +26,5 @@ public enum OperandDataType {
     SIMD_INTEGER,
     SIMD_FLOAT
 
-    // TODO: operands can be both simd and interger and or float...
+    // TODO: operands can be both simd and integer and or float...
 }
