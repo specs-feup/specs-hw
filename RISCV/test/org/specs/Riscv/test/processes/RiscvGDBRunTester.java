@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.Riscv.test.processes;
 
 import java.util.Arrays;
@@ -55,4 +55,25 @@ public class RiscvGDBRunTester extends GDBRunTester {
         var dump = new RiscvELFDump(RiscvLivermoreN100imaf.matmul);
         System.out.println(dump.getInstruction(Long.valueOf("80", 16)));
     }
+
+    /*
+    @Test
+    public void fastTest() {
+    
+        var elf = RiscvLivermoreN100imaf.innerprod;
+        var el = elf.toTraceStream();
+        int i = 0;
+        try {
+            Instruction inst = null;
+            while ((inst = el.nextInstruction()) != null && i++ < 50) {
+                inst.printInstruction();
+                System.out.println("op:" + inst.getProperties().getOpCode());
+            }
+            el.close();
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+    }*/
 }
