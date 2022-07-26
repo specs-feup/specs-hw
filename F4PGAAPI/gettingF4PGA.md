@@ -1,31 +1,26 @@
-F4PGA
+# F4PGA API
 
-.compile and run your own designs using the F4PGA toolchain
+## What is F4PGA
 
+## F4PGA download and installation
 
-This section describes how to compile and download your own designs to an FPGA using only the F4PGA toolchain.
+### Requirements
 
-
-		Update and install xz-utils depending on your Linux distribution:
+Update and install xz-utils depending on your Linux distribution:
+			
+	Debian:
+	
+		apt update -y
+		apt install -y git wget xz-utils
 		
-			Ubuntu:
-			
-				apt update -y
-				apt install -y git wget xz-utils
-			
-			Debian:
-			
-				apt update -y
-				apt install -y git wget xz-utils
-				
-			CentOS:
-			
-				yum update -y
-				yum install -y git wget which xz
-				
-			Fedora:
-			
-				dnf install -y findutils git wget which xz
+	CentOS:
+	
+		yum update -y
+		yum install -y git wget which xz
+		
+	Fedora:
+	
+		dnf install -y findutils git wget which xz
 
 	
 		Clone a repository (example):
@@ -34,16 +29,16 @@ This section describes how to compile and download your own designs to an FPGA u
 			cd f4pga-examples 
 	
 	
-		Installing F4PGA toolchain has 3 steps:
+### Installing F4PGA toolchain:
 		
-			- Installing Conda package manager:
+#### Installing Conda package manager:
 			
-				wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O conda_installer.sh
+	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O conda_installer.sh
 			
 			
-			- Choosing installation directory
+#### Choosing installation directory
 			
-				Directory can be either home directory (~/opt/f4pga) or system directory (/opt/f4pga)
+Directory can be either home directory (~/opt/f4pga) or system directory (/opt/f4pga)
 				
 				If you choose system directory, you'll need root permition to installation.
 				Add sudo commands to instructions:
@@ -53,7 +48,7 @@ This section describes how to compile and download your own designs to an FPGA u
 				
 				Select one target FPGA family:
 				
-					Ubuntu:
+					Artix 7:
 			
 						export FPGA_FAM=xc7
 						
@@ -89,8 +84,22 @@ This section describes how to compile and download your own designs to an FPGA u
 				
 					wget -qO- https://storage.googleapis.com/symbiflow-arch-defs-install/quicklogic-arch-defs-qlf-fc5d8da.tar.gz | tar -xzC $F4PGA_INSTALL_DIR/$FPGA_FAM/
 
+## F4PGA workflow
 
-	
+1. run the config file
+the configuration depends on the FPGA family: (artix 7 or eos s3)
+(the current configuration file is for the artix 7 family)
+
+2. Building
+ the building option are depending on the hardware you running: 
+ arty 35t
+ arty 100t
+ nexys 4 ddr
+ basys 3
+ Nexys Video
+ Zybo Z7
+
+
 	
 	
 	
