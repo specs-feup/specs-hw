@@ -21,12 +21,6 @@ Update and install xz-utils depending on your Linux distribution:
 	Fedora:
 	
 		dnf install -y findutils git wget which xz
-
-	
-		Clone a repository (example):
-		
-			git clone https://github.com/chipsalliance/f4pga-examples
-			cd f4pga-examples 
 	
 	
 ### Installing F4PGA toolchain:
