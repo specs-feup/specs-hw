@@ -2,6 +2,16 @@
 
 ## What is F4PGA
 F4PGA is an end-to-end FPGA synthesis toolchain, because of that it provides all the necessary tools to convert input Hardware Description Language (HDL) sources into a final bitstream. It is simple to use however, the whole synthesis and implementation process is not trivial.
+
+## Suported boards
+
+* arty 35t
+* arty 100t
+* nexys 4 ddr
+* basys 3
+* Nexys Video
+* Zybo Z7
+
 ## F4PGA download and installation
 
 ### Requirements
@@ -86,12 +96,7 @@ the configuration depends on the FPGA family: (artix 7 or eos s3)
 
 2. Building
  the building option are depending on the hardware you running: 
- arty 35t
- arty 100t
- nexys 4 ddr
- basys 3
- Nexys Video
- Zybo Z7
+
 
 
 	
