@@ -1,7 +1,7 @@
 # F4PGA API
 
 ## What is F4PGA
-
+F4PGA is an end-to-end FPGA synthesis toolchain, because of that it provides all the necessary tools to convert input Hardware Description Language (HDL) sources into a final bitstream. It is simple to use however, the whole synthesis and implementation process is not trivial.
 ## F4PGA download and installation
 
 ### Requirements
@@ -23,40 +23,40 @@ Update and install xz-utils depending on your Linux distribution:
 		dnf install -y findutils git wget which xz
 	
 	
-### Installing F4PGA toolchain:
+
 		
-#### Installing Conda package manager:
+ Installing Conda package manager:
 			
 	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O conda_installer.sh
 			
 			
-#### Choosing installation directory
+### Choosing installation directory
 			
 Directory can be either home directory (~/opt/f4pga) or system directory (/opt/f4pga)
 				
-				If you choose system directory, you'll need root permition to installation.
-				Add sudo commands to instructions:
-				
-					export export F4PGA_INSTALL_DIR=~/opt/f4pga
+If you choose system directory, you'll need root permition to installation.
+Add sudo commands to instructions:
+
+	export F4PGA_INSTALL_DIR=~/opt/f4pga
 					
 				
-				Select one target FPGA family:
+Select one target FPGA family:
 				
-					Artix 7:
-			
-						export FPGA_FAM=xc7
+Artix 7:
+
+	export FPGA_FAM=xc7
+	
+
+EOS S3:
+
+	export FPGA_FAM=eos-s3
 						
-					
-					EOS S3:
-			
-						export FPGA_FAM=eos-s3
-						
 				
-				Setup Conda and System's environment:
-				
-					bash conda_installer.sh -u -b -p $F4PGA_INSTALL_DIR/$FPGA_FAM/conda;
-					source "$F4PGA_INSTALL_DIR/$FPGA_FAM/conda/etc/profile.d/conda.sh";
-					conda env create -f $FPGA_FAM/environment.yml
+Setup Conda and System's environment:
+
+	bash conda_installer.sh -u -b -p $F4PGA_INSTALL_DIR/$FPGA_FAM/conda;
+	source "$F4PGA_INSTALL_DIR/$FPGA_FAM/conda/etc/profile.d/conda.sh";
+	conda env create -f $FPGA_FAM/environment.yml
 			
 			
 			
