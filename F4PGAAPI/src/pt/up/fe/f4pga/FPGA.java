@@ -20,6 +20,16 @@ public class FPGA {
 		this.hwType = hwType;
 	}
 
+	public FPGA getFPGA(String fpgaHwType) throws Exception {
+
+		for (FPGA fpga : list) {
+			if (fpga.hwType.equals(fpgaHwType))
+				return fpga;
+		}
+		throw new Exception("Invalid FPGA model");
+
+	}
+
 	public String getFpgaFamily() {
 		return fpgaFamily;
 	}

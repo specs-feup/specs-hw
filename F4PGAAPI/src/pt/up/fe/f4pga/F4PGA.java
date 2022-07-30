@@ -14,54 +14,29 @@ public class F4PGA {
 
 	final ArrayList<FPGA> list = new ArrayList<>();
 
-	public void init(String fpgaFamilyName, String fpgaHwType) throws Exception {
+	public void init(String fpgaHwType) throws Exception {
 
 		// Checking if FPGA is supported by F4PGA
-		boolean aux = isFpgaValid(fpgaFamilyName, fpgaHwType);
+		FPGA fpgaObject = new FPGA("", "");
+		FPGA ValidFPGA = fpgaObject.getFPGA(fpgaHwType);
 
-		if (aux == false) {
-			throw new Exception("Invalid FPGA Family Name");
-		}
-
-		// Saving FPGA in a class variable
-		validFPGA = new FPGA(fpgaFamilyName, fpgaHwType);
+		String fpgaFamilyName = ValidFPGA.getFpgaFamily();
 
 		// getting the resource (f4pga_config.sh)
-		String i = SpecsIo.getResource("pt/up/fe/f4pga/f4pga_config.sh");
+		String config_resource = SpecsIo.getResource("pt/up/fe/f4pga/f4pga_config.sh");
 
 		// Creating a replacer
-		Replacer r = new Replacer(i);
+		Replacer init_replacer = new Replacer(config_resource);
 
-		r.replace("<FPGA_FAM>", fpgaFamilyName);
+		init_replacer.replace("<FPGA_FAM>", fpgaFamilyName);
 
-		System.out.println(i);
+		System.out.println(config_resource);
 
 		var processOutput = SpecsSystem.runProcess(Arrays.asList("export F4PGA_INSTALL_DIR=~/opt/f4pga"), true, false);
 
 		// FPGA_FAM="xc7"
 		// var processOutput = SpecsSystem.runProcess(Arrays.asList("FPGA_FAM=\"xc7\""),
 		// true, false);
-	}
-
-	public boolean isFpgaValid(String fpgaFamilyName, String fpgaHwType) {
-
-		boolean aux = false;
-
-		for (int i = 0; i < list.size(); i++) {
-			if ((list.get(i).getFpgaFamily() == fpgaFamilyName) && (list.get(i).getHwType() == fpgaHwType)) {
-				aux = true;
-			}
-		}
-		return aux;
-
-	}
-
-	public void build(String buildDir) {
-		String target = validFPGA.getHwType;
-
-		String buildCmd = "TARGET=/" + target + " make -C " + buildDir;
-		var processOutput = SpecsSystem.runProcess(Arrays.asList(buildCmd), true, false);
-
 	}
 
 }
