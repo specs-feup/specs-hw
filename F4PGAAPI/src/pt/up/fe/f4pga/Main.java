@@ -9,20 +9,16 @@ import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.Replacer;
 
 public class Main {
-
-	public static void main(String[] args) {
+	
+	public static void main(String[] args) throws Exception {
 		
-		F4PGA a = new F4PGA();
-		try {
-			a.init("eos-s3", "hw");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		F4PGA basis3F4PGA = new F4PGA();
+		basis3F4PGA.init("basis3");
+		
+		
 		
 		FPGA object = new FPGA("","");
-		
-		ArrayList<FPGA> list = object.getListValidFPGA();
+
 		
 		
 		System.out.println("aqui");
@@ -38,5 +34,7 @@ public class Main {
 		//String i = SpecsIo.getResource("resourceExample");
 		
 	}
+	
+	
 
 }
