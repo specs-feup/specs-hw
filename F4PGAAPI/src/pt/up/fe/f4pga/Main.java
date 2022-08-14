@@ -9,20 +9,33 @@ import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.Replacer;
 
 public class Main {
-
-	public static void main(String[] args) {
+	
+	public static void main(String[] args) throws Exception {
+		
+		FPGA a1 = new FPGA("basis3","artix7");
+		FPGA a2 = new FPGA("arty 35t","artix7");
+		FPGA a3 = new FPGA("arty 100t","artix7");
+		FPGA a4 = new FPGA("nexys4 ddr","artix7");
+		FPGA a5 = new FPGA("nexys video","artix7");
+		FPGA a6 = new FPGA("zylo-z7","artix7");
+		
+		ArrayList<FPGA> listFPGA = new ArrayList<>();
+		listFPGA.add(a1);
+		listFPGA.add(a2);
+		listFPGA.add(a3);
+		listFPGA.add(a4);
+		listFPGA.add(a5);
+		listFPGA.add(a6);
+		
+		
 		
 		F4PGA a = new F4PGA();
-		try {
-			a.init("eos-s3", "hw");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		a.init("basis3");
+		
+		
 		
 		FPGA object = new FPGA("","");
-		
-		ArrayList<FPGA> list = object.getListValidFPGA();
+
 		
 		
 		System.out.println("aqui");
@@ -38,5 +51,7 @@ public class Main {
 		//String i = SpecsIo.getResource("resourceExample");
 		
 	}
+	
+	
 
 }
