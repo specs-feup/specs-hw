@@ -13,9 +13,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		
 		F4PGA basis3F4PGA = new F4PGA();
-		basis3F4PGA.init("basis3");
-		
-		
+		basis3F4PGA.init("basis3")
 		
 		FPGA object = new FPGA("","");
 

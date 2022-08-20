@@ -14,6 +14,7 @@ public class F4PGA {
 
 	FPGA validFPGA;
 
+
 	ArrayList<FPGA> getFpgaList() {
 
 		FPGA a1 = new FPGA("basis3","artix7");
