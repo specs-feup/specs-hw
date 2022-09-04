@@ -1,5 +1,6 @@
 package pt.up.fe.f4pga;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,12 +13,16 @@ import pt.up.fe.specs.util.utilities.Replacer;
 
 public class F4PGA {
 
+	String F4PGA_INSTALL_DIR="~/opt/f4pga";
+	String F4PGA_FAM_DIR;
+
 	FPGA validFPGA;
+	
 
 
 	ArrayList<FPGA> getFpgaList() {
 
-		FPGA a1 = new FPGA("basis3","artix7");
+		FPGA a1 = new FPGA("basis3","xc7");
 		FPGA a2 = new FPGA("arty 35t","artix7");
 		FPGA a3 = new FPGA("arty 100t","artix7");
 		FPGA a4 = new FPGA("nexys4 ddr","artix7");
@@ -54,11 +59,16 @@ public class F4PGA {
 
 		System.out.println(i);
 
-		var processOutput = SpecsSystem.runProcess(Arrays.asList("export F4PGA_INSTALL_DIR=~/opt/f4pga"), true, false);
+		F4PGA_FAM_DIR = F4PGA_INSTALL_DIR +'/' +validFPGA.getFpgaFamily();
+		String command = "cd "+F4PGA_FAM_DIR +"/conda/etc/profile.d";
+		System.out.println(command);
+		
+		
+		SpecsSystem.runProcess(Arrays.asList(command), false, true);
+		SpecsSystem.runProcess(Arrays.asList("cd ~/opt/f4pga/xc7/conda/etc/profile.d"), false, true);
+		SpecsSystem.runProcess(Arrays.asList("pwd"), false, true);
+		SpecsSystem.runProcess(Arrays.asList("cd .."), false, true);
 
-		// FPGA_FAM="xc7"
-		// var processOutput = SpecsSystem.runProcess(Arrays.asList("FPGA_FAM=\"xc7\""),
-		// true, false);
 	}
 
 	public boolean isFpgaValid(String fpgaHwType) {
