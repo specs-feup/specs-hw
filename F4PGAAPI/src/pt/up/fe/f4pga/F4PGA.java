@@ -13,66 +13,61 @@ import pt.up.fe.specs.util.utilities.Replacer;
 
 public class F4PGA {
 
-	String F4PGA_INSTALL_DIR="~/opt/f4pga";
-	String F4PGA_FAM_DIR;
+	String DEFAULT_F4PGA_INSTALL_DIR="~/opt/f4pga";
 
 	FPGA validFPGA;
-	
+	FPGA_Flow flow;
 
+	private ArrayList<FPGA> getFpgaList() {
 
-	ArrayList<FPGA> getFpgaList() {
-
-		FPGA a1 = new FPGA("basis3","xc7");
-		FPGA a2 = new FPGA("arty 35t","artix7");
-		FPGA a3 = new FPGA("arty 100t","artix7");
-		FPGA a4 = new FPGA("nexys4 ddr","artix7");
-		FPGA a5 = new FPGA("nexys video","artix7");
-		FPGA a6 = new FPGA("zylo-z7","artix7");
+		FPGA basis3 = new FPGA("basis3","xc7");
+		FPGA arty_35t = new FPGA("arty 35t","xc7");
+		FPGA arty_100t = new FPGA("arty 100t","xc7");
+		FPGA nexys4_ddr = new FPGA("nexys4 ddr","xc7");
+		FPGA nexys_video = new FPGA("nexys video","xc7");
+		FPGA zylo_z7 = new FPGA("zylo-z7","xc7");
+		
 		
 		ArrayList<FPGA> listFPGA = new ArrayList<>();
-		listFPGA.add(a1);
-		listFPGA.add(a2);
-		listFPGA.add(a3);
-		listFPGA.add(a4);
-		listFPGA.add(a5);
-		listFPGA.add(a6);
+		
+		listFPGA.add(basis3);
+		listFPGA.add(arty_35t);
+		listFPGA.add(arty_100t);
+		listFPGA.add(nexys4_ddr);
+		listFPGA.add(nexys_video);
+		listFPGA.add(zylo_z7);
 		
 		return listFPGA;
 	}
-
-
-	public void init(String fpgaHwType) throws Exception {
-
-
-		// Checking if FPGA is supported by F4PGA
-		if (!isFpgaValid(fpgaHwType)) {
-			throw new Exception("Invalid FPGA");
-		}
-
-		// getting the resource (f4pga_config.sh)
-		String i = SpecsIo.getResource("pt/up/fe/f4pga/f4pga_config.sh");
-
-		// Creating a replacer
-		Replacer r = new Replacer(i);
-
-		r.replace("<FPGA_FAM>", validFPGA.getFpgaFamily());
-
-		System.out.println(i);
-
-		F4PGA_FAM_DIR = F4PGA_INSTALL_DIR +'/' +validFPGA.getFpgaFamily();
-		String command = "cd "+F4PGA_FAM_DIR +"/conda/etc/profile.d";
-		System.out.println(command);
+	
+	private List<String> getEnvCommmands(String installDir) {
 		
+		String famDir = installDir +'/' + validFPGA.getFpgaFamily();
 		
-		SpecsSystem.runProcess(Arrays.asList(command), false, true);
-		SpecsSystem.runProcess(Arrays.asList("cd ~/opt/f4pga/xc7/conda/etc/profile.d"), false, true);
-		SpecsSystem.runProcess(Arrays.asList("pwd"), false, true);
-		SpecsSystem.runProcess(Arrays.asList("cd .."), false, true);
-
+		String exportF4pgaCommand = "export PATH=" + installDir + "/install/bin:$PATH";
+		String sourceCondaCommand = "source " + famDir + "/conda/etc/profile.d/conda.sh";
+		String activateCondaCommand = "conda activate " + validFPGA.getFpgaFamily();
+		
+		List<String> commandList = new List<>();
+		
+		commandList.add(exportF4pgaCommand);
+		commandList.add(sourceCondaCommand);
+		commandList.add(activateCondaCommand);
+		
+		return commandList;
 	}
-
-	public boolean isFpgaValid(String fpgaHwType) {
+	
+	private List<String> getBuildCommmands(String installDir) {
 		
+		// f4pga build --flow ./flow.json
+		
+		List<String> commandList = new List<>();
+		
+		return commandList;
+	}
+		
+	private void getFPGA(String fpgaHwType) throws Exception {
+
 		ArrayList<FPGA> list = getFpgaList();
 
 		for (int index = 0; index < list.size(); index++) {
@@ -81,23 +76,36 @@ public class F4PGA {
 			if (currentFPGA.getHwType().equalsIgnoreCase(fpgaHwType)) {
 				
 				validFPGA = currentFPGA;
-				return true;
+				return;
 			}
 		}
-		
-		return false;
+		throw new Exception("Invalid FPGA");
 	}
+	
+	public void init(String fpgaHwType) throws Exception {
 
+		String F4pgaInstallDir = DEFAULT_F4PGA_INSTALL_DIR;
+		// Checking if FPGA is supported by F4PGA
+		getFPGA(fpgaHwType);
+		List<String> commandList = getInitCommmands(F4pgaInstallDir);
+		getResources();
+
+		SpecsSystem.runProcess(commandList, false, true);
+	}
+	
+	public void config(String hdlSourceDir, String topName){	
+		flow.newFlow(hdlSourceDir, topName);
+	}
 	public void build(String buildDir) {
+		//fpgaFlowGenerate(String sourcePath, String topName)
 		String target = validFPGA.getHwType();
+		
 
 		String buildCmd = "TARGET=/" + target + " make -C " + buildDir;
 		var processOutput = SpecsSystem.runProcess(Arrays.asList(buildCmd), true, false);
 
 	}
 	
-	
-	
-	
-
+	public void upload() {
+	}
 }

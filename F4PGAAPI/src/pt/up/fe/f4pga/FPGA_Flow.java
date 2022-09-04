@@ -1,6 +1,8 @@
 package pt.up.fe.f4pga;
+package pt.up.fe.XDC;
 
 import java.util.Arrays;
+import java.util.List;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsSystem;
@@ -8,60 +10,62 @@ import pt.up.fe.specs.util.utilities.Replacer;
 
 public class FPGA_Flow {
 	
+	String flowString;
 	
-	//get resoruce -> replace -> criar ficheiro .json
-	//flow.generate(source_path, top_name)
-	//topName == main method, first method to be called
+	String hdlSourceDir;
+	String topName;
+	List<String> targetList;
+	String buildDir;
 	
+	class XDC xilinixDC;
 	
-	public void fpgaFlowGenerate(String sourcePath, String topName) {
+	public String newFlow(String _hdlSourceDir, String _topName) {
 		
-		String i = SpecsIo.getResource(sourcePath);
-
-		// Creating a replacer
-		Replacer r = new Replacer(i);
-
-		r.replace("counter.v", fpgaFamily);
-		r.replace("arty.xdc", fpgaFamily);
-		r.replace("synth.log", fpgaFamily);
-		r.replace("pack.log", fpgaFamily);
-		r.replace("top", fpgaFamily);
-		r.replace("<default_target>", fpgaFamily);
-		r.replace("<build_dir>", fpgaFamily);
-
-		System.out.println(i);
-
-		var processOutput = SpecsSystem.runProcess(Arrays.asList("export F4PGA_INSTALL_DIR=~/opt/f4pga"), true, false);
+		flowString = SpecsIo.getResource(flow.json);
 		
+		List<String> _targetList = new List<>();
+		_targetList.add("bitstream");
+
+		sourceFromList(_hdlSourceDir);
+		changeTopName(_topName);
+		changeTarget(_targetList);	
+		changeBuildDir("local_dir");
+		// default values from creating a flow.json file
+		
+		return flowString;
 	}
 	
-	
-	/*{
-    	"default_part": "XC7A35TCSG324-1",
-    	 
-    	//we have default_platform defined, we can skip the --part argument. 
-    	//We can also skip the --target argument because we have a default_target defined for the chosen platform.
-    	 *
-    	"dependencies": {
-        	"sources": ["counter.v"], // use replacer here with a list of the source files
-        	"xdc": ["arty.xdc"],
-        	"synth_log": "synth.log",
-        	"pack_log": "pack.log",
-    	},
-    	"values": {
-        	"top": "top" 
-    	},
-    	"XC7A35TCSG324-1": {
-        	"default_target": "<default_target>",
-        	"dependencies": {
-            	"build_dir": "<build_dir>"
-        	}
-    	}
-	  }*/
-	
-	
-	
-	
-	
+	public void sourceFromList(String _hdlSourceDir) {
 
+		Replacer replacer = new Replacer(flowString);
+		String sourceListString = "TODO";
+
+		replacer.replace("<source_list>", sourceListString);
+		hdlSourceDir = _hdlSourceDir;
+	}
+
+	public void changeTopName(String _topName) {
+
+		Replacer replacer = new Replacer(flowString);
+
+		replacer.replace("<source_list>", _topName);
+		topName = _topName;
+	}
+	
+	public void changeBuildDir(String _buildDir) {
+
+		Replacer replacer = new Replacer(flowString);
+
+		replacer.replace("build_dir>", _buildDir);
+		buildDir = _buildDir;
+	}
+	
+	public void changeTarget(List<String> _targetList) {
+
+		Replacer replacer = new Replacer(flowString);
+		String sourceListString = "TODO";
+
+		replacer.replace("<source_list>", sourceListString);
+		targetList = _targetList;
+	}
 }
