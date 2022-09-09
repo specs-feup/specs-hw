@@ -1,71 +1,67 @@
 package pt.up.fe.f4pga;
-package pt.up.fe.XDC;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.util.SpecsIo;
-import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.Replacer;
 
 public class FPGA_Flow {
-	
-	String flowString;
-	
-	String hdlSourceDir;
-	String topName;
-	List<String> targetList;
-	String buildDir;
-	
-	class XDC xilinixDC;
-	
-	public String newFlow(String _hdlSourceDir, String _topName) {
-		
-		flowString = SpecsIo.getResource("flow.json");
-		
-		List<String> _targetList = new List<>();
-		_targetList.add("bitstream");
 
-		sourceFromList(_hdlSourceDir);
-		changeTopName(_topName);
-		changeTarget(_targetList);	
-		changeBuildDir("local_dir");
-		// default values from creating a flow.json file
-		
-		return flowString;
-	}
-	
-	public void sourceFromList(String _hdlSourceDir) {
+    String flowString;
+    String hdlSourceDir;
+    String topName;
+    List<String> targetList;
+    String buildDir;
+    XDC xilinixDC;
 
-		Replacer replacer = new Replacer(flowString);
-		String sourceListString = "TODO";
+    public String newFlow(String _hdlSourceDir, String _topName) {
 
-		replacer.replace("<source_list>", sourceListString);
-		hdlSourceDir = _hdlSourceDir;
-	}
+        flowString = SpecsIo.getResource("flow.json");
 
-	public void changeTopName(String _topName) {
+        List<String> _targetList = new ArrayList<>();
+        _targetList.add("bitstream");
 
-		Replacer replacer = new Replacer(flowString);
+        sourceFromList(_hdlSourceDir);
+        changeTopName(_topName);
+        changeTarget(_targetList);
+        changeBuildDir("local_dir");
+        // default values from creating a flow.json file
 
-		replacer.replace("<source_list>", _topName);
-		topName = _topName;
-	}
-	
-	public void changeBuildDir(String _buildDir) {
+        return flowString;
+    }
 
-		Replacer replacer = new Replacer(flowString);
+    public void sourceFromList(String _hdlSourceDir) {
 
-		replacer.replace("build_dir>", _buildDir);
-		buildDir = _buildDir;
-	}
-	
-	public void changeTarget(List<String> _targetList) {
+        Replacer replacer = new Replacer(flowString);
+        String sourceListString = "TODO";
 
-		Replacer replacer = new Replacer(flowString);
-		String sourceListString = "TODO";
+        replacer.replace("<source_list>", sourceListString);
+        hdlSourceDir = _hdlSourceDir;
+    }
 
-		replacer.replace("<source_list>", sourceListString);
-		targetList = _targetList;
-	}
+    public void changeTopName(String _topName) {
+
+        Replacer replacer = new Replacer(flowString);
+
+        replacer.replace("<source_list>", _topName);
+        topName = _topName;
+    }
+
+    public void changeBuildDir(String _buildDir) {
+
+        Replacer replacer = new Replacer(flowString);
+
+        replacer.replace("build_dir>", _buildDir);
+        buildDir = _buildDir;
+    }
+
+    public void changeTarget(List<String> _targetList) {
+
+        Replacer replacer = new Replacer(flowString);
+        String sourceListString = "TODO";
+
+        replacer.replace("<source_list>", sourceListString);
+        targetList = _targetList;
+    }
 }
