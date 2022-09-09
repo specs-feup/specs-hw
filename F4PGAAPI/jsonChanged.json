@@ -1,7 +1,7 @@
 {
-    "default_part": "<PART_NUMBER>",
+    "default_part": "XC7A35T-1CPG236C",
     "dependencies": {
-        "sources": <SOURCE_LIST>, 
+        "sources": ["counter1.v", "counter2.v"], 
         "xdc": [
             "arty.xdc"
         ],
@@ -11,7 +11,7 @@
     "values": {
         "top": "top"
     },
-    "<PART_NUMBER>": {
+    "XC7A35T-1CPG236C": {
         "default_target": "<default_target>",
         "dependencies": {
             "build_dir": "<build_dir>"

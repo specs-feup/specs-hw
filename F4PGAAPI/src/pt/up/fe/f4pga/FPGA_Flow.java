@@ -19,7 +19,7 @@ public class FPGA_Flow {
 
         flowString = SpecsIo.getResource("flow.json");
 
-        List<String> _targetList = new ArrayList<>();
+        var _targetList = new ArrayList<>();
         _targetList.add("bitstream");
 
         sourceFromList(_hdlSourceDir);
@@ -33,8 +33,8 @@ public class FPGA_Flow {
 
     public void sourceFromList(String _hdlSourceDir) {
 
-        Replacer replacer = new Replacer(flowString);
-        String sourceListString = "TODO";
+        var replacer = new Replacer(flowString);
+        var sourceListString = "TODO";
 
         replacer.replace("<source_list>", sourceListString);
         hdlSourceDir = _hdlSourceDir;
@@ -42,7 +42,7 @@ public class FPGA_Flow {
 
     public void changeTopName(String _topName) {
 
-        Replacer replacer = new Replacer(flowString);
+        var replacer = new Replacer(flowString);
 
         replacer.replace("<source_list>", _topName);
         topName = _topName;
@@ -50,7 +50,7 @@ public class FPGA_Flow {
 
     public void changeBuildDir(String _buildDir) {
 
-        Replacer replacer = new Replacer(flowString);
+        var replacer = new Replacer(flowString);
 
         replacer.replace("build_dir>", _buildDir);
         buildDir = _buildDir;
@@ -58,7 +58,7 @@ public class FPGA_Flow {
 
     public void changeTarget(List<String> _targetList) {
 
-        Replacer replacer = new Replacer(flowString);
+        var replacer = new Replacer(flowString);
         String sourceListString = "TODO";
 
         replacer.replace("<source_list>", sourceListString);
