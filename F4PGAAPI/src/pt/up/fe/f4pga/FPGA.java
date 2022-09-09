@@ -1,17 +1,13 @@
 package pt.up.fe.f4pga;
 
+import java.util.ArrayList;
 
 public class FPGA {
 
 	String fpgaFamily;
-<<<<<<< HEAD
+	
 	String hwType;
 	
-	public FPGA(String hwType , String fpgaFamily) {
-		this.fpgaFamily=fpgaFamily;
-=======
-
-	String hwType;
 
 	final FPGA a1 = new FPGA("artix7", "basis3");
 	final FPGA a2 = new FPGA("artix7", "arty 35t");
@@ -22,7 +18,6 @@ public class FPGA {
 
 	public FPGA(String fpgaFamily, String hwType) {
 		this.fpgaFamily = fpgaFamily;
->>>>>>> e65de98be7f7cbcd04e2567b425c0cd0172848d1
 		this.hwType = hwType;
 	}
 
@@ -33,8 +28,7 @@ public class FPGA {
 	public String getHwType() {
 		return hwType;
 	}
-<<<<<<< HEAD
-=======
+
 
 	public ArrayList<FPGA> getListValidFPGA() {
 		ArrayList<FPGA> list = new ArrayList<>();
@@ -48,6 +42,6 @@ public class FPGA {
 		return list;
 
 	}
->>>>>>> e65de98be7f7cbcd04e2567b425c0cd0172848d1
+
 
 }

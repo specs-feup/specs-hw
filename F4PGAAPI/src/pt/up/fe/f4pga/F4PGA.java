@@ -48,7 +48,7 @@ public class F4PGA {
 		String sourceCondaCommand = "source " + famDir + "/conda/etc/profile.d/conda.sh";
 		String activateCondaCommand = "conda activate " + validFPGA.getFpgaFamily();
 		
-		List<String> commandList = new List<>();
+		List<String> commandList = new ArrayList<>();
 		
 		commandList.add(exportF4pgaCommand);
 		commandList.add(sourceCondaCommand);
@@ -61,7 +61,7 @@ public class F4PGA {
 		
 		// f4pga build --flow ./flow.json
 		
-		List<String> commandList = new List<>();
+		List<String> commandList = new ArrayList<>();
 		
 		return commandList;
 	}

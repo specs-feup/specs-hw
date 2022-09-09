@@ -21,7 +21,7 @@ public class FPGA_Flow {
 	
 	public String newFlow(String _hdlSourceDir, String _topName) {
 		
-		flowString = SpecsIo.getResource(flow.json);
+		flowString = SpecsIo.getResource("flow.json");
 		
 		List<String> _targetList = new List<>();
 		_targetList.add("bitstream");

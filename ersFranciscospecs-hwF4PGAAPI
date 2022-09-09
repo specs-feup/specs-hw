@@ -1,0 +1,1406 @@
+[33mcommit 0aa4e98ef67b11691b7da333c5ba3b5e2b099bd8[m[33m ([m[1;36mHEAD -> [m[1;32mbranchFrancisco[m[33m, [m[1;31morigin/branchFrancisco[m[33m)[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Sun Sep 4 10:42:07 2022 +0100
+
+    minor fixes
+
+[33mcommit a89a38ded8cf76245f438423c36d8b740e7abb87[m
+Merge: 02571597 afa0f28f
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Sat Aug 20 12:46:00 2022 +0100
+
+    Merge branch 'branchFrancisco' of https://github.com/specs-feup/specs-hw into branchFrancisco
+    Fix fpga list
+
+[33mcommit 025715972d612245a9593b448fc22138267d3ecb[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Sun Aug 14 11:36:00 2022 +0100
+
+    Created 2 classes, F4PGA_Shell and FPGA_Flow
+
+[33mcommit afa0f28f5d9884fc38276e577ca4e6138d85e5ed[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Sun Aug 14 11:36:15 2022 +0100
+
+    Created 2 classes, F4PGA_Shell and FPGA_Flow
+
+[33mcommit 484773dd7675dc289304ebf810ff4cf8587f33ce[m
+Merge: e1a02b4f 9abc856e
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Thu Aug 11 14:56:15 2022 +0100
+
+    Merge branch 'branchFrancisco' of https://github.com/specs-feup/specs-hw into branchFrancisco
+
+[33mcommit 9abc856e4d241ba57617779392f075b98578a464[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Thu Jul 28 12:11:42 2022 +0100
+
+    added suported boards section to readme file
+
+[33mcommit ced6bbc605527893cad5bbf897b5e4bb566b17bd[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Thu Jul 28 12:08:29 2022 +0100
+
+    added "what is f4pga" section to readme and other minor fixes
+
+[33mcommit c12c17ad737506ab5065e354d6a8b617b339f1fe[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Thu Jul 28 12:07:26 2022 +0100
+
+    added "what is f4pga" section to readme
+
+[33mcommit 4b72fa43ddeae0d512725d22f2592774c3cc90c3[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Thu Jul 28 11:54:04 2022 +0100
+
+    added build script to resources
+
+[33mcommit 482eaf7d0d667bdee3e94c0017a40d38cbbefe3c[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Wed Jul 27 22:55:41 2022 +0100
+
+    Development in the Java project
+
+[33mcommit 7a402255b0797edb1226de9784a0d3a183dd3091[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Wed Jul 27 18:30:49 2022 +0100
+
+    Developments in Main.java. Class F4PGA.java and started
+
+[33mcommit 826d8c4616373d3c5819a1e7e784279e22503d95[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Wed Jul 27 14:49:59 2022 +0100
+
+    Eclipse project created
+
+[33mcommit ce04bf078c192e25a51497b3abd7e87eacf189bf[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Wed Jul 27 12:09:07 2022 +0100
+
+    Replacing makefile positioReplacing makefile position
+
+[33mcommit a7c8d34343a446b7e20e81182386390aeb6cdab1[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Wed Jul 27 00:39:49 2022 +0100
+
+    removed cloning examples in installation process (readme)
+
+[33mcommit 32b1dba6e8686aa11753335a08701bceaba507a6[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Wed Jul 27 00:39:16 2022 +0100
+
+    removed examples from readme
+
+[33mcommit 3c235467a3d8f37b3a19ff2ecc7978d1b20ac61e[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Tue Jul 26 16:51:22 2022 +0100
+
+    Add example of makefile
+
+[33mcommit e1a02b4ff1dbebcb51972453681d6e1429e98a5b[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Wed Jul 27 22:55:41 2022 +0100
+
+    Development in the Java project
+
+[33mcommit 84274551de150a7e88a76b2028dfea2d8cc334a9[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Wed Jul 27 18:30:49 2022 +0100
+
+    Developments in Main.java. Class F4PGA.java and started
+
+[33mcommit 7f1f7cf788301e6e06f77f5bb3771f60db509a04[m[33m ([m[1;32msummer_intership2022_man_fra[m[33m)[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Wed Jul 27 14:49:59 2022 +0100
+
+    Eclipse project created
+
+[33mcommit d3f1a1a6775bc4afead387ca2f2a2e1c4e001853[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Wed Jul 27 12:09:07 2022 +0100
+
+    Replacing makefile positioReplacing makefile position
+
+[33mcommit 508dca78594732da7c7432cea004a342ba099e6c[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Wed Jul 27 00:39:49 2022 +0100
+
+    removed cloning examples in installation process (readme)
+
+[33mcommit 318aee75727f889dc85b2fb6db9725c823470e11[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Wed Jul 27 00:39:16 2022 +0100
+
+    removed examples from readme
+
+[33mcommit f6a983a5d6a8f3f7f083747c4f4dbd272b9643aa[m
+Merge: fc010e9f ee63ceb7
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Wed Jul 27 00:37:18 2022 +0100
+
+    Merge branch 'summer_intership2022_man_fra' of https://github.com/specs-feup/specs-hw into summer_intership2022_man_fra
+
+[33mcommit fc010e9f19c84c09b32db8649234c5a58e8a5097[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Wed Jul 27 00:28:11 2022 +0100
+
+    readme minor fixes
+    added workflow to readme
+
+[33mcommit ee63ceb736bd63038dcc3a2641ff15aba7bf24f9[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Tue Jul 26 16:51:22 2022 +0100
+
+    Add example of makefile
+
+[33mcommit 6a266908e44bac8ba9442aa123d61433bf92eabd[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Tue Jul 26 16:50:06 2022 +0100
+
+    added build script example
+
+[33mcommit 6c94f8476c73176b0836af5cdff72282ae355087[m
+Author: 1181626 <1181626@isep.ipp.pt>
+Date:   Tue Jul 26 16:25:43 2022 +0100
+
+    Add tutorial how to install F4PGA
+
+[33mcommit aefe2b4e641800df24b492ca173095c1aa69aaeb[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Tue Jul 26 14:56:50 2022 +0100
+
+    added config to the f4pga workflow
+
+[33mcommit b42ba7aa0c4435894e7a28d27c37991b7a86a9c3[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Mon Jul 25 16:59:32 2022 +0100
+
+    created new branch summer_intership2022_man_fra
+
+[33mcommit 772fd7d79bbbd3888f60f9f47c7448cbf6d3b026[m
+Author: ManelMCCS <up201806391@fe.up.pt>
+Date:   Mon Jul 25 16:49:06 2022 +0100
+
+    creating internship branch
+
+[33mcommit dd11155df59de6ea30ea3e392803ac7f1062fe98[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Mon Jul 25 14:44:26 2022 +0100
+
+    [F4FPGA] created this project
+
+[33mcommit 067b11691ffb4940677b701ebed25985d4101265[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Mon Jul 25 14:29:42 2022 +0100
+
+    [RISCV] minor whitespace and name changes
+
+[33mcommit d5d88b83f64148fe77be9d01aea123bfae9c5189[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Mon Mar 21 23:11:07 2022 +0000
+
+    [specs-hw] import fixes
+
+[33mcommit 9b24d870273d990ba54ce83ba79ffcc88c4f4022[m
+Merge: 6698063a 80a902a2
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Mar 21 22:22:38 2022 +0000
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+
+[33mcommit 6698063a3372d170fcb985cc8d1c21e33b81cfda[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Mar 21 22:22:03 2022 +0000
+
+    [BinaryTranslation, MicroBlaze] changes to gdb template, experiments with tracer family and tester edits
+
+[33mcommit 80a902a22311f5d8cf862ca638282a11737d0601[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Sat Feb 19 22:04:13 2022 +0000
+
+    [Crispy] testing generation of a RISCV Alu using crispy
+
+[33mcommit 397cb5b82d7781385b82b4db727fd8bb892cd395[m
+Merge: 59cc0664 4c032cd1
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Feb 17 18:24:20 2022 +0000
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+
+[33mcommit 59cc066461c41a5d31c03d10ff00f030cb768141[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Feb 17 18:23:26 2022 +0000
+
+    [RISCV] whitespace change and new test in RiscvPseudoInstructionGraph
+
+[33mcommit cc980cf2baa27207af6088192bbde7801a9b1653[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Feb 17 18:22:37 2022 +0000
+
+    [Crispy] TODO notes and examples for PEPCC workshop
+
+[33mcommit 5fd2e31425b4d93b5a91047b5d2dd7ecbcae44f6[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Feb 17 18:22:01 2022 +0000
+
+    [BinaryTranslation] minor whitespace edits and new test in TestLex
+
+[33mcommit 4c032cd15335f04670eb741e8fea56dc67a4aaaf[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Wed Feb 16 23:58:50 2022 +0000
+
+    [CrispyHDL] added RAMemory module to lib for fun
+
+[33mcommit 1421950ba0e0e12cd793df7351b4825f1abcebf4[m
+Author: JoaoConceicao <soiboi@soiboi>
+Date:   Fri Jan 21 17:03:16 2022 +0000
+
+    [Binary Translation] Bug fixes and added process execution (buggy)
+
+[33mcommit 98f5349bba3f1d4424919d0cf8c91be5ab0c6674[m
+Author: JoaoConceicao <soiboi@soiboi>
+Date:   Thu Jan 20 16:45:43 2022 +0000
+
+    [Binary Translation] Added more reports to vivado
+
+[33mcommit 364bfaba7b6244b2e3ae785aeb32bb6cd4a1d233[m
+Author: JoaoConceicao <soiboi@soiboi>
+Date:   Thu Jan 20 16:35:03 2022 +0000
+
+    [Binary Translation] Added register renaming step, and fixed validation
+
+[33mcommit 35f3d7aada232381e5ef6da1ec307008013bf406[m
+Author: JoaoConceicao <soiboi@soiboi>
+Date:   Wed Jan 19 19:02:43 2022 +0000
+
+    [Binary Translation] Added support for Vivado timing verification
+
+[33mcommit 8eccd7742208557136e5ab7f350fe06f873cb3c9[m
+Author: JoaoConceicao <soiboi@soiboi>
+Date:   Tue Jan 18 19:36:06 2022 +0000
+
+    [Binary Translation] Fixed some bugs in HW generation
+
+[33mcommit 9142308991239495a730b765fc87ee070d92bbc7[m
+Author: soiboi <soiboi@soiboi>
+Date:   Fri Jan 14 12:02:37 2022 +0000
+
+    [Binary Translation] Fixed some bugs with the CDFG pseudoSSA pass
+
+[33mcommit bf298e1af8691473ebeb59e2c43fe0f7f06b6428[m
+Author: soiboi <soiboi@soiboi>
+Date:   Wed Jan 12 15:22:13 2022 +0000
+
+    [Binary Translatio] Forgot to stage some of the changes
+
+[33mcommit 338cfbfc40ba32766596e96669df7070ce490778[m
+Author: soiboi <soiboi@soiboi>
+Date:   Wed Jan 12 15:18:18 2022 +0000
+
+    [Binary Translation] Separated data generator from HW and fixed bugs
+
+[33mcommit 0bbc1c3113c88b30034d443159f891423909ac25[m
+Author: soiboi <soiboi@soiboi>
+Date:   Wed Jan 12 14:00:38 2022 +0000
+
+    [Binary Translation] New validation gen and fixed bugs in HDL gen
+
+[33mcommit 3fc22373d30880da223bae024ecbc4d94e6f78bb[m
+Author: soiboi <soiboi@soiboi>
+Date:   Tue Jan 11 15:44:17 2022 +0000
+
+    [Binary Translation] Mostly finished SSA
+
+[33mcommit 748af4b65f5331b16ac4f768a8b48fccabd5039f[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Mon Jan 10 12:22:16 2022 +0000
+
+    [Binary Translation] Fixed some issues with InstructionCDFG
+
+[33mcommit dd62775864e60c08ad77cbde261646ad66d78a05[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Jan 7 11:36:16 2022 +0000
+
+    [BinaryTranslation] edited type return in HardwareTestbenchGenerator
+    
+    for compatibility with Verilator requirement of exposed testbench ports
+    (change this in the future if possible)
+
+[33mcommit f53e1e7127029bbd368ef68f7d1721fc002fa833[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Jan 7 11:35:36 2022 +0000
+
+    [Cripsy] changed HardwareInstanceTest
+
+[33mcommit 123d576ffb19b3cccdcb193de73a71ae930ff4be[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Wed Jan 5 16:37:34 2022 +0000
+
+    [Binary Translation] Resolved some bugs and added full flow classes
+
+[33mcommit b6a7e49b456e866c53248b3404412d71e276a4ff[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Tue Jan 4 17:53:16 2022 +0000
+
+    [Binary Translation] Added cripsy HW gen and universal cdfg visitor
+
+[33mcommit a08ce2ff26b1810b060bcbf10ce5d9ae7b47aecf[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Tue Jan 4 08:55:12 2022 +0000
+
+    [BinaryTranslation] added first attempt at CLA fu
+
+[33mcommit 991902198c35d2542671478eed20bb770610a16a[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Fri Dec 31 18:49:35 2021 +0000
+
+    [Crispy] fooled around with whitespace emission
+
+[33mcommit 6b7f318b30ebfc79d607e24c89790d10243e5e9c[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Fri Dec 31 18:49:08 2021 +0000
+
+    [BinaryTranslation] testing new CLAFunctionalUnit definition
+
+[33mcommit ec240189e789adeb611d221cee5cea5158d475de[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Dec 30 19:36:34 2021 +0000
+
+    [BinaryTranslation] uploading HardwareTestbenchGenerator (Was missing)
+
+[33mcommit cbfb9e0861fe966e305ab34aa118d4f5a6679779[m
+Merge: 9c59c0f1 b12b737b
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Dec 30 14:55:03 2021 +0000
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+
+[33mcommit 9c59c0f1b7c0301aaeb04d20dbdadb855bd90e5f[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Dec 30 14:54:34 2021 +0000
+
+    [Crispy] HardwareTestbenchGenerator totally free of errors (untested)
+
+[33mcommit b12b737b394f9e6b7dacbffe73428d65c3ed5650[m
+Merge: adfa57cf 54f1b605
+Author: joaom <joaom@192.168.1.245>
+Date:   Thu Dec 30 12:36:20 2021 +0000
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+
+[33mcommit adfa57cf08e4fef710d279138b6acf4f6fe1ef59[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Thu Dec 30 12:36:06 2021 +0000
+
+    [Binary Translation] Mostly finalized SSA, SegmentCDFG and added C++ gen
+    
+    The C++ generator is for trying to generate Verilator testbenches
+    directly and calculating validation data during runtime in order to make
+    the whole process less janky than currently, were an HDL testbench and a
+    Verilator C++ wrapper are generated and the validation data is generated
+    by doing multiple passes of the parse tree
+
+[33mcommit 54f1b605be56ddda0abb6517715b0f2ed112bfc5[m
+Merge: 8c25e239 cc2a872b
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Dec 30 11:59:06 2021 +0000
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+    
+    Conflicts:
+            Crispy/src/pt/up/fe/specs/crispy/ast/definition/HardwareModule.java
+            Crispy/src/pt/up/fe/specs/crispy/ast/definition/HardwareTestbench.java
+            Crispy/src/pt/up/fe/specs/crispy/ast/definition/ModuleBlockInterface.java
+            Crispy/src/pt/up/fe/specs/crispy/coarse/CoarseGrainedUnit.java
+            Crispy/src/pt/up/fe/specs/crispy/lib/CrossBarNxM.java
+            Crispy/src/pt/up/fe/specs/crispy/lib/Mux2to1.java
+            Crispy/src/pt/up/fe/specs/crispy/lib/MuxNto1.java
+            Crispy/src/pt/up/fe/specs/crispy/lib/RegisterBank.java
+
+[33mcommit 8c25e239abea48a28948858e55460caa0a8ed3f9[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Dec 30 11:50:41 2021 +0000
+
+    [Crispy] removed ModuleBlockInterface and HardwareBlockInterface
+    
+    moved those methods into HardwareBlock and ModuleBlock, and the
+    implementations of the methods previously in ModuleBlockInterface are
+    now in HardwareModule, which also now extends HardwareBlock, to inherit
+    all methods like nonBlocking, blocking, etc, without exposing sanity
+    methods like getAncestor, createAssigment, counter controls etc
+
+[33mcommit cc2a872b11898240b53f3e3e2005822f5c14ba33[m
+Author: nmcp88 <55549279+nmcp88@users.noreply.github.com>
+Date:   Thu Dec 30 09:40:25 2021 +0000
+
+    Set theme jekyll-theme-slate
+
+[33mcommit 564df8ecfb4280be918e13421b3b4797a5ba85a0[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Thu Dec 30 00:09:13 2021 +0000
+
+    [Crispy] experimenting with inline interfaces for CoarseGrainedUnit
+
+[33mcommit 76bfde92e3bb43767b66ba7593fe580f3abbdab8[m
+Merge: 6b30e49a f847f75f
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Wed Dec 29 20:32:37 2021 +0000
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw.git
+    
+    Conflicts:
+            Crispy/src/pt/up/fe/specs/crispy/ast/definition/HardwareDefinition.java
+            Crispy/src/pt/up/fe/specs/crispy/ast/definition/ModuleBlockInterface.java
+            Crispy/src/pt/up/fe/specs/crispy/lib/RegisterBank.java
+
+[33mcommit 6b30e49aa5c27ba0bea618bec56ad33b650fb201[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Wed Dec 29 20:23:28 2021 +0000
+
+    [Crispy] added new InputPort and OutputPort classes
+
+[33mcommit f847f75f2a12346624c2298422765ad8e18b80f6[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Dec 29 17:53:12 2021 +0000
+
+    [benchmarks] removed .project files
+
+[33mcommit 656463ee22851eebf16ca53fd1e36ead8ae368a0[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Dec 29 17:52:58 2021 +0000
+
+    [MicroBlaze] zipped lib files to remove large bloat of C files
+
+[33mcommit 11e39a2c70e67718332c2179eca23a158456a184[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Dec 29 17:52:26 2021 +0000
+
+    [BinaryTranslation] added to Classpath and corrected some name changes
+    
+    also WIP on HardareTestbenchGenerator using new syntax
+
+[33mcommit 83b4ddfb79c0cfa4ba9f80e89fe110b11a2f83e9[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Dec 29 17:16:20 2021 +0000
+
+    [Crispy] removed explict module instance naming;
+    
+    names are generated from HardwareModule class name + hash code of
+    instance of that module type
+
+[33mcommit 081fd44d13696bfb6896e47ef7c467667c6edd5f[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Dec 29 15:44:25 2021 +0000
+
+    [Crispy] same as last
+
+[33mcommit a263e05728d64c2c74da88fc64eb8d9427c81574[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Dec 29 15:44:13 2021 +0000
+
+    [Crispy] cleaning up syntax for chained if elses
+
+[33mcommit 5ba6c2f74da01e6a68824909889f894072139f62[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Wed Dec 22 17:18:28 2021 +0000
+
+    [Binary Translation] Trying new SSA, and initial Crispy support
+
+[33mcommit f551195e474feaa8bb39d17405f71e4dacdadcba[m
+Merge: 22ce9704 349a3f38
+Author: João Bispo <joaobispo@gmail.com>
+Date:   Tue Dec 21 10:01:39 2021 +0000
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+    
+    # Conflicts:
+    #       BinaryTranslation/src/pt/up/fe/specs/binarytranslation/hardware/accelerators/custominstruction/CustomInstructionUnitGenerator.java
+    #       MicroBlaze/test/org/specs/MicroBlaze/test/stream/MicroBlazeStreamTester.java
+
+[33mcommit 22ce9704c289e3281f3137711ed3dec79d362ca5[m
+Author: João Bispo <joaobispo@gmail.com>
+Date:   Tue Dec 21 09:57:35 2021 +0000
+
+    whitespace changes
+
+[33mcommit 349a3f38524cb21c5999d51a736a9bf028059951[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Tue Dec 21 00:08:26 2021 +0000
+
+    [Cripsy] new library HDL modules added; testing and fixing Crispy syntx
+
+[33mcommit 903d250e79b20c9eaf630f0b7242b6e2a33c7f7d[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Dec 20 17:45:18 2021 +0000
+
+    [SpecsHwSupport] changed incorrect resource path
+
+[33mcommit 75fdf342e53f1e07b469c7a622632a2fa292ca37[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Dec 20 17:45:05 2021 +0000
+
+    [Crispy] changed package name of some classes; deleted deprecated class
+
+[33mcommit 6771372408a5e0b4a29b05e7e5948faf28974a06[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Dec 20 17:34:53 2021 +0000
+
+    [repo] moved verilog AST code into new "Crispy" project; + 1 support prj
+
+[33mcommit fff614d1d3f9d5750e61a05810905642edeb9792[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Dec 20 15:53:52 2021 +0000
+
+    [BinaryTranslation] committing and tagging prior to Crispy project
+    
+    (going to move all internal verilog DSL to a separate project in
+    specs-hw)
+
+[33mcommit ac3b37a10ac1c0526a4d2e9d61f1eae5083a964d[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Mon Dec 20 00:31:59 2021 +0000
+
+    [BinaryTranslation] experimenting with testbench methods for init blk
+
+[33mcommit ba67ea90121bf15f890145566e0e593191e7f0d1[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Sun Dec 19 00:24:00 2021 +0000
+
+    [BinaryTranslation] cleaned up some HardwareBlockInterface methods
+
+[33mcommit 6851d54a8d60a3d2113701f1781e23342a806cb7[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Fri Dec 17 23:50:17 2021 +0000
+
+    [BinaryTranslation] experimenting with different interface methods
+    
+    for a cleaner DSL syntax
+
+[33mcommit fd1ba010d3d300e7b3fec2609920250cd89130e9[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Dec 16 18:19:40 2021 +0000
+
+    [BinaryTranslation] added more sugar and new CoarseGrainUnit class (wip)
+
+[33mcommit 5871fd05a9cb7f1338e03e148a293d5e101428ac[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Dec 16 12:31:17 2021 +0000
+
+    [BinaryTranslation] refining sugar for Verilog internal DSL
+
+[33mcommit f13a32eaae8afe8323a6ab62416a75942518b2d5[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Wed Dec 15 23:07:45 2021 +0000
+
+    [BinaryTranslation] test for fetching HardwareOperator via name
+
+[33mcommit 2f88d1df974886ee1fbcd3e5de8ac261fffbc497[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Dec 15 21:43:53 2021 +0000
+
+    [BinaryTranslation] experimenting with sugar methods for statement and expression creation
+
+[33mcommit 1525a26f2743fa18cb8e5db65583d714b65023cd[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Tue Dec 14 15:06:02 2021 +0000
+
+    [BinaryTranslation] experimenting with auxiliary method classes for more sugar on the inner DSL syntax
+
+[33mcommit 293679492bd4d04c970db27f4e225bf280f6d30e[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Mon Dec 13 23:32:25 2021 +0000
+
+    [BinaryTranslation] added new getResultWidth methods
+    
+    aids in automatic generation of VariableOperators which are results of
+    expressions
+
+[33mcommit f4d4c5bc8eb571285fb649314e138465805722b2[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Dec 13 21:07:40 2021 +0000
+
+    [BinaryTranslation] added methods to HardwareBlockInterface for sanityChecking
+
+[33mcommit 36d183f3c4b8a411bfcf80d321a615bd016b04b7[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Mon Dec 13 00:10:43 2021 +0000
+
+    [BinaryTranslation] moved some methods around to ModuleBlockInterface
+
+[33mcommit 8ae8bf246d8e5f0dd0622e61984224e4a545eae2[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Sun Dec 12 22:23:17 2021 +0000
+
+    [BinaryTranslation] added ModuleBlockInterface to prevent code replication in ModuleBlock and HardwareModule (WIP)
+
+[33mcommit 1b0e37eeea7161348045c5c017bf6d36c70989dc[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Dec 9 11:39:34 2021 +0000
+
+    [BinaryTranslation] adding method sugar to HardwareModule
+
+[33mcommit fc2f4f52a57b14116689224a695b34786e86b698[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Thu Dec 9 00:56:09 2021 +0000
+
+    [BinaryTranslation] added methods to HardwareModule and TODO notes
+
+[33mcommit 1881fc552c829b7bf116a4e0053b56a9ad185833[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Tue Dec 7 17:24:27 2021 +0000
+
+    [BinaryTranslation] changed HardwareTestbench to conform with parents
+
+[33mcommit 7c70f778c3532772f234bdeda7728450b0385eae[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Tue Dec 7 13:00:33 2021 +0000
+
+    [BinaryTranslation] version where ModuleBlock is a nested pvt class
+
+[33mcommit d8d43ade455becc02d766ce970e7f50831e2ab92[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Tue Dec 7 11:44:59 2021 +0000
+
+    [BinaryTranslation] refactoring HardwareModule and ModuleHeader relation
+    
+    since its current state makes printing of nested blocks complicated and
+    also ModuleHeader is a misnomer given its parent class
+
+[33mcommit 557f1aaf8ea4e30bd2385495724b320975e2a2b7[m
+Author: nmcp88 <nmcp88@gmail.com>
+Date:   Mon Dec 6 23:57:57 2021 +0000
+
+    [BinaryTranslation] added a couple of classes and some sugar
+
+[33mcommit 266b07a965dbf57600e5f2d496b1bb63aa54b733[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Dec 6 21:12:37 2021 +0000
+
+    [BinaryTranslation] added instantiate method to HardwareModule for more sugar
+
+[33mcommit 679dee30f6cddead3cebd2694190da553cbc7440[m
+Merge: e5917007 bc6b1590
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Dec 6 19:45:21 2021 +0000
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+
+[33mcommit e59170070b88f8a2c0ddc81027948d843840c2a6[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Dec 6 19:43:21 2021 +0000
+
+    [BinaryTranslation] fiddling with more hardware testing methods
+
+[33mcommit 826e9be6496a3ed8f69bdc7ceac166d483d2fee6[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Dec 6 19:05:06 2021 +0000
+
+    [BinaryTranslation] commit prior to removing HardwareTree family
+
+[33mcommit 0cb6c75520c580ad4554e256d79f8de448b449d4[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Dec 6 17:21:15 2021 +0000
+
+    [BinaryTranslation] commit before merging HardwareModule family into
+    
+    HardwareNode family as a node of this super type
+
+[33mcommit d4b8e85bbe9ce3d69ef3bd164fded77daf9d112e[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Dec 6 16:24:13 2021 +0000
+
+    [BinaryTranslation] refactoring method of instantiation of modules
+    
+    along with some class renaming to reflect actual relationships;
+    i.e., HardwareInstance is now HardwareModule, since it is not part of
+    the Verilog AST and should only hold a top level HardwareTree for
+    emission (regardless, this class still needs to be able to output its
+    port list, which now im doing with raw String lists, to prevent using
+    AST node type returns in a class thats supposed to encapsulate all that
+    typing away)
+
+[33mcommit 5f4943d21ecbbb6311abf2d045aa1f33d42694f1[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Dec 3 18:31:45 2021 +0000
+
+    [BinaryTranslation] WIP on "inner DSL" methods for adding subscripts etc
+
+[33mcommit 5cb70f7390e07e5cfa21c741f414c607cbf54904[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Dec 3 11:58:52 2021 +0000
+
+    [BinaryTranslation] implemented subscripting as child nodes of operands
+    
+    instead of having multiple cyclical subclasses for subsequent indexings
+
+[33mcommit bc6b15904c6b1a401b260147e9ec545c3b60afa4[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Thu Dec 2 23:27:18 2021 +0000
+
+    [MicroBlaze] Test for scheduling with AGUs
+
+[33mcommit 0915dcf61eb99ee2ed9eba5c54f9d59ef45596f6[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Thu Dec 2 23:26:41 2021 +0000
+
+    [BinaryTranslation] Scheduling with AGUs now working
+
+[33mcommit c1f94c18d23b8321d0e57b42c17850a1bde67c28[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Thu Dec 2 19:18:17 2021 +0000
+
+    [BinaryTranslation] Assigning latency values to AGUs
+
+[33mcommit f45be8657e1fdbe75cecd8a91719d1b29aea348c[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Dec 2 17:36:42 2021 +0000
+
+    [BinaryTranslation] refactoring class structure for OperandReferences
+    
+    in the Verilog AST; the issue is mostly around indexding and ranged
+    indexing, in order to support arbitrary ordering and repetitions of
+    subscripting
+
+[33mcommit 31e1b96153b7238522e63810926871ed703d8fe0[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Dec 2 15:02:42 2021 +0000
+
+    [BinaryTranslation] sticking with HardwareNode as an abstract class
+    
+    refactoring the rest of the classes to have explicitly typed copy
+    methods and getChild or getChildren with the appropriate casts
+
+[33mcommit 5eea950412112f1c999b7999a6b70cc5839ecf50[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Dec 2 11:25:29 2021 +0000
+
+    [BinaryTranslation] vast restructuring of HardwareNode family (WIP)
+    
+    adding subtype interfaces (e.g. HardwareStatement, and renaming existing
+    abstract classes to conform with convention, e.g. HardwareStatement ->
+    AHardwareStatement); this also prevents passing abstract classes as
+    arguments and enforces passing of only interfaces (with appropriate
+    subtypes)
+
+[33mcommit ff50fcf0204a62ad56864c390ab101fffce5deec[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Dec 1 18:31:04 2021 +0000
+
+    [BinaryTranslation] finished first cleaup of HardwareTestbenchGenerator
+    
+    eventually this module may be replaced with a walker or visitor (?)
+
+[33mcommit 993d86ba32f60cd33701b615829b206681ed60bc[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Dec 1 17:53:32 2021 +0000
+
+    [BinaryTranslation] refactoring "HardwareTestbenchGenerator" (WIP)
+    
+    might require verifying integrity of HardwareNode family due to new
+    nodes such as InitialBlock, PosedgeSignalChange, etc
+
+[33mcommit 67d8d660e9aec2482a867c9afe070ab807d5ca57[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Dec 1 16:44:11 2021 +0000
+
+    [BinaryTranslation] changes to VariableDeclaration
+    
+    made it so VariableDeclarations must receive name and width, and then
+    VariableReference instances are generated from the VariableDeclaration
+    instances; changed copy constructors to reflect this
+
+[33mcommit 63c0b3025cb6041adbc28aa5d9b7e09cdcc82ed5[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Dec 1 16:03:04 2021 +0000
+
+    [BinaryTranslation] cleaning up;
+    
+    code styling changes and refactoring methods instantiating
+    VariableDeclaration, PortDeclaration, VariableReferences, and similar
+    classes
+
+[33mcommit 6eac2f9ba23af01fb9ce13330be46f813441ea23[m
+Author: joaom <joaom@192.168.1.72>
+Date:   Tue Nov 30 19:10:47 2021 +0000
+
+    [Binary Translation] Added Riscv full flow and tried to improve SSAPass
+    
+    NOTE: The SSA pass is still not functional, so segments and complex
+     instructions are not still supported ! The whole package needs to be
+    rewritten and maybe a more generic SSA pass needs to be applied. Also
+    the RISCV custom instructions currently use one opcode for each of the
+    parts of the usage of the generated modules, but maybe this should be
+    changed (RISCV 32bit only has something like 30 free opcodes, and the
+    base extensions already occupy half of those opcodes).
+
+[33mcommit 0713f84c2d8e2b8db397a07e9a1e2e770f4088dd[m[33m ([m[1;33mtag: beforeVerilogASTRefactoring[m[33m)[m
+Merge: ced7a885 df1eac2e
+Author: Nuno <nmcp88@gmail.com>
+Date:   Mon Nov 29 09:33:59 2021 +0000
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+
+[33mcommit df1eac2ef3684621d28a4ca718956a26cbc82554[m
+Author: joaom <joaom@192.168.1.72>
+Date:   Fri Nov 26 21:50:31 2021 +0000
+
+    [Binary Translation] Added folder generation and added more features
+
+[33mcommit ced7a8850ea5da0ad3ed0a49a54d78c0973419f8[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Nov 26 19:01:22 2021 +0000
+
+    [BinaryTranslation] chng Application class; conform with specs-java-libs
+
+[33mcommit 4b0d20bd2551e34fd28d3d3021533a6a95d57b9b[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Nov 26 19:00:20 2021 +0000
+
+    [BinaryTranslation] correcting details in g4 grammar
+    
+    - better nesting topology for numbers, unsigned numbers, floats and ints
+    - better topology for operators, which now groups explicit asm fields as
+    "encodedfields" and metafields as that name, under a group "asmfield";
+    now all operand types are under a rule, instead of asmfield being just
+    the token list ASMFIELD; ranged and scalar subscripts can only receive
+    "asmfield"s as operands to the ranges, meaning the rule protects agaisnt
+    misuses like indexing literals, e.g. 2123[2:2]
+
+[33mcommit fc83765dfbf25169b11c5ecf41494af8648d7b6c[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Nov 26 15:55:37 2021 +0000
+
+    [MicroBlaze] added source, lib, and make for example MicroBlaze ELF
+
+[33mcommit 0988e8657fd28c9dbb8aa637e5db5c07d09f6543[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Nov 26 15:54:26 2021 +0000
+
+    [MicroBlaze] Removed old Rosetta 7z; added DTB for 4GB Microblaze syst
+
+[33mcommit 906720143fffaff7305592407b70c6eae335ed46[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Nov 26 15:44:42 2021 +0000
+
+    [MicroBlaze] normalizing Rosetta packing, and adding produced traces to 7z
+
+[33mcommit ff2bf7091e594b59f28aec0eadb8a2956652614f[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Nov 26 14:49:14 2021 +0000
+
+    [benchmarks] first version of Rosetta benchmarks under our packing topology (still contains some inline functions which cause GDB to break - in its current version
+
+[33mcommit c5fd3ed70b1192cdff2e1c890bc8d50957fa5505[m
+Merge: 498b7982 4e5da69f
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Thu Nov 25 22:08:36 2021 +0000
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 498b7982f82ffcbb3a1bfcb1648c028b82d60b72[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Thu Nov 25 22:08:19 2021 +0000
+
+    [Binary Translation] WIP of Address Generation Unit in DFG
+
+[33mcommit 4e5da69f4613d0f677d2cbd6049b771286adeda7[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Thu Nov 18 10:02:59 2021 +0000
+
+    [Binary Translation] Mostly finished hw and tb generation and validation
+    
+    NOTE: Currently the validation stages only works on WSL and maybe on Linux !
+
+[33mcommit 33c45b7bccb050fa14ae7df22d0874b534815a1c[m
+Author: joaom <joaom@DESKTOP-OFK9Q50.mshome.net>
+Date:   Thu Nov 11 17:08:36 2021 +0000
+
+    [Binary Translation] Fixed some bugs in HW generation
+
+[33mcommit 6582dd778bf74f4da2e10baae63a61244a07e9b9[m
+Author: joaom <joaom@DESKTOP-OFK9Q50.mshome.net>
+Date:   Thu Nov 11 16:57:31 2021 +0000
+
+    [Binary Translation] Added a few more methods to InstructionCDFG
+
+[33mcommit 5dac45facc70dcfbaaffe4ca0cd0dd2912cb72be[m
+Author: joaom <joaom@DESKTOP-OFK9Q50.mshome.net>
+Date:   Thu Nov 11 16:52:42 2021 +0000
+
+    [Binary Translation] Added automatic HW validation data generation
+
+[33mcommit c9f1fe6f5da510a27ddcbad97757c35432928174[m
+Author: specs <specs@atlantic>
+Date:   Tue Nov 9 12:40:52 2021 +0000
+
+    [Binary Translation] Changed RISCV HW tester
+
+[33mcommit c4a1f0297856a0b15b2c7dff4a2aeb821d605563[m
+Author: specs <specs@atlantic>
+Date:   Tue Nov 9 11:27:19 2021 +0000
+
+    [Binary Translation] Fixed some bugs
+
+[33mcommit 93f8cafae1a542690d4f6d675648526b8ea02866[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Sun Nov 7 19:02:17 2021 +0000
+
+    [BinaryTranslation] Added more HW nodes
+
+[33mcommit e926f3d74efea928f3ce3d1796bdf1666770199f[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Sun Nov 7 17:52:12 2021 +0000
+
+    [Binary Translation] Fixed some bugs in the testbench generation
+
+[33mcommit 1a7a401ce359d140aabb099b03b349aa89e9f2d1[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Sun Nov 7 17:16:45 2021 +0000
+
+    [BinaryTranslation] Added some features to some HW nodes
+
+[33mcommit 21e33cf1e2af1d5a0cafb0c6476b6cc6506d10f1[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Sun Nov 7 17:02:18 2021 +0000
+
+    [Binary Translation] Added more HW nodes and final testbench (buggy)
+
+[33mcommit 3c0c535f9ed08fee5f39009864adbbe1729956fc[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Fri Nov 5 12:22:03 2021 +0000
+
+    [Binary Translation] Fixed some HW tree bugs and added new nodes
+
+[33mcommit 4e38380cf7a38c76cafe629cb0e12df063b14cfd[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Fri Nov 5 11:50:39 2021 +0000
+
+    [Binary Translation] Added more testers and implemented HW generation
+    
+    NOTE: The generated hardware's signal names are a hack, this needs to be
+    changed, it will no scale properly !!!
+
+[33mcommit 0f539598e39b7c840c93cbab1e18bfc741c84e20[m
+Merge: 65d4f3b4 d97f0b9e
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Fri Oct 29 00:04:14 2021 +0100
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 65d4f3b4691d40a46c7bd9e6c4abce465e5a6f47[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Fri Oct 29 00:04:07 2021 +0100
+
+    [BinaryTranslation] Adds variant and invariant detection for base addr
+
+[33mcommit d97f0b9e7994ddd76c7e963bc471dbbaa7f116e2[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Thu Oct 28 16:56:55 2021 +0100
+
+    [Binary Translation] Moved some of the files that were in wrong folders
+
+[33mcommit 36ded92bdcbfb4935666d23740798bf1cd93ad41[m
+Merge: 10d7d1e8 c1f7b9d5
+Author: joaom <joaom@192.168.1.245>
+Date:   Thu Oct 28 16:53:23 2021 +0100
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+
+[33mcommit 10d7d1e8ad721a737131d552a916ff52b3f9f1ae[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Thu Oct 28 16:52:26 2021 +0100
+
+    [Binary Translation] Added ICDFG RISCV and MB tests and HW generation
+
+[33mcommit c1f7b9d5d3fb2f92b08f8d6e636209a7608da5a0[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 27 22:22:18 2021 +0100
+
+    [MicroBlaze] Updates tests to reflect new API changes
+
+[33mcommit f2da74200b3bf3dc16feee9113a32c06c53b0b01[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 27 22:21:54 2021 +0100
+
+    [BinaryTranslation] Now detects base addr registers alongside ind vars
+
+[33mcommit 119da32308b28e45cb3d6c59c3f44c5f98a306be[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Wed Oct 27 10:40:37 2021 +0100
+
+    [Binary Translation] Added more Hardware expressions, and revised some
+
+[33mcommit 6bde18732d59f24de44c20f85d35f169526c24b5[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 27 00:59:38 2021 +0100
+
+    [BinaryTranslation] WIP of streaming expression detector
+
+[33mcommit f6a641dabe79afebf6a55894d22f05696cac266e[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Tue Oct 26 20:05:54 2021 +0100
+
+    [BinaryTranslation] Dependency graph now in its own class
+
+[33mcommit 44813aaf407e303fa9c1135e0de39d888238b275[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Mon Oct 25 23:46:18 2021 +0100
+
+    [MicroBlaze] Changes pattern tests to explicitly use basic blocks
+
+[33mcommit c82871a83f2de6cf5e48eebec6a9d4e9d0136dde[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Mon Oct 25 23:45:56 2021 +0100
+
+    [BinaryTranslation] Pattern detectors now using arbitrary segments too
+
+[33mcommit 8b65af485c776bd35349861e340298bc30739f29[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Mon Oct 25 23:38:05 2021 +0100
+
+    [BinaryTranslation] Changes analyzers to accept arbitrary segment types
+
+[33mcommit e1c72b0779dcfb99f2ae61fbf5bbd3b69a99c10f[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Mon Oct 25 23:37:47 2021 +0100
+
+    [MicroBlaze] Adds test class for scheduling MegaBlocks
+
+[33mcommit 505e72d7aba01af732295c2b5d21b6f312c796b9[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Mon Oct 25 21:29:15 2021 +0100
+
+    [BinaryTranslation] Basic block analyzer is now a generic seg. analyzer
+
+[33mcommit 8010d458fa81206065282bcb06fc54063f485636[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Mon Oct 25 20:39:09 2021 +0100
+
+    [Binary Translation] Fixed some issues and added some JavaDocs
+
+[33mcommit 968e0263c2cbfd779e82f9c274cd9826e2a638c5[m
+Author: joaom <joaom@192.168.1.245>
+Date:   Mon Oct 25 19:10:17 2021 +0100
+
+    [Binary Translation] Initial implementation of generating Hardware
+    
+    NOTE: this is still very messy, and it does not allow for conditionals.
+    Also added tests for RISCV.
+
+[33mcommit e6f4f127eba83cdc2f49f7d707b80536be5e0970[m
+Merge: dc47138c be9d1a8e
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Thu Oct 21 23:59:57 2021 +0100
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit dc47138c4b45e96fc013d3f87d579c79e706feb2[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Thu Oct 21 23:59:47 2021 +0100
+
+    [BinaryTranslation] WIP of different arithmetic patterns
+
+[33mcommit be9d1a8e66444a53854867698e482520bff76fbe[m
+Merge: 304140d5 5d614111
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Oct 21 10:29:48 2021 +0100
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+
+[33mcommit 304140d539869c2fa8a643e7e4282e654a37297e[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Oct 21 10:28:47 2021 +0100
+
+    [BinaryTranslation] minor comment and tester changes abou4 g4 and lex
+
+[33mcommit 5d614111c0b7f4553929e0de8051b7994466c0f7[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Thu Oct 21 00:21:44 2021 +0100
+
+    [MicroBlaze] New test for the new pattern detector
+
+[33mcommit 4e0d6b629b195e37cf066989a26b3298ac7f058d[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Thu Oct 21 00:21:27 2021 +0100
+
+    [BinaryTranslation] WIP of arithmetic expressions pattern detector
+
+[33mcommit 2e8cc50887c4ac3933741dee81f0f70ba0484adf[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 20 23:07:06 2021 +0100
+
+    [MicroBlaze] Renames the patterns test file
+
+[33mcommit a15ffef1e69861f4d698c0a0b48f89a752f448b5[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 20 23:06:51 2021 +0100
+
+    [BinaryTranslation] Increment to expression matcher working
+
+[33mcommit ffc8a6922cc2cf4752602dc4d21a83d979f16b2c[m
+Author: specs <specs@atlantic>
+Date:   Wed Oct 20 17:21:22 2021 +0100
+
+    [Binary Translation] Further work on InstructionCDFG
+    
+    Fixes:
+            - Mostly finalized DOT export
+            - Added subscripts (still very bad)
+
+[33mcommit b37993221fc4f88ef556136470d7d6c63f7458a5[m
+Author: joaom <joaom@DESKTOP-OFK9Q50.mshome.net>
+Date:   Wed Oct 20 09:04:40 2021 +0100
+
+    [Binary Translation] New version of ICDFG (more standardized)
+    
+    This new version (contained in instruction/cdfg/wip) follows the more
+    general way of generating CDFGs, were instead of a graph that contains
+    all of the nodes, the CDFG is composed of DFGs and control nodes. The
+    new implementation also tries to be more general, so if another CDFG is
+    needed, it should be (mostly) easy to implement it. Also the JGrapht
+    DOTexporter was rewritten because it didn't support any subgraphs, and
+    it didn't allow being extended (a lot of methods and subclasses were
+    private).
+    
+    Known issues:
+            - The generation of nested ifs produces wrong control flow
+            - Still no implementation of subscripts and functions
+            - Code is still very messy in some parts
+            - The CDFG still doesn't have exceptions for when the generator
+    produces a wrong result (needed for generalization)
+            - Still needs to be more generalized
+
+[33mcommit d92b340feeae4eef2520ccae35b6cc9cb85cdc03[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 20 00:55:49 2021 +0100
+
+    [MicroBlaze] Adds new test for the new analyzer
+
+[33mcommit a29a5b7e15b191a3e62b43c0799873931669f894[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 20 00:55:34 2021 +0100
+
+    [BinaryTranslation] Adds analyzer for increment to expression matcher
+
+[33mcommit 6c1e5b2ea9487048d2417ff889650dfee879a211[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Tue Oct 19 22:57:54 2021 +0100
+
+    [BinaryTranslation] Improves MatchResult class
+
+[33mcommit feabef9d4401dd65c8299ea7c7a27e379c098a2d[m
+Merge: 46a1cf14 1d813239
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Mon Oct 18 23:02:21 2021 +0100
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 46a1cf1407e7eb0722956b65d26cf7a231a8ebbe[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Mon Oct 18 23:02:17 2021 +0100
+
+    [BinaryTranslation] Fixes conversion of constants in pattern matching
+
+[33mcommit 1d8132393e1d2ef7a53721487c15dc6c4ae430d9[m
+Merge: de8f83fd 8ab723b9
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Oct 15 23:44:40 2021 +0100
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+
+[33mcommit de8f83fda13b1a5d8c9f024eec762b2bbd0dc0b9[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Oct 15 13:48:35 2021 +0100
+
+    [BinaryTranslation] fixed if-else statements in PseudoInstruction.g4
+
+[33mcommit 1bfa367ef5ded1ce3d3d9a9f29645adb638a70a7[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Oct 15 11:13:56 2021 +0100
+
+    [BinaryTranslation] changed ivy, added copyright to file;
+    
+    missing file from last commit added
+
+[33mcommit bc7a41fea8374451c817c07c43c3e9f5b06f4be5[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Oct 15 09:40:31 2021 +0100
+
+    [BinaryTranslation] removed a comment
+
+[33mcommit c509eac579853587a95441947ab64de2db258a8e[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Oct 15 09:38:14 2021 +0100
+
+    [RISCV] commented a tester line to prevent build error
+
+[33mcommit e3c0664bbc6722e22594e469cd622a9969c06115[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Fri Oct 15 09:37:43 2021 +0100
+
+    [BinaryTranslation] corrected PseudoInstruction grammar for range exprs.
+
+[33mcommit 8ab723b9b165f42373b87ac5fc1fa46e24d44d15[m
+Merge: 2849a9db e71cca74
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Thu Oct 14 19:25:16 2021 +0100
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 2849a9dbcb85e295501da7e5f0e9597069f83317[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Thu Oct 14 19:25:09 2021 +0100
+
+    [BinaryTranslation] Loop increment now reporting register and constant
+
+[33mcommit e71cca74a6ff1ab274099028fd248f8a78dee338[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Oct 14 12:38:32 2021 +0100
+
+    [RISCV] refactored RiscvAsmBranchGetter to use RegisterResolver
+
+[33mcommit 0efdecbdc3b73c6abd830d544e63a2fa644c9e06[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Thu Oct 14 11:57:49 2021 +0100
+
+    [RISCV] refactored RiscvAsmOperandGetter to use RegisterResolver
+
+[33mcommit 41bf9d6596cb6d70c90fd6ea47c8b21e0f8cc9cd[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 13 22:55:12 2021 +0100
+
+    [BinaryTranslation] Adds another loop increment pattern
+
+[33mcommit fcc256ed5be4680617841f3dd00e59a87c4eaa81[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 13 22:49:47 2021 +0100
+
+    [BinaryTranslation] Isomorphism now detects one type of loop increments
+
+[33mcommit 2376bb96e243a1c5f191c152f0108fb30070bb03[m
+Merge: 731dea5d c5d40623
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 13 21:33:33 2021 +0100
+
+    Fixed merge conflicts
+
+[33mcommit 731dea5d6af219e0c135ee57f5b26215d7387856[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 13 21:28:08 2021 +0100
+
+    [MicroBlaze] Adds a test for loop increment pattern detector
+
+[33mcommit b0fed3970ec0440ee7d9cf5d73dc1da4c6badcae[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Wed Oct 13 21:27:46 2021 +0100
+
+    [BinaryTranslation] Refactors pattern report to accept other analysis
+
+[33mcommit c5d40623a58e9b70f3f4c1f44870f1b55c167511[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Oct 13 17:40:31 2021 +0100
+
+    [ARM] added SPeCS copyright headers
+
+[33mcommit b75293f5820212b6fcfe2daace6afb38c9322706[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Oct 13 17:40:22 2021 +0100
+
+    [BinaryTranslation] added SPeCS copyright headers
+
+[33mcommit cd351c4f111220c4f6b3f1950dbd29d266cf187f[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Oct 13 17:39:28 2021 +0100
+
+    [RISCV] added SPeCS copyright headers
+
+[33mcommit 7814c329d556af95fd1e9004b9e553b46b2655f1[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Oct 13 17:39:16 2021 +0100
+
+    [MicroBlaze] added SPeCS copyright headers
+
+[33mcommit a1b612b89bec1ccdafb5c36f371395a0d4862576[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Oct 13 17:38:50 2021 +0100
+
+    [CGRASim] added SPeCS copyright headers
+
+[33mcommit 459dfbf2b91dfa53d96448c8cccd473ed4b3c035[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Oct 13 17:38:44 2021 +0100
+
+    [BinaryTranslationLauncher] added SPeCS copyright headers
+
+[33mcommit 1407629ac3f39bc0ecf52e8279462add5f932981[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Oct 13 17:38:24 2021 +0100
+
+    [GearmanSpecsHw] added SPeCS copyright headers
+
+[33mcommit 2333929e5a5047af1670ddae152afe1df6934569[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Oct 13 17:29:04 2021 +0100
+
+    [ARM] corrected most build errors due to changes in parent BT project
+    
+    (ArmRegister is incomplete, and so is ArmOperandGetter and
+    ArmBranchGetter)
+
+[33mcommit c0abd8634c29ac6c94e253fb6b4738744dc9f21c[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Oct 13 17:27:18 2021 +0100
+
+    [BinaryTranslation] re-added AsmFielData field to AInstructionData
+    
+    (since some testers in ARM project needed it)
+
+[33mcommit a1efd12e30412e1a850a908ba1720a9222e91f28[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Oct 13 17:26:07 2021 +0100
+
+    [MicroBlaze] cleaned up comments in MicroBlazeInstruction; tester tweak
+
+[33mcommit 56004077e7f5a0218348e782a4bb05bc9e3632c5[m
+Author: Nuno <nmcp88@gmail.com>
+Date:   Wed Oct 13 17:24:35 2021 +0100
+
+    [RISCV] minor changes to copyright headers and cleaned up
+    RiscvInstruction
+
+[33mcommit e2fb8cddd34036da5ef4374bc2a404b89353ec4e[m
+Author: João Bispo <joaobispo@gmail.com>
+Date:   Wed Oct 13 13:04:13 2021 +0100
+
+    Ignoring project standalone_bsp_0 when building
+
+[33mcommit 0d831d3d748a13e06741aa1224aab2f8accc0bd2[m
+Merge: dec97f3b a3fd1e14
+Author: João Bispo <joaobispo@gmail.com>
+Date:   Wed Oct 13 13:03:34 2021 +0100
+
+    Merge branch 'master' of https://github.com/specs-feup/specs-hw
+
+[33mcommit dec97f3b1bfd18d5b0c3554e6e29557635e18369[m
+Author: João Bispo <joaobispo@gmail.com>
+Date:   Wed Oct 13 13:02:50 2021 +0100
+
+    Ignore building of project Base_Zynq_MPSoC_wrapper_hw_platform_0
+
+[33mcommit a3fd1e14d73afbd1212a02630d49a2ca4d2710dc[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Tue Oct 12 22:11:40 2021 +0100
+
+    [MicroBlaze] Adds MegaBlock window sizes
+
+[33mcommit e3c64f1702b1ef5551504df974deb962b71c4c90[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Tue Oct 12 22:11:04 2021 +0100
+
+    [BinaryTranslation] Refactor of pattern detector
+
+[33mcommit 7e70c9652359d1956de78216f33919f5a301c484[m
+Author: tiagolascasas <tiagolascasas@outlook.com>
+Date:   Tue Oct 12 22:01:25 2021 +0100
+
+    Auto stash before merge of "master" and "origin/master"
