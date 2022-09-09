@@ -60,4 +60,18 @@ public class F4FPGATestJSONWrite {
         SpecsIo.write(tmplChanged, repl.toString());
         // tmplChanged.deleteOnExit();
     }
+
+    /*
+     * 
+     * make script
+     *  var topscript = new File("./topscript.sh");
+     *  topscript.add ????
+     *      export 
+        SpecsIo.write(tmplChanged, repl.toString());
+     * 
+     *  var args = new ArrayList<String>();            
+        args.add("bash");
+        args.add("topscript.sh");
+        var unzipResult = SpecsSystem.runProcess(args, true, false);
+     */
 }
