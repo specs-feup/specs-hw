@@ -10,11 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.Riscv.test.processes;
 
 import org.junit.Test;
-import org.specs.Riscv.provider.RiscvPolyBenchMiniInt;
+import org.specs.Riscv.provider.RiscvLivermoreN100im;
 
 import pt.up.fe.specs.binarytranslation.test.processes.QEMUTester;
 
@@ -25,6 +25,6 @@ public class RiscvQEMUTester extends QEMUTester {
      */
     @Test
     public void testQEMU() {
-        testQEMULaunch(RiscvPolyBenchMiniInt.gemm);
+        testQEMULaunch(RiscvLivermoreN100im.innerprod);
     }
 }
