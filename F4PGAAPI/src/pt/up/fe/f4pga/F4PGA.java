@@ -41,19 +41,12 @@ public class F4PGA {
         var sourceCondaCommand = "source " + famDir + "/conda/etc/profile.d/conda.sh";
         var activateCondaCommand = "conda activate " + validFPGA.getFpgaFamily();
         var commandList = new ArrayList<String>();
+        var buildCmd = "// f4pga build --flow ./flow.json";
 
         commandList.add(exportF4pgaCommand);
         commandList.add(sourceCondaCommand);
         commandList.add(activateCondaCommand);
-
-        return commandList;
-    }
-
-    private List<String> getBuildCommmands(String installDir) {
-
-        // f4pga build --flow ./flow.json
-
-        List<String> commandList = new ArrayList<>();
+        commandList.add(buildCmd);
 
         return commandList;
     }
@@ -89,12 +82,25 @@ public class F4PGA {
         flow.newFlow(hdlSourceDir, topName);
     }
 
-    public void build(String buildDir) {
-        // fpgaFlowGenerate(String sourcePath, String topName)
-        String target = validFPGA.getHwType();
+    private void get
 
-        String buildCmd = "TARGET=/" + target + " make -C " + buildDir;
-        var processOutput = SpecsSystem.runProcess(Arrays.asList(buildCmd), true, false);
+    public void build(String buildDir) {
+
+        var tmpl = F4PGAResource.F4PGABASH_SRICPT_TEMPLATE;
+        var tmplAsString = tmpl.read();
+
+        // list of HDL files
+        var hdls = new ArrayList<String>();
+        hdls.add("\"counter1.v\"");
+        hdls.add("\"counter2.v\"");
+
+        var repl = new Replacer(tmplAsString);
+        repl.replace("<SOURCE_LIST>", hdls);
+        repl.replace("<PART_NUMBER>", F4PGATarget.Arty100T.getPartName());
+        // repl.replace("<PART_NUMBER>", F4PGATarget.Basys3.getPartName());
+
+        var tmplChanged = new File("./jsonChanged.json");
+        SpecsIo.write(tmplChanged, repl.toString());
 
     }
 
