@@ -11,7 +11,7 @@ public class FPGA_Flow {
     String flowString;
     String hdlSourceDir;
     String topName;
-    List<String> targetList;
+    List<Object> targetList;
     String buildDir;
     XDC xilinixDC;
 
@@ -56,7 +56,7 @@ public class FPGA_Flow {
         buildDir = _buildDir;
     }
 
-    public void changeTarget(List<String> _targetList) {
+    public void changeTarget(ArrayList<Object> _targetList) {
 
         var replacer = new Replacer(flowString);
         String sourceListString = "TODO";

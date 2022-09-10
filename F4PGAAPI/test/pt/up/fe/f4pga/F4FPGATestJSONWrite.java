@@ -14,7 +14,9 @@
 package pt.up.fe.f4pga;
 
 import java.io.File;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -59,6 +61,14 @@ public class F4FPGATestJSONWrite {
         var tmplChanged = new File("./jsonChanged.json");
         SpecsIo.write(tmplChanged, repl.toString());
         // tmplChanged.deleteOnExit();
+    }
+    
+    
+    public void testGetBuildCommand() {
+    	
+    	String DEFAULT_F4PGA_INSTALL_DIR = "~/opt/f4pga";
+    	List<String> aux = F4PGA.getBuildCommands(DEFAULT_F4PGA_INSTALL_DIR);
+    	
     }
 
     /*

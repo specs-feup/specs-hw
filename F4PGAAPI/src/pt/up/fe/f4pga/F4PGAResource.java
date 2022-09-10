@@ -18,7 +18,7 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 public enum F4PGAResource implements ResourceProvider {
 
     F4PGAJSON_TEMPLATE("pt/up/fe/f4pga/flow.json");
-	F4PGABASH_SCRIPT_TEMPLATE("pt/up/fe/f4pga/build.sh");
+
 
     private final String resource;
 
@@ -30,4 +30,9 @@ public enum F4PGAResource implements ResourceProvider {
     public String getResource() {
         return resource;
     }
+
 }
+
+
+
+

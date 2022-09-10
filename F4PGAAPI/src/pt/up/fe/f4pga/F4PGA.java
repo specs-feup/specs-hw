@@ -10,7 +10,7 @@ public class F4PGA {
 
     String DEFAULT_F4PGA_INSTALL_DIR = "~/opt/f4pga";
 
-    FPGA validFPGA;
+    static FPGA validFPGA;
     FPGA_Flow flow;
 
     private ArrayList<FPGA> getFpgaList() {
@@ -34,7 +34,7 @@ public class F4PGA {
         return listFPGA;
     }
 
-    private List<String> getEnvCommmands(String installDir) {
+    public static List<String> getBuildCommands(String installDir) {
 
         var famDir = installDir + '/' + validFPGA.getFpgaFamily();
         var exportF4pgaCommand = "export PATH=" + installDir + "/install/bin:$PATH";
@@ -45,7 +45,7 @@ public class F4PGA {
 
         commandList.add(exportF4pgaCommand);
         commandList.add(sourceCondaCommand);
-        commandList.add(activateCondaCommand);
+        commandList.add((String) activateCondaCommand);
         commandList.add(buildCmd);
 
         return commandList;
