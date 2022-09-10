@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Seting the installation directory to match what you set it to earlier:
-export F4PGA_INSTALL_DIR=~/opt/f4pga
-
-TARGET="nexys4ddr" make -C <DESIGN_FOLDER>
+export PATH= /<INSTALATION_DIR><FAM_NAME>/install/bin:$PATH
+source <INSTALATION_DIR><FAM_NAME>/conda/etc/profile.d/conda.sh
+conda activate <FAM_NAME>
+f4pga build --flow ./flow.json

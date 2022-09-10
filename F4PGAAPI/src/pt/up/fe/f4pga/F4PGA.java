@@ -82,17 +82,20 @@ public class F4PGA {
         flow.newFlow(hdlSourceDir, topName);
     }
 
-    private void get
+    private String doubleQouString;
+
+    private void hdlFilesListFromDir() {
+        // list of HDL files
+        var hdls = new ArrayList<String>();
+        hdls.add("\"counter1.v\"");
+        hdls.add("\"counter2.v\"");
+        doubleQouString
+    }
 
     public void build(String buildDir) {
 
         var tmpl = F4PGAResource.F4PGABASH_SRICPT_TEMPLATE;
         var tmplAsString = tmpl.read();
-
-        // list of HDL files
-        var hdls = new ArrayList<String>();
-        hdls.add("\"counter1.v\"");
-        hdls.add("\"counter2.v\"");
 
         var repl = new Replacer(tmplAsString);
         repl.replace("<SOURCE_LIST>", hdls);
