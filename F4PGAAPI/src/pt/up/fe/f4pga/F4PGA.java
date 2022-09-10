@@ -89,12 +89,12 @@ public class F4PGA {
         var hdls = new ArrayList<String>();
         hdls.add("\"counter1.v\"");
         hdls.add("\"counter2.v\"");
-        doubleQouString
+        doubleQouString;
     }
 
     public void build(String buildDir) {
 
-        var tmpl = F4PGAResource.F4PGABASH_SRICPT_TEMPLATE;
+        var tmpl = F4PGAResource.F4PGABASH_SCRIPT_TEMPLATE;
         var tmplAsString = tmpl.read();
 
         var repl = new Replacer(tmplAsString);
