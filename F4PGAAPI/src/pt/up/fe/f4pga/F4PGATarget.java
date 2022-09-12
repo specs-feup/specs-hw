@@ -28,6 +28,7 @@ public enum F4PGATarget {
     String devkitName;
     String partName;
     String fpgaFamily;
+    // String defaultXDC;
 
     private F4PGATarget(String devkitName, String fpgaFamily, String partName) {
         this.devkitName = devkitName;

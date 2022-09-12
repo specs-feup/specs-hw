@@ -14,7 +14,6 @@
 package pt.up.fe.f4pga;
 
 import java.io.File;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +22,27 @@ import org.junit.Test;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.utilities.Replacer;
 
-public class F4FPGATestJSONWrite {
+public class F4FPGATests {
 
+    //////////////////////////////////////////////////////////
+    @Test
+    public void testF4PGAFlow() {
+
+        // TODO: build dynamically or use a class to represent all HDLs
+        var hdls = new ArrayList<String>();
+        hdls.add("\"counter1.v\"");
+        hdls.add("\"counter2.v\"");
+
+        var flow1 = new F4PGAFlow("counter", "./output", hdls, F4PGATarget.Basys3);
+
+        // should output the json and bash files
+        flow1.setupFlow();
+
+        // TODO:
+        // var output = flow1.run();
+    }
+
+    //////////////////////////////////////////////////////////
     @Test
     public void testJSONRead() {
         var tmpl = F4PGAResource.F4PGAJSON_TEMPLATE;
@@ -38,9 +56,6 @@ public class F4FPGATestJSONWrite {
         var tmplOnDisk = tmpl.write();
         tmplOnDisk.deleteOnExit();
     }
-
-    // example
-    // new F4PGAFlow(F4PGATarget target) {{ .... }};
 
     @Test
     public void testJSONReplaceToDisk() {
@@ -60,15 +75,14 @@ public class F4FPGATestJSONWrite {
 
         var tmplChanged = new File("./jsonChanged.json");
         SpecsIo.write(tmplChanged, repl.toString());
-        // tmplChanged.deleteOnExit();
+        tmplChanged.deleteOnExit();
     }
-    
-    
+
     public void testGetBuildCommand() {
-    	
-    	String DEFAULT_F4PGA_INSTALL_DIR = "~/opt/f4pga";
-    	List<String> aux = F4PGA.getBuildCommands(DEFAULT_F4PGA_INSTALL_DIR);
-    	
+
+        String DEFAULT_F4PGA_INSTALL_DIR = "~/opt/f4pga";
+        List<String> aux = F4PGA.getBuildCommands(DEFAULT_F4PGA_INSTALL_DIR);
+
     }
 
     /*
