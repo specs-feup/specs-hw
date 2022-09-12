@@ -17,9 +17,7 @@ public class F4PGAFlow {
 
     private final String topName;
     private final String buildDir;
-    // private final String hdlSourceDir; // TODO: replace with class that repreesnts all src HDLs
-    private final List<String> hdls; // TODO: replace with class that repreesnts all src HDLs (should inbclude which
-                                     // file is top level)
+    
     private final F4PGATarget target;
 
     public F4PGAFlow(String topName, String buildDir, List<String> hdls, F4PGATarget target) {
@@ -63,18 +61,26 @@ public class F4PGAFlow {
         _prepBuildScript(this.target, this.topName);
 
         // setup json flow
-        _prepJson(this.target, this.hdls, this.topName);
+        _prepJson(this.target, getHdls(), this.topName);
     }
 
-    /*
-    F4PGARunOutput public run() {
+    
+     public void runF4PGARunOutput() {
+    	 
+    	 //How to connect the first part (mkdir and new file) to the second part (procesbuilder)
+    	 
         
+    	 
         // mkdir         
         // new file this.buildDir
+    	 File newFile = new File(this.buildDir);
+    	 newFile.mkdir();
     
             // using a pRocessbuilder, call this:
             // bash "./" + topName + "_f4pgabuild.sh"
-    }*/
+    	 
+    	 ProcessBuilder probuild = new ProcessBuilder( "./" + topName + "_f4pgabuild.sh");
+    }
 
     /*
     public String newFlow(String _hdlSourceDir, String _topName) {
@@ -93,16 +99,7 @@ public class F4PGAFlow {
         return flowString;
     }*/
 
-    /*
-     * TODO: move to a class represeting the HDL design
-    public void sourceFromList(String _hdlSourceDir) {
     
-        var replacer = new Replacer(flowString);
-        var sourceListString = "TODO";
-    
-        replacer.replace("<source_list>", sourceListString);
-        hdlSourceDir = _hdlSourceDir;
-    }*/
 
     /*
     public void changeTopName(String _topName) {
