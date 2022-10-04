@@ -10,8 +10,10 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.structure.pes;
+
+import java.util.List;
 
 /**
  * Used to occupy a mesh slot while nothing is placed there
@@ -21,5 +23,10 @@ public class NullPE implements ProcessingElement {
     @Override
     public String toString() {
         return "Null";
+    }
+
+    @Override
+    public List<ProcessingElementPort> getPorts() {
+        return null;
     }
 }

@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.structure.pes;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
      */
     private List<PEData> registerFile;
     private int memorySize = 0;
-    private int writeIdx = 0;
+    private int writeIdx = -1;
 
     /*
      * initialized by children
@@ -75,6 +75,14 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 
     protected AbstractProcessingElement() {
         this(1);
+    }
+
+    /*
+     * (just for testing???)
+     */
+    @Override
+    public List<ProcessingElementPort> getPorts() {
+        return this.ports;
     }
 
     @Override

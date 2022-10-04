@@ -15,7 +15,7 @@ package pt.up.specs.cgra.structure.pes;
 
 import pt.up.specs.cgra.dataypes.PEData;
 
-public class MultiplierElement extends AbstractProcessingElement {
+public class MultiplierElement extends BinaryProcessingElement {
 
     public MultiplierElement(int latency, int memorySize) {
         super(latency, memorySize);

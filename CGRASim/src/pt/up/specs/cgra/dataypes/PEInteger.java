@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.dataypes;
 
 public class PEInteger implements PEData {
@@ -26,7 +26,8 @@ public class PEInteger implements PEData {
         return new PEInteger(this.value);
     }
 
-    public int getValue() {
+    @Override
+    public Integer getValue() {
         return value;
     }
 
