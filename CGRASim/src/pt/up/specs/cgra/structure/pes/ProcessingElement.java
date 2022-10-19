@@ -80,14 +80,14 @@ public interface ProcessingElement {
      * 
      */
     default public boolean hasMemory() {
-        return false;
+        return true;
     }
 
     /*
      * 
      */
     default public int getMemorySize() {
-        return 0;
+        return 1;
     }
 
     /*
@@ -121,10 +121,10 @@ public interface ProcessingElement {
     /*
      * Sets result register for the next operation to execute (this setting is/should be persistent)
      */
-    default public boolean setResultRegister(int regIndex) {
+/*    default public boolean setResultRegister(int regIndex) {
         return false;
     }
-
+*/
     /*
      * Implements ONE execution tick (can be considered as a clock cycle)
      * this does not guarantee that the return is valid, only when
@@ -140,6 +140,30 @@ public interface ProcessingElement {
     default public String statusString() {
         return "No status";
     }
+    
+    /*
+     * 
+     */
+    default public boolean setInitial(boolean a) {
+        return false;
+    }
+    
+    default public boolean getInitial() {
+        return false;
+    }
+    
+    default public boolean setFinal(boolean a) {
+        return false;
+    }
+    
+    default public boolean getFinal() {
+        return false;
+    }
+    
+    /*
+     * 
+     */
+
 
     /*
      * JUST FOR TESTING (??)

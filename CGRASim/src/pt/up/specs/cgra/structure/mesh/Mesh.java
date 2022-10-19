@@ -62,6 +62,26 @@ public class Mesh {
     public ProcessingElement getProcessingElement(int x, int y) {
         return this.mesh.get(x).get(y);
     }
+    
+    public void fetch() {
+    	for (var line : this.mesh)
+            for (ProcessingElement pe : line)
+                if (pe.getInitial())
+                {
+                	pe.getPorts().get(0).setPayload(myparent.getLiveins().read(0 + 2*(pe.getExecuteCount())));
+                	pe.getPorts().get(1).setPayload(myparent.getLiveins().read(1 + 2*(pe.getExecuteCount())));
+                }
+    }
+    
+    public void store() {
+    	for (var line : this.mesh)
+            for (ProcessingElement pe : line)
+                if (pe.getFinal())
+                {
+                	myparent.getLiveouts().write((0 + pe.getExecuteCount()), pe.getPorts().get(2).getPayload());
+                	
+                }
+    }
 
     public void execute() {
         for (var line : this.mesh)

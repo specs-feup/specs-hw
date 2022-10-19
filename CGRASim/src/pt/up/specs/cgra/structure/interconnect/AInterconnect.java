@@ -45,8 +45,10 @@ public abstract class AInterconnect implements Interconnect {
     @Override
     public boolean propagate() {
 
-        for (var drive : this.connections.keySet()) {
+        for (var drive : this.connections.keySet()) 
+        {
             var drivenList = this.connections.get(drive);
+            
             for (var drivenPort : drivenList)
                 drivenPort.setPayload(drive.getPayload().copy()); // copy the data element
         }

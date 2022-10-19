@@ -33,6 +33,20 @@ public interface PEData {
     public PEData lshift(PEData operandB);
 
     public PEData rshift(PEData operandB);
+    
+    public PEData mod(PEData operandB);
+    
+    public PEData AND(PEData operandB);
+    
+    public PEData OR(PEData operandB);
+    
+    public PEData XOR(PEData operandB);
+    
+    public PEData passL(PEData operandB);
+    
+    public PEData passR(PEData operandB);
+    
+    public PEData passNull(PEData operandB);
 
     public Number getValue();
 

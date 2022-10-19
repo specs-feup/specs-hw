@@ -14,6 +14,7 @@
 package pt.up.specs.cgra.structure;
 
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
+import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 
 public interface SpecsCGRA {
@@ -48,4 +49,9 @@ public interface SpecsCGRA {
     // which lowers this functional spec into chisel3 or hdl
     // along with whatever other artefecats are necessary
     // public IMplementation(?) toImplementation(Implementer hdlImplementer);
+    
+    public GenericMemory getLiveins();
+	
+
+	public GenericMemory getLiveouts();
 }

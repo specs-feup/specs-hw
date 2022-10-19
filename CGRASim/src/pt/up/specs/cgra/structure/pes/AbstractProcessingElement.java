@@ -30,23 +30,27 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     private Mesh myparent;
     private int xPos, yPos;
     private int latency = 1;
-    private boolean hasMemory = false;
+    private boolean hasMemory = true;
     private boolean ready = true;
     private boolean executing = false;
+    private boolean isInitial = false;
+    private boolean isFinal = false;
     private int executeCount = 0;
+	private int memorySize = 1;
+    private int writeIdx = 0;
+
 
     /*
      * local memory to hold constants (useful for using 
      * same PE for different contexts, if that PE needs different contexts)
      */
-    private GenericMemory constants = new GenericMemory(2);
+    private GenericMemory constants = new GenericMemory(2);//2 inteiros
 
     /*
      * register file (for values computed during operation)
      */
-    private List<PEData> registerFile;
-    private int memorySize = 0;
-    private int writeIdx = -1;
+    public List<PEData> registerFile;
+    
 
     /*
      * initialized by children
@@ -61,16 +65,16 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     protected AbstractProcessingElement(int latency, int memorySize) {
         this.latency = latency;
         this.memorySize = memorySize;
-        if (this.memorySize > 0) {
-            this.hasMemory = true;
+//        if (this.memorySize > 0) {
+//            this.hasMemory = true;
             this.registerFile = new ArrayList<PEData>(memorySize);
-        } else {
-            this.hasMemory = false;
-        }
+//        } else {
+//            this.hasMemory = false;
+//        }
     }
 
     protected AbstractProcessingElement(int latency) {
-        this(latency, 0);
+        this(latency, 1);
     }
 
     protected AbstractProcessingElement() {
@@ -160,6 +164,36 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     public boolean isExecuting() {
         return this.executing;
     }
+    
+    @Override
+    public boolean getInitial() {
+    	return this.isInitial;
+    }
+    
+    @Override
+    public boolean getFinal() {
+    	return this.isFinal;
+    }
+    
+    @Override
+    public boolean setInitial(boolean a) {
+    	if(this.isFinal != true)
+        {
+        	this.isInitial = a;
+        	return true;
+        }
+        else return false;    
+    }
+    
+    @Override
+    public boolean setFinal(boolean a) {
+        if(this.isInitial != true)
+        {
+        	this.isFinal = a;
+        	return true;
+        }
+        else return false;
+    }
 
     @Override
     public boolean isReady() {
@@ -171,7 +205,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         return this.executeCount;
     }
 
-    @Override
+/*    @Override
     public boolean setResultRegister(int regIndex) {
         if (regIndex < this.memorySize) {
             this.writeIdx = regIndex;
@@ -181,7 +215,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
             return false;
         }
     }
-
+*/
     /*
      * Implemented by children
      */
@@ -201,9 +235,10 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 
         var result = _execute();
         this.executeCount++;
-        this.ports.get(this.ports.size() - 1).setPayload(result);
-        if (this.writeIdx != -1)
-            this.registerFile.set(this.writeIdx, result);
+//        if (this.writeIdx != -1)
+//            this.registerFile.set(this.writeIdx, result)
+        this.registerFile.set(0, result);
+
         return result;
     }
 
