@@ -39,6 +39,7 @@ public interface SpecsCGRA {
      */
     // public boolean switchContext();
 
+    
     /*
      * Generate a visual representation of the current CGRA status
      * (Use JFreeChart or similar?)
