@@ -15,6 +15,8 @@ package pt.up.specs.cgra.structure.pes;
 
 import java.util.List;
 
+import pt.up.specs.cgra.dataypes.PEControl.PEMemoryAccess;
+
 /**
  * Used to occupy a mesh slot while nothing is placed there
  */
@@ -24,6 +26,7 @@ public class NullPE implements ProcessingElement {
     public String toString() {
         return "Null";
     }
+    
 
     @Override
     public List<ProcessingElementPort> getPorts() {

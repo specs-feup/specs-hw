@@ -16,6 +16,8 @@ package pt.up.specs.cgra.structure.pes;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.specs.cgra.dataypes.PEControl.PEMemoryAccess;
+import pt.up.specs.cgra.dataypes.PEControlALU;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
@@ -38,9 +40,10 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     private int executeCount = 0;
 	private int memorySize = 1;
     private int writeIdx = 0;
+    protected PEControlALU control;
+   
 
-
-    /*
+	/*
      * local memory to hold constants (useful for using 
      * same PE for different contexts, if that PE needs different contexts)
      */
@@ -49,10 +52,9 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     /*
      * register file (for values computed during operation)
      */
-    public List<PEData> registerFile;
-    
+    private List<PEData> registerFile;
 
-    /*
+	/*
      * initialized by children
      */
     protected List<ProcessingElementPort> ports;
@@ -67,7 +69,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         this.memorySize = memorySize;
 //        if (this.memorySize > 0) {
 //            this.hasMemory = true;
-            this.registerFile = new ArrayList<PEData>(memorySize);
+        this.registerFile = new ArrayList<PEData>(memorySize);
 //        } else {
 //            this.hasMemory = false;
 //        }
@@ -114,7 +116,17 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     public Mesh getMesh() {
         return this.myparent;
     }
+    
+    public List<PEData> getRegisterFile() {
+		return registerFile;
+	}
 
+	public void setRegisterFile(List<PEData> registerFile) {
+		this.registerFile = registerFile;
+	}
+	
+
+	
     @Override
     public boolean setX(int x) {
         if (this.xPos != -1)
@@ -165,36 +177,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         return this.executing;
     }
     
-    @Override
-    public boolean getInitial() {
-    	return this.isInitial;
-    }
     
-    @Override
-    public boolean getFinal() {
-    	return this.isFinal;
-    }
-    
-    @Override
-    public boolean setInitial(boolean a) {
-    	if(this.isFinal != true)
-        {
-        	this.isInitial = a;
-        	return true;
-        }
-        else return false;    
-    }
-    
-    @Override
-    public boolean setFinal(boolean a) {
-        if(this.isInitial != true)
-        {
-        	this.isFinal = a;
-        	return true;
-        }
-        else return false;
-    }
-
     @Override
     public boolean isReady() {
         return this.ready;
@@ -241,6 +224,20 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 
         return result;
     }
+    
+    public boolean getInitial()
+    {
+    	if (control.getMemAccess() == PEMemoryAccess.INITIAL)
+    		return true;
+    	else return false;
+    }
+    
+    public boolean getFinal()
+    {
+    	if (control.getMemAccess() == PEMemoryAccess.FINAL)
+    		return true;
+    	else return false;
+    }
 
     /*
      * 
@@ -249,4 +246,5 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     public String toString() {
         return this.getClass().getSimpleName();
     }
+
 }

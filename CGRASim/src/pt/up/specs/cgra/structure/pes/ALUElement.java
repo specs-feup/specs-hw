@@ -13,20 +13,15 @@
  
 package pt.up.specs.cgra.structure.pes;
 
+import pt.up.specs.cgra.dataypes.PEControl;
+import pt.up.specs.cgra.dataypes.PEControlALU;
+
 import pt.up.specs.cgra.dataypes.PEData;
 
 public class ALUElement extends BinaryProcessingElement {
 
     // TODO: datatypes for T? bitwidths?
-	String type;
 
-    public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
 
 	public ALUElement(int latency, int memorySize) {
         super(latency, memorySize);
@@ -39,52 +34,62 @@ public class ALUElement extends BinaryProcessingElement {
     public ALUElement() {
         this(1, 0);
     }
+    
+	public PEControlALU getControl() {
+		return control;
+	}
+
+	public void setControl(PEControlALU control) {
+		this.control = control;
+	}
+
+    
 
     @Override
     protected PEData _execute() {
-        switch(this.type)
+        switch(control.getOperation())
         {
-        case "add":
+        case ADD:
         	return this.getOperand(0).add(this.getOperand(1));
         	
-		case "sub":
+		case SUB:
         	return this.getOperand(0).sub(this.getOperand(1));
         	
-        case "mul":
+        case MUL:
         	return this.getOperand(0).mul(this.getOperand(1));
         	
-        case "div":
+        case DIV:
         	return this.getOperand(0).div(this.getOperand(1));
         	
-        case "lshift":
+        case LSHIFT:
         	return this.getOperand(0).lshift(this.getOperand(1));
         	
-        case "rshift":
+        case RSHIFT:
         	return this.getOperand(0).rshift(this.getOperand(1));
         	
-        case "mod":        	
+        case MOD:        	
         	return this.getOperand(0).mod(this.getOperand(1));
 
-        case "AND":        	
-        	return this.getOperand(0).AND(this.getOperand(1));
+        case AND:        	
+        	return this.getOperand(0).and(this.getOperand(1));
 
-        case "OR":        	
-        	return this.getOperand(0).OR(this.getOperand(1));
+        case OR:        	
+        	return this.getOperand(0).or(this.getOperand(1));
 
-        case "XOR":        	
-        	return this.getOperand(0).XOR(this.getOperand(1));
+        case XOR:        	
+        	return this.getOperand(0).xor(this.getOperand(1));
 
-        case "passL":        	
-        	return this.getOperand(0).passL(this.getOperand(1));
+        case PASSL:        	
+        	return this.getOperand(0).passl(this.getOperand(1));
 
-        case "passR":        	
-        	return this.getOperand(0).passR(this.getOperand(1));
+        case PASSR:        	
+        	return this.getOperand(0).passr(this.getOperand(1));
         	
         	
-        case "passNull":
+        case PASSNULL:
         	
         default:
-        	return this.getOperand(0).passNull(this.getOperand(1));
+        	return this.getOperand(0).passnull(this.getOperand(1));
         
         }
     }
@@ -96,7 +101,7 @@ public class ALUElement extends BinaryProcessingElement {
 
     @Override
     public String toString() {
-        return "Adder";
+        return "ALU";
     }
     
 }

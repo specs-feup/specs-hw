@@ -29,17 +29,21 @@ public class NearestNeighbour extends AInterconnect {
         var distX = Math.abs(fromPE.getX() - toPE.getX());
         var distY = Math.abs(fromPE.getY() - toPE.getY());
 
-        // diagonal (of any length)
-        if (distX > 0 && distY > 0)
-            return false;
+        
 
-        else if (distX == 1 && distY == 0)
+        if (distX == 1 && distY == 0)
             return true;
 
         else if (distX == 0 && distY == 1)
             return true;
+        
+        else if (distX == 1 && distY == 1)
+            return true;
 
         // anything else
+     // diagonal (of any length)
+        //if (distX > 0 && distY > 0)
+        //    return false;
         else
             return false;
     }

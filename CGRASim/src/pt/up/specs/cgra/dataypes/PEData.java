@@ -14,8 +14,8 @@
 package pt.up.specs.cgra.dataypes;
 
 /**
- * Required methods for any data type which is meant to be used as data to be processed by a @ProcessingElement Any
- * PEData should only be attributed a value ONCE
+ * Required methods for any data type which is meant to be used as data to be processed by a @ProcessingElement
+ * Any PEData should only be attributed a value ONCE
  * 
  * @author nuno
  *
@@ -36,17 +36,17 @@ public interface PEData {
     
     public PEData mod(PEData operandB);
     
-    public PEData AND(PEData operandB);
+    public PEData and(PEData operandB);
     
-    public PEData OR(PEData operandB);
+    public PEData or(PEData operandB);
     
-    public PEData XOR(PEData operandB);
+    public PEData xor(PEData operandB);
     
-    public PEData passL(PEData operandB);
+    public PEData passl(PEData operandB);
     
-    public PEData passR(PEData operandB);
+    public PEData passr(PEData operandB);
     
-    public PEData passNull(PEData operandB);
+    public PEData passnull(PEData operandB);
 
     public Number getValue();
 

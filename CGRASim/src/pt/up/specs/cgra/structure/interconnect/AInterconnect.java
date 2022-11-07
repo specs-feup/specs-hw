@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
@@ -44,14 +45,18 @@ public abstract class AInterconnect implements Interconnect {
      */
     @Override
     public boolean propagate() {
+    	    	
 
         for (var drive : this.connections.keySet()) 
         {
+        	List<PEData> reg = drive.getPE().getRegisterFile(); //copy the data from
+        	drive.setPayload(reg.get(0)); //regfile to output port
+
             var drivenList = this.connections.get(drive);
             
             for (var drivenPort : drivenList)
-                drivenPort.setPayload(drive.getPayload().copy()); // copy the data element
-        }
+                drivenPort.setPayload(drive.getPayload().copy()); // copy the data element from 
+        } //output port to input ports
 
         return true;
     }

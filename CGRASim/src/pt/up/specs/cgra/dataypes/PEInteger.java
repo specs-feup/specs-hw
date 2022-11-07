@@ -75,14 +75,14 @@ public class PEInteger implements PEData {
     }
     
     @Override
-    public PEData AND(PEData operandB) {
+    public PEData and(PEData operandB) {
         var intB = (PEInteger) operandB;
         return new PEInteger(this.value & intB.getValue());
 
     }
     
     @Override
-    public PEData OR(PEData operandB) {
+    public PEData or(PEData operandB) {
         var intB = (PEInteger) operandB;
         return new PEInteger(this.value | intB.getValue());
 
@@ -90,27 +90,27 @@ public class PEInteger implements PEData {
     
 
     @Override
-    public PEData XOR(PEData operandB) {
+    public PEData xor(PEData operandB) {
         var intB = (PEInteger) operandB;
         return new PEInteger(this.value ^ intB.getValue());
 
     }
     
     @Override
-    public PEData passL(PEData operandB) {
+    public PEData passl(PEData operandB) {
         return new PEInteger(this.value);
 
     }
     
     @Override
-    public PEData passR(PEData operandB) {
+    public PEData passr(PEData operandB) {
     	var intB = (PEInteger) operandB;
         return new PEInteger(intB.getValue());
 
     }
     
     @Override
-    public PEData passNull(PEData operandB) {
+    public PEData passnull(PEData operandB) {
         return new PEInteger(0);
 
     }

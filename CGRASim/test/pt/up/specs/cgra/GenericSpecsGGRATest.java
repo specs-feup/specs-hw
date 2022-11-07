@@ -48,7 +48,11 @@ public class GenericSpecsGGRATest {
         var cgra = CGRAbld.build();
         cgra.visualize();
         
-        
+        //config
+        //fetch
+        //execute (as many times as wanted)
+        //store
+        //end
         
     }
 }

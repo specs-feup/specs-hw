@@ -47,6 +47,14 @@ public interface ProcessingElement {
     default public boolean setY(int y) {
         return false;
     }
+    
+    default public List<PEData> getRegisterFile() {
+		return null;
+	}
+
+	default public void setRegisterFile(List<PEData> x) {
+		
+	}
 
     /*
      * 
@@ -141,34 +149,21 @@ public interface ProcessingElement {
         return "No status";
     }
     
-    /*
-     * 
-     */
-    default public boolean setInitial(boolean a) {
-        return false;
-    }
-    
-    default public boolean getInitial() {
-        return false;
-    }
-    
-    default public boolean setFinal(boolean a) {
-        return false;
-    }
-    
-    default public boolean getFinal() {
-        return false;
-    }
-    
-    /*
-     * 
-     */
 
 
     /*
      * JUST FOR TESTING (??)
      */
     public List<ProcessingElementPort> getPorts();
+
+	default public boolean getInitial() {
+		return false;
+	}
+
+	default public boolean getFinal() {
+		return false;
+	}
+
 
     // public getImplementation ??
 

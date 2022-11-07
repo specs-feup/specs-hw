@@ -63,23 +63,26 @@ public class Mesh {
         return this.mesh.get(x).get(y);
     }
     
-    public void fetch() {
+    public void fetch(int pos1, int pos2) { //fetch data from generic ram to initial PEs
+    	int n = 0;
     	for (var line : this.mesh)
-            for (ProcessingElement pe : line)
+            for (var pe : line)
                 if (pe.getInitial())
                 {
-                	pe.getPorts().get(0).setPayload(myparent.getLiveins().read(0 + 2*(pe.getExecuteCount())));
-                	pe.getPorts().get(1).setPayload(myparent.getLiveins().read(1 + 2*(pe.getExecuteCount())));
+                	pe.getPorts().get(0).setPayload(myparent.getLiveins().read(pos1 + 2*n));
+                	pe.getPorts().get(1).setPayload(myparent.getLiveins().read(pos2 + 2*n));
+                	n++;
                 }
     }
     
-    public void store() {
+    public void store(int pos) {//store data from final PEs to generic ram
+    	int n = 0;
     	for (var line : this.mesh)
-            for (ProcessingElement pe : line)
+            for (var pe : line)
                 if (pe.getFinal())
                 {
-                	myparent.getLiveouts().write((0 + pe.getExecuteCount()), pe.getPorts().get(2).getPayload());
-                	
+                	myparent.getLiveouts().write((pos + n), pe.getRegisterFile().get(0));
+                	n++;
                 }
     }
 

@@ -111,8 +111,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     @Override
     public boolean execute() {
     	
-    	//fetches data from RAM for initial PEs
-    	this.mesh.fetch();
     	
     	// execute compute
         this.mesh.execute();
@@ -120,11 +118,15 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         // propagate data from interconnect settings
         this.interconnect.propagate();
         
-        this.mesh.store();
-
-        
-
         return true; // eventually use this return to indicate stalling or something
+    }
+    
+    public void fetch(int pos1, int pos2) {
+    	this.mesh.fetch(pos1, pos2);
+    }
+    
+    public void store(int pos) {
+    	this.mesh.store(pos);
     }
 
     // TODO: use a graphical representation later
