@@ -13,7 +13,6 @@
  
 package pt.up.specs.cgra.structure.pes;
 
-import pt.up.specs.cgra.dataypes.PEControl;
 import pt.up.specs.cgra.dataypes.PEControlALU;
 
 import pt.up.specs.cgra.dataypes.PEData;
@@ -25,6 +24,7 @@ public class ALUElement extends BinaryProcessingElement {
 
 	public ALUElement(int latency, int memorySize) {
         super(latency, memorySize);
+        this.control = new PEControlALU();
     }
 
     public ALUElement(int latency) {

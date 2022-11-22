@@ -35,8 +35,6 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     private boolean hasMemory = true;
     private boolean ready = true;
     private boolean executing = false;
-    private boolean isInitial = false;
-    private boolean isFinal = false;
     private int executeCount = 0;
 	private int memorySize = 1;
     private int writeIdx = 0;
@@ -224,20 +222,6 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 
         return result;
     }
-    
-    public boolean getInitial()
-    {
-    	if (control.getMemAccess() == PEMemoryAccess.INITIAL)
-    		return true;
-    	else return false;
-    }
-    
-    public boolean getFinal()
-    {
-    	if (control.getMemAccess() == PEMemoryAccess.FINAL)
-    		return true;
-    	else return false;
-    }
 
     /*
      * 
@@ -246,5 +230,14 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     public String toString() {
         return this.getClass().getSimpleName();
     }
+
+	public PEControlALU getControl() {
+		return control;
+	}
+
+	public void setControl(PEControlALU control) {
+		this.control = control;
+	}
+	
 
 }

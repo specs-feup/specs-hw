@@ -21,7 +21,7 @@ import pt.up.specs.cgra.structure.pes.ALUElement;
 import pt.up.specs.cgra.structure.pes.MultiplierElement;
 
 public class GenericSpecsGGRATest {
-
+/*
     @Test
     public void testInstantantiateAndView() {
         var CGRAbld = new GenericSpecsCGRA.Builder(2, 2, 8);
@@ -40,7 +40,7 @@ public class GenericSpecsGGRATest {
         var r = adder1.execute();
         System.out.println(r.getValue());
     }
-    
+    */
     @Test
     public void testBasicCGRAPrototype() {
         var CGRAbld = new GenericSpecsCGRA.Builder(3, 3, 8);

@@ -10,12 +10,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.structure.mesh;
 
 import java.util.List;
 
+import pt.up.specs.cgra.dataypes.PEControl.PEMemoryAccess;
+import pt.up.specs.cgra.dataypes.PEControlALU.PEDirection;
 import pt.up.specs.cgra.structure.SpecsCGRA;
+import pt.up.specs.cgra.structure.pes.NullProcessingElement;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 /**
@@ -26,83 +29,184 @@ import pt.up.specs.cgra.structure.pes.ProcessingElement;
  */
 public class Mesh {
 
-    private final SpecsCGRA myparent;
-    private final int x, y;
-    private final List<List<ProcessingElement>> mesh;
+	private final SpecsCGRA myparent;
+	private final int x, y;
+	private final List<List<ProcessingElement>> mesh;
 
-    public Mesh(List<List<ProcessingElement>> mesh, SpecsCGRA myparent) {
-        this.myparent = myparent;
-        this.mesh = mesh;
-        this.x = mesh.size();
-        this.y = mesh.get(0).size();
-        for (int i = 0; i < this.x; i++)
-            for (int j = 0; j < this.y; j++) {
-                var pe = this.mesh.get(i).get(j);
-                pe.setX(i);
-                pe.setY(j);
-                pe.setMesh(this);
-            }
-    }
+	public Mesh(List<List<ProcessingElement>> mesh, SpecsCGRA myparent) {
+		this.myparent = myparent;
+		this.mesh = mesh;
+		this.x = mesh.size();
+		this.y = mesh.get(0).size();
+		for (int i = 0; i < this.x; i++)
+			for (int j = 0; j < this.y; j++) {
+				var pe = this.mesh.get(i).get(j);
+				pe.setX(i);
+				pe.setY(j);
+				pe.setMesh(this);
+			}
+	}
 
-    /*
-     * 
-     */
-    public SpecsCGRA getCGRA() {
-        return this.myparent;
-    }
+	/*
+	 * 
+	 */
+	 public SpecsCGRA getCGRA() {
+		 return this.myparent;
+	 }
 
-    public int getX() {
-        return x;
-    }
+	 public int getX() {
+		 return x;
+	 }
 
-    public int getY() {
-        return y;
-    }
+	 public int getY() {
+		 return y;
+	 }
 
-    public ProcessingElement getProcessingElement(int x, int y) {
-        return this.mesh.get(x).get(y);
-    }
-    
-    public void fetch(int pos1, int pos2) { //fetch data from generic ram to initial PEs
-    	int n = 0;
-    	for (var line : this.mesh)
-            for (var pe : line)
-                if (pe.getInitial())
-                {
-                	pe.getPorts().get(0).setPayload(myparent.getLiveins().read(pos1 + 2*n));
-                	pe.getPorts().get(1).setPayload(myparent.getLiveins().read(pos2 + 2*n));
-                	n++;
-                }
-    }
-    
-    public void store(int pos) {//store data from final PEs to generic ram
-    	int n = 0;
-    	for (var line : this.mesh)
-            for (var pe : line)
-                if (pe.getFinal())
-                {
-                	myparent.getLiveouts().write((pos + n), pe.getRegisterFile().get(0));
-                	n++;
-                }
-    }
+	 public ProcessingElement getProcessingElement(int x, int y) {
+		 return this.mesh.get(x).get(y);
+	 }
 
-    public void execute() {
-        for (var line : this.mesh)
-            for (var pe : line)
-                pe.execute();
-    }
+	 public boolean setConnections()
+	 {
+		 for (var line : this.mesh)
+			 for (var pe : line)
+			 {
+				 if(!(pe instanceof NullProcessingElement))
+				 {
 
-    public String visualize() {
-        var sbld = new StringBuilder();
-        var str = "------------------";
-        for (var line : this.mesh) {
-            sbld.append(str.repeat(line.size()) + "\n");
-            for (var pe : line) {
-                sbld.append("|  " + pe.toString() + "  |");
-            }
-            sbld.append("\n");
-        }
-        sbld.append(str.repeat(this.x));
-        return sbld.toString();
-    }
+					 int x_orig = pe.getX();
+					 int y_orig = pe.getY();
+					 int x = 0;
+					 int y = 0;
+
+					 if (pe.getControl().getMemAccess() != PEMemoryAccess.INITIAL)
+					 {
+						 PEDirection inputone = pe.getControl().getInputone();
+						 switch (inputone)
+						 {
+						 case E:
+							 x = x_orig++;
+							 break;
+						 case NE:
+							 x = x_orig++;
+							 y = y_orig--;
+							 break;
+						 case N:
+							 y = y_orig--;
+							 break;
+						 case NW:
+							 x = x_orig--;
+							 y = y_orig--;
+							 break;
+						 case W:
+							 x = x_orig--;
+							 break;
+						 case SW:
+							 x = x_orig--;
+							 y = y_orig++;
+							 break;
+						 case S:
+							 y = y_orig++;
+							 break;
+						 case SE:
+							 x = x_orig++;
+							 y = y_orig++;
+							 break;
+
+						 case ZERO:
+						 default:
+							 break;
+
+						 }
+
+						 this.myparent.getInterconnect().setConnection(this.getProcessingElement(x, y).getPorts().get(2), pe.getPorts().get(0));
+						 
+						 PEDirection inputtwo = pe.getControl().getInputtwo();
+						 switch (inputtwo)
+						 {
+						 case E:
+							 x = x_orig++;
+							 break;
+						 case NE:
+							 x = x_orig++;
+							 y = y_orig--;
+							 break;
+						 case N:
+							 y = y_orig--;
+							 break;
+						 case NW:
+							 x = x_orig--;
+							 y = y_orig--;
+							 break;
+						 case W:
+							 x = x_orig--;
+							 break;
+						 case SW:
+							 x = x_orig--;
+							 y = y_orig++;
+							 break;
+						 case S:
+							 y = y_orig++;
+							 break;
+						 case SE:
+							 x = x_orig++;
+							 y = y_orig++;
+							 break;
+
+						 case ZERO:
+						 default:
+							 break;
+
+						 }
+
+						 this.myparent.getInterconnect().setConnection(this.getProcessingElement(x, y).getPorts().get(2), pe.getPorts().get(0));
+
+					 }
+				 }
+			 }
+		 return true;
+	 }
+
+	 public void fetch(int pos1, int pos2) { //fetch data from generic ram to initial PEs
+		 int n = 0;
+		 for (var line : this.mesh)
+			 for (var pe : line)
+				 if (pe.getControl().getMemAccess() == PEMemoryAccess.INITIAL)
+				 {
+					 pe.getPorts().get(0).setPayload(myparent.getLiveins().read(pos1 + 2*n));
+					 pe.getPorts().get(1).setPayload(myparent.getLiveins().read(pos2 + 2*n));
+					 n++;
+				 }
+	 }
+
+	 public void store(int pos) {//store data from final PEs to generic ram
+		 int n = 0;
+		 for (var line : this.mesh)
+			 for (var pe : line)
+				 if (pe.getControl().getMemAccess() == PEMemoryAccess.FINAL)
+				 {
+					 myparent.getLiveouts().write((pos + n), pe.getRegisterFile().get(0));
+					 n++;
+				 }
+	 }
+
+	 public void execute() {
+		 for (var line : this.mesh)
+			 for (var pe : line)
+				 pe.execute();
+	 }
+
+	 public String visualize() {
+		 var sbld = new StringBuilder();
+		 var str = "------------------";
+		 for (var line : this.mesh) {
+			 sbld.append(str.repeat(line.size()) + "\n");
+			 for (var pe : line) {
+				 sbld.append("|  " + pe.toString() + "  |");
+			 }
+			 sbld.append("\n");
+		 }
+		 sbld.append(str.repeat(this.x));
+		 return sbld.toString();
+	 }
 }

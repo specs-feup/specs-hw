@@ -3,7 +3,7 @@
  */
 package pt.up.specs.cgra.dataypes;
 
-import pt.up.specs.cgra.dataypes.PEControl.PEType;
+import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 /**
  * Abstract PEControl type class
@@ -11,6 +11,10 @@ import pt.up.specs.cgra.dataypes.PEControl.PEType;
  *
  */
 public abstract class PEControl {
+	
+	protected PEMemoryAccess memaccesstype; //ta
+	protected PEType petype; //ta
+	protected ProcessingElement PE;
 	
 	public static enum PEType
 	{
@@ -26,7 +30,30 @@ public abstract class PEControl {
 		NONE
 	}
 	
-	protected PEMemoryAccess memaccesstype;
-	protected PEType petype;
+	
+	
+	public void setMemAccess(PEMemoryAccess memaccess) {
+		this.memaccesstype = memaccess;
+	}
+	
+	public PEMemoryAccess getMemAccess() {
+		return memaccesstype;
+	}
+	
+	public void setType(PEType type) {
+		this.petype = type;
+	}
+	
+	public PEType getType() {
+		return petype;
+	}
+
+	public ProcessingElement getPE() {
+		return PE;
+	}
+
+	public void setPE(ProcessingElement pe) {
+		PE = pe;
+	}
 
 }

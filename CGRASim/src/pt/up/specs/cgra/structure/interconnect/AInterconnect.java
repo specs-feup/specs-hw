@@ -45,7 +45,7 @@ public abstract class AInterconnect implements Interconnect {
      */
     @Override
     public boolean propagate() {
-    	    	
+    	
 
         for (var drive : this.connections.keySet()) 
         {

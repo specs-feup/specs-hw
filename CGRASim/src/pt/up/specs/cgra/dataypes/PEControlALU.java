@@ -1,6 +1,22 @@
 package pt.up.specs.cgra.dataypes;
 
+import pt.up.specs.cgra.structure.pes.ProcessingElement;
+
 public final class PEControlALU extends PEControl {
+	
+	public static enum PEDirection
+	{
+		N,
+		NE,
+		E,
+		SE,
+		S,
+		SW,
+		W,
+		NW,
+		ZERO//constante 0
+	}
+	
 	
 	public static enum ALU_OP
 	{
@@ -19,24 +35,47 @@ public final class PEControlALU extends PEControl {
 		PASSNULL
 	}
 	
-	protected ALU_OP operation = ALU_OP.PASSNULL;
-	protected int memoffset = 0;//memory access address space offset, basic implementation of virtual memory, 
-	//does not replace or offer any memory access protection
+	protected ALU_OP operation; //ta
+	protected int memoffset;//ta - memory access offset, basic implementation of virtual memory, 
+//does not replace or offer any memory access protection, basically X/N, X = size of memory, N=number of inputs
+	protected PEDirection inputone;
+	protected PEDirection inputtwo;
 
-	public PEControlALU(PEMemoryAccess access, ALU_OP operation) {
+	
+	public PEControlALU(ProcessingElement parent, PEMemoryAccess access, ALU_OP operation, PEDirection inputone, PEDirection inputtwo) 
+	{
+		this.PE = parent;
 		this.petype = PEType.ALU;
-		
 		this.memaccesstype = access;
 		this.operation = operation;
+		this.memoffset = 0;
+		this.inputone = inputone;
+		this.inputtwo = inputtwo;
+	}
+	
+	public PEControlALU(ProcessingElement parent, PEMemoryAccess access, ALU_OP operation) 
+	{
+		this.PE = parent;
+		this.petype = PEType.ALU;
+		this.memaccesstype = access;
+		this.operation = operation;
+		this.memoffset = 0;
+		this.inputone = PEDirection.ZERO;
+		this.inputtwo = PEDirection.ZERO;
 	}
 	
 	public PEControlALU()
 	{
+		this.PE = null;
 		this.petype = PEType.ALU;
-
 		this.memaccesstype = PEMemoryAccess.NONE;
 		this.operation = ALU_OP.PASSNULL;
+		this.memoffset = 0;
+		this.inputone = PEDirection.ZERO;
+		this.inputtwo = PEDirection.ZERO;
 	}
+	
+	
 
 	
 	public ALU_OP getOperation() {
@@ -46,23 +85,6 @@ public final class PEControlALU extends PEControl {
 	public void setOperation(ALU_OP operation) {
 		this.operation = operation;
 	}
-	
-
-	public void setMemAccess(PEMemoryAccess memaccess) {
-		this.memaccesstype = memaccess;
-	}
-	
-	public PEMemoryAccess getMemAccess() {
-		return memaccesstype;
-	}
-	
-	public void setType(PEType type) {
-		this.petype = type;
-	}
-	
-	public PEType getType() {
-		return petype;
-	}
 
 	public int getMemoffset() {
 		return memoffset;
@@ -71,7 +93,21 @@ public final class PEControlALU extends PEControl {
 	public void setMemoffset(int memoffset) {
 		this.memoffset = memoffset;
 	}
+	
+	public PEDirection getInputone() {
+		return inputone;
+	}
 
+	public void setInputone(PEDirection inputone) {
+		this.inputone = inputone;
+	}
 
+	public PEDirection getInputtwo() {
+		return inputtwo;
+	}
+
+	public void setInputtwo(PEDirection inputtwo) {
+		this.inputtwo = inputtwo;
+	}
 
 }

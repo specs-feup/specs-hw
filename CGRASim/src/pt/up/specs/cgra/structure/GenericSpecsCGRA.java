@@ -26,7 +26,7 @@ import pt.up.specs.cgra.structure.interconnect.NearestNeighbour;
 import pt.up.specs.cgra.structure.interconnect.ToroidalNNInterconnect;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
-import pt.up.specs.cgra.structure.pes.NullPE;
+import pt.up.specs.cgra.structure.pes.EmptyPE;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 public class GenericSpecsCGRA implements SpecsCGRA {
@@ -159,7 +159,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
             for (int i = 0; i < x; i++) {
                 this.mesh.add(new ArrayList<ProcessingElement>(y));
                 for (int j = 0; j < y; j++) {
-                    this.mesh.get(i).add(new NullPE());
+                    this.mesh.get(i).add(new EmptyPE());
                 }
             }
         }

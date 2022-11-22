@@ -15,12 +15,15 @@ package pt.up.specs.cgra.structure.pes;
 
 import java.util.List;
 
-import pt.up.specs.cgra.dataypes.PEControl.PEMemoryAccess;
+import pt.up.specs.cgra.dataypes.PEControl;
+import pt.up.specs.cgra.dataypes.PEControlNull;
+
 
 /**
  * Used to occupy a mesh slot while nothing is placed there
  */
-public class NullPE implements ProcessingElement {
+public class EmptyPE implements ProcessingElement {
+	
 
     @Override
     public String toString() {
