@@ -18,7 +18,9 @@ import java.util.List;
 
 import pt.up.specs.cgra.dataypes.PEControl.PEMemoryAccess;
 import pt.up.specs.cgra.dataypes.PEControlALU;
+import pt.up.specs.cgra.dataypes.PEControlALU.PEDirection;
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
@@ -206,7 +208,11 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
      * Use by children
      */
     protected PEData getOperand(int idx) {
-        return this.ports.get(idx).getPayload();
+    	if (idx == 0 && this.control.getInputone() == PEDirection.ZERO) return new PEInteger(0);
+    	else if (idx == 1 && this.control.getInputtwo() == PEDirection.ZERO) return new PEInteger(0);
+    	
+    	else return this.ports.get(idx).getPayload();
+    	
     }
 
     @Override
