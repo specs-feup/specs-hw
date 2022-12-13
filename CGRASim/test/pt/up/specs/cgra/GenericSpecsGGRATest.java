@@ -82,6 +82,8 @@ public class GenericSpecsGGRATest {
         cgra.fetch(0, 5);
 
         cgra.setConnections();
+        
+        cgra.execute();
 
         
         //config

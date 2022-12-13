@@ -37,7 +37,7 @@ public class NullProcessingElement implements ProcessingElement {
 	public NullProcessingElement(int latency)
 	{
 		this.latency = latency;
-		this.registerFile = new ArrayList<PEData>(this.memorySize);
+		this.registerFile = new ArrayList<PEData>(1);
 		this.control = new PEControlNull();
 		this.ports = Arrays.asList(
                 new ProcessingElementPort(this, PEPortDirection.input, null),

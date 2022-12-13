@@ -28,11 +28,11 @@ public class ALUElement extends BinaryProcessingElement {
     }
 
     public ALUElement(int latency) {
-        this(latency, 0);
+        this(latency, 1);
     }
 
     public ALUElement() {
-        this(1, 0);
+        this(1, 1);
     }
  
 

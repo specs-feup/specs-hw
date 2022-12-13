@@ -86,36 +86,36 @@ public class Mesh {
 						switch (inputone)
 						{
 						case E:
-							x = x_orig + 1;
-							y = y_orig;
+							y = y_orig + 1;
+							x = x_orig;
 							break;
 						case NE:
-							x = x_orig + 1;
-							y = y_orig - 1;
+							y = y_orig + 1;
+							x = x_orig - 1;
 							break;
 						case N:
-							x = x_orig;
-							y = y_orig - 1;
+							y = y_orig;
+							x = x_orig - 1;
 							break;
 						case NW:
-							x = x_orig - 1;
 							y = y_orig - 1;
+							x = x_orig - 1;
 							break;
 						case W:
-							x = x_orig - 1;
-							y = y_orig;
+							y = y_orig - 1;
+							x = x_orig;
 							break;
 						case SW:
-							x = x_orig - 1;
-							y = y_orig + 1;
+							y = y_orig - 1;
+							x = x_orig + 1;
 							break;
 						case S:
-							x = x_orig;
-							y = y_orig + 1;
+							y = y_orig;
+							x = x_orig + 1;
 							break;
 						case SE:
-							x = x_orig + 1;
 							y = y_orig + 1;
+							x = x_orig + 1;
 							break;
 
 						case ZERO:
@@ -126,7 +126,7 @@ public class Mesh {
 
 						}
 
-						if (x >= 0 || y >= 0) 
+						if (x >= 0 && y >= 0) 
 						{
 							System.out.printf("%d, %d \n", x, y);
 							this.myparent.getInterconnect().setConnection(this.getProcessingElement(x, y).getPorts().get(2), pe.getPorts().get(0));
@@ -143,36 +143,36 @@ public class Mesh {
 						switch (inputtwo)
 						{
 						case E:
-							x = x_orig + 1;
-							y = y_orig;
+							y = y_orig + 1;
+							x = x_orig;
 							break;
 						case NE:
-							x = x_orig + 1;
-							y = y_orig - 1;
+							y = y_orig + 1;
+							x = x_orig - 1;
 							break;
 						case N:
-							x = x_orig;
-							y = y_orig - 1;
+							y = y_orig;
+							x = x_orig - 1;
 							break;
 						case NW:
-							x = x_orig - 1;
 							y = y_orig - 1;
+							x = x_orig - 1;
 							break;
 						case W:
-							x = x_orig - 1;
-							y = y_orig;
+							y = y_orig - 1;
+							x = x_orig;
 							break;
 						case SW:
-							x = x_orig - 1;
-							y = y_orig + 1;
+							y = y_orig - 1;
+							x = x_orig + 1;
 							break;
 						case S:
-							x = x_orig;
-							y = y_orig + 1;
+							y = y_orig;
+							x = x_orig + 1;
 							break;
 						case SE:
-							x = x_orig + 1;
 							y = y_orig + 1;
+							x = x_orig + 1;
 							break;
 
 						case ZERO:
@@ -183,8 +183,10 @@ public class Mesh {
 
 						}
 
-						if (x >= 0 || y >= 0) 
+						if (x >= 0 && y >= 0) 
 						{
+							System.out.printf("%d, %d \n", x, y);
+
 							this.myparent.getInterconnect().setConnection(this.getProcessingElement(x, y).getPorts().get(2), pe.getPorts().get(0));
 							System.out.printf("Connection set between output of %d, %d and input 2 of %d, %d \n", x, y, pe.getX(), pe.getY());
 

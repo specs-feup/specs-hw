@@ -69,7 +69,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         this.memorySize = memorySize;
 //        if (this.memorySize > 0) {
 //            this.hasMemory = true;
-        this.registerFile = new ArrayList<PEData>(memorySize);
+        this.registerFile = new ArrayList<PEData>(3);
 //        } else {
 //            this.hasMemory = false;
 //        }
