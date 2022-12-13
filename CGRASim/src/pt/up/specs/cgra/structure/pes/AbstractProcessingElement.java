@@ -18,7 +18,7 @@ import java.util.List;
 
 import pt.up.specs.cgra.dataypes.PEControl.PEMemoryAccess;
 import pt.up.specs.cgra.dataypes.PEControlALU;
-import pt.up.specs.cgra.dataypes.PEControlALU.PEDirection;
+import pt.up.specs.cgra.dataypes.PEControl.PEDirection;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
@@ -129,7 +129,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 	
     @Override
     public boolean setX(int x) {
-        if (this.xPos != -1)
+        if (this.xPos == -1)
             return false;
         else {
             this.xPos = x;
@@ -139,7 +139,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 
     @Override
     public boolean setY(int y) {
-        if (this.yPos != -1)
+        if (this.yPos == -1)
             return false;
         else {
             this.yPos = y;
@@ -243,6 +243,27 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 
 	public void setControl(PEControlALU control) {
 		this.control = control;
+	}
+	
+	public void printStatus() {
+		if (this.control == null)
+		{
+			System.out.println("No control associated");
+		}
+		else
+		{
+			System.out.println("PE stuff:");
+			System.out.printf("PE coords: %d, ", this.getX());
+			System.out.printf("%d \n", this.getY());
+			System.out.println("control settings: \n");
+			System.out.printf("Type: %s \n", this.control.getType().name());
+			System.out.printf("OP: %s \n", this.control.getOperation().name());
+			System.out.printf("MemAccess: %s \n", this.control.getMemAccess().name());
+			System.out.printf("Input One: %s \n", this.control.getInputone().name());
+			System.out.printf("Input Two: %s \n", this.control.getInputtwo().name());
+			System.out.println("\n");
+
+		}
 	}
 	
 

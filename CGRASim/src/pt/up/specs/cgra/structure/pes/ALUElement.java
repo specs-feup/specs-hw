@@ -34,16 +34,7 @@ public class ALUElement extends BinaryProcessingElement {
     public ALUElement() {
         this(1, 0);
     }
-    
-	public PEControlALU getControl() {
-		return control;
-	}
-
-	public void setControl(PEControlALU control) {
-		this.control = control;
-	}
-
-    
+ 
 
     @Override
     protected PEData _execute() {

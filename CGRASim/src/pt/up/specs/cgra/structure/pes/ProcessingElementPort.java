@@ -41,8 +41,9 @@ public class ProcessingElementPort {
         return payload;
     }
 
-    public void setPayload(PEData payload) {
+    public PEData setPayload(PEData payload) {
         this.payload = payload;
+        return this.payload;
     }
 
     public PEPortDirection getDir() {

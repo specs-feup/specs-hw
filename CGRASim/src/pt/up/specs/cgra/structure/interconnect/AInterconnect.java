@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.structure.interconnect;
 
 import java.util.ArrayList;
@@ -25,100 +25,108 @@ import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 
 public abstract class AInterconnect implements Interconnect {
 
-    // TODO: each interconnect class should only hold a set of permitted connection rules
-    // the AInterconnect should implement all methods?
+	// TODO: each interconnect class should only hold a set of permitted connection rules
+	// the AInterconnect should implement all methods?
 
-    // protected final RULES = ??? some kind of map of possible connections?
+	// protected final RULES = ??? some kind of map of possible connections?
 
-    private final SpecsCGRA myparent;
-    private Context currentContext;
-    private Map<ProcessingElementPort, List<ProcessingElementPort>> connections;
+	private final SpecsCGRA myparent;
+	private Context currentContext;
+	private Map<ProcessingElementPort, List<ProcessingElementPort>> connections;
 
-    public AInterconnect(SpecsCGRA myparent) {
-        this.myparent = myparent;
-        this.currentContext = null;
-        this.connections = new HashMap<ProcessingElementPort, List<ProcessingElementPort>>();
-    }
+	public AInterconnect(SpecsCGRA myparent) {
+		this.myparent = myparent;
+		this.currentContext = null;
+		this.connections = new HashMap<ProcessingElementPort, List<ProcessingElementPort>>();
+	}
 
-    /**
-     * For every connection, copy the output payload into the input ports of each @ProcessingElement
-     */
-    @Override
-    public boolean propagate() {
-    	
+	/**
+	 * For every connection, copy the output payload into the input ports of each @ProcessingElement
+	 */
+	@Override
+	public boolean propagate() {
 
-        for (var drive : this.connections.keySet()) 
-        {
-        	List<PEData> reg = drive.getPE().getRegisterFile(); //copy the data from
-        	drive.setPayload(reg.get(0)); //regfile to output port
 
-            var drivenList = this.connections.get(drive);
-            
-            for (var drivenPort : drivenList)
-                drivenPort.setPayload(drive.getPayload().copy()); // copy the data element from 
-        } //output port to input ports
+		for (var drive : this.connections.keySet()) 
+		{
+			List<PEData> reg = drive.getPE().getRegisterFile(); //copy the data from
+			drive.setPayload(reg.get(0)); //regfile to output port
 
-        return true;
-    }
+			var drivenList = this.connections.get(drive);
 
-    @Override
-    public boolean setConnection(ProcessingElementPort from, ProcessingElementPort to) {
+			for (var drivenPort : drivenList)
+				drivenPort.setPayload(drive.getPayload().copy()); // copy the data element from 
+		} //output port to input ports
 
-        if (!connectionValid(from, to))
-            return false;
+		return true;
+	}
 
-        // get list for this driving port, i.e., "from"
-        if (this.connections.containsKey(from)) {
-            var drivenList = this.connections.get(from);
-            if (!drivenList.contains(to))
-                drivenList.add(to);
+	@Override
+	public boolean setConnection(ProcessingElementPort from, ProcessingElementPort to) {
 
-        } else {
-            var newList = new ArrayList<ProcessingElementPort>();
-            newList.add(to);
-            this.connections.put(from, newList);
-        }
+		if (!connectionValid(from, to))
+		{
+			System.out.printf("connection invalid between %d, %d and %d, %d \n", from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
 
-        return true;
-    }
+			return false;
+		}
 
-    @Override
-    public boolean applyContext(Context ctx) {
-        var connections = ctx.getConnections();
-        for (var driver : connections.keySet()) {
-            for (var sink : connections.get(driver))
-                if (!this.setConnection(driver, sink))
-                    return false;
-            /*
-             * TODO: create exception classes to handle these errors
-             */
-        }
-        this.currentContext = ctx;
-        return true;
-    }
+		// get list for this driving port, i.e., "from"
+		if (this.connections.containsKey(from)) {
+			var drivenList = this.connections.get(from);
+			if (!drivenList.contains(to))
+				drivenList.add(to);
+			System.out.println("abc");
 
-    @Override
-    public Context getContext() {
-        return this.currentContext;
-    }
+		} else {
+			var newList = new ArrayList<ProcessingElementPort>();
+			newList.add(to);
+			this.connections.put(from, newList);
+			System.out.println("def");
 
-    @Override
-    public SpecsCGRA getCGRA() {
-        return this.myparent;
-    }
+		}
+		System.out.printf("Connection set between PE %d, %d and %d, %d \n", from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
 
-    @Override
-    public ProcessingElementPort findDriver(ProcessingElementPort to) {
+		return true;
+	}
 
-        ProcessingElementPort driver = null;
-        for (var drive : this.connections.keySet()) {
-            var drivenList = this.connections.get(drive);
-            if (drivenList.contains(to)) {
-                driver = drive;
-                break;
-            }
-        }
-        return driver;
+	@Override
+	public boolean applyContext(Context ctx) {
+		var connections = ctx.getConnections();
+		for (var driver : connections.keySet()) {
+			for (var sink : connections.get(driver))
+				if (!this.setConnection(driver, sink))
+					return false;
+			/*
+			 * TODO: create exception classes to handle these errors
+			 */
+		}
+		this.currentContext = ctx;
+		return true;
+	}
 
-    }
+	@Override
+	public Context getContext() {
+		return this.currentContext;
+	}
+
+	@Override
+	public SpecsCGRA getCGRA() {
+		return this.myparent;
+	}
+
+	@Override
+	public ProcessingElementPort findDriver(ProcessingElementPort to) {
+
+		ProcessingElementPort driver = null;
+		for (var drive : this.connections.keySet()) {
+			var drivenList = this.connections.get(drive);
+			if (drivenList.contains(to)) {
+				driver = drive;
+				break;
+			}
+		}
+		return driver;
+
+	}
 }

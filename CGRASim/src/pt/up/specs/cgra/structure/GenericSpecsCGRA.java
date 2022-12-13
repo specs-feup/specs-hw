@@ -128,6 +128,12 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     public void store(int pos) {
     	this.mesh.store(pos);
     }
+    
+    public void setConnections()
+    {
+    	if (this.mesh.setConnections()) System.out.println("Connections successfuly set");
+    	else System.out.println("Connections unsuccessfuly set");
+    }
 
     // TODO: use a graphical representation later
     @Override

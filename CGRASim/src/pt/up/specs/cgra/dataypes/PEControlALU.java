@@ -4,19 +4,6 @@ import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 public final class PEControlALU extends PEControl {
 	
-	public static enum PEDirection
-	{
-		N,
-		NE,
-		E,
-		SE,
-		S,
-		SW,
-		W,
-		NW,
-		ZERO//constante 0
-	}
-	
 	
 	public static enum ALU_OP
 	{

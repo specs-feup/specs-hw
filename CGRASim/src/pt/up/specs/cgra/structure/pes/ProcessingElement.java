@@ -15,36 +15,25 @@ package pt.up.specs.cgra.structure.pes;
 
 import java.util.List;
 
+import pt.up.specs.cgra.dataypes.PEControl;
 import pt.up.specs.cgra.dataypes.PEControlALU;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 
 public interface ProcessingElement {
 
-    /*
-     * 
-     */
     default public boolean setMesh(Mesh mesh) {
         return false;
     }
 
-    /*
-     * 
-     */
     default public Mesh getMesh() {
         return null;
     }
 
-    /*
-     * 
-     */
     default public boolean setX(int x) {
         return false;
     }
 
-    /*
-     * 
-     */
     default public boolean setY(int y) {
         return false;
     }
@@ -57,12 +46,10 @@ public interface ProcessingElement {
 		
 	}
 
-   
     default public int getX() {
         return -1;
     }
 
-   
     default public int getY() {
         return -1;
     }
@@ -74,32 +61,26 @@ public interface ProcessingElement {
         return null;
     }
 
-    
     default public int getLatency() {
         return 1;
     }
-
-    
+ 
     default public boolean hasMemory() {
         return true;
     }
 
-    
     default public int getMemorySize() {
         return 1;
     }
 
-    
     default public boolean isReady() {
         return false;
     }
 
-   
     default public boolean isExecuting() {
         return false;
     }
 
-   
     default public int getExecuteCount() {
         return 0;
     }
@@ -127,26 +108,24 @@ public interface ProcessingElement {
         return null;
     }
 
-    /*
-     * 
-     */
     default public String statusString() {
         return "No status";
     }
     
-
-
     /*
      * JUST FOR TESTING (??)
      */
     public List<ProcessingElementPort> getPorts();
 
-	default public PEControlALU getControl() {
+	default public PEControl getControl() {
 			return null;
 		}
 	
 	default public void setControl(PEControlALU control) {
 		}
+	
+	default public void printStatus() {
+	}
 
 
     // public getImplementation ??

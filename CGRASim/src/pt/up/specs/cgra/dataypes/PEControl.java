@@ -12,8 +12,8 @@ import pt.up.specs.cgra.structure.pes.ProcessingElement;
  */
 public abstract class PEControl {
 	
-	protected PEMemoryAccess memaccesstype; //ta
-	protected PEType petype; //ta
+	protected PEMemoryAccess memaccesstype;
+	protected PEType petype;
 	protected ProcessingElement PE;
 	
 	public static enum PEType
@@ -30,6 +30,18 @@ public abstract class PEControl {
 		NONE
 	}
 	
+	public static enum PEDirection
+	{
+		N,
+		NE,
+		E,
+		SE,
+		S,
+		SW,
+		W,
+		NW,
+		ZERO//constante 0
+	}
 	
 	
 	public void setMemAccess(PEMemoryAccess memaccess) {
@@ -55,5 +67,9 @@ public abstract class PEControl {
 	public void setPE(ProcessingElement pe) {
 		PE = pe;
 	}
+
+	public abstract PEDirection getInputone();
+	public abstract PEDirection getInputtwo();
+
 
 }

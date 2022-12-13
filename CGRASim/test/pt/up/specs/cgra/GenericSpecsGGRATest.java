@@ -15,10 +15,15 @@ package pt.up.specs.cgra;
 
 import org.junit.Test;
 
+import pt.up.specs.cgra.dataypes.PEControl.PEDirection;
+import pt.up.specs.cgra.dataypes.PEControl.PEMemoryAccess;
+import pt.up.specs.cgra.dataypes.PEControlALU;
+import pt.up.specs.cgra.dataypes.PEControlALU.ALU_OP;
 import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.GenericSpecsCGRA;
 import pt.up.specs.cgra.structure.pes.ALUElement;
 import pt.up.specs.cgra.structure.pes.MultiplierElement;
+import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 public class GenericSpecsGGRATest {
 /*
@@ -47,6 +52,37 @@ public class GenericSpecsGGRATest {
         CGRAbld.withHomogeneousPE(new ALUElement());
         var cgra = CGRAbld.build();
         cgra.visualize();
+        
+        ProcessingElement pe1 = cgra.getMesh().getProcessingElement(0, 0);
+        pe1.setControl(new PEControlALU(pe1, PEMemoryAccess.INITIAL, ALU_OP.PASSL, PEDirection.N, PEDirection.ZERO));
+        pe1.printStatus();
+        
+        pe1 = cgra.getMesh().getProcessingElement(0, 1);
+        pe1.setControl(new PEControlALU(pe1, PEMemoryAccess.INITIAL, ALU_OP.PASSL, PEDirection.N, PEDirection.ZERO));
+        pe1.printStatus();
+
+        pe1 = cgra.getMesh().getProcessingElement(1, 0);
+        pe1.setControl(new PEControlALU(pe1, PEMemoryAccess.NONE, ALU_OP.ADD, PEDirection.N, PEDirection.NE));
+        pe1.printStatus();
+
+        pe1 = cgra.getMesh().getProcessingElement(1, 1);
+        pe1.setControl(new PEControlALU(pe1, PEMemoryAccess.FINAL, ALU_OP.PASSL, PEDirection.W, PEDirection.E));
+        pe1.printStatus();
+        
+        cgra.getLiveins().write(0, new PEInteger(2));
+
+        cgra.getLiveins().write(1, new PEInteger(3));
+
+        
+        for (int i = 2; i<8; i++)
+        {
+            cgra.getLiveins().write(i, new PEInteger(0));
+        }
+
+        cgra.fetch(0, 5);
+
+        cgra.setConnections();
+
         
         //config
         //fetch
