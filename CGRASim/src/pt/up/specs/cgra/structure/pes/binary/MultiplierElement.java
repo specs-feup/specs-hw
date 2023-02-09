@@ -11,9 +11,10 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.specs.cgra.structure.pes;
+package pt.up.specs.cgra.structure.pes.binary;
 
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 public class MultiplierElement extends BinaryProcessingElement {
 
