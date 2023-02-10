@@ -98,7 +98,7 @@ public class HardwareInstanceTest {
 
         // create an assign at the level of the module body
         ex.assign(a, wire.lsl(2));
-
+ 
         // emit to stdout (eventually, to files)
         ex.emit();
     }
