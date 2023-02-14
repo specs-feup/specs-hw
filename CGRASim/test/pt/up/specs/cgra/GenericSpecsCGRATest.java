@@ -25,7 +25,7 @@ import pt.up.specs.cgra.structure.pes.ALUElement;
 import pt.up.specs.cgra.structure.pes.MultiplierElement;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
-public class GenericSpecsGGRATest {
+public class GenericSpecsCGRATest {
 /*
     @Test
     public void testInstantantiateAndView() {
