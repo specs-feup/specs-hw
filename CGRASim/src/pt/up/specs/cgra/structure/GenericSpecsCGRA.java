@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.structure;
 
 import java.lang.reflect.Constructor;
@@ -30,6 +30,9 @@ import pt.up.specs.cgra.structure.pes.EmptyPE;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 public class GenericSpecsCGRA implements SpecsCGRA {
+
+    // TODO: extend this class with CGRAs with global memories
+    // and memory ports
 
     // TODO: list of contexts is required to switch connections
     // the switch operation can model the latency upon call
@@ -51,27 +54,15 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     }
 
     // string name?
-    public GenericMemory liveins, liveouts;
-/*    protected void setLiveins(GenericMemory liveins) {
-		this.liveins = liveins;
-	}
-
-	protected void setLiveouts(GenericMemory liveouts) {
-		this.liveouts = liveouts;
-	}*/
-
-	public GenericMemory getLiveins() {
-		return liveins;
-	}
-
-	public GenericMemory getLiveouts() {
-		return liveouts;
-	}
-
-	protected final Mesh mesh;
+    private final int localmemsize;
+    protected final GenericMemory localmem;
+    protected final GenericMemory liveins, liveouts;
+    protected final Mesh mesh;
     protected final Interconnect interconnect;
 
-    private GenericSpecsCGRA(List<List<ProcessingElement>> mesh, Class<? extends Interconnect> intclass, int memsize) {
+    private GenericSpecsCGRA(List<List<ProcessingElement>> mesh,
+            Class<? extends Interconnect> intclass,
+            int localmemsize) {
         this.mesh = new Mesh(mesh, this);
 
         // in theory, should never fail
@@ -81,8 +72,13 @@ public class GenericSpecsCGRA implements SpecsCGRA {
             throw new RuntimeException(e);
         }
 
-        this.liveins = new GenericMemory(memsize);
-        this.liveouts = new GenericMemory(memsize);
+        this.liveins = new GenericMemory(8);
+        this.liveouts = new GenericMemory(8);
+        this.localmemsize = localmemsize;
+        if (this.localmemsize > 0)
+            this.localmem = new GenericMemory(this.localmemsize);
+        else
+            this.localmem = null;
     }
 
     /*
@@ -91,6 +87,8 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     private GenericSpecsCGRA() {
         this.liveins = null;
         this.liveouts = null;
+        this.localmem = null;
+        this.localmemsize = 0;
         this.mesh = null;
         this.interconnect = null;
     }
@@ -106,33 +104,32 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     }
 
     /*
+     * 
+     */
+    public void setLiveIn(int idx, PEData data) {
+        this.liveins.write(idx, data);
+    }
+
+    /*
+     * 
+     */
+    public PEData getLiveOut(int idx) {
+        return this.liveouts.read(idx);
+    }
+
+    /*
      * executes a single simulation step (clock cycle)
      */
     @Override
     public boolean execute() {
-    	
-    	
-    	// execute compute
-        this.mesh.execute();
 
         // propagate data from interconnect settings
         this.interconnect.propagate();
-        
+
+        // execute compute
+        this.mesh.execute();
+
         return true; // eventually use this return to indicate stalling or something
-    }
-    
-    public void fetch(int pos1, int pos2) {
-    	this.mesh.fetch(pos1, pos2);
-    }
-    
-    public void store(int pos) {
-    	this.mesh.store(pos);
-    }
-    
-    public void setConnections()
-    {
-    	if (this.mesh.setConnections()) System.out.println("Connections successfuly set");
-    	else System.out.println("Connections unsuccessfuly set");
     }
 
     // TODO: use a graphical representation later
@@ -143,7 +140,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         System.out.println(sbld.append(this.mesh.visualize()).toString());
     }
 
-    /**
+    /****************************************************************************************
      * Builder class for @GenericSpecsCGRA
      */
     public static class Builder extends GenericSpecsCGRA {
@@ -157,10 +154,10 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         /*
          * mesh size is mandatory before any "with..." calls
          */
-        public Builder(int x, int y, int memsize) {
+        public Builder(int x, int y) {
             this.meshX = x;
             this.meshY = y;
-            this.memsize = memsize;
+            this.memsize = 0;
             this.mesh = new ArrayList<List<ProcessingElement>>(x);
             for (int i = 0; i < x; i++) {
                 this.mesh.add(new ArrayList<ProcessingElement>(y));
@@ -185,6 +182,11 @@ public class GenericSpecsCGRA implements SpecsCGRA {
             return this;
         }
 
+        public Builder withMemory(int memsize) {
+            this.memsize = memsize;
+            return this;
+        }
+
         public Builder withNearestNeighbourInterconnect() {
             this.intclass = NearestNeighbour.class;
             return this;
@@ -196,7 +198,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         }
 
         public GenericSpecsCGRA build() {
-            return new GenericSpecsCGRA(this.mesh, this.intclass, this.memsize);
+            return new GenericSpecsCGRA(this.mesh, this.intclass, memsize);
         }
     }
 }
