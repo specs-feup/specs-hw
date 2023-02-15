@@ -1,6 +1,6 @@
-package pt.up.specs.cgra.dataypes;
+package pt.up.specs.cgra.controlDeprecated;
 
-import pt.up.specs.cgra.dataypes.PEControl.PEDirection;
+import pt.up.specs.cgra.controlDeprecated.PEControl.PEDirection;
 
 public class PEControlNull extends PEControl {
 	

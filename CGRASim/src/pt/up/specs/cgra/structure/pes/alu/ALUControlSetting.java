@@ -13,7 +13,7 @@
 
 package pt.up.specs.cgra.structure.pes.alu;
 
-import pt.up.specs.cgra.structure.control.PEControlSetting;
+import pt.up.specs.cgra.control.PEControlSetting;
 
 public enum ALUControlSetting implements PEControlSetting {
 

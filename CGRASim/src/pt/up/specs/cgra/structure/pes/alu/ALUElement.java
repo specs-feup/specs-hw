@@ -17,12 +17,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import pt.up.specs.cgra.control.PEControl;
 import pt.up.specs.cgra.dataypes.PEData;
-import pt.up.specs.cgra.structure.control.PEControl;
 import pt.up.specs.cgra.structure.pes.AProcessingElement;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
+import pt.up.specs.cgra.structure.pes.binary.BinaryProcessingElement;
 
-public class ALUElement extends AProcessingElement implements PEControl<ALUControlSetting> {
+public class ALUElement extends BinaryProcessingElement implements PEControl<ALUControlSetting> {
 
     /*
      * helper mapping of constructors to reduce verbosity
@@ -40,6 +41,7 @@ public class ALUElement extends AProcessingElement implements PEControl<ALUContr
         amap.put(ALUControlSetting.DIV, (a, b) -> a.div(b));
         amap.put(ALUControlSetting.LSHIFT, (a, b) -> a.lshift(b));
         amap.put(ALUControlSetting.RSHIFT, (a, b) -> a.rshift(b));
+        //amap.put(ALUControlSetting.NORM1, (a, b) -> a.mul(a) + b.mul(b));
         /*amap.put(ALUControl.MOD, (a, b) -> a.mod(b));
         amap.put(ALUControl.AND, (a, b) -> a.and(b));
         amap.put(ALUControl.OR, (a, b) -> a.or(b));

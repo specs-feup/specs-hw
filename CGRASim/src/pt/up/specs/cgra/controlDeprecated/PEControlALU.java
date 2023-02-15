@@ -1,4 +1,4 @@
-package pt.up.specs.cgra.dataypes;
+package pt.up.specs.cgra.controlDeprecated;
 
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 

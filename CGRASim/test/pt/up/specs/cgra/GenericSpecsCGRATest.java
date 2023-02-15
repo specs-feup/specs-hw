@@ -15,10 +15,10 @@ package pt.up.specs.cgra;
 
 import org.junit.Test;
 
-import pt.up.specs.cgra.dataypes.PEControl.PEDirection;
-import pt.up.specs.cgra.dataypes.PEControl.PEMemoryAccess;
-import pt.up.specs.cgra.dataypes.PEControlALU;
-import pt.up.specs.cgra.dataypes.PEControlALU.ALU_OP;
+import pt.up.specs.cgra.controlDeprecated.PEControlALU;
+import pt.up.specs.cgra.controlDeprecated.PEControl.PEDirection;
+import pt.up.specs.cgra.controlDeprecated.PEControl.PEMemoryAccess;
+import pt.up.specs.cgra.controlDeprecated.PEControlALU.ALU_OP;
 import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.GenericSpecsCGRA;
 import pt.up.specs.cgra.structure.pes.ALUElement;

@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import pt.up.specs.cgra.dataypes.PEControl;
-import pt.up.specs.cgra.dataypes.PEControlALU;
-import pt.up.specs.cgra.dataypes.PEControlNull;
+import pt.up.specs.cgra.controlDeprecated.PEControl;
+import pt.up.specs.cgra.controlDeprecated.PEControlALU;
+import pt.up.specs.cgra.controlDeprecated.PEControlNull;
+import pt.up.specs.cgra.controlDeprecated.PEControl.PEDirection;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEInteger;
-import pt.up.specs.cgra.dataypes.PEControl.PEDirection;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
 

@@ -13,11 +13,10 @@
  
 package pt.up.specs.cgra.structure.pes;
 
-import pt.up.specs.cgra.dataypes.PEControlALU;
-
+import pt.up.specs.cgra.controlDeprecated.PEControlALU;
 import pt.up.specs.cgra.dataypes.PEData;
 
-public class ALUElement extends BinaryProcessingElement {
+public class ALUElement extends AbstractProcessingElement {
 
     // TODO: datatypes for T? bitwidths?
 
