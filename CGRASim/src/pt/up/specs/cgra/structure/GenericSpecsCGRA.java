@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.structure;
 
 import java.lang.reflect.Constructor;
@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
 import pt.up.specs.cgra.structure.interconnect.NearestNeighbour;
 import pt.up.specs.cgra.structure.interconnect.ToroidalNNInterconnect;
@@ -53,11 +54,15 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     }
 
     // string name?
+    private final int localmemsize;
+    protected final GenericMemory localmem;
     protected final GenericMemory liveins, liveouts;
     protected final Mesh mesh;
     protected final Interconnect interconnect;
 
-    private GenericSpecsCGRA(List<List<ProcessingElement>> mesh, Class<? extends Interconnect> intclass) {
+    private GenericSpecsCGRA(List<List<ProcessingElement>> mesh,
+            Class<? extends Interconnect> intclass,
+            int localmemsize) {
         this.mesh = new Mesh(mesh, this);
 
         // in theory, should never fail
@@ -69,6 +74,11 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
         this.liveins = new GenericMemory(8);
         this.liveouts = new GenericMemory(8);
+        this.localmemsize = localmemsize;
+        if (this.localmemsize > 0)
+            this.localmem = new GenericMemory(this.localmemsize);
+        else
+            this.localmem = null;
     }
 
     /*
@@ -77,6 +87,8 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     private GenericSpecsCGRA() {
         this.liveins = null;
         this.liveouts = null;
+        this.localmem = null;
+        this.localmemsize = 0;
         this.mesh = null;
         this.interconnect = null;
     }
@@ -89,6 +101,20 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     @Override
     public Interconnect getInterconnect() {
         return this.interconnect;
+    }
+
+    /*
+     * 
+     */
+    public void setLiveIn(int idx, PEData data) {
+        this.liveins.write(idx, data);
+    }
+
+    /*
+     * 
+     */
+    public PEData getLiveOut(int idx) {
+        return this.liveouts.read(idx);
     }
 
     /*
@@ -114,12 +140,13 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         System.out.println(sbld.append(this.mesh.visualize()).toString());
     }
 
-    /**
+    /****************************************************************************************
      * Builder class for @GenericSpecsCGRA
      */
     public static class Builder extends GenericSpecsCGRA {
 
         private int meshX, meshY;
+        private int memsize;
         private final List<List<ProcessingElement>> mesh;
         private Class<? extends Interconnect> intclass = NearestNeighbour.class;
         // default interconnect
@@ -130,6 +157,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         public Builder(int x, int y) {
             this.meshX = x;
             this.meshY = y;
+            this.memsize = 0;
             this.mesh = new ArrayList<List<ProcessingElement>>(x);
             for (int i = 0; i < x; i++) {
                 this.mesh.add(new ArrayList<ProcessingElement>(y));
@@ -154,6 +182,11 @@ public class GenericSpecsCGRA implements SpecsCGRA {
             return this;
         }
 
+        public Builder withMemory(int memsize) {
+            this.memsize = memsize;
+            return this;
+        }
+
         public Builder withNearestNeighbourInterconnect() {
             this.intclass = NearestNeighbour.class;
             return this;
@@ -165,7 +198,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         }
 
         public GenericSpecsCGRA build() {
-            return new GenericSpecsCGRA(this.mesh, this.intclass);
+            return new GenericSpecsCGRA(this.mesh, this.intclass, memsize);
         }
     }
 }

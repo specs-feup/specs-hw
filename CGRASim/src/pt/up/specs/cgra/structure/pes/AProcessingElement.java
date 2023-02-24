@@ -21,7 +21,7 @@ import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
 
-public abstract class AbstractProcessingElement implements ProcessingElement {
+public abstract class AProcessingElement implements ProcessingElement {
 
     /*
      * 
@@ -58,7 +58,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     // scheduling
     // the map should be in the childmost class (maybe?)
 
-    protected AbstractProcessingElement(int latency, int memorySize) {
+    protected AProcessingElement(int latency, int memorySize) {
         this.latency = latency;
         this.memorySize = memorySize;
         if (this.memorySize > 0) {
@@ -69,11 +69,11 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         }
     }
 
-    protected AbstractProcessingElement(int latency) {
+    protected AProcessingElement(int latency) {
         this(latency, 0);
     }
 
-    protected AbstractProcessingElement() {
+    protected AProcessingElement() {
         this(1);
     }
 

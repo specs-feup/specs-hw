@@ -17,8 +17,9 @@ import org.junit.Test;
 
 import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.GenericSpecsCGRA;
-import pt.up.specs.cgra.structure.pes.AdderElement;
-import pt.up.specs.cgra.structure.pes.MultiplierElement;
+import pt.up.specs.cgra.structure.pes.alu.ALUElement;
+import pt.up.specs.cgra.structure.pes.binary.AdderElement;
+import pt.up.specs.cgra.structure.pes.binary.MultiplierElement;
 
 public class GenericSpecsGGRATest {
 
@@ -39,5 +40,50 @@ public class GenericSpecsGGRATest {
         adder1.getPorts().get(1).setPayload(new PEInteger(12));
         var r = adder1.execute();
         System.out.println(r.getValue());
+    }
+
+    @Test
+    public void testBasicCGRAPrototype() {
+        var CGRAbld = new GenericSpecsCGRA.Builder(3, 3);
+        CGRAbld.withMemory(3);
+        CGRAbld.withHomogeneousPE(new ALUElement());
+        var cgra = CGRAbld.build();
+        cgra.visualize();
+
+        /*
+        ProcessingElement pe1 = cgra.getMesh().getProcessingElement(0, 0);
+        pe1.setControl(new PEControlALU(pe1, PEMemoryAccess.INITIAL, ALU_OP.PASSL, PEDirection.N, PEDirection.ZERO));
+        pe1.printStatus();
+        
+        pe1 = cgra.getMesh().getProcessingElement(0, 1);
+        pe1.setControl(new PEControlALU(pe1, PEMemoryAccess.INITIAL, ALU_OP.PASSL, PEDirection.N, PEDirection.ZERO));
+        pe1.printStatus();
+        
+        pe1 = cgra.getMesh().getProcessingElement(1, 0);
+        pe1.setControl(new PEControlALU(pe1, PEMemoryAccess.NONE, ALU_OP.ADD, PEDirection.N, PEDirection.NE));
+        pe1.printStatus();
+        
+        pe1 = cgra.getMesh().getProcessingElement(1, 1);
+        pe1.setControl(new PEControlALU(pe1, PEMemoryAccess.FINAL, ALU_OP.PASSL, PEDirection.W, PEDirection.E));
+        pe1.printStatus();
+        
+        // liveins
+        cgra.setLiveIn(0, new PEInteger(2));
+        cgra.setLiveIn(1, new PEInteger(3));
+        for (int i = 2; i < 8; i++)
+            cgra.setLiveIn(i, new PEInteger(0));
+        
+        cgra.fetch(0, 5);
+        
+        cgra.setConnections();
+        
+        cgra.execute();*/
+
+        // config
+        // fetch
+        // execute (as many times as wanted)
+        // store
+        // end
+
     }
 }

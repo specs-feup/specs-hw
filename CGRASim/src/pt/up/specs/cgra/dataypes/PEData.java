@@ -13,6 +13,8 @@
 
 package pt.up.specs.cgra.dataypes;
 
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
+
 /**
  * Required methods for any data type which is meant to be used as data to be processed by a @ProcessingElement Any
  * PEData should only be attributed a value ONCE
@@ -22,17 +24,29 @@ package pt.up.specs.cgra.dataypes;
  */
 public interface PEData {
 
-    public PEData add(PEData operandB);
+    public default PEData add(PEData operandB) {
+        throw new NotImplementedException("PEData: add not implemented");
+    }
 
-    public PEData sub(PEData operandB);
+    public default PEData sub(PEData operandB) {
+        throw new NotImplementedException("PEData: sub not implemented");
+    }
 
-    public PEData mul(PEData operandB);
+    public default PEData mul(PEData operandB) {
+        throw new NotImplementedException("PEData: mul not implemented");
+    }
 
-    public PEData div(PEData operandB);
+    public default PEData div(PEData operandB) {
+        throw new NotImplementedException("PEData: div not implemented");
+    }
 
-    public PEData lshift(PEData operandB);
+    public default PEData lshift(PEData operandB) {
+        throw new NotImplementedException("PEData: lshift not implemented");
+    }
 
-    public PEData rshift(PEData operandB);
+    public default PEData rshift(PEData operandB) {
+        throw new NotImplementedException("PEData: rshift not implemented");
+    }
 
     public Number getValue();
 

@@ -10,14 +10,16 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
-package pt.up.specs.cgra.structure.pes;
+
+package pt.up.specs.cgra.structure.pes.binary;
 
 import java.util.Arrays;
 
+import pt.up.specs.cgra.structure.pes.AProcessingElement;
+import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
 
-public abstract class BinaryProcessingElement extends AbstractProcessingElement {
+public abstract class BinaryProcessingElement extends AProcessingElement {
 
     public BinaryProcessingElement(int latency, int memorySize) {
         super(latency, memorySize);
