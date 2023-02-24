@@ -23,6 +23,7 @@ import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
+import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.ScalarSubscript;
 import pt.up.fe.specs.crispy.ast.statement.ContinuousStatement;
@@ -41,6 +42,15 @@ import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class HardwareInstanceTest {
 
+	@Test
+    public void testPort() {
+
+		var d1 = new InputPortDeclaration("testinput", 32);
+        var p1 = new InputPort(d1);
+        d1.emit();
+        p1.emit();
+    }
+	
     @Test
     public void testALU() {
 
@@ -414,6 +424,7 @@ public class HardwareInstanceTest {
 
         var mux1 = new Mux2to1(8);
         mux1.emit();
+        //mux1.emitTestbench();
     }
 
     @Test
