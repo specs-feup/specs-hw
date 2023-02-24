@@ -13,6 +13,10 @@
 
 package pt.up.fe.specs.crispy.test;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import org.junit.Test;
 
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
@@ -21,11 +25,9 @@ import pt.up.fe.specs.crispy.ast.declaration.RegisterDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.OutputPortDeclaration;
-import pt.up.fe.specs.crispy.ast.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.ScalarSubscript;
-import pt.up.fe.specs.crispy.ast.statement.ContinuousStatement;
 import pt.up.fe.specs.crispy.ast.statement.IfStatement;
 import pt.up.fe.specs.crispy.coarse.Adder;
 import pt.up.fe.specs.crispy.lib.CrossBarNxM;
@@ -55,7 +57,8 @@ public class HardwareInstanceTest {
         var b = (new RegisterDeclaration("regB", 8)).getReference();
         var c = (new RegisterDeclaration("regC", 8)).getReference();
 
-        var r = new ContinuousStatement(c, new AdditionExpression(a, b));
+        // var r = new ContinuousStatement(c, new AdditionExpression(a, b));
+        var r = c.assign(a.add(b));
         r.emit();
 
         System.out.println(DottyGenerator.buildDotty(r));
@@ -153,7 +156,7 @@ public class HardwareInstanceTest {
         var a = adder.addInputPort("testA", 32);
         var b = adder.addInputPort("testB", 32);
         var c = adder.addOutputPort("testC", 32);
-        adder.alwayscomb()._do(c.nonBlocking(a.add(b)));
+        adder.alwayscomb()._do(c.nonBlocking(a.add(b).add(b)));
         return adder;
     }
 
@@ -393,6 +396,21 @@ public class HardwareInstanceTest {
 
         var adder1 = new Adder(32);
         adder1.emit();
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream("test.v");
+            adder1.emit(fos);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
