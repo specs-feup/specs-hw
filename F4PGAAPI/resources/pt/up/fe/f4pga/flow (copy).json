@@ -1,0 +1,22 @@
+{
+    "default_part": "XC7A35TCSG324-1", // we have default_platform defined, we can skip the --part argument. We can also skip the --target argument because we have a default_target defined for the chosen platform.
+    "dependencies": {
+        "sources": [
+            "counter.v"
+        ], // use replacer here with a list of the source files
+        "xdc": [
+            "arty.xdc"
+        ],
+        "synth_log": "synth.log",
+        "pack_log": "pack.log",
+    },
+    "values": {
+        "top": "top"
+    },
+    "XC7A35TCSG324-1": {
+        "default_target": "<default_target>",
+        "dependencies": {
+            "build_dir": "<build_dir>"
+        }
+    }
+}

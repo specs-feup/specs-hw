@@ -14,4 +14,10 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<!--<variableList>
+		<variable>
+			<name>resourceExample</name>
+			<value>file:/C:/Users/Francisco/specs-hw/F4PGAAPI/resources/pt/up/fe/f4pga/makefile</value>
+		</variable>
+	</variableList>-->
 </projectDescription>

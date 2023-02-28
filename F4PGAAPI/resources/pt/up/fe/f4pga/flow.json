@@ -1,0 +1,20 @@
+{
+    "default_part": "<PART_NUMBER>",
+    "dependencies": {
+        "sources": <SOURCE_LIST>, 
+        "xdc": [
+            "arty.xdc"
+        ],
+        "synth_log": "synth.log",
+        "pack_log": "pack.log",
+    },
+    "values": {
+        "top": "top"
+    },
+    "<PART_NUMBER>": {
+        "default_target": "<default_target>",
+        "dependencies": {
+            "build_dir": "<build_dir>"
+        }
+    }
+}
