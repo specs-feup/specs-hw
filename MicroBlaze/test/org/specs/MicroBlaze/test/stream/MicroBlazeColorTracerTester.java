@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.MicroBlaze.test.stream;
 
 import java.io.File;
@@ -96,7 +96,7 @@ public class MicroBlazeColorTracerTester {
     @Test
     public void testAllColors() {
 
-        testColorGDB(MicroBlazeLivermoreN100.matmul);
+        testColor(MicroBlazeLivermoreN100.matmul);
 
         // for (var elf : Arrays.asList(MicroBlazeLivermoreN100.values()))
         // testColorGDB(elf);
