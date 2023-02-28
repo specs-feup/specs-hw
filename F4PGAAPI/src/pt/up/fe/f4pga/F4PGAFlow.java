@@ -17,7 +17,7 @@ public class F4PGAFlow {
 
     private final String topName;
     private final String buildDir;
-    
+
     private final F4PGATarget target;
 
     public F4PGAFlow(String topName, String buildDir, List<String> hdls, F4PGATarget target) {
@@ -64,22 +64,19 @@ public class F4PGAFlow {
         _prepJson(this.target, getHdls(), this.topName);
     }
 
-    
-     public void runF4PGARunOutput() {
-    	 
-    	 //How to connect the first part (mkdir and new file) to the second part (procesbuilder)
-    	 
-        
-    	 
-        // mkdir         
+    public void runF4PGARunOutput() {
+
+        // How to connect the first part (mkdir and new file) to the second part (procesbuilder)
+
+        // mkdir
         // new file this.buildDir
-    	 File newFile = new File(this.buildDir);
-    	 newFile.mkdir();
-    
-            // using a pRocessbuilder, call this:
-            // bash "./" + topName + "_f4pgabuild.sh"
-    	 
-    	 ProcessBuilder probuild = new ProcessBuilder( "./" + topName + "_f4pgabuild.sh");
+        File newFile = new File(this.buildDir);
+        newFile.mkdir();
+
+        // using a pRocessbuilder, call this:
+        // bash "./" + topName + "_f4pgabuild.sh"
+
+        ProcessBuilder probuild = new ProcessBuilder("./" + topName + "_f4pgabuild.sh");
     }
 
     /*
@@ -98,8 +95,6 @@ public class F4PGAFlow {
     
         return flowString;
     }*/
-
-    
 
     /*
     public void changeTopName(String _topName) {

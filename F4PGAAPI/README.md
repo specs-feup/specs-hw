@@ -5,10 +5,10 @@ F4PGA is an end-to-end FPGA synthesis toolchain, because of that it provides all
 
 ## Suported boards
 
-* arty 35t
-* arty 100t
-* nexys 4 ddr
-* basys 3
+* Arty 35T
+* Arty 100T
+* Nexys 4 DDR (not supported by openFPGALoader)
+* Basys 3
 * Nexys Video
 * Zybo Z7
 
@@ -32,16 +32,9 @@ Update and install xz-utils depending on your Linux distribution:
 	
 		dnf install -y findutils git wget which xz
 	
-	
-<<<<<<< HEAD:F4PGAAPI/gettingF4PGA.md
 ### Installing F4PGA toolchain:
 		
 #### Installing Conda package manager:
-=======
-
-		
- Installing Conda package manager:
->>>>>>> 9abc856e4d241ba57617779392f075b98578a464:F4PGAAPI/README.md
 			
 	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O conda_installer.sh
 			
@@ -58,7 +51,7 @@ Add sudo commands to instructions:
 				
 Select one target FPGA family:
 				
-Artix 7:
+Artix 7:D D 
 
 	export FPGA_FAM=xc7
 	
