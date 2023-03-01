@@ -15,11 +15,12 @@ package pt.up.specs.cgra.structure.pes.binary;
 
 import java.util.Arrays;
 
-import pt.up.specs.cgra.structure.pes.AProcessingElement;
+import pt.up.specs.cgra.structure.pes.AProcessingElementOLD;
+import pt.up.specs.cgra.structure.pes.AbstractProcessingElement;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
 
-public abstract class BinaryProcessingElement extends AProcessingElement {
+public abstract class BinaryProcessingElement extends AbstractProcessingElement {
 
     public BinaryProcessingElement(int latency, int memorySize) {
         super(latency, memorySize);

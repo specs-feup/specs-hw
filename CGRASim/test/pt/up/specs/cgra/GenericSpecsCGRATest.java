@@ -21,7 +21,7 @@ import pt.up.specs.cgra.controlDeprecated.PEControl.PEMemoryAccess;
 import pt.up.specs.cgra.controlDeprecated.PEControlALU.ALU_OP;
 import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.GenericSpecsCGRA;
-import pt.up.specs.cgra.structure.pes.ALUElement;
+import pt.up.specs.cgra.structure.pes.ALUElementOLD;
 import pt.up.specs.cgra.structure.pes.MultiplierElement;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
@@ -49,7 +49,7 @@ public class GenericSpecsCGRATest {
     @Test
     public void testBasicCGRAPrototype() {
         var CGRAbld = new GenericSpecsCGRA.Builder(3, 3, 8);
-        CGRAbld.withHomogeneousPE(new ALUElement());
+        CGRAbld.withHomogeneousPE(new ALUElementOLD());
         var cgra = CGRAbld.build();
         cgra.visualize();
         

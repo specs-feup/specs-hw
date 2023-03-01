@@ -208,10 +208,10 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
      * Use by children
      */
     protected PEData getOperand(int idx) {
-    	if (idx == 0 && this.control.getInputone() == PEDirection.ZERO) return new PEInteger(0);
+    	/*if (idx == 0 && this.control.getInputone() == PEDirection.ZERO) return new PEInteger(0);
     	else if (idx == 1 && this.control.getInputtwo() == PEDirection.ZERO) return new PEInteger(0);
     	
-    	else return this.ports.get(idx).getPayload();
+    	else */ return this.ports.get(idx).getPayload();
     	
     }
 
@@ -237,13 +237,6 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         return this.getClass().getSimpleName();
     }
 
-	public PEControlALU getControl() {
-		return control;
-	}
-
-	public void setControl(PEControlALU control) {
-		this.control = control;
-	}
 	
 	public void printStatus() {
 		if (this.control == null)

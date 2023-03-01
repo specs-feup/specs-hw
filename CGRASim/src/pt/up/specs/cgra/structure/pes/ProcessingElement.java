@@ -117,12 +117,7 @@ public interface ProcessingElement {
      */
     public List<ProcessingElementPort> getPorts();
 
-	default public PEControl getControl() {
-			return null;
-		}
 	
-	/*default public void setControl(PEControlALU control) {
-		}*/
 	
 	default public void printStatus() {
 	}

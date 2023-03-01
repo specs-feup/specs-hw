@@ -16,21 +16,21 @@ package pt.up.specs.cgra.structure.pes;
 import pt.up.specs.cgra.controlDeprecated.PEControlALU;
 import pt.up.specs.cgra.dataypes.PEData;
 
-public class ALUElement extends AbstractProcessingElement {
+public class ALUElementOLD extends AbstractProcessingElement {
 
     // TODO: datatypes for T? bitwidths?
 
 
-	public ALUElement(int latency, int memorySize) {
+	public ALUElementOLD(int latency, int memorySize) {
         super(latency, memorySize);
         this.control = new PEControlALU();
     }
 
-    public ALUElement(int latency) {
+    public ALUElementOLD(int latency) {
         this(latency, 1);
     }
 
-    public ALUElement() {
+    public ALUElementOLD() {
         this(1, 1);
     }
  
@@ -86,7 +86,7 @@ public class ALUElement extends AbstractProcessingElement {
 
     @Override
     public ProcessingElement copy() {
-        return new ALUElement(this.getLatency(), this.getMemorySize());
+        return new ALUElementOLD(this.getLatency(), this.getMemorySize());
     }
 
     @Override

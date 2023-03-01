@@ -21,7 +21,7 @@ import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
 
-public abstract class AProcessingElement implements ProcessingElement {
+public abstract class AProcessingElementOLD implements ProcessingElement {
 
     /*
      * 
@@ -58,7 +58,7 @@ public abstract class AProcessingElement implements ProcessingElement {
     // scheduling
     // the map should be in the childmost class (maybe?)
 
-    protected AProcessingElement(int latency, int memorySize) {
+    protected AProcessingElementOLD(int latency, int memorySize) {
         this.latency = latency;
         this.memorySize = memorySize;
         if (this.memorySize > 0) {
@@ -69,11 +69,11 @@ public abstract class AProcessingElement implements ProcessingElement {
         }
     }
 
-    protected AProcessingElement(int latency) {
+    protected AProcessingElementOLD(int latency) {
         this(latency, 0);
     }
 
-    protected AProcessingElement() {
+    protected AProcessingElementOLD() {
         this(1);
     }
 
@@ -171,7 +171,7 @@ public abstract class AProcessingElement implements ProcessingElement {
         return this.executeCount;
     }
 
-    @Override
+    //@Override
     public boolean setResultRegister(int regIndex) {
         if (regIndex < this.memorySize) {
             this.writeIdx = regIndex;
