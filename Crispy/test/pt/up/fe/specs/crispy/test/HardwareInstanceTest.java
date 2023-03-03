@@ -44,15 +44,15 @@ import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class HardwareInstanceTest {
 
-	@Test
+    @Test
     public void testPort() {
 
-		var d1 = new InputPortDeclaration("testinput", 32);
+        var d1 = new InputPortDeclaration("testinput", 32);
         var p1 = new InputPort(d1);
         d1.emit();
         p1.emit();
     }
-	
+
     @Test
     public void testALU() {
 
@@ -111,7 +111,7 @@ public class HardwareInstanceTest {
 
         // create an assign at the level of the module body
         ex.assign(a, wire.lsl(2));
- 
+
         // emit to stdout (eventually, to files)
         ex.emit();
     }
@@ -344,14 +344,29 @@ public class HardwareInstanceTest {
 
         block.nonBlocking(refC, refA.add(refB));
 
-        mod.emit();
+        // mod.emit();
+
+        /*
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mod.getName() + ".v");
+            mod.emit(fos);
+        
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
 
         /*
          * 
          */
         var tb = new HardwareTestbench("tb1", mod);
         tb.emit();
-
     }
 
     @Test
@@ -405,11 +420,14 @@ public class HardwareInstanceTest {
     public void testCoarseModule() {
 
         var adder1 = new Adder(32);
-        adder1.emit();
+        // adder1.emit();
 
+        // adder1.getName();
+
+        // adder.toFile(); -> emit
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream("test.v");
+            fos = new FileOutputStream(adder1.getName() + ".v");
             adder1.emit(fos);
 
         } catch (FileNotFoundException e) {
@@ -442,7 +460,7 @@ public class HardwareInstanceTest {
 
         var mux1 = new Mux2to1(8);
         mux1.emit();
-        //mux1.emitTestbench();
+        // mux1.emitTestbench();
     }
 
     @Test
