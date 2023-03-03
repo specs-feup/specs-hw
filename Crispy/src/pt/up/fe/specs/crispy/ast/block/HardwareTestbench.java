@@ -131,6 +131,10 @@ public class HardwareTestbench extends HardwareModule {
         return this;
     }
 
+    /* public HardwareTestbench setResetInit(int mhz) {
+        
+    }*/
+
     @Override
     protected Port addPort(PortDeclaration port) {
         throw new RuntimeException(
