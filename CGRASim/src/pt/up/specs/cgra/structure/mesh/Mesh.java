@@ -25,6 +25,7 @@ import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 /**
  * Helper class to hold the List<List<ProcessingElement>> mesh, reduces some verbosity
+ * (GONCALO):array de PEs em list<list<PE>>, e metodo execute e visualize
  * 
  * @author nuno
  *
@@ -33,7 +34,7 @@ public class Mesh {
 
 	private final SpecsCGRA myparent;
 	private final int x, y;
-	private final List<List<ProcessingElement>> mesh;
+	private final List<List<ProcessingElement>> mesh;//array 2d de PEs
 
 	public Mesh(List<List<ProcessingElement>> mesh, SpecsCGRA myparent) {
 		this.myparent = myparent;
@@ -67,8 +68,9 @@ public class Mesh {
 	public ProcessingElement getProcessingElement(int x, int y) {
 		return this.mesh.get(x).get(y);
 	}
+	
 
-	public boolean setConnections()
+	/* public boolean setConnections()
 	{
 		for (var line : this.mesh)
 			for (var pe : line)
@@ -196,8 +198,8 @@ public class Mesh {
 				}
 			}
 		return true;
-	}
-
+	}*/
+/*
 	public void fetch(int pos1, int pos2) { //fetch data from generic ram to initial PEs
 		int n = 0;
 		for (var line : this.mesh)
@@ -236,7 +238,7 @@ public class Mesh {
 					n++;
 				}
 	}
-
+*/
 	public void execute() {
 		for (var line : this.mesh)
 			for (var pe : line)

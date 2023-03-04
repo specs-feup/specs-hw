@@ -39,8 +39,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     private boolean executing = false;
     private int executeCount = 0;
 	private int memorySize = 1;
-    private int writeIdx = 0;
-    protected PEControlALU control;
+    //private int writeIdx = 0;
    
 
 	/*
@@ -237,7 +236,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         return this.getClass().getSimpleName();
     }
 
-	
+/*	
 	public void printStatus() {
 		if (this.control == null)
 		{
@@ -259,5 +258,5 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 		}
 	}
 	
-
+*/
 }

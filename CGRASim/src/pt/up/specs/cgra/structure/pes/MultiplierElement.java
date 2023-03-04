@@ -14,6 +14,7 @@
 package pt.up.specs.cgra.structure.pes;
 
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.structure.pes.binary.BinaryProcessingElement;
 
 public class MultiplierElement extends BinaryProcessingElement {
 

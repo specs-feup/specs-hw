@@ -30,11 +30,11 @@ public interface ProcessingElement {
         return null;
     }
 
-    default public boolean setX(int x) {
+    default public boolean setX(int x) { //sera que devia ter mesmo?
         return false;
     }
 
-    default public boolean setY(int y) {
+    default public boolean setY(int y) { //idem aspas
         return false;
     }
     
@@ -73,7 +73,7 @@ public interface ProcessingElement {
         return 1;
     }
 
-    default public boolean isReady() {
+    default public boolean isReady() { //is ready == ! is executing?
         return false;
     }
 
@@ -81,7 +81,7 @@ public interface ProcessingElement {
         return false;
     }
 
-    default public int getExecuteCount() {
+    default public int getExecuteCount() { //data token approach
         return 0;
     }
 

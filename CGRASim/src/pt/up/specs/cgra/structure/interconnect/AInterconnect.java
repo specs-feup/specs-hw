@@ -23,6 +23,11 @@ import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 
+/*
+ * mapa de ports - map<PEport, list<PEports>>
+ * fonte - destino(s) (lista)
+ */
+
 public abstract class AInterconnect implements Interconnect {
 
 	// TODO: each interconnect class should only hold a set of permitted connection rules
@@ -47,16 +52,16 @@ public abstract class AInterconnect implements Interconnect {
 	public boolean propagate() {
 
 
-		for (var drive : this.connections.keySet()) 
+		for (var drive : this.connections.keySet()) //para cada x, isto e, cada registo de saida de PE
 		{
 			List<PEData> reg = drive.getPE().getRegisterFile(); //copy the data from
-			drive.setPayload(reg.get(0)); //regfile to output port
+			drive.setPayload(reg.get(0)); //regfile to output port, only 1st PEData for now
 
 			var drivenList = this.connections.get(drive);
 
 			for (var drivenPort : drivenList)
 				drivenPort.setPayload(drive.getPayload().copy()); // copy the data element from 
-		} //output port to input ports
+		} //output port to input ports of next PE
 
 		return true;
 	}
@@ -76,13 +81,13 @@ public abstract class AInterconnect implements Interconnect {
 			var drivenList = this.connections.get(from);
 			if (!drivenList.contains(to))
 				drivenList.add(to);
-			System.out.println("abc");
+			System.out.println("adicionou port a lista de output existente");
 
 		} else {
 			var newList = new ArrayList<ProcessingElementPort>();
 			newList.add(to);
 			this.connections.put(from, newList);
-			System.out.println("def");
+			System.out.println("adicionou port a nova lista");
 
 		}
 		System.out.printf("Connection set between PE %d, %d and %d, %d \n", from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());

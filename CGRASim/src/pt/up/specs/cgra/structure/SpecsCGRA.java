@@ -13,6 +13,7 @@
 
 package pt.up.specs.cgra.structure;
 
+import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 
@@ -32,6 +33,10 @@ public interface SpecsCGRA {
      * Executes a single simulation tick (can be considered a clock cycle)
      */
     public boolean execute();
+    
+    public Context getContext();
+    
+    public boolean setContext();
 
     /*
      * switch between one of X (max) available contexts
