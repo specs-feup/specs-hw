@@ -36,8 +36,6 @@ public interface SpecsCGRA {
     
     public Context getContext();
     
-    public boolean setContext();
-
     /*
      * switch between one of X (max) available contexts
      */
@@ -48,6 +46,8 @@ public interface SpecsCGRA {
      * (Use JFreeChart or similar?)
      */
     public void visualize();
+
+	public boolean setContext(Context c);
 
     // some kind of method that recieves an emitter class
     // which lowers this functional spec into chisel3 or hdl

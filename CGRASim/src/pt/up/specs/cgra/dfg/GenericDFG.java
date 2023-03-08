@@ -8,35 +8,45 @@ import java.util.Map;
 
 import pt.up.specs.cgra.structure.context.Context;
 
-public class GenericDFG implements DataflowGraph, Iterable {
+public class GenericDFG implements DataflowGraph, Iterable<Node> {
 	
 	private Map<Node, List<Node>> dfg;
 	private Context context;
 	
-	void addNode(Math_Op op, int id) {
+	public void addNewNode(Math_Op op, int id) {
 	    dfg.putIfAbsent(new Node(op, id), new ArrayList<>());
 	}
 	
-	void addEdge(Math_Op op1, int id1, Math_Op op2, int id2)
-	{
-		dfg.get(op1).add(new Node(op2, id2));
-		
-	}
 
-	void removeNode(Math_Op op, int id) {
-		dfg.remove(op, id);
-	    
+	public void addNode(Node x) {
+	    dfg.putIfAbsent(x, new ArrayList<>());
 	}
 	
-	void removeEdge(Math_Op op1, int id1, Math_Op op2, int id2)
+	public void addEdge(Node x, Node y)
 	{
-		dfg.get(op1).remove(new Node(op2, id2));
+		dfg.get(x).add(y);
+	}
+
+	public void removeNode(Node x) {
+		dfg.remove(x);
+	}
+	
+	public void removeEdge(Node x, Node y) {
+		dfg.get(x).remove(y);
+	}
+	
+	public List<Node> getEdges(Node x)
+	{
+		return dfg.get(x);
+		
 	}
 	
 	@Override
 	public Map<Node, List<Node>> getDFG() {
 		return dfg;
 	}
+	
+	
 
 	@Override
 	public Context makeContext() {

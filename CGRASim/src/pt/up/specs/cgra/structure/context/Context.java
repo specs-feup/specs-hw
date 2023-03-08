@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import pt.up.specs.cgra.dfg.GenericDFG;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 
 public class Context {
@@ -32,8 +33,21 @@ public class Context {
         this.contextID = contextID;
         this.connections = connections;
     }
+    
+    public Context(int contextID, GenericDFG dfg)
+    {
+    	this.contextID = contextID;
+    	this.connections = makeConnections(dfg);
+    }
 
-    public int getContextID() {
+    private static Map<ProcessingElementPort, List<ProcessingElementPort>> makeConnections(GenericDFG dfg) {
+    	Map<ProcessingElementPort, List<ProcessingElementPort>> tmp_con;
+    	
+		return null;
+		//return tmp_con;
+	}
+
+	public int getContextID() {
         return contextID;
     }
 
@@ -44,4 +58,6 @@ public class Context {
     public Optional<List<ProcessingElementPort>> getDestinationsOf(ProcessingElementPort source) {
         return Optional.of(this.connections.get(source));
     }
+    
+    
 }
