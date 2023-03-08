@@ -16,16 +16,12 @@ package pt.up.specs.cgra.structure.pes;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.specs.cgra.controlDeprecated.PEControlALU;
-import pt.up.specs.cgra.controlDeprecated.PEControl.PEDirection;
-import pt.up.specs.cgra.controlDeprecated.PEControl.PEMemoryAccess;
 import pt.up.specs.cgra.dataypes.PEData;
-import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
 
-public abstract class AbstractProcessingElement implements ProcessingElement {
+public abstract class AProcessingElement implements ProcessingElement {
 
     /*
      * 
@@ -38,22 +34,21 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     private boolean ready = true;
     private boolean executing = false;
     private int executeCount = 0;
-	private int memorySize = 1;
-    //private int writeIdx = 0;
-   
+    private int memorySize = 1;
+    // private int writeIdx = 0;
 
-	/*
+    /*
      * local memory to hold constants (useful for using 
      * same PE for different contexts, if that PE needs different contexts)
      */
-    private GenericMemory constants = new GenericMemory(2);//2 inteiros
+    private GenericMemory constants = new GenericMemory(2);// 2 inteiros
 
     /*
      * register file (for values computed during operation)
      */
     private List<PEData> registerFile;
 
-	/*
+    /*
      * initialized by children
      */
     protected List<ProcessingElementPort> ports;
@@ -63,22 +58,22 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     // scheduling
     // the map should be in the childmost class (maybe?)
 
-    protected AbstractProcessingElement(int latency, int memorySize) {
+    protected AProcessingElement(int latency, int memorySize) {
         this.latency = latency;
         this.memorySize = memorySize;
-//        if (this.memorySize > 0) {
-//            this.hasMemory = true;
+        // if (this.memorySize > 0) {
+        // this.hasMemory = true;
         this.registerFile = new ArrayList<PEData>(3);
-//        } else {
-//            this.hasMemory = false;
-//        }
+        // } else {
+        // this.hasMemory = false;
+        // }
     }
 
-    protected AbstractProcessingElement(int latency) {
+    protected AProcessingElement(int latency) {
         this(latency, 1);
     }
 
-    protected AbstractProcessingElement() {
+    protected AProcessingElement() {
         this(1);
     }
 
@@ -115,17 +110,17 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     public Mesh getMesh() {
         return this.myparent;
     }
-    
+
+    @Override
     public List<PEData> getRegisterFile() {
-		return registerFile;
-	}
+        return registerFile;
+    }
 
-	public void setRegisterFile(List<PEData> registerFile) {
-		this.registerFile = registerFile;
-	}
-	
+    @Override
+    public void setRegisterFile(List<PEData> registerFile) {
+        this.registerFile = registerFile;
+    }
 
-	
     @Override
     public boolean setX(int x) {
         if (this.xPos == -1)
@@ -175,8 +170,7 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     public boolean isExecuting() {
         return this.executing;
     }
-    
-    
+
     @Override
     public boolean isReady() {
         return this.ready;
@@ -187,17 +181,17 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         return this.executeCount;
     }
 
-/*    @Override
+    /*    @Override
     public boolean setResultRegister(int regIndex) {
         if (regIndex < this.memorySize) {
             this.writeIdx = regIndex;
             return true;
-
+    
         } else {
             return false;
         }
     }
-*/
+    */
     /*
      * Implemented by children
      */
@@ -207,11 +201,11 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
      * Use by children
      */
     protected PEData getOperand(int idx) {
-    	/*if (idx == 0 && this.control.getInputone() == PEDirection.ZERO) return new PEInteger(0);
-    	else if (idx == 1 && this.control.getInputtwo() == PEDirection.ZERO) return new PEInteger(0);
-    	
-    	else */ return this.ports.get(idx).getPayload();
-    	
+        /*if (idx == 0 && this.control.getInputone() == PEDirection.ZERO) return new PEInteger(0);
+        else if (idx == 1 && this.control.getInputtwo() == PEDirection.ZERO) return new PEInteger(0);
+        
+        else */ return this.ports.get(idx).getPayload();
+
     }
 
     @Override
@@ -221,8 +215,8 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
 
         var result = _execute();
         this.executeCount++;
-//        if (this.writeIdx != -1)
-//            this.registerFile.set(this.writeIdx, result)
+        // if (this.writeIdx != -1)
+        // this.registerFile.set(this.writeIdx, result)
         this.registerFile.set(0, result);
 
         return result;
@@ -236,27 +230,27 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
         return this.getClass().getSimpleName();
     }
 
-/*	
-	public void printStatus() {
-		if (this.control == null)
-		{
-			System.out.println("No control associated");
-		}
-		else
-		{
-			System.out.println("PE stuff:");
-			System.out.printf("PE coords: %d, ", this.getX());
-			System.out.printf("%d \n", this.getY());
-			System.out.println("control settings: \n");
-			System.out.printf("Type: %s \n", this.control.getType().name());
-			System.out.printf("OP: %s \n", this.control.getOperation().name());
-			System.out.printf("MemAccess: %s \n", this.control.getMemAccess().name());
-			System.out.printf("Input One: %s \n", this.control.getInputone().name());
-			System.out.printf("Input Two: %s \n", this.control.getInputtwo().name());
-			System.out.println("\n");
-
-		}
-	}
-	
-*/
+    /*	
+    	public void printStatus() {
+    		if (this.control == null)
+    		{
+    			System.out.println("No control associated");
+    		}
+    		else
+    		{
+    			System.out.println("PE stuff:");
+    			System.out.printf("PE coords: %d, ", this.getX());
+    			System.out.printf("%d \n", this.getY());
+    			System.out.println("control settings: \n");
+    			System.out.printf("Type: %s \n", this.control.getType().name());
+    			System.out.printf("OP: %s \n", this.control.getOperation().name());
+    			System.out.printf("MemAccess: %s \n", this.control.getMemAccess().name());
+    			System.out.printf("Input One: %s \n", this.control.getInputone().name());
+    			System.out.printf("Input Two: %s \n", this.control.getInputtwo().name());
+    			System.out.println("\n");
+    
+    		}
+    	}
+    	
+    */
 }

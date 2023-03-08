@@ -15,8 +15,6 @@ package pt.up.specs.cgra.structure.pes;
 
 import java.util.List;
 
-import pt.up.specs.cgra.controlDeprecated.PEControl;
-import pt.up.specs.cgra.controlDeprecated.PEControlALU;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 
@@ -30,21 +28,21 @@ public interface ProcessingElement {
         return null;
     }
 
-    default public boolean setX(int x) { //sera que devia ter mesmo?
+    default public boolean setX(int x) { // sera que devia ter mesmo?
         return false;
     }
 
-    default public boolean setY(int y) { //idem aspas
+    default public boolean setY(int y) { // idem aspas
         return false;
     }
-    
+
     default public List<PEData> getRegisterFile() {
-		return null;
-	}
+        return null;
+    }
 
-	default public void setRegisterFile(List<PEData> x) {
-		
-	}
+    default public void setRegisterFile(List<PEData> x) {
+
+    }
 
     default public int getX() {
         return -1;
@@ -64,7 +62,7 @@ public interface ProcessingElement {
     default public int getLatency() {
         return 1;
     }
- 
+
     default public boolean hasMemory() {
         return true;
     }
@@ -73,7 +71,7 @@ public interface ProcessingElement {
         return 1;
     }
 
-    default public boolean isReady() { //is ready == ! is executing?
+    default public boolean isReady() { // is ready == ! is executing?
         return false;
     }
 
@@ -81,7 +79,7 @@ public interface ProcessingElement {
         return false;
     }
 
-    default public int getExecuteCount() { //data token approach
+    default public int getExecuteCount() { // data token approach
         return 0;
     }
 
@@ -95,10 +93,10 @@ public interface ProcessingElement {
     /*
      * Sets result register for the next operation to execute (this setting is/should be persistent)
      */
-/*    default public boolean setResultRegister(int regIndex) {
+    /*    default public boolean setResultRegister(int regIndex) {
         return false;
     }
-*/
+    */
     /*
      * Implements ONE execution tick (can be considered as a clock cycle)
      * this does not guarantee that the return is valid, only when
@@ -111,17 +109,14 @@ public interface ProcessingElement {
     default public String statusString() {
         return "No status";
     }
-    
+
     /*
      * JUST FOR TESTING (??)
      */
     public List<ProcessingElementPort> getPorts();
 
-	
-	
-	default public void printStatus() {
-	}
-
+    default public void printStatus() {
+    }
 
     // public getImplementation ??
 
