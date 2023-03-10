@@ -26,6 +26,7 @@ import pt.up.fe.specs.specshw.SpecsHwUtils;
 
 public class HardwareTestbench extends HardwareModule {
 
+    private double period = -1;
     private final String testBenchName;
     private final HardwareModule dut;
 
@@ -79,13 +80,18 @@ public class HardwareTestbench extends HardwareModule {
         return this.getChild(ModuleBlock.class, 2);
     }
 
+    // returns clock period; only valid after setClockFrequency is called
+    public double getPeriod() {
+        return this.period;
+    }
+
     private InitialBlock getInitialBlock() {
         InitialBlock ini = null;
         var initials = getBody().getChildrenOf(InitialBlock.class);
         if (initials.isEmpty()) {
             ini = this.initial("initBlock");
-            var time = getChild(TimeScaleDeclaration.class, 1).getTimeUnit();
-            ini.delay(time * 10);
+            // var time = getChild(TimeScaleDeclaration.class, 1).getTimeUnit();
+            // ini.delay(time * 10);
         } else
             ini = initials.get(0);
 
@@ -112,28 +118,42 @@ public class HardwareTestbench extends HardwareModule {
 
     public HardwareTestbench setClockFrequency(int mhz) {
         var time = getChild(TimeScaleDeclaration.class, 1);
-        var period = (((1.0 / mhz) / Math.pow(10, -9)) / time.getTimeUnit());
+        this.period = (((1.0 / mhz) / Math.pow(10, -9)) / time.getTimeUnit());
         var clockBlock = new AlwaysBlock("clockBlock");
         this.addBlockAfter(clockBlock, getRegisterDeclarationBlock());
 
         VariableOperator clk = null;
-        if ((clk = (VariableOperator) this.getRegister("clk")) == null)
-            clk = this.addRegister("clk", 1);
+        if ((clk = (VariableOperator) this.getRegister("rclk")) == null)
+            clk = this.addRegister("rclk", 1);
 
-        clockBlock.blocking(clk, clk.not());
-        clockBlock.delay(period);
+        clockBlock.blocking(clk, clk.not()); // clk = ~clk
+        clockBlock.delay(period); // #(period)
 
         // add to initial
-        this.setInit(clk, 0);
+        // this.setInit(clk, 0);
         // this.initial.blocking(clk, 0);
         // this.initial.delay(period * 10);
 
         return this;
     }
 
-    /* public HardwareTestbench setResetInit(int mhz) {
-        
-    }*/
+    public HardwareTestbench setClockInit() {
+        this.setInit(this.getRegister("rclk"), 1);
+        this.getInitialBlock().delay(this.getPeriod());
+        return this;
+    }
+
+    public HardwareTestbench setResetInit() {
+        this.setInit(this.getRegister("rrst"), 1);
+        this.getInitialBlock().delay(10 * this.getPeriod());
+        this.setInit(this.getRegister("rrst"), 0);
+        return this;
+    }
+
+    public HardwareTestbench addDelay(int period) {
+        this.getInitialBlock().delay(period);
+        return this;
+    }
 
     @Override
     protected Port addPort(PortDeclaration port) {

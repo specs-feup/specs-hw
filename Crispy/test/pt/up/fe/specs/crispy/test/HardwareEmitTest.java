@@ -62,7 +62,9 @@ public class HardwareEmitTest {
         //
         var tb = new HardwareTestbench("testMod_tb", mod);
         tb.setClockFrequency(100);
-        // tb.setResetInit();
+        tb.setClockInit();
+        tb.setResetInit();
+        // tb.addStimulus(... ??
         tb.emitToFile();
     }
 }

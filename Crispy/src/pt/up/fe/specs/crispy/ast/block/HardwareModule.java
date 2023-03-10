@@ -508,8 +508,8 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
     /*
      * get Reg by name
      */
-    public HardwareOperator getRegister(String regname) {
-        return getRegisterDeclarationBlock().getDeclaration(regname);
+    public VariableOperator getRegister(String regname) {
+        return (VariableOperator) getRegisterDeclarationBlock().getDeclaration(regname);
     }
 
     /*
