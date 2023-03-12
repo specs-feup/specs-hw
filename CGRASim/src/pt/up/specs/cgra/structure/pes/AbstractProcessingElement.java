@@ -16,9 +16,6 @@ package pt.up.specs.cgra.structure.pes;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.specs.cgra.controlDeprecated.PEControlALU;
-import pt.up.specs.cgra.controlDeprecated.PEControl.PEDirection;
-import pt.up.specs.cgra.controlDeprecated.PEControl.PEMemoryAccess;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.memory.GenericMemory;

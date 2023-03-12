@@ -15,9 +15,6 @@ package pt.up.specs.cgra.structure.pes;
 
 import java.util.List;
 
-import pt.up.specs.cgra.controlDeprecated.PEControl;
-import pt.up.specs.cgra.controlDeprecated.PEControlNull;
-
 
 /**
  * Used to occupy a mesh slot while nothing is placed there

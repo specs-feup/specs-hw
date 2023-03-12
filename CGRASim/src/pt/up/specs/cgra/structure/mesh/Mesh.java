@@ -15,8 +15,7 @@ package pt.up.specs.cgra.structure.mesh;
 
 import java.util.List;
 
-import pt.up.specs.cgra.controlDeprecated.PEControl.PEDirection;
-import pt.up.specs.cgra.controlDeprecated.PEControl.PEMemoryAccess;
+
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.SpecsCGRA;

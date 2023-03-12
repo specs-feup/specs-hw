@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import pt.up.specs.cgra.controlDeprecated.PEControl;
-import pt.up.specs.cgra.controlDeprecated.PEControlALU;
-import pt.up.specs.cgra.controlDeprecated.PEControlNull;
-import pt.up.specs.cgra.controlDeprecated.PEControl.PEDirection;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.mesh.Mesh;
@@ -24,7 +20,6 @@ public class NullProcessingElement implements ProcessingElement {
 	private int executeCount = 0;
 	private int memorySize = 1;
 	private int writeIdx = 0;
-	protected PEControlNull control;
 
 	private List<PEData> registerFile;
 	protected List<ProcessingElementPort> ports;
@@ -38,7 +33,6 @@ public class NullProcessingElement implements ProcessingElement {
 	{
 		this.latency = latency;
 		this.registerFile = new ArrayList<PEData>(1);
-		this.control = new PEControlNull();
 		this.ports = Arrays.asList(
                 new ProcessingElementPort(this, PEPortDirection.input, null),
                 new ProcessingElementPort(this, PEPortDirection.input, null),
@@ -128,13 +122,6 @@ public class NullProcessingElement implements ProcessingElement {
 		return "NULL";
 	}
 
-	public PEControlNull getControl() {
-		return control;
-	}
-
-	public void setControl(PEControlNull control) {
-		this.control = control;
-	}
-
+	
 
 }

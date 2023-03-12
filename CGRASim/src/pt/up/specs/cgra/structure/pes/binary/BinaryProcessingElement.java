@@ -15,7 +15,6 @@ package pt.up.specs.cgra.structure.pes.binary;
 
 import java.util.Arrays;
 
-import pt.up.specs.cgra.structure.pes.AProcessingElementOLD;
 import pt.up.specs.cgra.structure.pes.AbstractProcessingElement;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;

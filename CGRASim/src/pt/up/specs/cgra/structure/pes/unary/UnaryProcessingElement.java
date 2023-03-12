@@ -3,11 +3,11 @@ package pt.up.specs.cgra.structure.pes.unary;
 import java.util.Arrays;
 
 import pt.up.specs.cgra.dataypes.PEData;
-import pt.up.specs.cgra.structure.pes.AProcessingElementOLD;
+import pt.up.specs.cgra.structure.pes.AbstractProcessingElement;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
 
-public abstract class UnaryProcessingElement extends AProcessingElementOLD {
+public abstract class UnaryProcessingElement extends AbstractProcessingElement {
 
     public UnaryProcessingElement(int latency, int memorySize) {
         super(latency, memorySize);

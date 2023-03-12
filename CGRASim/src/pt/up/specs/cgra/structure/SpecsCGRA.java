@@ -34,7 +34,7 @@ public interface SpecsCGRA {
      */
     public boolean execute();
     
-    public Context getContext();
+    public Context getContext(int i);
     
     /*
      * switch between one of X (max) available contexts

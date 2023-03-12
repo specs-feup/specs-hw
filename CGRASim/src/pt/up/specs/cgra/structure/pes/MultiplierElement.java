@@ -37,7 +37,7 @@ public class MultiplierElement extends BinaryProcessingElement {
 
     @Override
     public ProcessingElement copy() {
-        return new ALUElementOLD(this.getLatency(), this.getMemorySize());
+        return new MultiplierElement(this.getLatency(), this.getMemorySize());
     }
 
     @Override
