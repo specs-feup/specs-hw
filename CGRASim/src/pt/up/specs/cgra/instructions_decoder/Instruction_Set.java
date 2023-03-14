@@ -12,6 +12,7 @@ public enum Instruction_Set {
 	RUN,			//executar ou parar - tudo/só um thread x/só n ciclos/até resultado ter nivel de precisao x
 	PAUSE,			//pausar execução
 	RESET			//reset a tudo/só um thread x/só ás memorias e contadores, mantendo contexto
+
 	
 	
 

@@ -16,13 +16,15 @@ package pt.up.specs.cgra.structure.pes;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.specs.cgra.control.PEControl;
+import pt.up.specs.cgra.control.PEControlSetting;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
 
-public abstract class AbstractProcessingElement implements ProcessingElement {
+public abstract class AbstractProcessingElement<T extends PEControlSetting> implements ProcessingElement {
 
     /*
      * 
@@ -36,6 +38,8 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     private boolean executing = false;
     private int executeCount = 0;
 	private int memorySize = 1;
+	
+	private T ctrl;
     //private int writeIdx = 0;
    
 
@@ -232,6 +236,11 @@ public abstract class AbstractProcessingElement implements ProcessingElement {
     public String toString() {
         return this.getClass().getSimpleName();
     }
+
+	public <T extends PEControlSetting> boolean setControl(T ctrl) {
+		this.ctrl = ctrl;
+		return true;
+	}
 
 /*	
 	public void printStatus() {

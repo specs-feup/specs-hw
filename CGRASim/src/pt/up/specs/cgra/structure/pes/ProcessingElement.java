@@ -119,6 +119,10 @@ public interface ProcessingElement {
 	
 	default public void printStatus() {
 	}
+	
+	default public boolean setControl() {
+		return false;
+	}
 
 
     // public getImplementation ??

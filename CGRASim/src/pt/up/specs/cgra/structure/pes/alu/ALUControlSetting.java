@@ -15,33 +15,40 @@ package pt.up.specs.cgra.structure.pes.alu;
 
 import pt.up.specs.cgra.control.PEControlSetting;
 
-public enum ALUControlSetting implements PEControlSetting {
+public enum ALUControlSetting implements PEControlSetting{
 
-    ADD(0b0000),
-    SUB(0b0001),
-    MUL(0b0010),
-    DIV(0b0011),
-    LSHIFT(0b0100),
-    RSHIFT(0b0101),
-    MOD(0b0110),
-    AND(0b0111),
-    OR(0b1000),
-    XOR(0b1001),
-    PASSL(0b1011),
-    PASSR(0b1100),
-    PASSNULL(0b1101);
+    PASSNULL(0b0000),//name e value para o construtor
+    ADD(0b0001),
+    SUB(0b0010),
+    MUL(0b0011),
+    DIV(0b0100),
+    LSHIFT(0b0101),
+    RSHIFT(0b0110),
+    MOD(0b0111),
+    AND(0b1000),
+    OR(0b1001),
+    XOR(0b1011),
+    PASSL(0b1100),
+    PASSR(0b1101);
 
     private String name;
     private int value;
+    
+    
 
     private ALUControlSetting(int value) {
-        this.name = name();
         this.value = value;
+        this.name = name();
     }
 
     @Override
     public String getName() {
         return this.name;
+    }
+    
+    @Override
+    public String toString() {
+    	return this.name;
     }
 
     @Override
