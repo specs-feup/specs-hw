@@ -16,6 +16,7 @@ package pt.up.specs.cgra.structure.pes;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.up.specs.cgra.control.PEControlSetting;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
@@ -36,6 +37,7 @@ public abstract class AProcessingElement implements ProcessingElement {
     private int executeCount = 0;
     private int memorySize = 1;
     // private int writeIdx = 0;
+    private PEControlSetting ctrl;
 
     /*
      * local memory to hold constants (useful for using 

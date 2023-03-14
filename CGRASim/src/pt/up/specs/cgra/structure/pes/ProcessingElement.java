@@ -119,7 +119,7 @@ public interface ProcessingElement {
     default public void printStatus() {
     }
 
-    default public <T extends PEControlSetting> boolean setControl(T ctrl) {
+    default boolean setControl(PEControlSetting ctrl) {
         return false;
     }
 
