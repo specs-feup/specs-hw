@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.instructions_decoder.InstructionDecoder;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
 import pt.up.specs.cgra.structure.interconnect.NearestNeighbour;
@@ -60,7 +61,8 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	protected final GenericMemory liveins, liveouts;
 	protected final Mesh mesh;
 	protected final Interconnect interconnect;
-	protected Context context;
+	protected ArrayList<Context> context_memory;
+	protected final InstructionDecoder instdec;
 
 	private GenericSpecsCGRA(List<List<ProcessingElement>> mesh,
 			Class<? extends Interconnect> intclass,
@@ -77,6 +79,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		this.liveins = new GenericMemory(8);
 		this.liveouts = new GenericMemory(8);
 		this.localmemsize = localmemsize;
+		this.instdec = new InstructionDecoder();
 		if (this.localmemsize > 0)
 			this.localmem = new GenericMemory(this.localmemsize);
 		else
@@ -86,13 +89,14 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	/*
 	 * Only for use by builder child class
 	 */
-	private GenericSpecsCGRA() {
+	protected GenericSpecsCGRA() {
 		this.liveins = null;
 		this.liveouts = null;
 		this.localmem = null;
 		this.localmemsize = 0;
 		this.mesh = null;
 		this.interconnect = null;
+		this.instdec = new InstructionDecoder();
 	}
 
 	@Override
@@ -121,6 +125,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
 	/*
 	 * executes a single simulation step (clock cycle)
+	 * TODO - mudar execute() pq vai ser instrucoes agora
 	 */
 	@Override
 	public boolean execute() {
@@ -205,25 +210,25 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	}
 
 	@Override
-	public Context getContext() {
-		return this.context;
+	public Context getContext(int i) {
+		return this.context_memory.get(i);
 	}
 
 	@Override
 	public boolean setContext(Context c) {
 		if(c != null) {
-			this.context = c;
-			return true;
+			
+			return this.context_memory.add(c);
 		}
 
 		else return false;
 
 	}
 
-	public boolean applyContext() {
-		if(this.context != null) {
-			this.interconnect.applyContext(this.context);
-			return true;
+	//TODO exception handling
+	public boolean applyContext(int i) {
+		if(this.context_memory.get(i) != null) {
+			return this.interconnect.applyContext(this.context_memory.get(i));
 		}
 
 		else return false;

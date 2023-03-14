@@ -24,14 +24,14 @@ public class Node /*implements Iterable<Node>*/ {
 	  public boolean deleteLeaf(Node x) {
 		  return leaves.remove(x);
 	  }
-	  
+	  */
 	  @Override
 	  public String toString() {
 		  String a = "ID: " + id + " op: " + op.toString();
 		  return a;
 	  }
-
+/*
 	  public Iterator<Node> iterator() {
-	    return leaves.iterator();
+	    return leaves.iterator(); 
 	  } */
 	}
