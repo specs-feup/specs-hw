@@ -53,9 +53,9 @@ public class InstructionDecoder {
 		
 	}
 	
-	private <T extends AbstractProcessingElement, Y extends PEControlSetting> boolean SET(T x, Y ctrl) {
+	private <Y extends PEControlSetting> boolean SET(int x, int y, Y ctrl) {
 		
-		x.setOperation(ctrl);
+		parent.getMesh().getProcessingElement(x, y)).setOperation(ctrl);
 		
 		return true;
 		
