@@ -15,6 +15,7 @@ package pt.up.specs.cgra.structure.pes;
 
 import java.util.List;
 
+import pt.up.specs.cgra.control.PEControlSetting;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 
@@ -120,7 +121,7 @@ public interface ProcessingElement {
 	default public void printStatus() {
 	}
 	
-	default public boolean setControl() {
+	default public <T extends PEControlSetting> boolean setControl(T ctrl) {
 		return false;
 	}
 
