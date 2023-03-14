@@ -12,7 +12,6 @@ import pt.up.specs.cgra.structure.pes.ProcessingElement;
 import pt.up.specs.cgra.structure.pes.alu.ALUControlSetting;
 import pt.up.specs.cgra.structure.pes.alu.ALUControlSettingObject;
 import pt.up.specs.cgra.structure.pes.alu.ALUElement;
-import pt.up.specs.cgra.structure.pes.alu.ALUElement.ALUOperation;
 
 public class InstructionDecoder {
 	
@@ -30,7 +29,9 @@ public class InstructionDecoder {
 		while (tk.hasMoreElements())
 		{
 			String s = tk.nextToken();
-			switch(s) {
+			
+			switch(s) 
+			{
 			case "SET":
 				Integer x = Integer.parseInt(tk.nextToken());
 				Integer y = Integer.parseInt(tk.nextToken());
@@ -41,7 +42,7 @@ public class InstructionDecoder {
 				ALUControlSettingObject aux = new ALUControlSettingObject(op);
 				
 				
-				SET(pe, aux);
+				SET(x, y, aux);
 			}
 		}
 		return true;
@@ -55,7 +56,7 @@ public class InstructionDecoder {
 	
 	private <Y extends PEControlSetting> boolean SET(int x, int y, Y ctrl) {
 		
-		parent.getMesh().getProcessingElement(x, y)).setOperation(ctrl);
+		parent.getMesh().getProcessingElement(x, y).setControl(ctrl);
 		
 		return true;
 		

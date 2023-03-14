@@ -238,7 +238,7 @@ public abstract class AbstractProcessingElement<T extends PEControlSetting> impl
     }
 
 	public <T extends PEControlSetting> boolean setControl(T ctrl) {
-		this.ctrl = (T) ctrl;
+		this.ctrl = ctrl;
 		return true;
 	}
 
