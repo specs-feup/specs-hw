@@ -17,12 +17,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import pt.up.specs.cgra.control.PEControl;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 import pt.up.specs.cgra.structure.pes.binary.BinaryProcessingElement;
 
-public class ALUElement extends BinaryProcessingElement implements PEControl<ALUControlSetting> {
+public class ALUElement extends BinaryProcessingElement {// implements PEControl<ALUControlSetting> {
 
     /*
      * helper mapping of constructors to reduce verbosity
@@ -68,8 +67,7 @@ public class ALUElement extends BinaryProcessingElement implements PEControl<ALU
         this(1, 0);
     }
 
-    @Override
-    public boolean setOperation(ALUControlSetting ctrl) {
+   private boolean setControl(ALUControlSetting ctrl) {
 
         // TODO: throw exception??
         if (!ALUOperations.containsKey(ctrl))
@@ -78,6 +76,20 @@ public class ALUElement extends BinaryProcessingElement implements PEControl<ALU
         this.currentCtrl = ctrl;
         return true;
     }
+    
+    @Override
+	public boolean setControl(Integer ctrl) {
+    	
+    	// turn integer into valid enum of type ALUControlSetting
+    	ALUControlSetting ectrl = null;
+    	for(var e: ALUControlSetting.values()) {
+    		ectrl = e;
+    		if(ctrl == ectrl.getValue())
+    			break;
+    	}
+   
+		return this.setControl(ectrl);
+	}
 
     @Override
     protected PEData _execute() {

@@ -21,7 +21,18 @@ public class InstructionDecoder {
     private static final Map<String, InstDecoder> InstDecoders;
     static {
         Map<String, InstDecoder> amap = new HashMap<String, InstDecoder>();
-        amap.put("SET", InstructionDecoder::SET);
+        amap.put("set", InstructionDecoder::set);
+       /* amap.put("SET_IO", InstructionDecoder::SET_IO);
+        amap.put("GEN_INFO", InstructionDecoder::GEN_INFO);
+        amap.put("PE_INFO", InstructionDecoder::PE_INFO);
+        amap.put("MEM_INFO", InstructionDecoder::MEM_INFO);
+        amap.put("STORE_CTX", InstructionDecoder::STORE_CTX);
+        amap.put("SWITCH_CTX", InstructionDecoder::SWITCH_CTX);
+        amap.put("RUN", InstructionDecoder::RUN);
+        amap.put("PAUSE", InstructionDecoder::PAUSE);
+        amap.put("RESET", InstructionDecoder::RESET);*/
+
+
         InstDecoders = Collections.unmodifiableMap(amap);
     }
     
@@ -72,12 +83,10 @@ public class InstructionDecoder {
     }
 
     //private boolean SET(int x, int y, PEControlSetting ctrl) {
-    private static boolean SET(SpecsCGRA cgra, List<String> operands) {
+    private static boolean set(SpecsCGRA cgra, List<String> operands) {
     	var x = Integer.valueOf(operands.get(0));
     	var y = Integer.valueOf(operands.get(1));
-    	
     	var ctrl = Integer.valueOf(operands.get(2));
-        
     	cgra.getMesh().getProcessingElement(x, y).setControl(ctrl);
         return true;
     }
