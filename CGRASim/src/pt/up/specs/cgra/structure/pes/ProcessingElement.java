@@ -83,25 +83,7 @@ public interface ProcessingElement {
         return 0;
     }
 
-    /*
-     * opIndex:
-     * 0: lhs
-     * 1: rhs
-     */
-    // public boolean setOperand(int opIndex, PEData op);
-
-    /*
-     * Sets result register for the next operation to execute (this setting is/should be persistent)
-     */
-    /*    default public boolean setResultRegister(int regIndex) {
-        return false;
-    }
-    */
-    /*
-     * Implements ONE execution tick (can be considered as a clock cycle)
-     * this does not guarantee that the return is valid, only when
-     * isReady returns true can the result be considered valid
-     */
+    
     default public PEData execute() {
         return null;
     }
@@ -121,6 +103,26 @@ public interface ProcessingElement {
     default boolean setControl(Integer ctrl) {
         return false;
     }
+    
+    /*
+     * opIndex:
+     * 0: lhs
+     * 1: rhs
+     */
+    // public boolean setOperand(int opIndex, PEData op);
+
+    /*
+     * Sets result register for the next operation to execute (this setting is/should be persistent)
+     */
+    /*    default public boolean setResultRegister(int regIndex) {
+        return false;
+    }
+    */
+    /*
+     * Implements ONE execution tick (can be considered as a clock cycle)
+     * this does not guarantee that the return is valid, only when
+     * isReady returns true can the result be considered valid
+     */
 
     // public getImplementation ??
 

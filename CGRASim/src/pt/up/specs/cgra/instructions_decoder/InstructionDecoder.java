@@ -22,15 +22,15 @@ public class InstructionDecoder {
     static {
         Map<String, InstDecoder> amap = new HashMap<String, InstDecoder>();
         amap.put("set", InstructionDecoder::set);
-       /* amap.put("SET_IO", InstructionDecoder::SET_IO);
-        amap.put("GEN_INFO", InstructionDecoder::GEN_INFO);
-        amap.put("PE_INFO", InstructionDecoder::PE_INFO);
-        amap.put("MEM_INFO", InstructionDecoder::MEM_INFO);
-        amap.put("STORE_CTX", InstructionDecoder::STORE_CTX);
-        amap.put("SWITCH_CTX", InstructionDecoder::SWITCH_CTX);
-        amap.put("RUN", InstructionDecoder::RUN);
-        amap.put("PAUSE", InstructionDecoder::PAUSE);
-        amap.put("RESET", InstructionDecoder::RESET);*/
+        amap.put("set_io", InstructionDecoder::set_io);
+        amap.put("gen_info", InstructionDecoder::gen_info);
+        amap.put("pe_info", InstructionDecoder::pe_info);
+        amap.put("mem_info", InstructionDecoder::mem_info);
+        amap.put("store_ctx", InstructionDecoder::store_ctx);
+        amap.put("switch_ctx", InstructionDecoder::switch_ctx);
+        amap.put("run", InstructionDecoder::run);
+        amap.put("pause", InstructionDecoder::pause);
+        amap.put("reset", InstructionDecoder::reset);
 
 
         InstDecoders = Collections.unmodifiableMap(amap);
@@ -90,50 +90,68 @@ public class InstructionDecoder {
     	cgra.getMesh().getProcessingElement(x, y).setControl(ctrl);
         return true;
     }
-/*
-    private boolean SET_IO(List<String> operands) {
-        return true;
-    }
+    
+    private static boolean set_io(SpecsCGRA cgra, List<String> operands) {
+    	
+    	var xs = Integer.valueOf(operands.get(0));
+    	var ys = Integer.valueOf(operands.get(1));
+    	
+    	var x1 = Integer.valueOf(operands.get(2));
+    	var y1 = Integer.valueOf(operands.get(3));
 
-    private boolean GEN_INFO(List<String> operands) {
+    	var x2 = Integer.valueOf(operands.get(4));
+    	var y2 = Integer.valueOf(operands.get(5));
+    	
+    	
+
+    	
+    	
         return true;// return cgra.toString?
 
     }
 
-    private boolean PE_INFO(List<String> operands) {
+    private static boolean gen_info(SpecsCGRA cgra, List<String> operands) {
+    	
+        return true;// return cgra.toString?
+
+    }
+
+    private static boolean pe_info(SpecsCGRA cgra, List<String> operands) {
+    	
         return true;// return pe.toString?
 
     }
 
-    private boolean MEM_INFO(List<String> operands) {
+    private static boolean mem_info(SpecsCGRA cgra, List<String> operands) {
+    	
+        return true;// return genericmemory.tostring?
+
+    }
+
+    private static boolean store_ctx(SpecsCGRA cgra, List<String> operands) {
         return true;
 
     }
 
-    private boolean STORE_CTX(List<String> operands) {
+    private static boolean switch_ctx(SpecsCGRA cgra, List<String> operands) {
         return true;
 
     }
 
-    private boolean SWITCH_CTX(List<String> operands) {
+    private static boolean run(SpecsCGRA cgra, List<String> operands) {
         return true;
 
     }
 
-    private boolean RUN(List<String> operands) {
+    private static boolean pause(SpecsCGRA cgra, List<String> operands) {
         return true;
 
     }
 
-    private boolean PAUSE(List<String> operands) {
-        return true;
-
-    }
-
-    private boolean RESET(List<String> operands) {
+    private static boolean reset(SpecsCGRA cgra, List<String> operands) {
         return true;
     }
-*/
+
     
     private static boolean undefined(SpecsCGRA cgra, List<String> operands) {
         return false;
