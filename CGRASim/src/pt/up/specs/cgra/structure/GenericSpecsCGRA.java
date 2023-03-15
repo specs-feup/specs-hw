@@ -79,7 +79,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		this.liveins = new GenericMemory(8);
 		this.liveouts = new GenericMemory(8);
 		this.localmemsize = localmemsize;
-		this.instdec = new InstructionDecoder();
+		this.instdec = new InstructionDecoder(this);
 		if (this.localmemsize > 0)
 			this.localmem = new GenericMemory(this.localmemsize);
 		else
@@ -96,7 +96,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		this.localmemsize = 0;
 		this.mesh = null;
 		this.interconnect = null;
-		this.instdec = new InstructionDecoder();
+		this.instdec = new InstructionDecoder(this);
 	}
 
 	@Override
