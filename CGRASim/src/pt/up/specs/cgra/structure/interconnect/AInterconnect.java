@@ -134,4 +134,10 @@ public abstract class AInterconnect implements Interconnect {
 		return driver;
 
 	}
+
+	public Context makeContext(int id)
+	{
+		return new Context(id, this.connections);
+	}
 }
+

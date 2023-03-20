@@ -67,7 +67,7 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
         this(1, 0);
     }
 
-   private boolean setControl(ALUControlSetting ctrl) {
+   public boolean setControl(ALUControlSetting ctrl) {
 
         // TODO: throw exception??
         if (!ALUOperations.containsKey(ctrl))
@@ -77,7 +77,6 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
         return true;
     }
     
-    @Override
 	public boolean setControl(Integer ctrl) {
     	
     	// turn integer into valid enum of type ALUControlSetting

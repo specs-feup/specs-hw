@@ -17,6 +17,7 @@ import java.util.List;
 
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.mesh.Mesh;
+import pt.up.specs.cgra.structure.pes.alu.ALUControlSetting;
 
 public interface ProcessingElement {
 
@@ -100,9 +101,13 @@ public interface ProcessingElement {
     default public void printStatus() {
     }
 
-    default boolean setControl(Integer ctrl) {
+    default boolean setControl(ALUControlSetting aluControlSetting) {
         return false;
     }
+
+	public default boolean setControl(Integer ctrl) {
+		return false;
+	}
     
     /*
      * opIndex:

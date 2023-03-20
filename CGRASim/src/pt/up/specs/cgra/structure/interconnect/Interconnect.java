@@ -53,4 +53,6 @@ public interface Interconnect {
      * 
      */
     public boolean connectionValid(ProcessingElementPort from, ProcessingElementPort to);
+    
+    public Context makeContext(int id);
 }

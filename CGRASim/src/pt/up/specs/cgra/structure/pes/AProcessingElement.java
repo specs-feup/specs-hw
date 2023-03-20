@@ -203,11 +203,7 @@ public abstract class AProcessingElement implements ProcessingElement {
      * Use by children
      */
     protected PEData getOperand(int idx) {
-        /*if (idx == 0 && this.control.getInputone() == PEDirection.ZERO) return new PEInteger(0);
-        else if (idx == 1 && this.control.getInputtwo() == PEDirection.ZERO) return new PEInteger(0);
-        
-        else */ return this.ports.get(idx).getPayload();
-
+    	return this.ports.get(idx).getPayload();
     }
 
     @Override
@@ -224,16 +220,13 @@ public abstract class AProcessingElement implements ProcessingElement {
         return result;
     }
 
-    /*
-     * 
-     */
+    
     @Override
     public String toString() {
         return this.getClass().getSimpleName();
     }
 
-    /*	
-    	public void printStatus() {
+    	/* public void printStatus() {
     		if (this.control == null)
     		{
     			System.out.println("No control associated");

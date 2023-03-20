@@ -31,6 +31,8 @@ public class Mesh {
     private final SpecsCGRA myparent;
     private final int x, y;
     private final List<List<ProcessingElement>> mesh;// array 2d de PEs
+    
+    private boolean EXECUTE_FLAG = true;
 
     public Mesh(List<List<ProcessingElement>> mesh, SpecsCGRA myparent) {
         this.myparent = myparent;
@@ -64,180 +66,17 @@ public class Mesh {
     public ProcessingElement getProcessingElement(int x, int y) {
         return this.mesh.get(x).get(y);
     }
-
-    /* public boolean setConnections()
+    
+    public void pause()
     {
-    	for (var line : this.mesh)
-    		for (var pe : line)
-    		{
-    			if(!(pe instanceof NullProcessingElement))
-    			{
-    				if (pe.getControl().getMemAccess() != PEMemoryAccess.INITIAL)
-    				{
-    					int x_orig = pe.getX();
-    					int y_orig = pe.getY();
-    					int x = 0;
-    					int y = 0;
-    
-    					PEDirection inputone = pe.getControl().getInputone();
-    					switch (inputone)
-    					{
-    					case E:
-    						y = y_orig + 1;
-    						x = x_orig;
-    						break;
-    					case NE:
-    						y = y_orig + 1;
-    						x = x_orig - 1;
-    						break;
-    					case N:
-    						y = y_orig;
-    						x = x_orig - 1;
-    						break;
-    					case NW:
-    						y = y_orig - 1;
-    						x = x_orig - 1;
-    						break;
-    					case W:
-    						y = y_orig - 1;
-    						x = x_orig;
-    						break;
-    					case SW:
-    						y = y_orig - 1;
-    						x = x_orig + 1;
-    						break;
-    					case S:
-    						y = y_orig;
-    						x = x_orig + 1;
-    						break;
-    					case SE:
-    						y = y_orig + 1;
-    						x = x_orig + 1;
-    						break;
-    
-    					case ZERO:
-    					default:
-    						x = -1;
-    						y = -1;
-    						break;
-    
-    					}
-    
-    					if (x >= 0 && y >= 0) 
-    					{
-    						System.out.printf("%d, %d \n", x, y);
-    						this.myparent.getInterconnect().setConnection(this.getProcessingElement(x, y).getPorts().get(2), pe.getPorts().get(0));
-    						System.out.printf("Connection set between output of %d, %d and input 1 of %d, %d \n", x, y, pe.getX(), pe.getY());
-    					}
-    					else System.out.printf("Negative coords, connection unsuccessful for input 1 in %d, %d \n", x_orig, y_orig);
-    
-    					PEDirection inputtwo = pe.getControl().getInputtwo();
-    					x_orig = pe.getX();
-    					y_orig = pe.getY();
-    					x = 0;
-    					y = 0;
-    
-    					switch (inputtwo)
-    					{
-    					case E:
-    						y = y_orig + 1;
-    						x = x_orig;
-    						break;
-    					case NE:
-    						y = y_orig + 1;
-    						x = x_orig - 1;
-    						break;
-    					case N:
-    						y = y_orig;
-    						x = x_orig - 1;
-    						break;
-    					case NW:
-    						y = y_orig - 1;
-    						x = x_orig - 1;
-    						break;
-    					case W:
-    						y = y_orig - 1;
-    						x = x_orig;
-    						break;
-    					case SW:
-    						y = y_orig - 1;
-    						x = x_orig + 1;
-    						break;
-    					case S:
-    						y = y_orig;
-    						x = x_orig + 1;
-    						break;
-    					case SE:
-    						y = y_orig + 1;
-    						x = x_orig + 1;
-    						break;
-    
-    					case ZERO:
-    					default:
-    						x = -1;
-    						y = -1;
-    						break;
-    
-    					}
-    
-    					if (x >= 0 && y >= 0) 
-    					{
-    						System.out.printf("%d, %d \n", x, y);
-    
-    						this.myparent.getInterconnect().setConnection(this.getProcessingElement(x, y).getPorts().get(2), pe.getPorts().get(0));
-    						System.out.printf("Connection set between output of %d, %d and input 2 of %d, %d \n", x, y, pe.getX(), pe.getY());
-    
-    					}
-    					else System.out.printf("Negative coords, connection unsuccessful for input 2 in %d, %d \n", x_orig, y_orig);
-    				}
-    			}
-    		}
-    	return true;
-    }*/
-    /*
-    	public void fetch(int pos1, int pos2) { //fetch data from generic ram to initial PEs
-    		int n = 0;
-    		for (var line : this.mesh)
-    			for (var pe : line)
-    				if (pe.getControl().getMemAccess() == PEMemoryAccess.INITIAL)
-    				{
-    					if (pe.getControl().getInputone() != PEDirection.ZERO)
-    					{
-    						PEData x = pe.getPorts().get(0).setPayload(myparent.getLiveins().read(pos1 + n));
-    						System.out.printf("payload set: %d on first input port of pe: %d, %d\n", x.getValue(), pe.getX(), pe.getY());
-    					}
-    
-    					else pe.getPorts().get(0).setPayload(new PEInteger(0));
-    					
-    
-    					if (pe.getControl().getInputtwo() != PEDirection.ZERO)
-    					{
-    						PEData y = pe.getPorts().get(1).setPayload(myparent.getLiveins().read(pos2 + n));
-    						System.out.printf("payload set: %d on second input port of pe: %d, %d\n", y.getValue(), pe.getX(), pe.getY());
-    
-    					}
-    
-    					else pe.getPorts().get(1).setPayload(new PEInteger(0));
-    
-    					n++;
-    				}
-    	}
-    
-    	public void store(int pos) {//store data from final PEs to generic ram
-    		int n = 0;
-    		for (var line : this.mesh)
-    			for (var pe : line)
-    				if (pe.getControl().getMemAccess() == PEMemoryAccess.FINAL)
-    				{
-    					myparent.getLiveouts().write((pos + n), pe.getRegisterFile().get(0));
-    					n++;
-    				}
-    	}
-    */
-    public void execute() {
+    	EXECUTE_FLAG = !EXECUTE_FLAG ;
+    }
+
+     public void execute() {
         for (var line : this.mesh)
             for (var pe : line)
-                pe.execute();
+            	
+                if (EXECUTE_FLAG) pe.execute();
     }
 
     public String visualize() {

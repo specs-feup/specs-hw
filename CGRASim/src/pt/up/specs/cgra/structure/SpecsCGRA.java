@@ -34,6 +34,8 @@ public interface SpecsCGRA {
      */
     public boolean execute();
     
+	public boolean pause();
+    
     public Context getContext(int i);
     
     /*
@@ -48,6 +50,8 @@ public interface SpecsCGRA {
     public void visualize();
 
 	public boolean setContext(Context c);
+
+	public boolean applyContext(Integer id);
 
     // some kind of method that recieves an emitter class
     // which lowers this functional spec into chisel3 or hdl

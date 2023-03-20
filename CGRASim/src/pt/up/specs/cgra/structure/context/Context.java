@@ -34,18 +34,19 @@ public class Context {
         this.connections = connections;
     }
     
-    public Context(int contextID, GenericDFG dfg)
+    /*public Context(int contextID, GenericDFG dfg)
     {
     	this.contextID = contextID;
     	this.connections = makeConnections(dfg);
-    }
+    }*/
 
-    private static Map<ProcessingElementPort, List<ProcessingElementPort>> makeConnections(GenericDFG dfg) {
-    	Map<ProcessingElementPort, List<ProcessingElementPort>> tmp_con;
+    
+    /* private static Map<ProcessingElementPort, List<ProcessingElementPort>> makeConnections(GenericDFG dfg) 
+    {
     	
 		return null;
 		//return tmp_con;
-	}
+	} */
 
 	public int getContextID() {
         return contextID;

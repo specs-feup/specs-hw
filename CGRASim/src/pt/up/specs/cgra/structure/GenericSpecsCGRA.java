@@ -63,6 +63,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	protected final Interconnect interconnect;
 	protected ArrayList<Context> context_memory;
 	protected final InstructionDecoder instdec;
+	
 
 	private GenericSpecsCGRA(List<List<ProcessingElement>> mesh,
 			Class<? extends Interconnect> intclass,
@@ -137,6 +138,12 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		this.mesh.execute();
 
 		return true; // eventually use this return to indicate stalling or something
+	}
+	
+	public boolean pause()
+	{
+		this.mesh.pause();
+		return true;
 	}
 
 	// TODO: use a graphical representation later
@@ -216,8 +223,8 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
 	@Override
 	public boolean setContext(Context c) {
+		
 		if(c != null) {
-			
 			return this.context_memory.add(c);
 		}
 
@@ -226,7 +233,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	}
 
 	//TODO exception handling
-	public boolean applyContext(int i) {
+	public boolean applyContext(Integer i) {
 		if(this.context_memory.get(i) != null) {
 			return this.interconnect.applyContext(this.context_memory.get(i));
 		}
