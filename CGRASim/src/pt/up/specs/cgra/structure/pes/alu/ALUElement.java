@@ -84,10 +84,11 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
     	for(var e: ALUControlSetting.values()) {
     		ectrl = e;
     		if(ctrl == ectrl.getValue())
-    			break;
+    			return this.setControl(ectrl);
     	}
    
-		return this.setControl(ectrl);
+    	return false;
+
 	}
 
     @Override

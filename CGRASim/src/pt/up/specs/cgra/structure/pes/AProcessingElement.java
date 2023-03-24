@@ -209,8 +209,6 @@ public abstract class AProcessingElement implements ProcessingElement {
     @Override
     public PEData execute() {
 
-        // TODO: implement latency! requires a counter which sets ready = false and executing = true
-
         var result = _execute();
         this.executeCount++;
         // if (this.writeIdx != -1)

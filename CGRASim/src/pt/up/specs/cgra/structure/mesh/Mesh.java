@@ -32,7 +32,6 @@ public class Mesh {
     private final int x, y;
     private final List<List<ProcessingElement>> mesh;// array 2d de PEs
     
-    private boolean EXECUTE_FLAG = true;
 
     public Mesh(List<List<ProcessingElement>> mesh, SpecsCGRA myparent) {
         this.myparent = myparent;
@@ -64,19 +63,18 @@ public class Mesh {
     }
 
     public ProcessingElement getProcessingElement(int x, int y) {
+    	if(x > this.x || y > this.y || x < 0 || y < 0)
+    		throw new RuntimeException("Mesh: coordinates out of bounds for CGRA mesh");
+    		
         return this.mesh.get(x).get(y);
     }
     
-    public void pause()
-    {
-    	EXECUTE_FLAG = !EXECUTE_FLAG ;
-    }
 
      public void execute() {
         for (var line : this.mesh)
             for (var pe : line)
             	
-                if (EXECUTE_FLAG) pe.execute();
+                pe.execute();
     }
 
     public String visualize() {

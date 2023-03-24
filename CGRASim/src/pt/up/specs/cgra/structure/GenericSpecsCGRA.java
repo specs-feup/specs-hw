@@ -63,6 +63,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	protected final Interconnect interconnect;
 	protected ArrayList<Context> context_memory;
 	protected final InstructionDecoder instdec;
+	protected int execute_count;
 	
 
 	private GenericSpecsCGRA(List<List<ProcessingElement>> mesh,
@@ -98,6 +99,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		this.mesh = null;
 		this.interconnect = null;
 		this.instdec = new InstructionDecoder(this);
+		this.execute_count = 0;
 	}
 
 	@Override
@@ -136,6 +138,8 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
 		// execute compute
 		this.mesh.execute();
+		
+		this.execute_count++;
 
 		return true; // eventually use this return to indicate stalling or something
 	}
@@ -230,6 +234,11 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
 		else return false;
 
+	}
+	
+	@Override
+	public int getExecuteCount() {
+		return this.execute_count;
 	}
 
 	//TODO exception handling

@@ -52,120 +52,89 @@ public class InstructionDecoder {
 		var tk = new StringTokenizer(st);
 		var operands = new ArrayList<String>();
 
-		String instname_str;
+		var instname_str = "";
+		if(tk.hasMoreTokens())
+			instname_str = tk.nextToken();
 
-		try 
-		{
-			instname_str = tk.nextToken(); // TODO: exception
+		while (tk.hasMoreElements())
+			operands.add(tk.nextToken());
 
-			while (tk.hasMoreElements())
-				operands.add(tk.nextToken());
-		}
-		catch(NoSuchElementException e)
-		{
-			System.out.println("Erro a ler opcode da instrucao: " + st);
-			return false;
-		};
 
-		// get decoder of this instruction
 		var func = InstDecoders.get(instname_str);
 		if (func == null)
 			func = InstructionDecoder::undefined;
 
 		return func.apply(this.parent, operands);
-
-
 	}
 
-	// TODO: definir limites dos bits
-	/*    public void InstructionParser(Integer x) {
 
-    }*/
-	//TODO exception
-	private static boolean set(SpecsCGRA cgra, List<String> operands) throws IndexOutOfBoundsException, Exception{
+	private static boolean set(SpecsCGRA cgra, List<String> operands){
 
-		Integer x, y, ctrl;
-
-		try
-		{
-			x = Integer.valueOf(operands.get(0));
-			y = Integer.valueOf(operands.get(1));
-			ctrl = Integer.valueOf(operands.get(2));
-		}
-		catch(IndexOutOfBoundsException e)
-		{
+		if(operands.size() != 3) {
 			System.out.println("Erro a ler parametros da instrucao set");
-			return false;
+			return false;			
 		}
 
-		try {
-			cgra.getMesh().getProcessingElement(x, y).setControl(ctrl);
-		}
-		catch(Exception e)
-		{
-			System.out.println("Erro na instrucao set - definir operacao");
-			return false;
-		}
+		var x = Integer.valueOf(operands.get(0));
+		var y = Integer.valueOf(operands.get(1));
+		var ctrl = Integer.valueOf(operands.get(2));
 
-		return true;
+
+
+		return cgra.getMesh().getProcessingElement(x, y).setControl(ctrl);
 	}
 
 	//TODO exception
-	private static boolean set_io(SpecsCGRA cgra, List<String> operands) throws IndexOutOfBoundsException, Exception {
+	private static boolean set_io(SpecsCGRA cgra, List<String> operands) {
 
-		Integer xs, ys, x1, y1, x2, y2;
-
-		try {
-			xs = Integer.valueOf(operands.get(0));
-			ys = Integer.valueOf(operands.get(1));
-
-			x1 = Integer.valueOf(operands.get(2));
-			y1 = Integer.valueOf(operands.get(3));
-
-			x2 = Integer.valueOf(operands.get(4));
-			y2 = Integer.valueOf(operands.get(5)); }
-
-		catch (IndexOutOfBoundsException a)
-		{
+		if(operands.size() != 6) {
 			System.out.println("Erro a ler parametros da instrucao set_io");
-			return false;
+			return false;			
 		}
 
-		ProcessingElement pe1 = null, pe2 = null, pesrc = null;
-		try
-		{
-			pe1 = cgra.getMesh().getProcessingElement(x1, y1);
-			pe2 = cgra.getMesh().getProcessingElement(x2, y2);
-			pesrc = cgra.getMesh().getProcessingElement(xs, ys);
-		}
-		catch (NoSuchElementException e)
-		{
-			System.out.println("Erro na instrucao set_io - coordenadas dos PEs");
-			return false;
-		}
+		var xs = Integer.valueOf(operands.get(0));
+		var ys = Integer.valueOf(operands.get(1));
 
-		try {
-			cgra.getInterconnect().setConnection(pe1.getPorts().get(2), pesrc.getPorts().get(0)); //out de pe1 -> in1 de pesrc
-			cgra.getInterconnect().setConnection(pe2.getPorts().get(2), pesrc.getPorts().get(1)); //out de pe2 -> in2 de pesrc
+		var x1 = Integer.valueOf(operands.get(2));
+		var y1 = Integer.valueOf(operands.get(3));
+
+		var x2 = Integer.valueOf(operands.get(4));
+		var y2 = Integer.valueOf(operands.get(5)); 
+
+
+
+		var pe1 = cgra.getMesh().getProcessingElement(x1, y1);
+		var pe2 = cgra.getMesh().getProcessingElement(x2, y2);
+		var pesrc = cgra.getMesh().getProcessingElement(xs, ys);
+
+
+
+		if (pe1 != null && pe2 != null && pesrc != null) {
+
+			if (cgra.getInterconnect().setConnection(pe1.getPorts().get(2), pesrc.getPorts().get(0)) 
+					&& cgra.getInterconnect().setConnection(pe2.getPorts().get(2), pesrc.getPorts().get(1))
+					) 
+			{
+				return true; 
+			}
 		}
-		catch (Exception e)
-		{
-			System.out.println("Erro na instrucao set_io - ligacao dos ports");
-			return false;
-		}
-		return true;
+		
+		//out de pe1 -> in1 de pesrc
+		//out de pe2 -> in2 de pesrc
+
+		return false;
 
 	}
 
 	private static boolean gen_info(SpecsCGRA cgra, List<String> operands) {
 
-		return true;// return cgra.toString?
+		return true;// print cgra.toString?
 
 	}
 
 	private static boolean pe_info(SpecsCGRA cgra, List<String> operands) {
 
-		return true;// return pe.toString?
+		return true;// print pe.toString?
 
 	}
 
@@ -175,7 +144,7 @@ public class InstructionDecoder {
 
 	}
 
-	private static boolean store_ctx(SpecsCGRA cgra, List<String> operands) throws IndexOutOfBoundsException{
+	private static boolean store_ctx(SpecsCGRA cgra, List<String> operands) {
 
 		Integer id;
 		try {

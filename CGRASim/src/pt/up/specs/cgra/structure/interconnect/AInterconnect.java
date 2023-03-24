@@ -71,7 +71,8 @@ public abstract class AInterconnect implements Interconnect {
 
 		if (!connectionValid(from, to))
 		{
-			System.out.printf("connection invalid between %d, %d and %d, %d \n", from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
+			System.out.printf("connection invalid between %d, %d and %d, %d \n", 
+					from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
 
 			return false;
 		}
@@ -90,7 +91,8 @@ public abstract class AInterconnect implements Interconnect {
 			System.out.println("adicionou port a nova lista");
 
 		}
-		System.out.printf("Connection set between PE %d, %d and %d, %d \n", from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
+		System.out.printf("Connection set between PE %d, %d and %d, %d \n", 
+				from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
 
 		return true;
 	}
