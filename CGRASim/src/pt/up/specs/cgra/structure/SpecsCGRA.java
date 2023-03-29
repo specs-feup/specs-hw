@@ -54,6 +54,12 @@ public interface SpecsCGRA {
 	public boolean applyContext(Integer id);
 	
 	public int getExecuteCount();
+	
+	public boolean isExecuting();
+
+	public void setExecuting(boolean isExecuting);
+
+	public boolean step();
 
     // some kind of method that recieves an emitter class
     // which lowers this functional spec into chisel3 or hdl

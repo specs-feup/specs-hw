@@ -69,7 +69,6 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
 
    public boolean setControl(ALUControlSetting ctrl) {
 
-        // TODO: throw exception??
         if (!ALUOperations.containsKey(ctrl))
             return false;
 

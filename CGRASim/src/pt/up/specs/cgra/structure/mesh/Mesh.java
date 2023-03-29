@@ -28,66 +28,70 @@ import pt.up.specs.cgra.structure.pes.ProcessingElement;
  */
 public class Mesh {
 
-    private final SpecsCGRA myparent;
-    private final int x, y;
-    private final List<List<ProcessingElement>> mesh;// array 2d de PEs
-    
+	private final SpecsCGRA myparent;
+	private final int x, y;
+	private final List<List<ProcessingElement>> mesh;// array 2d de PEs
 
-    public Mesh(List<List<ProcessingElement>> mesh, SpecsCGRA myparent) {
-        this.myparent = myparent;
-        this.mesh = mesh;
-        this.x = mesh.size();
-        this.y = mesh.get(0).size();
-        for (int i = 0; i < this.x; i++)
-            for (int j = 0; j < this.y; j++) {
-                var pe = this.mesh.get(i).get(j);
-                pe.setX(i);
-                pe.setY(j);
-                pe.setMesh(this);
-            }
-    }
 
-    /*
-     * 
-     */
-    public SpecsCGRA getCGRA() {
-        return this.myparent;
-    }
+	public Mesh(List<List<ProcessingElement>> mesh, SpecsCGRA myparent) {
+		this.myparent = myparent;
+		this.mesh = mesh;
+		this.x = mesh.size();
+		this.y = mesh.get(0).size();
+		for (int i = 0; i < this.x; i++)
+			for (int j = 0; j < this.y; j++) {
+				var pe = this.mesh.get(i).get(j);
+				pe.setX(i);
+				pe.setY(j);
+				pe.setMesh(this);
+			}
+	}
 
-    public int getX() {
-        return x;
-    }
+	/*
+	 * 
+	 */
+	public SpecsCGRA getCGRA() {
+		return this.myparent;
+	}
 
-    public int getY() {
-        return y;
-    }
+	public int getX() {
+		return x;
+	}
 
-    public ProcessingElement getProcessingElement(int x, int y) {
-    	if(x > this.x || y > this.y || x < 0 || y < 0)
-    		throw new RuntimeException("Mesh: coordinates out of bounds for CGRA mesh");
-    		
-        return this.mesh.get(x).get(y);
-    }
-    
+	public int getY() {
+		return y;
+	}
 
-     public void execute() {
-        for (var line : this.mesh)
-            for (var pe : line)
-            	
-                pe.execute();
-    }
+	public ProcessingElement getProcessingElement(int x, int y) {
+		if(x > this.x || y > this.y || x < 0 || y < 0)
+			throw new RuntimeException("Mesh: coordinates out of bounds for CGRA mesh");
 
-    public String visualize() {
-        var sbld = new StringBuilder();
-        var str = "------------------";
-        for (var line : this.mesh) {
-            sbld.append(str.repeat(line.size()) + "\n");
-            for (var pe : line) {
-                sbld.append("|  " + pe.toString() + "  |");
-            }
-            sbld.append("\n");
-        }
-        sbld.append(str.repeat(this.x));
-        return sbld.toString();
-    }
+		return this.mesh.get(x).get(y);
+	}
+
+
+	public boolean execute() {
+		for (var line : this.mesh) {
+			for (var pe : line) { 
+				pe.execute();
+			}
+		}
+
+		return false;
+
+	}
+
+	public String visualize() {
+		var sbld = new StringBuilder();
+		var str = "------------------";
+		for (var line : this.mesh) {
+			sbld.append(str.repeat(line.size()) + "\n");
+			for (var pe : line) {
+				sbld.append("|  " + pe.toString() + "  |");
+			}
+			sbld.append("\n");
+		}
+		sbld.append(str.repeat(this.x));
+		return sbld.toString();
+	}
 }

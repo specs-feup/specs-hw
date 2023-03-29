@@ -48,6 +48,8 @@ public abstract class AInterconnect implements Interconnect {
 	/**
 	 * For every connection, copy the output payload into the input ports of each @ProcessingElement
 	 */
+	
+	//TODO: Exceptions
 	@Override
 	public boolean propagate() {
 

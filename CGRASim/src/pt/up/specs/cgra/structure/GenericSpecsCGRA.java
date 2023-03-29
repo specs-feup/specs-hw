@@ -64,7 +64,8 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	protected ArrayList<Context> context_memory;
 	protected final InstructionDecoder instdec;
 	protected int execute_count;
-	
+	protected boolean isExecuting;
+
 
 	private GenericSpecsCGRA(List<List<ProcessingElement>> mesh,
 			Class<? extends Interconnect> intclass,
@@ -100,6 +101,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		this.interconnect = null;
 		this.instdec = new InstructionDecoder(this);
 		this.execute_count = 0;
+		this.isExecuting = false;
 	}
 
 	@Override
@@ -126,27 +128,62 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		return this.liveouts.read(idx);
 	}
 
-	/*
-	 * executes a single simulation step (clock cycle)
-	 * TODO - mudar execute() pq vai ser instrucoes agora
-	 */
 	@Override
 	public boolean execute() {
 
+		this.setExecuting(true);
+
+		do {
+			// propagate data from interconnect settings
+			if (!this.interconnect.propagate()) 
+			{
+				this.setExecuting(false);
+				return false;
+			}
+
+			// execute compute
+			if (!this.mesh.execute()) {
+				this.setExecuting(false);
+				return false;
+			}
+
+			this.execute_count++;
+		} while (this.isExecuting);
+		//} while (CONDICAO);
+		
+
+		this.setExecuting(false);
+		return true;
+	}
+
+	@Override
+	public boolean step() {
+
+		this.setExecuting(true);
+
 		// propagate data from interconnect settings
-		this.interconnect.propagate();
+		if (!this.interconnect.propagate()) 
+		{
+			this.setExecuting(false);
+			return false;
+		}
 
 		// execute compute
-		this.mesh.execute();
-		
+		if (!this.mesh.execute()) 
+		{
+			this.setExecuting(false);
+			return false;
+		}
+
 		this.execute_count++;
 
-		return true; // eventually use this return to indicate stalling or something
+		this.setExecuting(false);
+		return true;
 	}
-	
+
 	public boolean pause()
 	{
-		this.mesh.pause();
+		this.setExecuting(false);
 		return true;
 	}
 
@@ -227,7 +264,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
 	@Override
 	public boolean setContext(Context c) {
-		
+
 		if(c != null) {
 			return this.context_memory.add(c);
 		}
@@ -235,13 +272,12 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		else return false;
 
 	}
-	
+
 	@Override
 	public int getExecuteCount() {
 		return this.execute_count;
 	}
 
-	//TODO exception handling
 	public boolean applyContext(Integer i) {
 		if(this.context_memory.get(i) != null) {
 			return this.interconnect.applyContext(this.context_memory.get(i));
@@ -249,5 +285,13 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
 		else return false;
 
+	}
+
+	public boolean isExecuting() {
+		return isExecuting;
+	}
+
+	public void setExecuting(boolean isExecuting) {
+		this.isExecuting = isExecuting;
 	}
 }

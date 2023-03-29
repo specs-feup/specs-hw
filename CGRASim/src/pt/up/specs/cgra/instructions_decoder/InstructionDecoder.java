@@ -34,6 +34,7 @@ public class InstructionDecoder {
 		amap.put("store_ctx", InstructionDecoder::store_ctx);
 		amap.put("switch_ctx", InstructionDecoder::switch_ctx);
 		amap.put("run", InstructionDecoder::run);
+		amap.put("step", InstructionDecoder::step);
 		amap.put("pause", InstructionDecoder::pause);
 		amap.put("reset", InstructionDecoder::reset);
 
@@ -47,7 +48,7 @@ public class InstructionDecoder {
 		this.parent = parent;
 	}
 
-	public boolean InstructionParser(String st) throws NoSuchElementException{
+	public boolean InstructionParser(String st){
 
 		var tk = new StringTokenizer(st);
 		var operands = new ArrayList<String>();
@@ -79,12 +80,9 @@ public class InstructionDecoder {
 		var y = Integer.valueOf(operands.get(1));
 		var ctrl = Integer.valueOf(operands.get(2));
 
-
-
 		return cgra.getMesh().getProcessingElement(x, y).setControl(ctrl);
 	}
 
-	//TODO exception
 	private static boolean set_io(SpecsCGRA cgra, List<String> operands) {
 
 		if(operands.size() != 6) {
@@ -102,21 +100,17 @@ public class InstructionDecoder {
 		var y2 = Integer.valueOf(operands.get(5)); 
 
 
-
 		var pe1 = cgra.getMesh().getProcessingElement(x1, y1);
 		var pe2 = cgra.getMesh().getProcessingElement(x2, y2);
 		var pesrc = cgra.getMesh().getProcessingElement(xs, ys);
 
 
-
 		if (pe1 != null && pe2 != null && pesrc != null) {
 
-			if (cgra.getInterconnect().setConnection(pe1.getPorts().get(2), pesrc.getPorts().get(0)) 
+			return (cgra.getInterconnect().setConnection(pe1.getPorts().get(2), pesrc.getPorts().get(0)) 
 					&& cgra.getInterconnect().setConnection(pe2.getPorts().get(2), pesrc.getPorts().get(1))
-					) 
-			{
-				return true; 
-			}
+					); 
+			
 		}
 		
 		//out de pe1 -> in1 de pesrc
@@ -145,36 +139,27 @@ public class InstructionDecoder {
 	}
 
 	private static boolean store_ctx(SpecsCGRA cgra, List<String> operands) {
-
-		Integer id;
-		try {
-			id = Integer.valueOf(operands.get(0));
-		}
-		catch (IndexOutOfBoundsException e)
-		{
+		
+		if(operands.size() != 1) {
 			System.out.println("Erro a ler parametros da instrucao store_ctx");
-			return false;
+			return false;			
 		}
-
-		cgra.setContext(cgra.getInterconnect().makeContext(id));
-		return true;
-
+	
+		var id = Integer.valueOf(operands.get(0));
+		
+		return cgra.setContext(cgra.getInterconnect().makeContext(id));
 	}
 
-	private static boolean switch_ctx(SpecsCGRA cgra, List<String> operands) throws IndexOutOfBoundsException{
-
-		Integer id;
-		try {
-			id = Integer.valueOf(operands.get(0));
-		}
-		catch (IndexOutOfBoundsException e)
-		{
+	private static boolean switch_ctx(SpecsCGRA cgra, List<String> operands){
+		
+		if(operands.size() != 1) {
 			System.out.println("Erro a ler parametros da instrucao switch_ctx");
-			return false;
+			return false;			
 		}
+
+		var id = Integer.valueOf(operands.get(0));
 
 		return cgra.applyContext(id);
-
 	}
 
 	private static boolean run(SpecsCGRA cgra, List<String> operands) {
@@ -182,11 +167,16 @@ public class InstructionDecoder {
 		return cgra.execute();
 
 	}
+	
+	private static boolean step(SpecsCGRA cgra, List<String> operands) {
+
+		return cgra.step();
+
+	}
 
 	private static boolean pause(SpecsCGRA cgra, List<String> operands) {
 
-		cgra.pause();
-		return true;
+		return cgra.pause();
 
 	}
 
@@ -196,6 +186,7 @@ public class InstructionDecoder {
 
 
 	private static boolean undefined(SpecsCGRA cgra, List<String> operands) {
-		return false;
+		System.out.println("Undefined instr");
+		return true;
 	}
 }
