@@ -29,4 +29,9 @@ public class EmptyPE implements ProcessingElement {
     public List<ProcessingElementPort> getPorts() {
         return null;
     }
+
+	@Override
+	public void clearRegisterFile() {
+		
+	}
 }

@@ -108,6 +108,9 @@ public interface ProcessingElement {
 	public default boolean setControl(Integer ctrl) {
 		return false;
 	}
+
+	public void clearRegisterFile();
+
     
     /*
      * opIndex:

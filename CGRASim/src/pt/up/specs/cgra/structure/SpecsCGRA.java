@@ -32,7 +32,7 @@ public interface SpecsCGRA {
     /*
      * Executes a single simulation tick (can be considered a clock cycle)
      */
-    public boolean execute();
+    public int execute();
     
 	public boolean pause();
     
@@ -60,6 +60,8 @@ public interface SpecsCGRA {
 	public void setExecuting(boolean isExecuting);
 
 	public boolean step();
+
+	public boolean reset();
 
     // some kind of method that recieves an emitter class
     // which lowers this functional spec into chisel3 or hdl

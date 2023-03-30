@@ -64,7 +64,9 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	protected ArrayList<Context> context_memory;
 	protected final InstructionDecoder instdec;
 	protected int execute_count;
+	protected int cycle_count;
 	protected boolean isExecuting;
+	protected boolean execute_terminated;
 
 
 	private GenericSpecsCGRA(List<List<ProcessingElement>> mesh,
@@ -101,7 +103,9 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		this.interconnect = null;
 		this.instdec = new InstructionDecoder(this);
 		this.execute_count = 0;
+		this.cycle_count = 0;
 		this.isExecuting = false;
+		this.execute_terminated = false;
 	}
 
 	@Override
@@ -129,7 +133,9 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	}
 
 	@Override
-	public boolean execute() {
+	public int execute() {
+
+		int tmp;
 
 		this.setExecuting(true);
 
@@ -138,22 +144,36 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 			if (!this.interconnect.propagate()) 
 			{
 				this.setExecuting(false);
-				return false;
+				this.setExecute_terminated(true);
+
+				return execute_count;
 			}
 
 			// execute compute
-			if (!this.mesh.execute()) {
+			if (!this.mesh.execute()) 
+			{
 				this.setExecuting(false);
-				return false;
+				this.setExecute_terminated(true);
+
+				return execute_count;
 			}
 
+			
 			this.execute_count++;
-		} while (this.isExecuting);
+			this.cycle_count++;
+
+		} while (this.isExecuting && !this.execute_terminated);
 		//} while (CONDICAO);
-		
+
 
 		this.setExecuting(false);
-		return true;
+		this.setExecute_terminated(true);
+
+		tmp = this.execute_count;
+		this.resetExecuteCount();
+		this.setExecute_terminated(false);
+
+		return tmp;
 	}
 
 	@Override
@@ -265,7 +285,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	@Override
 	public boolean setContext(Context c) {
 
-		if(c != null) {
+		if(c != null && c.getConnections().size() > 0) {
 			return this.context_memory.add(c);
 		}
 
@@ -293,5 +313,24 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
 	public void setExecuting(boolean isExecuting) {
 		this.isExecuting = isExecuting;
+	}
+
+	public void resetExecuteCount() {
+		this.execute_count = 0;
+	}
+
+	public boolean isExecute_terminated() {
+		return execute_terminated;
+	}
+
+	public void setExecute_terminated(boolean execute_terminated) {
+		this.execute_terminated = execute_terminated;
+	}
+
+	@Override
+	public boolean reset() {
+		this.mesh.reset();
+		this.interconnect.clear();
+		return true;
 	}
 }

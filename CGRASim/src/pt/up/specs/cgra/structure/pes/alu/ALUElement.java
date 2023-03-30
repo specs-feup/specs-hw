@@ -53,7 +53,7 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
     /*
      * At the next "_execute" step, this operation will be executed
      */
-    private ALUControlSetting currentCtrl;
+    private ALUControlSetting ctrl;
 
     public ALUElement(int latency, int memorySize) {
         super(latency, memorySize);
@@ -72,7 +72,7 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
         if (!ALUOperations.containsKey(ctrl))
             return false;
 
-        this.currentCtrl = ctrl;
+        this.ctrl = ctrl;
         return true;
     }
     
@@ -92,7 +92,7 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
 
     @Override
     protected PEData _execute() {
-        return ALUOperations.get(this.currentCtrl).apply(this.getOperand(0), this.getOperand(1));
+        return ALUOperations.get(this.ctrl).apply(this.getOperand(0), this.getOperand(1));
     }
 
     @Override

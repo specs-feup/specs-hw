@@ -94,4 +94,15 @@ public class Mesh {
 		sbld.append(str.repeat(this.x));
 		return sbld.toString();
 	}
+
+	public void reset() {
+		for (List<ProcessingElement> row : this.mesh) 
+		{
+			for (ProcessingElement PE : row)
+			{
+				PE.setControl(0);
+				PE.clearRegisterFile();
+			}
+		}
+	}
 }

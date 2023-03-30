@@ -36,13 +36,12 @@ public abstract class AInterconnect implements Interconnect {
 	// protected final RULES = ??? some kind of map of possible connections?
 
 	private final SpecsCGRA myparent;
-	private Context currentContext;
 	private Map<ProcessingElementPort, List<ProcessingElementPort>> connections;
 
 	public AInterconnect(SpecsCGRA myparent) {
 		this.myparent = myparent;
-		this.currentContext = null;
 		this.connections = new HashMap<ProcessingElementPort, List<ProcessingElementPort>>();
+		this.myparent.setContext(new Context(this.connections));
 	}
 
 	/**
@@ -110,13 +109,12 @@ public abstract class AInterconnect implements Interconnect {
 			 * TODO: create exception classes to handle these errors
 			 */
 		}
-		this.currentContext = ctx;
 		return true;
 	}
 
 	@Override
 	public Context getContext() {
-		return this.currentContext;
+		return new Context(this.connections);
 	}
 
 	@Override
@@ -138,10 +136,9 @@ public abstract class AInterconnect implements Interconnect {
 		return driver;
 
 	}
-
-	public Context makeContext(int id)
-	{
-		return new Context(id, this.connections);
+	
+	public void clear() {
+		this.connections.clear();
 	}
 }
 

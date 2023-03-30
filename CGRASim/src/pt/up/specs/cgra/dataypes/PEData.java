@@ -22,49 +22,51 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
  * @author nuno
  *
  */
+
+//TODO TUDO
 public interface PEData {
 
-    public default PEData add(PEData operandB) {
-        throw new NotImplementedException("PEData: add not implemented");
-    }
+	public default PEData add(PEData operandB) {
+		throw new NotImplementedException("PEData: add not implemented");
+	}
 
-    public default PEData sub(PEData operandB) {
-        throw new NotImplementedException("PEData: sub not implemented");
-    }
+	public default PEData sub(PEData operandB) {
+		throw new NotImplementedException("PEData: sub not implemented");
+	}
 
-    public default PEData mul(PEData operandB) {
-        throw new NotImplementedException("PEData: mul not implemented");
-    }
+	public default PEData mul(PEData operandB) {
+		throw new NotImplementedException("PEData: mul not implemented");
+	}
 
-    public default PEData div(PEData operandB) {
-        throw new NotImplementedException("PEData: div not implemented");
-    }
+	public default PEData div(PEData operandB) {
+		throw new NotImplementedException("PEData: div not implemented");
+	}
 
-    public default PEData lshift(PEData operandB) {
-        throw new NotImplementedException("PEData: lshift not implemented");
-    }
+	public default PEData lshift(PEData operandB) {
+		throw new NotImplementedException("PEData: lshift not implemented");
+	}
 
-    public default PEData rshift(PEData operandB) {
-        throw new NotImplementedException("PEData: rshift not implemented");
-    }
-    
-    public PEData mod(PEData operandB);
-    
-    public PEData and(PEData operandB);
-    
-    public PEData or(PEData operandB);
-    
-    public PEData xor(PEData operandB);
-    
-    public PEData passl(PEData operandB);
-    
-    public PEData passr(PEData operandB);
-    
-    public PEData passnull(PEData operandB);
+	public default PEData rshift(PEData operandB) {
+		throw new NotImplementedException("PEData: rshift not implemented");
+	}
 
-    public Number getValue();
+	public PEData mod(PEData operandB);
 
-    public PEData copy();
+	public PEData and(PEData operandB);
 
-    // public PEData partSelect(PEData operandB);
+	public PEData or(PEData operandB);
+
+	public PEData xor(PEData operandB);
+
+	public PEData passl(PEData operandB);
+
+	public PEData passr(PEData operandB);
+
+	public PEData passnull(PEData operandB);
+
+	public Number getValue();
+
+	public PEData copy();
+
+	// public PEData partSelect(PEData operandB);
 }

@@ -26,11 +26,9 @@ public class Context {
      * contexts are final, and are applied to the interconnect by iterating
      * over the entire map of source ports to destination ports
      */
-    private int contextID;
     private final Map<ProcessingElementPort, List<ProcessingElementPort>> connections;
 
-    public Context(int contextID, Map<ProcessingElementPort, List<ProcessingElementPort>> connections) {
-        this.contextID = contextID;
+    public Context(Map<ProcessingElementPort, List<ProcessingElementPort>> connections) {
         this.connections = connections;
     }
     
@@ -48,9 +46,6 @@ public class Context {
 		//return tmp_con;
 	} */
 
-	public int getContextID() {
-        return contextID;
-    }
 
     public Map<ProcessingElementPort, List<ProcessingElementPort>> getConnections() {
         return connections;

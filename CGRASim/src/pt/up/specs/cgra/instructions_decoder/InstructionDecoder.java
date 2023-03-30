@@ -54,6 +54,7 @@ public class InstructionDecoder {
 		var operands = new ArrayList<String>();
 
 		var instname_str = "";
+		
 		if(tk.hasMoreTokens())
 			instname_str = tk.nextToken();
 
@@ -140,14 +141,7 @@ public class InstructionDecoder {
 
 	private static boolean store_ctx(SpecsCGRA cgra, List<String> operands) {
 		
-		if(operands.size() != 1) {
-			System.out.println("Erro a ler parametros da instrucao store_ctx");
-			return false;			
-		}
-	
-		var id = Integer.valueOf(operands.get(0));
-		
-		return cgra.setContext(cgra.getInterconnect().makeContext(id));
+		return cgra.setContext(cgra.getInterconnect().getContext());
 	}
 
 	private static boolean switch_ctx(SpecsCGRA cgra, List<String> operands){
@@ -157,14 +151,17 @@ public class InstructionDecoder {
 			return false;			
 		}
 
-		var id = Integer.valueOf(operands.get(0));
+		var index = Integer.valueOf(operands.get(0));
 
-		return cgra.applyContext(id);
+		return cgra.applyContext(index);
 	}
 
 	private static boolean run(SpecsCGRA cgra, List<String> operands) {
 
-		return cgra.execute();
+		var i = cgra.execute();
+		
+		if (i > 0) return true;
+		else return false;
 
 	}
 	
@@ -181,7 +178,9 @@ public class InstructionDecoder {
 	}
 
 	private static boolean reset(SpecsCGRA cgra, List<String> operands) {
-		return true;
+		
+		return cgra.reset();
+		
 	}
 
 

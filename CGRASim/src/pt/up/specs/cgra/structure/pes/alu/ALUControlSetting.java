@@ -20,8 +20,8 @@ public enum ALUControlSetting implements PEControlSetting {
     PASSNULL(0b0000), // name e value para o construtor
     ADD(0b0001),
     SUB(0b0010),
-    MUL(0b0011),
-    DIV(0b0100),
+    MUL(0b0011), //nao existe!
+    DIV(0b0100), //nao existe!
     LSHIFT(0b0101),
     RSHIFT(0b0110),
     MOD(0b0111),
@@ -30,6 +30,10 @@ public enum ALUControlSetting implements PEControlSetting {
     XOR(0b1011),
     PASSL(0b1100),
     PASSR(0b1101);
+	//end if less than
+	//end if bigger than
+	//end if equal
+	//end if different
 
     private String name;
     private int value;

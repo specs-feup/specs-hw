@@ -34,9 +34,9 @@ public class NullProcessingElement implements ProcessingElement {
 		this.latency = latency;
 		this.registerFile = new ArrayList<PEData>(1);
 		this.ports = Arrays.asList(
-                new ProcessingElementPort(this, PEPortDirection.input, null),
-                new ProcessingElementPort(this, PEPortDirection.input, null),
-                new ProcessingElementPort(this, PEPortDirection.output, null));
+				new ProcessingElementPort(this, PEPortDirection.input, null),
+				new ProcessingElementPort(this, PEPortDirection.input, null),
+				new ProcessingElementPort(this, PEPortDirection.output, null));
 	}
 
 	@Override
@@ -122,6 +122,11 @@ public class NullProcessingElement implements ProcessingElement {
 		return "NULL";
 	}
 
-	
+	@Override
+	public void clearRegisterFile() {
+		this.registerFile.clear();		
+	}
+
+
 
 }
