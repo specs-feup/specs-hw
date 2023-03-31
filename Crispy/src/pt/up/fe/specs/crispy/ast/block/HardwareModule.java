@@ -578,7 +578,7 @@ public class HardwareModule extends HardwareBlock { // implements ModuleBlockInt
     public void emitToFile() {
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(this.getName() + ".v");
+            fos = new FileOutputStream(this.getName() + ".sv");
             this.emit(fos);
 
         } catch (FileNotFoundException e) {

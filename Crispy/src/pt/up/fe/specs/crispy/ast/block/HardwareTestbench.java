@@ -26,7 +26,7 @@ import pt.up.fe.specs.specshw.SpecsHwUtils;
 
 public class HardwareTestbench extends HardwareModule {
 
-    private double period = -1;
+    private int period = -1;
     private final String testBenchName;
     private final HardwareModule dut;
 
@@ -54,7 +54,7 @@ public class HardwareTestbench extends HardwareModule {
         this.addChild(new FileHeader(SpecsHwUtils.generateFileHeader()));
 
         // child 1
-        this.addChild(new TimeScaleDeclaration(100, 10));
+        this.addChild(new TimeScaleDeclaration(1, 1));
 
         // child 2
         this.addChild(new ModuleBlock(testBenchName));
@@ -81,7 +81,7 @@ public class HardwareTestbench extends HardwareModule {
     }
 
     // returns clock period; only valid after setClockFrequency is called
-    public double getPeriod() {
+    public int getPeriod() {
         return this.period;
     }
 
@@ -118,7 +118,10 @@ public class HardwareTestbench extends HardwareModule {
 
     public HardwareTestbench setClockFrequency(int mhz) {
         var time = getChild(TimeScaleDeclaration.class, 1);
-        this.period = (((1.0 / mhz) / Math.pow(10, -9)) / time.getTimeUnit());
+        // this.period = (int) (((1.0 / mhz) / Math.pow(10, -9)) / time.getTimeUnit());
+
+        this.period = (int) ((1.0 / (mhz * Math.pow(10, -3))) / time.getTimeUnit());
+
         var clockBlock = new AlwaysBlock("clockBlock");
         this.addBlockAfter(clockBlock, getRegisterDeclarationBlock());
 
