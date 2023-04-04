@@ -5,14 +5,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 import pt.up.specs.cgra.structure.SpecsCGRA;
-import pt.up.specs.cgra.structure.context.Context;
-import pt.up.specs.cgra.structure.pes.ProcessingElement;
-import pt.up.specs.cgra.structure.pes.alu.ALUControlSetting;
-import pt.up.specs.cgra.structure.pes.alu.ALUControlSettingObject;
 
 public class InstructionDecoder {
 

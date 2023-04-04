@@ -26,11 +26,16 @@ public class PEInteger implements PEData {
         return new PEInteger(this.value);
     }
 
-    @Override
+    //@Override
     public Integer getValue() {
         return value;
     }
 
+    @Override
+	public PEData passnull(PEData operandB) {
+		return new PEInteger(0);
+	}
+    
     @Override
     public PEData add(PEData operandB) {
         var intB = (PEInteger) operandB;
@@ -67,12 +72,12 @@ public class PEInteger implements PEData {
         return new PEInteger(this.value >> intB.getValue());
     }
     
-    @Override
+    /*@Override
     public PEData mod(PEData operandB) {
         var intB = (PEInteger) operandB;
         return new PEInteger(this.value % intB.getValue());
 
-    }
+    }*/
     
     @Override
     public PEData and(PEData operandB) {
@@ -108,12 +113,22 @@ public class PEInteger implements PEData {
         return new PEInteger(intB.getValue());
 
     }
-    
-    @Override
-    public PEData passnull(PEData operandB) {
-        return new PEInteger(0);
 
-    }
+	@Override
+	public PEData slt(PEData operandB) {
+    	var intB = (PEInteger) operandB;
+    	
+		return new PEBoolean(this.value < intB.value ? true : false);
+	}
+
+	@Override
+	public PEData seq(PEData operandB) {
+    	var intB = (PEInteger) operandB;
+
+		return new PEBoolean(this.value == intB.value ? true : false);
+	}
+
+	
     
 
 

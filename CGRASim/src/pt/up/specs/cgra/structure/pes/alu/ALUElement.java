@@ -33,20 +33,25 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
     private static final Map<ALUControlSetting, ALUOperation> ALUOperations;
     static {
         Map<ALUControlSetting, ALUOperation> amap = new HashMap<ALUControlSetting, ALUOperation>();
+        amap.put(ALUControlSetting.PASSNULL, (a, b) -> a.passnull(b));
         amap.put(ALUControlSetting.ADD, (a, b) -> a.add(b));
         amap.put(ALUControlSetting.SUB, (a, b) -> a.sub(b));
         amap.put(ALUControlSetting.MUL, (a, b) -> a.mul(b));
         amap.put(ALUControlSetting.DIV, (a, b) -> a.div(b));
         amap.put(ALUControlSetting.LSHIFT, (a, b) -> a.lshift(b));
         amap.put(ALUControlSetting.RSHIFT, (a, b) -> a.rshift(b));
-        // amap.put(ALUControlSetting.NORM1, (a, b) -> a.mul(a) + b.mul(b));
-        /*amap.put(ALUControl.MOD, (a, b) -> a.mod(b));
-        amap.put(ALUControl.AND, (a, b) -> a.and(b));
-        amap.put(ALUControl.OR, (a, b) -> a.or(b));
-        amap.put(ALUControl.XOR, (a, b) -> a.xor(b));
-        amap.put(ALUControl.PASSL, (a, b) -> a.passl(b));
-        amap.put(ALUControl.PASSR, (a, b) -> a.passr(b));
-        amap.put(ALUControl.PASSNULL, (a, b) -> a.passnull(b));*/
+        amap.put(ALUControlSetting.AND, (a, b) -> a.and(b));
+        amap.put(ALUControlSetting.OR, (a, b) -> a.or(b));
+        amap.put(ALUControlSetting.XOR, (a, b) -> a.xor(b));
+        amap.put(ALUControlSetting.PASSL, (a, b) -> a.passl(b));
+        amap.put(ALUControlSetting.PASSR, (a, b) -> a.passr(b));
+        amap.put(ALUControlSetting.SLT, (a, b) -> a.slt(b));
+        amap.put(ALUControlSetting.SEQ, (a, b) -> a.seq(b));
+
+        //amap.put(ALUControlSetting.NORM1, (a, b) -> a.mul(a) + b.mul(b));
+        //amap.put(ALUControl.MOD, (a, b) -> a.mod(b));
+        //amap.put(ALUControl.XOR, (a, b) -> a.xor(b));
+
         ALUOperations = Collections.unmodifiableMap(amap);
     }
 

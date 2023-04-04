@@ -26,6 +26,10 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
 //TODO TUDO
 public interface PEData {
 
+	public default PEData passnull(PEData operandB) {
+		return null;
+	}
+
 	public default PEData add(PEData operandB) {
 		throw new NotImplementedException("PEData: add not implemented");
 	}
@@ -50,21 +54,35 @@ public interface PEData {
 		throw new NotImplementedException("PEData: rshift not implemented");
 	}
 
-	public PEData mod(PEData operandB);
+	public default PEData and(PEData operandB){
+		throw new NotImplementedException("PEData: and not implemented");
+	}
 
-	public PEData and(PEData operandB);
+	public default PEData or(PEData operandB){
+		throw new NotImplementedException("PEData: or not implemented");
+	}
 
-	public PEData or(PEData operandB);
+	public default PEData xor(PEData operandB){
+		throw new NotImplementedException("PEData: xor not implemented");
+	}
 
-	public PEData xor(PEData operandB);
+	public default PEData passl(PEData operandB){
+		throw new NotImplementedException("PEData: passl not implemented");
+	}
 
-	public PEData passl(PEData operandB);
+	public default PEData passr(PEData operandB){
+		throw new NotImplementedException("PEData: passr not implemented");
+	}
+	
+	public default PEData slt(PEData operandB){
+		throw new NotImplementedException("PEData: slt not implemented");
+	}
 
-	public PEData passr(PEData operandB);
+	public default PEData seq(PEData operandB){
+		throw new NotImplementedException("PEData: seq not implemented");
+	}
 
-	public PEData passnull(PEData operandB);
-
-	public Number getValue();
+	//public Number getValue();
 
 	public PEData copy();
 

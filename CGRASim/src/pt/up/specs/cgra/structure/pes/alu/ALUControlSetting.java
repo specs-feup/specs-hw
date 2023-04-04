@@ -24,12 +24,15 @@ public enum ALUControlSetting implements PEControlSetting {
     DIV(0b0100), //nao existe!
     LSHIFT(0b0101),
     RSHIFT(0b0110),
-    MOD(0b0111),
-    AND(0b1000),
-    OR(0b1001),
-    XOR(0b1011),
-    PASSL(0b1100),
-    PASSR(0b1101);
+    AND(0b0111),
+    OR(0b1000),
+    XOR(0b1001),
+    PASSL(0b1011),
+    PASSR(0b1100),
+	SLT(0b1101),
+	SEQ(0b1110);
+	
+	//mod, norm1, etc
 	//end if less than
 	//end if bigger than
 	//end if equal
