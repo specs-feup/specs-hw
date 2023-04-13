@@ -15,11 +15,18 @@ package pt.up.specs.cgra.structure.pes;
 
 import java.util.List;
 
+import pt.up.specs.cgra.control.PEControlSetting;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.alu.ALUControlSetting;
 
 public interface ProcessingElement {
+	
+    public List<ProcessingElementPort> getPorts();
+
+    default public String statusString() {
+        return "No status";
+    }
 
     default public boolean setMesh(Mesh mesh) {
         return false;
@@ -27,14 +34,6 @@ public interface ProcessingElement {
 
     default public Mesh getMesh() {
         return null;
-    }
-
-    default public boolean setX(int x) { // sera que devia ter mesmo?
-        return false;
-    }
-
-    default public boolean setY(int y) { // idem aspas
-        return false;
     }
 
     default public List<PEData> getRegisterFile() {
@@ -45,19 +44,22 @@ public interface ProcessingElement {
 
     }
 
+	public void clearRegisterFile();
+    
+    default public boolean setX(int x) { // sera que devia ter mesmo?
+        return false;
+    }
+
+    default public boolean setY(int y) { // idem aspas
+        return false;
+    }
+
     default public int getX() {
         return -1;
     }
 
     default public int getY() {
         return -1;
-    }
-
-    /*
-     * Copy constructor
-     */
-    default public ProcessingElement copy() {
-        return null;
     }
 
     default public int getLatency() {
@@ -71,7 +73,7 @@ public interface ProcessingElement {
     default public int getMemorySize() {
         return 1;
     }
-
+   
     default public boolean isReady() { // is ready == ! is executing?
         return false;
     }
@@ -84,34 +86,28 @@ public interface ProcessingElement {
         return 0;
     }
 
-    
+	default public PEData getOperand(int idx) {
+		return null;
+	}
+
     default public PEData execute() {
         return null;
     }
 
-    default public String statusString() {
-        return "No status";
-    }
-
-    /*
-     * JUST FOR TESTING (??)
-     */
-    public List<ProcessingElementPort> getPorts();
-
     default public void printStatus() {
     }
 
-    default boolean setControl(ALUControlSetting aluControlSetting) {
-        return false;
+    default public ProcessingElement copy() {
+        return null;
     }
 
-	public default boolean setControl(Integer ctrl) {
-		return false;
-	}
+	public boolean setControl(Integer ctrl);
 
-	public void clearRegisterFile();
-
-    
+    default public PEControlSetting setControl(int i) {
+    	return null;
+    }
+	
+	
     /*
      * opIndex:
      * 0: lhs

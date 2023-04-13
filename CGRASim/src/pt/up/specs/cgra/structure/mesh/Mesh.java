@@ -68,6 +68,13 @@ public class Mesh {
 
 		return this.mesh.get(x).get(y);
 	}
+	
+	public ProcessingElement setProcessingElement(int x, int y, ProcessingElement pe) {
+		if(x > this.x || y > this.y || x < 0 || y < 0)
+			throw new RuntimeException("Mesh: coordinates out of bounds for CGRA mesh");
+
+		return this.mesh.get(x).set(y, pe);
+	}
 
 
 	public boolean execute() {

@@ -21,12 +21,10 @@ import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
+import pt.up.specs.cgra.structure.pes.alu.ALUControlSetting;
 
 public abstract class AProcessingElement implements ProcessingElement {
 
-	/*
-	 * 
-	 */
 	// private String peID;
 	private Mesh myparent;
 	private int xPos, yPos;
@@ -36,13 +34,12 @@ public abstract class AProcessingElement implements ProcessingElement {
 	private boolean executing;
 	private int executeCount;
 	private int memorySize;
-	private PEControlSetting ctrl;
+	protected PEControlSetting ctrl;
 	// private int writeIdx = 0;
 
 
 	/*
-	 * local memory to hold constants (useful for using 
-	 * same PE for different contexts, if that PE needs different contexts)
+	 * local memory to hold constants
 	 */
 	private GenericMemory constants = new GenericMemory(2);// 2 inteiros
 
@@ -60,6 +57,7 @@ public abstract class AProcessingElement implements ProcessingElement {
 	protected AProcessingElement(int latency, int memorySize) {
 		this.latency = latency;
 		this.memorySize = memorySize;
+		this.registerFile.add(0, null);
 		if (this.memorySize > 0) {
 			this.hasMemory = true;
 		} else {
@@ -183,13 +181,13 @@ public abstract class AProcessingElement implements ProcessingElement {
 		return this.executeCount;
 	}
 
-	
-	protected abstract PEData _execute();
-
 	/*
 	 * Use by children
 	 */
-	protected PEData getOperand(int idx) {
+	protected abstract PEData _execute();
+
+	
+	public PEData getOperand(int idx) {
 		return this.ports.get(idx).getPayload();
 	}
 
@@ -205,11 +203,14 @@ public abstract class AProcessingElement implements ProcessingElement {
 		return result;
 	}
 
-
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName();
 	}
+
+	public abstract PEControlSetting setControl(int i);
+	
+	public abstract PEControlSetting getControl();
 
 	/* public void printStatus() {
     		if (this.control == null)

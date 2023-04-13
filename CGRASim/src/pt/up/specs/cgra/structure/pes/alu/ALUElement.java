@@ -17,96 +17,98 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import pt.up.specs.cgra.control.PEControlSetting;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 import pt.up.specs.cgra.structure.pes.binary.BinaryProcessingElement;
 
 public class ALUElement extends BinaryProcessingElement {// implements PEControl<ALUControlSetting> {
 
-    /*
-     * helper mapping of constructors to reduce verbosity
-     */
-    interface ALUOperation {
-        PEData apply(PEData a, PEData b);
-    }
+	/*
+	 * helper mapping of constructors to reduce verbosity
+	 */
+	interface ALUOperation {
+		PEData apply(PEData a, PEData b);
+	}
 
-    private static final Map<ALUControlSetting, ALUOperation> ALUOperations;
-    static {
-        Map<ALUControlSetting, ALUOperation> amap = new HashMap<ALUControlSetting, ALUOperation>();
-        amap.put(ALUControlSetting.PASSNULL, (a, b) -> a.passnull(b));
-        amap.put(ALUControlSetting.ADD, (a, b) -> a.add(b));
-        amap.put(ALUControlSetting.SUB, (a, b) -> a.sub(b));
-        amap.put(ALUControlSetting.MUL, (a, b) -> a.mul(b));
-        amap.put(ALUControlSetting.DIV, (a, b) -> a.div(b));
-        amap.put(ALUControlSetting.LSHIFT, (a, b) -> a.lshift(b));
-        amap.put(ALUControlSetting.RSHIFT, (a, b) -> a.rshift(b));
-        amap.put(ALUControlSetting.AND, (a, b) -> a.and(b));
-        amap.put(ALUControlSetting.OR, (a, b) -> a.or(b));
-        amap.put(ALUControlSetting.XOR, (a, b) -> a.xor(b));
-        amap.put(ALUControlSetting.PASSL, (a, b) -> a.passl(b));
-        amap.put(ALUControlSetting.PASSR, (a, b) -> a.passr(b));
-        amap.put(ALUControlSetting.SLT, (a, b) -> a.slt(b));
-        amap.put(ALUControlSetting.SEQ, (a, b) -> a.seq(b));
+	private static final Map<ALUControlSetting, ALUOperation> ALUOperations;
+	static {
+		Map<ALUControlSetting, ALUOperation> amap = new HashMap<ALUControlSetting, ALUOperation>();
+		amap.put(ALUControlSetting.PASSNULL, (a, b) -> a.passnull(b));
+		amap.put(ALUControlSetting.ADD, (a, b) -> a.add(b));
+		amap.put(ALUControlSetting.SUB, (a, b) -> a.sub(b));
+		amap.put(ALUControlSetting.MUL, (a, b) -> a.mul(b));
+		amap.put(ALUControlSetting.DIV, (a, b) -> a.div(b));
+		amap.put(ALUControlSetting.LSHIFT, (a, b) -> a.lshift(b));
+		amap.put(ALUControlSetting.RSHIFT, (a, b) -> a.rshift(b));
+		amap.put(ALUControlSetting.AND, (a, b) -> a.and(b));
+		amap.put(ALUControlSetting.OR, (a, b) -> a.or(b));
+		amap.put(ALUControlSetting.XOR, (a, b) -> a.xor(b));
+		amap.put(ALUControlSetting.PASSL, (a, b) -> a.passl(b));
+		amap.put(ALUControlSetting.PASSR, (a, b) -> a.passr(b));
+		amap.put(ALUControlSetting.SLT, (a, b) -> a.slt(b));
+		amap.put(ALUControlSetting.SEQ, (a, b) -> a.seq(b));
 
-        //amap.put(ALUControlSetting.NORM1, (a, b) -> a.mul(a) + b.mul(b));
-        //amap.put(ALUControl.MOD, (a, b) -> a.mod(b));
-        //amap.put(ALUControl.XOR, (a, b) -> a.xor(b));
+		//amap.put(ALUControlSetting.NORM1, (a, b) -> a.mul(a) + b.mul(b));
+		//amap.put(ALUControl.MOD, (a, b) -> a.mod(b));
+		//amap.put(ALUControl.XOR, (a, b) -> a.xor(b));
 
-        ALUOperations = Collections.unmodifiableMap(amap);
-    }
+		ALUOperations = Collections.unmodifiableMap(amap);
+	}
 
-    /*
-     * At the next "_execute" step, this operation will be executed
-     */
-    private ALUControlSetting ctrl;
+	/*
+	 * At the next "_execute" step, this operation will be executed
+	 */
+	//private ALUControlSetting ctrl;
 
-    public ALUElement(int latency, int memorySize) {
-        super(latency, memorySize);
-    }
+	public ALUElement(int latency, int memorySize) {
+		super(latency, memorySize);
+	}
 
-    public ALUElement(int latency) {
-        this(latency, 0);
-    }
+	public ALUElement(int latency) {
+		this(latency, 0);
+	}
 
-    public ALUElement() {
-        this(1, 0);
-    }
+	public ALUElement() {
+		this(1, 0);
+	}
 
-   public boolean setControl(ALUControlSetting ctrl) {
+	public boolean setControl(ALUControlSetting ctrl) {
 
-        if (!ALUOperations.containsKey(ctrl))
-            return false;
+		if (!ALUOperations.containsKey(ctrl))
+			return false;
 
-        this.ctrl = ctrl;
-        return true;
-    }
-    
-	public boolean setControl(Integer ctrl) {
-    	
-    	// turn integer into valid enum of type ALUControlSetting
-    	ALUControlSetting ectrl = null;
-    	for(var e: ALUControlSetting.values()) {
-    		ectrl = e;
-    		if(ctrl == ectrl.getValue())
-    			return this.setControl(ectrl);
-    	}
-   
-    	return false;
+		this.ctrl = ctrl;
+		return true;
+	}
+
+	public PEControlSetting setControl(int ctrl) {
+
+		PEControlSetting ectrl = null;
+
+		for(var e: ALUControlSetting.values()) {
+			ectrl = e;
+			if(ctrl == ectrl.getValue()) {
+				this.setControl((ALUControlSetting) ectrl);
+				return ectrl;
+			}
+		}
+		return null;
 
 	}
 
-    @Override
-    protected PEData _execute() {
-        return ALUOperations.get(this.ctrl).apply(this.getOperand(0), this.getOperand(1));
-    }
+	@Override
+	protected PEData _execute() {
+		return ALUOperations.get(this.ctrl).apply(this.getOperand(0), this.getOperand(1));
+	}
 
-    @Override
-    public ProcessingElement copy() {
-        return new ALUElement(this.getLatency(), this.getMemorySize());
-    }
+	@Override
+	public ProcessingElement copy() {
+		return new ALUElement(this.getLatency(), this.getMemorySize());
+	}
 
-    @Override
-    public String toString() {
-        return "ALU";
-    }
+	@Override
+	public String toString() {
+		return "ALU";
+	}
 }

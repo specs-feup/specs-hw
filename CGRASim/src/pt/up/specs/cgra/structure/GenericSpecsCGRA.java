@@ -30,6 +30,7 @@ import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.EmptyPE;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
+import pt.up.specs.cgra.structure.pes.loadstore.LSElement;
 
 public class GenericSpecsCGRA implements SpecsCGRA {
 
@@ -58,7 +59,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	// string name?
 	private final int localmemsize;
 	protected final GenericMemory localmem;
-	protected final GenericMemory liveins, liveouts;
+	protected final List<GenericMemory> liveins, liveouts;
 	protected final Mesh mesh;
 	protected final Interconnect interconnect;
 	protected ArrayList<Context> context_memory;
@@ -81,8 +82,8 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 			throw new RuntimeException(e);
 		}
 
-		this.liveins = new GenericMemory(8);
-		this.liveouts = new GenericMemory(8);
+		this.liveins = new ArrayList<GenericMemory>(8);
+		this.liveouts = new ArrayList<GenericMemory>(8);
 		this.localmemsize = localmemsize;
 		this.instdec = new InstructionDecoder(this);
 		if (this.localmemsize > 0)
@@ -118,19 +119,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		return this.interconnect;
 	}
 
-	/*
-	 * 
-	 */
-	public void setLiveIn(int idx, PEData data) {
-		this.liveins.write(idx, data);
-	}
-
-	/*
-	 * 
-	 */
-	public PEData getLiveOut(int idx) {
-		return this.liveouts.read(idx);
-	}
 
 	@Override
 	public int execute() {
@@ -332,5 +320,25 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		this.mesh.reset();
 		this.interconnect.clear();
 		return true;
+	}
+	
+	public ProcessingElement setPE(int x, int y, ProcessingElement pe) {
+		return this.mesh.setProcessingElement(x, y, pe);
+	}
+	
+	public int assignLS(LSElement x)
+	{
+		if (x.getMem_id() == 0)
+		{
+			this.liveins.add(new GenericMemory(8));
+			return this.liveins.size();
+		}
+		return 0;
+		
+	}
+	
+	public PEData read_liveins(LSElement x, int i)
+	{
+		return this.liveins.get(x.getMem_id()).read(i);
 	}
 }

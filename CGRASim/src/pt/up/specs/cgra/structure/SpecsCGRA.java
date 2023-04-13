@@ -13,9 +13,13 @@
 
 package pt.up.specs.cgra.structure;
 
+import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
+import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
+import pt.up.specs.cgra.structure.pes.ProcessingElement;
+import pt.up.specs.cgra.structure.pes.loadstore.LSElement;
 
 public interface SpecsCGRA {
 
@@ -62,6 +66,14 @@ public interface SpecsCGRA {
 	public boolean step();
 
 	public boolean reset();
+	
+	public ProcessingElement setPE(int x, int y, ProcessingElement pe);
+	
+	public int assignLS(LSElement x);
+	
+	public PEData read_liveins(LSElement x, int i);
+
+
 
     // some kind of method that recieves an emitter class
     // which lowers this functional spec into chisel3 or hdl

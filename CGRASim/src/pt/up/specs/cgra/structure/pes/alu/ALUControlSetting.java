@@ -45,6 +45,11 @@ public enum ALUControlSetting implements PEControlSetting {
         this.value = value;
         this.name = name();
     }
+    
+    private ALUControlSetting() {
+        this.value = 0;
+        this.name = name();
+    }
 
     @Override
     public String getName() {
