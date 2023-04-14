@@ -36,7 +36,7 @@ public abstract class CoarseGrainUnit extends HardwareModule {
         super(name);
         inA = addInputPort("inA", bitwidth);
         inB = addInputPort("inB", bitwidth);
-        outC = addOutputPort("outA", bitwidth + 1);
+        outC = addOutputPort("outC", bitwidth + 1);
     }
 
     protected interface FunctionalUnitInstantiator {

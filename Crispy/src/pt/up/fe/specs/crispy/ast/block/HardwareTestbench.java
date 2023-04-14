@@ -13,10 +13,14 @@
 
 package pt.up.fe.specs.crispy.ast.block;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.declaration.TimeScaleDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.port.ModulePortDirection;
 import pt.up.fe.specs.crispy.ast.declaration.port.PortDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.comparison.EqualsToExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
@@ -25,6 +29,7 @@ import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.meta.FileHeader;
 import pt.up.fe.specs.crispy.ast.task.AssertTask;
 import pt.up.fe.specs.specshw.SpecsHwUtils;
+import pt.up.fe.specs.util.csv.CsvReader;
 
 public class HardwareTestbench extends HardwareModule {
 
@@ -184,5 +189,59 @@ public class HardwareTestbench extends HardwareModule {
     @Override
     public String getName() {
         return testBenchName;
+    }
+
+    public HardwareTestbench addStimuli(File stimuli) {
+        // var csv = new CsvReader(SpecsIO.getresource("pt/up/fe/specs/crispy/test/resources/dadosentrada.csv"), " ");
+        // // criar
+        var csv = new CsvReader(stimuli, " "); // criar
+        var portNamesAndDirs = csv.getHeader(); // um
+        var portNames = new ArrayList<String>();
+
+        // transforma a primeira linha do csv numa mapa de "nomes -> input/output"
+        var dirAndNames = new HashMap<String, ModulePortDirection>();
+        for (int i = 0; i < portNamesAndDirs.size(); i++) {
+            var aux = portNamesAndDirs.get(i); // e.g. "i:ina"
+            var dirAndName = Arrays.asList(aux.split(":"));
+            var portType = dirAndName.get(0);
+            var portName = dirAndName.get(1);
+            var type = (portType.compareTo("i") == 0) ? ModulePortDirection.input : ModulePortDirection.output;
+            dirAndNames.put(portName, type);
+            portNames.add(portName);
+        }
+        // system.out.println(dirAndNames);
+
+        // para cada linha de estimulos
+        while (csv.hasNext()) {
+            var values = csv.next();
+
+            // para cada coluna (ou seja, cada porta)
+            for (int i = 0; i < portNames.size(); i++) {
+
+                // se prefixo for "i:"
+                if (dirAndNames.get(portNames.get(i)) == ModulePortDirection.input) {
+                    var ref = this.getRegister("r" + portNames.get(i));
+                    // todo handle if null
+                    this.setInit(ref, Integer.parseInt(values.get(i)));
+                }
+            }
+
+            // wait after input values attributed
+            this.addDelay(this.getPeriod());
+
+            // para cada coluna (ou seja, cada porta)
+            for (int i = 0; i < portNames.size(); i++) {
+
+                // se prefixo for "o:"
+                if (dirAndNames.get(portNames.get(i)) == ModulePortDirection.output) {
+                    var refw = this.getWire("w" + portNames.get(i));
+                    var value = Integer.parseInt(values.get(i));
+                    this.doAssert(refw.eq(value));
+                }
+
+            }
+        }
+        this.addDelay(this.getPeriod());
+        return this;
     }
 }

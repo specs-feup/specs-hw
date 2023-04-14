@@ -13,21 +13,16 @@
 
 package pt.up.fe.specs.crispy.test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.io.File;
 
 import org.junit.Test;
 // import org.junit.Test.api.Assertions.assertTrue;
 
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.block.HardwareTestbench;
-import pt.up.fe.specs.crispy.ast.declaration.port.ModulePortDirection;
 import pt.up.fe.specs.crispy.coarse.Adder;
 import pt.up.fe.specs.crispy.coarse.Subtractor;
 import pt.up.fe.specs.crispy.lib.Mux2to1;
-import pt.up.fe.specs.util.SpecsIo;
-import pt.up.fe.specs.util.csv.CsvReader;
 
 public class HardwareEmitTest {
 
@@ -35,6 +30,12 @@ public class HardwareEmitTest {
     public void testAdder() {
         var adder1 = new Adder(32);
         adder1.emitToFile();
+
+        var tb = new HardwareTestbench("adder_tb.sv", adder1);
+        var stim = new File("./resources/pt/up/fe/specs/crispy/test/resources/addertb.csv");
+        tb.setClockFrequency(100);
+        tb.addStimuli(stim);
+        tb.emitToFile();
     }
 
     @Test
@@ -135,55 +136,65 @@ public class HardwareEmitTest {
 
         tb.addDelay(5 * tb.getPeriod()); // ??verificar
 
+        var stim = new File("./resources/pt/up/fe/specs/crispy/test/resources/dadosentrada.csv");
+        tb.addStimuli(stim);
+
         // alternativa ler directamente os dados de um ficheiro txt
-        var csv = new CsvReader(SpecsIo.getResource("pt/up/fe/specs/crispy/test/resources/dadosentrada.csv"), " "); // criar
-        var portNamesAndDirs = csv.getHeader(); // um
-        var portNames = new ArrayList<String>();
+        // copiar desde aqui abaixo para um metodo no HardwareTestbench
 
-        // transforma a primeira linha do CSV numa mapa de "nomes -> input/output"
-        var dirAndNames = new HashMap<String, ModulePortDirection>();
-        for (int i = 0; i < portNamesAndDirs.size(); i++) {
-            var aux = portNamesAndDirs.get(i); // e.g. "i:inA"
-            var dirAndName = Arrays.asList(aux.split(":"));
-            var portType = dirAndName.get(0);
-            var portName = dirAndName.get(1);
-            var type = (portType.compareTo("i") == 0) ? ModulePortDirection.input : ModulePortDirection.output;
-            dirAndNames.put(portName, type);
-            portNames.add(portName);
-        }
-        // System.out.println(dirAndNames);
+        // var csv = new csvreader(specsio.getresource("pt/up/fe/specs/crispy/test/resources/dadosentrada.csv"), " ");
+        // // criar
+        // var portnamesanddirs = csv.getheader(); // um
+        // var portnames = new arraylist<string>();
+        //
+        // // transforma a primeira linha do csv numa mapa de "nomes -> input/output"
+        // var dirandnames = new hashmap<string, moduleportdirection>();
+        // for (int i = 0; i < portnamesanddirs.size(); i++) {
+        // var aux = portnamesanddirs.get(i); // e.g. "i:ina"
+        // var dirandname = arrays.aslist(aux.split(":"));
+        // var porttype = dirandname.get(0);
+        // var portname = dirandname.get(1);
+        // var type = (porttype.compareto("i") == 0) ? moduleportdirection.input : moduleportdirection.output;
+        // dirandnames.put(portname, type);
+        // portnames.add(portname);
+        // }
+        // // system.out.println(dirandnames);
+        //
+        // // para cada linha de estimulos
+        // while (csv.hasnext()) {
+        // var values = csv.next();
+        //
+        // // para cada coluna (ou seja, cada porta)
+        // for (int i = 0; i < portnames.size(); i++) {
+        //
+        // // se prefixo for "i:"
+        // if (dirandnames.get(portnames.get(i)) == moduleportdirection.input) {
+        // var ref = tb.getregister("r" + portnames.get(i));
+        // // todo handle if null
+        // tb.setinit(ref, integer.parseint(values.get(i)));
+        // }
+        // }
+        //
+        // // wait after input values attributed
+        // tb.adddelay(tb.getperiod());
+        //
+        // // para cada coluna (ou seja, cada porta)
+        // for (int i = 0; i < portnames.size(); i++) {
+        //
+        // // se prefixo for "o:"
+        // if (dirandnames.get(portnames.get(i)) == moduleportdirection.output) {
+        // var refw = tb.getwire("w" + portnames.get(i));
+        // var value = integer.parseint(values.get(i));
+        // tb.doassert(refw.eq(value));
+        // }
+        //
+        // }
+        // }
+        // tb.adddelay(tb.getperiod());
 
-        // para cada linha de estimulos
-        while (csv.hasNext()) {
-            var values = csv.next();
+        // ate aqui para copiar
 
-            // para cada coluna (ou seja, cada porta)
-            for (int i = 0; i < portNames.size(); i++) {
-
-                // se prefixo for "i:"
-                if (dirAndNames.get(portNames.get(i)) == ModulePortDirection.input) {
-                    var ref = tb.getRegister("r" + portNames.get(i));
-                    // TODO handle if null
-                    tb.setInit(ref, Integer.parseInt(values.get(i)));
-                }
-            }
-
-            // wait after input values attributed
-            tb.addDelay(tb.getPeriod());
-
-            // para cada coluna (ou seja, cada porta)
-            for (int i = 0; i < portNames.size(); i++) {
-
-                // se prefixo for "o:"
-                if (dirAndNames.get(portNames.get(i)) == ModulePortDirection.output) {
-                    var refW = tb.getWire("w" + portNames.get(i));
-                    var value = Integer.parseInt(values.get(i));
-                    tb.doAssert(refW.eq(value));
-                }
-
-            }
-        }
-        tb.addDelay(tb.getPeriod());
+        // ledadosficheiro();
 
         // tb.addStimuli(new File("dados"))
 
