@@ -18,10 +18,12 @@ import java.util.ArrayList;
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.declaration.TimeScaleDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.PortDeclaration;
+import pt.up.fe.specs.crispy.ast.expression.comparison.EqualsToExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.meta.FileHeader;
+import pt.up.fe.specs.crispy.ast.task.AssertTask;
 import pt.up.fe.specs.specshw.SpecsHwUtils;
 
 public class HardwareTestbench extends HardwareModule {
@@ -155,6 +157,11 @@ public class HardwareTestbench extends HardwareModule {
 
     public HardwareTestbench addDelay(int period) {
         this.getInitialBlock().delay(period);
+        return this;
+    }
+
+    public HardwareTestbench doAssert(EqualsToExpression eq) {
+        getInitialBlock()._do(new AssertTask(eq));
         return this;
     }
 
