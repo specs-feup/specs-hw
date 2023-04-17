@@ -95,10 +95,10 @@ public class InstructionDecoder {
 		var x2 = Integer.valueOf(operands.get(4));
 		var y2 = Integer.valueOf(operands.get(5)); 
 
+		var pesrc = cgra.getMesh().getProcessingElement(xs, ys);
 
 		var pe1 = cgra.getMesh().getProcessingElement(x1, y1);
 		var pe2 = cgra.getMesh().getProcessingElement(x2, y2);
-		var pesrc = cgra.getMesh().getProcessingElement(xs, ys);
 
 
 		if (pe1 != null && pe2 != null && pesrc != null) {

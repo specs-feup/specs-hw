@@ -82,18 +82,17 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
 		return true;
 	}
 
-	public PEControlSetting setControl(int ctrl) {
+	public boolean setControl(int ctrl) {
 
 		PEControlSetting ectrl = null;
 
 		for(var e: ALUControlSetting.values()) {
 			ectrl = e;
 			if(ctrl == ectrl.getValue()) {
-				this.setControl((ALUControlSetting) ectrl);
-				return ectrl;
+				return this.setControl((ALUControlSetting) ectrl);
 			}
 		}
-		return null;
+		return false;
 
 	}
 
@@ -110,5 +109,10 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
 	@Override
 	public String toString() {
 		return "ALU";
+	}
+
+	@Override
+	public ALUControlSetting getControl() {
+		return (ALUControlSetting) this.ctrl;
 	}
 }

@@ -72,6 +72,11 @@ public interface SpecsCGRA {
 	public int assignLS(LSElement x);
 	
 	public PEData read_liveins(LSElement x, int i);
+	
+	public PEData read_liveins_specific(int x, int y);
+	
+	public boolean store_liveins(LSElement x, int i, PEData d);
+
 
 
 

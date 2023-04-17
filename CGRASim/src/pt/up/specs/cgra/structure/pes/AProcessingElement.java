@@ -118,7 +118,7 @@ public abstract class AProcessingElement implements ProcessingElement {
 	}
 
 	public void clearRegisterFile() {
-		this.registerFile.clear();
+		this.registerFile.set(0, null);
 	}
 
 	@Override
@@ -208,7 +208,7 @@ public abstract class AProcessingElement implements ProcessingElement {
 		return this.getClass().getSimpleName();
 	}
 
-	public abstract PEControlSetting setControl(int i);
+	public abstract boolean setControl(int i);
 	
 	public abstract PEControlSetting getControl();
 

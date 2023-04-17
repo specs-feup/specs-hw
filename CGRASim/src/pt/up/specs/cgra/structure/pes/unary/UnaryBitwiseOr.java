@@ -1,5 +1,6 @@
 package pt.up.specs.cgra.structure.pes.unary;
 
+import pt.up.specs.cgra.control.PEControlSetting;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 import pt.up.specs.cgra.structure.pes.binary.AdderElement;
@@ -33,4 +34,16 @@ public class UnaryBitwiseOr extends UnaryProcessingElement {
     public String toString() {
         return "UnaryBitwiseOr";
     }
+
+	@Override
+	public boolean setControl(int i) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public PEControlSetting getControl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

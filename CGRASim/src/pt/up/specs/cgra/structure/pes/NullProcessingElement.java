@@ -104,7 +104,7 @@ public class NullProcessingElement implements ProcessingElement {
 		return this.executeCount;
 	}
 
-	protected PEData getOperand(int idx) {
+	public PEData getOperand(int idx) {
 		return this.ports.get(idx).getPayload();
 
 	}

@@ -42,4 +42,8 @@ public class GenericMemory implements Memory {
         this.mem.put(Integer.valueOf(addr), data);
         return true;
     }
+    
+    public int getSize() {
+    	return this.memsize;
+    }
 }

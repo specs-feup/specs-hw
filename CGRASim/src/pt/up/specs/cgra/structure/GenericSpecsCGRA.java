@@ -82,8 +82,8 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 			throw new RuntimeException(e);
 		}
 
-		this.liveins = new ArrayList<GenericMemory>(8);
-		this.liveouts = new ArrayList<GenericMemory>(8);
+		this.liveins = new ArrayList<GenericMemory>();
+		this.liveouts = new ArrayList<GenericMemory>();
 		this.localmemsize = localmemsize;
 		this.instdec = new InstructionDecoder(this);
 		if (this.localmemsize > 0)
@@ -146,7 +146,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 				return execute_count;
 			}
 
-			
+
 			this.execute_count++;
 			this.cycle_count++;
 
@@ -321,11 +321,12 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		this.interconnect.clear();
 		return true;
 	}
-	
+
 	public ProcessingElement setPE(int x, int y, ProcessingElement pe) {
 		return this.mesh.setProcessingElement(x, y, pe);
 	}
-	
+
+	//cria um banco de memoria exclusivo para um load store
 	public int assignLS(LSElement x)
 	{
 		if (x.getMem_id() == 0)
@@ -334,11 +335,31 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 			return this.liveins.size();
 		}
 		return 0;
-		
 	}
-	
+
+	//le um objeto no banco de um LS "x" na posicao i
 	public PEData read_liveins(LSElement x, int i)
 	{
-		return this.liveins.get(x.getMem_id()).read(i);
+		if (i <= this.liveins.get(x.getMem_id()).getSize()) return this.liveins.get(x.getMem_id()).read(i);
+		else return null;
+	}
+
+	//le um objeto no banco x na posicao i
+	public PEData read_liveins_specific(int x, int y)
+	{
+		return this.liveins.get(x).read(y);
+	}
+
+	//guarda um objeto "d" no banco de um LS "x" na posicao "i"
+	public boolean store_liveins(LSElement x, int i, PEData d)
+	{
+		GenericMemory a = this.liveins.get(x.getMem_id());
+		if (a != null) {
+			if (!a.write(i, d)) return false;
+			if (this.liveins.set(x.getMem_id(), a) != null) return true;
+			else return false;
+		}
+		return false;
+
 	}
 }

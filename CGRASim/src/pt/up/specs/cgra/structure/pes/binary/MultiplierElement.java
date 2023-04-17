@@ -13,6 +13,7 @@
 
 package pt.up.specs.cgra.structure.pes.binary;
 
+import pt.up.specs.cgra.control.PEControlSetting;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
@@ -44,4 +45,16 @@ public class MultiplierElement extends BinaryProcessingElement {
     public String toString() {
         return "Mul";
     }
+
+	@Override
+	public boolean setControl(int i) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public PEControlSetting getControl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

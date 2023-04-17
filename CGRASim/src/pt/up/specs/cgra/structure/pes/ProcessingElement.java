@@ -101,10 +101,8 @@ public interface ProcessingElement {
         return null;
     }
 
-	public boolean setControl(Integer ctrl);
-
-    default public PEControlSetting setControl(int i) {
-    	return null;
+    default public boolean setControl(int i) {
+    	return false;
     }
 	
 	

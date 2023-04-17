@@ -4,7 +4,7 @@ import pt.up.specs.cgra.control.PEControlSetting;
 
 public enum LSControlSetting implements PEControlSetting {
 
-	PASSNULL(0b0000), // name e value para o construtor
+	NULL(0b0000), // name e value para o construtor
 	LOAD(0b0001),
 	STORE(0b0010);
 
