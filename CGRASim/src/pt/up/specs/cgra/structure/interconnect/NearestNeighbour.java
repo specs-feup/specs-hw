@@ -34,8 +34,8 @@ public class NearestNeighbour extends AInterconnect {
            
 
         // anything else
-     // diagonal (of any length)
-        //if (distX > 0 && distY > 0)
+        // diagonal (of any length)
+        // if (distX > 0 && distY > 0)
         //    return false;
         else
             return false;
