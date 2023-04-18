@@ -25,20 +25,13 @@ public class NearestNeighbour extends AInterconnect {
     @Override
     public boolean connectionValid(ProcessingElementPort from, ProcessingElementPort to) {
         var fromPE = from.getPE();
-        var toPE = from.getPE();
+        var toPE = to.getPE();
         var distX = Math.abs(fromPE.getX() - toPE.getX());
         var distY = Math.abs(fromPE.getY() - toPE.getY());
 
+        if ((distX == 1 && distY == 0) || (distX == 0 && distY == 1) || (distX == 1 && distY == 1)) return true;
         
-
-        if (distX == 1 && distY == 0)
-            return true;
-
-        else if (distX == 0 && distY == 1)
-            return true;
-        
-        else if (distX == 1 && distY == 1)
-            return true;
+           
 
         // anything else
      // diagonal (of any length)

@@ -67,10 +67,12 @@ public abstract class AInterconnect implements Interconnect {
 		return true;
 	}
 
+	
+	//TODO: VERIFICAR N. DE CONECCOES > N DE PORTS
 	@Override
 	public boolean setConnection(ProcessingElementPort from, ProcessingElementPort to) {
 
-		if (!connectionValid(from, to))
+		if (!connectionValid(from, to))//ISTO SO VERIFICA DISTANCIA
 		{
 			System.out.printf("connection invalid between %d, %d and %d, %d \n", 
 					from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());

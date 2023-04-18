@@ -19,9 +19,7 @@ public class LSElement extends AProcessingElement {
 
 	public LSElement() {
 		super();
-
 		this.ports = Arrays.asList(
-				new ProcessingElementPort(this, PEPortDirection.output, null),
 				new ProcessingElementPort(this, PEPortDirection.output, null));
 
 		this.mem_id = this.getMesh().getCGRA().assignLS(this);
@@ -40,17 +38,10 @@ public class LSElement extends AProcessingElement {
 		amap.put(LSControlSetting.LOAD, (a, b) -> a.load(b));
 		amap.put(LSControlSetting.STORE, (a, b) -> a.store(b));
 
-
-		//amap.put(ALUControlSetting.NORM1, (a, b) -> a.mul(a) + b.mul(b));
-		//amap.put(ALUControl.MOD, (a, b) -> a.mod(b));
-		//amap.put(ALUControl.XOR, (a, b) -> a.xor(b));
-
 		LSOperations = Collections.unmodifiableMap(amap);
 	}*/
 
-	/*
-	 * At the next "_execute" step, this operation will be executed
-	 */
+	
 	private final int mem_id;//id para o genericmemory
 	private int cload, cstore; //contador para ler dados continuamente, guardar dados continuamente
 
@@ -68,8 +59,7 @@ public class LSElement extends AProcessingElement {
 
 	//le os dados na posicao idx do banco deste LS
 	private PEData load(int idx) {
-		this.getRegisterFile().set(0, this.getMesh().getCGRA().read_liveins(this, idx));
-		return this.getRegisterFile().get(0);
+		return this.getRegisterFile().set(0, this.getMesh().getCGRA().read_liveins(this, idx));
 	}
 
 	//le os dados a partir da posicao 0 ate nao der mais
@@ -92,7 +82,8 @@ public class LSElement extends AProcessingElement {
 
 	private PEData store(int idx) {
 
-		if (this.getMesh().getCGRA().store_liveins(this, idx, this.getRegisterFile().get(0))) return this.getRegisterFile().get(0);
+		if (this.getMesh().getCGRA().store_liveins(this, idx, this.getRegisterFile().get(0))) 
+			return this.getRegisterFile().get(0);
 		else return null;
 	}
 
@@ -127,10 +118,6 @@ public class LSElement extends AProcessingElement {
 	public int getMem_id() {
 		return mem_id;
 	}
-
-	/*public void setMem_id(int mem_id) {
-		this.mem_id = mem_id;
-	}*/
 
 	@Override
 	public LSControlSetting getControl() {
