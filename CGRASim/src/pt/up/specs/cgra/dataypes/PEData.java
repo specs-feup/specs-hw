@@ -23,68 +23,68 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
  *
  */
 
-//TODO TUDO
+// TODO TUDO
 public interface PEData {
 
-	public default PEData passnull(PEData operandB) {
-		return null;
-	}
+    public default PEData passnull(PEData operandB) {
+        return null;
+    }
 
-	public default PEData add(PEData operandB) {
-		throw new NotImplementedException("PEData: add not implemented");
-	}
+    public default PEData add(PEData operandB) {
+        throw new NotImplementedException("PEData: add not implemented");
+    }
 
-	public default PEData sub(PEData operandB) {
-		throw new NotImplementedException("PEData: sub not implemented");
-	}
+    public default PEData sub(PEData operandB) {
+        throw new NotImplementedException("PEData: sub not implemented");
+    }
 
-	public default PEData mul(PEData operandB) {
-		throw new NotImplementedException("PEData: mul not implemented");
-	}
+    public default PEData mul(PEData operandB) {
+        throw new NotImplementedException("PEData: mul not implemented");
+    }
 
-	public default PEData div(PEData operandB) {
-		throw new NotImplementedException("PEData: div not implemented");
-	}
+    public default PEData div(PEData operandB) {
+        throw new NotImplementedException("PEData: div not implemented");
+    }
 
-	public default PEData lshift(PEData operandB) {
-		throw new NotImplementedException("PEData: lshift not implemented");
-	}
+    public default PEData lshift(PEData operandB) {
+        throw new NotImplementedException("PEData: lshift not implemented");
+    }
 
-	public default PEData rshift(PEData operandB) {
-		throw new NotImplementedException("PEData: rshift not implemented");
-	}
+    public default PEData rshift(PEData operandB) {
+        throw new NotImplementedException("PEData: rshift not implemented");
+    }
 
-	public default PEData and(PEData operandB){
-		throw new NotImplementedException("PEData: and not implemented");
-	}
+    public default PEData and(PEData operandB) {
+        throw new NotImplementedException("PEData: and not implemented");
+    }
 
-	public default PEData or(PEData operandB){
-		throw new NotImplementedException("PEData: or not implemented");
-	}
+    public default PEData or(PEData operandB) {
+        throw new NotImplementedException("PEData: or not implemented");
+    }
 
-	public default PEData xor(PEData operandB){
-		throw new NotImplementedException("PEData: xor not implemented");
-	}
+    public default PEData xor(PEData operandB) {
+        throw new NotImplementedException("PEData: xor not implemented");
+    }
 
-	public default PEData passl(PEData operandB){
-		throw new NotImplementedException("PEData: passl not implemented");
-	}
+    public default PEData passl(PEData operandB) {
+        throw new NotImplementedException("PEData: passl not implemented");
+    }
 
-	public default PEData passr(PEData operandB){
-		throw new NotImplementedException("PEData: passr not implemented");
-	}
-	
-	public default PEData slt(PEData operandB){
-		throw new NotImplementedException("PEData: slt not implemented");
-	}
+    public default PEData passr(PEData operandB) {
+        throw new NotImplementedException("PEData: passr not implemented");
+    }
 
-	public default PEData seq(PEData operandB){
-		throw new NotImplementedException("PEData: seq not implemented");
-	}
+    public default PEData slt(PEData operandB) {
+        throw new NotImplementedException("PEData: slt not implemented");
+    }
 
-	//public Number getValue();
+    public default PEData seq(PEData operandB) {
+        throw new NotImplementedException("PEData: seq not implemented");
+    }
 
-	public PEData copy();
+    public Number getValue();
 
-	// public PEData partSelect(PEData operandB);
+    public PEData copy();
+
+    // public PEData partSelect(PEData operandB);
 }

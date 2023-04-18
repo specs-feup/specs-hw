@@ -10,14 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.structure.context;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import pt.up.specs.cgra.dfg.GenericDFG;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 
 public class Context {
@@ -31,21 +30,19 @@ public class Context {
     public Context(Map<ProcessingElementPort, List<ProcessingElementPort>> connections) {
         this.connections = connections;
     }
-    
+
     /*public Context(int contextID, GenericDFG dfg)
     {
     	this.contextID = contextID;
     	this.connections = makeConnections(dfg);
     }*/
 
-    
     /* private static Map<ProcessingElementPort, List<ProcessingElementPort>> makeConnections(GenericDFG dfg) 
     {
     	
-		return null;
-		//return tmp_con;
-	} */
-
+    	return null;
+    	//return tmp_con;
+    } */
 
     public Map<ProcessingElementPort, List<ProcessingElementPort>> getConnections() {
         return connections;
@@ -54,6 +51,5 @@ public class Context {
     public Optional<List<ProcessingElementPort>> getDestinationsOf(ProcessingElementPort source) {
         return Optional.of(this.connections.get(source));
     }
-    
-    
+
 }

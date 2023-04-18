@@ -14,12 +14,12 @@
 package pt.up.specs.cgra.structure;
 
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
-import pt.up.specs.cgra.structure.pes.loadstore.LSElement;
 
 public interface SpecsCGRA {
 
@@ -34,14 +34,29 @@ public interface SpecsCGRA {
     public Interconnect getInterconnect();
 
     /*
+     * Get local CGRA memory
+     */
+    public GenericMemory getMemory();
+
+    /*
+     * write data to memory adddr
+     */
+    public PEData writeMemory(PEInteger waddr, PEData data);
+
+    /*
+     * read data from memory addr
+     */
+    public PEData readMemory(PEInteger raddr);
+
+    /*
      * Executes a single simulation tick (can be considered a clock cycle)
      */
     public int execute();
-    
-	public boolean pause();
-    
+
+    public boolean pause();
+
     public Context getContext(int i);
-    
+
     /*
      * switch between one of X (max) available contexts
      */
@@ -53,32 +68,29 @@ public interface SpecsCGRA {
      */
     public void visualize();
 
-	public boolean setContext(Context c);
+    public boolean setContext(Context c);
 
-	public boolean applyContext(Integer id);
-	
-	public int getExecuteCount();
-	
-	public boolean isExecuting();
+    public boolean applyContext(Integer id);
 
-	public void setExecuting(boolean isExecuting);
+    public int getExecuteCount();
 
-	public boolean step();
+    public boolean isExecuting();
 
-	public boolean reset();
-	
-	public ProcessingElement setPE(int x, int y, ProcessingElement pe);
-	
-	public int assignLS(LSElement x);
-	
-	public PEData read_liveins(LSElement x, int i);
-	
-	public PEData read_liveins_specific(int x, int y);
-	
-	public boolean store_liveins(LSElement x, int i, PEData d);
+    public void setExecuting(boolean isExecuting);
 
+    public boolean step();
 
+    public boolean reset();
 
+    public ProcessingElement setPE(int x, int y, ProcessingElement pe);
+
+    /*public int assignLS(LSElement x);
+    
+    public PEData read_liveins(LSElement x, int i);
+    
+    public PEData read_liveins_specific(int x, int y);
+    
+    public boolean store_liveins(LSElement x, int i, PEData d);*/
 
     // some kind of method that recieves an emitter class
     // which lowers this functional spec into chisel3 or hdl
