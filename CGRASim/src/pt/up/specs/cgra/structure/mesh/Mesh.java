@@ -15,6 +15,7 @@ package pt.up.specs.cgra.structure.mesh;
 
 import java.util.List;
 
+import pt.up.specs.cgra.dataypes.PEInteger;
 // github.com/specs-feup/specs-hw
 import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
@@ -68,23 +69,38 @@ public class Mesh {
 
 		return this.mesh.get(x).get(y);
 	}
-	
+
 	public ProcessingElement setProcessingElement(int x, int y, ProcessingElement pe) {
 		if(x > this.x || y > this.y || x < 0 || y < 0)
 			throw new RuntimeException("Mesh: coordinates out of bounds for CGRA mesh");
 
-		return this.mesh.get(x).set(y, pe);
+		if (this.mesh.get(x).set(y, pe) != null) {
+			pe.setX(x);
+			pe.setY(y);
+			pe.setMesh(this);
+			System.out.printf("PE %d %d set succesfully as %s \n", x, y, pe.toString());
+			return pe;
+
+		}
+
+		System.out.printf("PE %d %d set unsuccesfully! \n", x, y);
+		return pe;
+
 	}
 
 
 	public boolean execute() {
 		for (var line : this.mesh) {
 			for (var pe : line) { 
-				pe.execute();
+				pe.setReady();
+				if (pe.isReady()) pe.execute();
+
 			}
 		}
 
-		return false;
+		System.out.println("execution step done succesfully");
+
+		return true;
 
 	}
 
@@ -111,5 +127,24 @@ public class Mesh {
 				PE.clearRegisterFile();
 			}
 		}
+	}
+
+	public boolean zero_ports() {
+
+		for (List<ProcessingElement> row : this.mesh) 
+		{
+			for (ProcessingElement PE : row)
+			{
+				PE.getPorts().get(0).setPayload(new PEInteger(0));
+				PE.getPorts().get(1).setPayload(new PEInteger(0));
+				PE.getPorts().get(2).setPayload(new PEInteger(0));
+
+
+			}
+		}
+
+		System.out.println("Ports set to 0s");
+		return true;
+
 	}
 }

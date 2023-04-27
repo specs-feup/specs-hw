@@ -23,7 +23,6 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
  *
  */
 
-// TODO TUDO
 public interface PEData {
 
     public default PEData passnull(PEData operandB) {

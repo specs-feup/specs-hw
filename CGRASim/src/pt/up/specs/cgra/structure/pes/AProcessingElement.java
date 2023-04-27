@@ -18,6 +18,7 @@ import java.util.List;
 
 import pt.up.specs.cgra.control.PEControlSetting;
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
@@ -35,6 +36,7 @@ public abstract class AProcessingElement implements ProcessingElement {
 	private int executeCount;
 	private int memorySize;
 	protected PEControlSetting ctrl;
+	private int nConnections;
 	// private int writeIdx = 0;
 
 
@@ -57,9 +59,16 @@ public abstract class AProcessingElement implements ProcessingElement {
 	protected AProcessingElement(int latency, int memorySize) {
 		this.latency = latency;
 		this.memorySize = memorySize;
-		this.registerFile.add(0, null);
+		this.registerFile = new ArrayList<PEData>(memorySize);
+		this.ready = false;
+		this.nConnections = 0;
+
 		if (this.memorySize > 0) {
 			this.hasMemory = true;
+			for (int i = 0; i < this.memorySize; i++)
+			{
+				this.registerFile.add(null);
+			}
 		} else {
 			this.hasMemory = false;
 		}
@@ -118,7 +127,11 @@ public abstract class AProcessingElement implements ProcessingElement {
 	}
 
 	public void clearRegisterFile() {
-		this.registerFile.set(0, null);
+		for (int i = 0; i < this.memorySize; i++)
+		{
+			this.registerFile.set(i, new PEInteger(0));
+			System.out.printf("PE %d %d register file cleared \n", this.getX(), this.getY());
+		}	
 	}
 
 	@Override
@@ -186,7 +199,7 @@ public abstract class AProcessingElement implements ProcessingElement {
 	 */
 	protected abstract PEData _execute();
 
-	
+
 	public PEData getOperand(int idx) {
 		return this.ports.get(idx).getPayload();
 	}
@@ -194,13 +207,18 @@ public abstract class AProcessingElement implements ProcessingElement {
 	@Override
 	public PEData execute() {
 
-		var result = _execute();
-		this.executeCount++;
-		// if (this.writeIdx != -1)
-		// this.registerFile.set(this.writeIdx, result)
-		this.registerFile.set(0, result);
+		if (this.ready)
+		{
+			var result = _execute();
+			this.executeCount++;
+			// if (this.writeIdx != -1)
+			// this.registerFile.set(this.writeIdx, result)
+			if (hasMemory) this.registerFile.set(0, result);
 
-		return result;
+			return result;
+		}
+		else return null;
+
 	}
 
 	@Override
@@ -208,9 +226,37 @@ public abstract class AProcessingElement implements ProcessingElement {
 		return this.getClass().getSimpleName();
 	}
 
+	//implemented by child
 	public abstract boolean setControl(int i);
-	
+
+	//implemented by child
 	public abstract PEControlSetting getControl();
+
+	public int getnConnections() {
+		return nConnections;
+	}
+
+	public void setnConnections(int nConnections) {
+		this.nConnections = nConnections;
+	}
+	
+	public void setnConnections() {
+		this.nConnections++;
+	}
+
+	public boolean setReady() //TODO: should be number_of_ports- agnostic
+	{
+		if (this.getControl() != null && this.nConnections > 0 && this.getPorts().get(0).getPayload() != null && 
+				this.getPorts().get(1).getPayload() != null)
+		{
+			this.ready = true;
+			return true;
+		}
+		else {
+			this.ready = false;
+			return false;
+		}
+	}
 
 	/* public void printStatus() {
     		if (this.control == null)

@@ -70,15 +70,21 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
 	}
 
 	public ALUElement() {
-		this(1, 0);
+		this(1, 1);
 	}
 
 	public boolean setControl(ALUControlSetting ctrl) {
 
-		if (!ALUOperations.containsKey(ctrl))
+		if (!ALUOperations.containsKey(ctrl)) {
+			System.out.println("set control failed: unknown control setting");
 			return false;
 
+		}
+
 		this.ctrl = ctrl;
+
+		System.out.printf("set control on PE %d %d for instruction: %s \n", this.getX(), this.getY(), this.getControl().getName());
+
 		return true;
 	}
 
@@ -98,7 +104,14 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
 
 	@Override
 	protected PEData _execute() {
-		return ALUOperations.get(this.ctrl).apply(this.getOperand(0), this.getOperand(1));
+		var x = ALUOperations.get(this.ctrl).apply(this.getOperand(0), this.getOperand(1));
+		
+		System.out.printf("ALU %d %d executed successfuly operation %d %s %d yielding result %d\n", 
+				this.getX(), this.getY(), this.getOperand(0).getValue().intValue(), this.getControl().name(), 
+				this.getOperand(1).getValue().intValue(), x.getValue().intValue());
+		
+		return x;
+
 	}
 
 	@Override
@@ -113,6 +126,7 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
 
 	@Override
 	public ALUControlSetting getControl() {
-		return (ALUControlSetting) this.ctrl;
+		if (this.ctrl != null) return (ALUControlSetting) this.ctrl;
+		else return null;
 	}
 }

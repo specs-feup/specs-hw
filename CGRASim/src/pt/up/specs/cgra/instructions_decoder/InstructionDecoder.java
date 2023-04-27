@@ -60,6 +60,9 @@ public class InstructionDecoder {
 		var func = InstDecoders.get(instname_str);
 		if (func == null)
 			func = InstructionDecoder::undefined;
+		
+		System.out.printf("received instruction: '%s' \n", instname_str);
+
 
 		return func.apply(this.parent, operands);
 	}

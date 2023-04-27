@@ -41,7 +41,7 @@ public abstract class AInterconnect implements Interconnect {
 	public AInterconnect(SpecsCGRA myparent) {
 		this.myparent = myparent;
 		this.connections = new HashMap<ProcessingElementPort, List<ProcessingElementPort>>();
-		this.myparent.setContext(new Context(this.connections));
+		//this.myparent.setContext(new Context(this.connections));
 	}
 
 	/**
@@ -51,7 +51,6 @@ public abstract class AInterconnect implements Interconnect {
 	//TODO: Exceptions
 	@Override
 	public boolean propagate() {
-
 
 		for (var drive : this.connections.keySet()) //para cada x, isto e, cada registo de saida de PE
 		{
@@ -63,6 +62,8 @@ public abstract class AInterconnect implements Interconnect {
 			for (var drivenPort : drivenList)
 				drivenPort.setPayload(drive.getPayload().copy()); // copy the data element from 
 		} //output port to input ports of next PE
+		
+		System.out.println("propagated succesfully");
 
 		return true;
 	}
@@ -85,13 +86,16 @@ public abstract class AInterconnect implements Interconnect {
 			var drivenList = this.connections.get(from);
 			if (!drivenList.contains(to))
 				drivenList.add(to);
-			System.out.println("adicionou port a lista de output existente");
+			
+			from.getPE().setnConnections();
+			
+			System.out.println("new port to existing output port list");
 
 		} else {
 			var newList = new ArrayList<ProcessingElementPort>();
 			newList.add(to);
 			this.connections.put(from, newList);
-			System.out.println("adicionou port a nova lista");
+			System.out.println("new port to new list element");
 
 		}
 		System.out.printf("Connection set between PE %d, %d and %d, %d \n", 
@@ -142,5 +146,7 @@ public abstract class AInterconnect implements Interconnect {
 	public void clear() {
 		this.connections.clear();
 	}
+	
+	
 }
 

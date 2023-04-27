@@ -105,6 +105,22 @@ public interface ProcessingElement {
     	return false;
     }
 	
+	default public int getnConnections() {
+		return 0;
+	}
+	
+	default public void setnConnections(int nConnections) {
+	}
+	
+	public void setnConnections();
+	
+	default public boolean setReady() {
+		return false;
+	}
+	
+	
+
+
 	
     /*
      * opIndex:

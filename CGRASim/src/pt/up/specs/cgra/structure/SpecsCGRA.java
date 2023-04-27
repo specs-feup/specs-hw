@@ -15,6 +15,7 @@ package pt.up.specs.cgra.structure;
 
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEInteger;
+import pt.up.specs.cgra.instructions_decoder.InstructionDecoder;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
@@ -83,6 +84,9 @@ public interface SpecsCGRA {
     public boolean reset();
 
     public ProcessingElement setPE(int x, int y, ProcessingElement pe);
+    
+	public InstructionDecoder getInstdec();
+
 
     /*public int assignLS(LSElement x);
     

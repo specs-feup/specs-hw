@@ -55,6 +55,7 @@ public interface Interconnect {
     public boolean connectionValid(ProcessingElementPort from, ProcessingElementPort to);
     
     public void clear();
+
     
 
 }
