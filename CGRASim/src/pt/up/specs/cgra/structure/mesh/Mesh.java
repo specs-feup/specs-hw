@@ -90,11 +90,13 @@ public class Mesh {
 
 
 	public boolean execute() {
+		
+		System.out.println("\n========== execution step ==========");
+
 		for (var line : this.mesh) {
 			for (var pe : line) { 
 				pe.setReady();
 				if (pe.isReady()) pe.execute();
-
 			}
 		}
 

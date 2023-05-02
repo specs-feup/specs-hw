@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
@@ -51,6 +52,9 @@ public abstract class AInterconnect implements Interconnect {
 	//TODO: Exceptions
 	@Override
 	public boolean propagate() {
+		
+		System.out.println("\n========== propagation step ==========");
+
 
 		for (var drive : this.connections.keySet()) //para cada x, isto e, cada registo de saida de PE
 		{
@@ -60,8 +64,10 @@ public abstract class AInterconnect implements Interconnect {
 			var drivenList = this.connections.get(drive);
 
 			for (var drivenPort : drivenList)
-				drivenPort.setPayload(drive.getPayload().copy()); // copy the data element from 
-		} //output port to input ports of next PE
+				drivenPort.setPayload(drive.getPayload().copy()); // copy the data element from output port to input ports of next PE
+		
+		drive.setPayload(new PEInteger(0));
+		} 
 		
 		System.out.println("propagated succesfully");
 

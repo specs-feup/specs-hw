@@ -24,7 +24,7 @@ import pt.up.specs.cgra.structure.pes.loadstore.LSElement;
 
 public class GenericSpecsCGRATest {
 
-    /*@Test
+	/*@Test
     public void testInstantantiateAndView() {
         var CGRAbld = new GenericSpecsCGRA.Builder(2, 2);
         CGRAbld.withHomogeneousPE(new AdderElement());
@@ -33,7 +33,7 @@ public class GenericSpecsCGRATest {
         cgra.visualize();
     }*/
 
-    /*@Test
+	/*@Test
     public void testAdderPE() {
         var adder1 = new AdderElement();
 
@@ -43,73 +43,77 @@ public class GenericSpecsCGRATest {
         System.out.println(r.getValue());
     }*/
 
-    @Test
-    public void testBasicCGRAPrototype() {
-        var CGRAbld = new GenericSpecsCGRA.Builder(4, 4);
-        CGRAbld.withMemory(3);
-        CGRAbld.withHomogeneousPE(new ALUElement());
-        var cgra = CGRAbld.build();
-        
-        cgra.setPE(0, 0, new LSElement());
-        cgra.setPE(0, 1, new LSElement(8));
-        cgra.setPE(0, 2, new LSElement(16));
-        cgra.setPE(0, 3, new LSElement(24));
-        
-        for (int i = 0; i< cgra.getLiveinsSize(); i++) cgra.writeMemory(new PEInteger(i), new PEInteger(i*i));
-        
-        
-        System.out.println();
-        System.out.println("Resetting to 0");
-        
-        cgra.reset();
-        
-        System.out.println("Reset done");
-        System.out.println();
+	@Test
+	public void testBasicCGRAPrototype() {
+		var CGRAbld = new GenericSpecsCGRA.Builder(4, 4);
+		CGRAbld.withMemory(3);
+		CGRAbld.withHomogeneousPE(new ALUElement());
+		var cgra = CGRAbld.build();
 
-        
-        /*      0    1    2    3
-         * 
-         * 0    LS   LS   LS   LS
-         * 1    ADD  ---  ADD  --
-         * 2    ---  MUL   --   --
-         * 3
-         * 
-         */
+		cgra.setPE(0, 0, new LSElement());
+		cgra.setPE(0, 1, new LSElement(8));
+		cgra.setPE(0, 2, new LSElement(16));
+		cgra.setPE(0, 3, new LSElement(24));
 
-        cgra.getInstdec().InstructionParser("set 0 0 1");//LOAD
-        cgra.getInstdec().InstructionParser("set 0 1 1");//LOAD
-        cgra.getInstdec().InstructionParser("set 0 2 1");//LOAD
-        cgra.getInstdec().InstructionParser("set 0 3 1");//LOAD
-        cgra.getInstdec().InstructionParser("set 1 0 1");//ADD
-        cgra.getInstdec().InstructionParser("set 1 2 1");//ADD
-        cgra.getInstdec().InstructionParser("set 2 1 3");//MUL
-        
-        System.out.println();
-        
-        cgra.getInstdec().InstructionParser("set_io 1 0 0 0 0 1");//ADD 1 0    liga in1 e 2 de pe_src a out de pe1 e pe2
-        cgra.getInstdec().InstructionParser("set_io 1 2 0 2 0 3");//add 1 2
-        cgra.getInstdec().InstructionParser("set_io 2 1 1 0 1 2");//mul 2 1
-        
-        System.out.println();
-        
-        for (int j = 0; j < 4; j++) cgra.getMesh().getProcessingElement(0, j).getPorts().get(0).setPayload(new PEInteger(0));  
-        
-        System.out.println("Addresses set for LSUnits");
-
-        cgra.visualize();
-        
-        cgra.step();
-        
-        for (int j = 0; j < 4; j++) cgra.getMesh().getProcessingElement(0, j).getPorts().get(0).setPayload(new PEInteger(1));    
-
-        cgra.step();
+		for (int i = 0; i< cgra.getLiveinsSize(); i++) cgra.writeMemory(new PEInteger(i), new PEInteger(i*i));
 
 
-        // config
-        // fetch
-        // execute (as many times as wanted)
-        // store
-        // end
+		System.out.println();
+		System.out.println("Resetting to 0");
 
-    }
+		cgra.reset();
+
+		System.out.println("Reset done");
+		System.out.println();
+
+
+		/*      0    1    2    3
+		 * 
+		 * 0    LS   LS   LS   LS
+		 * 1    ADD  ---  ADD  --
+		 * 2    ---  MUL   --   --
+		 * 3
+		 * 
+		 */
+
+		cgra.getInstdec().InstructionParser("set 0 0 1");//LOAD
+		cgra.getInstdec().InstructionParser("set 0 1 1");//LOAD
+		cgra.getInstdec().InstructionParser("set 0 2 1");//LOAD
+		cgra.getInstdec().InstructionParser("set 0 3 1");//LOAD
+		cgra.getInstdec().InstructionParser("set 1 0 1");//ADD
+		cgra.getInstdec().InstructionParser("set 1 2 1");//ADD
+		cgra.getInstdec().InstructionParser("set 2 1 3");//MUL
+
+		System.out.println();
+
+		cgra.getInstdec().InstructionParser("set_io 1 0 0 0 0 1");//ADD 1 0    liga in1 e 2 de pe_src a out de pe1 e pe2
+		cgra.getInstdec().InstructionParser("set_io 1 2 0 2 0 3");//add 1 2
+		cgra.getInstdec().InstructionParser("set_io 2 1 1 0 1 2");//mul 2 1
+
+		System.out.println();
+
+
+		//defining base address value of 0 for LSU; They already have an offset each of 0, 8, 16, 24
+		for (int j = 0; j < 4; j++) cgra.getMesh().getProcessingElement(0, j).getPorts().get(0).setPayload(new PEInteger(0));  
+
+		System.out.println("Addresses set for LSUnits");
+
+		cgra.visualize();
+
+		System.out.println("Initiating first execution steps");
+
+		cgra.step();
+
+		for (int j = 0; j < 4; j++) cgra.getMesh().getProcessingElement(0, j).getPorts().get(0).setPayload(new PEInteger(1));    
+
+		cgra.step();
+
+
+		// config
+		// fetch
+		// execute (as many times as wanted)
+		// store
+		// end
+
+	}
 }

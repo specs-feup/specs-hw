@@ -210,10 +210,19 @@ public abstract class AProcessingElement implements ProcessingElement {
 		if (this.ready)
 		{
 			var result = _execute();
+
+			System.out.printf("PE %d %d of type %s executed successfuly with result: %d \n", 
+					this.getX(), this.getY(), this.toString(), result);
 			this.executeCount++;
 			// if (this.writeIdx != -1)
 			// this.registerFile.set(this.writeIdx, result)
-			if (hasMemory) this.registerFile.set(0, result);
+			if (hasMemory) 
+			{
+				this.registerFile.set(0, result);
+				System.out.println("Value stored in register");
+
+			}
+
 
 			return result;
 		}
@@ -239,7 +248,7 @@ public abstract class AProcessingElement implements ProcessingElement {
 	public void setnConnections(int nConnections) {
 		this.nConnections = nConnections;
 	}
-	
+
 	public void setnConnections() {
 		this.nConnections++;
 	}
@@ -250,10 +259,14 @@ public abstract class AProcessingElement implements ProcessingElement {
 				this.getPorts().get(1).getPayload() != null)
 		{
 			this.ready = true;
+			System.out.printf("PE %d %d ready for execution \n", this.getX(), this.getY());
+
 			return true;
 		}
 		else {
 			this.ready = false;
+			System.out.printf("PE %d %d NOT ready for execution \n", this.getX(), this.getY());
+
 			return false;
 		}
 	}
