@@ -13,126 +13,153 @@
 
 package pt.up.specs.cgra.dataypes;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+
 public class PEInteger implements PEData {
 
-    int value = 0;
+	int value = 0;
 
-    public PEInteger(int value) {
-        this.value = value;
-    }
+	public PEInteger(int value) {
+		this.value = value;
+	}
 
-    @Override
-    public PEData copy() {
-        return new PEInteger(this.value);
-    }
+	@Override
+	public PEData copy() {
+		return new PEInteger(this.value);
+	}
 
-    //@Override
-    public Integer getValue() {
-        return value;
-    }
+	//@Override
+	public Integer getValue() {
+		return value;
+	}
 
-    @Override
+	@Override
 	public PEData passnull(PEData operandB) {
 		return new PEInteger(0);
 	}
-    
-    @Override
-    public PEData add(PEData operandB) {
-        var intB = (PEInteger) operandB;
-        return new PEInteger(this.value + intB.getValue());
-    }
 
-    @Override
-    public PEData sub(PEData operandB) {
-        var intB = (PEInteger) operandB;
-        return new PEInteger(this.value - intB.getValue());
-    }
+	@Override
+	public PEData add(PEData operandB) {
+		var intB = (PEInteger) operandB;
+		return new PEInteger(this.value + intB.getValue());
+	}
 
-    @Override
-    public PEData mul(PEData operandB) {
-        var intB = (PEInteger) operandB;
-        return new PEInteger(this.value * intB.getValue());
-    }
+	@Override
+	public PEData sub(PEData operandB) {
+		var intB = (PEInteger) operandB;
+		return new PEInteger(this.value - intB.getValue());
+	}
 
-    @Override
-    public PEData div(PEData operandB) {
-        var intB = (PEInteger) operandB;
-        return new PEInteger(this.value / intB.getValue());
-    }
+	@Override
+	public PEData mul(PEData operandB) {
+		var intB = (PEInteger) operandB;
+		return new PEInteger(this.value * intB.getValue());
+	}
 
-    @Override
-    public PEData lshift(PEData operandB) {
-        var intB = (PEInteger) operandB;
-        return new PEInteger(this.value << intB.getValue());
-    }
+	@Override
+	public PEData div(PEData operandB) {
+		var intB = (PEInteger) operandB;
+		return new PEInteger(this.value / intB.getValue());
+	}
 
-    @Override
-    public PEData rshift(PEData operandB) {
-        var intB = (PEInteger) operandB;
-        return new PEInteger(this.value >> intB.getValue());
-    }
-    
-    /*@Override
+	@Override
+	public PEData lshift(PEData operandB) {
+		var intB = (PEInteger) operandB;
+		return new PEInteger(this.value << intB.getValue());
+	}
+
+	@Override
+	public PEData rshift(PEData operandB) {
+		var intB = (PEInteger) operandB;
+		return new PEInteger(this.value >> intB.getValue());
+	}
+
+	/*@Override
     public PEData mod(PEData operandB) {
         var intB = (PEInteger) operandB;
         return new PEInteger(this.value % intB.getValue());
 
     }*/
-    
-    @Override
-    public PEData and(PEData operandB) {
-        var intB = (PEInteger) operandB;
-        return new PEInteger(this.value & intB.getValue());
 
-    }
-    
-    @Override
-    public PEData or(PEData operandB) {
-        var intB = (PEInteger) operandB;
-        return new PEInteger(this.value | intB.getValue());
+	@Override
+	public PEData and(PEData operandB) {
+		var intB = (PEInteger) operandB;
+		return new PEInteger(this.value & intB.getValue());
 
-    }
-    
+	}
 
-    @Override
-    public PEData xor(PEData operandB) {
-        var intB = (PEInteger) operandB;
-        return new PEInteger(this.value ^ intB.getValue());
+	@Override
+	public PEData or(PEData operandB) {
+		var intB = (PEInteger) operandB;
+		return new PEInteger(this.value | intB.getValue());
 
-    }
-    
-    @Override
-    public PEData passl(PEData operandB) {
-        return new PEInteger(this.value);
+	}
 
-    }
-    
-    @Override
-    public PEData passr(PEData operandB) {
-    	var intB = (PEInteger) operandB;
-        return new PEInteger(intB.getValue());
 
-    }
+	@Override
+	public PEData xor(PEData operandB) {
+		var intB = (PEInteger) operandB;
+		return new PEInteger(this.value ^ intB.getValue());
+
+	}
+
+	@Override
+	public PEData passl(PEData operandB) {
+		return new PEInteger(this.value);
+
+	}
+
+	@Override
+	public PEData passr(PEData operandB) {
+		var intB = (PEInteger) operandB;
+		return new PEInteger(intB.getValue());
+
+	}
 
 	@Override
 	public PEData slt(PEData operandB) {
-    	var intB = (PEInteger) operandB;
-    	
+		var intB = (PEInteger) operandB;
+
 		return new PEBoolean(this.value < intB.value ? true : false);
 	}
 
 	@Override
 	public PEData seq(PEData operandB) {
-    	var intB = (PEInteger) operandB;
+		var intB = (PEInteger) operandB;
 
 		return new PEBoolean(this.value == intB.value ? true : false);
 	}
 
-	
-    
+	/*@Override
+	public int hashCode() {
+		return new HashCodeBuilder(13, 37)
+				.append(value)
+				.toHashCode();
+	}*/
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof PEInteger))
+			return false;
+		if (obj == this)
+			return true;
+
+		/*PEInteger peint = (PEInteger) obj;
+		return new EqualsBuilder()
+				// if deriving: appendSuper(super.equals(obj)).
+				.append(peint, peint.value)
+				.isEquals();*/
+		
+		return (this.value == ((PEInteger) obj).value);//TODO: unsafe
+		
+		
+	}
 
 
-    /*
+
+	/*
     @Override
     public PEData partSelect(PEData operandB) {
         var intB = (PEInteger) operandB;

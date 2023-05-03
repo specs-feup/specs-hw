@@ -1,5 +1,8 @@
 package pt.up.specs.cgra.dataypes;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class PEBoolean implements PEData {
 
     boolean value;
@@ -94,5 +97,26 @@ public class PEBoolean implements PEData {
     @Override
     public PEData seq(PEData operandB) {
         throw new RuntimeException("Cannot perform seq operation on boolean inputs");
+    }
+    
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31)
+            .append(value)
+            .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+       if (!(obj instanceof PEBoolean))
+            return false;
+        if (obj == this)
+            return true;
+
+        PEBoolean pebool = (PEBoolean) obj;
+        return new EqualsBuilder()
+            // if deriving: appendSuper(super.equals(obj)).
+            .append(pebool, pebool.value)
+            .isEquals();
     }
 }

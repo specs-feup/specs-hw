@@ -13,7 +13,7 @@ public class LSElement extends BinaryProcessingElement {
 
 	public LSElement(int x) {
 		super(1, 1);
-		
+
 		this.cload = 0;
 		this.cstore = 0;
 		this.offset = x;
@@ -43,13 +43,20 @@ public class LSElement extends BinaryProcessingElement {
 			var a = cgra.readMemory(addr); // "data", second argument, is not used here
 			if (a != null)
 			{
-				System.out.printf("LS at %d %d LOADed succesfully value %d from address %d + offset %d \n", 
-						this.getX(), this.getY(), a.getValue().intValue(), this.getOperand(0).getValue().intValue(), this.offset);
+				System.out.printf("LS at %d %d LOADed succesfully value %d from address %d (%d + offset %d) \n", 
+						this.getX(), this.getY(), a.getValue().intValue(), addr.getValue().intValue(), 
+						this.getOperand(0).getValue().intValue(), this.offset);
 				return a;
 			}
-			System.out.printf("LS at %d %d LOADed NULL value from address %d + offset %d \n", 
-					this.getX(), this.getY(), this.getOperand(0).getValue().intValue(), this.offset);
-			return a;
+
+			else if (a == null)
+			{
+				System.out.printf("LS at %d %d LOADed NULL value from address %d (%d + offset %d) \n", 
+						this.getX(), this.getY(), addr.getValue().intValue(),
+						this.getOperand(0).getValue().intValue(), this.offset);
+				
+				return new PEInteger(0);
+			}
 
 		}
 
@@ -69,6 +76,7 @@ public class LSElement extends BinaryProcessingElement {
 		// explode
 		else
 			throw new RuntimeException("LSElement: invalid control setting");
+		return null;
 	}
 
 	/*

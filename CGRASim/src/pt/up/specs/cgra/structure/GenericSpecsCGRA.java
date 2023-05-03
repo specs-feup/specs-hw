@@ -134,14 +134,14 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
 	@Override
 	public PEData writeMemory(PEInteger waddr, PEData data) {
-		this.localmem.write(waddr.getValue().intValue(), data);
-		System.out.println("Data stored into generic memory");
+		this.localmem.write(waddr, data);
+		System.out.printf("Data stored into generic memory: %d at address %d \n", data.getValue().intValue(), waddr.getValue().intValue());
 		return data;
 	}
 
 	@Override
 	public PEData readMemory(PEInteger raddr) {
-		return this.localmem.read(raddr.getValue().intValue());
+		return this.localmem.read(raddr);
 	}
 
 	@Override

@@ -34,4 +34,10 @@ public class EmptyPE implements ProcessingElement {
 	public void clearRegisterFile() {
 		
 	}
+
+	@Override
+	public void setnConnections() {
+		// TODO Auto-generated method stub
+		
+	}
 }

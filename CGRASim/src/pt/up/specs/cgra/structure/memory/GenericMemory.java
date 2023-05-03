@@ -13,7 +13,9 @@
  
 package pt.up.specs.cgra.structure.memory;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEInteger;
@@ -21,25 +23,30 @@ import pt.up.specs.cgra.dataypes.PEInteger;
 public class GenericMemory implements Memory {
 
     private int memsize;
-    private HashMap<Integer, PEData> mem;
+    private HashMap<PEInteger, PEData> mem;
+    Map<PEInteger, PEData> mem_new;
 
     public GenericMemory(int memsize) {
         this.memsize = memsize;
-        this.mem = new HashMap<Integer, PEData>();
-        for (int i = 0; i < this.memsize; i++)
-            this.mem.put(Integer.valueOf(i), new PEInteger(0));
+        this.mem = new HashMap<PEInteger, PEData>();
+        
+        this.mem_new = Collections.synchronizedMap(mem);
+        
+        /*for (int i = 0; i < this.memsize; i++)
+            this.mem_new.put(Integer.valueOf(i), new PEInteger(0));*/
+                
     }
 
     @Override
-    public PEData read(int addr) {
-        return this.mem.get(Integer.valueOf(addr));
+    public PEData read(PEInteger addr) {
+        return this.mem_new.get(addr);
     }
 
     @Override
-    public boolean write(int addr, PEData data) {
-        if (addr > this.memsize)
+    public boolean write(PEInteger addr, PEData data) {
+        if (addr.getValue().intValue() > this.memsize)
             return false;
-        this.mem.put(Integer.valueOf(addr), data);
+        this.mem_new.put(addr, data);
         return true;
     }
     

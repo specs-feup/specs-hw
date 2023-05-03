@@ -95,8 +95,7 @@ public class Mesh {
 
 		for (var line : this.mesh) {
 			for (var pe : line) { 
-				pe.setReady();
-				if (pe.isReady()) pe.execute();
+				pe.execute();
 			}
 		}
 

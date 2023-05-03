@@ -55,8 +55,7 @@ public class GenericSpecsCGRATest {
 		cgra.setPE(0, 2, new LSElement(16));
 		cgra.setPE(0, 3, new LSElement(24));
 
-		for (int i = 0; i< cgra.getLiveinsSize(); i++) cgra.writeMemory(new PEInteger(i), new PEInteger(i*i));
-
+		for (int i = 0; i < cgra.getLiveinsSize(); i++) cgra.writeMemory(new PEInteger(i), new PEInteger(i*i + 1));
 
 		System.out.println();
 		System.out.println("Resetting to 0");
@@ -94,7 +93,11 @@ public class GenericSpecsCGRATest {
 
 
 		//defining base address value of 0 for LSU; They already have an offset each of 0, 8, 16, 24
-		for (int j = 0; j < 4; j++) cgra.getMesh().getProcessingElement(0, j).getPorts().get(0).setPayload(new PEInteger(0));  
+		for (int j = 0; j < 4; j++) {
+			cgra.getMesh().getProcessingElement(0, j).getPorts().get(0).setPayload(new PEInteger(0));
+			cgra.getMesh().getProcessingElement(0, j).getPorts().get(1).setPayload(new PEInteger(0));  
+
+		}
 
 		System.out.println("Addresses set for LSUnits");
 

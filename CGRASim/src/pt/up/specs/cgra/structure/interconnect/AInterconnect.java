@@ -152,6 +152,14 @@ public abstract class AInterconnect implements Interconnect {
 	public void clear() {
 		this.connections.clear();
 	}
+
+	public Map<ProcessingElementPort, List<ProcessingElementPort>> getConnections() {
+		return connections;
+	}
+
+	public void setConnections(Map<ProcessingElementPort, List<ProcessingElementPort>> connections) {
+		this.connections = connections;
+	}
 	
 	
 }

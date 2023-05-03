@@ -206,13 +206,16 @@ public abstract class AProcessingElement implements ProcessingElement {
 
 	@Override
 	public PEData execute() {
+		
+		this.ready = setReady();
+		//this.setnConnections(this.myparent.getCGRA().getInterconnect().);
 
 		if (this.ready)
-		{
+		{			
 			var result = _execute();
 
 			System.out.printf("PE %d %d of type %s executed successfuly with result: %d \n", 
-					this.getX(), this.getY(), this.toString(), result);
+					this.getX(), this.getY(), this.toString(), result.getValue().intValue());
 			this.executeCount++;
 			// if (this.writeIdx != -1)
 			// this.registerFile.set(this.writeIdx, result)
@@ -255,20 +258,26 @@ public abstract class AProcessingElement implements ProcessingElement {
 
 	public boolean setReady() //TODO: should be number_of_ports- agnostic
 	{
-		if (this.getControl() != null && this.nConnections > 0 && this.getPorts().get(0).getPayload() != null && 
-				this.getPorts().get(1).getPayload() != null)
+		if (this.getControl() == null)
 		{
-			this.ready = true;
-			System.out.printf("PE %d %d ready for execution \n", this.getX(), this.getY());
-
-			return true;
-		}
-		else {
-			this.ready = false;
-			System.out.printf("PE %d %d NOT ready for execution \n", this.getX(), this.getY());
-
+			System.out.printf("PE %d %d NOT ready for execution due to NULL control \n", this.getX(), this.getY());
 			return false;
 		}
+		/*else if (this.nConnections == 0)
+		{
+			System.out.printf("PE %d %d NOT ready for execution due to nconnects being 0 \n", this.getX(), this.getY());
+			return false;
+		}*/
+		else if (this.getPorts().get(0).getPayload() == null || this.getPorts().get(1).getPayload() == null)
+		{
+			System.out.printf("PE %d %d NOT ready for execution due to NULL payloads \n", this.getX(), this.getY());
+			return false;
+		}
+
+
+		System.out.printf("PE %d %d ready for execution \n", this.getX(), this.getY());
+		return true;
+
 	}
 
 	/* public void printStatus() {
