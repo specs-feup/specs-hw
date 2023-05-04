@@ -23,6 +23,7 @@ import pt.up.fe.specs.crispy.ast.block.HardwareTestbench;
 import pt.up.fe.specs.crispy.coarse.Adder;
 import pt.up.fe.specs.crispy.coarse.Subtractor;
 import pt.up.fe.specs.crispy.lib.Mux2to1;
+import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class HardwareEmitTest {
 
@@ -36,6 +37,8 @@ public class HardwareEmitTest {
         tb.setClockFrequency(100);
         tb.addStimuli(stim);
         tb.emitToFile();
+
+        System.out.println(DottyGenerator.buildDotty(tb));
     }
 
     @Test

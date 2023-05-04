@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
 import pt.up.fe.specs.crispy.ast.block.HardwareTestbench;
+import pt.up.fe.specs.crispy.ast.constructs.SwitchCase;
 import pt.up.fe.specs.crispy.ast.declaration.RegisterDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
@@ -29,8 +30,10 @@ import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.RangedSubscript;
 import pt.up.fe.specs.crispy.ast.expression.operator.subscript.ScalarSubscript;
+import pt.up.fe.specs.crispy.ast.statement.CaseItem;
 import pt.up.fe.specs.crispy.ast.statement.IfStatement;
 import pt.up.fe.specs.crispy.coarse.Adder;
+import pt.up.fe.specs.crispy.lib.ALU;
 import pt.up.fe.specs.crispy.lib.CrossBarNxM;
 import pt.up.fe.specs.crispy.lib.DecoderNxM;
 import pt.up.fe.specs.crispy.lib.Mux2to1;
@@ -38,11 +41,56 @@ import pt.up.fe.specs.crispy.lib.MuxNto1;
 import pt.up.fe.specs.crispy.lib.RAMemory;
 import pt.up.fe.specs.crispy.lib.RegisterBank;
 import pt.up.fe.specs.crispy.lib.ShiftRegister;
-import pt.up.fe.specs.crispy.lib.riscv.ALUI32;
 import pt.up.fe.specs.crispy.test.workshop.Add3;
 import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 
 public class HardwareInstanceTest {
+
+    @Test
+    public void testCaseItem() {
+
+        var a = (new RegisterDeclaration("regA", 8)).getReference();
+        var b = (new RegisterDeclaration("regB", 8)).getReference();
+        var c = (new RegisterDeclaration("regC", 8)).getReference();
+
+        var imm = new Immediate(3, 4);
+        var c1 = new CaseItem(imm);
+        c1.addStatement(c.blocking(a.add(b)));
+        c1.emit();
+
+        System.out.println(DottyGenerator.buildDotty(c1));
+    }
+
+    @Test // ????
+    public void testSwitchCase() {
+
+        var sel = (new RegisterDeclaration("sel", 2)).getReference();
+        var a = (new RegisterDeclaration("regA", 8)).getReference();
+        var b = (new RegisterDeclaration("regB", 8)).getReference();
+        var c = (new RegisterDeclaration("regC", 8)).getReference();
+
+        var sw = new SwitchCase(sel);
+        sw.addCaseItem((new CaseItem(new Immediate(0, 2))));
+        sw.addCaseItem(new CaseItem(new Immediate(1, 2)));
+        sw.addCaseItem(new CaseItem(new Immediate(2, 2)));
+        sw.addCaseItem(new CaseItem(new Immediate(3, 2)));
+        // TODO: move into cycle inside SwitchCase? make caseitems based on nr of bits of sel
+
+        sw.getCaseItem(0).addStatement(c.blocking(a.add(b)));
+        sw.getCaseItem(1).addStatement(c.blocking(a.sub(b)));
+        sw.getCaseItem(2).addStatement(c.blocking(a.mul(b)));
+        sw.getCaseItem(3).addStatement(c.blocking(a.or(b)));
+
+        sw.emit();
+        // System.out.println(DottyGenerator.buildDotty(sw));
+
+        // var switchCase = new SwitchCase(4, 32);
+        // switchCase.emit();
+
+        // var alu = new ALUI32();
+        // alu.emit();
+
+    }
 
     @Test
     public void testPort() {
@@ -55,9 +103,12 @@ public class HardwareInstanceTest {
 
     @Test
     public void testALU() {
-
-        var alu = new ALUI32();
+        var alu = new ALU(32);
         alu.emit();
+
+        // var alu = new ALUI32();
+        // alu.emit();
+
     }
 
     @Test
