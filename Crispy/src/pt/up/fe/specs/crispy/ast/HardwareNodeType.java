@@ -103,6 +103,8 @@ public enum HardwareNodeType {
     IfStatement,
     IfElseStatement,
     DelayStatement,
+    CaseItem,
+    SwitchCase,
 
     // tasks
     AssertTask,

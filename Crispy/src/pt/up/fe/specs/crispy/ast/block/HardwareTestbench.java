@@ -13,19 +13,27 @@
 
 package pt.up.fe.specs.crispy.ast.block;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.declaration.TimeScaleDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.port.ModulePortDirection;
 import pt.up.fe.specs.crispy.ast.declaration.port.PortDeclaration;
+import pt.up.fe.specs.crispy.ast.expression.comparison.EqualsToExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Port;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.meta.FileHeader;
+import pt.up.fe.specs.crispy.ast.task.AssertTask;
 import pt.up.fe.specs.specshw.SpecsHwUtils;
+import pt.up.fe.specs.util.csv.CsvReader;
 
 public class HardwareTestbench extends HardwareModule {
 
+    private int period = -1;
     private final String testBenchName;
     private final HardwareModule dut;
 
@@ -53,7 +61,7 @@ public class HardwareTestbench extends HardwareModule {
         this.addChild(new FileHeader(SpecsHwUtils.generateFileHeader()));
 
         // child 1
-        this.addChild(new TimeScaleDeclaration(100, 10));
+        this.addChild(new TimeScaleDeclaration(1, 1));
 
         // child 2
         this.addChild(new ModuleBlock(testBenchName));
@@ -79,13 +87,18 @@ public class HardwareTestbench extends HardwareModule {
         return this.getChild(ModuleBlock.class, 2);
     }
 
+    // returns clock period; only valid after setClockFrequency is called
+    public int getPeriod() {
+        return this.period;
+    }
+
     private InitialBlock getInitialBlock() {
         InitialBlock ini = null;
         var initials = getBody().getChildrenOf(InitialBlock.class);
         if (initials.isEmpty()) {
             ini = this.initial("initBlock");
-            var time = getChild(TimeScaleDeclaration.class, 1).getTimeUnit();
-            ini.delay(time * 10);
+            // var time = getChild(TimeScaleDeclaration.class, 1).getTimeUnit();
+            // ini.delay(time * 10);
         } else
             ini = initials.get(0);
 
@@ -112,22 +125,48 @@ public class HardwareTestbench extends HardwareModule {
 
     public HardwareTestbench setClockFrequency(int mhz) {
         var time = getChild(TimeScaleDeclaration.class, 1);
-        var period = (((1.0 / mhz) / Math.pow(10, -9)) / time.getTimeUnit());
+        // this.period = (int) (((1.0 / mhz) / Math.pow(10, -9)) / time.getTimeUnit());
+
+        this.period = (int) ((1.0 / (mhz * Math.pow(10, -3))) / time.getTimeUnit());
+
         var clockBlock = new AlwaysBlock("clockBlock");
         this.addBlockAfter(clockBlock, getRegisterDeclarationBlock());
 
         VariableOperator clk = null;
-        if ((clk = (VariableOperator) this.getRegister("clk")) == null)
-            clk = this.addRegister("clk", 1);
+        if ((clk = (VariableOperator) this.getRegister("rclk")) == null)
+            clk = this.addRegister("rclk", 1);
 
-        clockBlock.blocking(clk, clk.not());
-        clockBlock.delay(period);
+        clockBlock.blocking(clk, clk.not()); // clk = ~clk
+        clockBlock.delay(period); // #(period)
 
         // add to initial
-        this.setInit(clk, 0);
+        // this.setInit(clk, 0);
         // this.initial.blocking(clk, 0);
         // this.initial.delay(period * 10);
 
+        return this;
+    }
+
+    public HardwareTestbench setClockInit() {
+        this.setInit(this.getRegister("rclk"), 1);
+        this.getInitialBlock().delay(this.getPeriod());
+        return this;
+    }
+
+    public HardwareTestbench setResetInit() {
+        this.setInit(this.getRegister("rrst"), 1);
+        this.getInitialBlock().delay(10 * this.getPeriod());
+        this.setInit(this.getRegister("rrst"), 0);
+        return this;
+    }
+
+    public HardwareTestbench addDelay(int period) {
+        this.getInitialBlock().delay(period);
+        return this;
+    }
+
+    public HardwareTestbench doAssert(EqualsToExpression eq) {
+        getInitialBlock()._do(new AssertTask(eq));
         return this;
     }
 
@@ -150,5 +189,59 @@ public class HardwareTestbench extends HardwareModule {
     @Override
     public String getName() {
         return testBenchName;
+    }
+
+    public HardwareTestbench addStimuli(File stimuli) {
+        // var csv = new CsvReader(SpecsIO.getresource("pt/up/fe/specs/crispy/test/resources/dadosentrada.csv"), " ");
+        // // criar
+        var csv = new CsvReader(stimuli, " "); // criar
+        var portNamesAndDirs = csv.getHeader(); // um
+        var portNames = new ArrayList<String>();
+
+        // transforma a primeira linha do csv numa mapa de "nomes -> input/output"
+        var dirAndNames = new HashMap<String, ModulePortDirection>();
+        for (int i = 0; i < portNamesAndDirs.size(); i++) {
+            var aux = portNamesAndDirs.get(i); // e.g. "i:ina"
+            var dirAndName = Arrays.asList(aux.split(":"));
+            var portType = dirAndName.get(0);
+            var portName = dirAndName.get(1);
+            var type = (portType.compareTo("i") == 0) ? ModulePortDirection.input : ModulePortDirection.output;
+            dirAndNames.put(portName, type);
+            portNames.add(portName);
+        }
+        // system.out.println(dirAndNames);
+
+        // para cada linha de estimulos
+        while (csv.hasNext()) {
+            var values = csv.next();
+
+            // para cada coluna (ou seja, cada porta)
+            for (int i = 0; i < portNames.size(); i++) {
+
+                // se prefixo for "i:"
+                if (dirAndNames.get(portNames.get(i)) == ModulePortDirection.input) {
+                    var ref = this.getRegister("r" + portNames.get(i));
+                    // todo handle if null
+                    this.setInit(ref, Integer.parseInt(values.get(i)));
+                }
+            }
+
+            // wait after input values attributed
+            this.addDelay(this.getPeriod());
+
+            // para cada coluna (ou seja, cada porta)
+            for (int i = 0; i < portNames.size(); i++) {
+
+                // se prefixo for "o:"
+                if (dirAndNames.get(portNames.get(i)) == ModulePortDirection.output) {
+                    var refw = this.getWire("w" + portNames.get(i));
+                    var value = Integer.parseInt(values.get(i));
+                    this.doAssert(refw.eq(value));
+                }
+
+            }
+        }
+        this.addDelay(this.getPeriod());
+        return this;
     }
 }

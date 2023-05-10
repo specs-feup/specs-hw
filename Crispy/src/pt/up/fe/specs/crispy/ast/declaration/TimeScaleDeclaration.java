@@ -58,7 +58,7 @@ public class TimeScaleDeclaration extends HardwareDeclaration {
         builder.append(this.timeUnit + "ns");
         builder.append("/");
         // put time precision
-        builder.append(this.timePrecision + "ns\n");
+        builder.append(this.timePrecision + "ps\n");
 
         return builder.toString();
     }

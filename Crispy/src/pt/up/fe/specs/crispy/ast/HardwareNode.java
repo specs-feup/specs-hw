@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.treenode.ATreeNode;
 
 public abstract class HardwareNode extends ATreeNode<HardwareNode> {
@@ -109,5 +110,12 @@ public abstract class HardwareNode extends ATreeNode<HardwareNode> {
      */
     public void emit() {
         System.out.print(this.getAsString());
+    }
+
+    /*
+     * 
+     */
+    public void emitToFile() {
+        throw new NotImplementedException("emitToFile not valid for this class");
     }
 }
