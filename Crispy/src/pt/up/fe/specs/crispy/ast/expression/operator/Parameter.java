@@ -14,7 +14,7 @@
 package pt.up.fe.specs.crispy.ast.expression.operator;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.declaration.ParameterDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.parameter.ParameterDeclaration;
 
 public class Parameter extends VariableOperator {
 

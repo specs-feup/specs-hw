@@ -35,14 +35,14 @@ public abstract class IdentifierDeclaration extends HardwareDeclaration {
         return name;
     }
 
+    public boolean isSigned() {
+        return false;
+    }
+
     @Override
     public String toContentString() {
         return getAsString();
     }
-
-    /*public VariableOperator getReference() {
-        return new VariableOperator(this);
-    }*/
 
     public abstract VariableOperator getReference();
 

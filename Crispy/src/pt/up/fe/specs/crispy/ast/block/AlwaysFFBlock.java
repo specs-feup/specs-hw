@@ -16,7 +16,7 @@ package pt.up.fe.specs.crispy.ast.block;
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.constructs.SignalEdge;
 import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
-import pt.up.fe.specs.crispy.ast.declaration.RegisterDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.register.RegisterDeclaration;
 
 public class AlwaysFFBlock extends BeginEndBlock {
 

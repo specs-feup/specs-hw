@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 SPeCS.
+ * Copyright 2023 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -11,19 +11,11 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.ast.declaration.port;
+package pt.up.fe.specs.crispy.ast.declaration;
 
-import java.util.Arrays;
+public interface SignedDeclaration {
 
-import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
-
-public class ClockDeclaration extends InputPortDeclaration {
-
-    public ClockDeclaration(String clockName) {
-        super(new WireDeclaration(clockName, 1), Arrays.asList(ModulePortProperties.Clock));
-    }
-
-    public ClockDeclaration() {
-        this("clk");
+    public default boolean isSigned() {
+        return true;
     }
 }

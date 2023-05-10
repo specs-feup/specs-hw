@@ -27,13 +27,11 @@ import pt.up.fe.specs.crispy.ast.constructs.PosEdge;
 import pt.up.fe.specs.crispy.ast.constructs.SignalEdge;
 import pt.up.fe.specs.crispy.ast.declaration.ArrayDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
-import pt.up.fe.specs.crispy.ast.declaration.RegisterDeclaration;
-import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
-import pt.up.fe.specs.crispy.ast.declaration.port.ClockDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.OutputPortDeclaration;
 import pt.up.fe.specs.crispy.ast.declaration.port.PortDeclaration;
-import pt.up.fe.specs.crispy.ast.declaration.port.ResetDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.register.RegisterDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.wire.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.HardwareOperator;
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
@@ -48,6 +46,8 @@ import pt.up.fe.specs.crispy.ast.meta.DeclarationBlock;
 import pt.up.fe.specs.crispy.ast.meta.FileHeader;
 import pt.up.fe.specs.crispy.ast.statement.ContinuousStatement;
 import pt.up.fe.specs.crispy.ast.statement.ModuleInstance;
+import pt.up.fe.specs.crispy.lib.ClockDeclaration;
+import pt.up.fe.specs.crispy.lib.ResetDeclaration;
 import pt.up.fe.specs.specshw.SpecsHwUtils;
 
 public class HardwareModule extends HardwareBlock { // implements ModuleBlockInterface {

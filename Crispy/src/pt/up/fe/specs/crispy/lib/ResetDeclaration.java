@@ -11,28 +11,21 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.ast.declaration.sign;
+package pt.up.fe.specs.crispy.lib;
 
-import pt.up.fe.specs.crispy.ast.HardwareNode;
+import java.util.Arrays;
 
-public abstract class ASignDeclaration extends HardwareNode {
+import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.port.ModulePortProperties;
+import pt.up.fe.specs.crispy.ast.declaration.wire.WireDeclaration;
 
-    private String sign;
+public class ResetDeclaration extends InputPortDeclaration {
 
-    protected ASignDeclaration(String sign, HardwareNode variable) {
-        this.sign = sign;
-        this.addChild(variable);
+    public ResetDeclaration(String rstName) {
+        super(new WireDeclaration(rstName, 1), Arrays.asList(ModulePortProperties.Reset));
     }
 
-    @Override
-    public String getAsString() {
-
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(this.sign);
-        builder.append(" ");
-        builder.append(this.getChild(0).getAsString());
-
-        return builder.toString();
+    public ResetDeclaration() {
+        this("rst");
     }
 }

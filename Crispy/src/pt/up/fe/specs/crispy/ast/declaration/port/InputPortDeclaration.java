@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
-import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.wire.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.operator.InputPort;
 
 public class InputPortDeclaration extends PortDeclaration {

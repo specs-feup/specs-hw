@@ -17,7 +17,7 @@ import java.util.function.BiFunction;
 
 import pt.up.fe.specs.crispy.ast.block.HardwareBlock;
 import pt.up.fe.specs.crispy.ast.block.HardwareModule;
-import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.wire.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 import pt.up.fe.specs.crispy.ast.expression.aritmetic.AdditionExpression;
 import pt.up.fe.specs.crispy.ast.expression.aritmetic.SubtractionExpression;

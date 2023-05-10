@@ -11,14 +11,15 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.ast.declaration;
+package pt.up.fe.specs.crispy.ast.declaration.parameter;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
+import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.operator.Parameter;
 
 public class ParameterDeclaration extends IdentifierDeclaration {
 
-    private final String initializer;
+    protected final String initializer;
 
     public ParameterDeclaration(String parameterName, int numBits, String initializer) {
         super(parameterName, numBits, HardwareNodeType.ParameterDeclaration);

@@ -11,19 +11,21 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.crispy.ast.declaration.port;
+package pt.up.fe.specs.crispy.lib;
 
 import java.util.Arrays;
 
-import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.port.ModulePortProperties;
+import pt.up.fe.specs.crispy.ast.declaration.wire.WireDeclaration;
 
-public class ResetDeclaration extends InputPortDeclaration {
+public class ClockDeclaration extends InputPortDeclaration {
 
-    public ResetDeclaration(String rstName) {
-        super(new WireDeclaration(rstName, 1), Arrays.asList(ModulePortProperties.Reset));
+    public ClockDeclaration(String clockName) {
+        super(new WireDeclaration(clockName, 1), Arrays.asList(ModulePortProperties.Clock));
     }
 
-    public ResetDeclaration() {
-        this("rst");
+    public ClockDeclaration() {
+        this("clk");
     }
 }

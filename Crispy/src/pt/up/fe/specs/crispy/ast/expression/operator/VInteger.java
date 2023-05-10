@@ -14,7 +14,7 @@
 package pt.up.fe.specs.crispy.ast.expression.operator;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.declaration.IntegerDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.integer.IntegerDeclaration;
 
 public class VInteger extends VariableOperator {
 

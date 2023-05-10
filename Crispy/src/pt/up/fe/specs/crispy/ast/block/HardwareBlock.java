@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import pt.up.fe.specs.crispy.ast.HardwareNode;
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
 import pt.up.fe.specs.crispy.ast.declaration.IdentifierDeclaration;
-import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.wire.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.HardwareExpression;
 import pt.up.fe.specs.crispy.ast.expression.operator.Immediate;
 import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;

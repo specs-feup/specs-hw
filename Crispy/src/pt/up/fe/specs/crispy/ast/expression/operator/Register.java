@@ -14,7 +14,7 @@
 package pt.up.fe.specs.crispy.ast.expression.operator;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.declaration.RegisterDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.register.RegisterDeclaration;
 
 public class Register extends VariableOperator {
 

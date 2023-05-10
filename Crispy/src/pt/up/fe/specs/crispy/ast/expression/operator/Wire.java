@@ -14,7 +14,7 @@
 package pt.up.fe.specs.crispy.ast.expression.operator;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
-import pt.up.fe.specs.crispy.ast.declaration.WireDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.wire.WireDeclaration;
 
 public class Wire extends VariableOperator {
 

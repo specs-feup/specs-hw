@@ -14,6 +14,9 @@
 package pt.up.fe.specs.crispy.ast.declaration;
 
 import pt.up.fe.specs.crispy.ast.HardwareNodeType;
+import pt.up.fe.specs.crispy.ast.declaration.integer.IntegerDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.register.RegisterDeclaration;
+import pt.up.fe.specs.crispy.ast.declaration.wire.WireDeclaration;
 import pt.up.fe.specs.crispy.ast.expression.operator.VArray;
 
 public class ArrayDeclaration extends IdentifierDeclaration {
@@ -86,7 +89,8 @@ public class ArrayDeclaration extends IdentifierDeclaration {
 
     @Override
     public String getAsString() {
-        return this.getChild(0).getAsString().replace(";", "") + " [" + (this.getSize() - 1) + " : 0];";
+        return super.getAsString() + this.getChild(0).getAsString().replace(";", "") + " [" + (this.getSize() - 1)
+                + " : 0];";
     }
 
     @Override
