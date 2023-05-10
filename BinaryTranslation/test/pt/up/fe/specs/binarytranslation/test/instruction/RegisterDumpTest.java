@@ -13,7 +13,7 @@
  
 package pt.up.fe.specs.binarytranslation.test.instruction;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 import pt.up.fe.specs.binarytranslation.instruction.register.RegisterDump;
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 

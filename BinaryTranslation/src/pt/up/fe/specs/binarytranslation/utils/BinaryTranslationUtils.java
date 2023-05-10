@@ -15,10 +15,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
-import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
-import pt.up.fe.specs.binarytranslation.ELFProvider;
-import pt.up.fe.specs.binarytranslation.processes.ProcessRun;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
+import pt.up.fe.specs.specshw.BinaryTranslationResource;
 import pt.up.fe.specs.specshw.SpecsHwUtils;
+import pt.up.fe.specs.specshw.processes.ProcessRun;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsSystem;
 

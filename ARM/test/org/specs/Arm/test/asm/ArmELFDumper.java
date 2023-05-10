@@ -20,8 +20,8 @@ import org.junit.Test;
 import org.specs.Arm.provider.ArmLivermoreN100;
 import org.specs.Arm.provider.ArmPolyBenchMiniFloat;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.asm.ELFDumper;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 
 public class ArmELFDumper extends ELFDumper {
 

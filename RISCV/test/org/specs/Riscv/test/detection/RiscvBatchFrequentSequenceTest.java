@@ -18,8 +18,8 @@ import org.specs.Riscv.provider.RiscvLivermoreN100im;
 import org.specs.Riscv.stream.RiscvTraceProducer;
 import org.specs.Riscv.stream.RiscvTraceStream;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 import pt.up.fe.specs.binarytranslation.test.detection.ThreadedSegmentDetectUtils;
 
 public class RiscvBatchFrequentSequenceTest {

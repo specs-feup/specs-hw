@@ -18,7 +18,6 @@ import java.util.List;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressDetector;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.GraphUtils;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.templates.GraphTemplateType;
@@ -29,6 +28,7 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemo
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformShiftsToMult;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class MemoryAccessTypesAnalyzer extends APatternAnalyzer {

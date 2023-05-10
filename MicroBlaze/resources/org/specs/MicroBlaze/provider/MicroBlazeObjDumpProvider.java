@@ -13,7 +13,7 @@
  
 package org.specs.MicroBlaze.provider;
 
-import pt.up.fe.specs.binarytranslation.ObjDumpProvider;
+import pt.up.fe.specs.binarytranslation.elf.ObjDumpProvider;
 
 public class MicroBlazeObjDumpProvider extends ObjDumpProvider implements MicroBlazeELFProvider {
 

@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.Arm.instruction;
 
 import org.specs.Arm.parsing.ArmAsmField;
@@ -39,22 +39,6 @@ public class ArmOperand extends AOperand {
      */
     private ArmOperand(OperandProperties props, String value) {
         super(props, value);
-    }
-
-    /*
-     * 
-     */
-    private static ArmOperand newInstance(
-            ArmAsmField field, String prefix, String suffix, Number value,
-            OperandType opType, OperandAccessType opRnw,
-            OperandDataType opDataType, OperandDataSize opDataSize) {
-
-        var checkType = (value.intValue() == SPvalue) ? OperandType.SPECIAL : opType;
-        var props = new AOperandProperties(field, prefix, suffix, checkType, opRnw, opDataType, opDataSize);
-        if (checkType == OperandType.SPECIAL)
-            return new ArmOperand(props, "sp");
-        else
-            return new ArmOperand(props, value);
     }
 
     private static String getPrefix(int width) {

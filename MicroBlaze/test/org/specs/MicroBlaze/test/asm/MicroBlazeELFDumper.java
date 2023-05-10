@@ -20,8 +20,8 @@ import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 import org.specs.MicroBlaze.provider.MicroBlazeRosetta;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.asm.ELFDumper;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 
 public class MicroBlazeELFDumper extends ELFDumper {
 

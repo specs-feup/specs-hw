@@ -18,8 +18,8 @@ import org.specs.Arm.provider.ArmLivermoreN100;
 import org.specs.Arm.stream.ArmTraceProducer;
 import org.specs.Arm.stream.ArmTraceStream;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.TraceBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 import pt.up.fe.specs.binarytranslation.test.detection.ThreadedSegmentDetectUtils;
 
 public class ArmBatchFrequentSequenceTest {

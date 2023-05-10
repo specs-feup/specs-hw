@@ -21,7 +21,7 @@ import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 
 public class MicroBlazeBasicBlockInfo {
     public static Map<ZippedELFProvider, Integer[]> getLivermoreN100Kernels() {

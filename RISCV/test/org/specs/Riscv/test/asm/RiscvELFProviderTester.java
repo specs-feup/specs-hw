@@ -20,7 +20,7 @@ import org.specs.Riscv.provider.RiscvLivermoreN100imaf;
 import org.specs.Riscv.provider.RiscvPolyBenchMiniFloat;
 import org.specs.Riscv.provider.RiscvPolyBenchMiniInt;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 import pt.up.fe.specs.binarytranslation.test.asm.ELFProviderTester;
 
 public class RiscvELFProviderTester extends ELFProviderTester {

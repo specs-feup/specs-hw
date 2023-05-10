@@ -16,7 +16,6 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.ASegmentAnalyzer;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.dataflow.DataFlowCriticalPath;
@@ -29,6 +28,7 @@ import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataF
 import pt.up.fe.specs.binarytranslation.analysis.graphs.transforms.TransformRemoveZeroLatencyOps;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 

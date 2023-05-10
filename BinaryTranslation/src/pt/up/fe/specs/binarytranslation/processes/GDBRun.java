@@ -23,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.specshw.processes.StdioThreads;
+import pt.up.fe.specs.specshw.processes.StringProcessRun;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.providers.ResourceProvider;

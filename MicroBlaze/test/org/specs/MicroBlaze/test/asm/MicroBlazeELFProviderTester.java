@@ -20,7 +20,7 @@ import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniInt;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 import pt.up.fe.specs.binarytranslation.test.asm.ELFProviderTester;
 
 public class MicroBlazeELFProviderTester extends ELFProviderTester {

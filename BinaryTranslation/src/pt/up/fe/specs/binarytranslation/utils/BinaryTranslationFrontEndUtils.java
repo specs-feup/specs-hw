@@ -13,11 +13,11 @@
  
 package pt.up.fe.specs.binarytranslation.utils;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.detection.detectors.DetectorConfiguration.DetectorConfigurationBuilder;
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.StaticBasicBlockDetector;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 import pt.up.fe.specs.binarytranslation.graph.GraphBundle;
 
 /**

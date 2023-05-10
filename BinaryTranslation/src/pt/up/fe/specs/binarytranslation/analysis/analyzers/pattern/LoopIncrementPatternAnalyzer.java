@@ -19,12 +19,12 @@ import java.util.List;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.BtfVertex.BtfVertexType;
 import pt.up.fe.specs.binarytranslation.analysis.graphs.dataflow.BasicBlockDataFlowGraph;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class LoopIncrementPatternAnalyzer extends APatternAnalyzer {

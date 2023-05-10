@@ -13,7 +13,7 @@
  
 package org.specs.Arm.provider;
 
-import pt.up.fe.specs.binarytranslation.TraceDumpProvider;
+import pt.up.fe.specs.binarytranslation.elf.TraceDumpProvider;
 
 public class ArmTraceDumpProvider extends TraceDumpProvider implements ArmELFProvider {
 

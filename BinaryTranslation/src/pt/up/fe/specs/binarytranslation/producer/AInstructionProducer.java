@@ -20,7 +20,7 @@ import com.google.gson.annotations.Expose;
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionInstantiator;
-import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
+import pt.up.fe.specs.specshw.processes.StringProcessRun;
 import pt.up.fe.specs.util.SpecsStrings;
 
 public abstract class AInstructionProducer implements InstructionProducer {

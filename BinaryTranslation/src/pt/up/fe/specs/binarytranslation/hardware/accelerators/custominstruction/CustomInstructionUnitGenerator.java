@@ -18,13 +18,6 @@ import pt.up.fe.specs.binarytranslation.graph.GraphNode;
 import pt.up.fe.specs.binarytranslation.hardware.HardwareArchitecture;
 import pt.up.fe.specs.binarytranslation.hardware.generation.AHardwareGenerator;
 import pt.up.fe.specs.binarytranslation.hardware.generation.visitors.InstructionASTConverter;
-import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.HardwareNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.constructs.AlwaysCombBlock;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.InputPortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.meta.HardwareCommentNode;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.task.HardwareErrorMessage;
 import pt.up.fe.specs.binarytranslation.instruction.ast.InstructionAST;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.InstructionASTNodeType;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.PseudoInstructionASTNode;
@@ -32,6 +25,13 @@ import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.operand.Opera
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplyInstructionPass;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.ApplySSAPass;
 import pt.up.fe.specs.binarytranslation.instruction.ast.passes.MetaFieldFetcherPass;
+import pt.up.fe.specs.specshw.hardware.tree.VerilogModuleTree;
+import pt.up.fe.specs.specshw.hardware.tree.nodes.HardwareNode;
+import pt.up.fe.specs.specshw.hardware.tree.nodes.constructs.AlwaysCombBlock;
+import pt.up.fe.specs.specshw.hardware.tree.nodes.declaration.port.InputPortDeclaration;
+import pt.up.fe.specs.specshw.hardware.tree.nodes.declaration.port.OutputPortDeclaration;
+import pt.up.fe.specs.specshw.hardware.tree.nodes.meta.HardwareCommentNode;
+import pt.up.fe.specs.specshw.hardware.tree.nodes.task.HardwareErrorMessage;
 
 /**
  * Generates a single dedicated verilog module for a single binary segment

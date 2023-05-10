@@ -20,7 +20,7 @@ import org.specs.Arm.provider.ArmLivermoreN100;
 import org.specs.Arm.provider.ArmPolyBenchMiniFloat;
 import org.specs.Arm.provider.ArmPolyBenchMiniInt;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 import pt.up.fe.specs.binarytranslation.test.asm.ELFProviderTester;
 
 public class ArmELFProviderTester extends ELFProviderTester {

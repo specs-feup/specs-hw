@@ -20,6 +20,7 @@ import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
 import pt.up.fe.specs.specshw.SpecsHwUtils;
+import pt.up.fe.specs.specshw.processes.StringProcessRun;
 
 public class VerilatorCompile extends StringProcessRun {
 

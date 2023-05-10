@@ -13,7 +13,7 @@
  
 package org.specs.MicroBlaze.provider;
 
-import pt.up.fe.specs.binarytranslation.TraceDumpProvider;
+import pt.up.fe.specs.binarytranslation.elf.TraceDumpProvider;
 
 public class MicroBlazeTraceDumpProvider extends TraceDumpProvider implements MicroBlazeELFProvider {
 

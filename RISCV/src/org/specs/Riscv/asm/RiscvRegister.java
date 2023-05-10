@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.Riscv.asm;
 
 import static pt.up.fe.specs.binarytranslation.instruction.register.RegisterType.*;
@@ -23,6 +23,8 @@ import pt.up.fe.specs.binarytranslation.instruction.register.RegisterType;
 
 public enum RiscvRegister implements Register {
 
+    // https://msyksphinz-self.github.io/riscv-isadoc/html/regs.html
+
     // GP bank
     x0("zero", HARDZERO),
     x1("ra", GENERALPURPOSE, RETURNADDR),
@@ -32,7 +34,7 @@ public enum RiscvRegister implements Register {
     x5("t0", GENERALPURPOSE, TEMPORARY),
     x6("t1", GENERALPURPOSE, TEMPORARY),
     x7("t2", GENERALPURPOSE, TEMPORARY),
-    x8("fp", GENERALPURPOSE, TEMPORARY), // TODO this register has an alias "s0"
+    x8("fp", GENERALPURPOSE, SAVED, FRAMEPOINTER), // TODO this register has an alias "s0"
     x9("s1", GENERALPURPOSE, SAVED),
     x10("a0", GENERALPURPOSE, PARAMETER, RETURNVALUE),
     x11("a1", GENERALPURPOSE, PARAMETER, RETURNVALUE),

@@ -13,7 +13,7 @@
  
 package org.specs.MicroBlaze.provider;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 
 public interface MicroBlazeZippedELFProvider extends MicroBlazeELFProvider, ZippedELFProvider {
 

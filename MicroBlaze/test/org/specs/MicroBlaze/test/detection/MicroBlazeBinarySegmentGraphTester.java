@@ -10,16 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.MicroBlaze.test.detection;
 
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
-import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
-import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
-import org.specs.MicroBlaze.stream.MicroBlazeElfStream;
-import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
 import pt.up.fe.specs.binarytranslation.detection.detectors.SegmentDetector;
 import pt.up.fe.specs.binarytranslation.detection.detectors.fixed.FrequentStaticSequenceDetector;
@@ -31,10 +27,8 @@ import pt.up.fe.specs.binarytranslation.stream.InstructionStream;
 
 public class MicroBlazeBinarySegmentGraphTester {
 
-    private MicroBlazeELFProvider getELF() {
-        var elf = MicroBlazeLivermoreN100.cholesky;
-        return new MicroBlazeTraceDumpProvider((MicroBlazeELFProvider) elf);
-    }
+    // EUT elf under test
+    private static MicroBlazeELFProvider elf = MicroBlazeLivermoreN100.cholesky;
 
     private void getSegments(InstructionStream el, SegmentDetector bbd) {
         var bundle = bbd.detectSegments(el);
@@ -52,33 +46,21 @@ public class MicroBlazeBinarySegmentGraphTester {
 
     @Test
     public void testStaticFrequentSequence() {
-        try (var el = new MicroBlazeElfStream(getELF())) {
-            var bbd = new FrequentStaticSequenceDetector();
-            getSegments(el, bbd);
-        }
+        getSegments(elf.toStaticStream(), new FrequentStaticSequenceDetector());
     }
 
     @Test
     public void testStaticBasicBlock() {
-        try (var el = new MicroBlazeElfStream(getELF())) {
-            var bbd = new StaticBasicBlockDetector();
-            getSegments(el, bbd);
-        }
+        getSegments(elf.toStaticStream(), new StaticBasicBlockDetector());
     }
 
     @Test
     public void testTraceFrequenceSequence() {
-        try (var el = new MicroBlazeTraceStream(getELF())) {
-            var bbd = new FrequentTraceSequenceDetector();
-            getSegments(el, bbd);
-        }
+        getSegments(elf.toTraceStream(), new FrequentTraceSequenceDetector());
     }
 
     @Test
     public void testTraceBasicBlock() {
-        try (var el = new MicroBlazeTraceStream(getELF())) {
-            var bbd = new TraceBasicBlockDetector();
-            getSegments(el, bbd);
-        }
+        getSegments(elf.toTraceStream(), new TraceBasicBlockDetector());
     }
 }

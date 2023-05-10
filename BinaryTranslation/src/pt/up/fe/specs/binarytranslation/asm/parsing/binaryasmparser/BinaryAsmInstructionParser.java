@@ -81,16 +81,6 @@ public class BinaryAsmInstructionParser implements AsmParser {
                     constString = SpecsStrings.buildLine(constString, result.getAmount());
                     currentRule = result.getCurrentString();
                 }
-                // if (currentRule.startsWith("(")) {
-                // int endIndex = currentRule.indexOf(')');
-                // if (endIndex == -1) {
-                // throw new RuntimeException("Unbalanced parenthesis on rule: " + rule);
-                // }
-                //
-                // int amount = Integer.parseInt(currentRule.substring(1, endIndex));
-                // constString = SpecsStrings.buildLine(constString, amount);
-                // currentRule = currentRule.substring(endIndex + 1);
-                // }
 
                 rules.add(new ConstantRule(constString));
                 continue;

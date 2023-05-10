@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.specs.Riscv.provider.RiscvPolyBenchMiniFloat;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 
 public class RiscvBasicBlockStaticInfo {
     public static Map<ELFProvider, Long[][]> getPolybenchSmallFloatKernels() {

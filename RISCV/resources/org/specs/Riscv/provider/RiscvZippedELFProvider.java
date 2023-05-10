@@ -13,7 +13,7 @@
  
 package org.specs.Riscv.provider;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 
 public interface RiscvZippedELFProvider extends RiscvELFProvider, ZippedELFProvider {
 

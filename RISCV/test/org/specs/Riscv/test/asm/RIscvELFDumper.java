@@ -20,8 +20,8 @@ import org.junit.Test;
 import org.specs.Riscv.provider.RiscvLivermoreN100im;
 import org.specs.Riscv.provider.RiscvPolyBenchMiniFloat;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
 import pt.up.fe.specs.binarytranslation.asm.ELFDumper;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 
 public class RIscvELFDumper extends ELFDumper {
 

@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.test.processes;
 
 import java.util.concurrent.TimeUnit;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 import pt.up.fe.specs.binarytranslation.processes.QEMU;
 
 public class QEMUTester {

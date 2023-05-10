@@ -17,7 +17,7 @@ import org.specs.Arm.ArmApplication;
 import org.specs.Arm.stream.ArmElfStream;
 import org.specs.Arm.stream.ArmTraceStream;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 

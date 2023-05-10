@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.MicroBlaze.test.analysis;
 
 import java.io.BufferedOutputStream;
@@ -19,7 +19,6 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import org.junit.Test;
-import org.specs.MicroBlaze.asm.MicroBlazeRegisterConventions;
 import org.specs.MicroBlaze.provider.MicroBlazeGccOptimizationLevels;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN10;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceProducer;
@@ -228,7 +227,7 @@ public class MicroBlazeTraceAnalysisTest {
         // var elf = MicroBlazeGccOptimizationLevels.firparam2; int window = 10;
 
         var stream = new MicroBlazeTraceStream(elf);
-        var maa = new MemoryAddressAnalyzer(stream, elf, new MicroBlazeRegisterConventions(), window);
+        var maa = new MemoryAddressAnalyzer(stream, elf, window);
         maa.analyze();
     }
 }

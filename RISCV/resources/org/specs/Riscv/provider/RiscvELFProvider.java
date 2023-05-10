@@ -17,7 +17,7 @@ import org.specs.Riscv.RiscvApplication;
 import org.specs.Riscv.stream.RiscvElfStream;
 import org.specs.Riscv.stream.RiscvTraceStream;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 import pt.up.fe.specs.binarytranslation.stream.StaticInstructionStream;
 import pt.up.fe.specs.binarytranslation.stream.TraceInstructionStream;
 

@@ -17,8 +17,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.hardware.tree.HardwareTree;
 import pt.up.fe.specs.crispy.ast.meta.HardwareRootNode;
+import pt.up.fe.specs.specshw.hardware.tree.HardwareTree;
 
 public abstract class AHardwareArchitecture implements HardwareArchitecture {
 

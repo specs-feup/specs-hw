@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
 import pt.up.fe.specs.binarytranslation.hardware.generation.HardwareFolderGenerator;
-import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
 import pt.up.fe.specs.binarytranslation.processes.VerilatorCompile;
+import pt.up.fe.specs.specshw.BinaryTranslationResource;
+import pt.up.fe.specs.specshw.processes.StringProcessRun;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.utilities.Replacer;
 

@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
+import pt.up.fe.specs.specshw.BinaryTranslationResource;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.utilities.Replacer;
 

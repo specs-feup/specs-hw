@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.binarytranslation.asm.Application;
+import pt.up.fe.specs.specshw.processes.StringProcessRun;
 
 public class ObjDump extends StringProcessRun {
 

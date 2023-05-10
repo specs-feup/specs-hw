@@ -15,8 +15,8 @@ package pt.up.fe.specs.binarytranslation.test.processes;
 
 import org.junit.Test;
 
-import pt.up.fe.specs.binarytranslation.processes.TxtDump;
 import pt.up.fe.specs.binarytranslation.utils.BinaryTranslationUtils;
+import pt.up.fe.specs.specshw.processes.TxtDump;
 
 public class TxtDumpTest {
 

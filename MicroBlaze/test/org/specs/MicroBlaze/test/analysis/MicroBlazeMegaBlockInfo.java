@@ -23,7 +23,7 @@ import java.util.Map;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 import org.specs.MicroBlaze.provider.MicroBlazePolyBenchMiniFloat;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 
 public class MicroBlazeMegaBlockInfo {
     public static Map<ZippedELFProvider, Integer[]> getLivermoreN100Kernels() {

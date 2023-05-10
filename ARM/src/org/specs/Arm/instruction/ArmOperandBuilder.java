@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package org.specs.Arm.instruction;
 
 import java.util.Collections;
@@ -21,6 +21,7 @@ import org.specs.Arm.parsing.ArmAsmField;
 
 import pt.up.fe.specs.binarytranslation.instruction.operand.Operand;
 import pt.up.fe.specs.binarytranslation.instruction.operand.OperandAccessType;
+import pt.up.fe.specs.binarytranslation.instruction.operand.OperandDataSize;
 
 /*
  * this class only exists to provide a shorthandle to the providers
@@ -41,6 +42,25 @@ public class ArmOperandBuilder {
      */
     interface ArmOperandProvider {
         ArmOperand apply(ArmAsmField field, Number value, int width);
+    }
+
+    private static final Map<Integer, OperandDataSize> WIDTHS;
+    static {
+        // NIBBLE(4),
+        // BYTE(8),
+        // HALFWORD(16),
+        // WORD(32),
+        // DWORD(64),
+        // QWORD(128);
+
+        Map<Integer, OperandDataSize> widths = new HashMap<Integer, OperandDataSize>();
+        widths.put(4, OperandDataSize.NIBBLE);
+        widths.put(8, OperandDataSize.BYTE);
+        widths.put(16, OperandDataSize.HALFWORD);
+        widths.put(32, OperandDataSize.WORD);
+        widths.put(64, OperandDataSize.DWORD);
+        widths.put(128, OperandDataSize.QWORD);
+        WIDTHS = Collections.unmodifiableMap(widths);
     }
 
     private static final Map<Integer, ArmOperandProvider> OPERANDPROVIDE;

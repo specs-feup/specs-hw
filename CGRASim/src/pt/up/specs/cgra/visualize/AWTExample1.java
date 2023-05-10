@@ -18,18 +18,20 @@ import java.awt.Frame;
 
 public class AWTExample1 {
 
+    private Frame f;
+    private Button btn;
+
     public AWTExample1() {
-        var f = new Frame();
-        var btn = new Button("Hello World");
+        this.f = new Frame();
+        this.btn = new Button("Hello World");
         btn.setBounds(80, 80, 100, 50);
         f.add(btn); // adding a new Button.
         f.setSize(300, 250); // setting size.
         f.setTitle("JavaTPoint"); // setting title.
         f.setLayout(null); // set default layout for frame.
-        f.setVisible(true); // set frame visibility true.
     }
 
-    public static void main(String[] args) {
-        var awt = new AWTExample1(); // creating a frame.
+    public void setVisible() {
+        f.setVisible(true); // set frame visibility true.
     }
 }

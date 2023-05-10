@@ -13,7 +13,7 @@
 
 package org.specs.Riscv.provider;
 
-import pt.up.fe.specs.binarytranslation.ObjDumpProvider;
+import pt.up.fe.specs.binarytranslation.elf.ObjDumpProvider;
 
 public class RiscvObjDumpProvider extends ObjDumpProvider implements RiscvELFProvider {
 

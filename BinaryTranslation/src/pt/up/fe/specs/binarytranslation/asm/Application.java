@@ -25,7 +25,7 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 
 import com.google.gson.annotations.Expose;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.providers.ResourceProvider;

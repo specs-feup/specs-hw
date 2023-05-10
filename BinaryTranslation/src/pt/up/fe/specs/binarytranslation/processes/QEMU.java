@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import pt.up.fe.specs.binarytranslation.NullResource;
 import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.specshw.SpecsHwUtils;
 import pt.up.fe.specs.util.utilities.Replacer;
@@ -107,7 +106,8 @@ public class QEMU implements AutoCloseable {
         qemuArgs.replace("<PORT>", port);
 
         var dtbResourceProvider = app.get(Application.BAREMETAL_DTB);
-        if (dtbResourceProvider != NullResource.nullResource) {
+        // if (dtbResourceProvider != NullResource.nullResource) {
+        if (dtbResourceProvider != null) { // TODO: works?
             var dtbfileOnDisk = dtbResourceProvider.write();
             dtbfileOnDisk.deleteOnExit();
             var dtbpath = dtbfileOnDisk.getAbsolutePath();

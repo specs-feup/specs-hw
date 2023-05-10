@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.test.asm;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.ELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ELFProvider;
 
 public class ELFProviderTester {
 

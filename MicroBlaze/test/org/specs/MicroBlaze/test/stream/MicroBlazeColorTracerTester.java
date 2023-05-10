@@ -18,7 +18,7 @@ import java.io.File;
 import org.junit.Test;
 import org.specs.MicroBlaze.provider.MicroBlazeLivermoreN100;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
 import pt.up.fe.specs.util.SpecsIo;

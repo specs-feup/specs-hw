@@ -15,7 +15,6 @@ package pt.up.fe.specs.binarytranslation.hardware.generation.visitors;
 
 import pt.up.fe.specs.binarytranslation.hardware.generation.exception.HardwareGenerationException;
 import pt.up.fe.specs.binarytranslation.hardware.generation.exception.UnimplementedExpressionException;
-import pt.up.fe.specs.binarytranslation.hardware.tree.nodes.expression.operator.ImmediateOperator;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.AssignmentExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.BinaryExpressionASTNode;
 import pt.up.fe.specs.binarytranslation.instruction.ast.nodes.base.expr.UnaryExpressionASTNode;
@@ -37,6 +36,7 @@ import pt.up.fe.specs.crispy.ast.expression.operator.VariableOperator;
 import pt.up.fe.specs.crispy.ast.statement.ContinuousStatement;
 import pt.up.fe.specs.crispy.ast.statement.ProceduralBlockingStatement;
 import pt.up.fe.specs.crispy.ast.statement.ProceduralNonBlockingStatement;
+import pt.up.fe.specs.specshw.hardware.tree.nodes.expression.operator.ImmediateOperator;
 
 /**
  * Converts a single {@AssignmentExpressionASTNode} into a single corresponding hardware expression

@@ -129,6 +129,8 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         // execute compute
         this.mesh.execute();
 
+        // update view
+
         return true; // eventually use this return to indicate stalling or something
     }
 

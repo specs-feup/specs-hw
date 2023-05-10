@@ -13,7 +13,7 @@
  
 package org.specs.Arm.provider;
 
-import pt.up.fe.specs.binarytranslation.ObjDumpProvider;
+import pt.up.fe.specs.binarytranslation.elf.ObjDumpProvider;
 
 public class ArmObjDumpProvider extends ObjDumpProvider implements ArmELFProvider {
 

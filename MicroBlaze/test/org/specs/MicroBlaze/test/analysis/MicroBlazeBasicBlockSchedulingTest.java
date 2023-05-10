@@ -23,11 +23,11 @@ import org.specs.MicroBlaze.provider.MicroBlazeELFProvider;
 import org.specs.MicroBlaze.provider.MicroBlazeTraceDumpProvider;
 import org.specs.MicroBlaze.stream.MicroBlazeTraceStream;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterDataFlow;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterScheduling;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.reporters.ReporterSummary;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegmentType;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 import pt.up.fe.specs.util.SpecsLogs;
 

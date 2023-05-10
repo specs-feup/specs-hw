@@ -13,7 +13,7 @@
  
 package org.specs.Riscv.provider;
 
-import pt.up.fe.specs.binarytranslation.TraceDumpProvider;
+import pt.up.fe.specs.binarytranslation.elf.TraceDumpProvider;
 
 public class RiscvTraceDumpProvider extends TraceDumpProvider implements RiscvELFProvider {
 

@@ -25,10 +25,10 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 
-import pt.up.fe.specs.binarytranslation.BinaryTranslationResource;
 import pt.up.fe.specs.binarytranslation.detection.segments.SegmentContext;
 import pt.up.fe.specs.binarytranslation.graph.edge.GraphInput;
 import pt.up.fe.specs.binarytranslation.graph.edge.GraphOutput;
+import pt.up.fe.specs.specshw.BinaryTranslationResource;
 import pt.up.fe.specs.specshw.SpecsHwUtils;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.Replacer;

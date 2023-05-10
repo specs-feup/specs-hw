@@ -19,8 +19,8 @@ import pt.up.fe.specs.binarytranslation.asm.Application;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.instruction.InstructionInstantiator;
 import pt.up.fe.specs.binarytranslation.processes.GDBRun;
-import pt.up.fe.specs.binarytranslation.processes.StringProcessRun;
-import pt.up.fe.specs.binarytranslation.processes.TxtDump;
+import pt.up.fe.specs.specshw.processes.StringProcessRun;
+import pt.up.fe.specs.specshw.processes.TxtDump;
 
 public class TraceInstructionProducer extends AInstructionProducer {
 

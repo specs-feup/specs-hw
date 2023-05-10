@@ -3,11 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="resources"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/XStreamPlus"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SpecsUtils"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/jOptions"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Crispy"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SpecsHwSupport"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
@@ -15,5 +10,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=BinaryTranslation&amp;ivyXmlPath=ivy.xml&amp;confs=*"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/XStreamPlus"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SpecsUtils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jOptions"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Crispy"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SpecsHWUtils"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

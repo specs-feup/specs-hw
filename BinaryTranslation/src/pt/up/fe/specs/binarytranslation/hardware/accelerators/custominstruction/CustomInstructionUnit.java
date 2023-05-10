@@ -15,7 +15,7 @@ package pt.up.fe.specs.binarytranslation.hardware.accelerators.custominstruction
 
 import pt.up.fe.specs.binarytranslation.graph.BinarySegmentGraph;
 import pt.up.fe.specs.binarytranslation.hardware.AHardwareArchitecture;
-import pt.up.fe.specs.binarytranslation.hardware.tree.VerilogModuleTree;
+import pt.up.fe.specs.specshw.hardware.tree.VerilogModuleTree;
 
 public class CustomInstructionUnit extends AHardwareArchitecture {
 

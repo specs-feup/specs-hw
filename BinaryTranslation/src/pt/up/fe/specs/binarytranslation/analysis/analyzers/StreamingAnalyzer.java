@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.AddressGenerationUnit;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.InductionVariablesDetector;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.memory.MemoryAddressDetector;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
 public class StreamingAnalyzer extends ASegmentAnalyzer {

@@ -15,13 +15,13 @@ package pt.up.fe.specs.binarytranslation.analysis.analyzers;
 
 import java.util.List;
 
-import pt.up.fe.specs.binarytranslation.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.analysis.AnalysisUtils;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.BasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.OutElimination;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.SimpleBasicBlockInOuts;
 import pt.up.fe.specs.binarytranslation.analysis.analyzers.inouts.TraceInOuts;
 import pt.up.fe.specs.binarytranslation.detection.segments.BinarySegment;
+import pt.up.fe.specs.binarytranslation.elf.ZippedELFProvider;
 import pt.up.fe.specs.binarytranslation.instruction.Instruction;
 import pt.up.fe.specs.binarytranslation.stream.ATraceInstructionStream;
 
