@@ -30,14 +30,20 @@ public class EmptyPE implements ProcessingElement {
         return null;
     }
 
-	@Override
-	public void clearRegisterFile() {
-		
-	}
+    @Override
+    public void clearRegisterFile() {
 
-	@Override
-	public void setnConnections() {
-		// TODO Auto-generated method stub
-		
-	}
+    }
+
+    @Override
+    public void setnConnections() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void reset() {
+        // TODO Auto-generated method stub
+
+    }
 }

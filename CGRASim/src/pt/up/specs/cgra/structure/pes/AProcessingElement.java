@@ -22,265 +22,262 @@ import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort.PEPortDirection;
-import pt.up.specs.cgra.structure.pes.alu.ALUControlSetting;
 
 public abstract class AProcessingElement implements ProcessingElement {
 
-	// private String peID;
-	private Mesh myparent;
-	private int xPos, yPos;
-	private int latency;
-	private boolean hasMemory;
-	private boolean ready;
-	private boolean executing;
-	private int executeCount;
-	private int memorySize;
-	protected PEControlSetting ctrl;
-	private int nConnections;
-	// private int writeIdx = 0;
+    // private String peID;
+    private Mesh myparent;
+    private int xPos, yPos;
+    private int latency;
+    private boolean hasMemory;
+    private boolean ready;
+    private boolean executing;
+    private int executeCount;
+    private int memorySize;
+    protected PEControlSetting ctrl;
+    private int nConnections;
+    // private int writeIdx = 0;
 
+    /*
+     * local memory to hold constants
+     */
+    private GenericMemory constants = new GenericMemory(2);// 2 inteiros
 
-	/*
-	 * local memory to hold constants
-	 */
-	private GenericMemory constants = new GenericMemory(2);// 2 inteiros
+    /*
+     * register file (for values computed during operation)
+     */
+    private List<PEData> registerFile;
 
-	/*
-	 * register file (for values computed during operation)
-	 */
-	private List<PEData> registerFile;
+    /*
+     * initialized by children
+     */
+    protected List<ProcessingElementPort> ports;
 
-	/*
-	 * initialized by children
-	 */
-	protected List<ProcessingElementPort> ports;
+    protected AProcessingElement(int latency, int memorySize) {
+        this.latency = latency;
+        this.memorySize = memorySize;
+        this.registerFile = new ArrayList<PEData>(memorySize);
+        this.ready = false;
+        this.nConnections = 0;
 
+        if (this.memorySize > 0) {
+            this.hasMemory = true;
+            for (int i = 0; i < this.memorySize; i++) {
+                this.registerFile.add(null);
+            }
+        } else {
+            this.hasMemory = false;
+        }
+    }
 
-	protected AProcessingElement(int latency, int memorySize) {
-		this.latency = latency;
-		this.memorySize = memorySize;
-		this.registerFile = new ArrayList<PEData>(memorySize);
-		this.ready = false;
-		this.nConnections = 0;
+    protected AProcessingElement(int latency) {
+        this(latency, 1);
+    }
 
-		if (this.memorySize > 0) {
-			this.hasMemory = true;
-			for (int i = 0; i < this.memorySize; i++)
-			{
-				this.registerFile.add(null);
-			}
-		} else {
-			this.hasMemory = false;
-		}
-	}
+    protected AProcessingElement() {
+        this(1);
+    }
 
-	protected AProcessingElement(int latency) {
-		this(latency, 1);
-	}
+    /*
+     * (just for testing???)
+     */
+    @Override
+    public List<ProcessingElementPort> getPorts() {
+        return this.ports;
+    }
 
-	protected AProcessingElement() {
-		this(1);
-	}
+    @Override
+    public String statusString() {
+        var strbld = new StringBuilder();
+        strbld.append("PE." + this.xPos + "." + this.yPos + "(");
+        for (var iPort : this.ports) {
+            if (iPort.getDir() == PEPortDirection.input) {
+                // PE -> Mesh (parent) -> CGRA (parent) -> Interconnect (child)
+                var driver = this.getMesh().getCGRA().getInterconnect().findDriver(iPort);
+                if (driver != null)
+                    strbld.append(iPort.toString() + "<-" + driver.toString());
+            }
+        }
+        return strbld.toString();
+    }
 
-	/*
-	 * (just for testing???)
-	 */
-	@Override
-	public List<ProcessingElementPort> getPorts() {
-		return this.ports;
-	}
+    @Override
+    public boolean setMesh(Mesh myparent) {
+        this.myparent = myparent;
+        return true;
+    }
 
-	@Override
-	public String statusString() {
-		var strbld = new StringBuilder();
-		strbld.append("PE." + this.xPos + "." + this.yPos + "(");
-		for (var iPort : this.ports) {
-			if (iPort.getDir() == PEPortDirection.input) {
-				// PE -> Mesh (parent) -> CGRA (parent) -> Interconnect (child)
-				var driver = this.getMesh().getCGRA().getInterconnect().findDriver(iPort);
-				if (driver != null)
-					strbld.append(iPort.toString() + "<-" + driver.toString());
-			}
-		}
-		return strbld.toString();
-	}
+    @Override
+    public Mesh getMesh() {
+        return this.myparent;
+    }
 
-	@Override
-	public boolean setMesh(Mesh myparent) {
-		this.myparent = myparent;
-		return true;
-	}
+    @Override
+    public List<PEData> getRegisterFile() {
+        return registerFile;
+    }
 
-	@Override
-	public Mesh getMesh() {
-		return this.myparent;
-	}
+    @Override
+    public void setRegisterFile(List<PEData> registerFile) {
+        this.registerFile = registerFile;
+    }
 
-	@Override
-	public List<PEData> getRegisterFile() {
-		return registerFile;
-	}
+    public void clearRegisterFile() {
+        for (int i = 0; i < this.memorySize; i++) {
+            this.registerFile.set(i, new PEInteger(0));
+            System.out.printf("PE %d %d register file cleared \n", this.getX(), this.getY());
+        }
+    }
 
-	@Override
-	public void setRegisterFile(List<PEData> registerFile) {
-		this.registerFile = registerFile;
-	}
+    @Override
+    public boolean setX(int x) {
+        if (this.xPos == -1)
+            return false;
+        else {
+            this.xPos = x;
+            return true;
+        }
+    }
 
-	public void clearRegisterFile() {
-		for (int i = 0; i < this.memorySize; i++)
-		{
-			this.registerFile.set(i, new PEInteger(0));
-			System.out.printf("PE %d %d register file cleared \n", this.getX(), this.getY());
-		}	
-	}
+    @Override
+    public boolean setY(int y) {
+        if (this.yPos == -1)
+            return false;
+        else {
+            this.yPos = y;
+            return true;
+        }
+    }
 
-	@Override
-	public boolean setX(int x) {
-		if (this.xPos == -1)
-			return false;
-		else {
-			this.xPos = x;
-			return true;
-		}
-	}
+    @Override
+    public int getX() {
+        return this.xPos;
+    }
 
-	@Override
-	public boolean setY(int y) {
-		if (this.yPos == -1)
-			return false;
-		else {
-			this.yPos = y;
-			return true;
-		}
-	}
+    @Override
+    public int getY() {
+        return this.yPos;
+    }
 
-	@Override
-	public int getX() {
-		return this.xPos;
-	}
+    @Override
+    public int getLatency() {
+        return latency;
+    }
 
-	@Override
-	public int getY() {
-		return this.yPos;
-	}
+    @Override
+    public boolean hasMemory() {
+        return hasMemory;
+    }
 
-	@Override
-	public int getLatency() {
-		return latency;
-	}
+    @Override
+    public int getMemorySize() {
+        return memorySize;
+    }
 
-	@Override
-	public boolean hasMemory() {
-		return hasMemory;
-	}
+    @Override
+    public boolean isExecuting() {
+        return this.executing;
+    }
 
-	@Override
-	public int getMemorySize() {
-		return memorySize;
-	}
+    @Override
+    public boolean isReady() {
+        return this.ready;
+    }
 
-	@Override
-	public boolean isExecuting() {
-		return this.executing;
-	}
+    @Override
+    public int getExecuteCount() {
+        return this.executeCount;
+    }
 
-	@Override
-	public boolean isReady() {
-		return this.ready;
-	}
+    /*
+     * Use by children
+     */
+    protected abstract PEData _execute();
 
-	@Override
-	public int getExecuteCount() {
-		return this.executeCount;
-	}
+    public PEData getOperand(int idx) {
+        return this.ports.get(idx).getPayload();
+    }
 
-	/*
-	 * Use by children
-	 */
-	protected abstract PEData _execute();
+    @Override
+    public PEData execute() {
 
+        this.ready = setReady();
+        // this.setnConnections(this.myparent.getCGRA().getInterconnect().);
 
-	public PEData getOperand(int idx) {
-		return this.ports.get(idx).getPayload();
-	}
+        if (this.ready) {
+            var result = _execute();
 
-	@Override
-	public PEData execute() {
-		
-		this.ready = setReady();
-		//this.setnConnections(this.myparent.getCGRA().getInterconnect().);
+            System.out.printf("PE %d %d of type %s executed successfuly with result: %d \n",
+                    this.getX(), this.getY(), this.toString(), result.getValue().intValue());
+            this.executeCount++;
+            // if (this.writeIdx != -1)
+            // this.registerFile.set(this.writeIdx, result)
+            if (hasMemory) {
+                this.registerFile.set(0, result);
+                System.out.println("Value stored in register");
 
-		if (this.ready)
-		{			
-			var result = _execute();
+            }
 
-			System.out.printf("PE %d %d of type %s executed successfuly with result: %d \n", 
-					this.getX(), this.getY(), this.toString(), result.getValue().intValue());
-			this.executeCount++;
-			// if (this.writeIdx != -1)
-			// this.registerFile.set(this.writeIdx, result)
-			if (hasMemory) 
-			{
-				this.registerFile.set(0, result);
-				System.out.println("Value stored in register");
+            return result;
+        } else
+            return null;
 
-			}
+    }
 
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName();
+    }
 
-			return result;
-		}
-		else return null;
+    // implemented by child
+    public abstract boolean setControl(int i);
 
-	}
+    // implemented by child
+    public abstract PEControlSetting getControl();
 
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
-	}
+    public int getnConnections() {
+        return nConnections;
+    }
 
-	//implemented by child
-	public abstract boolean setControl(int i);
+    public void setnConnections(int nConnections) {
+        this.nConnections = nConnections;
+    }
 
-	//implemented by child
-	public abstract PEControlSetting getControl();
+    public void setnConnections() {
+        this.nConnections++;
+    }
+    // TODO: estes 3 metodos são para que??
 
-	public int getnConnections() {
-		return nConnections;
-	}
+    @Override
+    public void reset() {
+        this.setControl(0);
+        this.clearRegisterFile();
+        for (var port : this.getPorts())
+            port.setPayload(null); // TODO: better way? NullPayload?
+    }
 
-	public void setnConnections(int nConnections) {
-		this.nConnections = nConnections;
-	}
+    public boolean setReady() // TODO: should be number_of_ports- agnostic
+    {
+        if (this.getControl() == null) {
+            System.out.printf("PE %d %d NOT ready for execution due to NULL control \n", this.getX(), this.getY());
+            return false;
+        }
+        /*else if (this.nConnections == 0)
+        {
+        	System.out.printf("PE %d %d NOT ready for execution due to nconnects being 0 \n", this.getX(), this.getY());
+        	return false;
+        }*/
+        else if (this.getPorts().get(0).getPayload() == null || this.getPorts().get(1).getPayload() == null) {
+            System.out.printf("PE %d %d NOT ready for execution due to NULL payloads \n", this.getX(), this.getY());
+            return false;
+        }
 
-	public void setnConnections() {
-		this.nConnections++;
-	}
+        System.out.printf("PE %d %d ready for execution \n", this.getX(), this.getY());
+        return true;
 
-	public boolean setReady() //TODO: should be number_of_ports- agnostic
-	{
-		if (this.getControl() == null)
-		{
-			System.out.printf("PE %d %d NOT ready for execution due to NULL control \n", this.getX(), this.getY());
-			return false;
-		}
-		/*else if (this.nConnections == 0)
-		{
-			System.out.printf("PE %d %d NOT ready for execution due to nconnects being 0 \n", this.getX(), this.getY());
-			return false;
-		}*/
-		else if (this.getPorts().get(0).getPayload() == null || this.getPorts().get(1).getPayload() == null)
-		{
-			System.out.printf("PE %d %d NOT ready for execution due to NULL payloads \n", this.getX(), this.getY());
-			return false;
-		}
+    }
 
-
-		System.out.printf("PE %d %d ready for execution \n", this.getX(), this.getY());
-		return true;
-
-	}
-
-	/* public void printStatus() {
+    /* public void printStatus() {
     		if (this.control == null)
     		{
     			System.out.println("No control associated");
@@ -297,9 +294,9 @@ public abstract class AProcessingElement implements ProcessingElement {
     			System.out.printf("Input One: %s \n", this.control.getInputone().name());
     			System.out.printf("Input Two: %s \n", this.control.getInputtwo().name());
     			System.out.println("\n");
-
+    
     		}
     	}
-
-	 */
+    
+     */
 }

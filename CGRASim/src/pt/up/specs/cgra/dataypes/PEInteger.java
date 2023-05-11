@@ -38,7 +38,7 @@ public class PEInteger implements PEData {
     }
 
     @Override
-    public PEData passnull(PEData operandB) {
+    public PEData passNull(PEData operandB) {
         return new PEInteger(0);
     }
 

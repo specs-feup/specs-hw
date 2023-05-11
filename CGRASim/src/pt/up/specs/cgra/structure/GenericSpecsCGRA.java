@@ -296,7 +296,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     public boolean reset() {
         this.mesh.reset();
         this.interconnect.clear();
-        // this.mesh.zero_ports(); //TODO: Better way to achieve the same
         return true;
     }
 

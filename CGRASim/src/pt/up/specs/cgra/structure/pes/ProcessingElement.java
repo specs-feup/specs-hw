@@ -116,6 +116,8 @@ public interface ProcessingElement {
         return false;
     }
 
+    public void reset();
+
     /*
      * opIndex:
      * 0: lhs

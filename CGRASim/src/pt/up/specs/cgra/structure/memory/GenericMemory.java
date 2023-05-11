@@ -15,7 +15,7 @@ package pt.up.specs.cgra.structure.memory;
 
 import java.util.HashMap;
 
-import pt.up.fe.specs.util.SpecsSystem;
+import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEInteger;
 
@@ -39,7 +39,7 @@ public class GenericMemory implements Memory {
         if (addr.getValue().intValue() > this.memsize)
             return false;
         this.mem.put(addr, data);
-        SpecsSystem.debug("GenericMemory: Data stored into generic memory: " + data + " at address " + waddr);
+        SpecsLogs.debug("GenericMemory: Data stored into generic memory: " + data + " at address " + addr);
         return true;
     }
 

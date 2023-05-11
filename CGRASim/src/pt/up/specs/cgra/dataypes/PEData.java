@@ -25,7 +25,7 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 public interface PEData {
 
-    public default PEData passnull(PEData operandB) {
+    public default PEData passNull(PEData operandB) {
         return null;
     }
 
@@ -81,12 +81,16 @@ public interface PEData {
         throw new NotImplementedException("PEData: seq not implemented");
     }
 
+    public default Number getValue() {
+        throw new NotImplementedException("PEData: getValue not implemented");
+    }
+
+    public default PEData copy() {
+        throw new NotImplementedException("PEData: copy not implemented");
+    }
+
     @Override
     public String toString();
-
-    public Number getValue();
-
-    public PEData copy();
 
     // public PEData partSelect(PEData operandB);
 }
