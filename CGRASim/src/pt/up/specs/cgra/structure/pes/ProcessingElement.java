@@ -20,95 +20,100 @@ import pt.up.specs.cgra.structure.mesh.Mesh;
 
 public interface ProcessingElement {
 
-    /*
-     * 
-     */
+    public List<ProcessingElementPort> getPorts();
+
+    default public String statusString() {
+        return "No status";
+    }
+
     default public boolean setMesh(Mesh mesh) {
         return false;
     }
 
-    /*
-     * 
-     */
     default public Mesh getMesh() {
         return null;
     }
 
-    /*
-     * 
-     */
-    default public boolean setX(int x) {
+    default public List<PEData> getRegisterFile() {
+        return null;
+    }
+
+    default public void setRegisterFile(List<PEData> x) {
+
+    }
+
+    public void clearRegisterFile();
+
+    default public boolean setX(int x) { // sera que devia ter mesmo?
         return false;
     }
 
-    /*
-     * 
-     */
-    default public boolean setY(int y) {
+    default public boolean setY(int y) { // idem aspas
         return false;
     }
 
-    /*
-     * 
-     */
     default public int getX() {
         return -1;
     }
 
-    /*
-     * 
-     */
     default public int getY() {
         return -1;
     }
 
-    /*
-     * Copy constructor
-     */
-    default public ProcessingElement copy() {
-        return null;
-    }
-
-    /*
-     * 
-     */
     default public int getLatency() {
         return 1;
     }
 
-    /*
-     * 
-     */
     default public boolean hasMemory() {
-        return false;
+        return true;
     }
 
-    /*
-     * 
-     */
     default public int getMemorySize() {
-        return 0;
+        return 1;
     }
 
-    /*
-     * 
-     */
-    default public boolean isReady() {
+    default public boolean isReady() { // is ready == ! is executing?
         return false;
     }
 
-    /*
-     * 
-     */
     default public boolean isExecuting() {
         return false;
     }
 
-    /*
-     * 
-     */
-    default public int getExecuteCount() {
+    default public int getExecuteCount() { // data token approach
         return 0;
+    }
+
+    default public PEData getOperand(int idx) {
+        return null;
+    }
+
+    default public PEData execute() {
+        return null;
+    }
+
+    default public void printStatus() {
+    }
+
+    default public ProcessingElement copy() {
+        return null;
+    }
+
+    default public boolean setControl(int i) {
+        return false;
+    }
+
+    default public int getnConnections() {
+        return 0;
+    }
+
+    default public void setnConnections(int nConnections) {
+    }
+
+    public void setnConnections();
+
+    default public boolean setReady() {
+        return false;
     }
 
     /*
@@ -121,30 +126,15 @@ public interface ProcessingElement {
     /*
      * Sets result register for the next operation to execute (this setting is/should be persistent)
      */
-    default public boolean setResultRegister(int regIndex) {
+    /*    default public boolean setResultRegister(int regIndex) {
         return false;
     }
-
+    */
     /*
      * Implements ONE execution tick (can be considered as a clock cycle)
      * this does not guarantee that the return is valid, only when
      * isReady returns true can the result be considered valid
      */
-    default public PEData execute() {
-        return null;
-    }
-
-    /*
-     * 
-     */
-    default public String statusString() {
-        return "No status";
-    }
-
-    /*
-     * JUST FOR TESTING (??)
-     */
-    public List<ProcessingElementPort> getPorts();
 
     // public getImplementation ??
 

@@ -26,9 +26,20 @@ public class PEInteger implements PEData {
         return new PEInteger(this.value);
     }
 
+    // @Override
     @Override
     public Integer getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(this.value);
+    }
+
+    @Override
+    public PEData passnull(PEData operandB) {
+        return new PEInteger(0);
     }
 
     @Override
@@ -65,6 +76,70 @@ public class PEInteger implements PEData {
     public PEData rshift(PEData operandB) {
         var intB = (PEInteger) operandB;
         return new PEInteger(this.value >> intB.getValue());
+    }
+
+    /*@Override
+    public PEData mod(PEData operandB) {
+        var intB = (PEInteger) operandB;
+        return new PEInteger(this.value % intB.getValue());
+    
+    }*/
+
+    @Override
+    public PEData and(PEData operandB) {
+        var intB = (PEInteger) operandB;
+        return new PEInteger(this.value & intB.getValue());
+
+    }
+
+    @Override
+    public PEData or(PEData operandB) {
+        var intB = (PEInteger) operandB;
+        return new PEInteger(this.value | intB.getValue());
+
+    }
+
+    @Override
+    public PEData xor(PEData operandB) {
+        var intB = (PEInteger) operandB;
+        return new PEInteger(this.value ^ intB.getValue());
+
+    }
+
+    @Override
+    public PEData passl(PEData operandB) {
+        return new PEInteger(this.value);
+
+    }
+
+    @Override
+    public PEData passr(PEData operandB) {
+        var intB = (PEInteger) operandB;
+        return new PEInteger(intB.getValue());
+
+    }
+
+    @Override
+    public PEData slt(PEData operandB) {
+        var intB = (PEInteger) operandB;
+        return new PEBoolean(this.value < intB.value ? true : false);
+    }
+
+    @Override
+    public PEData seq(PEData operandB) {
+        var intB = (PEInteger) operandB;
+        return new PEBoolean(this.value == intB.value ? true : false);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof PEInteger))
+            return false;
+
+        else if (obj == this)
+            return true;
+
+        return (this.value == ((PEInteger) obj).value);// TODO: unsafe
     }
 
     /*

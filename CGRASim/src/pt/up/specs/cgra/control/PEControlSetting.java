@@ -11,16 +11,28 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.specs.cgra.structure.control;
+package pt.up.specs.cgra.control;
 
-/**
- * This interface defines the methods that a PE needs to implement if it needs/requires control bits (e.g. setting which
- * operation to perform in an ALU, or setting a coefficient in a DSP-like operation)
- * 
- * @author nuno
- *
- */
-public interface PEControl<T extends PEControlSetting> {
+public interface PEControlSetting {
 
-    public boolean setOperation(T ctrl);
+    /*
+     * 
+     */
+    public String getName();
+
+    /*
+     * 
+     */
+    public int getValue();
+
+    /*
+    public Map<String, Integer> getControlOptions();
+    
+    public default int getValue(String name) {
+        return this.getControlOptions().get(name);
+    }
+    
+    public String getName(int value) {
+        return this.getControlOptions().get(name);
+    }*/
 }

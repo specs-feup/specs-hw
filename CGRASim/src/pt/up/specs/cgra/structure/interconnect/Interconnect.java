@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.structure.interconnect;
 
 import pt.up.specs.cgra.structure.SpecsCGRA;
@@ -53,4 +53,6 @@ public interface Interconnect {
      * 
      */
     public boolean connectionValid(ProcessingElementPort from, ProcessingElementPort to);
+
+    public void clear();
 }

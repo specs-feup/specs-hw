@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 SPeCS.
+ * Copyright 2023 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -11,22 +11,30 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.specs.cgra.structure.pes;
+package pt.up.specs.cgra.dataypes;
 
-import java.util.List;
-
-/**
- * Used to occupy a mesh slot while nothing is placed there
- */
-public class NullPE implements ProcessingElement {
+public abstract class APEData implements PEData {
 
     @Override
-    public String toString() {
-        return "Null";
-    }
-
-    @Override
-    public List<ProcessingElementPort> getPorts() {
+    public Number getValue() {
+        // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public PEData copy() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    /*
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof PEInteger))
+            return false;
+    
+        else if (obj == this)
+            return true;
+    
+        return (this.getValue() == ((PEInteger) obj).value);// TODO: unsafe
+    }*/
 }

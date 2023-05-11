@@ -20,13 +20,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.dataypes.PEInteger;
+import pt.up.specs.cgra.instructions_decoder.InstructionDecoder;
+import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
 import pt.up.specs.cgra.structure.interconnect.NearestNeighbour;
 import pt.up.specs.cgra.structure.interconnect.ToroidalNNInterconnect;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
-import pt.up.specs.cgra.structure.pes.NullPE;
+import pt.up.specs.cgra.structure.pes.EmptyPE;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 public class GenericSpecsCGRA implements SpecsCGRA {
@@ -59,10 +63,19 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     protected final GenericMemory liveins, liveouts;
     protected final Mesh mesh;
     protected final Interconnect interconnect;
+    protected ArrayList<Context> context_memory;
+    protected final InstructionDecoder instdec;
+
+    protected int execute_count;
+    protected int cycle_count;
+    protected boolean isExecuting;
+    protected boolean execute_terminated;
 
     private GenericSpecsCGRA(List<List<ProcessingElement>> mesh,
             Class<? extends Interconnect> intclass,
             int localmemsize) {
+
+        GenericSpecsCGRA.debug("Constructor started...");
         this.mesh = new Mesh(mesh, this);
 
         // in theory, should never fail
@@ -75,22 +88,34 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         this.liveins = new GenericMemory(8);
         this.liveouts = new GenericMemory(8);
         this.localmemsize = localmemsize;
+        this.instdec = new InstructionDecoder(this);
         if (this.localmemsize > 0)
             this.localmem = new GenericMemory(this.localmemsize);
         else
             this.localmem = null;
+
+        GenericSpecsCGRA.debug("Constructor finished!");
     }
 
     /*
      * Only for use by builder child class
      */
-    private GenericSpecsCGRA() {
+    protected GenericSpecsCGRA() {
         this.liveins = null;
         this.liveouts = null;
         this.localmem = null;
         this.localmemsize = 0;
         this.mesh = null;
         this.interconnect = null;
+        this.instdec = new InstructionDecoder(this);
+        this.execute_count = 0;
+        this.cycle_count = 0;
+        this.isExecuting = false;
+        this.execute_terminated = false;
+    }
+
+    private static void debug(String str) {
+        SpecsLogs.debug(GenericSpecsCGRA.class.getSimpleName() + ": " + str);
     }
 
     @Override
@@ -101,6 +126,178 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     @Override
     public Interconnect getInterconnect() {
         return this.interconnect;
+    }
+
+    @Override
+    public GenericMemory getMemory() {
+        return this.localmem;
+    }
+
+    @Override
+    public PEData writeMemory(PEInteger waddr, PEData data) {
+        this.localmem.write(waddr, data);
+        return data;
+    }
+
+    @Override
+    public PEData readMemory(PEInteger raddr) {
+        return this.localmem.read(raddr);
+    }
+
+    @Override
+    public boolean isExecuting() {
+        return isExecuting;
+    }
+
+    @Override
+    public void setExecuting(boolean isExecuting) {
+        this.isExecuting = isExecuting;
+    }
+
+    public void resetExecuteCount() {
+        this.execute_count = 0;
+    }
+
+    public boolean isExecute_terminated() {
+        return execute_terminated;
+    }
+
+    public void setExecute_terminated(boolean execute_terminated) {
+        this.execute_terminated = execute_terminated;
+    }
+
+    @Override
+    public ProcessingElement setPE(int x, int y, ProcessingElement pe) {
+        return this.mesh.setProcessingElement(x, y, pe);
+    }
+
+    @Override
+    public InstructionDecoder getInstdec() {
+        return instdec;
+    }
+
+    public int getLiveinsSize() {
+        return this.liveins.getSize();
+    }
+
+    public int getLiveoutsSize() {
+        return this.liveouts.getSize();
+    }
+
+    @Override
+    public int execute() {
+
+        this.setExecuting(true);
+
+        do {
+            // propagate data from interconnect settings
+            if (!this.interconnect.propagate()) {
+                this.setExecuting(false);
+                this.setExecute_terminated(true);
+
+                return execute_count;
+            }
+
+            // execute compute
+            if (!this.mesh.execute()) {
+                this.setExecuting(false);
+                this.setExecute_terminated(true);
+
+                return execute_count;
+            }
+
+            this.execute_count++;
+            this.cycle_count++;
+
+        } while (this.isExecuting && !this.execute_terminated);
+        // } while (CONDICAO);
+
+        this.setExecuting(false);
+        this.setExecute_terminated(true);
+
+        var tmp = this.execute_count;
+        this.resetExecuteCount();
+        this.setExecute_terminated(false);
+
+        return tmp;
+    }
+
+    @Override
+    public boolean step() {
+
+        this.setExecuting(true);
+
+        // execute compute
+        if (!this.mesh.execute()) {
+            this.setExecuting(false);
+            return false;
+        }
+
+        // propagate data from interconnect settings
+        if (!this.interconnect.propagate()) {
+            this.setExecuting(false);
+            return false;
+        }
+
+        this.execute_count++;
+
+        this.setExecuting(false);
+        return true;
+    }
+
+    @Override
+    public boolean pause() {
+        this.setExecuting(false);
+        return true;
+    }
+
+    @Override
+    public Context getContext(int i) {
+        var x = this.context_memory.get(i);
+        if (x != null)
+            GenericSpecsCGRA.debug("Context nr. " + i + " retrieved successfuly");
+        else
+            GenericSpecsCGRA.debug("Context fetch failed...");
+        return x;
+    }
+
+    @Override
+    public boolean setContext(Context c) {
+        if (c != null && c.getConnections().size() > 0) {
+            if (this.context_memory.add(c)) {
+                GenericSpecsCGRA.debug("Context added");
+                return true;
+            }
+        }
+        GenericSpecsCGRA.debug("Context add failed...");
+        return false;
+    }
+
+    @Override
+    public int getExecuteCount() {
+        return this.execute_count;
+    }
+
+    @Override
+    public boolean applyContext(Integer i) {
+        if (this.context_memory.get(i) != null) {
+            if (this.interconnect.applyContext(this.context_memory.get(i))) {
+                System.out.printf("Context set succesfully \n");
+                return true;
+            }
+        }
+
+        System.out.printf("setting context failed \n");
+        return false;
+
+    }
+
+    @Override
+    public boolean reset() {
+        this.mesh.reset();
+        this.interconnect.clear();
+        // this.mesh.zero_ports(); //TODO: Better way to achieve the same
+        return true;
     }
 
     /*
@@ -119,20 +316,20 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
     /*
      * executes a single simulation step (clock cycle)
-     */
+     
     @Override
     public boolean execute() {
-
+    
         // propagate data from interconnect settings
         this.interconnect.propagate();
-
+    
         // execute compute
         this.mesh.execute();
-
+    
         // update view
-
+    
         return true; // eventually use this return to indicate stalling or something
-    }
+    }*/
 
     // TODO: use a graphical representation later
     @Override
@@ -157,6 +354,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
          * mesh size is mandatory before any "with..." calls
          */
         public Builder(int x, int y) {
+            GenericSpecsCGRA.debug("Starting CGRA Builder, with (x, y) = (" + x + ", " + y + ")");
             this.meshX = x;
             this.meshY = y;
             this.memsize = 0;
@@ -164,7 +362,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
             for (int i = 0; i < x; i++) {
                 this.mesh.add(new ArrayList<ProcessingElement>(y));
                 for (int j = 0; j < y; j++) {
-                    this.mesh.get(i).add(new NullPE());
+                    this.mesh.get(i).add(new EmptyPE());
                 }
             }
         }
@@ -173,6 +371,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
          * "pe" must be copied for each grid position by deep copy
          */
         public Builder withHomogeneousPE(ProcessingElement pe) {
+            GenericSpecsCGRA.debug("Setting PEs to homogeneous, with type " + pe.getClass().getSimpleName());
             for (int i = 0; i < this.meshX; i++)
                 for (int j = 0; j < this.meshY; j++)
                     this.mesh.get(i).set(j, pe.copy());
@@ -180,26 +379,33 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         }
 
         public Builder withProcessingElement(ProcessingElement pe, int x, int y) {
+            GenericSpecsCGRA.debug("Started build PE of type "
+                    + pe.getClass().getSimpleName()
+                    + " at (x, y) = (" + x + ", " + y + ")");
             this.mesh.get(x).set(y, pe);
             return this;
         }
 
         public Builder withMemory(int memsize) {
+            GenericSpecsCGRA.debug("Setting localmem to size " + memsize);
             this.memsize = memsize;
             return this;
         }
 
         public Builder withNearestNeighbourInterconnect() {
+            GenericSpecsCGRA.debug("Setting mesh to NearestNeighbour");
             this.intclass = NearestNeighbour.class;
             return this;
         }
 
         public Builder withToroidalNNInterconnect() {
+            GenericSpecsCGRA.debug("Setting mesh to ToroidalNearestNeighbour");
             this.intclass = ToroidalNNInterconnect.class;
             return this;
         }
 
         public GenericSpecsCGRA build() {
+            GenericSpecsCGRA.debug("Building CGRA...");
             return new GenericSpecsCGRA(this.mesh, this.intclass, memsize);
         }
     }

@@ -13,8 +13,14 @@
 
 package pt.up.specs.cgra.structure;
 
+import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.dataypes.PEInteger;
+import pt.up.specs.cgra.instructions_decoder.InstructionDecoder;
+import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
+import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
+import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 public interface SpecsCGRA {
 
@@ -29,9 +35,28 @@ public interface SpecsCGRA {
     public Interconnect getInterconnect();
 
     /*
+     * Get local CGRA memory
+     */
+    public GenericMemory getMemory();
+
+    /*
+     * write data to memory adddr
+     */
+    public PEData writeMemory(PEInteger waddr, PEData data);
+
+    /*
+     * read data from memory addr
+     */
+    public PEData readMemory(PEInteger raddr);
+
+    /*
      * Executes a single simulation tick (can be considered a clock cycle)
      */
-    public boolean execute();
+    public int execute();
+
+    public boolean pause();
+
+    public Context getContext(int i);
 
     /*
      * switch between one of X (max) available contexts
@@ -43,6 +68,24 @@ public interface SpecsCGRA {
      * (Use JFreeChart or similar?)
      */
     public void visualize();
+
+    public boolean setContext(Context c);
+
+    public boolean applyContext(Integer id);
+
+    public int getExecuteCount();
+
+    public boolean isExecuting();
+
+    public void setExecuting(boolean isExecuting);
+
+    public boolean step();
+
+    public boolean reset();
+
+    public ProcessingElement setPE(int x, int y, ProcessingElement pe);
+
+    public InstructionDecoder getInstdec();
 
     // some kind of method that recieves an emitter class
     // which lowers this functional spec into chisel3 or hdl

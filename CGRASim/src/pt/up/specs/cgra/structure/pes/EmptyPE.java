@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 SPeCS.
+ * Copyright 2021 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -11,28 +11,33 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.specs.cgra.structure.control;
+package pt.up.specs.cgra.structure.pes;
 
-public interface PEControlSetting {
+import java.util.List;
 
-    /*
-     * 
-     */
-    public String getName();
+/**
+ * Used to occupy a mesh slot while nothing is placed there
+ */
+public class EmptyPE implements ProcessingElement {
 
-    /*
-     * 
-     */
-    public int getValue();
-
-    /*
-    public Map<String, Integer> getControlOptions();
-    
-    public default int getValue(String name) {
-        return this.getControlOptions().get(name);
+    @Override
+    public String toString() {
+        return "Null";
     }
-    
-    public String getName(int value) {
-        return this.getControlOptions().get(name);
-    }*/
+
+    @Override
+    public List<ProcessingElementPort> getPorts() {
+        return null;
+    }
+
+	@Override
+	public void clearRegisterFile() {
+		
+	}
+
+	@Override
+	public void setnConnections() {
+		// TODO Auto-generated method stub
+		
+	}
 }

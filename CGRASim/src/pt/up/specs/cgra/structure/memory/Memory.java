@@ -10,20 +10,35 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.structure.memory;
 
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.dataypes.PEInteger;
 
 public interface Memory {
 
     /*
      * 
      */
-    public PEData read(int addr);
+    public PEData read(PEInteger addr);
 
     /*
      * 
      */
-    public boolean write(int addr, PEData data);
+    public default PEData read(int addr) {
+        return this.read(new PEInteger(addr));
+    }
+
+    /*
+     * 
+     */
+    public boolean write(PEInteger addr, PEData data);
+
+    /*
+     * 
+     */
+    public default boolean write(int addr, PEData data) {
+        return this.write(new PEInteger(addr), data);
+    }
 }
