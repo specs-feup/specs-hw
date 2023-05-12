@@ -20,36 +20,24 @@ import pt.up.specs.cgra.structure.mesh.Mesh;
 
 public interface ProcessingElement {
 
-    public List<ProcessingElementPort> getPorts();
+    public default List<ProcessingElementPort> getPorts() {
+        return null;
+    }
+
+    public default ProcessingElementPort getPort(int idx) {
+        return this.getPorts().get(idx);
+    }
 
     default public String statusString() {
         return "No status";
     }
 
-    default public boolean setMesh(Mesh mesh) {
+    default public boolean setMesh(Mesh parent) {
         return false;
     }
 
     default public Mesh getMesh() {
         return null;
-    }
-
-    default public List<PEData> getRegisterFile() {
-        return null;
-    }
-
-    default public void setRegisterFile(List<PEData> x) {
-
-    }
-
-    public void clearRegisterFile();
-
-    default public boolean setX(int x) { // sera que devia ter mesmo?
-        return false;
-    }
-
-    default public boolean setY(int y) { // idem aspas
-        return false;
     }
 
     default public int getX() {
@@ -62,6 +50,10 @@ public interface ProcessingElement {
 
     default public int getLatency() {
         return 1;
+    }
+
+    default public boolean hasControl() {
+        return false;
     }
 
     default public boolean hasMemory() {
@@ -99,24 +91,12 @@ public interface ProcessingElement {
         return null;
     }
 
-    default public boolean setControl(int i) {
-        return false;
-    }
-
-    default public int getnConnections() {
-        return 0;
-    }
-
-    default public void setnConnections(int nConnections) {
-    }
-
-    public void setnConnections();
-
     default public boolean setReady() {
         return false;
     }
 
-    public void reset();
+    default public void reset() {
+    }
 
     /*
      * opIndex:

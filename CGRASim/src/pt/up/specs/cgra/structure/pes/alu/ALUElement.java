@@ -18,12 +18,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.specs.cgra.control.PEControl;
 import pt.up.specs.cgra.control.PEControlSetting;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 import pt.up.specs.cgra.structure.pes.binary.BinaryProcessingElement;
 
-public class ALUElement extends BinaryProcessingElement { // implements PEControl<ALUControlSetting> {
+public class ALUElement extends BinaryProcessingElement implements PEControl<ALUControlSetting> {
 
     /*
      * helper mapping of constructors to reduce verbosity
@@ -93,6 +94,7 @@ public class ALUElement extends BinaryProcessingElement { // implements PEContro
         return true;
     }
 
+    @Override
     public boolean setControl(int ctrl) {
 
         PEControlSetting ectrl = null;
@@ -104,7 +106,12 @@ public class ALUElement extends BinaryProcessingElement { // implements PEContro
             }
         }
         return false;
+    }
 
+    @Override
+    public boolean setOperation(ALUControlSetting ctrl) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override

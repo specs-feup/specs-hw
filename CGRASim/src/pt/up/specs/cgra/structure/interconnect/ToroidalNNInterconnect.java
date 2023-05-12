@@ -44,8 +44,8 @@ public class ToroidalNNInterconnect extends NearestNeighbour {
         var distX = Math.abs(fromPE.getX() - toPE.getX());
         var distY = Math.abs(fromPE.getY() - toPE.getY());
 
-        var xmax = this.getCGRA().getMesh().getX();
-        var ymax = this.getCGRA().getMesh().getY();
+        var xmax = this.getCGRA().getMesh().getWidth();
+        var ymax = this.getCGRA().getMesh().getHeight();
 
         // if same row, opposing sides
         if (fromPE.getX() == toPE.getX() && (distX == xmax - 1)) {

@@ -18,16 +18,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.specs.cgra.dataypes.PEData;
-import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 
-/*
- * mapa de ports - map<PEport, list<PEports>> fonte - destino(s) (lista)
+/**
+ * 
+ * @author nuno
+ *
  */
-
 public abstract class AInterconnect implements Interconnect {
 
     // TODO: each interconnect class should only hold a set of permitted connection rules
@@ -37,6 +36,7 @@ public abstract class AInterconnect implements Interconnect {
 
     private final SpecsCGRA myparent;
     private Map<ProcessingElementPort, List<ProcessingElementPort>> connections;
+    // mapa de ports - map<PEport, list<PEports>> fonte - destino(s) (lista)
 
     public AInterconnect(SpecsCGRA myparent) {
         this.myparent = myparent;
@@ -44,11 +44,9 @@ public abstract class AInterconnect implements Interconnect {
         // this.myparent.setContext(new Context(this.connections));
     }
 
-    /**
+    /*
      * For every connection, copy the output payload into the input ports of each @ProcessingElement
      */
-
-    // TODO: Exceptions
     @Override
     public boolean propagate() {
 
@@ -56,8 +54,9 @@ public abstract class AInterconnect implements Interconnect {
 
         for (var drive : this.connections.keySet()) // para cada x, isto e, cada registo de saida de PE
         {
-            List<PEData> reg = drive.getPE().getRegisterFile(); // copy the data from
-            drive.setPayload(reg.get(0)); // regfile to output port, only 1st PEData for now
+            // List<PEData> reg = drive.getPE().getRegisterFile(); // copy the data from
+            // drive.setPayload(reg.get(0)); // regfile to output port, only 1st PEData for now
+            // isto devia ser feito ao nivel do PE
 
             var drivenList = this.connections.get(drive);
 
@@ -65,20 +64,19 @@ public abstract class AInterconnect implements Interconnect {
                 drivenPort.setPayload(drive.getPayload().copy()); // copy the data element from output port to input
                                                                   // ports of next PE
 
-            drive.setPayload(new PEInteger(0));
+            // drive.setPayload(new PEInteger(0));
         }
 
         System.out.println("propagated succesfully");
 
-        return true;
+        return true; // TODO: Exceptions
     }
 
     // TODO: VERIFICAR N. DE CONECCOES > N DE PORTS
     @Override
     public boolean setConnection(ProcessingElementPort from, ProcessingElementPort to) {
 
-        if (!connectionValid(from, to))// ISTO SO VERIFICA DISTANCIA
-        {
+        if (!connectionValid(from, to)) {
             System.out.printf("connection invalid between %d, %d and %d, %d \n",
                     from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
 
@@ -90,8 +88,6 @@ public abstract class AInterconnect implements Interconnect {
             var drivenList = this.connections.get(from);
             if (!drivenList.contains(to))
                 drivenList.add(to);
-
-            from.getPE().setnConnections(); // para que? - nmcp
 
             System.out.println("new port to existing output port list");
 
@@ -111,14 +107,12 @@ public abstract class AInterconnect implements Interconnect {
     @Override
     public boolean applyContext(Context ctx) {
         var connections = ctx.getConnections();
-        for (var driver : connections.keySet()) {
+        for (var driver : connections.keySet())
             for (var sink : connections.get(driver))
                 if (!this.setConnection(driver, sink))
                     return false;
-            /*
-             * TODO: create exception classes to handle these errors
-             */
-        }
+
+        // TODO: create exception classes to handle these errors
         return true;
     }
 
@@ -134,19 +128,16 @@ public abstract class AInterconnect implements Interconnect {
 
     @Override
     public ProcessingElementPort findDriver(ProcessingElementPort to) {
-
-        ProcessingElementPort driver = null;
         for (var drive : this.connections.keySet()) {
             var drivenList = this.connections.get(drive);
             if (drivenList.contains(to)) {
-                driver = drive;
-                break;
+                return drive;
             }
         }
-        return driver;
-
+        return null;
     }
 
+    @Override
     public void clear() {
         this.connections.clear();
     }
@@ -158,5 +149,4 @@ public abstract class AInterconnect implements Interconnect {
     public void setConnections(Map<ProcessingElementPort, List<ProcessingElementPort>> connections) {
         this.connections = connections;
     }
-
 }

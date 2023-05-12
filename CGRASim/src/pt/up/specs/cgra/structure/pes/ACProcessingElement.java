@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 SPeCS.
+ * Copyright 2023 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,37 +13,26 @@
 
 package pt.up.specs.cgra.structure.pes;
 
-import java.util.List;
+import pt.up.specs.cgra.control.PEControl;
+import pt.up.specs.cgra.control.PEControlSetting;
+import pt.up.specs.cgra.dataypes.PEData;
 
-/**
- * Used to occupy a mesh slot while nothing is placed there
- */
-public class EmptyPE implements ProcessingElement {
+public abstract class ACProcessingElement<T extends PEControlSetting> extends AProcessingElement
+        implements PEControl<T> {
 
     @Override
-    public String toString() {
-        return "Null";
+    protected abstract PEData _execute();
+
+    @Override
+    public boolean setControl(int i) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
-    public List<ProcessingElementPort> getPorts() {
+    public PEControlSetting getControl() {
+        // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
-    public void clearRegisterFile() {
-
-    }
-
-    @Override
-    public void setnConnections() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void reset() {
-        // TODO Auto-generated method stub
-
-    }
 }

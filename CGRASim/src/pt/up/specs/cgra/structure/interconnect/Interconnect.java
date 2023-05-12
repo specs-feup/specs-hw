@@ -30,7 +30,7 @@ public interface Interconnect {
     public boolean propagate();
 
     /*
-     * Set an individual connection in the internconnect
+     * Set an individual connection in the interconnect
      */
     public boolean setConnection(ProcessingElementPort from, ProcessingElementPort to);
 
@@ -54,5 +54,8 @@ public interface Interconnect {
      */
     public boolean connectionValid(ProcessingElementPort from, ProcessingElementPort to);
 
+    /*
+     * 
+     */
     public void clear();
 }

@@ -1,4 +1,4 @@
-package pt.up.specs.cgra.instructions_decoder;
+package pt.up.specs.cgra.microcontroler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import pt.up.specs.cgra.structure.SpecsCGRA;
 
@@ -15,7 +16,7 @@ public class InstructionDecoder {
      * helper mapping of per-instruction decoders
      */
     interface InstDecoder {
-        boolean apply(SpecsCGRA cgra, List<String> operands);
+        boolean apply(SpecsCGRA cgra, List<Integer> operands);
     }
 
     private static final Map<String, InstDecoder> InstDecoders;
@@ -59,124 +60,96 @@ public class InstructionDecoder {
             func = InstructionDecoder::undefined;
 
         System.out.printf("received instruction: '%s' \n", instname_str);
-
-        return func.apply(this.parent, operands);
+        return func.apply(this.parent, operands.stream().map(Integer::valueOf).collect(Collectors.toList()));
     }
 
-    private static boolean set(SpecsCGRA cgra, List<String> operands) {
+    private static boolean set(SpecsCGRA cgra, List<Integer> ops) {
 
-        if (operands.size() != 3) {
+        if (ops.size() != 3) {
             System.out.println("Erro a ler parametros da instrucao set");
             return false;
         }
 
-        var x = Integer.valueOf(operands.get(0));
-        var y = Integer.valueOf(operands.get(1));
-        var ctrl = Integer.valueOf(operands.get(2));
-
-        return cgra.getMesh().getProcessingElement(x, y).setControl(ctrl);
+        var ctrl = Integer.valueOf(ops.get(2));
+        return cgra.getMesh().getProcessingElement(ops.get(0), ops.get(1)).setControl(ctrl);
     }
 
-    private static boolean set_io(SpecsCGRA cgra, List<String> operands) {
+    private static boolean set_io(SpecsCGRA cgra, List<Integer> ops) {
 
-        if (operands.size() != 6) {
+        if (ops.size() != 6) {
             System.out.println("Erro a ler parametros da instrucao set_io");
             return false;
         }
 
-        var xs = Integer.valueOf(operands.get(0));
-        var ys = Integer.valueOf(operands.get(1));
+        var pesrc = cgra.getMesh().getProcessingElement(ops.get(0), ops.get(1));
+        var pe1 = cgra.getMesh().getProcessingElement(ops.get(2), ops.get(3));
+        var pe2 = cgra.getMesh().getProcessingElement(ops.get(4), ops.get(5));
+        if (pe1 == null || pe2 == null || pesrc == null) {
+            System.out.println("Erro nos parametros da instrucao set_io");
+            return true;
+        }
 
-        var x1 = Integer.valueOf(operands.get(2));
-        var y1 = Integer.valueOf(operands.get(3));
+        var intc = cgra.getInterconnect();
+        if (!intc.setConnection(pe1.getPort(2), pesrc.getPort(0))) {
+            System.out.println("Erro nos parametros da instrucao set_io");
+            return true;
+        }
 
-        var x2 = Integer.valueOf(operands.get(4));
-        var y2 = Integer.valueOf(operands.get(5));
-
-        var pesrc = cgra.getMesh().getProcessingElement(xs, ys);
-
-        var pe1 = cgra.getMesh().getProcessingElement(x1, y1);
-        var pe2 = cgra.getMesh().getProcessingElement(x2, y2);
-
-        if (pe1 != null && pe2 != null && pesrc != null) {
-
-            return (cgra.getInterconnect().setConnection(pe1.getPorts().get(2), pesrc.getPorts().get(0))
-                    && cgra.getInterconnect().setConnection(pe2.getPorts().get(2), pesrc.getPorts().get(1)));
-
+        if (!intc.setConnection(pe2.getPort(2), pesrc.getPort(1))) {
+            System.out.println("Erro nos parametros da instrucao set_io");
+            return true;
         }
 
         // out de pe1 -> in1 de pesrc
         // out de pe2 -> in2 de pesrc
-
         return false;
-
     }
 
-    private static boolean gen_info(SpecsCGRA cgra, List<String> operands) {
-
+    private static boolean gen_info(SpecsCGRA cgra, List<Integer> ops) {
         return true;// print cgra.toString?
-
     }
 
-    private static boolean pe_info(SpecsCGRA cgra, List<String> operands) {
-
+    private static boolean pe_info(SpecsCGRA cgra, List<Integer> ops) {
         return true;// print pe.toString?
-
     }
 
-    private static boolean mem_info(SpecsCGRA cgra, List<String> operands) {
-
+    private static boolean mem_info(SpecsCGRA cgra, List<Integer> ops) {
         return true;// return genericmemory.tostring?
-
     }
 
-    private static boolean store_ctx(SpecsCGRA cgra, List<String> operands) {
-
+    private static boolean store_ctx(SpecsCGRA cgra, List<Integer> ops) {
         return cgra.setContext(cgra.getInterconnect().getContext());
     }
 
-    private static boolean switch_ctx(SpecsCGRA cgra, List<String> operands) {
-
-        if (operands.size() != 1) {
+    private static boolean switch_ctx(SpecsCGRA cgra, List<Integer> ops) {
+        if (ops.size() != 1) {
             System.out.println("Erro a ler parametros da instrucao switch_ctx");
             return false;
         }
-
-        var index = Integer.valueOf(operands.get(0));
-
-        return cgra.applyContext(index);
+        return cgra.applyContext(ops.get(0));
     }
 
-    private static boolean run(SpecsCGRA cgra, List<String> operands) {
-
+    private static boolean run(SpecsCGRA cgra, List<Integer> ops) {
         var i = cgra.execute();
-
         if (i > 0)
             return true;
         else
             return false;
-
     }
 
-    private static boolean step(SpecsCGRA cgra, List<String> operands) {
-
+    private static boolean step(SpecsCGRA cgra, List<Integer> ops) {
         return cgra.step();
-
     }
 
-    private static boolean pause(SpecsCGRA cgra, List<String> operands) {
-
+    private static boolean pause(SpecsCGRA cgra, List<Integer> ops) {
         return cgra.pause();
-
     }
 
-    private static boolean reset(SpecsCGRA cgra, List<String> operands) {
-
+    private static boolean reset(SpecsCGRA cgra, List<Integer> ops) {
         return cgra.reset();
-
     }
 
-    private static boolean undefined(SpecsCGRA cgra, List<String> operands) {
+    private static boolean undefined(SpecsCGRA cgra, List<Integer> ops) {
         System.out.println("Undefined instr");
         return true;
     }

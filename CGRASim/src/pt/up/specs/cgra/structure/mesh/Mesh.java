@@ -29,21 +29,17 @@ import pt.up.specs.cgra.structure.pes.ProcessingElement;
 public class Mesh {
 
     private final SpecsCGRA myparent;
-    private final int x, y;
+    private final int width, height;
     private final List<List<ProcessingElement>> mesh;// array 2d de PEs
 
     public Mesh(List<List<ProcessingElement>> mesh, SpecsCGRA myparent) {
         this.myparent = myparent;
         this.mesh = mesh;
-        this.x = mesh.size();
-        this.y = mesh.get(0).size();
-        for (int i = 0; i < this.x; i++)
-            for (int j = 0; j < this.y; j++) {
-                var pe = this.mesh.get(i).get(j);
-                pe.setX(i);
-                pe.setY(j);
-                pe.setMesh(this);
-            }
+        this.width = mesh.size();
+        this.height = mesh.get(0).size();
+        for (int i = 0; i < this.width; i++)
+            for (int j = 0; j < this.height; j++)
+                this.mesh.get(i).get(j).setMesh(this);
     }
 
     private static void debug(String str) {
@@ -57,29 +53,30 @@ public class Mesh {
         return this.myparent;
     }
 
-    public int getX() {
-        return x;
+    public int getWidth() {
+        return width;
     }
 
-    public int getY() {
-        return y;
+    public int getHeight() {
+        return height;
+    }
+
+    private void boundCheck(int x, int y) {
+        if (x > this.width || y > this.height || x < 0 || y < 0)
+            throw new RuntimeException("Mesh: coordinates out of bounds for CGRA mesh");
     }
 
     public ProcessingElement getProcessingElement(int x, int y) {
-        if (x > this.x || y > this.y || x < 0 || y < 0)
-            throw new RuntimeException("Mesh: coordinates out of bounds for CGRA mesh");
-
+        this.boundCheck(x, y);
         return this.mesh.get(x).get(y);
     }
 
     public ProcessingElement setProcessingElement(int x, int y, ProcessingElement pe) {
-        if (x > this.x || y > this.y || x < 0 || y < 0)
-            throw new RuntimeException("Mesh: coordinates out of bounds for CGRA mesh");
-
+        this.boundCheck(x, y);
         if (this.mesh.get(x).set(y, pe) != null) {
-            pe.setX(x);
+            /*pe.setX(x);
             pe.setY(y);
-            pe.setMesh(this);
+            pe.setMesh(this);*/
             Mesh.debug("PE set sucessfuly: " + pe + " (" + x + ", " + y + ")");
 
         } else {
@@ -115,7 +112,7 @@ public class Mesh {
             }
             sbld.append("\n");
         }
-        sbld.append(str.repeat(this.x));
+        sbld.append(str.repeat(this.width));
         return sbld.toString();
     }
 }

@@ -28,7 +28,9 @@ public class GenericSpecsCGRATest {
     public void testInstantantiateAndView() {
         var CGRAbld = new GenericSpecsCGRA.Builder(2, 2);
         CGRAbld.withHomogeneousPE(new AdderElement());
-        CGRAbld.withProcessingElement(new MultiplierElement(), 0, 1);
+        CGRAbld.withProcessingElement(new MultiplierElement(), 0, 1); // TODO: should receive a function that produces
+                                                                      // the PE, instead
+        // of working via copy
         var cgra = CGRAbld.build();
         cgra.visualize();
     }
@@ -54,6 +56,8 @@ public class GenericSpecsCGRATest {
         cgra.setPE(0, 2, new LSElement(16));
         cgra.setPE(0, 3, new LSElement(24));
 
+        cgra.visualize();
+
         for (int i = 0; i < cgra.getLiveinsSize(); i++)
             cgra.writeMemory(new PEInteger(i), new PEInteger(i * i + 1));
 
@@ -74,19 +78,19 @@ public class GenericSpecsCGRATest {
          * 
          */
 
-        cgra.getInstdec().InstructionParser("set 0 0 1");// LOAD
-        cgra.getInstdec().InstructionParser("set 0 1 1");// LOAD
-        cgra.getInstdec().InstructionParser("set 0 2 1");// LOAD
-        cgra.getInstdec().InstructionParser("set 0 3 1");// LOAD
-        cgra.getInstdec().InstructionParser("set 1 0 1");// ADD
-        cgra.getInstdec().InstructionParser("set 1 2 1");// ADD
-        cgra.getInstdec().InstructionParser("set 2 1 3");// MUL
+        cgra.getInstructionDecoder().InstructionParser("set 0 0 1");// LOAD
+        cgra.getInstructionDecoder().InstructionParser("set 0 1 1");// LOAD
+        cgra.getInstructionDecoder().InstructionParser("set 0 2 1");// LOAD
+        cgra.getInstructionDecoder().InstructionParser("set 0 3 1");// LOAD
+        cgra.getInstructionDecoder().InstructionParser("set 1 0 1");// ADD
+        cgra.getInstructionDecoder().InstructionParser("set 1 2 1");// ADD
+        cgra.getInstructionDecoder().InstructionParser("set 2 1 3");// MUL
 
         System.out.println();
 
-        cgra.getInstdec().InstructionParser("set_io 1 0 0 0 0 1");// ADD 1 0 liga in1 e 2 de pe_src a out de pe1 e pe2
-        cgra.getInstdec().InstructionParser("set_io 1 2 0 2 0 3");// add 1 2
-        cgra.getInstdec().InstructionParser("set_io 2 1 1 0 1 2");// mul 2 1
+        cgra.getInstructionDecoder().InstructionParser("set_io 1 0 0 0 0 1");// ADD 1 0 liga in1 e 2 de pe_src a out de pe1 e pe2
+        cgra.getInstructionDecoder().InstructionParser("set_io 1 2 0 2 0 3");// add 1 2
+        cgra.getInstructionDecoder().InstructionParser("set_io 2 1 1 0 1 2");// mul 2 1
 
         System.out.println();
 

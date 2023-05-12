@@ -23,14 +23,14 @@ import java.util.Map;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEInteger;
-import pt.up.specs.cgra.instructions_decoder.InstructionDecoder;
+import pt.up.specs.cgra.microcontroler.InstructionDecoder;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
 import pt.up.specs.cgra.structure.interconnect.NearestNeighbour;
 import pt.up.specs.cgra.structure.interconnect.ToroidalNNInterconnect;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
-import pt.up.specs.cgra.structure.pes.EmptyPE;
+import pt.up.specs.cgra.structure.pes.NullPE;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 public class GenericSpecsCGRA implements SpecsCGRA {
@@ -70,6 +70,10 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     protected int cycle_count;
     protected boolean isExecuting;
     protected boolean execute_terminated;
+
+    private static void debug(String str) {
+        SpecsLogs.debug(GenericSpecsCGRA.class.getSimpleName() + ": " + str);
+    }
 
     private GenericSpecsCGRA(List<List<ProcessingElement>> mesh,
             Class<? extends Interconnect> intclass,
@@ -112,10 +116,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         this.cycle_count = 0;
         this.isExecuting = false;
         this.execute_terminated = false;
-    }
-
-    private static void debug(String str) {
-        SpecsLogs.debug(GenericSpecsCGRA.class.getSimpleName() + ": " + str);
     }
 
     @Override
@@ -172,7 +172,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     }
 
     @Override
-    public InstructionDecoder getInstdec() {
+    public InstructionDecoder getInstructionDecoder() {
         return instdec;
     }
 
@@ -183,6 +183,23 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     public int getLiveoutsSize() {
         return this.liveouts.getSize();
     }
+
+    /*
+     * executes a single simulation step (clock cycle)
+     
+    @Override
+    public boolean execute() {
+    
+        // propagate data from interconnect settings
+        this.interconnect.propagate();
+    
+        // execute compute
+        this.mesh.execute();
+    
+        // update view
+    
+        return true; // eventually use this return to indicate stalling or something
+    }*/
 
     @Override
     public int execute() {
@@ -210,7 +227,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
             this.cycle_count++;
 
         } while (this.isExecuting && !this.execute_terminated);
-        // } while (CONDICAO);
 
         this.setExecuting(false);
         this.setExecute_terminated(true);
@@ -282,14 +298,13 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     public boolean applyContext(Integer i) {
         if (this.context_memory.get(i) != null) {
             if (this.interconnect.applyContext(this.context_memory.get(i))) {
-                System.out.printf("Context set succesfully \n");
+                GenericSpecsCGRA.debug("\"Context set succesfully");
                 return true;
             }
         }
 
-        System.out.printf("setting context failed \n");
+        GenericSpecsCGRA.debug("Setting context failed");
         return false;
-
     }
 
     @Override
@@ -312,23 +327,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     public PEData getLiveOut(int idx) {
         return this.liveouts.read(idx);
     }
-
-    /*
-     * executes a single simulation step (clock cycle)
-     
-    @Override
-    public boolean execute() {
-    
-        // propagate data from interconnect settings
-        this.interconnect.propagate();
-    
-        // execute compute
-        this.mesh.execute();
-    
-        // update view
-    
-        return true; // eventually use this return to indicate stalling or something
-    }*/
 
     // TODO: use a graphical representation later
     @Override
@@ -361,7 +359,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
             for (int i = 0; i < x; i++) {
                 this.mesh.add(new ArrayList<ProcessingElement>(y));
                 for (int j = 0; j < y; j++) {
-                    this.mesh.get(i).add(new EmptyPE());
+                    this.mesh.get(i).add(new NullPE());
                 }
             }
         }
@@ -370,6 +368,10 @@ public class GenericSpecsCGRA implements SpecsCGRA {
          * "pe" must be copied for each grid position by deep copy
          */
         public Builder withHomogeneousPE(ProcessingElement pe) {
+
+            // public Builder withHomogeneousPE(Supplier<ProcessingElement> constructor) {
+            // var pe = constructor.get()
+
             GenericSpecsCGRA.debug("Setting PEs to homogeneous, with type " + pe.getClass().getSimpleName());
             for (int i = 0; i < this.meshX; i++)
                 for (int j = 0; j < this.meshY; j++)
@@ -380,7 +382,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         public Builder withProcessingElement(ProcessingElement pe, int x, int y) {
             GenericSpecsCGRA.debug("Started build PE of type "
                     + pe.getClass().getSimpleName()
-                    + " at (x, y) = (" + x + ", " + y + ")");
+                    + " at (x, y) = (" + pe.getX() + ", " + pe.getY() + ")");
             this.mesh.get(x).set(y, pe);
             return this;
         }
