@@ -19,8 +19,8 @@ import java.util.Map;
 
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.specs.cgra.control.PEControl;
-import pt.up.specs.cgra.control.PEControlSetting;
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.dataypes.PEDataNull;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 import pt.up.specs.cgra.structure.pes.binary.BinaryProcessingElement;
 
@@ -36,7 +36,7 @@ public class ALUElement extends BinaryProcessingElement implements PEControl<ALU
     private static final Map<ALUControlSetting, ALUOperation> ALUOperations;
     static {
         Map<ALUControlSetting, ALUOperation> amap = new HashMap<ALUControlSetting, ALUOperation>();
-        amap.put(ALUControlSetting.PASSNULL, (a, b) -> a.passNull(b));
+        amap.put(ALUControlSetting.PASSNULL, (a, b) -> new PEDataNull());
         amap.put(ALUControlSetting.ADD, (a, b) -> a.add(b));
         amap.put(ALUControlSetting.SUB, (a, b) -> a.sub(b));
         amap.put(ALUControlSetting.MUL, (a, b) -> a.mul(b));
@@ -46,26 +46,25 @@ public class ALUElement extends BinaryProcessingElement implements PEControl<ALU
         amap.put(ALUControlSetting.AND, (a, b) -> a.and(b));
         amap.put(ALUControlSetting.OR, (a, b) -> a.or(b));
         amap.put(ALUControlSetting.XOR, (a, b) -> a.xor(b));
-        amap.put(ALUControlSetting.PASSL, (a, b) -> a.passl(b));
-        amap.put(ALUControlSetting.PASSR, (a, b) -> a.passr(b));
+        amap.put(ALUControlSetting.PASSL, (a, b) -> a.copy());
+        amap.put(ALUControlSetting.PASSR, (a, b) -> b.copy());
         amap.put(ALUControlSetting.SLT, (a, b) -> a.slt(b));
         amap.put(ALUControlSetting.SEQ, (a, b) -> a.seq(b));
+        amap.put(ALUControlSetting.XOR, (a, b) -> a.xor(b));
 
         // amap.put(ALUControlSetting.NORM1, (a, b) -> a.mul(a) + b.mul(b));
         // amap.put(ALUControl.MOD, (a, b) -> a.mod(b));
-        // amap.put(ALUControl.XOR, (a, b) -> a.xor(b));
-
         ALUOperations = Collections.unmodifiableMap(amap);
     }
 
-    private static void debug(String str) {
+    private void debug(String str) {
         SpecsLogs.debug(ALUElement.class.getSimpleName() + ": " + str);
     }
 
     /*
      * At the next "_execute" step, this operation will be executed
      */
-    // private ALUControlSetting ctrl;
+    private ALUControlSetting ctrl;
 
     public ALUElement(int latency, int memorySize) {
         super(latency, memorySize);
@@ -79,26 +78,32 @@ public class ALUElement extends BinaryProcessingElement implements PEControl<ALU
         this(1, 1);
     }
 
-    public boolean setControl(ALUControlSetting ctrl) {
+    @Override
+    public void reset() {
+        this.ctrl = ALUControlSetting.PASSNULL;
+        super.reset();
+    }
+
+    @Override
+    public boolean setOperation(ALUControlSetting ctrl) {
 
         if (!ALUOperations.containsKey(ctrl)) {
-            System.out.println("set control failed: unknown control setting");
+            this.debug("Set control failed: unknown control setting");
             return false;
         }
 
         this.ctrl = ctrl;
-
-        System.out.printf("set control on PE %d %d for instruction: %s \n", this.getX(), this.getY(),
-                this.getControl().getName());
-
+        this.debug("set control on " + this.getAt()
+                + " for instruction " + this.getOperation().getName());
         return true;
     }
 
+    /*
     @Override
     public boolean setControl(int ctrl) {
-
+    
         PEControlSetting ectrl = null;
-
+    
         for (var e : ALUControlSetting.values()) {
             ectrl = e;
             if (ctrl == ectrl.getValue()) {
@@ -106,37 +111,40 @@ public class ALUElement extends BinaryProcessingElement implements PEControl<ALU
             }
         }
         return false;
+    }*/
+
+    @Override
+    public ALUControlSetting getOperation() {
+        return this.ctrl;
     }
 
     @Override
-    public boolean setOperation(ALUControlSetting ctrl) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public ALUControlSetting getControl() {
-        if (this.ctrl != null)
-            return (ALUControlSetting) this.ctrl;
-        else
-            return null;
+    protected boolean setReady() {
+        if (this.ctrl == ALUControlSetting.PASSNULL) {
+            this.debug(this.getAt() + "NOT ready for execution due to NULL control");
+            return false;
+        }
+        return super.setReady();
     }
 
     @Override
     protected PEData _execute() {
         var x = ALUOperations.get(this.ctrl).apply(this.getOperand(0), this.getOperand(1));
-
-        System.out.printf("ALU %d %d executed successfuly operation %d %s %d yielding result %d\n",
-                this.getX(), this.getY(), this.getOperand(0).getValue().intValue(), this.getControl().name(),
-                this.getOperand(1).getValue().intValue(), x.getValue().intValue());
-
+        var opA = this.getOperand(0);
+        var opB = this.getOperand(1);
+        var op = this.getOperation().name();
+        this.debug(this.getAt() + "executed successfuly operation" + opA + op + opB + " = " + x);
         return x;
-
     }
 
     @Override
     public ProcessingElement copy() {
         return new ALUElement(this.getLatency(), this.getMemorySize());
+    }
+
+    @Override
+    protected ALUElement getThis() {
+        return this;
     }
 
     @Override

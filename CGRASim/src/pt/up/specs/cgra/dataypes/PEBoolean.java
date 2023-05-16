@@ -47,17 +47,6 @@ public class PEBoolean implements PEData {
         return new PEBoolean(this.value ^ intB.value);
     }
 
-    @Override
-    public PEData passl(PEData operandB) {
-        return new PEBoolean(this.value);
-    }
-
-    @Override
-    public PEData passr(PEData operandB) {
-        var intB = (PEBoolean) operandB;
-        return new PEBoolean(intB.value);
-    }
-
     // INVALID OPERATIONS:
 
     @Override

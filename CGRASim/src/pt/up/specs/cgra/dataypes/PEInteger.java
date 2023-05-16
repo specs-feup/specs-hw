@@ -38,11 +38,6 @@ public class PEInteger implements PEData {
     }
 
     @Override
-    public PEData passNull(PEData operandB) {
-        return new PEInteger(0);
-    }
-
-    @Override
     public PEData add(PEData operandB) {
         var intB = (PEInteger) operandB;
         return new PEInteger(this.value + intB.getValue());
@@ -103,19 +98,6 @@ public class PEInteger implements PEData {
     public PEData xor(PEData operandB) {
         var intB = (PEInteger) operandB;
         return new PEInteger(this.value ^ intB.getValue());
-
-    }
-
-    @Override
-    public PEData passl(PEData operandB) {
-        return new PEInteger(this.value);
-
-    }
-
-    @Override
-    public PEData passr(PEData operandB) {
-        var intB = (PEInteger) operandB;
-        return new PEInteger(intB.getValue());
 
     }
 

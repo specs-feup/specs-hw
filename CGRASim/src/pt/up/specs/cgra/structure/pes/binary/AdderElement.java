@@ -10,10 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.structure.pes.binary;
 
-import pt.up.specs.cgra.control.PEControlSetting;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
@@ -44,19 +43,12 @@ public class AdderElement extends BinaryProcessingElement {
     }
 
     @Override
+    protected AdderElement getThis() {
+        return this;
+    }
+
+    @Override
     public String toString() {
         return "Adder";
     }
-
-	@Override
-	public boolean setControl(int i) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public PEControlSetting getControl() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

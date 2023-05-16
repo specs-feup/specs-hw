@@ -32,7 +32,7 @@ public interface PEControlSetting {
         return this.getControlOptions().get(name);
     }
     
-    public String getName(int value) {
-        return this.getControlOptions().get(name);
+    public default String getName(int value) {
+        var ks = this.getControlOptions().keySet();
     }*/
 }

@@ -30,6 +30,11 @@ public class GenericMemory implements Memory {
     }
 
     @Override
+    public void reset() {
+        this.mem.clear();
+    }
+
+    @Override
     public PEData read(PEInteger addr) {
         return this.mem.get(addr);
     }

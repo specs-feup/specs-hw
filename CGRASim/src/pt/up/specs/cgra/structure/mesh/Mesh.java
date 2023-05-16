@@ -15,7 +15,7 @@ package pt.up.specs.cgra.structure.mesh;
 
 import java.util.List;
 
-import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.specs.cgra.CGRAUtils;
 // github.com/specs-feup/specs-hw
 import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
@@ -42,8 +42,8 @@ public class Mesh {
                 this.mesh.get(i).get(j).setMesh(this);
     }
 
-    private static void debug(String str) {
-        SpecsLogs.debug(Mesh.class.getSimpleName() + ": " + str);
+    private void debug(String str) {
+        CGRAUtils.debug(Mesh.class.getSimpleName(), str);
     }
 
     /*
@@ -74,25 +74,22 @@ public class Mesh {
     public ProcessingElement setProcessingElement(int x, int y, ProcessingElement pe) {
         this.boundCheck(x, y);
         if (this.mesh.get(x).set(y, pe) != null) {
-            /*pe.setX(x);
-            pe.setY(y);
-            pe.setMesh(this);*/
-            Mesh.debug("PE set sucessfuly: " + pe + " (" + x + ", " + y + ")");
+            this.debug("PE set sucessfuly: " + pe + " (" + x + ", " + y + ")");
 
         } else {
-            Mesh.debug("PE set failed...");
+            this.debug("PE set failed...");
         }
         return pe;
         // TODO: should return null when fail?
     }
 
     public boolean execute() {
-        Mesh.debug("Execute start...");
+        this.debug("Execute start...");
         for (var line : this.mesh)
             for (var pe : line)
                 pe.execute();
 
-        Mesh.debug("Execute sucessful");
+        this.debug("Execute sucessful");
         return true;
     }
 

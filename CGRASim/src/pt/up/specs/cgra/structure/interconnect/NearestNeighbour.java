@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
- 
+
 package pt.up.specs.cgra.structure.interconnect;
 
 import pt.up.specs.cgra.structure.SpecsCGRA;
@@ -23,21 +23,26 @@ public class NearestNeighbour extends AInterconnect {
     }
 
     @Override
+    protected NearestNeighbour getThis() {
+        return this;
+    }
+
+    @Override
     public boolean connectionValid(ProcessingElementPort from, ProcessingElementPort to) {
         var fromPE = from.getPE();
         var toPE = to.getPE();
         var distX = Math.abs(fromPE.getX() - toPE.getX());
         var distY = Math.abs(fromPE.getY() - toPE.getY());
 
-        	if ((distX == 1 && distY == 0) || 
-        		(distX == 0 && distY == 1) || 
-        		(distX == 1 && distY == 1)) return true;
-        
-           
+        if ((distX == 1 && distY == 0) ||
+                (distX == 0 && distY == 1) ||
+                (distX == 1 && distY == 1))
+            return true;
+
         // anything else
         // diagonal (of any length)
         // if (distX > 0 && distY > 0)
-        //    return false;
+        // return false;
         else
             return false;
     }

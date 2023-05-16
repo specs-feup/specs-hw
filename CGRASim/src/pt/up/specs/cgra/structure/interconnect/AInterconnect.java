@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pt.up.specs.cgra.CGRAUtils;
 import pt.up.specs.cgra.structure.SpecsCGRA;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
@@ -45,13 +46,20 @@ public abstract class AInterconnect implements Interconnect {
     }
 
     /*
+     * Implemented by concrete instances
+     */
+    protected abstract Interconnect getThis();
+
+    private void debug(String str) {
+        CGRAUtils.debug(getThis().getClass().getSimpleName(), str);
+    }
+
+    /*
      * For every connection, copy the output payload into the input ports of each @ProcessingElement
      */
     @Override
     public boolean propagate() {
-
-        System.out.println("\n========== propagation step ==========");
-
+        this.debug("\n========== propagation step ==========");
         for (var drive : this.connections.keySet()) // para cada x, isto e, cada registo de saida de PE
         {
             // List<PEData> reg = drive.getPE().getRegisterFile(); // copy the data from
@@ -66,9 +74,7 @@ public abstract class AInterconnect implements Interconnect {
 
             // drive.setPayload(new PEInteger(0));
         }
-
-        System.out.println("propagated succesfully");
-
+        this.debug("propagated succesfully");
         return true; // TODO: Exceptions
     }
 
@@ -76,10 +82,10 @@ public abstract class AInterconnect implements Interconnect {
     @Override
     public boolean setConnection(ProcessingElementPort from, ProcessingElementPort to) {
 
+        var fromCords = from.getPE().getAt();
+        var toCoords = from.getPE().getAt();
         if (!connectionValid(from, to)) {
-            System.out.printf("connection invalid between %d, %d and %d, %d \n",
-                    from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
-
+            this.debug("connection invalid between " + fromCords + " to " + toCoords);
             return false;
         }
 
@@ -89,18 +95,16 @@ public abstract class AInterconnect implements Interconnect {
             if (!drivenList.contains(to))
                 drivenList.add(to);
 
-            System.out.println("new port to existing output port list");
+            this.debug("new port to existing output port list");
 
         } else {
             var newList = new ArrayList<ProcessingElementPort>();
             newList.add(to);
             this.connections.put(from, newList);
-            System.out.println("new port to new list element");
+            this.debug("new port to new list element"); // ???
 
         }
-        System.out.printf("Connection set between PE %d, %d and %d, %d \n",
-                from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
-
+        this.debug("Connection set between " + fromCords + " to " + toCoords);
         return true;
     }
 

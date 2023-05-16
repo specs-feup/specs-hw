@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.specs.cgra.CGRAUtils;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.microcontroler.InstructionDecoder;
@@ -71,15 +71,15 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     protected boolean isExecuting;
     protected boolean execute_terminated;
 
-    private static void debug(String str) {
-        SpecsLogs.debug(GenericSpecsCGRA.class.getSimpleName() + ": " + str);
+    private void debug(String str) {
+        CGRAUtils.debug(GenericSpecsCGRA.class.getSimpleName(), str);
     }
 
     private GenericSpecsCGRA(List<List<ProcessingElement>> mesh,
             Class<? extends Interconnect> intclass,
             int localmemsize) {
 
-        GenericSpecsCGRA.debug("Constructor started...");
+        this.debug("Constructor started...");
         this.mesh = new Mesh(mesh, this);
 
         // in theory, should never fail
@@ -98,7 +98,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         else
             this.localmem = null;
 
-        GenericSpecsCGRA.debug("Constructor finished!");
+        this.debug("Constructor finished!");
     }
 
     /*
@@ -271,9 +271,9 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     public Context getContext(int i) {
         var x = this.context_memory.get(i);
         if (x != null)
-            GenericSpecsCGRA.debug("Context nr. " + i + " retrieved successfuly");
+            this.debug("Context nr. " + i + " retrieved successfuly");
         else
-            GenericSpecsCGRA.debug("Context fetch failed...");
+            this.debug("Context fetch failed...");
         return x;
     }
 
@@ -281,11 +281,11 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     public boolean setContext(Context c) {
         if (c != null && c.getConnections().size() > 0) {
             if (this.context_memory.add(c)) {
-                GenericSpecsCGRA.debug("Context added");
+                this.debug("Context added");
                 return true;
             }
         }
-        GenericSpecsCGRA.debug("Context add failed...");
+        this.debug("Context add failed...");
         return false;
     }
 
@@ -298,12 +298,12 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     public boolean applyContext(Integer i) {
         if (this.context_memory.get(i) != null) {
             if (this.interconnect.applyContext(this.context_memory.get(i))) {
-                GenericSpecsCGRA.debug("\"Context set succesfully");
+                this.debug("\"Context set succesfully");
                 return true;
             }
         }
 
-        GenericSpecsCGRA.debug("Setting context failed");
+        this.debug("Setting context failed");
         return false;
     }
 
@@ -347,11 +347,15 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         private Class<? extends Interconnect> intclass = NearestNeighbour.class;
         // default interconnect
 
+        private void debug(String str) {
+            CGRAUtils.debug(GenericSpecsCGRA.Builder.class.getSimpleName(), str);
+        }
+
         /*
          * mesh size is mandatory before any "with..." calls
          */
         public Builder(int x, int y) {
-            GenericSpecsCGRA.debug("Starting CGRA Builder, with (x, y) = (" + x + ", " + y + ")");
+            this.debug("Starting CGRA Builder, with (x, y) = (" + x + ", " + y + ")");
             this.meshX = x;
             this.meshY = y;
             this.memsize = 0;
@@ -372,7 +376,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
             // public Builder withHomogeneousPE(Supplier<ProcessingElement> constructor) {
             // var pe = constructor.get()
 
-            GenericSpecsCGRA.debug("Setting PEs to homogeneous, with type " + pe.getClass().getSimpleName());
+            this.debug("Setting PEs to homogeneous, with type " + pe.getClass().getSimpleName());
             for (int i = 0; i < this.meshX; i++)
                 for (int j = 0; j < this.meshY; j++)
                     this.mesh.get(i).set(j, pe.copy());
@@ -380,7 +384,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         }
 
         public Builder withProcessingElement(ProcessingElement pe, int x, int y) {
-            GenericSpecsCGRA.debug("Started build PE of type "
+            this.debug("Started build PE of type "
                     + pe.getClass().getSimpleName()
                     + " at (x, y) = (" + pe.getX() + ", " + pe.getY() + ")");
             this.mesh.get(x).set(y, pe);
@@ -388,25 +392,25 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         }
 
         public Builder withMemory(int memsize) {
-            GenericSpecsCGRA.debug("Setting localmem to size " + memsize);
+            this.debug("Setting localmem to size " + memsize);
             this.memsize = memsize;
             return this;
         }
 
         public Builder withNearestNeighbourInterconnect() {
-            GenericSpecsCGRA.debug("Setting mesh to NearestNeighbour");
+            this.debug("Setting mesh to NearestNeighbour");
             this.intclass = NearestNeighbour.class;
             return this;
         }
 
         public Builder withToroidalNNInterconnect() {
-            GenericSpecsCGRA.debug("Setting mesh to ToroidalNearestNeighbour");
+            this.debug("Setting mesh to ToroidalNearestNeighbour");
             this.intclass = ToroidalNNInterconnect.class;
             return this;
         }
 
         public GenericSpecsCGRA build() {
-            GenericSpecsCGRA.debug("Building CGRA...");
+            this.debug("Building CGRA...");
             return new GenericSpecsCGRA(this.mesh, this.intclass, memsize);
         }
     }

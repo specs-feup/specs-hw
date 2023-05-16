@@ -8,9 +8,14 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
+import pt.up.specs.cgra.CGRAUtils;
 import pt.up.specs.cgra.structure.SpecsCGRA;
 
 public class InstructionDecoder {
+
+    /*
+     * TODO: help map of control generators based on type of PE control?
+     */
 
     /*
      * helper mapping of per-instruction decoders
@@ -43,6 +48,10 @@ public class InstructionDecoder {
         this.parent = parent;
     }
 
+    private static void debug(String str) {
+        CGRAUtils.debug(InstructionDecoder.class.getSimpleName(), str);
+    }
+
     public boolean InstructionParser(String st) {
 
         var tk = new StringTokenizer(st);
@@ -59,25 +68,27 @@ public class InstructionDecoder {
         if (func == null)
             func = InstructionDecoder::undefined;
 
-        System.out.printf("received instruction: '%s' \n", instname_str);
+        InstructionDecoder.debug("received instruction:" + instname_str);
         return func.apply(this.parent, operands.stream().map(Integer::valueOf).collect(Collectors.toList()));
     }
 
     private static boolean set(SpecsCGRA cgra, List<Integer> ops) {
 
         if (ops.size() != 3) {
-            System.out.println("Erro a ler parametros da instrucao set");
+            InstructionDecoder.debug("Erro a ler parametros da instrucao set");
             return false;
         }
 
+        // TODO: requires resolving specific PE isntance in order to cast control to concrete class
+
         var ctrl = Integer.valueOf(ops.get(2));
-        return cgra.getMesh().getProcessingElement(ops.get(0), ops.get(1)).setControl(ctrl);
+        return cgra.getMesh().getProcessingElement(ops.get(0), ops.get(1)).setOperation(ctrl);
     }
 
     private static boolean set_io(SpecsCGRA cgra, List<Integer> ops) {
 
         if (ops.size() != 6) {
-            System.out.println("Erro a ler parametros da instrucao set_io");
+            InstructionDecoder.debug("Erro a ler parametros da instrucao set_io");
             return false;
         }
 
@@ -85,18 +96,18 @@ public class InstructionDecoder {
         var pe1 = cgra.getMesh().getProcessingElement(ops.get(2), ops.get(3));
         var pe2 = cgra.getMesh().getProcessingElement(ops.get(4), ops.get(5));
         if (pe1 == null || pe2 == null || pesrc == null) {
-            System.out.println("Erro nos parametros da instrucao set_io");
+            InstructionDecoder.debug("Erro nos parametros da instrucao set_io");
             return true;
         }
 
         var intc = cgra.getInterconnect();
         if (!intc.setConnection(pe1.getPort(2), pesrc.getPort(0))) {
-            System.out.println("Erro nos parametros da instrucao set_io");
+            InstructionDecoder.debug("Erro nos parametros da instrucao set_io");
             return true;
         }
 
         if (!intc.setConnection(pe2.getPort(2), pesrc.getPort(1))) {
-            System.out.println("Erro nos parametros da instrucao set_io");
+            InstructionDecoder.debug("Erro nos parametros da instrucao set_io");
             return true;
         }
 
@@ -123,7 +134,7 @@ public class InstructionDecoder {
 
     private static boolean switch_ctx(SpecsCGRA cgra, List<Integer> ops) {
         if (ops.size() != 1) {
-            System.out.println("Erro a ler parametros da instrucao switch_ctx");
+            InstructionDecoder.debug("Erro a ler parametros da instrucao switch_ctx");
             return false;
         }
         return cgra.applyContext(ops.get(0));
@@ -150,7 +161,7 @@ public class InstructionDecoder {
     }
 
     private static boolean undefined(SpecsCGRA cgra, List<Integer> ops) {
-        System.out.println("Undefined instr");
+        InstructionDecoder.debug("Undefined instr");
         return true;
     }
 }

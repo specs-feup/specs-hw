@@ -23,4 +23,6 @@ package pt.up.specs.cgra.control;
 public interface PEControl<T extends PEControlSetting> {
 
     public boolean setOperation(T ctrl);
+
+    public T getOperation();
 }

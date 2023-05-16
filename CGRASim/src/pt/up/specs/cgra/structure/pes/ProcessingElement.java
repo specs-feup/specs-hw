@@ -48,6 +48,10 @@ public interface ProcessingElement {
         return -1;
     }
 
+    default public String getAt() {
+        return this.toString() + "@(" + this.getX() + ", " + this.getY() + ")";
+    }
+
     default public int getLatency() {
         return 1;
     }
@@ -91,9 +95,9 @@ public interface ProcessingElement {
         return null;
     }
 
-    default public boolean setReady() {
+    /*default public boolean setReady() {
         return false;
-    }
+    }*/
 
     default public void reset() {
     }

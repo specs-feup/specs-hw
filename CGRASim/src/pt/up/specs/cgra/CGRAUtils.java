@@ -11,30 +11,16 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.specs.cgra.dataypes;
+package pt.up.specs.cgra;
 
-public abstract class APEData implements PEData {
+import pt.up.fe.specs.util.SpecsLogs;
 
-    @Override
-    public Number getValue() {
-        // TODO Auto-generated method stub
-        return null;
+public class CGRAUtils {
+
+    private static boolean isDebug = true;
+
+    public static void debug(Object obj, String str) {
+        if (isDebug)
+            SpecsLogs.debug(obj.getClass().getSimpleName() + ": " + str);
     }
-
-    @Override
-    public PEData copy() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    /*
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof PEInteger))
-            return false;
-    
-        else if (obj == this)
-            return true;
-    
-        return (this.getValue() == ((PEInteger) obj).value);// TODO: unsafe
-    }*/
 }

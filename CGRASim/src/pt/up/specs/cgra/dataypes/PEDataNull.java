@@ -11,28 +11,17 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.specs.cgra.structure.pes;
+package pt.up.specs.cgra.dataypes;
 
-import pt.up.specs.cgra.control.PEControl;
-import pt.up.specs.cgra.control.PEControlSetting;
-import pt.up.specs.cgra.dataypes.PEData;
-
-public abstract class ACProcessingElement<T extends PEControlSetting> extends AProcessingElement
-        implements PEControl<T> {
+public class PEDataNull implements PEData {
 
     @Override
-    protected abstract PEData _execute();
-
-    @Override
-    public boolean setControl(int i) {
-        // TODO Auto-generated method stub
-        return false;
+    public Number getValue() {
+        return 0;
     }
 
     @Override
-    public PEControlSetting getControl() {
-        // TODO Auto-generated method stub
-        return null;
+    public String toString() {
+        return "NullValue";
     }
-
 }

@@ -25,10 +25,6 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 public interface PEData {
 
-    public default PEData passNull(PEData operandB) {
-        return null;
-    }
-
     public default PEData add(PEData operandB) {
         throw new NotImplementedException("PEData: add not implemented");
     }
@@ -63,14 +59,6 @@ public interface PEData {
 
     public default PEData xor(PEData operandB) {
         throw new NotImplementedException("PEData: xor not implemented");
-    }
-
-    public default PEData passl(PEData operandB) {
-        throw new NotImplementedException("PEData: passl not implemented");
-    }
-
-    public default PEData passr(PEData operandB) {
-        throw new NotImplementedException("PEData: passr not implemented");
     }
 
     public default PEData slt(PEData operandB) {

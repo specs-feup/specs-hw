@@ -21,6 +21,11 @@ public interface Memory {
     /*
      * 
      */
+    public void reset();
+
+    /*
+     * 
+     */
     public PEData read(PEInteger addr);
 
     /*
