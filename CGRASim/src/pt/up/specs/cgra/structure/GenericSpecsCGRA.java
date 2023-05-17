@@ -166,10 +166,10 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         this.execute_terminated = execute_terminated;
     }
 
-    @Override
+    /*@Override
     public ProcessingElement setPE(int x, int y, ProcessingElement pe) {
         return this.mesh.setProcessingElement(x, y, pe);
-    }
+    }*/
 
     @Override
     public InstructionDecoder getInstructionDecoder() {
@@ -200,6 +200,11 @@ public class GenericSpecsCGRA implements SpecsCGRA {
     
         return true; // eventually use this return to indicate stalling or something
     }*/
+
+    @Override
+    public boolean execute(String instruction) {
+        return this.instdec.decode(instruction);
+    }
 
     @Override
     public int execute() {
@@ -309,8 +314,10 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
     @Override
     public boolean reset() {
+        this.debug("Resetting CGRA");
         this.mesh.reset();
         this.interconnect.clear();
+        this.debug("Reset complete");
         return true;
     }
 
@@ -372,10 +379,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
          * "pe" must be copied for each grid position by deep copy
          */
         public Builder withHomogeneousPE(ProcessingElement pe) {
-
-            // public Builder withHomogeneousPE(Supplier<ProcessingElement> constructor) {
-            // var pe = constructor.get()
-
             this.debug("Setting PEs to homogeneous, with type " + pe.getClass().getSimpleName());
             for (int i = 0; i < this.meshX; i++)
                 for (int j = 0; j < this.meshY; j++)
@@ -385,8 +388,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
         public Builder withProcessingElement(ProcessingElement pe, int x, int y) {
             this.debug("Started build PE of type "
-                    + pe.getClass().getSimpleName()
-                    + " at (x, y) = (" + pe.getX() + ", " + pe.getY() + ")");
+                    + pe.toString() + " at (x, y) = (" + x + ", " + y + ")");
             this.mesh.get(x).set(y, pe);
             return this;
         }

@@ -108,13 +108,13 @@ public abstract class AProcessingElement implements ProcessingElement {
      */
     private boolean _getPos() {
         if (this.getMesh() == null) {
-            // TODO: error msg
+            // this.debug("Cannot get position in Mesh since I have no parent.");
             return false; // have no parent
         }
 
         int x = 0, y = 0;
-        while (x++ < this.myparent.getWidth())
-            while (y++ < this.myparent.getHeight())
+        for (x = 0; x < this.myparent.getWidth(); x++)
+            for (y = 0; y < this.myparent.getHeight(); y++)
                 if (this.myparent.getProcessingElement(x, y) == this)
                     break;
 
@@ -126,7 +126,7 @@ public abstract class AProcessingElement implements ProcessingElement {
     @Override
     public boolean setMesh(Mesh parent) {
         if (this.getMesh() != null) {
-            // TODO: error msg
+            this.debug("This PE already has a parent! Not changing.");
             return false;
         } else {
             this.myparent = parent;
@@ -205,7 +205,7 @@ public abstract class AProcessingElement implements ProcessingElement {
                 this.debug(this.getAt() + "NOT ready for execution due to NULL payload at port.");
                 return false;
             }
-        this.debug(this.getAt() + "ready for execution");
+        this.debug(this.getAt() + " ready for execution");
         return true;
     }
 
@@ -214,7 +214,7 @@ public abstract class AProcessingElement implements ProcessingElement {
         this.ready = setReady();
         if (this.ready) {
             var result = _execute();
-            this.debug(this.getAt() + "executed successfuly with result:" + result);
+            this.debug(this.getAt() + " executed successfuly with result:" + result);
             this.executeCount++;
             if (this.hasMemory && this.writeIdx != -1) {
                 this.registerFile.write(this.writeIdx, result);
@@ -228,7 +228,6 @@ public abstract class AProcessingElement implements ProcessingElement {
     @Override
     public final String toString() {
         return this.getType().toString();
-        // return this.getClass().getSimpleName();
     }
 
     @Override

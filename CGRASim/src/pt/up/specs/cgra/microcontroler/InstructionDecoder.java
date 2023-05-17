@@ -52,7 +52,7 @@ public class InstructionDecoder {
         CGRAUtils.debug(InstructionDecoder.class.getSimpleName(), str);
     }
 
-    public boolean InstructionParser(String st) {
+    public boolean decode(String st) {
 
         var tk = new StringTokenizer(st);
         var operands = new ArrayList<String>();

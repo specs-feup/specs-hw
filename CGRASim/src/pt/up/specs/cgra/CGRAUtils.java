@@ -17,10 +17,9 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 public class CGRAUtils {
 
-    private static boolean isDebug = true;
+    // Note: create a file called "debug" in the root in order for this print to work
 
     public static void debug(Object obj, String str) {
-        if (isDebug)
-            SpecsLogs.debug(obj.getClass().getSimpleName() + ": " + str);
+        SpecsLogs.debug(() -> obj.getClass().getSimpleName() + ": " + str);
     }
 }

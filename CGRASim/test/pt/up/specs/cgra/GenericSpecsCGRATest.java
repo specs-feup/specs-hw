@@ -28,9 +28,7 @@ public class GenericSpecsCGRATest {
     public void testInstantantiateAndView() {
         var CGRAbld = new GenericSpecsCGRA.Builder(2, 2);
         CGRAbld.withHomogeneousPE(new AdderElement());
-        CGRAbld.withProcessingElement(new MultiplierElement(), 0, 1); // TODO: should receive a function that produces
-                                                                      // the PE, instead
-        // of working via copy
+        CGRAbld.withProcessingElement(new MultiplierElement(), 0, 1);
         var cgra = CGRAbld.build();
         cgra.visualize();
     }
@@ -46,28 +44,26 @@ public class GenericSpecsCGRATest {
 
     @Test
     public void testBasicCGRAPrototype() {
+
+        /*
+         * Build CGRA
+         */
         var CGRAbld = new GenericSpecsCGRA.Builder(4, 4);
         CGRAbld.withMemory(3);
         CGRAbld.withHomogeneousPE(new ALUElement());
+        CGRAbld.withProcessingElement(new LSElement(), 0, 0);
+        CGRAbld.withProcessingElement(new LSElement(8), 0, 1);
+        CGRAbld.withProcessingElement(new LSElement(16), 0, 2);
+        CGRAbld.withProcessingElement(new LSElement(24), 0, 3);
         var cgra = CGRAbld.build();
-
-        cgra.setPE(0, 0, new LSElement());
-        cgra.setPE(0, 1, new LSElement(8));
-        cgra.setPE(0, 2, new LSElement(16));
-        cgra.setPE(0, 3, new LSElement(24));
-
         cgra.visualize();
 
+        /*
+         * Reset
+         */
+        cgra.reset();
         for (int i = 0; i < cgra.getLiveinsSize(); i++)
             cgra.writeMemory(new PEInteger(i), new PEInteger(i * i + 1));
-
-        System.out.println();
-        System.out.println("Resetting to 0");
-
-        cgra.reset();
-
-        System.out.println("Reset done");
-        System.out.println();
 
         /*      0    1    2    3
          * 
@@ -78,27 +74,24 @@ public class GenericSpecsCGRATest {
          * 
          */
 
-        cgra.getInstructionDecoder().InstructionParser("set 0 0 1");// LOAD
-        cgra.getInstructionDecoder().InstructionParser("set 0 1 1");// LOAD
-        cgra.getInstructionDecoder().InstructionParser("set 0 2 1");// LOAD
-        cgra.getInstructionDecoder().InstructionParser("set 0 3 1");// LOAD
-        cgra.getInstructionDecoder().InstructionParser("set 1 0 1");// ADD
-        cgra.getInstructionDecoder().InstructionParser("set 1 2 1");// ADD
-        cgra.getInstructionDecoder().InstructionParser("set 2 1 3");// MUL
-
-        System.out.println();
-
-        cgra.getInstructionDecoder().InstructionParser("set_io 1 0 0 0 0 1");// ADD 1 0 liga in1 e 2 de pe_src a out de pe1 e pe2
-        cgra.getInstructionDecoder().InstructionParser("set_io 1 2 0 2 0 3");// add 1 2
-        cgra.getInstructionDecoder().InstructionParser("set_io 2 1 1 0 1 2");// mul 2 1
-
-        System.out.println();
+        /*
+         * Start feeding instructions
+         */
+        cgra.execute("set 0 0 1");// LOAD
+        cgra.execute("set 0 1 1");// LOAD
+        cgra.execute("set 0 2 1");// LOAD
+        cgra.execute("set 0 3 1");// LOAD
+        cgra.execute("set 1 0 1");// ADD
+        cgra.execute("set 1 2 1");// ADD
+        cgra.execute("set 2 1 3");// MUL
+        cgra.execute("set_io 1 0 0 0 0 1");// ADD 1 0 liga in1 e 2 de pe_src a out de pe1 e pe2
+        cgra.execute("set_io 1 2 0 2 0 3");// add 1 2
+        cgra.execute("set_io 2 1 1 0 1 2");// mul 2 1
 
         // defining base address value of 0 for LSU; They already have an offset each of 0, 8, 16, 24
         for (int j = 0; j < 4; j++) {
-            cgra.getMesh().getProcessingElement(0, j).getPorts().get(0).setPayload(new PEInteger(0));
-            cgra.getMesh().getProcessingElement(0, j).getPorts().get(1).setPayload(new PEInteger(0));
-
+            cgra.getPE(0, j).getPort(0).setPayload(new PEInteger(0));
+            cgra.getPE(0, j).getPort(1).setPayload(new PEInteger(0));
         }
 
         System.out.println("Addresses set for LSUnits");
@@ -110,7 +103,7 @@ public class GenericSpecsCGRATest {
         cgra.step();
 
         for (int j = 0; j < 4; j++)
-            cgra.getMesh().getProcessingElement(0, j).getPorts().get(0).setPayload(new PEInteger(1));
+            cgra.getPE(0, j).getPort(0).setPayload(new PEInteger(1));
 
         cgra.step();
 
@@ -119,6 +112,5 @@ public class GenericSpecsCGRATest {
         // execute (as many times as wanted)
         // store
         // end
-
     }
 }

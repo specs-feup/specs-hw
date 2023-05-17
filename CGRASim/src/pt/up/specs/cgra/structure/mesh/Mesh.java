@@ -71,17 +71,17 @@ public class Mesh {
         return this.mesh.get(x).get(y);
     }
 
-    public ProcessingElement setProcessingElement(int x, int y, ProcessingElement pe) {
+    /*public ProcessingElement setProcessingElement(int x, int y, ProcessingElement pe) {
         this.boundCheck(x, y);
         if (this.mesh.get(x).set(y, pe) != null) {
             this.debug("PE set sucessfuly: " + pe + " (" + x + ", " + y + ")");
-
+    
         } else {
             this.debug("PE set failed...");
         }
         return pe;
         // TODO: should return null when fail?
-    }
+    }*/
 
     public boolean execute() {
         this.debug("Execute start...");

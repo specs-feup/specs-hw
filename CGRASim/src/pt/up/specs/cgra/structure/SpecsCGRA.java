@@ -25,9 +25,16 @@ import pt.up.specs.cgra.structure.pes.ProcessingElement;
 public interface SpecsCGRA {
 
     /*
-     * 
+     * get entire Mesh of PEs
      */
     public Mesh getMesh();
+
+    /*
+     * get specific PE
+     */
+    public default ProcessingElement getPE(int x, int y) {
+        return this.getMesh().getProcessingElement(x, y);
+    }
 
     /*
      * Interconnect
@@ -52,7 +59,13 @@ public interface SpecsCGRA {
     /*
      * Executes a single simulation tick (can be considered a clock cycle)
      */
-    public int execute();
+    public int execute(); // TODO: return of this should go back
+    // to "boolean".. it indicates if execute was sucessful or not
+
+    /*
+     * invokes the built-in decoder
+     */
+    public boolean execute(String instruction);
 
     public boolean pause();
 
@@ -83,7 +96,7 @@ public interface SpecsCGRA {
 
     public boolean reset();
 
-    public ProcessingElement setPE(int x, int y, ProcessingElement pe);
+    // public ProcessingElement setPE(int x, int y, ProcessingElement pe);
 
     public InstructionDecoder getInstructionDecoder();
 
