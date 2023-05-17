@@ -20,6 +20,8 @@ import pt.up.specs.cgra.structure.mesh.Mesh;
 
 public interface ProcessingElement {
 
+    public PEType getType();
+
     public default List<ProcessingElementPort> getPorts() {
         return null;
     }

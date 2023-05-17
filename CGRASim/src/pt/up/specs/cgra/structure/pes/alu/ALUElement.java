@@ -21,6 +21,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.specs.cgra.control.PEControl;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEDataNull;
+import pt.up.specs.cgra.structure.pes.PEType;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 import pt.up.specs.cgra.structure.pes.binary.BinaryProcessingElement;
 
@@ -148,7 +149,7 @@ public class ALUElement extends BinaryProcessingElement implements PEControl<ALU
     }
 
     @Override
-    public String toString() {
-        return "ALU";
+    public PEType getType() {
+        return PEType.ALUElement;
     }
 }

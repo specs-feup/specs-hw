@@ -14,6 +14,7 @@
 package pt.up.specs.cgra.structure.pes.binary;
 
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.structure.pes.PEType;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 public class AdderElement extends BinaryProcessingElement {
@@ -48,7 +49,7 @@ public class AdderElement extends BinaryProcessingElement {
     }
 
     @Override
-    public String toString() {
-        return "Adder";
+    public PEType getType() {
+        return PEType.AdderElement;
     }
 }

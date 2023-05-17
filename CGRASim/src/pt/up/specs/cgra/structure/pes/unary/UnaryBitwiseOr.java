@@ -1,6 +1,7 @@
 package pt.up.specs.cgra.structure.pes.unary;
 
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.structure.pes.PEType;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 import pt.up.specs.cgra.structure.pes.binary.AdderElement;
 
@@ -35,7 +36,7 @@ public class UnaryBitwiseOr extends UnaryProcessingElement {
     }
 
     @Override
-    public String toString() {
-        return "UnaryBitwiseOr";
+    public PEType getType() {
+        return PEType.UnaryBitwiseOr;
     }
 }

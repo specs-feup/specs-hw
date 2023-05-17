@@ -14,6 +14,7 @@
 package pt.up.specs.cgra.structure.pes.binary;
 
 import pt.up.specs.cgra.dataypes.PEData;
+import pt.up.specs.cgra.structure.pes.PEType;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 
 public class MultiplierElement extends BinaryProcessingElement {
@@ -46,7 +47,7 @@ public class MultiplierElement extends BinaryProcessingElement {
     }
 
     @Override
-    public String toString() {
-        return "Mul";
+    public PEType getType() {
+        return PEType.MultiplierElement;
     }
 }

@@ -79,10 +79,9 @@ public class InstructionDecoder {
             return false;
         }
 
-        // TODO: requires resolving specific PE isntance in order to cast control to concrete class
-
+        var pe = cgra.getMesh().getProcessingElement(ops.get(0), ops.get(1));
         var ctrl = Integer.valueOf(ops.get(2));
-        return cgra.getMesh().getProcessingElement(ops.get(0), ops.get(1)).setOperation(ctrl);
+        return ControlDecoder.applyControl(pe, ctrl);
     }
 
     private static boolean set_io(SpecsCGRA cgra, List<Integer> ops) {

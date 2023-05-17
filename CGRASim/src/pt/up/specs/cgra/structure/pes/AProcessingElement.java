@@ -226,8 +226,9 @@ public abstract class AProcessingElement implements ProcessingElement {
     }
 
     @Override
-    public String toString() {
-        return this.getClass().getSimpleName();
+    public final String toString() {
+        return this.getType().toString();
+        // return this.getClass().getSimpleName();
     }
 
     @Override

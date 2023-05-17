@@ -13,14 +13,19 @@
 
 package pt.up.specs.cgra.microcontroler;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import pt.up.specs.cgra.control.PEControlSetting;
+import pt.up.specs.cgra.structure.pes.PEType;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
 import pt.up.specs.cgra.structure.pes.alu.ALUControlSetting;
 import pt.up.specs.cgra.structure.pes.alu.ALUElement;
+import pt.up.specs.cgra.structure.pes.loadstore.LSControlSetting;
+import pt.up.specs.cgra.structure.pes.loadstore.LSElement;
 
 public class ControlDecoder {
 
@@ -29,29 +34,43 @@ public class ControlDecoder {
      * (turns integer value into appropriate enum key)
      */
     interface ControlDecode {
-        PEControlSetting apply(int value);
+        boolean apply(ProcessingElement pe, int value);
     }
 
-    private static final Map<Class<? extends ProcessingElement>, ControlDecode> CtrlDecoders;
+    private static final Map<PEType, ControlDecode> CtrlDecoders;
     static {
-        var amap = new HashMap<Class<? extends ProcessingElement>, ControlDecode>();
-        amap.put(ALUElement.class, ControlDecoder::ALUDecoder);
-        // amap.put("set_io", InstructionDecoder::set_io);
-
+        var amap = new HashMap<PEType, ControlDecode>();
+        amap.put(PEType.ALUElement, ControlDecoder::ALUDecoder);
+        amap.put(PEType.LSElement, ControlDecoder::LSDecoder);
         CtrlDecoders = Collections.unmodifiableMap(amap);
     }
 
-    public static ALUControlSetting ALUDecoder(int value) {
+    public static boolean applyControl(ProcessingElement pe, int value) {
+        var func = CtrlDecoders.get(pe.getType());
+        if (func == null)
+            throw new RuntimeException("ControlDecoder: attempted to control PE w/o control setting: " + pe.getAt());
 
-        ALUControlSetting ectrl = null;
+        return func.apply(pe, value);
+    }
 
-        for (var e : ALUControlSetting.values()) {
-            ectrl = e;
-            if (value == ectrl.getValue()) {
-                return ectrl;
-            }
-        }
+    private static PEControlSetting resolve(List<? extends PEControlSetting> list, int value) {
+        for (var e : list)
+            if (value == e.getValue())
+                return e;
         return null;
     }
 
+    private static boolean ALUDecoder(ProcessingElement pe, int value) {
+        var list = Arrays.asList(ALUControlSetting.values());
+        var ctrl = (ALUControlSetting) ControlDecoder.resolve(list, value);
+        var alu = (ALUElement) pe;
+        return alu.setOperation(ctrl);
+    }
+
+    private static boolean LSDecoder(ProcessingElement pe, int value) {
+        var list = Arrays.asList(LSControlSetting.values());
+        var ctrl = (LSControlSetting) ControlDecoder.resolve(list, value);
+        var ls = (LSElement) pe;
+        return ls.setOperation(ctrl);
+    }
 }

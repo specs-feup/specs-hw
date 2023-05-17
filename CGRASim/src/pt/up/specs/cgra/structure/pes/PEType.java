@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 SPeCS.
+ * Copyright 2023 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,13 +13,12 @@
 
 package pt.up.specs.cgra.structure.pes;
 
-/**
- * Used to occupy a mesh slot while nothing is placed there
- */
-public class NullPE implements ProcessingElement {
+public enum PEType {
 
-    @Override
-    public PEType getType() {
-        return PEType.NullPE;
-    }
+    NullPE,
+    ALUElement,
+    AdderElement,
+    MultiplierElement,
+    LSElement,
+    UnaryBitwiseOr
 }

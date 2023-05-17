@@ -5,6 +5,7 @@ import pt.up.specs.cgra.control.PEControl;
 import pt.up.specs.cgra.dataypes.PEData;
 import pt.up.specs.cgra.dataypes.PEDataNull;
 import pt.up.specs.cgra.dataypes.PEInteger;
+import pt.up.specs.cgra.structure.pes.PEType;
 import pt.up.specs.cgra.structure.pes.binary.BinaryProcessingElement;
 
 public class LSElement extends BinaryProcessingElement implements PEControl<LSControlSetting> {
@@ -86,7 +87,7 @@ public class LSElement extends BinaryProcessingElement implements PEControl<LSCo
 
         } else {
             data = new PEDataNull();
-            System.out.printf("LS at %d %d STOREd NULL value \n", this.getX(), this.getY());
+            this.debug(this.getAt() + "STOREd NULL value " + addr);
         }
         return data;
     }
@@ -104,31 +105,13 @@ public class LSElement extends BinaryProcessingElement implements PEControl<LSCo
             throw new RuntimeException("LSElement: invalid control setting");
     }
 
-    // reset ao contador
-    public boolean reset_counter() {
-        cload = 0;
-        cstore = 0;
-        if (cload == 0 && cstore == 0)
-            return true;
-        else
-            return false;
+    @Override
+    public void reset() {
+        this.ctrl = LSControlSetting.NULL;
+        this.cload = 0;
+        this.cstore = 0;
+        super.reset();
     }
-    /*
-    private PEData store(int idx) {
-    
-        if (this.getMesh().getCGRA().store_liveins(this, idx, this.getRegisterFile().get(0)))
-            return this.getRegisterFile().get(0);
-        else
-            return null;
-    }
-    
-    private PEData store_next() {
-    
-        store(cstore);
-        cstore++;
-        return this.getRegisterFile().get(0);
-    
-    }*/
 
     @Override
     public boolean setOperation(LSControlSetting ctrl) {
@@ -138,28 +121,13 @@ public class LSElement extends BinaryProcessingElement implements PEControl<LSCo
         return true;
     }
 
-    /*
-    public boolean setControl(int ctrl) {
-    
-        PEControlSetting ectrl = null;
-    
-        for (var e : LSControlSetting.values()) {
-            ectrl = e;
-            if (ctrl == ectrl.getValue()) {
-                return this.setControl((LSControlSetting) ectrl);
-            }
-        }
-        return false;
-    
-    }*/
-
     @Override
     protected LSElement getThis() {
         return this;
     }
 
     @Override
-    public String toString() {
-        return "LSU";
+    public PEType getType() {
+        return PEType.LSElement;
     }
 }
