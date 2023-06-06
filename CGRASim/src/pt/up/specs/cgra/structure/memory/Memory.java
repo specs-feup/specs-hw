@@ -21,10 +21,10 @@ public interface Memory {
     /*
      * 
      */
-    public PEData read(PEInteger addr);
+    public PEData read(Integer addr);
 
     /*
      * 
      */
-    public boolean write(PEInteger addr, PEData data);
+    public boolean write(Integer addr, PEData data);
 }

@@ -15,7 +15,7 @@ public class InstructionDecoder {
 	 * helper mapping of per-instruction decoders
 	 */
 	interface InstDecoder {
-		boolean apply(SpecsCGRA cgra, List<String> operands);
+		String apply(SpecsCGRA cgra, List<String> operands);
 	}
 
 	private static final Map<String, InstDecoder> InstDecoders;
@@ -43,13 +43,13 @@ public class InstructionDecoder {
 		this.parent = parent;
 	}
 
-	public boolean InstructionParser(String st){
+	public String InstructionParser(String st){
 
 		var tk = new StringTokenizer(st);
 		var operands = new ArrayList<String>();
 
 		var instname_str = "";
-		
+
 		if(tk.hasMoreTokens())
 			instname_str = tk.nextToken();
 
@@ -60,33 +60,39 @@ public class InstructionDecoder {
 		var func = InstDecoders.get(instname_str);
 		if (func == null)
 			func = InstructionDecoder::undefined;
-		
-		System.out.printf("received instruction: '%s' \n", instname_str);
+
+		System.out.printf("received instruction: '%s' \n", st);
 
 
 		return func.apply(this.parent, operands);
 	}
 
 
-	private static boolean set(SpecsCGRA cgra, List<String> operands){
+	private static String set(SpecsCGRA cgra, List<String> operands){
 
 		if(operands.size() != 3) {
-			System.out.println("Erro a ler parametros da instrucao set");
-			return false;			
+			return String.format("Error reading SET instruction parameters");
 		}
 
 		var x = Integer.valueOf(operands.get(0));
 		var y = Integer.valueOf(operands.get(1));
 		var ctrl = Integer.valueOf(operands.get(2));
 
-		return cgra.getMesh().getProcessingElement(x, y).setControl(ctrl);
+		if (cgra.getMesh().getProcessingElement(x, y).setControl(ctrl))
+		{
+			return String.format("SET succesful");
+		}
+
+		else
+		{
+			return String.format("SET unsuccesful");
+		}
 	}
 
-	private static boolean set_io(SpecsCGRA cgra, List<String> operands) {
+	private static String set_io(SpecsCGRA cgra, List<String> operands) {
 
 		if(operands.size() != 6) {
-			System.out.println("Erro a ler parametros da instrucao set_io");
-			return false;			
+			return String.format("Error reading SET_IO instruction parameters");
 		}
 
 		var xs = Integer.valueOf(operands.get(0));
@@ -106,84 +112,129 @@ public class InstructionDecoder {
 
 		if (pe1 != null && pe2 != null && pesrc != null) {
 
-			return (cgra.getInterconnect().setConnection(pe1.getPorts().get(2), pesrc.getPorts().get(0)) 
+			if ((cgra.getInterconnect().setConnection(pe1.getPorts().get(2), pesrc.getPorts().get(0)) 
 					&& cgra.getInterconnect().setConnection(pe2.getPorts().get(2), pesrc.getPorts().get(1))
-					); 
-			
+					))
+			{
+				return String.format("SET_IO succesful");
+			}
+
+			else
+			{
+				return String.format("SET_IO unsuccesful");
+			}
+
+
 		}
-		
+		return String.format("SET_IO unsuccesful");
+
 		//out de pe1 -> in1 de pesrc
 		//out de pe2 -> in2 de pesrc
 
-		return false;
 
 	}
 
-	private static boolean gen_info(SpecsCGRA cgra, List<String> operands) {
+	private static String gen_info(SpecsCGRA cgra, List<String> operands) {
 
-		return true;// print cgra.toString?
-
-	}
-
-	private static boolean pe_info(SpecsCGRA cgra, List<String> operands) {
-
-		return true;// print pe.toString?
+		return "x";// print cgra.toString?
 
 	}
 
-	private static boolean mem_info(SpecsCGRA cgra, List<String> operands) {
+	private static String pe_info(SpecsCGRA cgra, List<String> operands) {
 
-		return true;// return genericmemory.tostring?
+		return "y";// print pe.toString?
 
 	}
 
-	private static boolean store_ctx(SpecsCGRA cgra, List<String> operands) {
-		
-		return cgra.setContext(cgra.getInterconnect().getContext());
+	private static String mem_info(SpecsCGRA cgra, List<String> operands) {
+
+		return "z";// return genericmemory.tostring?
+
 	}
 
-	private static boolean switch_ctx(SpecsCGRA cgra, List<String> operands){
-		
+	private static String store_ctx(SpecsCGRA cgra, List<String> operands) {
+
+		if (cgra.setContext(cgra.getInterconnect().getContext()))
+		{
+			return String.format("STORE_CTX succesful");
+		}
+
+		else
+		{
+			return String.format("STORE_CTX unsuccesful");
+		}
+	}
+
+	private static String switch_ctx(SpecsCGRA cgra, List<String> operands){
+
 		if(operands.size() != 1) {
-			System.out.println("Erro a ler parametros da instrucao switch_ctx");
-			return false;			
+			return String.format("Error reading SWITCH_CTX instruction parameters");
 		}
 
 		var index = Integer.valueOf(operands.get(0));
 
-		return cgra.applyContext(index);
+		if (cgra.applyContext(index))
+		{
+			return String.format("SWITCH_CTX succesful");
+		}
+
+		else
+		{
+			return String.format("SWITCH_CTX unsuccesful");
+		}
 	}
 
-	private static boolean run(SpecsCGRA cgra, List<String> operands) {
+	private static String run(SpecsCGRA cgra, List<String> operands) {
 
 		var i = cgra.execute();
-		
-		if (i > 0) return true;
-		else return false;
 
-	}
-	
-	private static boolean step(SpecsCGRA cgra, List<String> operands) {
-
-		return cgra.step();
+		if (i > 0) return String.format ("RUN succesful with %d steps", i);
+		else return String.format("RUN unsuccesful with %d steps", i);
 
 	}
 
-	private static boolean pause(SpecsCGRA cgra, List<String> operands) {
+	private static String step(SpecsCGRA cgra, List<String> operands) {
 
-		return cgra.pause();
+		if (cgra.step())
+		{
+			return String.format("STEP succesful");
+		}
+
+		else
+		{
+			return String.format("STEP unsuccesful");
+		}
 
 	}
 
-	private static boolean reset(SpecsCGRA cgra, List<String> operands) {
-		
-		return cgra.reset();
-		
+	private static String pause(SpecsCGRA cgra, List<String> operands) {
+
+		if (cgra.pause())
+		{
+			return String.format("PAUSE succesful");
+		}
+
+		else
+		{
+			return String.format("PAUSE unsuccesful");
+		}
+	}
+
+	private static String reset(SpecsCGRA cgra, List<String> operands) {
+
+		if (cgra.reset())
+		{
+			return String.format("RESET succesful");
+		}
+
+		else
+		{
+			return String.format("RESET unsuccesful");
+		}		
 	}
 
 
-	private static boolean undefined(SpecsCGRA cgra, List<String> operands) {
-		System.out.println("Undefined instr");
-		return true;
+	private static String undefined(SpecsCGRA cgra, List<String> operands) {
+		return String.format("Undefined instr");
 	}
 }

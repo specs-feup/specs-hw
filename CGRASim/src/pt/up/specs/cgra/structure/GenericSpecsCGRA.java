@@ -26,11 +26,13 @@ import pt.up.specs.cgra.instructions_decoder.InstructionDecoder;
 import pt.up.specs.cgra.structure.context.Context;
 import pt.up.specs.cgra.structure.interconnect.Interconnect;
 import pt.up.specs.cgra.structure.interconnect.NearestNeighbour;
+import pt.up.specs.cgra.structure.interconnect.NearestNeighbourDiagonal;
 import pt.up.specs.cgra.structure.interconnect.ToroidalNNInterconnect;
 import pt.up.specs.cgra.structure.memory.GenericMemory;
 import pt.up.specs.cgra.structure.mesh.Mesh;
 import pt.up.specs.cgra.structure.pes.EmptyPE;
 import pt.up.specs.cgra.structure.pes.ProcessingElement;
+import pt.up.specs.cgra.structure.pes.loadstore.LSElement;
 
 public class GenericSpecsCGRA implements SpecsCGRA {
 
@@ -49,7 +51,9 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		var amap = new HashMap<Class<? extends Interconnect>, Constructor<?>>();
 		try {
 			amap.put(NearestNeighbour.class, NearestNeighbour.class.getConstructor(SpecsCGRA.class));
+			amap.put(NearestNeighbourDiagonal.class, NearestNeighbourDiagonal.class.getConstructor(SpecsCGRA.class));
 			amap.put(ToroidalNNInterconnect.class, ToroidalNNInterconnect.class.getConstructor(SpecsCGRA.class));
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -72,10 +76,10 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	private GenericSpecsCGRA(List<List<ProcessingElement>> mesh,
 			Class<? extends Interconnect> intclass,
 			int localmemsize) {
-		
+
 		System.out.println("\n INITIALIZATION STARTED \n \n");
 
-		
+
 		this.mesh = new Mesh(mesh, this);
 
 		// in theory, should never fail
@@ -95,9 +99,9 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 			this.localmem = new GenericMemory(this.localmemsize);
 		else
 			this.localmem = null;
-		
+
 		System.out.println("\n INITIALIZATION FINISHED \n \n");
-		
+
 	}
 
 	/*
@@ -133,14 +137,14 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	}
 
 	@Override
-	public PEData writeMemory(PEInteger waddr, PEData data) {
+	public PEData writeMemory(Integer waddr, PEData data) {
 		this.localmem.write(waddr, data);
-		System.out.printf("Data stored into generic memory: %d at address %d \n", data.getValue().intValue(), waddr.getValue().intValue());
+		System.out.printf("Data stored into generic memory: %d at address %d \n", data.getValue().intValue(), waddr.intValue());
 		return data;
 	}
 
 	@Override
-	public PEData readMemory(PEInteger raddr) {
+	public PEData readMemory(Integer raddr) {
 		return this.localmem.read(raddr);
 	}
 
@@ -186,12 +190,12 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	public boolean step() {
 
 		this.setExecuting(true);
-		
+
 		// execute compute
-				if (!this.mesh.execute()) {
-					this.setExecuting(false);
-					return false;
-				}
+		if (!this.mesh.execute()) {
+			this.setExecuting(false);
+			return false;
+		}
 
 		// propagate data from interconnect settings
 		if (!this.interconnect.propagate()) {
@@ -199,7 +203,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 			return false;
 		}
 
-		
+
 
 		this.execute_count++;
 
@@ -212,6 +216,14 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		return true;
 	}
 
+	@Override
+	public boolean reset() {
+		this.mesh.reset();
+		this.interconnect.clear();
+		//this.mesh.zero_ports(); //TODO: Better way to achieve the same
+		return true;
+	}
+
 	// TODO: use a graphical representation later
 	@Override
 	public void visualize() {
@@ -220,88 +232,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		System.out.println(sbld.append(this.mesh.visualize()).toString());
 	}
 
-	/****************************************************************************************
-	 * Builder class for @GenericSpecsCGRA
-	 */
-	public static class Builder extends GenericSpecsCGRA {
-
-		private int meshX, meshY;
-		private int memsize;
-		private final List<List<ProcessingElement>> mesh;
-		private Class<? extends Interconnect> intclass = NearestNeighbour.class;
-		// default interconnect
-
-		/*
-		 * mesh size is mandatory before any "with..." calls
-		 */
-		public Builder(int x, int y) {
-			
-			System.out.println("\n BUILD STARTED \n \n");
-
-			this.meshX = x;
-			this.meshY = y;
-			this.memsize = 0;
-			this.mesh = new ArrayList<List<ProcessingElement>>(x);
-			for (int i = 0; i < x; i++) {
-				this.mesh.add(new ArrayList<ProcessingElement>(y));
-				for (int j = 0; j < y; j++) {
-					this.mesh.get(i).add(new EmptyPE());
-				}
-			}
-		}
-
-		/*
-		 * "pe" must be copied for each grid position by deep copy
-		 */
-		public Builder withHomogeneousPE(ProcessingElement pe) {
-			
-			System.out.println("\n BUILD HOMOGENEOUS STARTED \n \n");
-
-			for (int i = 0; i < this.meshX; i++)
-				for (int j = 0; j < this.meshY; j++)
-					this.mesh.get(i).set(j, pe.copy());
-			return this;
-		}
-
-		public Builder withProcessingElement(ProcessingElement pe, int x, int y) {
-			
-			System.out.println("\n BUILD SPECIFIC PE STARTED \n \n");
-
-			this.mesh.get(x).set(y, pe);
-			return this;
-		}
-
-		public Builder withMemory(int memsize) {
-			
-			System.out.println("\n BUILD MEMORY STARTED \n \n");
-
-			this.memsize = memsize;
-			return this;
-		}
-
-		public Builder withNearestNeighbourInterconnect() {
-			
-			System.out.println("\n BUILD NN MESH STARTED \n \n");
-
-			this.intclass = NearestNeighbour.class;
-			return this;
-		}
-
-		public Builder withToroidalNNInterconnect() {
-			
-			System.out.println("\n BUILD TOROIDAL MESH STARTED \n \n");
-
-			this.intclass = ToroidalNNInterconnect.class;
-			return this;
-		}
-
-		public GenericSpecsCGRA build() {
-			
-			System.out.println("\n BUILDER FINISHED \n \n");
-
-			return new GenericSpecsCGRA(this.mesh, this.intclass, memsize);
-		}
-	}
 
 	@Override
 	public Context getContext(int i) {
@@ -367,14 +297,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		this.execute_terminated = execute_terminated;
 	}
 
-	@Override
-	public boolean reset() {
-		this.mesh.reset();
-		this.interconnect.clear();
-		//this.mesh.zero_ports(); //TODO: Better way to achieve the same
-		return true;
-	}
-
 	public ProcessingElement setPE(int x, int y, ProcessingElement pe) {
 		return this.mesh.setProcessingElement(x, y, pe);
 	}
@@ -382,13 +304,18 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	public InstructionDecoder getInstdec() {
 		return instdec;
 	}
-	
+
 	public int getLiveinsSize() {
 		return this.liveins.getSize();
 	}
-	
+
 	public int getLiveoutsSize() {
 		return this.liveouts.getSize();
+	}
+
+	public int getLocalmemSize()
+	{
+		return this.localmemsize;
 	}
 
 	/*
@@ -428,4 +355,106 @@ public class GenericSpecsCGRA implements SpecsCGRA {
         return false;
 
     }*/
+
+
+	/****************************************************************************************
+	 * Builder class for @GenericSpecsCGRA
+	 */
+	public static class Builder extends GenericSpecsCGRA {
+
+		private int meshX, meshY;
+		private int memsize;
+		private final List<List<ProcessingElement>> mesh;
+		private Class<? extends Interconnect> intclass;
+		// default interconnect
+
+		/*
+		 * mesh size is mandatory before any "with..." calls
+		 */
+		public Builder(int x, int y) {
+
+			System.out.println("\n BUILD STARTED \n \n");
+
+			this.meshX = x;
+			this.meshY = y;
+			this.memsize = 0;
+			this.mesh = new ArrayList<List<ProcessingElement>>(x);
+			for (int i = 0; i < x; i++) {
+				this.mesh.add(new ArrayList<ProcessingElement>(y));
+				for (int j = 0; j < y; j++) {
+					this.mesh.get(i).add(new EmptyPE());
+				}
+			}
+		}
+
+		/*
+		 * "pe" must be copied for each grid position by deep copy
+		 */
+		public Builder withHomogeneousPE(ProcessingElement pe) {
+
+			System.out.println("\n BUILD HOMOGENEOUS STARTED \n \n");
+
+			for (int i = 0; i < this.meshX; i++)
+				for (int j = 0; j < this.meshY; j++)
+					this.mesh.get(i).set(j, pe.copy());
+			return this;
+		}
+
+		public Builder withProcessingElement(ProcessingElement pe, int x, int y) {
+
+			System.out.println("\n BUILD SPECIFIC PE STARTED \n \n");
+
+			this.mesh.get(x).set(y, pe);
+			return this;
+		}
+
+		public Builder withMemory(int memsize) {
+
+			System.out.println("\n BUILD MEMORY STARTED \n \n");
+
+			this.memsize = memsize;
+			return this;
+		}
+
+		public Builder withNearestNeighbourInterconnect() {
+
+			System.out.println("\n BUILD NN MESH STARTED \n \n");
+
+			this.intclass = NearestNeighbour.class;
+			return this;
+		}
+
+		public Builder withNearestNeighbourDiagonalInterconnect() {
+
+			System.out.println("\n BUILD NN MESH STARTED \n \n");
+
+			this.intclass = NearestNeighbourDiagonal.class;
+			return this;
+		}
+
+		public Builder withToroidalNNInterconnect() {
+
+			System.out.println("\n BUILD TOROIDAL MESH STARTED \n \n");
+
+			this.intclass = ToroidalNNInterconnect.class;
+			return this;
+		}
+
+		public Builder firstRowLSU() {
+
+			System.out.println("\n BUILD HOMOGENEOUS STARTED \n \n");
+
+			for (int i = 0; i < this.meshX; i++)
+
+				this.mesh.get(i).set(0, new LSElement());
+			return this;
+		}
+
+		public GenericSpecsCGRA build() {
+
+			System.out.println("\n BUILDER FINISHED \n \n");
+
+			return new GenericSpecsCGRA(this.mesh, this.intclass, memsize);
+		}
+	}
 }

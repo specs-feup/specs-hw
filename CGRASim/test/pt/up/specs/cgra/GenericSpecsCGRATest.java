@@ -18,8 +18,6 @@ import org.junit.Test;
 import pt.up.specs.cgra.dataypes.PEInteger;
 import pt.up.specs.cgra.structure.GenericSpecsCGRA;
 import pt.up.specs.cgra.structure.pes.alu.ALUElement;
-import pt.up.specs.cgra.structure.pes.binary.AdderElement;
-import pt.up.specs.cgra.structure.pes.binary.MultiplierElement;
 import pt.up.specs.cgra.structure.pes.loadstore.LSElement;
 
 public class GenericSpecsCGRATest {
@@ -46,7 +44,7 @@ public class GenericSpecsCGRATest {
 	@Test
 	public void testBasicCGRAPrototype() {
 		var CGRAbld = new GenericSpecsCGRA.Builder(4, 4);
-		CGRAbld.withMemory(3);
+		CGRAbld.withMemory(256);
 		CGRAbld.withHomogeneousPE(new ALUElement());
 		var cgra = CGRAbld.build();
 
@@ -55,7 +53,7 @@ public class GenericSpecsCGRATest {
 		cgra.setPE(0, 2, new LSElement(16));
 		cgra.setPE(0, 3, new LSElement(24));
 
-		for (int i = 0; i < cgra.getLiveinsSize(); i++) cgra.writeMemory(new PEInteger(i), new PEInteger(i*i + 1));
+		for (int i = 0; i < cgra.getLocalmemSize(); i++) cgra.writeMemory(new Integer(i), new PEInteger(i*i + 1));
 
 		System.out.println();
 		System.out.println("Resetting to 0");
@@ -67,7 +65,9 @@ public class GenericSpecsCGRATest {
 
 
 		/*      0    1    2    3
-		 * 
+		 *      
+		 *      1    65   257  577
+		 *      
 		 * 0    LS   LS   LS   LS
 		 * 1    ADD  ---  ADD  --
 		 * 2    ---  MUL   --   --
@@ -107,9 +107,14 @@ public class GenericSpecsCGRATest {
 
 		cgra.step();
 
-		for (int j = 0; j < 4; j++) cgra.getMesh().getProcessingElement(0, j).getPorts().get(0).setPayload(new PEInteger(1));    
+		//for (int j = 0; j < 4; j++) cgra.getMesh().getProcessingElement(0, j).getPorts().get(0).setPayload(new PEInteger(1));    
 
 		cgra.step();
+		
+		cgra.step();
+
+		cgra.step();
+
 
 
 		// config

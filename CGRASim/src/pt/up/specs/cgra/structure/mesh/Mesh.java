@@ -14,6 +14,7 @@
 package pt.up.specs.cgra.structure.mesh;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import pt.up.specs.cgra.dataypes.PEInteger;
 // github.com/specs-feup/specs-hw
@@ -147,5 +148,13 @@ public class Mesh {
 		System.out.println("Ports set to 0s");
 		return true;
 
+	}
+	
+	public List<ProcessingElement> get1Dmesh()
+	{
+		List<ProcessingElement> flatList = mesh.stream().flatMap(s -> s.stream()).collect(Collectors.toList());
+		
+		return flatList;
+		
 	}
 }

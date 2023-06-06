@@ -33,7 +33,7 @@ public class LSElement extends BinaryProcessingElement {
 		}
 
 		var ctrl = (LSControlSetting) this.ctrl;
-		var addr = new PEInteger(this.getOperand(0).getValue().intValue() + offset);
+		var addr = new Integer(this.getOperand(0).getValue().intValue() + offset);
 		var data = this.getOperand(1);
 		var cgra = this.getMesh().getCGRA();
 
@@ -44,7 +44,7 @@ public class LSElement extends BinaryProcessingElement {
 			if (a != null)
 			{
 				System.out.printf("LS at %d %d LOADed succesfully value %d from address %d (%d + offset %d) \n", 
-						this.getX(), this.getY(), a.getValue().intValue(), addr.getValue().intValue(), 
+						this.getX(), this.getY(), a.getValue().intValue(), addr.intValue(), 
 						this.getOperand(0).getValue().intValue(), this.offset);
 				return a;
 			}
@@ -52,7 +52,7 @@ public class LSElement extends BinaryProcessingElement {
 			else if (a == null)
 			{
 				System.out.printf("LS at %d %d LOADed NULL value from address %d (%d + offset %d) \n", 
-						this.getX(), this.getY(), addr.getValue().intValue(),
+						this.getX(), this.getY(), addr.intValue(),
 						this.getOperand(0).getValue().intValue(), this.offset);
 				
 				return new PEInteger(0);

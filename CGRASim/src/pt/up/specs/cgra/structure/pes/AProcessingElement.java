@@ -206,7 +206,7 @@ public abstract class AProcessingElement implements ProcessingElement {
 
 	@Override
 	public PEData execute() {
-		
+
 		this.ready = setReady();
 		//this.setnConnections(this.myparent.getCGRA().getInterconnect().);
 
@@ -280,26 +280,24 @@ public abstract class AProcessingElement implements ProcessingElement {
 
 	}
 
-	/* public void printStatus() {
-    		if (this.control == null)
-    		{
-    			System.out.println("No control associated");
-    		}
-    		else
-    		{
-    			System.out.println("PE stuff:");
-    			System.out.printf("PE coords: %d, ", this.getX());
-    			System.out.printf("%d \n", this.getY());
-    			System.out.println("control settings: \n");
-    			System.out.printf("Type: %s \n", this.control.getType().name());
-    			System.out.printf("OP: %s \n", this.control.getOperation().name());
-    			System.out.printf("MemAccess: %s \n", this.control.getMemAccess().name());
-    			System.out.printf("Input One: %s \n", this.control.getInputone().name());
-    			System.out.printf("Input Two: %s \n", this.control.getInputtwo().name());
-    			System.out.println("\n");
+	public String printStatus() {
 
-    		}
-    	}
+		String status = String.format(" PE %s : (%d, %d) \n Control settings: %s - %d \n Register: %d \n Ready: %B", 
+				this.toString(), this.getX(), this.getY(), this.getControl().getName(), 
+				this.getControl().getValue(), this.getRegisterFile().get(0).getValue().intValue(), this.isReady());
+		/*
+		System.out.printf("%d \n", this.getY());
+		System.out.println("control settings: %s - %s \n");
+		System.out.printf("Type: %s \n", this.control.getType().name());
+		System.out.printf("OP: %s \n", this.control.getOperation().name());
+		System.out.printf("MemAccess: %s \n", this.control.getMemAccess().name());
+		System.out.printf("Input One: %s \n", this.control.getInputone().name());
+		System.out.printf("Input Two: %s \n", this.control.getInputtwo().name());
+		System.out.println("\n");*/
 
-	 */
+		return status;
+
+	}
+
+
 }

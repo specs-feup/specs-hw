@@ -94,7 +94,8 @@ public interface ProcessingElement {
         return null;
     }
 
-    default public void printStatus() {
+    default public String printStatus() {
+		return null;
     }
 
     default public ProcessingElement copy() {

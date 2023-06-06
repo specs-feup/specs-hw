@@ -40,52 +40,63 @@ public interface SpecsCGRA {
     public GenericMemory getMemory();
 
     /*
-     * write data to memory adddr
+     * write data to localmemory addr
      */
-    public PEData writeMemory(PEInteger waddr, PEData data);
+    public PEData writeMemory(Integer waddr, PEData data);
 
     /*
-     * read data from memory addr
+     * read data from localmemory addr
      */
-    public PEData readMemory(PEInteger raddr);
+    public PEData readMemory(Integer raddr);
 
     /*
      * Executes a single simulation tick (can be considered a clock cycle)
      */
     public int execute();
-
+    
+    public boolean step();
+    
     public boolean pause();
 
-    public Context getContext(int i);
-
-    /*
-     * switch between one of X (max) available contexts
-     */
-    // public boolean switchContext();
-
+    public boolean reset();
+    
     /*
      * Generate a visual representation of the current CGRA status
      * (Use JFreeChart or similar?)
      */
     public void visualize();
 
+    public Context getContext(int i);
+
+    /*
+     * switch between one of X (max) available contexts
+     */
+
     public boolean setContext(Context c);
+    
+    public int getExecuteCount();
 
     public boolean applyContext(Integer id);
-
-    public int getExecuteCount();
 
     public boolean isExecuting();
 
     public void setExecuting(boolean isExecuting);
-
-    public boolean step();
-
-    public boolean reset();
+    
+	public void resetExecuteCount();
+	
+	public boolean isExecute_terminated();
+	
+	public void setExecute_terminated(boolean execute_terminated);
 
     public ProcessingElement setPE(int x, int y, ProcessingElement pe);
     
 	public InstructionDecoder getInstdec();
+
+	public int getLiveinsSize();
+	
+	public int getLiveoutsSize();
+	
+	public int getLocalmemSize();
 
 
     /*public int assignLS(LSElement x);
