@@ -208,7 +208,6 @@ public abstract class AProcessingElement implements ProcessingElement {
 	public PEData execute() {
 
 		this.ready = setReady();
-		//this.setnConnections(this.myparent.getCGRA().getInterconnect().);
 
 		if (this.ready)
 		{			

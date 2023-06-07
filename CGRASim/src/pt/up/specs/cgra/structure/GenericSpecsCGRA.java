@@ -220,7 +220,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	public boolean reset() {
 		this.mesh.reset();
 		this.interconnect.clear();
-		//this.mesh.zero_ports(); //TODO: Better way to achieve the same
+		this.resetExecuteCount();
 		return true;
 	}
 
@@ -318,43 +318,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		return this.localmemsize;
 	}
 
-	/*
-    // cria um banco de memoria exclusivo para um load store
-    public int assignLS(LSElement x) {
-        if (x.getMem_id() == 0) {
-            this.liveins.add(new GenericMemory(8));
-            return this.liveins.size();
-        }
-        return 0;
-    }
-
-    // le um objeto no banco de um LS "x" na posicao i
-    public PEData read_liveins(LSElement x, int i) {
-        if (i <= this.liveins.get(x.getMem_id()).getSize())
-            return this.liveins.get(x.getMem_id()).read(i);
-        else
-            return null;
-    }
-
-    // le um objeto no banco x na posicao i
-    public PEData read_liveins_specific(int x, int y) {
-        return this.liveins.get(x).read(y);
-    }
-
-    // guarda um objeto "d" no banco de um LS "x" na posicao "i"
-    public boolean store_liveins(LSElement x, int i, PEData d) {
-        var a = this.liveins.get(x.getMem_id());
-        if (a != null) {
-            if (!a.write(i, d))
-                return false;
-            if (this.liveins.set(x.getMem_id(), a) != null)
-                return true;
-            else
-                return false;
-        }
-        return false;
-
-    }*/
+	
 
 
 	/****************************************************************************************

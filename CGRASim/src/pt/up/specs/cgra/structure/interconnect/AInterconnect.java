@@ -48,11 +48,11 @@ public abstract class AInterconnect implements Interconnect {
 	/**
 	 * For every connection, copy the output payload into the input ports of each @ProcessingElement
 	 */
-	
+
 	//TODO: Exceptions
 	@Override
 	public boolean propagate() {
-		
+
 		System.out.println("\n========== propagation step ==========");
 
 
@@ -65,16 +65,16 @@ public abstract class AInterconnect implements Interconnect {
 
 			for (var drivenPort : drivenList)
 				drivenPort.setPayload(drive.getPayload().copy()); // copy the data element from output port to input ports of next PE
-		
-		drive.setPayload(new PEInteger(0));
+
+			drive.setPayload(new PEInteger(0));
 		} 
-		
+
 		System.out.println("propagated succesfully");
 
 		return true;
 	}
 
-	
+
 	//TODO: VERIFICAR N. DE CONECCOES > N DE PORTS
 	@Override
 	public boolean setConnection(ProcessingElementPort from, ProcessingElementPort to) {
@@ -90,15 +90,51 @@ public abstract class AInterconnect implements Interconnect {
 		// get list for this driving port, i.e., "from"
 		if (this.connections.containsKey(from)) {
 			var drivenList = this.connections.get(from);
-			if (!drivenList.contains(to))
-				drivenList.add(to);
-			
-			from.getPE().setnConnections();
-			
+			if (!drivenList.contains(to)) {
+				switch (from.getPE().toString()) {
+				case ("ALU"):
+				case ("MUL"):
+					if (from.getPE().getnConnections() < 2) {
+						drivenList.add(to);
+						from.getPE().setnConnections();
+					}
+				break;
+				case ("LSU"):
+					if (from.getPE().getnConnections() < 1) {
+						drivenList.add(to);
+						from.getPE().setnConnections();
+					}
+				break;
+
+				default:
+					break;
+
+				}
+			}
+
 			System.out.println("new port to existing output port list");
 
 		} else {
 			var newList = new ArrayList<ProcessingElementPort>();
+				switch (from.getPE().toString()) {
+				case ("ALU"):
+				case ("MUL"):
+					if (from.getPE().getnConnections() < 2) {
+						newList.add(to);
+						from.getPE().setnConnections();
+					}
+				break;
+				case ("LSU"):
+					if (from.getPE().getnConnections() < 1) {
+						newList.add(to);
+						from.getPE().setnConnections();
+					}
+				break;
+
+				default:
+					break;
+
+				}
 			newList.add(to);
 			this.connections.put(from, newList);
 			System.out.println("new port to new list element");
@@ -148,8 +184,15 @@ public abstract class AInterconnect implements Interconnect {
 		return driver;
 
 	}
-	
+
 	public void clear() {
+		for (int i = 0; i < this.getCGRA().getMesh().getX(); i++)
+		{
+			for (int j = 0; j < this.getCGRA().getMesh().getY(); j++)
+			{
+				this.getCGRA().getMesh().getProcessingElement(i, j).setnConnections(0);
+			}
+		}
 		this.connections.clear();
 	}
 
@@ -160,7 +203,7 @@ public abstract class AInterconnect implements Interconnect {
 	public void setConnections(Map<ProcessingElementPort, List<ProcessingElementPort>> connections) {
 		this.connections = connections;
 	}
-	
-	
+
+
 }
 

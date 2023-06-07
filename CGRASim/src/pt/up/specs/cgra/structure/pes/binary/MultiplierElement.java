@@ -43,7 +43,7 @@ public class MultiplierElement extends BinaryProcessingElement {
 
     @Override
     public String toString() {
-        return "Mul";
+        return "MUL";
     }
 
 	@Override
