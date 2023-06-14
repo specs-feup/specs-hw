@@ -24,11 +24,11 @@ public class MultiplierElement extends BinaryProcessingElement {
     }
 
     public MultiplierElement(int latency) {
-        this(latency, 0);
+        this(latency, 1);
     }
 
     public MultiplierElement() {
-        this(1, 0);
+        this(1, 1);
     }
 
     @Override

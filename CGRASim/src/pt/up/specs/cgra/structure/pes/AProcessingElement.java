@@ -67,7 +67,7 @@ public abstract class AProcessingElement implements ProcessingElement {
 			this.hasMemory = true;
 			for (int i = 0; i < this.memorySize; i++)
 			{
-				this.registerFile.add(null);
+				this.registerFile.add(new PEInteger(0));
 			}
 		} else {
 			this.hasMemory = false;

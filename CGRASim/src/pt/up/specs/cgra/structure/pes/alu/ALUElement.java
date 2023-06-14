@@ -66,7 +66,7 @@ public class ALUElement extends BinaryProcessingElement {// implements PEControl
 	}
 
 	public ALUElement(int latency) {
-		this(latency, 0);
+		this(latency, 1);
 	}
 
 	public ALUElement() {

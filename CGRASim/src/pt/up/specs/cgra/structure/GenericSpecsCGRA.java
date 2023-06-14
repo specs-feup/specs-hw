@@ -42,9 +42,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	// TODO: list of contexts is required to switch connections
 	// the switch operation can model the latency upon call
 
-	/*
-	 * 
-	 */
 	private static final Map<Class<? extends Interconnect>, Constructor<?>> INTCCONSTRUCTORS;
 	static {
 
@@ -62,12 +59,13 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 
 	// string name?
 	private final int localmemsize;
-	protected final GenericMemory localmem;
+	protected GenericMemory localmem;
 	protected final GenericMemory liveins, liveouts;
 	protected final Mesh mesh;
+	protected final InstructionDecoder instdec;
 	protected final Interconnect interconnect;
 	protected ArrayList<Context> context_memory;
-	protected final InstructionDecoder instdec;
+	protected int selected_context;
 	protected int execute_count;
 	protected int cycle_count;
 	protected boolean isExecuting;
@@ -77,7 +75,7 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 			Class<? extends Interconnect> intclass,
 			int localmemsize) {
 
-		System.out.println("\n INITIALIZATION STARTED \n \n");
+		System.out.println("INITIALIZATION STARTED \n \n");
 
 
 		this.mesh = new Mesh(mesh, this);
@@ -89,16 +87,21 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 			throw new RuntimeException(e);
 		}
 
-		/*this.liveins = new ArrayList<GenericMemory>();
-        this.liveouts = new ArrayList<GenericMemory>();*/
 		this.liveins = new GenericMemory(256);
 		this.liveouts = new GenericMemory(256);
 		this.localmemsize = localmemsize;
 		this.instdec = new InstructionDecoder(this);
+		this.context_memory = new ArrayList<Context>(16);
 		if (this.localmemsize > 0)
 			this.localmem = new GenericMemory(this.localmemsize);
 		else
 			this.localmem = null;
+
+		this.selected_context = 0;
+		this.execute_count = 0;
+		this.cycle_count = 0;
+		this.isExecuting = false;
+		this.execute_terminated = false;
 
 		System.out.println("\n INITIALIZATION FINISHED \n \n");
 
@@ -148,6 +151,12 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		return this.localmem.read(raddr);
 	}
 
+	public GenericMemory setMemory(GenericMemory tmp)
+	{
+		this.localmem = tmp;
+		return tmp;
+	}
+
 	@Override
 	public int execute() {
 
@@ -174,7 +183,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 			this.cycle_count++;
 
 		} while (this.isExecuting && !this.execute_terminated);
-		// } while (CONDICAO);
 
 		this.setExecuting(false);
 		this.setExecute_terminated(true);
@@ -203,8 +211,6 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 			return false;
 		}
 
-
-
 		this.execute_count++;
 
 		this.setExecuting(false);
@@ -232,19 +238,23 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		System.out.println(sbld.append(this.mesh.visualize()).toString());
 	}
 
-
 	@Override
 	public Context getContext(int i) {
-		var x = this.context_memory.get(i);
-		if (x != null) System.out.printf("Context n. %d retrieved successfuly \n", i);
-		else 				System.out.printf("Retrieved null context \n");
-
-		return x;
+		try { 
+			var x = this.context_memory.get(i);
+			System.out.printf("Context n. %d retrieved successfuly \n", i);
+			return x;
+		}
+		catch (IndexOutOfBoundsException e) {
+			System.out.printf("Retrieved null context \n");
+			e.printStackTrace();
+			return null;
+		}
 
 	}
 
 	@Override
-	public boolean setContext(Context c) {
+	public boolean saveContext(Context c) {
 
 		if (c != null && c.getConnections().size() > 0) {
 			if (this.context_memory.add(c))
@@ -253,8 +263,8 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 				return true;
 			}
 		}
-		System.out.printf("context adding failed \n");
 
+		System.out.printf("context adding failed \n");
 		return false;
 	}
 
@@ -264,17 +274,19 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 	}
 
 	public boolean applyContext(Integer i) {
-		if (this.context_memory.get(i) != null) {
-			if (this.interconnect.applyContext(this.context_memory.get(i)))
+		try {
+			if (this.interconnect.applyContext(this.getContext(i)))
 			{
 				System.out.printf("Context set succesfully \n");
 				return true;
 			}
+			else return false;
 		}
+		catch (IndexOutOfBoundsException e) {
+			System.out.printf("setting context failed \n");
+			return false;
 
-		System.out.printf("setting context failed \n");
-		return false;
-
+		}
 	}
 
 	public boolean isExecuting() {
@@ -318,7 +330,21 @@ public class GenericSpecsCGRA implements SpecsCGRA {
 		return this.localmemsize;
 	}
 
-	
+	public ArrayList<Context> getContext_memory() {
+		return context_memory;
+	}
+
+	public void setContext_memory(ArrayList<Context> context_memory) {
+		this.context_memory = context_memory;
+	}
+
+	public int getSelected_context() {
+		return selected_context;
+	}
+
+	public void setSelected_context(int selected_context) {
+		this.selected_context = selected_context;
+	}
 
 
 	/****************************************************************************************

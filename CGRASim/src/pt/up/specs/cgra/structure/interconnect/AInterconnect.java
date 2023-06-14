@@ -42,7 +42,6 @@ public abstract class AInterconnect implements Interconnect {
 	public AInterconnect(SpecsCGRA myparent) {
 		this.myparent = myparent;
 		this.connections = new HashMap<ProcessingElementPort, List<ProcessingElementPort>>();
-		//this.myparent.setContext(new Context(this.connections));
 	}
 
 	/**
@@ -94,15 +93,13 @@ public abstract class AInterconnect implements Interconnect {
 				switch (from.getPE().toString()) {
 				case ("ALU"):
 				case ("MUL"):
+				case ("LSU"):
 					if (from.getPE().getnConnections() < 2) {
 						drivenList.add(to);
 						from.getPE().setnConnections();
-					}
-				break;
-				case ("LSU"):
-					if (from.getPE().getnConnections() < 1) {
-						drivenList.add(to);
-						from.getPE().setnConnections();
+						System.out.printf("Connection set between PE %d, %d and %d, %d \n", 
+								from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
+						return true;
 					}
 				break;
 
@@ -110,40 +107,38 @@ public abstract class AInterconnect implements Interconnect {
 					break;
 
 				}
+			} else {
+				System.out.println("Connection already exists");
+				return false;
 			}
 
-			System.out.println("new port to existing output port list");
 
 		} else {
 			var newList = new ArrayList<ProcessingElementPort>();
-				switch (from.getPE().toString()) {
-				case ("ALU"):
-				case ("MUL"):
-					if (from.getPE().getnConnections() < 2) {
-						newList.add(to);
-						from.getPE().setnConnections();
-					}
-				break;
-				case ("LSU"):
-					if (from.getPE().getnConnections() < 1) {
-						newList.add(to);
-						from.getPE().setnConnections();
-					}
-				break;
-
-				default:
-					break;
-
+			switch (from.getPE().toString()) {
+			case ("ALU"):
+			case ("MUL"):
+			case ("LSU"):
+				if (from.getPE().getnConnections() < 2) {
+					newList.add(to);
+					from.getPE().setnConnections();
 				}
+				break;
+
+			default:
+				break;
+			}
+
 			newList.add(to);
 			this.connections.put(from, newList);
 			System.out.println("new port to new list element");
+			System.out.printf("Connection set between PE %d, %d and %d, %d \n", 
+					from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
+			return true;
 
 		}
-		System.out.printf("Connection set between PE %d, %d and %d, %d \n", 
-				from.getPE().getX(), from.getPE().getY(), to.getPE().getX(), to.getPE().getY());
-
-		return true;
+		
+		return false;
 	}
 
 	@Override
@@ -161,7 +156,7 @@ public abstract class AInterconnect implements Interconnect {
 	}
 
 	@Override
-	public Context getContext() {
+	public Context makeContext() {
 		return new Context(this.connections);
 	}
 

@@ -13,6 +13,11 @@
 
 package pt.up.specs.cgra.structure.context;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,35 +26,68 @@ import pt.up.specs.cgra.structure.pes.ProcessingElementPort;
 
 public class Context {
 
-    /*
-     * contexts are final, and are applied to the interconnect by iterating
-     * over the entire map of source ports to destination ports
-     */
-    private final Map<ProcessingElementPort, List<ProcessingElementPort>> connections;
+	/*
+	 * contexts are final, and are applied to the interconnect by iterating
+	 * over the entire map of source ports to destination ports
+	 */
+	private final Map<ProcessingElementPort, List<ProcessingElementPort>> connections;
+	private String name;
 
-    public Context(Map<ProcessingElementPort, List<ProcessingElementPort>> connections) {
-        this.connections = connections;
-    }
+	public Context(Map<ProcessingElementPort, List<ProcessingElementPort>> connections) {
+		this.connections = connections;
+	}
 
-    /*public Context(int contextID, GenericDFG dfg)
+	/*public Context(int contextID, GenericDFG dfg)
     {
     	this.contextID = contextID;
     	this.connections = makeConnections(dfg);
     }*/
 
-    /* private static Map<ProcessingElementPort, List<ProcessingElementPort>> makeConnections(GenericDFG dfg) 
+	/* private static Map<ProcessingElementPort, List<ProcessingElementPort>> makeConnections(GenericDFG dfg) 
     {
-    	
+
     	return null;
     	//return tmp_con;
     } */
 
-    public Map<ProcessingElementPort, List<ProcessingElementPort>> getConnections() {
-        return connections;
-    }
+	public Map<ProcessingElementPort, List<ProcessingElementPort>> getConnections() {
+		return connections;
+	}
 
-    public Optional<List<ProcessingElementPort>> getDestinationsOf(ProcessingElementPort source) {
-        return Optional.of(this.connections.get(source));
-    }
+	public Optional<List<ProcessingElementPort>> getDestinationsOf(ProcessingElementPort source) {
+		return Optional.of(this.connections.get(source));
+	}
+	
+	public boolean saveToFile(String name) {
+		try (FileOutputStream fos = new FileOutputStream(String.format(name + ".ctxt"));
+				ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+			oos.writeObject(connections);
+			System.out.println("Map saved to file successfully");
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public Map<ProcessingElementPort, List<ProcessingElementPort>> readFile(String x) {
+		try (FileInputStream fis = new FileInputStream(x);
+	             ObjectInputStream ois = new ObjectInputStream(fis)) {
+			Map<ProcessingElementPort, List<ProcessingElementPort>> map = (Map<ProcessingElementPort, List<ProcessingElementPort>>) ois.readObject();
+	            System.out.println("Map loaded from file successfully");
+	           return map;
+	        } catch (IOException | ClassNotFoundException e) {
+	            e.printStackTrace();
+	            return null;
+	        }
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 }

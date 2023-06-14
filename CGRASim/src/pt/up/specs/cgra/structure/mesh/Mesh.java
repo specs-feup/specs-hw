@@ -32,7 +32,7 @@ public class Mesh {
 
 	private final SpecsCGRA myparent;
 	private final int x, y;
-	private final List<List<ProcessingElement>> mesh;// array 2d de PEs
+	private List<List<ProcessingElement>> mesh;// array 2d de PEs
 
 
 	public Mesh(List<List<ProcessingElement>> mesh, SpecsCGRA myparent) {
@@ -156,5 +156,13 @@ public class Mesh {
 		
 		return flatList;
 		
+	}
+
+	public List<List<ProcessingElement>> get2Dmesh() {
+		return mesh;
+	}
+
+	public void set2Dmesh(List<List<ProcessingElement>> mesh) {
+		this.mesh = mesh;
 	}
 }

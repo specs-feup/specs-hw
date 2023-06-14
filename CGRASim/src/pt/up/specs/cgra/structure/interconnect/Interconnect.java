@@ -42,7 +42,7 @@ public interface Interconnect {
     /*
      * get current interconnection context
      */
-    public Context getContext();
+    public Context makeContext();
 
     /*
      * 

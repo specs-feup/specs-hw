@@ -72,7 +72,7 @@ public interface SpecsCGRA {
      * switch between one of X (max) available contexts
      */
 
-    public boolean setContext(Context c);
+    public boolean saveContext(Context c);
     
     public int getExecuteCount();
 

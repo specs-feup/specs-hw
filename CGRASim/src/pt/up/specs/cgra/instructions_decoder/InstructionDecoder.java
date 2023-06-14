@@ -1,5 +1,10 @@
 package pt.up.specs.cgra.instructions_decoder;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -90,7 +95,9 @@ public class InstructionDecoder {
 	}
 
 	private static String set_io(SpecsCGRA cgra, List<String> operands) {
-
+		
+		String s1 = null, s2 = null;
+		
 		if(operands.size() != 6) {
 			return String.format("Error reading SET_IO instruction parameters");
 		}
@@ -107,31 +114,28 @@ public class InstructionDecoder {
 		var pesrc = cgra.getMesh().getProcessingElement(xs, ys);
 
 		var pe1 = cgra.getMesh().getProcessingElement(x1, y1);
-		var pe2 = cgra.getMesh().getProcessingElement(x2, y2);
-
-
-		if (pe1 != null && pe2 != null && pesrc != null) {
-
-			if ((cgra.getInterconnect().setConnection(pe1.getPorts().get(2), pesrc.getPorts().get(0)) 
-					&& cgra.getInterconnect().setConnection(pe2.getPorts().get(2), pesrc.getPorts().get(1))
-					))
-			{
-				return String.format("SET_IO succesful");
+		
+		if (pe1 != null && pesrc != null) {
+			if (cgra.getInterconnect().setConnection(pe1.getPorts().get(2), pesrc.getPorts().get(0))) {
+				s1 = String.format("SET_IO succesful for port 1");
 			}
-
-			else
-			{
-				return String.format("SET_IO unsuccesful");
-			}
-
-
+			else s1 = String.format("SET_IO unsuccesful for port 1");
 		}
-		return String.format("SET_IO unsuccesful");
+		else s1 = String.format("SET_IO unsuccesful for port 1");
 
-		//out de pe1 -> in1 de pesrc
-		//out de pe2 -> in2 de pesrc
+		
+		var pe2 = cgra.getMesh().getProcessingElement(x2, y2);
+		
+		if (pe2 != null && pesrc != null) {
+			if (cgra.getInterconnect().setConnection(pe2.getPorts().get(2), pesrc.getPorts().get(1))) {
+				s2 = String.format("SET_IO succesful for port 2");
+			}
+			else s2 = String.format("SET_IO unsuccesful for port 2");
+		}
+		else s1 = String.format("SET_IO unsuccesful for port 2");
 
 
+		return String.format(s1 + "\n" + s2);
 	}
 
 	private static String gen_info(SpecsCGRA cgra, List<String> operands) {
@@ -154,7 +158,7 @@ public class InstructionDecoder {
 
 	private static String store_ctx(SpecsCGRA cgra, List<String> operands) {
 
-		if (cgra.setContext(cgra.getInterconnect().getContext()))
+		if (cgra.saveContext(cgra.getInterconnect().makeContext()))
 		{
 			return String.format("STORE_CTX succesful");
 		}
@@ -236,5 +240,20 @@ public class InstructionDecoder {
 
 	private static String undefined(SpecsCGRA cgra, List<String> operands) {
 		return String.format("Undefined instr");
+	}
+
+	public boolean parseFile(File file) {
+
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+
+			String line;
+
+			while ((line = br.readLine()) != null) {
+				InstructionParser(line);            
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return true;
 	}
 }
