@@ -128,10 +128,10 @@ public class HardwareInstanceTest {
     @Test
     public void workshopExample2() {
         var adder = new HardwareModule("testAdder");
-        var a = adder.addInputPort("testA", 32);
-        var b = adder.addInputPort("testB", 32);
-        var c = adder.addOutputPort("testC", 32);
-        adder.alwayscomb()._do(c.nonBlocking(a.add(b)));
+        var a = adder.addInputPort("testA", 8);
+        var b = adder.addInputPort("testB", 8);
+        var c = adder.addOutputPort("testC", 8);
+        adder.alwayscomb()._do(c.nonBlocking(a.sub(b)));
 
         adder.emit();
 

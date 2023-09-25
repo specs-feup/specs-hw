@@ -1,0 +1,3 @@
+./RISCV/resources/org/specs/Riscv/provider/RiscvObjDumpProvider.java
+./RISCV/resources/org/specs/Riscv/provider/RiscvTraceDumpProvider.java
+./RISCV/resources/org/specs/Riscv/provider/RiscvLivermoreN100imaf.java

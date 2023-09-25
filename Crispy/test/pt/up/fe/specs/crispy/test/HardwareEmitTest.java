@@ -28,6 +28,13 @@ import pt.up.fe.specs.util.treenode.utils.DottyGenerator;
 public class HardwareEmitTest {
 
     @Test
+    public void testAdder2() {
+        var adder1 = new Adder(32);
+        adder1.emit();
+        // System.out.println(DottyGenerator.buildDotty(adder1));
+    }
+
+    @Test
     public void testAdder() {
         var adder1 = new Adder(32);
         adder1.emitToFile();
